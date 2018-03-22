@@ -120,8 +120,7 @@ add_definitions(-DREVISION_ID="${PROJECT_NAME}-${${PROJECT_NAME}_MAJOR_VERSION}.
 include_directories(
     ${PROJECT_BINARY_DIR}/include
     include
-    include/time_conversion
-    src/refimpl
+    src/
     ${XML_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIR}
 )
@@ -130,15 +129,14 @@ link_directories(
     ${Boost_LIBRARY_DIRS}
 )
 
-
 #
 # The reference implementation
 #
 
 add_library( E57Format STATIC
-    src/refimpl/E57Foundation.cpp
-    src/refimpl/E57FoundationImpl.cpp
-    src/refimpl/E57FoundationImpl.h
+    src/E57Foundation.cpp
+    src/E57FoundationImpl.cpp
+    src/E57FoundationImpl.h
     include/E57Foundation.h
 )
 set_target_properties( E57Format

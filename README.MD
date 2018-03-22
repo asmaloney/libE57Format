@@ -5,9 +5,9 @@ A library to provide read and write support for the E57 file format.
 
 This is a fork of [E57RefImpl](https://sourceforge.net/projects/e57-3d-imgfmt/) v1.1.332. It is primarily for use in the [CloudCompare](https://github.com/CloudCompare/CloudCompare) project, but it should work for anyone else who wants to use it.
 
-The source is from [E57RefImpl 1.1.332](https://sourceforge.net/projects/e57-3d-imgfmt/files/E57Refimpl-src/) and I stripped out all the extra files to clean it up (and I don't know about licensing/distribution of these) for the initial commit.
+The source is from [E57RefImpl 1.1.332](https://sourceforge.net/projects/e57-3d-imgfmt/files/E57Refimpl-src/) and I stripped out all the "auxiliary" files to clean it up for the initial commit.
 
-I then stripped out everything except the main implementation of reading and writing E57.
+I then stripped out everything except the main implementation for reading and writing E57.
 
 Why Fork?
 --

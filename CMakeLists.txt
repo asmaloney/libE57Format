@@ -46,11 +46,11 @@ set(CMAKE_USER_MAKE_RULES_OVERRIDE_CXX ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cxx_fla
 # Set a private module find path
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
-project(E57RefImpl)
+project(E57Format)
 
 # developer adjustable version numbers
-set(${PROJECT_NAME}_MAJOR_VERSION 1)
-set(${PROJECT_NAME}_MINOR_VERSION 1)
+set(${PROJECT_NAME}_MAJOR_VERSION 2)
+set(${PROJECT_NAME}_MINOR_VERSION 0)
 
 include(Tags)
 
@@ -141,104 +141,14 @@ link_directories(
 # The reference implementation
 #
 
-add_library( E57RefImpl STATIC
+add_library( E57Format STATIC
     src/refimpl/E57Foundation.cpp
     src/refimpl/E57FoundationImpl.cpp
     src/refimpl/E57FoundationImpl.h
     include/E57Foundation.h
 )
-set_target_properties( E57RefImpl
+set_target_properties( E57Format
     PROPERTIES DEBUG_POSTFIX "-d"
-)
-
-#
-# Files for LAS format support
-#
-
-add_library( LASReader STATIC
-    src/LASReader/LASReader.cpp
-    include/LASReader.h
-)
-
-#
-# Time conversion utilities
-#
-
-add_library( time_conversion STATIC
-    src/time_conversion/time_conversion.c
-    include/time_conversion/time_conversion.h
-    include/time_conversion/basictypes.h
-    include/time_conversion/constants.h
-    include/time_conversion/gnss_error.h
-)
-
-#
-# Example programs
-#
-
-add_executable( DemoWrite01
-    src/examples/DemoWrite01.cpp
-)
-target_link_libraries( DemoWrite01
-    E57RefImpl
-    ${XML_LIBRARIES}
-    ${CMAKE_THREAD_LIBS_INIT}
-)
-add_executable( DemoRead01
-    src/examples/DemoRead01.cpp
-)
-target_link_libraries( DemoRead01
-    E57RefImpl
-    ${XML_LIBRARIES}
-    ${CMAKE_THREAD_LIBS_INIT}
-)
-
-#
-# E57-4 Tools
-#
-
-add_executable( las2e57
-    src/tools/las2e57.cpp
-)
-target_link_libraries( las2e57
-    E57RefImpl
-    LASReader
-    time_conversion
-    ${XML_LIBRARIES}
-    ${CMAKE_THREAD_LIBS_INIT}
-)
-add_executable( e57fields
-    src/tools/e57fields.cpp
-)
-target_link_libraries( e57fields
-    E57RefImpl
-    ${XML_LIBRARIES}
-    ${CMAKE_THREAD_LIBS_INIT}
-)
-add_executable( e57xmldump
-    src/tools/e57xmldump.cpp
-)
-target_link_libraries( e57xmldump
-    E57RefImpl
-    ${XML_LIBRARIES}
-    ${CMAKE_THREAD_LIBS_INIT}
-)
-add_executable( e57validate
-    src/tools/e57validate.cpp
-)
-target_link_libraries( e57validate
-    E57RefImpl
-    ${XML_LIBRARIES}
-    ${CMAKE_THREAD_LIBS_INIT}
-)
-add_executable( e57unpack
-    src/tools/e57unpack.cpp
-)
-target_link_libraries( e57unpack
-    E57RefImpl
-    ${XML_LIBRARIES}
-    ${Boost_LIBRARIES}
-    ${CMAKE_THREAD_LIBS_INIT}
 )
 
 #
@@ -247,17 +157,11 @@ target_link_libraries( e57unpack
 
 install(
     TARGETS
-        E57RefImpl
-        e57fields
-        e57xmldump
-        e57unpack
-        e57validate
-        las2e57
-    RUNTIME DESTINATION bin
+        E57Format
     ARCHIVE DESTINATION lib
 )
 install(
     FILES
         include/E57Foundation.h
-    DESTINATION include/e57
+    DESTINATION include/E57Format
 )

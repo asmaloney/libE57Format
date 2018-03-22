@@ -30,11 +30,7 @@
 #include <iomanip>
 #include <float.h>
 #include <map>
-#if defined(_MSC_VER)
-#   include <memory>
-#else
-#   include <tr1/memory>
-#endif
+#include <memory>
 #include "E57Foundation.h"
 #include "E57FoundationImpl.h" //??? for exceptions, should be in separate file
 
@@ -43,7 +39,6 @@ using boost::math::fpclassify;
 
 using namespace e57;
 using namespace std;
-using namespace std::tr1;
 
 //!!! prologue, file name, date, version#, total # elements
 //!!! doc

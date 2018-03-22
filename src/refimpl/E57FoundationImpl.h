@@ -169,29 +169,14 @@ class Encoder;
 const uint32_t E57_FORMAT_MAJOR = 1;			//Changed from 0 to 1 by SC
 const uint32_t E57_FORMAT_MINOR = 0;			//Changed from 6 to 0 by SC
 
-/// Version of Reference Implementation, E57_REFIMPL_REVISION_ID should be passed from compiler command line
-/// All this macro trickery because E57_REFIMPL_REVISION_ID might not be numeric (e.g. 27M, or exported).
+/// REVISION_ID should be passed from compiler command line
 
-#define E57_REFIMPL_MAJOR          1			//Changed from 0 to 1 by SC
-#define E57_REFIMPL_MINOR          0			//Changed from 1 to 0 by SC
-#ifndef E57_REFIMPL_REVISION_ID
-#  define E57_REFIMPL_REVISION_ID  unknown
+#ifndef REVISION_ID
+#error "Need to specify REVISION_ID on command line"
 #endif
-#define STR_VALUE(arg)                  #arg
-#define DO_QUOTE(name)                  STR_VALUE(name)
-#define QUOTED_E57_REFIMPL_MAJOR        DO_QUOTE(E57_REFIMPL_MAJOR)
-#define QUOTED_E57_REFIMPL_MINOR        DO_QUOTE(E57_REFIMPL_MINOR)
-#define QUOTED_E57_REFIMPL_REVISION_ID  DO_QUOTE(E57_REFIMPL_REVISION_ID)
-#if 0
-const char E57_LIBRARY_ID[] = "ReferenceImplementation "      \
-                              QUOTED_E57_REFIMPL_MAJOR        \
-                              "."                             \
-                              QUOTED_E57_REFIMPL_MINOR        \
-                              "."                             \
-                              QUOTED_E57_REFIMPL_REVISION_ID;
-#else
-const char E57_LIBRARY_ID[] = QUOTED_E57_REFIMPL_REVISION_ID;
-#endif
+
+const char E57_LIBRARY_ID[] = REVISION_ID;
+
 /// Section types:
 #define E57_BLOB_SECTION                0	//changed from 1 by SC to fit the standard
 #define E57_COMPRESSED_VECTOR_SECTION   1	//changed from 2 by SC to fit the standard

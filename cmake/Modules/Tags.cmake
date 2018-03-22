@@ -1,22 +1,5 @@
 # This file defines the variables
-# ${PROJECT_NAME}_BUILD_VERSION
 # ${PROJECT_NAME}_BUILD_TAG
-
-# try to find subversion revision number
-execute_process(
-    COMMAND svnversion
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    OUTPUT_VARIABLE ${PROJECT_NAME}_BUILD_VERSION
-)
-if (NOT ${PROJECT_NAME}_BUILD_VERSION)
-    set(${PROJECT_NAME}_BUILD_VERSION "unknown")
-else()
-    string(REGEX MATCH " " F ${${PROJECT_NAME}_BUILD_VERSION})
-    if (F) # a valid build number does not contain a space
-        set(${PROJECT_NAME}_BUILD_VERSION "unknown")
-    endif()
-    string(STRIP ${${PROJECT_NAME}_BUILD_VERSION} ${PROJECT_NAME}_BUILD_VERSION)
-endif ()
 
 # calculate the tag
 set(T_ ${CMAKE_SYSTEM_PROCESSOR})

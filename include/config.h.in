@@ -1,0 +1,11 @@
+
+#ifndef CONFIG_H
+#define CONFIG_H
+
+#ifndef E57_REFIMPL_REVISION_ID
+#   define E57_REFIMPL_REVISION_ID "E57RefImpl-@E57RefImpl_MAJOR_VERSION@.@E57RefImpl_MINOR_VERSION@.@E57RefImpl_BUILD_VERSION@-@E57RefImpl_BUILD_TAG@"
+#endif
+
+#define SVN_VERSION @E57RefImpl_BUILD_VERSION@
+
+#endif /* CONFIG_H */

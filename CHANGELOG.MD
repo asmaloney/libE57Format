@@ -1,7 +1,10 @@
-libe57Format
+libE57Format
 ==
 - v2.0 (not yet released)
   - initial release
+  - forked from E57RefImpl
+  - removed all but the main sources for reading and writing E57 files
+  - changes to compile on macOS
   
 E57RefImpl
 ==

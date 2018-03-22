@@ -57,6 +57,15 @@
 # include <fcntl.h>
 # define O_BINARY (0)
 # define _unlink unlink
+#elif defined(MACOS)
+#  define _LARGEFILE64_SOURCE
+#  define __LARGE64_FILES
+#  include <sys/types.h>
+#  include <sys/stat.h>
+#  include <unistd.h>
+# include <fcntl.h>
+# define O_BINARY (0)
+# define _unlink unlink
 #else
 #  error "no supported OS platform defined"
 #endif
@@ -4764,6 +4773,8 @@ uint64_t CheckedFile::lseek64(int64_t offset, int whence)
 #  endif
 #elif defined(LINUX)
     int64_t result = ::lseek64(fd_, offset, whence);
+#elif defined(MACOS)
+    int64_t result = ::lseek(fd_, offset, whence);
 #else
 #  error "no supported OS platform defined"
 #endif
@@ -8509,4 +8520,3 @@ void BitpackIntegerDecoder<RegisterT>::dump(int indent, std::ostream& os)
     os << space(indent) << "destBitMask:      " << binaryString(destBitMask_) << " = " << hexString(destBitMask_) << endl;
 }
 #endif
-

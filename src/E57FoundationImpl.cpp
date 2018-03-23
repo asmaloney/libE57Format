@@ -6783,6 +6783,7 @@ shared_ptr<Encoder> Encoder::EncoderFactory(unsigned bytestreamNumber,
                                                                                 E57_DATA_PACKET_MAX/*!!!*/,
                                                                                 sini->minimum(), sini->maximum(),
                                                                                 sini->scale(), sini->offset()));
+                return(encoder);
             }
         }
         case E57_FLOAT: {

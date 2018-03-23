@@ -104,8 +104,8 @@ include_directories(
     ${XML_INCLUDE_DIRS}
 )
 
-#CRCpp (to replace boost::crc_optimal)
-include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/contrib/CRCpp/inc )
+# CRCpp from here: https://github.com/d-bahr/CRCpp
+include_directories( contrib/CRCpp/inc )
 
 #
 # The reference implementation

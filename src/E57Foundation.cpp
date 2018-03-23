@@ -194,9 +194,9 @@ using namespace e57;
 using std::endl;
 
 //using namespace boost;
-using boost::shared_ptr;
-using boost::weak_ptr;
-using boost::dynamic_pointer_cast;
+using std::shared_ptr;
+using std::weak_ptr;
+using std::dynamic_pointer_cast;
 
 //=====================================================================================
 /*================*/ /*!
@@ -2060,7 +2060,7 @@ StructureNode::StructureNode(const Node& n)
 }
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't documented.
-StructureNode::StructureNode(boost::weak_ptr<ImageFileImpl> fileParent)
+StructureNode::StructureNode(std::weak_ptr<ImageFileImpl> fileParent)
 : impl_(new StructureNodeImpl(fileParent))
 {}
 

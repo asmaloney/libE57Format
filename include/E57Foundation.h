@@ -41,11 +41,9 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <memory>
 #include <float.h>
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
-#include <boost/cstdint.hpp>    // for int8_t, int16_t, int32_t, etc...
+#include <cstdint>    // for int8_t, int16_t, int32_t, etc...
 
 
 #ifndef DOXYGEN  // Doxygen is not handling namespaces well in @includelineno commands, so disable
@@ -53,14 +51,14 @@ namespace e57 {
 #endif
 
 // Use Boost type names for signed/unsigned integers in various witdths
-using boost::int8_t;
-using boost::uint8_t;
-using boost::int16_t;
-using boost::uint16_t;
-using boost::int32_t;
-using boost::uint32_t;
-using boost::int64_t;
-using boost::uint64_t;
+using std::int8_t;
+using std::uint8_t;
+using std::int16_t;
+using std::uint16_t;
+using std::int32_t;
+using std::uint32_t;
+using std::int64_t;
+using std::uint64_t;
 
 // Shorthand for unicode string
 //! @brief UTF-8 encodeded Unicode string
@@ -158,13 +156,13 @@ class ImageFile;
 #ifdef E57_INTERNAL_IMPLEMENTATION_ENABLE
 #  define E57_OBJECT_IMPLEMENTATION(T)                              \
 public:                                                             \
-    boost::shared_ptr<T##Impl> impl() const {return(impl_);};       \
+    std::shared_ptr<T##Impl> impl() const {return(impl_);};       \
 protected:                                                          \
-    boost::shared_ptr<T##Impl> impl_;
+    std::shared_ptr<T##Impl> impl_;
 #else
 #  define E57_OBJECT_IMPLEMENTATION(T)                              \
 protected:                                                          \
-    boost::shared_ptr<T##Impl> impl_;
+    std::shared_ptr<T##Impl> impl_;
 #endif
 //! @endcond
 
@@ -198,7 +196,7 @@ public:
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
 #ifdef E57_INTERNAL_IMPLEMENTATION_ENABLE
-    explicit    Node(boost::shared_ptr<NodeImpl>);  // internal use only
+    explicit    Node(std::shared_ptr<NodeImpl>);  // internal use only
 #endif
 private:   //=================
                 Node();                 // No default constructor is defined for Node
@@ -241,8 +239,8 @@ private:   //=================
 protected: //=================
     friend class ImageFile;
 
-                StructureNode(boost::shared_ptr<StructureNodeImpl> ni);    // internal use only
-                StructureNode(boost::weak_ptr<ImageFileImpl> fileParent);  // internal use only
+                StructureNode(std::shared_ptr<StructureNodeImpl> ni);    // internal use only
+                StructureNode(std::weak_ptr<ImageFileImpl> fileParent);  // internal use only
 
     E57_OBJECT_IMPLEMENTATION(StructureNode)  // Internal implementation details, not part of API, must be last in object
 //! \endcond
@@ -283,7 +281,7 @@ private:   //=================
 protected: //=================
     friend class CompressedVectorNode;
 
-                VectorNode(boost::shared_ptr<VectorNodeImpl> ni);  // internal use only
+                VectorNode(std::shared_ptr<VectorNodeImpl> ni);  // internal use only
 
     E57_OBJECT_IMPLEMENTATION(VectorNode)  // Internal implementation details, not part of API, must be last in object
 //! \endcond
@@ -352,7 +350,7 @@ private:   //=================
 protected: //=================
     friend class CompressedVectorNode;
 
-                CompressedVectorReader(boost::shared_ptr<CompressedVectorReaderImpl> ni);
+                CompressedVectorReader(std::shared_ptr<CompressedVectorReaderImpl> ni);
 
     E57_OBJECT_IMPLEMENTATION(CompressedVectorReader)  // Internal implementation details, not part of API, must be last in object
 //! \endcond
@@ -375,7 +373,7 @@ private:   //=================
 protected: //=================
     friend class CompressedVectorNode;
 
-                CompressedVectorWriter(boost::shared_ptr<CompressedVectorWriterImpl> ni);
+                CompressedVectorWriter(std::shared_ptr<CompressedVectorWriterImpl> ni);
 
     E57_OBJECT_IMPLEMENTATION(CompressedVectorWriter)  // Internal implementation details, not part of API, must be last in object
 //! \endcond
@@ -417,7 +415,7 @@ protected: //=================
     friend class CompressedVectorWriter;
     friend class E57XmlParser;
 
-                CompressedVectorNode(boost::shared_ptr<CompressedVectorNodeImpl> ni);  // internal use only
+                CompressedVectorNode(std::shared_ptr<CompressedVectorNodeImpl> ni);  // internal use only
 
     E57_OBJECT_IMPLEMENTATION(CompressedVectorNode)  // Internal implementation details, not part of API, must be last in object
 //! \endcond
@@ -452,7 +450,7 @@ private:   //=================
                 IntegerNode();                 // No default constructor is defined for IntegerNode
 protected: //=================
 
-                IntegerNode(boost::shared_ptr<IntegerNodeImpl> ni);  // internal use only
+                IntegerNode(std::shared_ptr<IntegerNodeImpl> ni);  // internal use only
 
     E57_OBJECT_IMPLEMENTATION(IntegerNode)  // Internal implementation details, not part of API, must be last in object
 //! \endcond
@@ -499,7 +497,7 @@ private:   //=================
                 ScaledIntegerNode();                 // No default constructor is defined for ScaledIntegerNode
 protected: //=================
 
-                ScaledIntegerNode(boost::shared_ptr<ScaledIntegerNodeImpl> ni);  // internal use only
+                ScaledIntegerNode(std::shared_ptr<ScaledIntegerNodeImpl> ni);  // internal use only
 
     E57_OBJECT_IMPLEMENTATION(ScaledIntegerNode)  // Internal implementation details, not part of API, must be last in object
 //! \endcond
@@ -536,7 +534,7 @@ private:   //=================
                 FloatNode();                 // No default constructor is defined for FloatNode
 protected: //=================
 
-                FloatNode(boost::shared_ptr<FloatNodeImpl> ni);  // internal use only
+                FloatNode(std::shared_ptr<FloatNodeImpl> ni);  // internal use only
 
     E57_OBJECT_IMPLEMENTATION(FloatNode)  // Internal implementation details, not part of API, must be last in object
 //! \endcond
@@ -570,7 +568,7 @@ private:   //=================
                 StringNode();                 // No default constructor is defined for StringNode
 protected: //=================
     friend class StringNodeImpl;
-                StringNode(boost::shared_ptr<StringNodeImpl> ni);  // internal use only
+                StringNode(std::shared_ptr<StringNodeImpl> ni);  // internal use only
 
     E57_OBJECT_IMPLEMENTATION(StringNode)  // Internal implementation details, not part of API, must be last in object
 //! \endcond
@@ -606,7 +604,7 @@ private:   //=================
 protected: //=================
     friend class E57XmlParser;
 
-                BlobNode(boost::shared_ptr<BlobNodeImpl> ni);       // internal use only
+                BlobNode(std::shared_ptr<BlobNodeImpl> ni);       // internal use only
 
                 // Internal use only, create blob already in a file
                 BlobNode(ImageFile destImageFile, int64_t fileOffset, int64_t length);
@@ -661,7 +659,7 @@ protected: //=================
     friend class StringNode;
     friend class BlobNode;
 
-                    ImageFile(boost::shared_ptr<ImageFileImpl> imfi);  // internal use only
+                    ImageFile(std::shared_ptr<ImageFileImpl> imfi);  // internal use only
 
     E57_OBJECT_IMPLEMENTATION(ImageFile)  // Internal implementation details, not part of API, must be last in object
 //! \endcond

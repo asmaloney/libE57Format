@@ -1345,7 +1345,7 @@ public:
                         PacketReadCache(CheckedFile* cFile, unsigned packetCount);
                         ~PacketReadCache();
 
-    std::auto_ptr<PacketLock> lock(uint64_t packetLogicalOffset, char* &pkt);  //??? pkt could be const
+    std::unique_ptr<PacketLock> lock(uint64_t packetLogicalOffset, char* &pkt);  //??? pkt could be const
     void                 markDiscarable(uint64_t packetLogicalOffset);
 
 #ifdef E57_DEBUG
@@ -1750,7 +1750,7 @@ void SeekIndexReader::lookup(uint64_t recordNumber, uint64_t& foundRecordNumber,
     for (unsigned level = indexDepth_-1; level >= 0; level--) {
         /// Get index packet at packetOffset into cache and get pointer
         char* pkt;
-        auto_ptr<PacketLock> plock = imf_->cache()->lock(nextPacketOffset, pkt);
+        unique_ptr<PacketLock> plock = imf_->cache()->lock(nextPacketOffset, pkt);
         IndexPacket* ipkt = reinterpret_cast<IndexPacket*>(pkt);
 
         /// Quick check that packet looks ok
@@ -1825,7 +1825,7 @@ void SeekIndexReader::lookup(uint64_t recordNumber, uint64_t& foundRecordNumber,
     for (unsigned level = indexDepth_-1; level >= 0; level--) {
         /// Get index packet at packetOffset into cache and get pointer
         char* pkt;
-        auto_ptr<PacketLock> plock = imf_->cache()->lock(nextPacketOffset, pkt);
+        unique_ptr<PacketLock> plock = imf_->cache()->lock(nextPacketOffset, pkt);
         IndexPacket* ipkt = reinterpret_cast<IndexPacket*>(pkt);
 
         /// Quick check that packet looks ok

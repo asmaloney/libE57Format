@@ -4950,15 +4950,18 @@ size_t CheckedFile::efficientBufferSize(size_t logicalBytes)
 #endif  // SAFE_MODE
 }
 
+#include <CRC.h>
+
 uint32_t CheckedFile::checksum(char* buf, size_t size)
 {
 #ifdef SAFE_MODE
 #if 1
     /// Calc CRC32C of given data
-    crcCalculator_.reset();
-    crcCalculator_.process_bytes(buf, size);
-    uint32_t crc = crcCalculator_.checksum();
-    swab(crc); //!!! inside BIGENDIAN?
+    //crcCalculator_.reset();
+    //crcCalculator_.process_bytes(buf, size);
+    //uint32_t crc = crcCalculator_.checksum();
+	uint32_t crc = CRC::Calculate(buf, size, CRC::CRC_32());
+	swab(crc); //!!! inside BIGENDIAN?
     return(crc);
 #else
     /// For page size performance testing purposes, approximate the computation time for

@@ -131,6 +131,9 @@ link_directories(
     ${Boost_LIBRARY_DIRS}
 )
 
+#CRCpp (to replace boost::crc)
+include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/contrib/CRCpp/inc )
+
 #
 # The reference implementation
 #

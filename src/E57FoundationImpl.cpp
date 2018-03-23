@@ -1413,6 +1413,7 @@ double SourceDestBufferImpl::getNextDouble()
                 throw E57_EXCEPTION2(E57_ERROR_CONVERSION_REQUIRED, "pathName=" + pathName_);
             /// Convert bool to 0/1, all non-zero values map to 1.0
             value = (*reinterpret_cast<bool*>(p)) ? 1.0 : 0.0;
+            break;
         case E57_REAL32:
             value = static_cast<double>(*reinterpret_cast<float*>(p));
             break;

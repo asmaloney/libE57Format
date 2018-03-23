@@ -608,7 +608,7 @@ bool StructureNodeImpl::isDefined(const ustring& pathName)
 {
     checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
     shared_ptr<NodeImpl> ni(lookup(pathName));
-    return(ni != 0);
+    return(ni != nullptr);
 }
 
 void StructureNodeImpl::setAttachedRecursive()

@@ -1,10 +1,11 @@
 libE57Format
 ==
-- v2.0 (not yet released)
-  - initial release
+- v2.0 (not yet released) (initial release)
   - forked from E57RefImpl
   - removed all but the main sources for reading and writing E57 files
-  - changes to compile on macOS
+  - multiple fixes for compilation on macOS
+  - removed BOOST requirement
+  - require C++11
   
 E57RefImpl
 ==

@@ -27,9 +27,9 @@
  */
 //////////////////////////////////////////////////////////////////////////
 //
-//	V106	Dec 1, 2010		Stan Coleby	SC	scoleby@intelisum.com
-//								Added pageSize to E57FileHeader
-//								Changed Version to 1.0
+//  V106    Dec 1, 2010     Stan Coleby SC  scoleby@intelisum.com
+//                              Added pageSize to E57FileHeader
+//                              Changed Version to 1.0
 
 #ifndef E57FOUNDATIONIMPL_H_INCLUDED
 #define E57FOUNDATIONIMPL_H_INCLUDED
@@ -165,8 +165,8 @@ class E57XmlParser;
 class Encoder;
 
 /// Version numbers of ASTM standard that this library supports
-const uint32_t E57_FORMAT_MAJOR = 1;			//Changed from 0 to 1 by SC
-const uint32_t E57_FORMAT_MINOR = 0;			//Changed from 6 to 0 by SC
+const uint32_t E57_FORMAT_MAJOR = 1;            //Changed from 0 to 1 by SC
+const uint32_t E57_FORMAT_MINOR = 0;            //Changed from 6 to 0 by SC
 
 /// REVISION_ID should be passed from compiler command line
 
@@ -177,13 +177,13 @@ const uint32_t E57_FORMAT_MINOR = 0;			//Changed from 6 to 0 by SC
 const char E57_LIBRARY_ID[] = REVISION_ID;
 
 /// Section types:
-#define E57_BLOB_SECTION                0	//changed from 1 by SC to fit the standard
-#define E57_COMPRESSED_VECTOR_SECTION   1	//changed from 2 by SC to fit the standard
+#define E57_BLOB_SECTION                0   //changed from 1 by SC to fit the standard
+#define E57_COMPRESSED_VECTOR_SECTION   1   //changed from 2 by SC to fit the standard
 
 /// Packet types (in a compressed vector section)
 #define E57_DATA_PACKET                 1
-#define E57_INDEX_PACKET                0	//changed from 2 by SC to fit the standard
-#define E57_EMPTY_PACKET                2	//changed from 3 by SC to fit the standard
+#define E57_INDEX_PACKET                0   //changed from 2 by SC to fit the standard
+#define E57_EMPTY_PACKET                2   //changed from 3 by SC to fit the standard
 
 #ifdef E57_BIGENDIAN
 #  define  SWAB(p)  swab(p)
@@ -554,11 +554,11 @@ protected: //=================
 class ScaledIntegerNodeImpl : public NodeImpl {
 public:
                         ScaledIntegerNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile,
-							int64_t value = 0, int64_t minimum = 0, int64_t maximum = 0,
+                            int64_t value = 0, int64_t minimum = 0, int64_t maximum = 0,
                             double scale = 1.0, double offset = 0.0);
 
-						ScaledIntegerNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile,		//Added by SC
-							double scaledValue = 0., double scaledMinimum = 0., double scaledMaximum = 0.,
+                        ScaledIntegerNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile,       //Added by SC
+                            double scaledValue = 0., double scaledMinimum = 0., double scaledMaximum = 0.,
                             double scale = 1.0, double offset = 0.0);
 
     virtual             ~ScaledIntegerNodeImpl() {};
@@ -570,9 +570,9 @@ public:
     int64_t             rawValue();
     double              scaledValue();
     int64_t             minimum();
-	double				scaledMinimum();	//Added by SC
+    double              scaledMinimum();    //Added by SC
     int64_t             maximum();
-	double				scaledMaximum();	//Added by SC
+    double              scaledMaximum();    //Added by SC
     double              scale();
     double              offset();
 
@@ -695,8 +695,8 @@ struct E57FileHeader {
     uint64_t    filePhysicalLength;
     uint64_t    xmlPhysicalOffset;
     uint64_t    xmlLogicalLength;
-    uint64_t    pageSize;				//Added by SC
-//  char        e57LibraryVersion[8];	//Not in V1.0 Standard
+    uint64_t    pageSize;               //Added by SC
+//  char        e57LibraryVersion[8];   //Not in V1.0 Standard
 
 #ifdef E57_BIGENDIAN
     void        swab();
@@ -710,8 +710,8 @@ struct E57FileHeader {
 
 class ImageFileImpl : public std::enable_shared_from_this<ImageFileImpl> {
 public:
-					ImageFileImpl();
-	void			construct2(const ustring& fileName, const ustring& mode, const ustring& configuration);
+                    ImageFileImpl();
+    void            construct2(const ustring& fileName, const ustring& mode, const ustring& configuration);
     std::shared_ptr<StructureNodeImpl> root();
     void            close();
     void            cancel();

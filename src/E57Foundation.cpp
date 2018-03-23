@@ -3613,7 +3613,7 @@ ScaledIntegerNode::ScaledIntegerNode(ImageFile destImageFile, int rawValue, int 
 /*================*/ /*!
 @brief   This second constructor create an E57 element for storing a fixed point number but does the scaling for you.
 @param   [in] destImageFile   The ImageFile where the new node will eventually be stored.
-@param   [in] scaledValue	  The scaled integer value of the element.
+@param   [in] scaledValue     The scaled integer value of the element.
 @param   [in] scaledMinimum   The smallest scaledValue that the element may take.
 @param   [in] scaledMaximum   The largest scaledValue that the element may take.
 @param   [in] scale     The scaling factor used to compute scaledValue from rawValue.
@@ -3732,7 +3732,7 @@ int64_t ScaledIntegerNode::minimum() const
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     ScaledIntegerCreate.cpp example, ScaledIntegerNode::scaledMaximum, ScaledIntegerNode::scaledValue
 */ /*================*/
-double ScaledIntegerNode::scaledMinimum() const		//Added by SC
+double ScaledIntegerNode::scaledMinimum() const     //Added by SC
 {
     CHECK_INVARIANCE_RETURN(double, impl_->scaledMinimum());
 }
@@ -3758,7 +3758,7 @@ int64_t ScaledIntegerNode::maximum() const
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     ScaledIntegerCreate.cpp example, ScaledIntegerNode::scaledMinimum, ScaledIntegerNode::scaledValue
 */ /*================*/
-double ScaledIntegerNode::scaledMaximum() const		//Added by SC
+double ScaledIntegerNode::scaledMaximum() const     //Added by SC
 {
     CHECK_INVARIANCE_RETURN(double, impl_->scaledMaximum());
 }

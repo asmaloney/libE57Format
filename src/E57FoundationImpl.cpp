@@ -28,9 +28,9 @@
  */
 //////////////////////////////////////////////////////////////////////////
 //
-//	V106	Dec 1, 2010		Stan Coleby	SC	scoleby@intelisum.com
-//								Added pageSize to E57FileHeader
-//								Changed Version to 1.0
+//  V106    Dec 1, 2010     Stan Coleby SC  scoleby@intelisum.com
+//                              Added pageSize to E57FileHeader
+//                              Changed Version to 1.0
 
 #if defined(WIN32)
 #  if defined(_MSC_VER)
@@ -170,7 +170,7 @@ void E57FileHeader::swab()
     SWAB(&filePhysicalLength);
     SWAB(&xmlPhysicalOffset);
     SWAB(&xmlLogicalLength);
-    SWAB(&pageSize);			//Added by SC
+    SWAB(&pageSize);            //Added by SC
 };
 #endif
 
@@ -185,7 +185,7 @@ void E57FileHeader::dump(int indent, std::ostream& os)
     os << space(indent) << "filePhysicalLength: " << filePhysicalLength << endl;
     os << space(indent) << "xmlPhysicalOffset:  " << xmlPhysicalOffset << endl;
     os << space(indent) << "xmlLogicalLength:   " << xmlLogicalLength << endl;
-	os << space(indent) << "pageSize:           " << pageSize << endl;			//Added by SC
+    os << space(indent) << "pageSize:           " << pageSize << endl;          //Added by SC
 }
 #endif
 
@@ -631,7 +631,7 @@ int64_t StructureNodeImpl::childCount()
 shared_ptr<NodeImpl> StructureNodeImpl::get(int64_t index)
 {
     checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
-		if (index < 0 || index >= static_cast<int64_t>(children_.size())) {	// %%% Possible truncation on platforms where size_t = uint64
+        if (index < 0 || index >= static_cast<int64_t>(children_.size())) { // %%% Possible truncation on platforms where size_t = uint64
         throw E57_EXCEPTION2(E57_ERROR_CHILD_INDEX_OUT_OF_BOUNDS,
                              "this->pathName=" + this->pathName()
                              + " index=" + toString(index)
@@ -2268,7 +2268,7 @@ ScaledIntegerNodeImpl::ScaledIntegerNodeImpl(weak_ptr<ImageFileImpl> destImageFi
                              + " maximum=" + toString(maximum));
     }
 }
-//=============================================================================		Added by SC
+//=============================================================================     Added by SC
 ScaledIntegerNodeImpl::ScaledIntegerNodeImpl(weak_ptr<ImageFileImpl> destImageFile, double scaledValue, double scaledMinimum, double scaledMaximum, double scale, double offset)
 : NodeImpl(destImageFile),
   value_((int64_t)floor((scaledValue - offset)/scale +.5)),
@@ -2354,7 +2354,7 @@ int64_t ScaledIntegerNodeImpl::minimum()
     checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
     return(minimum_);
 }
-double ScaledIntegerNodeImpl::scaledMinimum()	//Added by SC
+double ScaledIntegerNodeImpl::scaledMinimum()   //Added by SC
 {
     checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
     return(minimum_ * scale_ + offset_);
@@ -2365,7 +2365,7 @@ int64_t ScaledIntegerNodeImpl::maximum()
     checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
     return(maximum_);
 }
-double ScaledIntegerNodeImpl::scaledMaximum()	//Added by SC
+double ScaledIntegerNodeImpl::scaledMaximum()   //Added by SC
 {
     checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
     return(maximum_ * scale_ + offset_);
@@ -3259,23 +3259,23 @@ void E57XmlParser::startElement(const   XMLCh* const    uri,
         pi.nodeType = E57_FLOAT;
 
         if (isAttributeDefined(attributes, att_precision)) {
-			ustring precision_str = lookupAttribute(attributes, att_precision);
-			if (precision_str == "single")
-				pi.precision = E57_SINGLE;
-			else if (precision_str == "double")
-				pi.precision = E57_DOUBLE;
-			else {
-				throw E57_EXCEPTION2(E57_ERROR_BAD_XML_FORMAT,
-									 "precisionString=" + precision_str
-									 + " fileName=" + imf_->fileName()
-									 + " uri=" + toUString(uri)
-									 + " localName=" + toUString(localName)
-									 + " qName=" + toUString(qName));
-			}
-		} else {
+            ustring precision_str = lookupAttribute(attributes, att_precision);
+            if (precision_str == "single")
+                pi.precision = E57_SINGLE;
+            else if (precision_str == "double")
+                pi.precision = E57_DOUBLE;
+            else {
+                throw E57_EXCEPTION2(E57_ERROR_BAD_XML_FORMAT,
+                                     "precisionString=" + precision_str
+                                     + " fileName=" + imf_->fileName()
+                                     + " uri=" + toUString(uri)
+                                     + " localName=" + toUString(localName)
+                                     + " qName=" + toUString(qName));
+            }
+        } else {
             /// Not defined defined in XML, so defaults to double
-			pi.precision = E57_DOUBLE;
-		}
+            pi.precision = E57_DOUBLE;
+        }
 
         if (isAttributeDefined(attributes, att_minimum)) {
             ustring minimum_str = lookupAttribute(attributes, att_minimum);
@@ -3759,7 +3759,7 @@ void ImageFileImpl::construct2(const ustring& fileName, const ustring& mode, con
 #ifdef E57_MAX_VERBOSE
     cout << "ImageFileImpl() called, fileName=" << fileName << " mode=" << mode << endl;
 #endif
-	unusedLogicalStart_ = sizeof(E57FileHeader);	//Added by SC
+    unusedLogicalStart_ = sizeof(E57FileHeader);    //Added by SC
     fileName_ = fileName;
 
     /// Get shared_ptr to this object
@@ -3788,9 +3788,9 @@ void ImageFileImpl::construct2(const ustring& fileName, const ustring& mode, con
             /// Open file for reading.
             file_ = new CheckedFile(fileName_, CheckedFile::readOnly);
 
-			shared_ptr<StructureNodeImpl> root(new StructureNodeImpl(imf));	//Added by SC
-			root_ = root;
-			root_->setAttachedRecursive();
+            shared_ptr<StructureNodeImpl> root(new StructureNodeImpl(imf)); //Added by SC
+            root_ = root;
+            root_->setAttachedRecursive();
 
             E57FileHeader header;
             readFileHeader(file_, header);
@@ -3836,7 +3836,7 @@ void ImageFileImpl::construct2(const ustring& fileName, const ustring& mode, con
             /// Create input source (XML section of E57 file turned into a stream).
             E57FileInputSource xmlSection(file_, xmlLogicalOffset_, xmlLogicalLength_);
 
-			unusedLogicalStart_ = sizeof(E57FileHeader);	//Added by SC
+            unusedLogicalStart_ = sizeof(E57FileHeader);    //Added by SC
 
             /// Do the parse, building up the node tree
             xmlReader->parse(xmlSection);
@@ -3854,20 +3854,20 @@ void ImageFileImpl::construct2(const ustring& fileName, const ustring& mode, con
         }
         delete xmlReader;
 
-		XMLPlatformUtils::Terminate();	//Added by SC
+        XMLPlatformUtils::Terminate();  //Added by SC
 
     } else { /// open for writing (start empty)
         try {
             /// Open file for writing, truncate if already exists.
             file_ = new CheckedFile(fileName_, CheckedFile::writeCreate);
 
-			shared_ptr<StructureNodeImpl> root(new StructureNodeImpl(imf));	//Added by SC
-			root_ = root;
-			root_->setAttachedRecursive();
+            shared_ptr<StructureNodeImpl> root(new StructureNodeImpl(imf)); //Added by SC
+            root_ = root;
+            root_->setAttachedRecursive();
 
             unusedLogicalStart_ = sizeof(E57FileHeader);
-			xmlLogicalOffset_ = 0;		//Added by SC
-			xmlLogicalLength_ = 0;
+            xmlLogicalOffset_ = 0;      //Added by SC
+            xmlLogicalLength_ = 0;
 
         } catch (...) {
             /// Remember to close file if got any exception
@@ -3884,7 +3884,7 @@ void ImageFileImpl::readFileHeader(CheckedFile* file, E57FileHeader& header)
 {
 #ifdef E57_DEBUG
     /// Double check that compiler thinks sizeof header is what it is supposed to be
-    if (sizeof(E57FileHeader) != 48)		//Changed from 40 to 48 by SC
+    if (sizeof(E57FileHeader) != 48)        //Changed from 40 to 48 by SC
         throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "headerSize=" + toString(sizeof(E57FileHeader)));
 #endif
 
@@ -3900,7 +3900,7 @@ void ImageFileImpl::readFileHeader(CheckedFile* file, E57FileHeader& header)
         throw E57_EXCEPTION2(E57_ERROR_BAD_FILE_SIGNATURE, "fileName="+file->fileName());
 
     /// Check file version compatibility
-    if (header.majorVersion > E57_FORMAT_MAJOR) {		//Changed to > from != by SC so that V1.0 will work on a V2.0 release
+    if (header.majorVersion > E57_FORMAT_MAJOR) {       //Changed to > from != by SC so that V1.0 will work on a V2.0 release
         throw E57_EXCEPTION2(E57_ERROR_UNKNOWN_FILE_VERSION,
                              "fileName=" + file->fileName()
                              + " header.majorVersion=" + toString(header.majorVersion)
@@ -3909,8 +3909,8 @@ void ImageFileImpl::readFileHeader(CheckedFile* file, E57FileHeader& header)
 
     /// If is a prototype version (majorVersion==0), then minorVersion has to match too.
     /// In production versions (majorVersion==E57_FORMAT_MAJOR), should be able to handle any minor version.
-    if (header.majorVersion == E57_FORMAT_MAJOR &&		//Added by SC so that V1.0 will work on a V1.1 release
-		header.minorVersion > E57_FORMAT_MINOR) {		//Changed to > from != by SC
+    if (header.majorVersion == E57_FORMAT_MAJOR &&      //Added by SC so that V1.0 will work on a V1.1 release
+        header.minorVersion > E57_FORMAT_MINOR) {       //Changed to > from != by SC
         throw E57_EXCEPTION2(E57_ERROR_UNKNOWN_FILE_VERSION,
                              "fileName=" + file->fileName()
                              + " header.majorVersion=" + toString(header.majorVersion)
@@ -3927,7 +3927,7 @@ void ImageFileImpl::readFileHeader(CheckedFile* file, E57FileHeader& header)
 
     /// Check that page size is correct constant
     if (header.majorVersion != 0 &&
-		header.pageSize != CheckedFile::physicalPageSize)		//Added by SC
+        header.pageSize != CheckedFile::physicalPageSize)       //Added by SC
         throw E57_EXCEPTION2(E57_ERROR_BAD_FILE_LENGTH, "fileName=" + file->fileName());
 }
 
@@ -4011,7 +4011,7 @@ void ImageFileImpl::close()
         header.filePhysicalLength = file_->length(CheckedFile::physical);
         header.xmlPhysicalOffset  = xmlPhysicalOffset;
         header.xmlLogicalLength   = xmlLogicalLength_;
-		header.pageSize           = CheckedFile::physicalPageSize;		//Added by SC
+        header.pageSize           = CheckedFile::physicalPageSize;      //Added by SC
 #ifdef E57_MAX_VERBOSE
         header.dump(); //???
 #endif
@@ -6028,7 +6028,7 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
     cout << "  bsbLength=" << (unsigned)bsbLength << endl; //???
 #endif
     for (unsigned i=0; i < bytestreams_.size(); i++) {
-        bsbLength[i] = static_cast<uint16_t>(count.at(i));		// %%% Truncation
+        bsbLength[i] = static_cast<uint16_t>(count.at(i));      // %%% Truncation
 #ifdef E57_MAX_VERBOSE
         cout << "  Writing " << bsbLength[i] << " bytes into bytestream " << i << endl; //???
 #endif
@@ -6088,8 +6088,8 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
     /// Prepare header in dataPacket_, now that we are sure of packetLength
     dataPacket_.packetType = E57_DATA_PACKET;
     dataPacket_.packetFlags = 0;
-    dataPacket_.packetLogicalLengthMinus1 = static_cast<uint16_t>(packetLength-1);		    // %%% Truncation
-    dataPacket_.bytestreamCount = static_cast<uint16_t>(bytestreams_.size());		// %%% Truncation
+    dataPacket_.packetLogicalLengthMinus1 = static_cast<uint16_t>(packetLength-1);          // %%% Truncation
+    dataPacket_.bytestreamCount = static_cast<uint16_t>(bytestreams_.size());       // %%% Truncation
 
     /// Double check that data packet is well formed
     dataPacket_.verify(packetLength);

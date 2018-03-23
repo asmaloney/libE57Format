@@ -101,10 +101,9 @@ using std::auto_ptr;
 using std::min;
 using std::max;
 
-//using namespace boost;
-using boost::weak_ptr;
-using boost::shared_ptr;
-using boost::dynamic_pointer_cast;
+using std::weak_ptr;
+using std::shared_ptr;
+using std::dynamic_pointer_cast;
 
 #include <xercesc/util/TransService.hpp>
 
@@ -248,14 +247,14 @@ bool NodeImpl::isRoot()
     return(parent_.expired());
 };
 
-boost::shared_ptr<NodeImpl> NodeImpl::parent()
+std::shared_ptr<NodeImpl> NodeImpl::parent()
 {
     checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
     if (isRoot()) {
         /// If is root, then has self as parent (by convention)
         return(shared_from_this());
     } else {
-        boost::shared_ptr<NodeImpl> myParent(parent_);
+        std::shared_ptr<NodeImpl> myParent(parent_);
         return(myParent);
     }
 }
@@ -392,7 +391,7 @@ bool NodeImpl::isTypeConstrained()
     return(false);
 }
 
-boost::shared_ptr<NodeImpl> NodeImpl::get(const ustring& pathName)
+std::shared_ptr<NodeImpl> NodeImpl::get(const ustring& pathName)
 {
     /// This is common virtual function for terminal E57 element types: Integer, ScaledInteger, Float, Blob.
     /// The non-terminal types override this virtual function.
@@ -460,7 +459,7 @@ void NodeImpl::set(const ustring& pathName, shared_ptr<NodeImpl> ni, bool autoPa
     root->set(pathName, ni, autoPathCreate);
 }
 
-void NodeImpl::set(const std::vector<ustring>& /*fields*/, unsigned /*level*/, boost::shared_ptr<NodeImpl> /*ni*/, bool /*autoPathCreate*/)
+void NodeImpl::set(const std::vector<ustring>& /*fields*/, unsigned /*level*/, std::shared_ptr<NodeImpl> /*ni*/, bool /*autoPathCreate*/)
 {
     /// If get here, then tried to call set(fields...) on NodeImpl that wasn't a StructureNodeImpl, so that's an error
     throw E57_EXCEPTION1(E57_ERROR_BAD_PATH_NAME); //???
@@ -630,7 +629,7 @@ int64_t StructureNodeImpl::childCount()
 shared_ptr<NodeImpl> StructureNodeImpl::get(int64_t index)
 {
     checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
-		if (index < 0 || index >= static_cast<boost::int64_t>(children_.size())) {	// %%% Possible truncation on platforms where size_t = uint64
+		if (index < 0 || index >= static_cast<int64_t>(children_.size())) {	// %%% Possible truncation on platforms where size_t = uint64
         throw E57_EXCEPTION2(E57_ERROR_CHILD_INDEX_OUT_OF_BOUNDS,
                              "this->pathName=" + this->pathName()
                              + " index=" + toString(index)
@@ -838,7 +837,7 @@ void StructureNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, sha
 }
 
 //??? use visitor?
-void StructureNodeImpl::writeXml(boost::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName)
+void StructureNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName)
 {
     /// don't checkImageFileOpen
 
@@ -963,7 +962,7 @@ void VectorNodeImpl::set(int64_t index64, shared_ptr<NodeImpl> ni)
     StructureNodeImpl::set(index64, ni);
 }
 
-void VectorNodeImpl::writeXml(boost::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName)
+void VectorNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName)
 {
     /// don't checkImageFileOpen
 
@@ -1989,7 +1988,7 @@ void CompressedVectorNodeImpl::checkLeavesInSet(const std::set<ustring>& /*pathN
     throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "this->pathName=" + this->pathName());
 }
 
-void CompressedVectorNodeImpl::writeXml(boost::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName)
+void CompressedVectorNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName)
 {
     // don't checkImageFileOpen
 
@@ -2210,7 +2209,7 @@ void IntegerNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, share
         throw E57_EXCEPTION2(E57_ERROR_NO_BUFFER_FOR_ELEMENT, "this->pathName=" + this->pathName());
 }
 
-void IntegerNodeImpl::writeXml(boost::shared_ptr<ImageFileImpl> /*imf???*/, CheckedFile& cf, int indent, const char* forcedFieldName)
+void IntegerNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> /*imf???*/, CheckedFile& cf, int indent, const char* forcedFieldName)
 {
     // don't checkImageFileOpen
 
@@ -2391,7 +2390,7 @@ void ScaledIntegerNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames,
         throw E57_EXCEPTION2(E57_ERROR_NO_BUFFER_FOR_ELEMENT, "this->pathName=" + this->pathName());
 }
 
-void ScaledIntegerNodeImpl::writeXml(boost::shared_ptr<ImageFileImpl> /*imf*/, CheckedFile& cf, int indent, const char* forcedFieldName)
+void ScaledIntegerNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> /*imf*/, CheckedFile& cf, int indent, const char* forcedFieldName)
 {
     // don't checkImageFileOpen
 
@@ -2542,7 +2541,7 @@ void FloatNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, shared_
         throw E57_EXCEPTION2(E57_ERROR_NO_BUFFER_FOR_ELEMENT, "this->pathName=" + this->pathName());
 }
 
-void FloatNodeImpl::writeXml(boost::shared_ptr<ImageFileImpl> /*imf*/, CheckedFile& cf, int indent, const char* forcedFieldName)
+void FloatNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> /*imf*/, CheckedFile& cf, int indent, const char* forcedFieldName)
 {
     // don't checkImageFileOpen
 
@@ -2662,7 +2661,7 @@ void StringNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, shared
         throw E57_EXCEPTION2(E57_ERROR_NO_BUFFER_FOR_ELEMENT, "this->pathName=" + this->pathName());
 }
 
-void StringNodeImpl::writeXml(boost::shared_ptr<ImageFileImpl> /*imf*/, CheckedFile& cf, int indent, const char* forcedFieldName)
+void StringNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> /*imf*/, CheckedFile& cf, int indent, const char* forcedFieldName)
 {
     // don't checkImageFileOpen
 
@@ -2862,7 +2861,7 @@ void BlobNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, shared_p
         throw E57_EXCEPTION2(E57_ERROR_NO_BUFFER_FOR_ELEMENT, "this->pathName=" + this->pathName());
 }
 
-void BlobNodeImpl::writeXml(boost::shared_ptr<ImageFileImpl> /*imf*/, CheckedFile& cf, int indent, const char* forcedFieldName)
+void BlobNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> /*imf*/, CheckedFile& cf, int indent, const char* forcedFieldName)
 {
     // don't checkImageFileOpen
 
@@ -3018,7 +3017,7 @@ namespace e57 {
 class E57XmlParser : public DefaultHandler
 {
 public:
-    E57XmlParser(boost::shared_ptr<ImageFileImpl> imf);
+    E57XmlParser(std::shared_ptr<ImageFileImpl> imf);
     ~E57XmlParser();
 
     /// SAX interface
@@ -3040,7 +3039,7 @@ private:
     ustring lookupAttribute(const Attributes& attributes, const XMLCh* attribute_name);
     bool    isAttributeDefined(const Attributes& attributes, const XMLCh* attribute_name);
 
-    boost::shared_ptr<ImageFileImpl> imf_;   /// Image file we are reading
+    std::shared_ptr<ImageFileImpl> imf_;   /// Image file we are reading
 
     struct ParseInfo {
         /// All the fields need to remember while parsing the XML
@@ -3109,7 +3108,7 @@ void E57XmlParser::ParseInfo::dump(int indent, ostream& os)
 
 } /// end namespace e57
 
-E57XmlParser::E57XmlParser(boost::shared_ptr<ImageFileImpl> imf)
+E57XmlParser::E57XmlParser(std::shared_ptr<ImageFileImpl> imf)
 : imf_(imf)
 {
 }
@@ -4951,15 +4950,36 @@ size_t CheckedFile::efficientBufferSize(size_t logicalBytes)
 #endif  // SAFE_MODE
 }
 
+#include <CRC.h>
+
 uint32_t CheckedFile::checksum(char* buf, size_t size)
 {
 #ifdef SAFE_MODE
 #if 1
     /// Calc CRC32C of given data
-    crcCalculator_.reset();
-    crcCalculator_.process_bytes(buf, size);
-    uint32_t crc = crcCalculator_.checksum();
-    swab(crc); //!!! inside BIGENDIAN?
+    //crcCalculator_.reset();
+    //crcCalculator_.process_bytes(buf, size);
+    //uint32_t crc = crcCalculator_.checksum();
+
+	static CRC::Parameters<crcpp_uint32, 32> s_crcParams;
+	static bool s_crcParamsInitialized = false;
+	if (!s_crcParamsInitialized)
+	{
+		// 0x1EDC6F41,  // truncated polynomial, iSCSI
+		// 0xFFFFFFFF,  // initial remainder
+		// 0xFFFFFFFF,  // final xor value
+		// true,        // reflect input
+		// true         // reflect remainder
+		s_crcParams.finalXOR = 0xFFFFFFFF;
+		s_crcParams.initialValue = 0xFFFFFFFF;
+		s_crcParams.polynomial = 0x1EDC6F41;
+		s_crcParams.reflectInput = true;
+		s_crcParams.reflectOutput = true;
+		s_crcParamsInitialized = true;
+	}
+	uint32_t crc = CRC::Calculate<crcpp_uint32, 32>(buf, size, s_crcParams);
+
+	swab(crc); //!!! inside BIGENDIAN?
     return(crc);
 #else
     /// For page size performance testing purposes, approximate the computation time for
@@ -5808,7 +5828,7 @@ bool CompressedVectorWriterImpl::isOpen()
     return(isOpen_);
 }
 
-boost::shared_ptr<CompressedVectorNodeImpl> CompressedVectorWriterImpl::compressedVectorNode()
+std::shared_ptr<CompressedVectorNodeImpl> CompressedVectorWriterImpl::compressedVectorNode()
 {
     return(cVector_);
 }
@@ -6094,7 +6114,7 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
     dataPacket_.packetType = E57_DATA_PACKET;
     dataPacket_.packetFlags = 0;
     dataPacket_.packetLogicalLengthMinus1 = static_cast<uint16_t>(packetLength-1);		    // %%% Truncation
-    dataPacket_.bytestreamCount = static_cast<boost::uint16_t>(bytestreams_.size());		// %%% Truncation
+    dataPacket_.bytestreamCount = static_cast<uint16_t>(bytestreams_.size());		// %%% Truncation
 
     /// Double check that data packet is well formed
     dataPacket_.verify(packetLength);
@@ -6600,7 +6620,7 @@ bool CompressedVectorReaderImpl::isOpen()
     return(isOpen_);
 }
 
-boost::shared_ptr<CompressedVectorNodeImpl> CompressedVectorReaderImpl::compressedVectorNode()
+std::shared_ptr<CompressedVectorNodeImpl> CompressedVectorReaderImpl::compressedVectorNode()
 {
     return(cVector_);
 }

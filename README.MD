@@ -1,13 +1,14 @@
 libE57Format
 ==
+[![Build Status](https://travis-ci.org/asmaloney/libE57Format.svg?branch=master)](https://travis-ci.org/asmaloney/libE57Format)
 
-A library to provide read and write support for the E57 file format.
+A library to provide read & write support for the E57 file format.
 
 This is a fork of [E57RefImpl](https://sourceforge.net/projects/e57-3d-imgfmt/) v1.1.332. It is primarily for use in the [CloudCompare](https://github.com/CloudCompare/CloudCompare) project, but it should work for anyone else who wants to use it.
 
-The source is from [E57RefImpl 1.1.332](https://sourceforge.net/projects/e57-3d-imgfmt/files/E57Refimpl-src/) and I stripped out all the "auxiliary" files to clean it up for the initial commit.
+The original source is from [E57RefImpl 1.1.332](https://sourceforge.net/projects/e57-3d-imgfmt/files/E57Refimpl-src/) and then everything was stripped out except the main implementation for reading and writing E57.
 
-I then stripped out everything except the main implementation for reading and writing E57.
+This version also removes the dependency on [Boost](http://www.boost.org/) and requires C++11.
 
 Why Fork?
 --
@@ -20,4 +21,4 @@ Versions of **libE57Format** will start at 2.0.
 
 License
 --
-The original code is under the [Boost Software License (BSL1.0)](https://opensource.org/licenses/BSL-1.0).
+[Boost Software License (BSL1.0)](https://opensource.org/licenses/BSL-1.0).

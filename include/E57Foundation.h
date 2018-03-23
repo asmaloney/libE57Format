@@ -765,9 +765,6 @@ public:
     // Error code translation
     ustring     errorCodeToString(ErrorCode ecode);
 
-    // Direct read of XML representation in E57 file
-    int64_t     rawXmlLength(const ustring& fname);
-    void        rawXmlRead(const ustring& fname, uint8_t* buf, int64_t start, size_t byteCount);
 };
 
 #ifndef DOXYGEN

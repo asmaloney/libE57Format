@@ -107,6 +107,15 @@ using std::weak_ptr;
 using std::shared_ptr;
 using std::dynamic_pointer_cast;
 
+// The XML parser headers
+#include <xercesc/sax2/SAX2XMLReader.hpp>
+#include <xercesc/sax2/XMLReaderFactory.hpp>
+#include <xercesc/sax2/DefaultHandler.hpp>
+#include <xercesc/sax2/Attributes.hpp>
+
+// Use Xerces namespace (the current version defined in Xerces header)
+XERCES_CPP_NAMESPACE_USE
+
 #include <xercesc/util/TransService.hpp>
 
 namespace {

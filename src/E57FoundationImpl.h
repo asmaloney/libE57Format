@@ -91,15 +91,6 @@
 // Turn off DLL input/export mechanism for Xerces library (usually done by defining in compile command line).
 //#define XERCES_STATIC_LIBRARY 1
 
-// The XML parser headers
-#include <xercesc/sax2/SAX2XMLReader.hpp>
-#include <xercesc/sax2/XMLReaderFactory.hpp>
-#include <xercesc/sax2/DefaultHandler.hpp>
-#include <xercesc/sax2/Attributes.hpp>
-
-// Use Xerces namespace (the current version defined in Xerces header)
-XERCES_CPP_NAMESPACE_USE
-
 namespace e57 {
 
 inline ustring exception_string(const char* errorName, const char* fileName, int lineNumber) {

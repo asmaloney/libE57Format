@@ -4960,7 +4960,25 @@ uint32_t CheckedFile::checksum(char* buf, size_t size)
     //crcCalculator_.reset();
     //crcCalculator_.process_bytes(buf, size);
     //uint32_t crc = crcCalculator_.checksum();
-	uint32_t crc = CRC::Calculate(buf, size, CRC::CRC_32());
+
+	static CRC::Parameters<crcpp_uint32, 32> s_crcParams;
+	static bool s_crcParamsInitialized = false;
+	if (!s_crcParamsInitialized)
+	{
+		// 0x1EDC6F41,  // truncated polynomial, iSCSI
+		// 0xFFFFFFFF,  // initial remainder
+		// 0xFFFFFFFF,  // final xor value
+		// true,        // reflect input
+		// true         // reflect remainder
+		s_crcParams.finalXOR = 0xFFFFFFFF;
+		s_crcParams.initialValue = 0xFFFFFFFF;
+		s_crcParams.polynomial = 0x1EDC6F41;
+		s_crcParams.reflectInput = true;
+		s_crcParams.reflectOutput = true;
+		s_crcParamsInitialized = true;
+	}
+	uint32_t crc = CRC::Calculate<crcpp_uint32, 32>(buf, size, s_crcParams);
+
 	swab(crc); //!!! inside BIGENDIAN?
     return(crc);
 #else

@@ -193,7 +193,6 @@ using namespace e57;
 //using namespace std;
 using std::endl;
 
-//using namespace boost;
 using std::shared_ptr;
 using std::weak_ptr;
 using std::dynamic_pointer_cast;

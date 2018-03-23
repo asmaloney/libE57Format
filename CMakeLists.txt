@@ -27,7 +27,6 @@
 #
 # Requirements:
 #     Xerces library: http://xerces.apache.org/
-#     Boost library: http://www.boost.org
 # Notes:
 #     Since there is not standard cmake module to find the xerces library
 #     we provide one with this distribution. It should be able to find
@@ -70,27 +69,6 @@ endif(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 
 find_package(Threads REQUIRED)
 
-# Find the Boost and Xerces libraries
-
-set(Boost_USE_STATIC_LIBS   ON)
-set(Boost_USE_STATIC_RUNTIME ON)
-set(Boost_USE_MULTITHREADED ON)
-find_package(Boost
-    COMPONENTS
-        program_options
-        system
-        thread
-        filesystem
-    QUIET
-)
-if (NOT Boost_FOUND)
-    set(BOOST_ROOT CACHE PATH  "Location of the boost root directory" )
-    message(FATAL_ERROR
-"Unable to find boost library.
-Please set the BOOST_ROOT to point to the boost distribution files."
-)
-endif(NOT Boost_FOUND)
-
 set(Xerces_USE_STATIC_LIBS On)
 find_package(Xerces QUIET)
 if (NOT Xerces_FOUND)
@@ -115,8 +93,7 @@ elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
     add_definitions(-DWINDOWS)
 endif()
 
-add_definitions(${Boost_LIB_DIAGNOSTIC_DEFINITIONS})
-add_definitions(-DBOOST_ALL_NO_LIB -DXERCES_STATIC_LIBRARY)
+add_definitions(-DXERCES_STATIC_LIBRARY)
 add_definitions(-DREVISION_ID="${PROJECT_NAME}-${${PROJECT_NAME}_MAJOR_VERSION}.${${PROJECT_NAME}_MINOR_VERSION}-${${PROJECT_NAME}_BUILD_TAG}")
 
 include_directories(
@@ -124,14 +101,9 @@ include_directories(
     include
     src/
     ${XML_INCLUDE_DIRS}
-    ${Boost_INCLUDE_DIR}
 )
 
-link_directories(
-    ${Boost_LIBRARY_DIRS}
-)
-
-#CRCpp (to replace boost::crc)
+#CRCpp (to replace boost::crc_optimal)
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/contrib/CRCpp/inc )
 
 #

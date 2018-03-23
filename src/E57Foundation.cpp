@@ -3601,12 +3601,12 @@ ScaledIntegerNode::ScaledIntegerNode(ImageFile destImageFile, int64_t rawValue, 
     CHECK_THIS_INVARIANCE()
 }
 ScaledIntegerNode::ScaledIntegerNode(ImageFile destImageFile, int rawValue, int64_t  minimum, int64_t  maximum, double scale, double offset)
-: impl_(new ScaledIntegerNodeImpl(destImageFile.impl(), (int64_t) rawValue, minimum, maximum, scale, offset))
+: impl_(new ScaledIntegerNodeImpl(destImageFile.impl(), static_cast<int64_t>(rawValue), minimum, maximum, scale, offset))
 {
     CHECK_THIS_INVARIANCE()
 }
 ScaledIntegerNode::ScaledIntegerNode(ImageFile destImageFile, int rawValue, int  minimum, int  maximum, double scale, double offset)
-: impl_(new ScaledIntegerNodeImpl(destImageFile.impl(), (int64_t) rawValue, (int64_t) minimum, (int64_t) maximum, scale, offset))
+: impl_(new ScaledIntegerNodeImpl(destImageFile.impl(), static_cast<int64_t>(rawValue), static_cast<int64_t>(minimum), static_cast<int64_t>(maximum), scale, offset))
 {
     CHECK_THIS_INVARIANCE()
 }

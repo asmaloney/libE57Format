@@ -108,10 +108,12 @@ using std::shared_ptr;
 using std::dynamic_pointer_cast;
 
 // The XML parser headers
+#include <xercesc/sax/InputSource.hpp>
+#include <xercesc/sax2/Attributes.hpp>
+#include <xercesc/sax2/DefaultHandler.hpp>
 #include <xercesc/sax2/SAX2XMLReader.hpp>
 #include <xercesc/sax2/XMLReaderFactory.hpp>
-#include <xercesc/sax2/DefaultHandler.hpp>
-#include <xercesc/sax2/Attributes.hpp>
+#include <xercesc/util/BinInputStream.hpp>
 
 // Use Xerces namespace (the current version defined in Xerces header)
 XERCES_CPP_NAMESPACE_USE
@@ -2280,9 +2282,9 @@ ScaledIntegerNodeImpl::ScaledIntegerNodeImpl(weak_ptr<ImageFileImpl> destImageFi
 //=============================================================================     Added by SC
 ScaledIntegerNodeImpl::ScaledIntegerNodeImpl(weak_ptr<ImageFileImpl> destImageFile, double scaledValue, double scaledMinimum, double scaledMaximum, double scale, double offset)
 : NodeImpl(destImageFile),
-  value_((int64_t)floor((scaledValue - offset)/scale +.5)),
-  minimum_((int64_t)floor((scaledMinimum - offset)/scale +.5)),
-  maximum_((int64_t)floor((scaledMaximum - offset)/scale +.5)),
+  value_(static_cast<int64_t>(floor((scaledValue - offset)/scale +.5))),
+  minimum_(static_cast<int64_t>(floor((scaledMinimum - offset)/scale +.5))),
+  maximum_(static_cast<int64_t>(floor((scaledMaximum - offset)/scale +.5))),
   scale_(scale),
   offset_(offset)
 {
@@ -2913,20 +2915,14 @@ void BlobNodeImpl::dump(int indent, ostream& os)
 ///================================================================
 ///================================================================
 
-#include <xercesc/sax/InputSource.hpp>
-#include <xercesc/util/BinInputStream.hpp>
-
-/// Make shorthand for Xerces namespace???
-XERCES_CPP_NAMESPACE_USE
-
 class E57FileInputStream : public BinInputStream
 {
 public :
                             E57FileInputStream(CheckedFile* cf, uint64_t logicalStart, uint64_t logicalLength);
-    virtual                 ~E57FileInputStream() {};
-    virtual XMLFilePos      curPos() const {return(logicalPosition_);};
+    virtual                 ~E57FileInputStream() {}
+    virtual XMLFilePos      curPos() const {return(logicalPosition_);}
     virtual XMLSize_t       readBytes(XMLByte* const toFill, const XMLSize_t maxToRead);
-    virtual const XMLCh*    getContentType() const {return(0);};
+    virtual const XMLCh*    getContentType() const {return(0);}
 
 private :
     ///  Unimplemented constructors and operators
@@ -2990,7 +2986,7 @@ XMLSize_t E57FileInputStream::readBytes(       XMLByte* const  toFill
 class E57FileInputSource : public InputSource {
 public :
     E57FileInputSource(CheckedFile* cf, uint64_t logicalStart, uint64_t logicalLength);
-    ~E57FileInputSource(){};
+    ~E57FileInputSource(){}
     BinInputStream* makeStream() const;
 
 private :
@@ -5196,7 +5192,7 @@ void CompressedVectorSectionHeader::swab()
 #ifdef E57_DEBUG
 void CompressedVectorSectionHeader::dump(int indent, std::ostream& os)
 {
-    os << space(indent) << "sectionId:            " << (unsigned)sectionId << endl;
+    os << space(indent) << "sectionId:            " << static_cast<unsigned>(sectionId) << endl;
     os << space(indent) << "sectionLogicalLength: " << sectionLogicalLength << endl;
     os << space(indent) << "dataPhysicalOffset:   " << dataPhysicalOffset << endl;
     os << space(indent) << "indexPhysicalOffset:  " << indexPhysicalOffset << endl;
@@ -5264,8 +5260,8 @@ void DataPacketHeader::swab()
 #ifdef E57_DEBUG
 void DataPacketHeader::dump(int indent, std::ostream& os)
 {
-    os << space(indent) << "packetType:                " << (unsigned)packetType << endl;
-    os << space(indent) << "packetFlags:               " << (unsigned)packetFlags << endl;
+    os << space(indent) << "packetType:                " << static_cast<unsigned>(packetType) << endl;
+    os << space(indent) << "packetFlags:               " << static_cast<unsigned>(packetFlags) << endl;
     os << space(indent) << "packetLogicalLengthMinus1: " << packetLogicalLengthMinus1 << endl;
     os << space(indent) << "bytestreamCount:           " << bytestreamCount << endl;
 }
@@ -5575,8 +5571,8 @@ IndexPacket::swab(bool toLittleEndian)
 #ifdef E57_DEBUG
 void IndexPacket::dump(int indent, std::ostream& os)
 {
-    os << space(indent) << "packetType:                " << (unsigned)packetType << endl;
-    os << space(indent) << "packetFlags:               " << (unsigned)packetFlags << endl;
+    os << space(indent) << "packetType:                " << static_cast<unsigned>(packetType) << endl;
+    os << space(indent) << "packetFlags:               " << static_cast<unsigned>(packetFlags) << endl;
     os << space(indent) << "packetLogicalLengthMinus1: " << packetLogicalLengthMinus1 << endl;
     os << space(indent) << "entryCount:                " << entryCount << endl;
     os << space(indent) << "indexLevel:                " << indexLevel << endl;
@@ -5638,7 +5634,7 @@ void EmptyPacketHeader::swab()
 #ifdef E57_DEBUG
 void EmptyPacketHeader::dump(int indent, std::ostream& os)
 {
-    os << space(indent) << "packetType:                " << (unsigned)packetType << endl;
+    os << space(indent) << "packetType:                " << static_cast<unsigned>(packetType) << endl;
     os << space(indent) << "packetLogicalLengthMinus1: " << packetLogicalLengthMinus1 << endl;
 }
 #endif
@@ -5652,9 +5648,8 @@ struct SortByBytestreamNumber {
 };
 
 CompressedVectorWriterImpl::CompressedVectorWriterImpl(shared_ptr<CompressedVectorNodeImpl> ni, vector<SourceDestBuffer>& sbufs)
-: isOpen_(false),  // set to true when succeed below
-  cVector_(ni),
-  seekIndex_()      /// Init seek index for random access to beginning of chunks
+: cVector_(ni),
+  isOpen_(false)  // set to true when succeed below
 {
     //???  check if cvector already been written (can't write twice)
 
@@ -5916,9 +5911,10 @@ void CompressedVectorWriterImpl::write(const size_t requestedRecordCount)
         float totalBitsPerRecord = 0;  // an estimate of future performance
         for (unsigned i=0; i < bytestreams_.size(); i++)
             totalBitsPerRecord += bytestreams_.at(i)->bitsPerRecord();
-        float totalBytesPerRecord = max(totalBitsPerRecord/8, 0.1F); //??? trust
 
 #ifdef E57_MAX_VERBOSE
+        float totalBytesPerRecord = max(totalBitsPerRecord/8, 0.1F); //??? trust
+
         cout << "  totalBytesPerRecord=" << totalBytesPerRecord << endl; //???
 #endif
 
@@ -5939,7 +5935,7 @@ void CompressedVectorWriterImpl::write(const size_t requestedRecordCount)
                 //!!! For now, process up to 50 records at a time
                 uint64_t recordCount = endRecordIndex - bytestreams_.at(i)->currentRecordIndex();
                 recordCount = (recordCount<50ULL)?recordCount:50ULL; //min(recordCount, 50ULL);
-                bytestreams_.at(i)->processRecords((unsigned)recordCount);
+                bytestreams_.at(i)->processRecords(static_cast<unsigned>(recordCount));
 #endif
             }
         }
@@ -6196,7 +6192,7 @@ void CompressedVectorWriterImpl::dump(int indent, std::ostream& os)
     os << space(indent) << "dataPacket:" << endl;
     uint8_t* p = reinterpret_cast<uint8_t*>(&dataPacket_);
     for (unsigned i = 0; i < 40; ++i) {
-        os << space(indent+4) << "dataPacket[" << i << "]: " << (unsigned)p[i] << endl;
+        os << space(indent+4) << "dataPacket[" << i << "]: " << static_cast<unsigned>(p[i]) << endl;
     }
     os << space(indent+4) << "more unprinted..." << endl;
 
@@ -8029,11 +8025,6 @@ DecodeChannel::DecodeChannel(SourceDestBuffer dbuf_arg, shared_ptr<Decoder> deco
     currentBytestreamBufferLength = 0;
     inputFinished = 0;
 }
-
-DecodeChannel::~DecodeChannel()
-{
-}
-
 
 bool DecodeChannel::isOutputBlocked()
 {

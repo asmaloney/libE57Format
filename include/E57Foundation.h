@@ -30,14 +30,6 @@
 
 //! @file  E57Foundation.h header file for the E57 Foundation API
 
-// Define the following symbol to enable heap corruption and memory leakage debugging:
-//#define E57_DEBUG_MEMORY 1
-#if E57_DEBUG_MEMORY
-#  define _CRTDBG_MAP_ALLOC
-#  include <stdlib.h>
-#  include <crtdbg.h>
-#endif
-
 #include <vector>
 #include <string>
 #include <iostream>

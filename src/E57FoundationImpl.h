@@ -25,11 +25,6 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
-//////////////////////////////////////////////////////////////////////////
-//
-//  V106    Dec 1, 2010     Stan Coleby SC  scoleby@intelisum.com
-//                              Added pageSize to E57FileHeader
-//                              Changed Version to 1.0
 
 #ifndef E57FOUNDATIONIMPL_H_INCLUDED
 #define E57FOUNDATIONIMPL_H_INCLUDED
@@ -138,8 +133,8 @@ class E57XmlParser;
 class Encoder;
 
 /// Version numbers of ASTM standard that this library supports
-const uint32_t E57_FORMAT_MAJOR = 1;            //Changed from 0 to 1 by SC
-const uint32_t E57_FORMAT_MINOR = 0;            //Changed from 6 to 0 by SC
+const uint32_t E57_FORMAT_MAJOR = 1;
+const uint32_t E57_FORMAT_MINOR = 0;
 
 /// REVISION_ID should be passed from compiler command line
 
@@ -150,13 +145,13 @@ const uint32_t E57_FORMAT_MINOR = 0;            //Changed from 6 to 0 by SC
 const char E57_LIBRARY_ID[] = REVISION_ID;
 
 /// Section types:
-#define E57_BLOB_SECTION                0   //changed from 1 by SC to fit the standard
-#define E57_COMPRESSED_VECTOR_SECTION   1   //changed from 2 by SC to fit the standard
+#define E57_BLOB_SECTION                0
+#define E57_COMPRESSED_VECTOR_SECTION   1
 
 /// Packet types (in a compressed vector section)
 #define E57_DATA_PACKET                 1
-#define E57_INDEX_PACKET                0   //changed from 2 by SC to fit the standard
-#define E57_EMPTY_PACKET                2   //changed from 3 by SC to fit the standard
+#define E57_INDEX_PACKET                0
+#define E57_EMPTY_PACKET                2
 
 #ifdef E57_BIGENDIAN
 #  define  SWAB(p)  swab(p)
@@ -180,7 +175,6 @@ public:
                     ~CheckedFile();
 
     void            read(char* buf, size_t nRead, size_t bufSize = 0);
-    //???void       write(char* buf, size_t nWrite, size_t bufSize = 0);
     void            write(const char* buf, size_t nWrite);
     CheckedFile&    operator<<(const ustring& s);
     CheckedFile&    operator<<(int64_t i);
@@ -279,12 +273,11 @@ public:
     virtual void            dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 
-protected: //=================
-    //??? owned by image file?
+protected:
     friend class StructureNodeImpl;
     friend class CompressedVectorWriterImpl;
-    friend class Decoder; //???
-    friend class Encoder; //???
+    friend class Decoder;
+    friend class Encoder;
 
                                          NodeImpl(std::weak_ptr<ImageFileImpl> destImageFile);
     NodeImpl&                            operator=(NodeImpl& n);
@@ -300,7 +293,7 @@ protected: //=================
 class StructureNodeImpl : public NodeImpl {
 public:
                         StructureNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile);
-    virtual             ~StructureNodeImpl() {};
+    virtual             ~StructureNodeImpl() {}
 
     virtual NodeType    type();
     virtual bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni);
@@ -323,7 +316,7 @@ public:
     void                dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 
-protected: //=================
+protected:
     friend class CompressedVectorReaderImpl;
     virtual std::shared_ptr<NodeImpl> lookup(const ustring& pathName);
 
@@ -339,11 +332,7 @@ public:
     virtual bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni);
     bool                allowHeteroChildren();
 
-    //???virtual Node   get(int64_t index);
-    //???virtual Node   get(const ustring& pathName);
     virtual void        set(int64_t index, std::shared_ptr<NodeImpl> ni);
-    //???virtual void   set(const ustring& pathName, std::shared_ptr<NodeImpl> ni);
-    //???virtual void   append(std::shared_ptr<NodeImpl> ni);
 
     virtual void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=NULL);
 
@@ -351,7 +340,7 @@ public:
     void                dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 
-protected: //=================
+protected:
     bool allowHeteroChildren_;
 };
 
@@ -390,7 +379,6 @@ public:
     unsigned                nextIndex()     {return(nextIndex_);}
     void                    rewind()        {nextIndex_= 0;}
 
-    /// Get/set values:
     int64_t         getNextInt64();
     int64_t         getNextInt64(double scale, double offset);
     float           getNextFloat();
@@ -408,15 +396,15 @@ public:
     void            dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 
-protected: //=================
-friend class BitpackIntegerEncoder<uint8_t>;   //??? needed?
-friend class BitpackIntegerEncoder<uint16_t>;  //??? needed?
-friend class BitpackIntegerEncoder<uint32_t>;  //??? needed?
-friend class BitpackIntegerEncoder<uint64_t>;  //??? needed?
-friend class BitpackIntegerDecoder<uint8_t> ;  //??? needed?
-friend class BitpackIntegerDecoder<uint16_t>;  //??? needed?
-friend class BitpackIntegerDecoder<uint32_t>;  //??? needed?
-friend class BitpackIntegerDecoder<uint64_t>;  //??? needed?
+protected:
+    friend class BitpackIntegerEncoder<uint8_t>;   //??? needed?
+    friend class BitpackIntegerEncoder<uint16_t>;  //??? needed?
+    friend class BitpackIntegerEncoder<uint32_t>;  //??? needed?
+    friend class BitpackIntegerEncoder<uint64_t>;  //??? needed?
+    friend class BitpackIntegerDecoder<uint8_t> ;  //??? needed?
+    friend class BitpackIntegerDecoder<uint16_t>;  //??? needed?
+    friend class BitpackIntegerDecoder<uint32_t>;  //??? needed?
+    friend class BitpackIntegerDecoder<uint64_t>;  //??? needed?
 
     void                    checkState_();  /// Common routine to check that constructor arguments were ok, throws if not
 
@@ -470,13 +458,12 @@ public:
     void                dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 
-protected: //=================
+protected:
     friend class CompressedVectorReaderImpl; //???
 
     std::shared_ptr<NodeImpl> prototype_;
     std::shared_ptr<VectorNodeImpl> codecs_;
 
-//???    bool                            writeCompleted_;
     int64_t                     recordCount_;
     uint64_t                    binarySectionLogicalStart_;
 };
@@ -502,7 +489,7 @@ public:
     void                dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 
-protected: //=================
+protected:
     int64_t             value_;
     int64_t             minimum_;
     int64_t             maximum_;
@@ -514,7 +501,7 @@ public:
                             int64_t value = 0, int64_t minimum = 0, int64_t maximum = 0,
                             double scale = 1.0, double offset = 0.0);
 
-                        ScaledIntegerNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile,       //Added by SC
+                        ScaledIntegerNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile,
                             double scaledValue = 0., double scaledMinimum = 0., double scaledMaximum = 0.,
                             double scale = 1.0, double offset = 0.0);
 
@@ -527,9 +514,9 @@ public:
     int64_t             rawValue();
     double              scaledValue();
     int64_t             minimum();
-    double              scaledMinimum();    //Added by SC
+    double              scaledMinimum();
     int64_t             maximum();
-    double              scaledMaximum();    //Added by SC
+    double              scaledMaximum();
     double              scale();
     double              offset();
 
@@ -542,7 +529,7 @@ public:
     void                dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 
-protected: //=================
+protected:
     int64_t             value_;
     int64_t             minimum_;
     int64_t             maximum_;
@@ -574,7 +561,7 @@ public:
     void                dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 
-protected: //=================
+protected:
     double              value_;
     FloatPrecision      precision_;
     double              minimum_;
@@ -600,7 +587,7 @@ public:
     void                dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 
-protected: //=================
+protected:
     ustring             value_;
 };
 
@@ -626,7 +613,7 @@ public:
     void                dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 
-protected: //=================
+protected:
     uint64_t            blobLogicalLength_;
     uint64_t            binarySectionLogicalStart_;
     uint64_t            binarySectionLogicalLength_;
@@ -640,7 +627,7 @@ struct E57FileHeader {
     uint64_t    filePhysicalLength;
     uint64_t    xmlPhysicalOffset;
     uint64_t    xmlLogicalLength;
-    uint64_t    pageSize;               //Added by SC
+    uint64_t    pageSize;
 //  char        e57LibraryVersion[8];   //Not in V1.0 Standard
 
 #ifdef E57_BIGENDIAN
@@ -701,7 +688,7 @@ public:
     void            dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 
-protected: //=================
+protected:
     friend class E57XmlParser;
     friend class BlobNodeImpl;
     friend class CompressedVectorWriterImpl;
@@ -876,7 +863,7 @@ public:
     void        dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 
-protected: //=================
+protected:
     void        checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName);
     void        checkReaderOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName);
     void        setBuffers(std::vector<SourceDestBuffer>& dbufs); //???needed?
@@ -914,7 +901,7 @@ public:
     void        dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 
-protected: //=================
+protected:
     void        checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName);
     void        checkWriterOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName);
     void        setBuffers(std::vector<SourceDestBuffer>& sbufs); //???needed?
@@ -973,7 +960,7 @@ public:
 #ifdef E57_DEBUG
     virtual void        dump(int indent = 0, std::ostream& os = std::cout);
 #endif
-protected: //================
+protected:
                         Encoder(unsigned bytestreamNumber);
 
     unsigned            bytestreamNumber_;
@@ -1000,7 +987,7 @@ public:
 #ifdef E57_DEBUG
     virtual void        dump(int indent = 0, std::ostream& os = std::cout);
 #endif
-protected: //================
+protected:
                         BitpackEncoder(unsigned bytestreamNumber, SourceDestBuffer& sbuf, unsigned outputMaxSize, unsigned alignmentSize);
 
     void                outBufferShiftDown();
@@ -1028,7 +1015,7 @@ public:
 #ifdef E57_DEBUG
     virtual void        dump(int indent = 0, std::ostream& os = std::cout);
 #endif
-protected: //================
+protected:
     FloatPrecision      precision_;
 };
 
@@ -1045,7 +1032,7 @@ public:
 #ifdef E57_DEBUG
     virtual void        dump(int indent = 0, std::ostream& os = std::cout);
 #endif
-protected: //================
+protected:
     uint64_t    totalBytesProcessed_;
     bool        isStringActive_;
     bool        prefixComplete_;
@@ -1068,7 +1055,7 @@ public:
 #ifdef E57_DEBUG
     virtual void        dump(int indent = 0, std::ostream& os = std::cout);
 #endif
-protected: //================
+protected:
     bool            isScaledInteger_;
     int64_t         minimum_;
     int64_t         maximum_;
@@ -1102,7 +1089,7 @@ public:
 #ifdef E57_DEBUG
     virtual void        dump(int indent = 0, std::ostream& os = std::cout);
 #endif
-protected: //================
+protected:
     std::shared_ptr<SourceDestBufferImpl>  sourceBuffer_;
     uint64_t            currentRecordIndex_;
     int64_t             minimum_;
@@ -1126,7 +1113,7 @@ public:
 #ifdef E57_DEBUG
     virtual void        dump(int indent = 0, std::ostream& os = std::cout) = 0;
 #endif
-protected: //================
+protected:
                         Decoder(unsigned bytestreamNumber);
 
     unsigned            bytestreamNumber_;
@@ -1152,7 +1139,7 @@ public:
 #ifdef E57_DEBUG
     virtual void        dump(int indent = 0, std::ostream& os = std::cout);
 #endif
-protected: //================
+protected:
                         BitpackDecoder(unsigned bytestreamNumber, SourceDestBuffer& dbuf, unsigned alignmentSize, uint64_t maxRecordCount);
 
     void                inBufferShiftDown();
@@ -1181,7 +1168,7 @@ public:
 #ifdef E57_DEBUG
     virtual void        dump(int indent = 0, std::ostream& os = std::cout);
 #endif
-protected: //================
+protected:
     FloatPrecision      precision_;
 };
 
@@ -1196,7 +1183,7 @@ public:
 #ifdef E57_DEBUG
     virtual void        dump(int indent = 0, std::ostream& os = std::cout);
 #endif
-protected: //================
+protected:
     bool        readingPrefix_;
     int         prefixLength_;
     uint8_t     prefixBytes_[8];
@@ -1219,7 +1206,7 @@ public:
 #ifdef E57_DEBUG
     virtual void        dump(int indent = 0, std::ostream& os = std::cout);
 #endif
-protected: //================
+protected:
     bool        isScaledInteger_;
     int64_t     minimum_;
     int64_t     maximum_;
@@ -1242,7 +1229,7 @@ public:
 #ifdef E57_DEBUG
     virtual void        dump(int indent = 0, std::ostream& os = std::cout);
 #endif
-protected: //================
+protected:
     uint64_t            currentRecordIndex_;
     uint64_t            maxRecordCount_;
 
@@ -1260,12 +1247,12 @@ class PacketLock {
 public:
                     ~PacketLock();
 
-private: //================
+private:
     /// Can't be copied or assigned
                     PacketLock(const PacketLock& plock);
     PacketLock&     operator=(const PacketLock& plock);
 
-protected: //================
+protected:
     friend class PacketReadCache;
     /// Only PacketReadCache can construct
                      PacketLock(PacketReadCache* cache, unsigned cacheIndex);
@@ -1287,7 +1274,7 @@ public:
 #ifdef E57_DEBUG
     void                dump(int indent = 0, std::ostream& os = std::cout);
 #endif
-protected: //================
+protected:
     /// Only PacketLock can unlock the cache
     friend class PacketLock;
     void                unlock(unsigned cacheIndex);
@@ -1414,13 +1401,13 @@ public:
     void        dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 
-private: //================
+private:
     /// No default ctor, copy, assign
                     SeekIndex();
                     SeekIndex(const SeekIndex& si);
     SeekIndex&      operator=(const SeekIndex& si);
 
-protected: //================
+protected:
     CheckedFile*    cf_;
     bool            forWriting_;
     bool            isOpen_;
@@ -1673,7 +1660,7 @@ public:
 #ifdef E57_DEBUG
     void        dump(int indent = 0, std::ostream& os = std::cout);
 #endif
-protected: //================
+protected:
     uint64_t    topLevelPhysicalOffset_;
     unsigned    indexDepth_;
 };
@@ -1735,7 +1722,7 @@ public:
 #ifdef E57_DEBUG
     void        dump(int indent = 0, std::ostream& os = std::cout);
 #endif
-protected: //================
+protected:
     uint64_t                sectionPhysicalStart_;
     vector<SeekLevelInfo>   levels_;
 };
@@ -1748,7 +1735,7 @@ public:
 #ifdef E57_DEBUG
     void        dump(int indent = 0, std::ostream& os = std::cout);
 #endif
-protected: //================
+protected:
     uint64_t    topLevelPhysicalOffset_;
     unsigned    indexDepth_;
 };

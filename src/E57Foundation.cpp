@@ -27,7 +27,7 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-/*================*/ /*!
+/*!
 @mainpage
 
 @section main_Introduction Introduction
@@ -158,7 +158,7 @@ Binary distributions may be made available for some compiler/OSes.
 Help is available by email through E57 SourceForge repository.
 To get help during the beta phase of the software release you have to agree to be a beta tester (you have to describe what you are doing and hopefully to give a review of your experience).
 To get more information about the beta test, contact Roland Schwarz by email at roland_schwarz@users.sourceforge.net.
-*/ /*================*/ /*!
+*/ /*!
 @page CopyRightPage Copyright
 
 Copyright 2010 Kevin Ackley (kackley@gwi.net)
@@ -193,8 +193,7 @@ DEALINGS IN THE SOFTWARE.
 using namespace e57;
 using namespace std;
 
-//=====================================================================================
-/*================*/ /*!
+/*!
 @file HelloWorld.cpp
 Also see listing at end of this page for source without line numbers (to cut&paste from).
 @includelineno HelloWorld.cpp
@@ -306,7 +305,7 @@ The XML section of the @c temp._e57 E57 file produced by this example program is
 Here is the source code without line numbers to cut&paste from:
 @include HelloWorld.cpp
 
-*/ /*================*/ /*!
+*/ /*!
 @file Cancel.cpp
 Also see listing at end of this page for source without line numbers (to cut&paste from).
 @includelineno Cancel.cpp
@@ -330,7 +329,7 @@ There is no XML section of the @c temp._e57 E57 file, because it was deleted by 
 Here is the source code without line numbers to cut&paste from:
 @include Cancel.cpp
 
-*/ /*================*/ /*!
+*/ /*!
 @file Extensions.cpp
 Also see listing at end of this page for source without line numbers (to cut&paste from).
 @includelineno Extensions.cpp
@@ -358,7 +357,7 @@ The XML section of the @c temp._e57 E57 file produced by this example program is
 Here is the source code without line numbers to cut&paste from:
 @include Extensions.cpp
 
-*/ /*================*/ /*!
+*/ /*!
 @file NameParse.cpp
 Also see listing at end of this page for source without line numbers (to cut&paste from).
 @includelineno NameParse.cpp
@@ -383,7 +382,7 @@ The XML section of the @c temp._e57 E57 file produced by this example program is
 Here is the source code without line numbers to cut&paste from:
 @include NameParse.cpp
 
-*/ /*================*/ /*!
+*/ /*!
 @file ImageFileDump.cpp
 Also see listing at end of this page for source without line numbers (to cut&paste from).
 @includelineno ImageFileDump.cpp
@@ -407,7 +406,7 @@ The XML section of the @c temp._e57 E57 file produced by this example program is
 Here is the source code without line numbers to cut&paste from:
 @include ImageFileDump.cpp
 
-*/ /*================*/ /*!
+*/ /*!
 @file NodeFunctions.cpp
 Also see listing at end of this page for source without line numbers (to cut&paste from).
 @includelineno NodeFunctions.cpp
@@ -452,7 +451,7 @@ The XML section of the @c temp._e57 E57 file produced by this example program is
 Here is the source code without line numbers to cut&paste from:
 @include NodeFunctions.cpp
 
-*/ /*================*/ /*!
+*/ /*!
 @file StructureCreate.cpp
 Also see listing at end of this page for source without line numbers (to cut&paste from).
 @includelineno StructureCreate.cpp
@@ -485,7 +484,7 @@ The XML section of the @c temp._e57 E57 file produced by this example program is
 Here is the source code without line numbers to cut&paste from:
 @include StructureCreate.cpp
 
-*/ /*================*/ /*!
+*/ /*!
 @file VectorCreate.cpp
 Also see listing at end of this page for source without line numbers (to cut&paste from).
 @includelineno VectorCreate.cpp
@@ -512,7 +511,7 @@ The XML section of the @c temp._e57 E57 file produced by this example program is
 Here is the source code without line numbers to cut&paste from:
 @include VectorCreate.cpp
 
-*/ /*================*/ /*!
+*/ /*!
 @file VectorFunctions.cpp
 Also see listing at end of this page for source without line numbers (to cut&paste from).
 @includelineno VectorFunctions.cpp
@@ -535,7 +534,7 @@ The XML section of the @c temp._e57 E57 file produced by this example program is
 Here is the source code without line numbers to cut&paste from:
 @include VectorFunctions.cpp
 
-*/ /*================*/ /*!
+*/ /*!
 @file IntegerCreate.cpp
 Also see listing at end of this page for source without line numbers (to cut&paste from).
 @includelineno IntegerCreate.cpp
@@ -582,7 +581,7 @@ The XML section of the @c temp._e57 E57 file produced by this example program is
 Here is the source code without line numbers to cut&paste from:
 @include IntegerCreate.cpp
 
-*/ /*================*/ /*!
+*/ /*!
 @file ScaledIntegerCreate.cpp
 Also see listing at end of this page for source without line numbers (to cut&paste from).
 @includelineno ScaledIntegerCreate.cpp
@@ -609,7 +608,7 @@ The XML section of the @c temp._e57 E57 file produced by this example program is
 Here is the source code without line numbers to cut&paste from:
 @include ScaledIntegerCreate.cpp
 
-*/ /*================*/ /*!
+*/ /*!
 @file FloatCreate.cpp
 Also see listing at end of this page for source without line numbers (to cut&paste from).
 @includelineno FloatCreate.cpp
@@ -642,7 +641,7 @@ The XML section of the @c temp._e57 E57 file produced by this example program is
 Here is the source code without line numbers to cut&paste from:
 @include FloatCreate.cpp
 
-*/ /*================*/ /*!
+*/ /*!
 @file StringCreate.cpp
 Also see listing at end of this page for source without line numbers (to cut&paste from).
 @includelineno StringCreate.cpp
@@ -669,7 +668,7 @@ The XML section of the @c temp._e57 E57 file produced by this example program is
 Here is the source code without line numbers to cut&paste from:
 @include StringCreate.cpp
 
-*/ /*================*/ /*!
+*/ /*!
 @file BlobCreate.cpp
 Also see listing at end of this page for source without line numbers (to cut&paste from).
 @includelineno BlobCreate.cpp
@@ -698,7 +697,7 @@ The XML section of the @c temp._e57 E57 file produced by this example program is
 Here is the source code without line numbers to cut&paste from:
 @include BlobCreate.cpp
 
-*/ /*================*/ /*!
+*/ /*!
 @file CompressedVectorCreate.cpp
 Also see listing at end of this page for source without line numbers (to cut&paste from).
 @includelineno CompressedVectorCreate.cpp
@@ -800,7 +799,7 @@ The XML section of the @c temp._e57 E57 file produced by this example program is
 Here is the source code without line numbers to cut&paste from:
 @include CompressedVectorCreate.cpp
 
-*/ /*================*/ /*!
+*/ /*!
 @file SourceDestBufferFunctions.cpp
 Also see listing at end of this page for source without line numbers (to cut&paste from).
 @includelineno SourceDestBufferFunctions.cpp
@@ -828,7 +827,7 @@ The XML section of the @c temp._e57 E57 file produced by this example program is
 Here is the source code without line numbers to cut&paste from:
 @include SourceDestBufferFunctions.cpp
 
-*/ /*================*/ /*!
+*/ /*!
 @file SourceDestBufferNumericCreate.cpp
 Also see listing at end of this page for source without line numbers (to cut&paste from).
 @includelineno SourceDestBufferNumericCreate.cpp
@@ -880,7 +879,7 @@ The XML section of the @c temp._e57 E57 file produced by this example program is
 Here is the source code without line numbers to cut&paste from:
 @include SourceDestBufferNumericCreate.cpp
 
-*/ /*================*/ /*!
+*/ /*!
 @file SourceDestBufferStringCreate.cpp
 Also see listing at end of this page for source without line numbers (to cut&paste from).
 @includelineno SourceDestBufferStringCreate.cpp
@@ -920,7 +919,7 @@ The XML section of the @c temp._e57 E57 file produced by this example program is
 Here is the source code without line numbers to cut&paste from:
 @include SourceDestBufferStringCreate.cpp
 
-*/ /*================*/ /*!
+*/ /*!
 @file E57ExceptionFunctions.cpp
 Also see listing at end of this page for source without line numbers (to cut&paste from).
 @includelineno E57ExceptionFunctions.cpp
@@ -952,7 +951,7 @@ The XML section of the @c temp._e57 E57 file produced by this example program is
 Here is the source code without line numbers to cut&paste from:
 @include E57ExceptionFunctions.cpp
 
-*/ /*================*/ /*!
+*/ /*!
 @file RawXML.cpp
 Also see listing at end of this page for source without line numbers (to cut&paste from).
 @includelineno RawXML.cpp
@@ -978,7 +977,7 @@ The XML section of the @c temp._e57 E57 file produced by this example program is
 Here is the source code without line numbers to cut&paste from:
 @include RawXML.cpp
 
-*/ /*================*/ /*!
+*/ /*!
 @file Versions.cpp
 Also see listing at end of this page for source without line numbers (to cut&paste from).
 @includelineno Versions.cpp
@@ -1001,7 +1000,7 @@ The XML section of the @c temp._e57 E57 file produced by this example program is
 Here is the source code without line numbers to cut&paste from:
 @include Versions.cpp
 
-*/ /*================*/ /*!
+*/ /*!
 @file CheckInvariant.cpp
 Also see listing at end of this page for source without line numbers (to cut&paste from).
 @includelineno CheckInvariant.cpp
@@ -1024,11 +1023,10 @@ The XML section of the @c temp._e57 E57 file produced by this example program is
 
 Here is the source code without line numbers to cut&paste from:
 @include CheckInvariant.cpp
-*/ /*================*/
+*/
 
 
-//=====================================================================================
-/*================*/ /*!
+/*!
 @brief Check whether Node class invariant is true
 @param   [in] doRecurse     If true, also check invariants of all children or sub-objects recursively.
 @param   [in] doDowncast    If true, also check any invariants of the actual derived type in addition to the generic node invariants.
@@ -1042,8 +1040,7 @@ Checking the invariant recursively may be expensive if the tree is large, so sho
 @post    No visible state is modified.
 @throw   ::E57_ERROR_INVARIANCE_VIOLATION or any other E57 ErrorCode
 @see     CheckInvariant.cpp example, Class Invariant section in Node, IntegerNode::checkInvariant, ScaledIntegerNode::checkInvariant, FloatNode::checkInvariant, BlobNode::checkInvariant, StructureNode::checkInvariant, VectorNode::checkInvariant, CompressedVectorNode::checkInvariant
-*/ /*================*/
-// begin Node::checkInvariant
+*/
 void Node::checkInvariant(bool doRecurse, bool doDowncast) {
     ImageFile imf = destImageFile();
 
@@ -1151,9 +1148,9 @@ void Node::checkInvariant(bool doRecurse, bool doDowncast) {
             default: break;
         }
     }
-} // end Node::checkInvariant
+}
 
-/*================*/ /*!
+/*!
 @class Node
 @brief   Generic handle to any of the 8 types of E57 element objects.
 @details
@@ -1209,11 +1206,10 @@ The following C++ code checks externally visible state for consistency and throw
 @until end Node::checkInvariant
 
 @see     StructureNode, VectorNode, CompressedVectorNode, IntegerNode, ScaledIntegerNode, FloatNode, StringNode, BlobNode
-*/ /*================*/
+*/
 
 //! @brief Check whether StructureNode class invariant is true
 //! @copydetails IntegerNode::checkInvariant()
-// begin StructureNode::checkInvariant
 void StructureNode::checkInvariant(bool doRecurse, bool doUpcast) {
     // If destImageFile not open, can't test invariant (almost every call would throw)
     if (!destImageFile().isOpen())
@@ -1244,12 +1240,10 @@ void StructureNode::checkInvariant(bool doRecurse, bool doUpcast) {
         if (n != child)
            throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
     }
-} // end StructureNode::checkInvariant
-
+}
 
 //! @brief Check whether VectorNode class invariant is true
 //! @copydetails IntegerNode::checkInvariant()
-// begin VectorNode::checkInvariant
 void VectorNode::checkInvariant(bool doRecurse, bool doUpcast) {
     // If destImageFile not open, can't test invariant (almost every call would throw)
     if (!destImageFile().isOpen())
@@ -1280,11 +1274,10 @@ void VectorNode::checkInvariant(bool doRecurse, bool doUpcast) {
         if (n != child)
            throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
     }
-} // end VectorNode::checkInvariant
+}
 
 //! @brief Check whether CompressedVectorNode class invariant is true
 //! @copydetails IntegerNode::checkInvariant()
-// begin CompressedVectorNode::checkInvariant
 void CompressedVectorNode::checkInvariant(bool doRecurse, bool doUpcast) {
     // If destImageFile not open, can't test invariant (almost every call would throw)
     if (!destImageFile().isOpen())
@@ -1323,9 +1316,8 @@ void CompressedVectorNode::checkInvariant(bool doRecurse, bool doUpcast) {
     // codecs dest ImageFile not same as this dest ImageFile
     if (codecs().destImageFile() != destImageFile())
        throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
-} // end CompressedVectorNode::checkInvariant
-
-/*================*/ /*!
+}
+/*!
 @brief Check whether IntegerNode class invariant is true
 @param   [in] doRecurse   If true, also check invariants of all children or sub-objects recursively.
 @param   [in] doUpcast    If true, also check invariants of the generic Node class.
@@ -1338,8 +1330,7 @@ Checking the invariant recursively may be expensive if the tree is large, so sho
 @post    No visible state is modified.
 @throw   ::E57_ERROR_INVARIANCE_VIOLATION or any other E57 ErrorCode
 @see     CheckInvariant.cpp example
-*/ /*================*/
-// begin IntegerNode::checkInvariant
+*/
 void IntegerNode::checkInvariant(bool /*doRecurse*/, bool doUpcast) {
     // If destImageFile not open, can't test invariant (almost every call would throw)
     if (!destImageFile().isOpen())
@@ -1351,11 +1342,10 @@ void IntegerNode::checkInvariant(bool /*doRecurse*/, bool doUpcast) {
 
     if (value() < minimum() || value() > maximum())
        throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
-} // end IntegerNode::checkInvariant
+}
 
 //! @brief Check whether ScaledIntegerNode class invariant is true
 //! @copydetails IntegerNode::checkInvariant()
-// begin ScaledIntegerNode::checkInvariant
 void ScaledIntegerNode::checkInvariant(bool /*doRecurse*/, bool doUpcast) {
     // If destImageFile not open, can't test invariant (almost every call would throw)
     if (!destImageFile().isOpen())
@@ -1376,11 +1366,9 @@ void ScaledIntegerNode::checkInvariant(bool /*doRecurse*/, bool doUpcast) {
     // If scaled value is not calculated correctly
     if (scaledValue() != rawValue() * scale() + offset())
        throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
-} // end ScaledIntegerNode::checkInvariant
-
+}
 //! @brief Check whether FloatNode class invariant is true
 //! @copydetails IntegerNode::checkInvariant()
-// begin FloatNode::checkInvariant
 void FloatNode::checkInvariant(bool /*doRecurse*/, bool doUpcast) {
     // If destImageFile not open, can't test invariant (almost every call would throw)
     if (!destImageFile().isOpen())
@@ -1398,11 +1386,9 @@ void FloatNode::checkInvariant(bool /*doRecurse*/, bool doUpcast) {
     // If value is out of bounds
     if (value() < minimum() || value() > maximum())
        throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
-} // end FloatNode::checkInvariant
-
+}
 //! @brief Check whether StringNode class invariant is true
 //! @copydetails IntegerNode::checkInvariant()
-// begin StringNode::checkInvariant
 void StringNode::checkInvariant(bool /*doRecurse*/, bool doUpcast) {
     // If destImageFile not open, can't test invariant (almost every call would throw)
     if (!destImageFile().isOpen())
@@ -1412,11 +1398,9 @@ void StringNode::checkInvariant(bool /*doRecurse*/, bool doUpcast) {
     if (doUpcast)
         static_cast<Node>(*this).checkInvariant(false, false);
     /// ? check legal UTF-8
-} // end StringNode::checkInvariant
-
+}
 //! @brief Check whether BlobNode class invariant is true
 //! @copydetails IntegerNode::checkInvariant()
-// begin BlobNode::checkInvariant
 void BlobNode::checkInvariant(bool /*doRecurse*/, bool doUpcast) {
     // If destImageFile not open, can't test invariant (almost every call would throw)
     if (!destImageFile().isOpen())
@@ -1428,9 +1412,8 @@ void BlobNode::checkInvariant(bool /*doRecurse*/, bool doUpcast) {
 
     if (byteCount() < 0)
        throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
-} // end BlobNode::checkInvariant
-
-/*================*/ /*!
+}
+/*!
 @brief Check whether CompressedVectorReader class invariant is true
 @param   [in] doRecurse   If true, also check invariants of all children or sub-objects recursively.
 @details
@@ -1439,8 +1422,7 @@ Other internal invariants that are implementation-dependent may also be checked.
 If any invariant clause is violated, an E57Exception with errorCode of E57_ERROR_INVARIANCE_VIOLATION is thrown.
 @post    No visible state is modified.
 @see     CheckInvariant.cpp example
-*/ /*================*/
-// begin CompressedVectorReader::checkInvariant
+*/
 void CompressedVectorReader::checkInvariant(bool /*doRecurse*/) {
     // If this CompressedVectorReader is not open, can't test invariant (almost every call would throw)
     if (!isOpen())
@@ -1464,11 +1446,10 @@ void CompressedVectorReader::checkInvariant(bool /*doRecurse*/) {
     // Dest ImageFile can't have any writers
     if (imf.writerCount() != 0)
        throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
-} // end CompressedVectorReader::checkInvariant
+}
 
 //! @brief Check whether CompressedVectorWriter class invariant is true
 //! @copydetails CompressedVectorReader::checkInvariant
-// begin CompressedVectorWriter::checkInvariant
 void CompressedVectorWriter::checkInvariant(bool /*doRecurse*/) {
     // If this CompressedVectorWriter is not open, can't test invariant (almost every call would throw)
     if (!isOpen())
@@ -1496,9 +1477,9 @@ void CompressedVectorWriter::checkInvariant(bool /*doRecurse*/) {
     // Dest ImageFile can't have any readers
     if (imf.readerCount() != 0)
        throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
-} // end CompressedVectorWriter::checkInvariant
+}
 
-/*================*/ /*!
+/*!
 @brief Check whether ImageFile class invariant is true
 @param   [in] doRecurse   If true, also check invariants of all children or sub-objects recursively.
 @details
@@ -1510,8 +1491,7 @@ Checking the invariant recursively may be expensive if the tree is large, so sho
 @post    No visible state is modified.
 @throw   ::E57_ERROR_INVARIANCE_VIOLATION or any other E57 ErrorCode
 @see     CheckInvariant.cpp example, Node::checkInvariant
-*/ /*================*/
-// begin ImageFile::checkInvariant
+*/
 void ImageFile::checkInvariant(bool doRecurse) {
     // If this ImageFile is not open, can't test invariant (almost every call would throw)
     if (!isOpen())
@@ -1580,10 +1560,9 @@ void ImageFile::checkInvariant(bool doRecurse) {
     // If requested, check all objects "below" this one
     if (doRecurse)
         root().checkInvariant(doRecurse);
-} // end ImageFile::checkInvariant
+}
 
 //! @brief Check whether SourceDestBuffer class invariant is true
-// begin SourceDestBuffer::checkInvariant
 void SourceDestBuffer::checkInvariant(bool /*doRecurse*/) {
     // Stride must be >= a memory type dependent value
     size_t min_stride = 0;
@@ -1604,23 +1583,22 @@ void SourceDestBuffer::checkInvariant(bool /*doRecurse*/) {
     }
     if (stride() < min_stride)
         throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
-} // end SourceDestBuffer::checkInvariant
+}
 
-
-/*================*/ /*!
+/*!
 @brief   Return the NodeType of a generic Node.
 @details This function allows the actual node type to be interrogated before upcasting the handle to the actual node type (see Upcasting and Dowcasting section in Node).
 @return  The NodeType of a generic Node, which may be one of the following NodeType enumeration values:
 ::E57_STRUCTURE, ::E57_VECTOR, ::E57_COMPRESSED_VECTOR, ::E57_INTEGER, ::E57_SCALED_INTEGER, ::E57_FLOAT, ::E57_STRING, ::E57_BLOB.
 @post    No visible state is modified.
 @see     NodeFunctions.cpp example, NodeType, StructureCreate.cpp example, upcast/dowcast discussion in Node
-*/ /*================*/
+*/
 NodeType Node::type() const
 {
     return impl_->type();
 }
 
-/*================*/ /*!
+/*!
 @brief   Is this a root node.
 @details A root node has itself as a parent (it is not a child of any node).
 Newly constructed nodes (before they are inserted into an ImageFile tree) start out as root nodes.
@@ -1634,13 +1612,13 @@ The concept of @em attachement is slightly larger than that of the parent-child 
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     NodeFunctions.cpp example, Node::parent, Node::isAttached, CompressedVectorNode::CompressedVectorNode
-*/ /*================*/
+*/
 bool Node::isRoot() const
 {
     return impl_->isRoot();
 }
 
-/*================*/ /*!
+/*!
 @brief   Return parent of node, or self if a root node.
 @details Nodes are organized into trees (acyclic graphs) with a distinguished node (the "top-most" node) called the root node.
 A parent-child relationship is established between nodes to form a tree.
@@ -1661,13 +1639,13 @@ Use Node::isRoot to avoid infinite loops or infinite recursion.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     NodeFunctions.cpp example, Node::isRoot, Node::isAttached, CompressedVectorNode::CompressedVectorNode, Node::elementName
-*/ /*================*/
+*/
 Node Node::parent() const
 {
     return Node(impl_->parent());
 }
 
-/*================*/ /*!
+/*!
 @brief   Get absolute pathname of node.
 @details
 Nodes are organized into trees (acyclic graphs) by a parent-child relationship between nodes.
@@ -1687,13 +1665,13 @@ By convention, in this API, a root node has the empty string ("") as its element
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     NodeFunctions.cpp example, Node::elementName, Node::parent, Node::isRoot
-*/ /*================*/
+*/
 ustring Node::pathName() const
 {
     return impl_->pathName();
 }
 
-/*================*/ /*!
+/*!
 @brief   Get element name of node.
 @details
 The elementName is a string associated with each parent-child link between nodes.
@@ -1712,13 +1690,13 @@ However in a CompressedVectorNode, the elementName string is not stored in the f
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     NodeFunctions.cpp example, Node::pathName, Node::parent, Node::isRoot
-*/ /*================*/
+*/
 ustring Node::elementName() const
 {
     return impl_->elementName();
 }
 
-/*================*/ /*!
+/*!
 @brief   Get the ImageFile that was declared as the destination for the node when it was created.
 @details The first argument of the constructors of each of the 8 types of nodes is an ImageFile that indicates which ImageFile the node will eventually be attached to.
 This function returns that constructor argument.
@@ -1728,13 +1706,13 @@ Use Node::isAttached to check if the node actually did get attached.
 @post    No visible object state is modified.
 @return  The ImageFile that was declared as the destination for the node when it was created.
 @see     NodeFunctions.cpp example, Node::isAttached, StructureNode::StructureNode(), VectorNode::VectorNode(), CompressedVectorNode::CompressedVectorNode(), IntegerNode::IntegerNode(), ScaledIntegerNode::ScaledIntegerNode(), FloatNode::FloatNode(), StringNode::StringNode(), BlobNode::BlobNode()
-*/ /*================*/
+*/
 ImageFile Node::destImageFile() const
 {
     return ImageFile(impl_->destImageFile());
 }
 
-/*================*/ /*!
+/*!
 @brief   Has node been attached into the tree of an ImageFile.
 @details Nodes are attached into an ImageFile tree by inserting them as children (directly or indirectly) of the ImageFile's root node.
 Nodes can also be attached to an ImageFile if they are used in the @c codecs or @c prototype trees of an CompressedVectorNode that is attached.
@@ -1747,13 +1725,13 @@ It is not recommended to create nodes that are not eventually attached to the Im
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     NodeFunctions.cpp example, Node::destImageFile, ImageFile::root
-*/ /*================*/
+*/
 bool Node::isAttached() const
 {
     return impl_->isAttached();
 }
 
-/*================*/ /*!
+/*!
 @brief   Diagnostic function to print internal state of object to output stream in an indented format.
 @param   [in] indent    Number of spaces to indent all the printed lines of this object.
 @param   [in] os        Output stream to print on.
@@ -1766,7 +1744,7 @@ The output format may change from version to version.
 @post    No visible object state is modified.
 @throw   No E57Exceptions
 @see     ImageFileDump.cpp example
-*/ /*================*/
+*/
 #ifdef E57_DEBUG
 void Node::dump(int indent, std::ostream& os) const
 {
@@ -1777,25 +1755,25 @@ void Node::dump(int indent, std::ostream& os) const
 {}
 #endif
 
-/*================*/ /*!
+/*!
 @brief   Test if two node handles refer to the same underlying node
 @param   [in] n2        The node to compare this node with
 @post    No visible object state is modified.
 @return  @c true if node handles refer to the same underlying node.
 @throw   No E57Exceptions
-*/ /*================*/
+*/
 bool Node::operator==(Node n2) const
 {
     return(impl_ == n2.impl_);
 }
 
-/*================*/ /*!
+/*!
 @brief   Test if two node handles refer to different underlying nodes
 @param   [in] n2        The node to compare this node with
 @post    No visible object state is modified.
 @return  @c true if node handles refer to different underlying nodes.
 @throw   No E57Exceptions
-*/ /*================*/
+*/
 bool Node::operator!=(Node n2) const
 {
     return(impl_ != n2.impl_);
@@ -1808,7 +1786,7 @@ Node::Node(shared_ptr<NodeImpl> ni)
 //! @endcond
 
 //=====================================================================================
-/*================*/ /*!
+/*!
 @class StructureNode
 @brief   An E57 element containing named child nodes.
 @details
@@ -1830,7 +1808,7 @@ The following C++ code checks externally visible state for consistancy and throw
 @see     Node
 */
 
-/*================*/ /*!
+/*!
 @brief   Create an empty StructureNode.
 @param   [in] destImageFile   The ImageFile where the new node will eventually be stored.
 @details
@@ -1845,7 +1823,7 @@ It is an error to attempt to attach the StructureNode to a different ImageFile.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     StructureCreate.cpp example, NodeFunctions.cpp example, Node
-*/ /*================*/
+*/
 StructureNode::StructureNode(ImageFile destImageFile)
 : impl_(new StructureNodeImpl(destImageFile.impl()))
 {
@@ -1893,7 +1871,7 @@ bool StructureNode::isAttached() const
     return impl_->isAttached();
 }
 
-/*================*/ /*!
+/*!
 @brief   Return number of child nodes contained by this StructureNode.
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @post    No visible state is modified.
@@ -1901,13 +1879,13 @@ bool StructureNode::isAttached() const
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     StructureCreate.cpp example, StructureNode::get(int64_t) const, StructureNode::set, VectorNode::childCount
-*/ /*================*/
+*/
 int64_t StructureNode::childCount() const
 {
     return impl_->childCount();
 }
 
-/*================*/ /*!
+/*!
 @brief   Is the given pathName defined relative to this node.
 @param   [in] pathName   The absolute pathname, or pathname relative to this object, to check.
 @details
@@ -1921,13 +1899,13 @@ If this StructureNode is not attached to an ImageFile, the @a pathName origin ro
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     StructureCreate.cpp example, ImageFile::root, VectorNode::isDefined
-*/ /*================*/
+*/
 bool StructureNode::isDefined(const ustring& pathName) const
 {
     return impl_->isDefined(pathName);
 }
 
-/*================*/ /*!
+/*!
 @brief   Get a child element by positional index.
 @param   [in] index   The index of child element to get, starting at 0.
 @details
@@ -1941,13 +1919,13 @@ The order of children may change if more children are added to the StructureNode
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     StructureCreate.cpp example, StructureNode::childCount, StructureNode::get(const ustring&) const, VectorNode::get
-*/ /*================*/
+*/
 Node StructureNode::get(int64_t index) const
 {
     return Node(impl_->get(index));
 }
 
-/*================*/ /*!
+/*!
 @brief   Get a child by path name.
 @param   [in] pathName   The absolute pathname, or pathname relative to this object, of the object to get.
 The @a pathName may be relative to this node, or absolute (starting with a "/").
@@ -1962,13 +1940,13 @@ If this StructureNode is not attached to an ImageFile, the @a pathName origin ro
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     StructureCreate.cpp example, StructureNode::get(int64_t) const
-*/ /*================*/
+*/
 Node StructureNode::get(const ustring& pathName) const
 {
     return Node(impl_->get(pathName));
 }
 
-/*================*/ /*!
+/*!
 @brief   Add a new child at a given path
     @param   [in] pathName  The absolute pathname, or pathname relative to this object, that the child object @a n will be given.
 @param   [in] n         The node to be added to the tree with given @a pathName.
@@ -1999,7 +1977,7 @@ This would be very difficult to do dynamically, as some of the naming rules invo
 @throw   ::E57_ERROR_FILE_IS_READ_ONLY
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     StructureCreate.cpp example, VectorNode::append
-*/ /*================*/
+*/
 void StructureNode::set(const ustring& pathName, Node n)
 {
     impl_->set(pathName, n.impl(), false);
@@ -2017,20 +1995,20 @@ void StructureNode::dump(int indent, std::ostream& os) const
 {}
 #endif
 
-/*================*/ /*!
+/*!
 @brief   Upcast a StructureNode handle to a generic Node handle.
 @details An upcast is always safe, and the compiler can automatically insert it for initializations of Node variables and Node function arguments.
 @return  A smart Node handle referencing the underlying object.
 @throw   No E57Exceptions.
 @see     NodeFunctions.cpp example, StructureCreate.cpp example, explanation in Node, Node::type(), StructureNode(const Node&)
-*/ /*================*/
+*/
 StructureNode::operator Node() const
 {
     /// Implicitly upcast from shared_ptr<StructureNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
     return Node(impl_);
 }
 
-/*================*/ /*!
+/*!
 @brief   Downcast a generic Node handle to a StructureNode handle.
 @param   [in] n The generic handle to downcast.
 @details The handle @a n must be for an underlying StructureNode, otherwise an exception is thrown.
@@ -2039,7 +2017,7 @@ This function must be explicitly called (c++ compiler cannot insert it automatic
 @return  A smart StructureNode handle referencing the underlying object.
 @throw   ::E57_ERROR_BAD_NODE_DOWNCAST
 @see     NodeFunctions.cpp example, StructureCreate.cpp example, Node::type(), StructureNode::operator Node()
-*/ /*================*/
+*/
 StructureNode::StructureNode(const Node& n)
 {
     /// Downcast from shared_ptr<NodeImpl> to shared_ptr<StructureNodeImpl>
@@ -2062,7 +2040,7 @@ StructureNode::StructureNode(shared_ptr<StructureNodeImpl> ni)
 //! @endcond
 
 //=====================================================================================
-/*================*/ /*!
+/*!
 @class VectorNode
 @brief   An E57 element containing ordered vector of child nodes.
 @details
@@ -2087,7 +2065,7 @@ The following C++ code checks externally visible state for consistency and throw
 @see     Node
 */
 
-/*================*/ /*!
+/*!
 @brief   Create a new empty Vector node.
 @param   [in] destImageFile         The ImageFile where the new node will eventually be stored.
 @param   [in] allowHeteroChildren   Will child elements of differing types be allowed in this VectorNode.
@@ -2109,7 +2087,7 @@ If @a allowHeteroChildren is true, then the types of the children of the VectorN
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     VectorCreate.cpp example, VectorFunctions.cpp example, Node, VectorNode::allowHeteroChildren, ::E57_ERROR_HOMOGENEOUS_VIOLATION
-*/ /*================*/
+*/
 VectorNode::VectorNode(ImageFile destImageFile, bool allowHeteroChildren)
 : impl_(new VectorNodeImpl(destImageFile.impl(), allowHeteroChildren))
 {
@@ -2157,7 +2135,7 @@ bool VectorNode::isAttached() const
     return impl_->isAttached();
 }
 
-/*================*/ /*!
+/*!
 @brief   Get whether child elements are allowed to be different types?
 @details
 See the class discussion at bottom of VectorNode page for details of homogeneous/heterogeneous VectorNode.
@@ -2168,13 +2146,13 @@ The returned attribute is determined when the VectorNode is created, and cannot 
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     VectorCreate.cpp example, ::E57_ERROR_HOMOGENEOUS_VIOLATION
-*/ /*================*/
+*/
 bool VectorNode::allowHeteroChildren() const
 {
     return impl_->allowHeteroChildren();
 }
 
-/*================*/ /*!
+/*!
 @brief   Get number of child elements in this VectorNode.
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @post    No visible state is modified.
@@ -2182,13 +2160,13 @@ bool VectorNode::allowHeteroChildren() const
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     VectorFunctions.cpp example, VectorNode::get(int64_t), VectorNode::append, StructureNode::childCount
-*/ /*================*/
+*/
 int64_t VectorNode::childCount() const
 {
     return impl_->childCount();
 }
 
-/*================*/ /*!
+/*!
 @brief   Is the given pathName defined relative to this node.
 @param   [in] pathName   The absolute pathname, or pathname relative to this object, to check.
 @details
@@ -2204,13 +2182,13 @@ The element names of child elements of VectorNodes are numbers, encoded as strin
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     VectorFunctions.cpp example, StructureNode::isDefined
-*/ /*================*/
+*/
 bool VectorNode::isDefined(const ustring& pathName) const
 {
     return impl_->isDefined(pathName);
 }
 
-/*================*/ /*!
+/*!
 @brief   Get a child element by positional index.
 @param   [in] index   The index of child element to get, starting at 0.
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
@@ -2221,13 +2199,13 @@ bool VectorNode::isDefined(const ustring& pathName) const
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     VectorFunctions.cpp example, VectorNode::childCount, VectorNode::append, StructureNode::get(int64_t) const
-*/ /*================*/
+*/
 Node VectorNode::get(int64_t index) const
 {
     return Node(impl_->get(index));
 }
 
-/*================*/ /*!
+/*!
 @brief   Get a child element by string path name
 @param   [in] pathName   The pathname, either absolute or relative, of the object to get.
 @details
@@ -2245,13 +2223,13 @@ The element names of child elements of VectorNodes are numbers, encoded as strin
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     VectorFunctions.cpp example, VectorNode::childCount, VectorNode::append, StructureNode::get(int64_t) const
-*/ /*================*/
+*/
 Node VectorNode::get(const ustring& pathName) const
 {
     return Node(impl_->get(pathName));
 }
 
-/*================*/ /*!
+/*!
 @brief   Append a child element to end of VectorNode.
 @param   [in] n   The node to be added as a child at end of the VectorNode.
 @details
@@ -2270,7 +2248,7 @@ The VectorNode must not be a descendent of a homogeneous VectorNode with more th
 @throw   ::E57_ERROR_DIFFERENT_DEST_IMAGEFILE
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     VectorFunctions.cpp example, VectorNode::childCount, VectorNode::get(int64_t), StructureNode::set
-*/ /*================*/
+*/
 void VectorNode::append(Node n)
 {
     impl_->append(n.impl());
@@ -2289,20 +2267,20 @@ void VectorNode::dump(int indent, std::ostream& os) const
 #endif
 
 
-/*================*/ /*!
+/*!
 @brief   Upcast a VectorNode handle to a generic Node handle.
 @details An upcast is always safe, and the compiler can automatically insert it for initializations of Node variables and Node function arguments.
 @return  A smart Node handle referencing the underlying object.
 @throw   No E57Exceptions.
 @see     VectorFunctions.cpp example, NodeFunctions.cpp example, VectorNode(const Node&) example, explanation in Node, Node::type(), VectorNode(const Node&)
-*/ /*================*/
+*/
 VectorNode::operator Node() const
 {
     /// Implicitly upcast from shared_ptr<VectorNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
     return Node(impl_);
 }
 
-/*================*/ /*!
+/*!
 @brief   Downcast a generic Node handle to a VectorNode handle.
 @param   [in] n The generic handle to downcast.
 @details The handle @a n must be for an underlying VectorNode, otherwise an exception is thrown.
@@ -2311,7 +2289,7 @@ This function must be explicitly called (c++ compiler cannot insert it automatic
 @return  A smart VectorNode handle referencing the underlying object.
 @throw   ::E57_ERROR_BAD_NODE_DOWNCAST
 @see     VectorFunctions.cpp example, NodeFunctions.cpp example, Node::type(), VectorNode::operator Node()
-*/ /*================*/
+*/
 VectorNode::VectorNode(const Node& n)
 {
     /// Downcast from shared_ptr<NodeImpl> to shared_ptr<VectorNodeImpl>
@@ -2330,7 +2308,7 @@ VectorNode::VectorNode(shared_ptr<VectorNodeImpl> ni)
 //! @endcond
 
 //=====================================================================================
-/*================*/ /*!
+/*!
 @class SourceDestBuffer
 @brief   A memory buffer to transfer data to/from a CompressedVectorNode in a block.
 @details
@@ -2359,7 +2337,7 @@ The following C++ code checks externally visible state for consistency and throw
 @see     Node
 */
 
-/*================*/ /*!
+/*!
 @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
 @param   [in] destImageFile The ImageFile where the new node will eventually be stored.
 @param   [in] pathName      The pathname of the field in CompressedVectorNode that will transfer data to/from.
@@ -2391,7 +2369,7 @@ The @a capacity must match the capacity of all other SourceDestBuffers that will
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     SourceDestBufferNumericCreate.cpp example, SourceDestVufferStringCreate.cpp example, ImageFile::reader, ImageFile::writer, CompressedVectorReader::read(std::vector<SourceDestBuffer>&), CompressedVectorWriter::write(std::vector<SourceDestBuffer>&)
-*/ /*================*/
+*/
 SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, int8_t* b, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
 : impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b, capacity, doConversion, doScaling, stride))
 {
@@ -2460,7 +2438,7 @@ SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathNa
 {
 }
 
-/*================*/ /*!
+/*!
 @brief   Designate vector of strings to transfer data to/from a CompressedVector as a block.
 @param   [in] destImageFile The ImageFile where the new node will eventually be stored.
 @param   [in] pathName      The pathname of the field in CompressedVectorNode that will transfer data to/from.
@@ -2486,13 +2464,13 @@ The API user is responsible for ensuring that the lifetime of the @a b vector ex
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     SourceDestBufferStringCreate.cpp example, SourceDestBufferNumericCreate.cpp example, SourceDestBuffer::doConversion for discussion on representations compatible with string SourceDestBuffers.
-*/ /*================*/
+*/
 SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, std::vector<ustring>* b)
 : impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b))
 {
 }
 
-/*================*/ /*!
+/*!
 @brief   Get path name in prototype that this SourceDestBuffer will transfer data to/from.
 @details
 The prototype of a CompressedVectorNode describes the fields that are in each record.
@@ -2503,13 +2481,13 @@ The correctness of this path name is checked when this SourceDestBuffer is assoc
 @return  Path name in prototype that this SourceDestBuffer will transfer data to/from.
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     SourceDestBufferFunctions.cpp example, CompressedVector, CompressedVectorNode::prototype
-*/ /*================*/
+*/
 ustring SourceDestBuffer::pathName() const
 {
     return impl_->pathName();
 }
 
-/*================*/ /*!
+/*!
 @brief   Get memory representation of the elements in this SourceDestBuffer.
 @details
 The memory representation is deduced from which overloaded SourceDestBuffer constructor was used.
@@ -2523,13 +2501,13 @@ Some combinations are never possible (e.g. E57_INT16 and StringNode).
 @return  Memory representation of the elements in buffer.
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     SourceDestBufferFunctions.cpp example, MemoryRepresentation, NodeType
-*/ /*================*/
+*/
 MemoryRepresentation SourceDestBuffer::memoryRepresentation() const
 {
     return impl_->memoryRepresentation();
 }
 
-/*================*/ /*!
+/*!
 @brief   Get total capacity of buffer.
 @details
 The API programmer is responsible for correctly specifying the length of a buffer.
@@ -2539,13 +2517,13 @@ If the length is incorrect (in particular, too long) memory may be corrupted or 
 @return  Total capacity of buffer.
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     SourceDestBufferFunctions.cpp example
-*/ /*================*/
+*/
 size_t SourceDestBuffer::capacity() const
 {
     return impl_->capacity();
 }
 
-/*================*/ /*!
+/*!
 @brief   Get whether conversions will be performed to match the memory type of buffer.
 @details
 The API user must explicitly request conversion between basic representation groups in memory and on the disk.
@@ -2566,13 +2544,13 @@ Missing or unsupported conversions are detected when the first transfer is attem
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     SourceDestBufferFunctions.cpp example
-*/ /*================*/
+*/
 bool SourceDestBuffer::doConversion() const
 {
     return impl_->doConversion();
 }
 
-/*================*/ /*!
+/*!
 @brief   Get whether scaling will be performed for ScaledIntegerNode transfers.
 @details
 The doScaling option only applies to ScaledIntegerNodes stored in a CompressedVectorNode on the disk (it is ignored if a ScaledIntegerNode is not involved).
@@ -2594,13 +2572,13 @@ Because the ASTM E57 format recommends that SI units without prefix be used (i.e
 @return  true if scaling will be performed for ScaledInteger transfers.
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     SourceDestBufferFunctions.cpp example, SourceDestBufferNumericCreate.cpp example, ScaledIntegerNode
-*/ /*================*/
+*/
 bool SourceDestBuffer::doScaling() const
 {
     return impl_->doScaling();
 }
 
-/*================*/ /*!
+/*!
 @brief   Get number of bytes between consecutive memory elements in buffer
 @details
 Elements in a memory buffer do not have to be consecutive.
@@ -2610,7 +2588,7 @@ In the case that the element values are stored consecutively in memory, the stri
 @post    No visible state is modified.
 @return  Number of bytes between consecutive memory elements in buffer
 @see     SourceDestBufferNumericCreate.cpp example
-*/ /*================*/
+*/
 size_t SourceDestBuffer::stride() const
 {
     return impl_->stride();
@@ -2629,7 +2607,7 @@ void SourceDestBuffer::dump(int indent, std::ostream& os) const
 #endif
 
 //=====================================================================================
-/*================*/ /*!
+/*!
 @class CompressedVectorReader
 @brief   An iterator object keeping track of a read in progress from a CompressedVectorNode.
 @details
@@ -2667,7 +2645,7 @@ CompressedVectorReader::CompressedVectorReader(shared_ptr<CompressedVectorReader
 {}
 //! @endcond
 
-/*================*/ /*!
+/*!
 @brief   Request transfer of blocks of data from CompressedVectorNode into previously designated destination buffers.
 @details
 The SourceDestBuffers used are previously designated either in CompressedVectorNode::reader where this object was created, or in the last call to CompressedVectorReader::read(std::vector<SourceDestBuffer>&) where new buffers were designated.
@@ -2698,13 +2676,13 @@ The E57 Foundation Implementation cannot detect that a memory buffer been destro
 @throw   ::E57_ERROR_BAD_CHECKSUM       This CompressedVectorReader, associated ImageFile in undocumented state
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     SourceDestBufferNumericCreate.cpp example, CompressedVectorReader::read(std::vector<SourceDestBuffer>&), CompressedVectorNode::reader, SourceDestBuffer, CompressedVectorReader::read(std::vector<SourceDestBuffer>&)
-*/ /*================*/
+*/
 unsigned CompressedVectorReader::read()
 {
     return impl_->read();
 }
 
-/*================*/ /*!
+/*!
 @brief   Request transfer of block of data from CompressedVectorNode into given destination buffers.
 @param   [in] dbufs     Vector of memory buffers that will receive data read from a CompressedVectorNode.
 @details
@@ -2744,13 +2722,13 @@ The E57 Foundation Implementation cannot detect that a memory buffer been destro
 @throw   ::E57_ERROR_BAD_CHECKSUM       This CompressedVectorReader, associated ImageFile in undocumented state
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     SourceDestBufferNumericCreate.cpp example, CompressedVectorReader::read(), CompressedVectorNode::reader, SourceDestBuffer
-*/ /*================*/
+*/
 unsigned CompressedVectorReader::read(std::vector<SourceDestBuffer>& dbufs)
 {
     return impl_->read(dbufs);
 }
 
-/*================*/ /*!
+/*!
 @brief   Set record number of CompressedVectorNode where next read will start.
 @param   [in] recordNumber   The index of record in ComressedVectorNode where next read using this CompressedVectorReader will start.
 @details
@@ -2770,13 +2748,13 @@ It is not an error to seek to recordNumber = childCount() (i.e. to one record pa
 @throw   ::E57_ERROR_BAD_CHECKSUM
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     SourceDestBufferNumericCreate.cpp example, CompressedVectorNode::reader
-*/ /*================*/
+*/
 void CompressedVectorReader::seek(int64_t recordNumber)
 {
     impl_->seek(recordNumber);
 }
 
-/*================*/ /*!
+/*!
 @brief   End the read operation.
 @details
 It is recommended that this function be called to gracefully end a transfer to a CompressedVectorNode.
@@ -2785,25 +2763,25 @@ This function will cause the CompressedVectorReader to enter the closed state, a
 
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     SourceDestBufferNumericCreate.cpp example, CompressedVectorReader::isOpen, CompressedVectorNode::reader
-*/ /*================*/
+*/
 void CompressedVectorReader::close()
 {
     impl_->close();
 }
 
-/*================*/ /*!
+/*!
 @brief   Test whether CompressedVectorReader is still open for reading.
 @pre     The associated ImageFile must be open.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     SourceDestBufferNumericCreate.cpp example, CompressedVectorReader::close, CompressedVectorNode::reader
-*/ /*================*/
+*/
 bool CompressedVectorReader::isOpen()
 {
     return impl_->isOpen();
 }
 
-/*================*/ /*!
+/*!
 @brief   Return the CompressedVectorNode being read.
 @details
 It is not an error if this CompressedVectorReader is closed.
@@ -2812,7 +2790,7 @@ It is not an error if this CompressedVectorReader is closed.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     SourceDestBufferNumericCreate.cpp example, CompressedVectorReader::close, CompressedVectorNode::reader
-*/ /*================*/
+*/
 CompressedVectorNode CompressedVectorReader::compressedVectorNode() const
 {
     return impl_->compressedVectorNode();
@@ -2831,7 +2809,7 @@ void CompressedVectorReader::dump(int indent, std::ostream& os) const
 #endif
 
 //=====================================================================================
-/*================*/ /*!
+/*!
 @class CompressedVectorWriter
 @brief   An iterator object keeping track of a write in progress to a CompressedVectorNode.
 @details
@@ -2869,7 +2847,7 @@ CompressedVectorWriter::CompressedVectorWriter(shared_ptr<CompressedVectorWriter
 {}
 //! @endcond
 
-/*================*/ /*!
+/*!
 @brief   Request transfer of blocks of data to CompressedVectorNode from previously designated source buffers.
 @param   [in] recordCount   Number of records to write.
 @details
@@ -2901,13 +2879,13 @@ If CompressedVectorWriter::close is not called before the CompressedVectorWriter
 @throw   ::E57_ERROR_BAD_CHECKSUM       This CompressedVectorWriter, associated ImageFile in undocumented state
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     SourceDestBufferNumericCreate.cpp example, CompressedVectorWriter::write(std::vector<SourceDestBuffer>&,unsigned), CompressedVectorNode::writer, CompressedVectorWriter::close, SourceDestBuffer, E57Exception
-*/ /*================*/
+*/
 void CompressedVectorWriter::write(const size_t recordCount)
 {
     impl_->write(recordCount);
 }
 
-/*================*/ /*!
+/*!
 @brief   Request transfer of block of data to CompressedVectorNode from given source buffers.
 @param   [in] sbufs         Vector of memory buffers that hold data to be written to a CompressedVectorNode.
 @param   [in] recordCount   Number of records to write.
@@ -2946,13 +2924,13 @@ If a file I/O or checksum error occurs during the transfer, both this Compressed
 @throw   ::E57_ERROR_BAD_CHECKSUM       This CompressedVectorWriter, associated ImageFile in undocumented state
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     SourceDestBufferNumericCreate.cpp example, CompressedVectorWriter::write(unsigned), CompressedVectorNode::writer, CompressedVectorWriter::close, SourceDestBuffer, E57Exception
-*/ /*================*/
+*/
 void CompressedVectorWriter::write(std::vector<SourceDestBuffer>& sbufs, const size_t recordCount)
 {
     impl_->write(sbufs, recordCount);
 }
 
-/*================*/ /*!
+/*!
 @brief   End the write operation.
 @details
 This function must be called to safely and gracefully end a transfer to a CompressedVectorNode.
@@ -2970,32 +2948,32 @@ This function will cause the CompressedVectorWriter to enter the closed state, a
 @throw   ::E57_ERROR_BAD_CHECKSUM       This CompressedVectorWriter, associated ImageFile in undocumented state
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     SourceDestBufferNumericCreate.cpp example, CompressedVectorWriter::isOpen
-*/ /*================*/
+*/
 void CompressedVectorWriter::close()
 {
     impl_->close();
 }
 
-/*================*/ /*!
+/*!
 @brief   Test whether CompressedVectorWriter is still open for writing.
 @pre     The associated ImageFile must be open.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     SourceDestBufferFunctions.cpp example, CompressedVectorWriter::close, CompressedVectorNode::writer
-*/ /*================*/
+*/
 bool CompressedVectorWriter::isOpen()
 {
     return impl_->isOpen();
 }
 
-/*================*/ /*!
+/*!
 @brief   Return the CompressedVectorNode being written to.
 @pre     The associated ImageFile must be open.
 @return  A smart CompressedVectorNode handle referencing the underlying object being written to.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     SourceDestBufferNumericCreate.cpp example, CompressedVectorNode::writer
-*/ /*================*/
+*/
 CompressedVectorNode CompressedVectorWriter::compressedVectorNode() const
 {
     return impl_->compressedVectorNode();
@@ -3014,7 +2992,7 @@ void CompressedVectorWriter::dump(int indent, std::ostream& os) const
 #endif
 
 //=====================================================================================
-/*================*/ /*!
+/*!
 @class CompressedVectorNode
 @brief   An E57 element containing ordered vector of child nodes, stored in an efficient binary format.
 @details
@@ -3058,7 +3036,7 @@ The following C++ code checks externally visible state for consistency and throw
 @see     CompressedVectorReader, CompressedVectorWriter, Node
 */
 
-/*================*/ /*!
+/*!
 @brief   Create an empty CompressedVectorNode, for writing, that will store records specified by the prototype.
 @param   [in] destImageFile The ImageFile where the new node will eventually be stored.
 @param   [in] prototype     A tree that describes the fields in each record of the CompressedVectorNode.
@@ -3092,7 +3070,7 @@ Since currently only one codec is supported (bitPackCodec), and it is the defaul
 @throw   ::E57_ERROR_DIFFERENT_DEST_IMAGEFILE
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     CompressedVectorCreate.cpp example, SourceDestBuffer, Node, CompressedVectorNode::reader, CompressedVectorNode::writer
-*/ /*================*/
+*/
 CompressedVectorNode::CompressedVectorNode(ImageFile destImageFile, Node prototype, VectorNode codecs)
 : impl_(new CompressedVectorNodeImpl(destImageFile.impl()))
 {
@@ -3143,7 +3121,7 @@ bool CompressedVectorNode::isAttached() const
     return impl_->isAttached();
 }
 
-/*================*/ /*!
+/*!
 @brief   Get current number of records in a CompressedVectorNode.
 @details
 For a CompressedVectorNode with an active CompressedVectorWriter, the returned number will reflect any writes completed.
@@ -3153,13 +3131,13 @@ For a CompressedVectorNode with an active CompressedVectorWriter, the returned n
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     CompressedVectorCreate.cpp example, CompressedVectorNode::reader, CompressedVectorNode::writer
-*/ /*================*/
+*/
 int64_t CompressedVectorNode::childCount() const
 {
     return impl_->childCount();
 }
 
-/*================*/ /*!
+/*!
 @brief   Get the prototype tree that describes the types in the record.
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @post    No visible state is modified.
@@ -3167,13 +3145,13 @@ int64_t CompressedVectorNode::childCount() const
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     SourceDestBufferNumericCreate.cpp example, CompressedVectorNode::CompressedVectorNode, SourceDestBuffer, CompressedVectorNode::reader, CompressedVectorNode::writer
-*/ /*================*/
+*/
 Node CompressedVectorNode::prototype() const
 {
     return Node(impl_->getPrototype());
 }
 
-/*================*/ /*!
+/*!
 @brief   Get the codecs tree that describes the encoder/decoder configuration of the CompressedVectorNode.
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @post    No visible state is modified.
@@ -3181,7 +3159,7 @@ Node CompressedVectorNode::prototype() const
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     SourceDestBufferNumericCreate.cpp example, CompressedVectorNode::CompressedVectorNode, SourceDestBuffer, CompressedVectorNode::reader, CompressedVectorNode::writer
-*/ /*================*/
+*/
 VectorNode CompressedVectorNode::codecs() const
 {
     return VectorNode(impl_->getCodecs());
@@ -3199,20 +3177,20 @@ void CompressedVectorNode::dump(int indent, std::ostream& os) const
 {}
 #endif
 
-/*================*/ /*!
+/*!
 @brief   Upcast a CompressedVectorNode handle to a generic Node handle.
 @details An upcast is always safe, and the compiler can automatically insert it for initializations of Node variables and Node function arguments.
 @return  A smart Node handle referencing the underlying object.
 @throw   No E57Exceptions.
 @see     NodeFunctions.cpp example, CompressedVectorNode(const Node&) example, explanation in Node, Node::type(), CompressedVectorNode(const Node&)
-*/ /*================*/
+*/
 CompressedVectorNode::operator Node() const
 {
     /// Implicitly upcast from shared_ptr<CompressedVectorNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
     return Node(impl_);
 }
 
-/*================*/ /*!
+/*!
 @brief   Downcast a generic Node handle to a CompressedVectorNode handle.
 @param   [in] n The generic handle to downcast.
 @details The handle @a n must be for an underlying CompressedVectorNode, otherwise an exception is thrown.
@@ -3221,7 +3199,7 @@ This function must be explicitly called (c++ compiler cannot insert it automatic
 @return  A smart CompressedVectorNode handle referencing the underlying object.
 @throw   ::E57_ERROR_BAD_NODE_DOWNCAST
 @see     NodeFunctions.cpp example, Node::type(), CompressedVectorNode::operator Node()
-*/ /*================*/
+*/
 CompressedVectorNode::CompressedVectorNode(const Node& n)
 {
     /// Downcast from shared_ptr<NodeImpl> to shared_ptr<CompressedVectorNodeImpl>
@@ -3239,7 +3217,7 @@ CompressedVectorNode::CompressedVectorNode(shared_ptr<CompressedVectorNodeImpl> 
 {}
 //! @endcond
 
-/*================*/ /*!
+/*!
 @brief   Create an iterator object for writing a series of blocks of data to a CompressedVectorNode.
 @param   [in] sbufs         Vector of memory buffers that will hold data to be written to a CompressedVectorNode.
 @details
@@ -3271,13 +3249,13 @@ It is an error to call this function if the CompressedVectorNode already has any
 @throw   ::E57_ERROR_NO_BUFFER_FOR_ELEMENT
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     SourceDestBufferFunctions.cpp example, CompressedVectorWriter, SourceDestBuffer, CompressedVectorNode::CompressedVectorNode, CompressedVectorNode::prototype
-*/ /*================*/
+*/
 CompressedVectorWriter CompressedVectorNode::writer(std::vector<SourceDestBuffer>& sbufs)
 {
     return CompressedVectorWriter(impl_->writer(sbufs));
 }
 
-/*================*/ /*!
+/*!
 @brief   Create an iterator object for reading a series of blocks of data from a CompressedVectorNode.
 @param   [in] dbufs     Vector of memory buffers that will receive data read from a CompressedVectorNode.
 @details
@@ -3300,14 +3278,14 @@ It is not an error to create a CompressedVectorReader for an empty CompressedVec
 @throw   ::E57_ERROR_BAD_CV_HEADER
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     SourceDestBufferFunctions.cpp example, CompressedVectorReader, SourceDestBuffer, CompressedVectorNode::CompressedVectorNode, CompressedVectorNode::prototype
-*/ /*================*/
+*/
 CompressedVectorReader CompressedVectorNode::reader(const std::vector<SourceDestBuffer>& dbufs)
 {
     return CompressedVectorReader(impl_->reader(dbufs));
 }
 
 //=====================================================================================
-/*================*/ /*!
+/*!
 @class IntegerNode
 @brief   An E57 element encoding an integer value.
 @details
@@ -3333,7 +3311,7 @@ The following C++ code checks externally visible state for consistency and throw
 @see     Node, CompressedVector
 */
 
-/*================*/ /*!
+/*!
 @brief   Create an E57 element for storing a integer value.
 @param   [in] destImageFile   The ImageFile where the new node will eventually be stored.
 @param   [in] value     The integer value of the element.
@@ -3361,7 +3339,7 @@ If the IntegerNode is to be used in a prototype, it is recommended to specify a 
 @throw   ::E57_ERROR_VALUE_OUT_OF_BOUNDS
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     IntegerCreate.cpp example, IntegerNode::value, Node, CompressedVectorNode, CompressedVectorNode::prototype
-*/ /*================*/
+*/
 IntegerNode::IntegerNode(ImageFile destImageFile, int64_t value, int64_t  minimum, int64_t  maximum)
 : impl_(new IntegerNodeImpl(destImageFile.impl(), value, minimum, maximum))
 {
@@ -3409,7 +3387,7 @@ bool IntegerNode::isAttached() const
     return impl_->isAttached();
 }
 
-/*================*/ /*!
+/*!
 @brief   Get integer value stored.
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @post    No visible state is modified.
@@ -3417,13 +3395,13 @@ bool IntegerNode::isAttached() const
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     IntegerCreate.cpp example, IntegerNode::minimum, IntegerNode::maximum
-*/ /*================*/
+*/
 int64_t IntegerNode::value() const
 {
     return impl_->value();
 }
 
-/*================*/ /*!
+/*!
 @brief   Get the declared minimum that the value may take.
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @post    No visible state is modified.
@@ -3431,13 +3409,13 @@ int64_t IntegerNode::value() const
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     IntegerCreate.cpp example, IntegerNode::value
-*/ /*================*/
+*/
 int64_t IntegerNode::minimum() const
 {
     return impl_->minimum();
 }
 
-/*================*/ /*!
+/*!
 @brief   Get the declared maximum that the value may take.
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @post    No visible state is modified.
@@ -3445,7 +3423,7 @@ int64_t IntegerNode::minimum() const
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     IntegerCreate.cpp example, IntegerNode::value
-*/ /*================*/
+*/
 int64_t IntegerNode::maximum() const
 {
     return impl_->maximum();
@@ -3463,20 +3441,20 @@ void IntegerNode::dump(int indent, std::ostream& os) const
 {}
 #endif
 
-/*================*/ /*!
+/*!
 @brief   Upcast a IntegerNode handle to a generic Node handle.
 @details An upcast is always safe, and the compiler can automatically insert it for initializations of Node variables and Node function arguments.
 @return  A smart Node handle referencing the underlying object.
 @throw   No E57Exceptions.
 @see     NodeFunctions.cpp example, IntegerNode(const Node&) example, explanation in Node, Node::type(), IntegerNode(const Node&)
-*/ /*================*/
+*/
 IntegerNode::operator Node() const
 {
     /// Upcast from shared_ptr<IntegerNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
     return Node(impl_);
 }
 
-/*================*/ /*!
+/*!
 @brief   Downcast a generic Node handle to a IntegerNode handle.
 @param   [in] n The generic handle to downcast.
 @details The handle @a n must be for an underlying IntegerNode, otherwise an exception is thrown.
@@ -3485,7 +3463,7 @@ This function must be explicitly called (c++ compiler cannot insert it automatic
 @return  A smart IntegerNode handle referencing the underlying object.
 @throw   ::E57_ERROR_BAD_NODE_DOWNCAST
 @see     NodeFunctions.cpp example, Node::type(), IntegerNode::operator Node()
-*/ /*================*/
+*/
 IntegerNode::IntegerNode(const Node& n)
 {
     /// Downcast from shared_ptr<NodeImpl> to shared_ptr<IntegerNodeImpl>
@@ -3504,7 +3482,7 @@ IntegerNode::IntegerNode(shared_ptr<IntegerNodeImpl> ni)
 //! @endcond
 
 //=====================================================================================
-/*================*/ /*!
+/*!
 @class ScaledIntegerNode
 @brief   An E57 element encoding a fixed point number.
 @details
@@ -3530,7 +3508,7 @@ The following C++ code checks externally visible state for consistancy and throw
 @see     Node
 */
 
-/*================*/ /*!
+/*!
 @brief   Create an E57 element for storing a fixed point number.
 @param   [in] destImageFile   The ImageFile where the new node will eventually be stored.
 @param   [in] rawValue  The raw integer value of the element.
@@ -3561,7 +3539,7 @@ If the ScaledIntegerNode is to be used in a prototype, it is recommended to spec
 @throw   ::E57_ERROR_VALUE_OUT_OF_BOUNDS
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     ScaledIntegerCreate.cpp example, ScaledIntegerNode::rawValue, Node, CompressedVectorNode, CompressedVectorNode::prototype
-*/ /*================*/
+*/
 ScaledIntegerNode::ScaledIntegerNode(ImageFile destImageFile, int64_t rawValue, int64_t  minimum, int64_t  maximum, double scale, double offset)
 : impl_(new ScaledIntegerNodeImpl(destImageFile.impl(), rawValue, minimum, maximum, scale, offset))
 {
@@ -3574,7 +3552,7 @@ ScaledIntegerNode::ScaledIntegerNode(ImageFile destImageFile, int rawValue, int 
 : impl_(new ScaledIntegerNodeImpl(destImageFile.impl(), static_cast<int64_t>(rawValue), static_cast<int64_t>(minimum), static_cast<int64_t>(maximum), scale, offset))
 {
 }
-/*================*/ /*!
+/*!
 @brief   This second constructor create an E57 element for storing a fixed point number but does the scaling for you.
 @param   [in] destImageFile   The ImageFile where the new node will eventually be stored.
 @param   [in] scaledValue     The scaled integer value of the element.
@@ -3598,7 +3576,7 @@ If the ScaledIntegerNode is to be used in a prototype, it is recommended to spec
 @throw   ::E57_ERROR_VALUE_OUT_OF_BOUNDS
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     ScaledIntegerCreate.cpp example, ScaledIntegerNode::scaledValue, Node, CompressedVectorNode, CompressedVectorNode::prototype
-*/ /*================*/
+*/
 ScaledIntegerNode::ScaledIntegerNode(ImageFile destImageFile, double scaledValue, double  scaledMinimum, double  scaledMaximum, double scale, double offset)
 : impl_(new ScaledIntegerNodeImpl(destImageFile.impl(), scaledValue, scaledMinimum, scaledMaximum, scale, offset))
 {
@@ -3645,7 +3623,7 @@ bool ScaledIntegerNode::isAttached() const
     return impl_->isAttached();
 }
 
-/*================*/ /*!
+/*!
 @brief   Get raw unscaled integer value of element.
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @post    No visible state is modified.
@@ -3653,13 +3631,13 @@ bool ScaledIntegerNode::isAttached() const
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     ScaledIntegerCreate.cpp example, ScaledIntegerNode::scaledValue, ScaledIntegerNode::minimum, ScaledIntegerNode::maximum
-*/ /*================*/
+*/
 int64_t ScaledIntegerNode::rawValue() const
 {
     return impl_->rawValue();
 }
 
-/*================*/ /*!
+/*!
 @brief   Get scaled value of element.
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @post    No visible state is modified.
@@ -3667,13 +3645,13 @@ int64_t ScaledIntegerNode::rawValue() const
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     ScaledIntegerCreate.cpp example, ScaledIntegerNode::rawValue
-*/ /*================*/
+*/
 double  ScaledIntegerNode::scaledValue() const
 {
     return impl_->scaledValue();
 }
 
-/*================*/ /*!
+/*!
 @brief   Get the declared minimum that the raw value may take.
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @post    No visible state is modified.
@@ -3681,12 +3659,12 @@ double  ScaledIntegerNode::scaledValue() const
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     ScaledIntegerCreate.cpp example, ScaledIntegerNode::maximum, ScaledIntegerNode::rawValue
-*/ /*================*/
+*/
 int64_t ScaledIntegerNode::minimum() const
 {
     return impl_->minimum();
 }
-/*================*/ /*!
+/*!
 @brief   Get the declared scaled minimum that the scaled value may take.
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @post    No visible state is modified.
@@ -3694,12 +3672,12 @@ int64_t ScaledIntegerNode::minimum() const
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     ScaledIntegerCreate.cpp example, ScaledIntegerNode::scaledMaximum, ScaledIntegerNode::scaledValue
-*/ /*================*/
+*/
 double ScaledIntegerNode::scaledMinimum() const
 {
     return impl_->scaledMinimum();
 }
-/*================*/ /*!
+/*!
 @brief   Get the declared maximum that the raw value may take.
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @post    No visible state is modified.
@@ -3707,12 +3685,12 @@ double ScaledIntegerNode::scaledMinimum() const
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     ScaledIntegerCreate.cpp example, ScaledIntegerNode::minimum, ScaledIntegerNode::rawValue
-*/ /*================*/
+*/
 int64_t ScaledIntegerNode::maximum() const
 {
     return impl_->maximum();
 }
-/*================*/ /*!
+/*!
 @brief   Get the declared scaled maximum that the scaled value may take.
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @post    No visible state is modified.
@@ -3720,12 +3698,12 @@ int64_t ScaledIntegerNode::maximum() const
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     ScaledIntegerCreate.cpp example, ScaledIntegerNode::scaledMinimum, ScaledIntegerNode::scaledValue
-*/ /*================*/
+*/
 double ScaledIntegerNode::scaledMaximum() const     //Added by SC
 {
     return impl_->scaledMaximum();
 }
-/*================*/ /*!
+/*!
 @brief   Get declared scaling factor.
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @post    No visible state is modified.
@@ -3733,13 +3711,13 @@ double ScaledIntegerNode::scaledMaximum() const     //Added by SC
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     ScaledIntegerCreate.cpp example, ScaledIntegerNode::scaledValue
-*/ /*================*/
+*/
 double  ScaledIntegerNode::scale() const
 {
     return impl_->scale();
 }
 
-/*================*/ /*!
+/*!
 @brief   Get declared offset.
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @post    No visible state is modified.
@@ -3747,7 +3725,7 @@ double  ScaledIntegerNode::scale() const
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     ScaledIntegerCreate.cpp example, ScaledIntegerNode::scaledValue
-*/ /*================*/
+*/
 double  ScaledIntegerNode::offset() const
 {
     return impl_->offset();
@@ -3765,20 +3743,20 @@ void ScaledIntegerNode::dump(int indent, std::ostream& os) const
 {}
 #endif
 
-/*================*/ /*!
+/*!
 @brief   Upcast a ScaledIntegerNode handle to a generic Node handle.
 @details An upcast is always safe, and the compiler can automatically insert it for initializations of Node variables and Node function arguments.
 @return  A smart Node handle referencing the underlying object.
 @throw   No E57Exceptions.
 @see     NodeFunctions.cpp example, ScaledIntegerNode(const Node&) example, explanation in Node, Node::type(), ScaledIntegerNode(const Node&)
-*/ /*================*/
+*/
 ScaledIntegerNode::operator Node() const
 {
     /// Upcast from shared_ptr<ScaledIntegerNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
     return Node(impl_);
 }
 
-/*================*/ /*!
+/*!
 @brief   Downcast a generic Node handle to an ScaledIntegerNode handle.
 @param   [in] n The generic handle to downcast.
 @details The handle @a n must be for an underlying ScaledIntegerNode, otherwise an exception is thrown.
@@ -3787,7 +3765,7 @@ This function must be explicitly called (c++ compiler cannot insert it automatic
 @return  A smart ScaledIntegerNode handle referencing the underlying object.
 @throw   ::E57_ERROR_BAD_NODE_DOWNCAST
 @see     NodeFunctions.cpp example, Node::type(), ScaledIntegerNode::operator Node()
-*/ /*================*/
+*/
 ScaledIntegerNode::ScaledIntegerNode(const Node& n)
 {
     /// Downcast from shared_ptr<NodeImpl> to shared_ptr<ScaledIntegerNodeImpl>
@@ -3806,7 +3784,7 @@ ScaledIntegerNode::ScaledIntegerNode(shared_ptr<ScaledIntegerNodeImpl> ni)
 //! @endcond
 
 //=====================================================================================
-/*================*/ /*!
+/*!
 @class FloatNode
 @brief   An E57 element encoding a single or double precision IEEE floating point number.
 @details
@@ -3839,7 +3817,7 @@ The following C++ code checks externally visible state for consistency and throw
 @see     Node
 */
 
-/*================*/ /*!
+/*!
 @brief   Create an E57 element for storing an double precision IEEE floating point number.
 @param   [in] destImageFile   The ImageFile where the new node will eventually be stored.
 @param   [in] value     The double precision IEEE floating point value of the element.
@@ -3873,7 +3851,7 @@ If the FloatNode is to be used in a prototype, it is recommended to specify a @a
 @throw   ::E57_ERROR_VALUE_OUT_OF_BOUNDS
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     FloatCreate.cpp example, FloatPrecision, FloatNode::value, Node, CompressedVectorNode, CompressedVectorNode::prototype
-*/ /*================*/
+*/
 FloatNode::FloatNode(ImageFile destImageFile, double value, FloatPrecision precision, double minimum, double maximum)
 : impl_(new FloatNodeImpl(destImageFile.impl(), value, precision, minimum, maximum))
 {
@@ -3921,7 +3899,7 @@ bool FloatNode::isAttached() const
     return impl_->isAttached();
 }
 
-/*================*/ /*!
+/*!
 @brief   Get IEEE floating point value stored.
 @details
 If precision is E57_SINGLE, the single precision value is returned as a double.
@@ -3932,13 +3910,13 @@ If precision is E57_DOUBLE, the double precision value is returned as a double.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     FloatCreate.cpp example, FloatNode::minimum, FloatNode::maximum
-*/ /*================*/
+*/
 double FloatNode::value() const
 {
     return impl_->value();
 }
 
-/*================*/ /*!
+/*!
 @brief   Get declared precision of the floating point number.
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @post    No visible state is modified.
@@ -3946,13 +3924,13 @@ double FloatNode::value() const
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     FloatCreate.cpp example, FloatPrecision
-*/ /*================*/
+*/
 FloatPrecision FloatNode::precision() const
 {
     return impl_->precision();
 }
 
-/*================*/ /*!
+/*!
 @brief   Get the declared minimum that the value may take.
 @details
 If precision is E57_SINGLE, the single precision minimum is returned as a double.
@@ -3963,13 +3941,13 @@ If precision is E57_DOUBLE, the double precision minimum is returned as a double
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     FloatCreate.cpp example, FloatNode::maximum, FloatNode::value
-*/ /*================*/
+*/
 double FloatNode::minimum() const
 {
     return impl_->minimum();
 }
 
-/*================*/ /*!
+/*!
 @brief   Get the declared maximum that the value may take.
 @details
 If precision is E57_SINGLE, the single precision maximum is returned as a double.
@@ -3980,7 +3958,7 @@ If precision is E57_DOUBLE, the double precision maximum is returned as a double
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     FloatCreate.cpp example, FloatNode::minimum, FloatNode::value
-*/ /*================*/
+*/
 double FloatNode::maximum() const
 {
     return impl_->maximum();
@@ -3998,20 +3976,20 @@ void FloatNode::dump(int indent, std::ostream& os) const
 {}
 #endif
 
-/*================*/ /*!
+/*!
 @brief   Upcast a FloatNode handle to a generic Node handle.
 @details An upcast is always safe, and the compiler can automatically insert it for initializations of Node variables and Node function arguments.
 @return  A smart Node handle referencing the underlying object.
 @throw   No E57Exceptions.
 @see     NodeFunctions.cpp example, FloatNode(const Node&) example, explanation in Node, Node::type()
-*/ /*================*/
+*/
 FloatNode::operator Node() const
 {
     /// Upcast from shared_ptr<FloatNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
     return Node(impl_);
 }
 
-/*================*/ /*!
+/*!
 @brief   Downcast a generic Node handle to a FloatNode handle.
 @param   [in] n The generic handle to downcast.
 @details The handle @a n must be for an underlying FloatNode, otherwise an exception is thrown.
@@ -4020,7 +3998,7 @@ This function must be explicitly called (c++ compiler cannot insert it automatic
 @return  A smart FloatNode handle referencing the underlying object.
 @throw   ::E57_ERROR_BAD_NODE_DOWNCAST
 @see     NodeFunctions.cpp example, Node::type(), FloatNode::operator Node()
-*/ /*================*/
+*/
 FloatNode::FloatNode(const Node& n)
 {
     /// Downcast from shared_ptr<NodeImpl> to shared_ptr<FloatNodeImpl>
@@ -4039,7 +4017,7 @@ FloatNode::FloatNode(shared_ptr<FloatNodeImpl> ni)
 //! @endcond
 
 //=====================================================================================
-/*================*/ /*!
+/*!
 @class StringNode
 @brief   An E57 element encoding a Unicode character string value.
 @details
@@ -4061,7 +4039,7 @@ The following C++ code checks externally visible state for consistency and throw
 @see     Node
 */
 
-/*================*/ /*!
+/*!
 @brief   Create an element storing a Unicode character string.
 @param   [in] destImageFile The ImageFile where the new node will eventually be stored.
 @param   [in] value         The Unicode character string value of the element, in UTF-8 encoding.
@@ -4082,7 +4060,7 @@ If the StringNode is to be used in a CompressedVectorNode prototype, it is recom
 @throw   ::E57_ERROR_FILE_IS_READ_ONLY
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     StringCreate.cpp example, StringNode::value, Node, CompressedVectorNode, CompressedVectorNode::prototype
-*/ /*================*/
+*/
 StringNode::StringNode(ImageFile destImageFile, const ustring value)
 : impl_(new StringNodeImpl(destImageFile.impl(), value))
 {
@@ -4130,7 +4108,7 @@ bool StringNode::isAttached() const
     return impl_->isAttached();
 }
 
-/*================*/ /*!
+/*!
 @brief   Get Unicode character string value stored.
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @post    No visible state is modified.
@@ -4138,7 +4116,7 @@ bool StringNode::isAttached() const
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     StringCreate.cpp example
-*/ /*================*/
+*/
 ustring StringNode::value() const
 {
     return impl_->value();
@@ -4156,20 +4134,20 @@ void StringNode::dump(int indent, std::ostream& os) const
 {}
 #endif
 
-/*================*/ /*!
+/*!
 @brief   Upcast a StringNode handle to a generic Node handle.
 @details An upcast is always safe, and the compiler can automatically insert it for initializations of Node variables and Node function arguments.
 @return  A smart Node handle referencing the underlying object.
 @throw   No E57Exceptions.
 @see     NodeFunctions.cpp example, StringNode(const Node&) example, explanation in Node, Node::type(), StringNode(const Node&)
-*/ /*================*/
+*/
 StringNode::operator Node() const
 {
     /// Upcast from shared_ptr<StringNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
     return Node(impl_);
 }
 
-/*================*/ /*!
+/*!
 @brief   Downcast a generic Node handle to a StringNode handle.
 @param   [in] n The generic handle to downcast.
 @details The handle @a n must be for an underlying StringNode, otherwise an exception is thrown.
@@ -4178,7 +4156,7 @@ This function must be explicitly called (c++ compiler cannot insert it automatic
 @return  A smart StringNode handle referencing the underlying object.
 @throw   ::E57_ERROR_BAD_NODE_DOWNCAST
 @see     NodeFunctions.cpp example, Node::type(), StringNode::operator Node()
-*/ /*================*/
+*/
 StringNode::StringNode(const Node& n)
 {
     /// Downcast from shared_ptr<NodeImpl> to shared_ptr<StringNodeImpl>
@@ -4197,7 +4175,7 @@ StringNode::StringNode(shared_ptr<StringNodeImpl> ni)
 //! @endcond
 
 //=====================================================================================
-/*================*/ /*!
+/*!
 @class BlobNode
 @brief   An E57 element encoding an fixed-length sequence of bytes with an opaque format.
 @details
@@ -4237,7 +4215,7 @@ The following C++ code checks externally visible state for consistency and throw
 @see     Node
 */
 
-/*================*/ /*!
+/*!
 @brief   Create an element for storing a sequence of bytes with an opaque format.
 @param   [in] destImageFile The ImageFile where the new node will eventually be stored.
 @param   [in] byteCount     The number of bytes reserved in the ImageFile for holding the blob.
@@ -4262,7 +4240,7 @@ It is an error to attempt to attach the BlobNode to a different ImageFile.
 @throw   ::E57_ERROR_FILE_IS_READ_ONLY
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     BlobCreate.cpp example, Node, BlobNode::read, BlobNode::write
-*/ /*================*/
+*/
 BlobNode::BlobNode(ImageFile destImageFile, int64_t byteCount)
 : impl_(new BlobNodeImpl(destImageFile.impl(), byteCount))
 {
@@ -4310,7 +4288,7 @@ bool BlobNode::isAttached() const
     return impl_->isAttached();
 }
 
-/*================*/ /*!
+/*!
 @brief   Get size of blob declared when it was created.
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @post    No visible state is modified.
@@ -4318,13 +4296,13 @@ bool BlobNode::isAttached() const
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     BlobCreate.cpp example, BlobNode::read, BlobNode::write
-*/ /*================*/
+*/
 int64_t BlobNode::byteCount() const
 {
     return impl_->byteCount();
 }
 
-/*================*/ /*!
+/*!
 @brief   Read a buffer of bytes from a blob.
 @param   [in] buf   A memory buffer to store bytes read from the blob.
 @param   [in] start The index of the first byte in blob to read.
@@ -4349,13 +4327,13 @@ Any part of the Blob data can be read zero or more times.
 @throw   ::E57_ERROR_BAD_CHECKSUM
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     BlobCreate.cpp example, BlobNode::byteCount, BlobNode::write
-*/ /*================*/
+*/
 void BlobNode::read(uint8_t* buf, int64_t start, size_t count)
 {
     impl_->read(buf, start, count);
 }
 
-/*================*/ /*!
+/*!
 @brief   Write a buffer of bytes to a blob.
 @param   [in] buf   A memory buffer of bytes to write to the blob.
 @param   [in] start The index of the first byte in blob to write to.
@@ -4387,7 +4365,7 @@ The BlobNode is one of the two node types that must be attached to the root of a
 @throw   ::E57_ERROR_BAD_CHECKSUM
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     BlobCreate.cpp example, BlobNode::byteCount, BlobNode::read
-*/ /*================*/
+*/
 void BlobNode::write(uint8_t* buf, int64_t start, size_t count)
 {
     impl_->write(buf, start, count);
@@ -4405,20 +4383,20 @@ void BlobNode::dump(int indent, std::ostream& os) const
 {}
 #endif
 
-/*================*/ /*!
+/*!
 @brief   Upcast a BlobNode handle to a generic Node handle.
 @details An upcast is always safe, and the compiler can automatically insert it for initializations of Node variables and Node function arguments.
 @return  A smart Node handle referencing the underlying object.
 @throw   No E57Exceptions.
 @see     NodeFunctions.cpp example, BlobNode(const Node&) example, explanation in Node, Node::type(), BlobNode(const Node&)
-*/ /*================*/
+*/
 BlobNode::operator Node() const
 {
     /// Upcast from shared_ptr<StringNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
     return Node(impl_);
 }
 
-/*================*/ /*!
+/*!
 @brief   Downcast a generic Node handle to a BlobNode handle.
 @param   [in] n The generic handle to downcast.
 @details The handle @a n must be for an underlying BlobNode, otherwise an exception is thrown.
@@ -4427,7 +4405,7 @@ This function must be explicitly called (c++ compiler cannot insert it automatic
 @return  A smart BlobNode handle referencing the underlying object.
 @throw   ::E57_ERROR_BAD_NODE_DOWNCAST
 @see     NodeFunctions.cpp example, Node::type(), BlobNode::operator Node()
-*/ /*================*/
+*/
 BlobNode::BlobNode(const Node& n)
 {
     /// Downcast from shared_ptr<NodeImpl> to shared_ptr<BlobNodeImpl>
@@ -4450,7 +4428,7 @@ BlobNode::BlobNode(shared_ptr<BlobNodeImpl> ni)
 //! @endcond
 
 //=====================================================================================
-/*================*/ /*!
+/*!
 @class ImageFile
 @brief   An ASTM E57 3D format file object.
 @details
@@ -4514,7 +4492,7 @@ The following C++ code checks externally visible state for consistency and throw
 @until end ImageFile::checkInvariant
 */
 
-/*================*/ /*!
+/*!
 @brief   Open an ASTM E57 imaging data file for reading/writing.
 @param   [in] fname File name to open.
 Support of '\' as a directory separating character is system dependent.
@@ -4557,7 +4535,7 @@ There is no API support for appending data onto an existing E57 data file.
 @throw   ::E57_ERROR_BAD_CONFIGURATION
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     HelloWorld.cpp example, IntegerNode, ScaledIntegerNode, FloatNode, StringNode, BlobNode, StructureNode, VectorNode, CompressedVectorNode, E57Exception, E57Utilities::E57Utilities
-*/ /*================*/
+*/
 ImageFile::ImageFile(const ustring& fname, const ustring& mode, const ustring& configuration)
 : impl_(new ImageFileImpl())
 {
@@ -4565,7 +4543,7 @@ ImageFile::ImageFile(const ustring& fname, const ustring& mode, const ustring& c
     impl_->construct2(fname, mode, configuration);
 }
 
-/*================*/ /*!
+/*!
 @brief   Get the pre-established root StructureNode of the E57 ImageFile.
 @details The root node of an ImageFile always exists and is always type StructureNode.
 The root node is empty in a newly created write mode ImageFile.
@@ -4574,13 +4552,13 @@ The root node is empty in a newly created write mode ImageFile.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     HelloWorld.cpp example, StructureNode.
-*/ /*================*/
+*/
 StructureNode ImageFile::root() const
 {
     return StructureNode(impl_->root());
 }
 
-/*================*/ /*!
+/*!
 @brief   Complete any write operations on an ImageFile, and close the file on the disk.
 @details
 Completes the writing of the state of the ImageFile to the disk.
@@ -4603,13 +4581,13 @@ It is not an error if ImageFile is already closed.
 @throw   ::E57_ERROR_BAD_CHECKSUM
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     HelloWorld.cpp example, ImageFile::cancel, ImageFile::isOpen
-*/ /*================*/
+*/
 void ImageFile::close()
 {
     impl_->close();
 }
 
-/*================*/ /*!
+/*!
 @brief   Stop I/O operations and delete a partially written ImageFile on the disk.
 @details
 If the ImageFile is write mode, the associated file on the disk is closed and deleted, and the ImageFile goes to the closed state.
@@ -4618,49 +4596,49 @@ It is not an error if ImageFile is already closed.
 @post    ImageFile is in @c closed state.
 @throw   No E57Exceptions.
 @see     Cancel.cpp example, ImageFile::ImageFile, ImageFile::close, ImageFile::isOpen
-*/ /*================*/
+*/
 void ImageFile::cancel()
 {
     impl_->cancel();
 }
 
-/*================*/ /*!
+/*!
 @brief   Test whether ImageFile is still open for accessing.
 @post    No visible state is modified.
 @return  true if ImageFile is in @c open state.
 @throw   No E57Exceptions.
 @see     Cancel.cpp example, ImageFile::ImageFile, ImageFile::close
-*/ /*================*/
+*/
 bool ImageFile::isOpen() const
 {
     return impl_->isOpen();
 }
 
-/*================*/ /*!
+/*!
 @brief   Test whether ImageFile was opened in write mode.
 @post    No visible state is modified.
 @return  true if ImageFile was opened in write mode.
 @throw   No E57Exceptions.
 @see     SourceDestBufferFunctions.cpp example, ImageFile::ImageFile, ImageFile::isOpen
-*/ /*================*/
+*/
 bool ImageFile::isWritable() const
 {
     return impl_->isWriter();
 }
 
-/*================*/ /*!
+/*!
 @brief   Get the file name the ImageFile was created with.
 @post    No visible state is modified.
 @return  The file name the ImageFile was created with.
 @throw   No E57Exceptions.
 @see     NodeFunctions.cpp example, Cancel.cpp example, ImageFile::ImageFile
-*/ /*================*/
+*/
 ustring ImageFile::fileName() const
 {
     return impl_->fileName();
 }
 
-/*================*/ /*!
+/*!
 @brief   Get current number of open CompressedVectorWriter objects writing to ImageFile.
 @details
 CompressedVectorWriter objects that still exist, but are in the closed state aren't counted.
@@ -4671,13 +4649,13 @@ CompressedVectorWriter objects are created by the CompressedVectorNode::writer f
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     SourceDestBufferFunctions.cpp example, CompressedVectorNode::writer, CompressedVectorWriter
-*/ /*================*/
+*/
 int ImageFile::writerCount() const
 {
     return impl_->writerCount();
 }
 
-/*================*/ /*!
+/*!
 @brief   Get current number of open CompressedVectorReader objects reading from ImageFile.
 @details
 CompressedVectorReader objects that still exist, but are in the closed state aren't counted.
@@ -4688,13 +4666,13 @@ CompressedVectorReader objects are created by the CompressedVectorNode::reader f
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     SourceDestBuffer::pathName() example, CompressedVectorNode::reader, CompressedVectorReader
-*/ /*================*/
+*/
 int ImageFile::readerCount() const
 {
     return impl_->readerCount();
 }
 
-/*================*/ /*!
+/*!
 @brief   Declare the use of an E57 extension in an ImageFile being written.
 @param   [in] prefix    The shorthand name of the extension to use in element names.
 @param   [in] uri       The Uniform Resource Identifier string to associate with the prefix in the ImageFile.
@@ -4725,13 +4703,13 @@ See the class discussion at bottom of ImageFile page for more details about name
 @throw   ::E57_ERROR_DUPLICATE_NAMESPACE_URI
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     Extensions.cpp example, ImageFile::extensionsCount, ImageFile::extensionsLookupPrefix, ImageFile::extensionsLookupUri
-*/ /*================*/
+*/
 void ImageFile::extensionsAdd(const ustring& prefix, const ustring& uri)
 {
     impl_->extensionsAdd(prefix, uri);
 }
 
-/*================*/ /*!
+/*!
 @brief   Get URI associated with an E57 extension prefix in the ImageFile.
 @param   [in] prefix    The shorthand name of the extension to look up.
 @param   [out] uri      The URI that was associated with the given @a prefix.
@@ -4747,13 +4725,13 @@ It is not an error if @a prefix is well-formed, but not defined in the ImageFile
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     Extensions.cpp example, ImageFile::extensionsLookupUri
-*/ /*================*/
+*/
 bool ImageFile::extensionsLookupPrefix(const ustring& prefix, ustring& uri) const
 {
     return impl_->extensionsLookupPrefix(prefix, uri);
 }
 
-/*================*/ /*!
+/*!
 @brief   Get an E57 extension prefix associated with a URI in the ImageFile.
 @param   [in] uri       The URI of the extension to look up.
 @param   [out] prefix   The shorthand prefix that was associated with the given @a uri.
@@ -4769,13 +4747,13 @@ It is not an error if @a uri is well-formed, but not defined in the ImageFile (t
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     Extensions.cpp example, ImageFile::extensionsLookupPrefix
-*/ /*================*/
+*/
 bool ImageFile::extensionsLookupUri(const ustring& uri, ustring& prefix) const
 {
     return impl_->extensionsLookupUri(uri, prefix);
 }
 
-/*================*/ /*!
+/*!
 @brief   Get number of E57 extensions declared in the ImageFile.
 @details
 The default E57 namespace does not count as an extension.
@@ -4785,13 +4763,13 @@ The default E57 namespace does not count as an extension.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     Extensions.cpp example, ImageFile::extensionsPrefix, ImageFile::extensionsUri
-*/ /*================*/
+*/
 size_t ImageFile::extensionsCount() const
 {
     return impl_->extensionsCount();
 }
 
-/*================*/ /*!
+/*!
 @brief   Get an E57 extension prefix declared in an ImageFile by index.
 @param   [in] index The index of the prefix to get, starting at 0.
 @details
@@ -4806,13 +4784,13 @@ The default E57 namespace is not counted as an extension.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     Extensions.cpp example, ImageFile::extensionsCount, ImageFile::extensionsUri
-*/ /*================*/
+*/
 ustring ImageFile::extensionsPrefix(const size_t index) const
 {
     return impl_->extensionsPrefix(index);
 }
 
-/*================*/ /*!
+/*!
 @brief   Get an E57 extension URI declared in an ImageFile by index.
 @param   [in] index The index of the URI to get, starting at 0.
 @details
@@ -4827,13 +4805,13 @@ The default E57 namespace is not counted as an extension.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     Extensions.cpp example, ImageFile::extensionsCount, ImageFile::extensionsPrefix
-*/ /*================*/
+*/
 ustring ImageFile::extensionsUri(const size_t index) const
 {
     return impl_->extensionsUri(index);
 }
 
-/*================*/ /*!
+/*!
 @brief   Test whether an E57 element name has an extension prefix.
 @details
 The element name has a prefix if the function elementNameParse(elementName,prefix,dummy) would succeed, and returned prefix != "".
@@ -4842,13 +4820,13 @@ The element name has a prefix if the function elementNameParse(elementName,prefi
 @return  True if the E57 element name has an extension prefix.
 @throw   No E57Exceptions.
 @see     NameParse.cpp example
-*/ /*================*/
+*/
 bool ImageFile::isElementNameExtended(const ustring& elementName) const
 {
     return impl_->isElementNameExtended(elementName);
 }
 
-/*================*/ /*!
+/*!
 @brief   Parse element name into prefix and localPart substrings.
 @param   [in] elementName   The string element name to parse into prefix and local parts.
 @param   [out] prefix       The prefix (if any) in the @a elementName.
@@ -4861,16 +4839,16 @@ If in prefixed form, the prefix does not have to be declared in the ImageFile.
 @throw   ::E57_ERROR_BAD_PATH_NAME
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     NameParse.cpp example, ImageFile::isElementNameExtended
-*/ /*================*/
+*/
 void ImageFile::elementNameParse(const ustring& elementName, ustring& prefix, ustring& localPart) const
 {
     impl_->elementNameParse(elementName, prefix, localPart);
 }
 
-/*================*/ /*!
+/*!
 @brief   Diagnostic function to print internal state of object to output stream in an indented format.
 @copydetails Node::dump()
-*/ /*================*/
+*/
 #ifdef E57_DEBUG
 void ImageFile::dump(int indent, std::ostream& os) const
 {
@@ -4881,25 +4859,25 @@ void ImageFile::dump(int indent, std::ostream& os) const
 {}
 #endif
 
-/*================*/ /*!
+/*!
 @brief   Test if two ImageFile handles refer to the same underlying ImageFile
 @param   [in] imf2        The ImageFile to compare this ImageFile with
 @post    No visible object state is modified.
 @return  @c true if ImageFile handles refer to the same underlying ImageFile.
 @throw   No E57Exceptions
-*/ /*================*/
+*/
 bool ImageFile::operator==(ImageFile imf2) const
 {
     return(impl_ == imf2.impl_);
 }
 
-/*================*/ /*!
+/*!
 @brief   Test if two ImageFile handles refer to different underlying ImageFile
 @param   [in] imf2        The ImageFile to compare this ImageFile with
 @post    No visible object state is modified.
 @return  @c true if ImageFile handles refer to different underlying ImageFiles.
 @throw   No E57Exceptions
-*/ /*================*/
+*/
 bool ImageFile::operator!=(ImageFile imf2) const
 {
     return(impl_ != imf2.impl_);
@@ -4912,7 +4890,7 @@ ImageFile::ImageFile(shared_ptr<ImageFileImpl> imfi)
 //! @endcond
 
 //=====================================================================================
-/*================*/ /*!
+/*!
 @class E57Exception
 @brief   Object thrown by E57 Foundation API functions to communicate the conditions of an error.
 @details
@@ -4971,7 +4949,7 @@ E57Exception::E57Exception(ErrorCode ecode, const ustring context,
 }
 //! @endcond
 
-/*================*/ /*!
+/*!
 @brief   Print error information on a given output stream.
 @param   [in] reportingFileName     Name of file where catch statement caught the exception.  NULL if unknown.
 @param   [in] reportingLineNumber   Number of source code line where catch statement caught the exception.  0 if unknown.
@@ -4982,7 +4960,7 @@ The amount of information printed to output stream may depend on whether the E57
 @post    No visible state is modified.
 @throw   No E57Exceptions.
 @see     E57ExceptionFunctions.cpp example, ErrorCode, HelloWorld.cpp example
-*/ /*================*/
+*/
 void E57Exception::report(const char* reportingFileName, int reportingLineNumber, const char* reportingFunctionName, std::ostream& os) const
 {
     os << "**** Got an e57 exception: " << E57Utilities().errorCodeToString(errorCode()) << endl;
@@ -5001,19 +4979,19 @@ void E57Exception::report(const char* reportingFileName, int reportingLineNumber
 #endif
 }
 
-/*================*/ /*!
+/*!
 @brief   Get numeric ::ErrorCode associated with the exception.
 @post    No visible state is modified.
 @return  The numeric ::ErrorCode associated with the exception.
 @throw   No E57Exceptions.
 @see     E57ExceptionFunctions.cpp example, E57Utilities::errorCodeToString, ErrorCode
-*/ /*================*/
+*/
 ErrorCode E57Exception::errorCode() const
 {
     return(errorCode_);
 }
 
-/*================*/ /*!
+/*!
 @brief   Get human-readable string that describes the context of the error.
 @details
 The context string may include values in object state, or function arguments.
@@ -5023,13 +5001,13 @@ However, in the Reference Implementation, many strings contain a sequence of " V
 @return  The human-readable string that describes the context of the error.
 @throw   No E57Exceptions.
 @see     E57ExceptionsFunctions.cpp example
-*/ /*================*/
+*/
 ustring E57Exception::context() const
 {
     return(context_);
 }
 
-/*================*/ /*!
+/*!
 @brief   Get string description of exception category.
 @details
 Returns "E57 Exception" for all E57Exceptions, no matter what the errorCode.
@@ -5037,13 +5015,13 @@ Returns "E57 Exception" for all E57Exceptions, no matter what the errorCode.
 @return  The string description of exception category.
 @throw   No E57Exceptions.
 @see     E57ExceptionsFunctions.cpp example
-*/ /*================*/
-const char* E57Exception::what() const throw()
+*/
+const char* E57Exception::what() const noexcept
 {
     return("E57 exception");
 }
 
-/*================*/ /*!
+/*!
 @brief   Get name of source file where exception occurred, for debugging.
 @details
 May return the value of the macro variable __FILE__ at the location where the E57Exception was constructed.
@@ -5052,13 +5030,13 @@ May return the empty string ("") in some E57 Foundation Implementations.
 @return  The name of source file where exception occurred, for debugging.
 @throw   No E57Exceptions.
 @see     E57ExceptionsFunctions.cpp example
-*/ /*================*/
+*/
 const char* E57Exception::sourceFileName() const
 {
     return(sourceFileName_);
 }
 
-/*================*/ /*!
+/*!
 @brief   Get name of function in source code where the error occurred , for debugging.
 @details
 May return the value of the macro variable __FUNCTION__ at the location where the E57Exception was constructed.
@@ -5067,13 +5045,13 @@ May return the empty string ("") in some E57 Foundation Implementations.
 @return  The name of source code function where the error occurred , for debugging.
 @throw   No E57Exceptions.
 @see     E57ExceptionsFunctions.cpp example
-*/ /*================*/
+*/
 const char* E57Exception::sourceFunctionName() const
 {
     return(sourceFunctionName_);
 }
 
-/*================*/ /*!
+/*!
 @brief   Get line number in source code file where exception occurred, for debugging.
 @details
 May return the value of the macro variable __LINE__ at the location where the E57Exception was constructed.
@@ -5082,7 +5060,7 @@ May return the empty string ("") in some E57 Foundation Implementations.
 @return  The line number in source code file where exception occurred, for debugging.
 @throw   No E57Exceptions.
 @see     E57ExceptionsFunctions.cpp example
-*/ /*================*/
+*/
 int E57Exception::sourceLineNumber() const
 {
     return(sourceLineNumber_);
@@ -5090,7 +5068,7 @@ int E57Exception::sourceLineNumber() const
 
 
 //=====================================================================================
-/*================*/ /*!
+/*!
 @class E57Utilities
 @brief   Utility functions not associated with any object.
 @details
@@ -5098,7 +5076,7 @@ The E57Utilities encapsulates the miscellaneous functions that aren't associated
 Having these functions be member functions of a constructed object allows these functions to be dynamically linked at run-time rather than be statically linked at compile time.
 */
 
-/*================*/ /*!
+/*!
 @fn      E57Utilities::E57Utilities(const ustring &)
 @brief   Create an object that allows access to functions that are not associated with an ImageFile.
 @details
@@ -5106,10 +5084,10 @@ Because the construction of the E57Utilities object may be expensive, it is reco
 @return  An object that allows access to functions that are not associated with an ImageFile.
 @throw   ::E57_ERROR_BAD_CONFIGURATION
 @see     Versions.cpp example, ImageFile::ImageFile
-*/ /*================*/
+*/
 
 
-/*================*/ /*!
+/*!
 @brief   Get the version of ASTM E57 standard that the API implementation supports, and library id string.
 @param   [out] astmMajor    The major version number of the ASTM E57 standard supported.
 @param   [out] astmMinor    The minor version number of the ASTM E57 standard supported.
@@ -5119,7 +5097,7 @@ Since the E57 Foundation Implementation may be dynamically linked underneath the
 This function returns these identifiers from the underlying implementation.
 @throw   No E57Exceptions.
 @see     Versions.cpp example, E57Utilities::E57Utilities
-*/ /*================*/
+*/
 void E57Utilities::getVersions(int& astmMajor, int& astmMinor, ustring& libraryId)
 {
     astmMajor = E57_FORMAT_MAJOR;
@@ -5127,7 +5105,7 @@ void E57Utilities::getVersions(int& astmMajor, int& astmMinor, ustring& libraryI
     libraryId = E57_LIBRARY_ID;
 }
 
-/*================*/ /*!
+/*!
 @brief   Get short string description of an E57 ErrorCode.
 @param   [in] ecode     The numeric errorCode from an E57Exception.
 @details
@@ -5135,7 +5113,7 @@ The errorCode is translated into a one-line English string.
 @return  English ustring describing error.
 @throw   No E57Exceptions.
 @see     E57ExceptionsFunctions.cpp example, E57Exception::errorCode, E57Utilities::E57Utilities
-*/ /*================*/
+*/
 ustring E57Utilities::errorCodeToString(ErrorCode ecode)
 {
     switch (ecode) {

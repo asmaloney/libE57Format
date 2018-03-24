@@ -26,11 +26,6 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
-//////////////////////////////////////////////////////////////////////////
-//
-//  V106    Dec 1, 2010     Stan Coleby SC  scoleby@intelisum.com
-//                              Added pageSize to E57FileHeader
-//                              Changed Version to 1.0
 
 #if defined(WIN32)
 #if defined(_MSC_VER)
@@ -149,7 +144,7 @@ void E57FileHeader::swab()
     SWAB(&filePhysicalLength);
     SWAB(&xmlPhysicalOffset);
     SWAB(&xmlLogicalLength);
-    SWAB(&pageSize);            //Added by SC
+    SWAB(&pageSize);
 };
 #endif
 
@@ -164,7 +159,7 @@ void E57FileHeader::dump(int indent, std::ostream& os)
     os << space(indent) << "filePhysicalLength: " << filePhysicalLength << endl;
     os << space(indent) << "xmlPhysicalOffset:  " << xmlPhysicalOffset << endl;
     os << space(indent) << "xmlLogicalLength:   " << xmlLogicalLength << endl;
-    os << space(indent) << "pageSize:           " << pageSize << endl;          //Added by SC
+    os << space(indent) << "pageSize:           " << pageSize << endl;
 }
 #endif
 
@@ -2248,7 +2243,7 @@ ScaledIntegerNodeImpl::ScaledIntegerNodeImpl(weak_ptr<ImageFileImpl> destImageFi
                              + " maximum=" + toString(maximum));
     }
 }
-//=============================================================================     Added by SC
+//=============================================================================
 ScaledIntegerNodeImpl::ScaledIntegerNodeImpl(weak_ptr<ImageFileImpl> destImageFile, double scaledValue, double scaledMinimum, double scaledMaximum, double scale, double offset)
 : NodeImpl(destImageFile),
   value_(static_cast<int64_t>(floor((scaledValue - offset)/scale +.5))),
@@ -2334,7 +2329,7 @@ int64_t ScaledIntegerNodeImpl::minimum()
     checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
     return(minimum_);
 }
-double ScaledIntegerNodeImpl::scaledMinimum()   //Added by SC
+double ScaledIntegerNodeImpl::scaledMinimum()
 {
     checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
     return(minimum_ * scale_ + offset_);
@@ -2345,7 +2340,7 @@ int64_t ScaledIntegerNodeImpl::maximum()
     checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
     return(maximum_);
 }
-double ScaledIntegerNodeImpl::scaledMaximum()   //Added by SC
+double ScaledIntegerNodeImpl::scaledMaximum()
 {
     checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
     return(maximum_ * scale_ + offset_);
@@ -3732,19 +3727,11 @@ void ImageFileImpl::construct2(const ustring& fileName, const ustring& mode, con
 #ifdef E57_MAX_VERBOSE
     cout << "ImageFileImpl() called, fileName=" << fileName << " mode=" << mode << endl;
 #endif
-    unusedLogicalStart_ = sizeof(E57FileHeader);    //Added by SC
+    unusedLogicalStart_ = sizeof(E57FileHeader);
     fileName_ = fileName;
 
     /// Get shared_ptr to this object
     shared_ptr<ImageFileImpl> imf=shared_from_this();
-
-// Removed by SC
-//    file_ = reinterpret_cast<CheckedFile*>(-1); // yes, really! Work around a strange invariant check <rs 2010-06-16> //todo: FIXME
-//    shared_ptr<StructureNodeImpl> root(new StructureNodeImpl(imf));
-//    file_ = 0;
-//    root_ = root; //??? ok?
-/// Mark the root as attached to an ImageFile (this one)
-//    root_->setAttachedRecursive();
 
     //??? allow "rw" or "a"?
     if (mode == "w")
@@ -3761,7 +3748,7 @@ void ImageFileImpl::construct2(const ustring& fileName, const ustring& mode, con
             /// Open file for reading.
             file_ = new CheckedFile(fileName_, CheckedFile::readOnly);
 
-            shared_ptr<StructureNodeImpl> root(new StructureNodeImpl(imf)); //Added by SC
+            shared_ptr<StructureNodeImpl> root(new StructureNodeImpl(imf));
             root_ = root;
             root_->setAttachedRecursive();
 
@@ -3809,7 +3796,7 @@ void ImageFileImpl::construct2(const ustring& fileName, const ustring& mode, con
             /// Create input source (XML section of E57 file turned into a stream).
             E57FileInputSource xmlSection(file_, xmlLogicalOffset_, xmlLogicalLength_);
 
-            unusedLogicalStart_ = sizeof(E57FileHeader);    //Added by SC
+            unusedLogicalStart_ = sizeof(E57FileHeader);
 
             /// Do the parse, building up the node tree
             xmlReader->parse(xmlSection);
@@ -3827,19 +3814,19 @@ void ImageFileImpl::construct2(const ustring& fileName, const ustring& mode, con
         }
         delete xmlReader;
 
-        XMLPlatformUtils::Terminate();  //Added by SC
+        XMLPlatformUtils::Terminate();
 
     } else { /// open for writing (start empty)
         try {
             /// Open file for writing, truncate if already exists.
             file_ = new CheckedFile(fileName_, CheckedFile::writeCreate);
 
-            shared_ptr<StructureNodeImpl> root(new StructureNodeImpl(imf)); //Added by SC
+            shared_ptr<StructureNodeImpl> root(new StructureNodeImpl(imf));
             root_ = root;
             root_->setAttachedRecursive();
 
             unusedLogicalStart_ = sizeof(E57FileHeader);
-            xmlLogicalOffset_ = 0;      //Added by SC
+            xmlLogicalOffset_ = 0;
             xmlLogicalLength_ = 0;
 
         } catch (...) {
@@ -3857,7 +3844,7 @@ void ImageFileImpl::readFileHeader(CheckedFile* file, E57FileHeader& header)
 {
 #ifdef E57_DEBUG
     /// Double check that compiler thinks sizeof header is what it is supposed to be
-    if (sizeof(E57FileHeader) != 48)        //Changed from 40 to 48 by SC
+    if (sizeof(E57FileHeader) != 48)
         throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "headerSize=" + toString(sizeof(E57FileHeader)));
 #endif
 
@@ -3873,7 +3860,7 @@ void ImageFileImpl::readFileHeader(CheckedFile* file, E57FileHeader& header)
         throw E57_EXCEPTION2(E57_ERROR_BAD_FILE_SIGNATURE, "fileName="+file->fileName());
 
     /// Check file version compatibility
-    if (header.majorVersion > E57_FORMAT_MAJOR) {       //Changed to > from != by SC so that V1.0 will work on a V2.0 release
+    if (header.majorVersion > E57_FORMAT_MAJOR) {
         throw E57_EXCEPTION2(E57_ERROR_UNKNOWN_FILE_VERSION,
                              "fileName=" + file->fileName()
                              + " header.majorVersion=" + toString(header.majorVersion)
@@ -3882,8 +3869,8 @@ void ImageFileImpl::readFileHeader(CheckedFile* file, E57FileHeader& header)
 
     /// If is a prototype version (majorVersion==0), then minorVersion has to match too.
     /// In production versions (majorVersion==E57_FORMAT_MAJOR), should be able to handle any minor version.
-    if (header.majorVersion == E57_FORMAT_MAJOR &&      //Added by SC so that V1.0 will work on a V1.1 release
-        header.minorVersion > E57_FORMAT_MINOR) {       //Changed to > from != by SC
+    if (header.majorVersion == E57_FORMAT_MAJOR &&
+        header.minorVersion > E57_FORMAT_MINOR) {
         throw E57_EXCEPTION2(E57_ERROR_UNKNOWN_FILE_VERSION,
                              "fileName=" + file->fileName()
                              + " header.majorVersion=" + toString(header.majorVersion)
@@ -3900,7 +3887,7 @@ void ImageFileImpl::readFileHeader(CheckedFile* file, E57FileHeader& header)
 
     /// Check that page size is correct constant
     if (header.majorVersion != 0 &&
-        header.pageSize != CheckedFile::physicalPageSize)       //Added by SC
+        header.pageSize != CheckedFile::physicalPageSize)
         throw E57_EXCEPTION2(E57_ERROR_BAD_FILE_LENGTH, "fileName=" + file->fileName());
 }
 
@@ -3984,7 +3971,7 @@ void ImageFileImpl::close()
         header.filePhysicalLength = file_->length(CheckedFile::physical);
         header.xmlPhysicalOffset  = xmlPhysicalOffset;
         header.xmlLogicalLength   = xmlLogicalLength_;
-        header.pageSize           = CheckedFile::physicalPageSize;      //Added by SC
+        header.pageSize           = CheckedFile::physicalPageSize;
 #ifdef E57_MAX_VERBOSE
         header.dump(); //???
 #endif

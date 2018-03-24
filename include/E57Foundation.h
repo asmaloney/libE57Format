@@ -189,9 +189,9 @@ public:
 #ifdef E57_INTERNAL_IMPLEMENTATION_ENABLE
     explicit    Node(std::shared_ptr<NodeImpl>);  // internal use only
 #endif
-private:   //=================
-                Node();                 // No default constructor is defined for Node
-protected: //=================
+private:
+                Node() = delete;
+protected:
     friend class NodeImpl;
 
     E57_OBJECT_IMPLEMENTATION(Node)  // Internal implementation details, not part of API, must be last in object
@@ -225,9 +225,9 @@ public:
     void        checkInvariant(bool doRecurse = true, bool doUpcast=true);
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
-private:   //=================
-                StructureNode();                 // No default constructor is defined for StructureNode
-protected: //=================
+private:
+                StructureNode() = delete;
+protected:
     friend class ImageFile;
 
                 StructureNode(std::shared_ptr<StructureNodeImpl> ni);    // internal use only
@@ -267,9 +267,9 @@ public:
     void        checkInvariant(bool doRecurse = true, bool doUpcast=true);
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
-private:   //=================
-                VectorNode();                 // No default constructor is defined for VectorNode
-protected: //=================
+private:
+                VectorNode() = delete;
+protected:
     friend class CompressedVectorNode;
 
                 VectorNode(std::shared_ptr<VectorNodeImpl> ni);  // internal use only
@@ -314,10 +314,10 @@ public:
     void            checkInvariant(bool doRecurse = true);
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
-private:   //=================
-                    SourceDestBuffer();                 // No default constructor is defined for SourceDestBuffer
+private:
+                    SourceDestBuffer() = delete;
 
-protected: //=================
+protected:
 
     E57_OBJECT_IMPLEMENTATION(SourceDestBuffer)  // Internal implementation details, not part of API, must be last in object
 //! \endcond
@@ -336,9 +336,9 @@ public:
     void        checkInvariant(bool doRecurse = true);
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
-private:   //=================
-                CompressedVectorReader();          // No default constructor is defined for CompressedVectorReader
-protected: //=================
+private:
+                CompressedVectorReader() = delete;
+protected:
     friend class CompressedVectorNode;
 
                 CompressedVectorReader(std::shared_ptr<CompressedVectorReaderImpl> ni);
@@ -359,9 +359,9 @@ public:
     void        checkInvariant(bool doRecurse = true);
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
-private:   //=================
-                CompressedVectorWriter();          // No default constructor is defined for CompressedVectorWriter
-protected: //=================
+private:
+                CompressedVectorWriter() = delete;
+protected:
     friend class CompressedVectorNode;
 
                 CompressedVectorWriter(std::shared_ptr<CompressedVectorWriterImpl> ni);
@@ -399,9 +399,9 @@ public:
     void        checkInvariant(bool doRecurse = true, bool doUpcast=true);
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
-private:   //=================
-                CompressedVectorNode();           // No default constructor is defined for CompressedVectorNode
-protected: //=================
+private:
+                CompressedVectorNode() = delete;
+protected:
     friend class CompressedVectorReader;
     friend class CompressedVectorWriter;
     friend class E57XmlParser;
@@ -437,9 +437,9 @@ public:
     void        checkInvariant(bool doRecurse = true, bool doUpcast=true);
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
-private:   //=================
-                IntegerNode();                 // No default constructor is defined for IntegerNode
-protected: //=================
+private:
+                IntegerNode() = delete;
+protected:
 
                 IntegerNode(std::shared_ptr<IntegerNodeImpl> ni);  // internal use only
 
@@ -484,9 +484,9 @@ public:
     void        checkInvariant(bool doRecurse = true, bool doUpcast=true);
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
-private:   //=================
-                ScaledIntegerNode();                 // No default constructor is defined for ScaledIntegerNode
-protected: //=================
+private:
+                ScaledIntegerNode() = delete;
+protected:
 
                 ScaledIntegerNode(std::shared_ptr<ScaledIntegerNodeImpl> ni);  // internal use only
 
@@ -521,9 +521,9 @@ public:
     void        checkInvariant(bool doRecurse = true, bool doUpcast=true);
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
-private:   //=================
-                FloatNode();                 // No default constructor is defined for FloatNode
-protected: //=================
+private:
+                FloatNode() = delete;
+protected:
 
                 FloatNode(std::shared_ptr<FloatNodeImpl> ni);  // internal use only
 
@@ -555,9 +555,9 @@ public:
     void        checkInvariant(bool doRecurse = true, bool doUpcast=true);
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
-private:   //=================
-                StringNode();                 // No default constructor is defined for StringNode
-protected: //=================
+private:
+                StringNode() = delete;
+protected:
     friend class StringNodeImpl;
                 StringNode(std::shared_ptr<StringNodeImpl> ni);  // internal use only
 
@@ -590,9 +590,9 @@ public:
     void        checkInvariant(bool doRecurse = true, bool doUpcast=true);
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
-private:   //=================
-                BlobNode();                 // No default constructor is defined for BlobNode
-protected: //=================
+private:
+                BlobNode() = delete;
+protected:
     friend class E57XmlParser;
 
                 BlobNode(std::shared_ptr<BlobNodeImpl> ni);       // internal use only
@@ -635,10 +635,10 @@ public:
     bool            operator!=(ImageFile imf2) const;
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
-private:   //=================
-                    ImageFile();                 // No default constructor is defined for ImageFile
+private:
+                    ImageFile() = delete;
                     ImageFile(double);           // Give a second dummy constructor, better error msg for: ImageFile(0)
-protected: //=================
+protected:
     //??? workaround?
     friend class Node;
     friend class StructureNode;
@@ -734,9 +734,9 @@ public:
                  const char* srcFileName = NULL, int srcLineNumber = 0, const char* srcFunctionName = NULL);
     ~E57Exception() noexcept {}
 
-private:   //=================
-                E57Exception();                 // No default constructor is defined for E57Exception
-protected: //=================
+private:
+                E57Exception() = delete;
+protected:
     ErrorCode   errorCode_;
     ustring     context_;
     const char* sourceFileName_;

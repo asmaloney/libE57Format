@@ -722,7 +722,7 @@ public:
     virtual void        report(const char* reportingFileName=NULL, int reportingLineNumber=0, const char* reportingFunctionName=NULL, std::ostream& os = std::cout) const;
     virtual ErrorCode   errorCode() const;
     virtual ustring     context() const;
-    virtual const char* what() const throw();
+    virtual const char* what() const noexcept;
 
     // For debugging purposes:
     virtual const char* sourceFileName() const;
@@ -732,7 +732,7 @@ public:
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
     E57Exception(ErrorCode ecode, const ustring context,
                  const char* srcFileName = NULL, int srcLineNumber = 0, const char* srcFunctionName = NULL);
-    ~E57Exception() throw() {};
+    ~E57Exception() noexcept {}
 
 private:   //=================
                 E57Exception();                 // No default constructor is defined for E57Exception
@@ -748,7 +748,7 @@ protected: //=================
 class E57Utilities {
 public:
     // Constructor (does nothing for now)
-                E57Utilities(const ustring& /*configuration*/ = "") {};
+                E57Utilities(const ustring& /*configuration*/ = "") {}
 
     // Get latest version of ASTM standard supported, and library id string
     void        getVersions(int& astmMajor, int& astmMinor, ustring& libraryId);

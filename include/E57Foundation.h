@@ -50,7 +50,6 @@
 namespace e57 {
 #endif
 
-// Use Boost type names for signed/unsigned integers in various witdths
 using std::int8_t;
 using std::uint8_t;
 using std::int16_t;

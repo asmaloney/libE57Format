@@ -1,3 +1,6 @@
+#ifndef E57FOUNDATION_H_INCLUDED
+#define E57FOUNDATION_H_INCLUDED
+
 /*
  * E57Foundation.h - public header of E57 Foundation API for reading/writing .e57 files.
  *
@@ -25,8 +28,6 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
-#ifndef E57FOUNDATION_H_INCLUDED
-#define E57FOUNDATION_H_INCLUDED
 
 //! @file  E57Foundation.h header file for the E57 Foundation API
 
@@ -124,21 +125,6 @@ const double E57_DOUBLE_MIN = -DBL_MAX;
 const double E57_DOUBLE_MAX = DBL_MAX;
 //! @endcond
 
-// Forward references to classes in this header
-class Node;
-class StructureNode;
-class VectorNode;
-class SourceDestBuffer;
-class CompressedVectorReader;
-class CompressedVectorWriter;
-class CompressedVectorNode;
-class IntegerNode;
-class ScaledIntegerNode;
-class FloatNode;
-class StringNode;
-class BlobNode;
-class ImageFile;
-
 //! @cond documentNonPublic   The following isn't part of the API, and isn't documented.
 //??? Can define operator-> that will make implementation more readable
 // Internal implementation files should include e57FoundationImpl.h first which defines symbol E57_INTERNAL_IMPLEMENTATION_ENABLE.
@@ -157,19 +143,31 @@ protected:                                                          \
 #endif
 //! @endcond
 
-// Forward references to implementation in other headers (so don't have to include E57FoundationImpl.h)
-class NodeImpl;
-class StructureNodeImpl;
-class VectorNodeImpl;
-class SourceDestBufferImpl;
-class CompressedVectorReaderImpl;
-class CompressedVectorWriterImpl;
-class CompressedVectorNodeImpl;
-class IntegerNodeImpl;
-class ScaledIntegerNodeImpl;
-class FloatNodeImpl;
+class BlobNode;
 class BlobNodeImpl;
+class CompressedVectorNode;
+class CompressedVectorNodeImpl;
+class CompressedVectorReader;
+class CompressedVectorReaderImpl;
+class CompressedVectorWriter;
+class CompressedVectorWriterImpl;
+class FloatNode;
+class FloatNodeImpl;
+class ImageFile;
 class ImageFileImpl;
+class IntegerNode;
+class IntegerNodeImpl;
+class Node;
+class NodeImpl;
+class ScaledIntegerNode;
+class ScaledIntegerNodeImpl;
+class SourceDestBuffer;
+class SourceDestBufferImpl;
+class StringNode;
+class StructureNode;
+class StructureNodeImpl;
+class VectorNode;
+class VectorNodeImpl;
 
 class Node {
 public:
@@ -456,14 +454,14 @@ public:
     explicit    ScaledIntegerNode(ImageFile destImageFile, int value, int minimum, int maximum,
                                   double scale = 1.0, double offset = 0.0);
     explicit    ScaledIntegerNode(ImageFile destImageFile, double scaledValue, double scaledMinimum, double scaledMaximum,
-                                  double scale = 1.0, double offset = 0.0);     //Added by SC
+                                  double scale = 1.0, double offset = 0.0);
 
     int64_t     rawValue() const;
     double      scaledValue() const;
     int64_t     minimum() const;
-    double      scaledMinimum() const;  //Added by SC
+    double      scaledMinimum() const;
     int64_t     maximum() const;
-    double      scaledMaximum() const;  //Added by SC
+    double      scaledMaximum() const;
     double      scale() const;
     double      offset() const;
 
@@ -747,13 +745,11 @@ protected:
 
 class E57Utilities {
 public:
-    // Constructor (does nothing for now)
                 E57Utilities(const ustring& /*configuration*/ = "") {}
 
     // Get latest version of ASTM standard supported, and library id string
     void        getVersions(int& astmMajor, int& astmMinor, ustring& libraryId);
 
-    // Error code translation
     ustring     errorCodeToString(ErrorCode ecode);
 
 };

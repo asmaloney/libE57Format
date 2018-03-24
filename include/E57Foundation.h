@@ -30,12 +30,12 @@
 
 //! @file  E57Foundation.h header file for the E57 Foundation API
 
-#include <vector>
-#include <string>
+#include <cstdint>
+#include <float.h>
 #include <iostream>
 #include <memory>
-#include <float.h>
-#include <cstdint>    // for int8_t, int16_t, int32_t, etc...
+#include <string>
+#include <vector>
 
 
 #ifndef DOXYGEN  // Doxygen is not handling namespaces well in @includelineno commands, so disable

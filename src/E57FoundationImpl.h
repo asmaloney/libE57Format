@@ -34,13 +34,15 @@
 #ifndef E57FOUNDATIONIMPL_H_INCLUDED
 #define E57FOUNDATIONIMPL_H_INCLUDED
 
-#include <vector>
-#include <set>
-#include <string>
-#include <iostream>
-#include <iomanip>
-#include <sstream>
 #include <algorithm>
+#include <iomanip>
+#include <iostream>
+#include <set>
+#include <sstream>
+#include <stack>
+#include <stdexcept>
+#include <string>
+#include <vector>
 
 // Define the following symbol adds some functions to the API for implementation purposes.
 // These functions are not available to a normal API user.
@@ -84,9 +86,6 @@
 // Disable MSVC warning: warning C4224: nonstandard extension used : formal parameter 'locale' was previously defined as a type
 #pragma warning( disable : 4224)
 #endif
-
-#include <stack>
-#include <stdexcept>
 
 // Turn off DLL input/export mechanism for Xerces library (usually done by defining in compile command line).
 //#define XERCES_STATIC_LIBRARY 1

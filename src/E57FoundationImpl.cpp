@@ -33,79 +33,43 @@
 //                              Changed Version to 1.0
 
 #if defined(WIN32)
-#  if defined(_MSC_VER)
-#    include <io.h>
-#    include <fcntl.h>
-#    include <sys\stat.h>
-#  elif defined(__GNUC__)
-#  define _LARGEFILE64_SOURCE
-#  define __LARGE64_FILES
-#  include <sys/types.h>
-#  include <unistd.h>
-
-#    include <fcntl.h>
-#    include <sys\stat.h>
-#  else
-#    error "no supported compiler defined"
-#  endif
-#elif defined(LINUX)
-#  define _LARGEFILE64_SOURCE
-#  define __LARGE64_FILES
-#  include <sys/types.h>
-#  include <sys/stat.h>
-#  include <unistd.h>
-# include <fcntl.h>
-# define O_BINARY (0)
-# define _unlink unlink
-#elif defined(MACOS)
-#  define _LARGEFILE64_SOURCE
-#  define __LARGE64_FILES
-#  include <sys/types.h>
-#  include <sys/stat.h>
-#  include <unistd.h>
-# include <fcntl.h>
-# define O_BINARY (0)
-# define _unlink unlink
+#if defined(_MSC_VER)
+#include <io.h>
+#elif defined(__GNUC__)
+#define _LARGEFILE64_SOURCE
+#define __LARGE64_FILES
+#include <sys/types.h>
+#include <unistd.h>
 #else
-#  error "no supported OS platform defined"
+#error "no supported compiler defined"
+#endif
+#elif defined(LINUX)
+#define _LARGEFILE64_SOURCE
+#define __LARGE64_FILES
+#include <sys/types.h>
+#include <unistd.h>
+#elif defined(MACOS)
+#include <sys/types.h>
+#include <unistd.h>
+#else
+#error "no supported OS platform defined"
 #endif
 
-#include <sstream>
-//#include <memory> //??? needed?
-#include <fstream> //??? needed?
-#include <iomanip> //??? needed?
-#include <cmath> //??? needed?
-#include <float.h> //??? needed?
-
-#include "CRC.h"
+#include <cmath>
+#include <fcntl.h>
+#include <sys/stat.h>
 
 #ifdef E57_MAX_VERBOSE
 #include <iostream>
-using std::cout;
-using std::endl;
-using std::cerr;
 #endif
 
-#include "E57FoundationImpl.h"
-using namespace e57;
-//using namespace std;
-using std::cerr;
-using std::endl;
-using std::vector;
-using std::ostream;
-using std::stringstream;
-using std::streamsize;
-using std::ios_base;
-using std::scientific;
-using std::setprecision;
-using std::string;
-using std::unique_ptr;
-using std::min;
-using std::max;
+#ifndef O_BINARY
+#define O_BINARY (0)
+#endif
 
-using std::weak_ptr;
-using std::shared_ptr;
-using std::dynamic_pointer_cast;
+#ifndef _unlink
+#define _unlink unlink
+#endif
 
 // The XML parser headers
 #include <xercesc/sax/InputSource.hpp>
@@ -114,11 +78,17 @@ using std::dynamic_pointer_cast;
 #include <xercesc/sax2/SAX2XMLReader.hpp>
 #include <xercesc/sax2/XMLReaderFactory.hpp>
 #include <xercesc/util/BinInputStream.hpp>
+#include <xercesc/util/TransService.hpp>
 
 // Use Xerces namespace (the current version defined in Xerces header)
 XERCES_CPP_NAMESPACE_USE
 
-#include <xercesc/util/TransService.hpp>
+#include "CRC.h"
+
+#include "E57FoundationImpl.h"
+
+using namespace e57;
+using namespace std;
 
 namespace {
 
@@ -165,8 +135,6 @@ const XMLCh att_recordCount[] = {
     chLatin_C, chLatin_o, chLatin_u, chLatin_n, chLatin_t, chNull
 };
 }
-
-//???using namespace std::tr1;
 
 ///============================================================================================================
 ///============================================================================================================
@@ -3018,7 +2986,6 @@ BinInputStream* E57FileInputSource::makeStream() const
 ///============================================================================================================
 ///============================================================================================================
 ///============================================================================================================
-#include <stdlib.h>
 
 namespace e57 {
 

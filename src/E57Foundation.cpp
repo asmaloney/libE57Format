@@ -1617,7 +1617,7 @@ void SourceDestBuffer::checkInvariant(bool /*doRecurse*/) {
 */ /*================*/
 NodeType Node::type() const
 {
-    CHECK_INVARIANCE_RETURN(NodeType, impl_->type());
+    return impl_->type();
 }
 
 /*================*/ /*!
@@ -1637,7 +1637,7 @@ The concept of @em attachement is slightly larger than that of the parent-child 
 */ /*================*/
 bool Node::isRoot() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isRoot());
+    return impl_->isRoot();
 }
 
 /*================*/ /*!
@@ -1664,7 +1664,7 @@ Use Node::isRoot to avoid infinite loops or infinite recursion.
 */ /*================*/
 Node Node::parent() const
 {
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_->parent()));
+    return Node(impl_->parent());
 }
 
 /*================*/ /*!
@@ -1690,7 +1690,7 @@ By convention, in this API, a root node has the empty string ("") as its element
 */ /*================*/
 ustring Node::pathName() const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->pathName());
+    return impl_->pathName();
 }
 
 /*================*/ /*!
@@ -1715,7 +1715,7 @@ However in a CompressedVectorNode, the elementName string is not stored in the f
 */ /*================*/
 ustring Node::elementName() const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->elementName());
+    return impl_->elementName();
 }
 
 /*================*/ /*!
@@ -1731,7 +1731,7 @@ Use Node::isAttached to check if the node actually did get attached.
 */ /*================*/
 ImageFile Node::destImageFile() const
 {
-    CHECK_INVARIANCE_RETURN(ImageFile, ImageFile(impl_->destImageFile()));
+    return ImageFile(impl_->destImageFile());
 }
 
 /*================*/ /*!
@@ -1750,7 +1750,7 @@ It is not recommended to create nodes that are not eventually attached to the Im
 */ /*================*/
 bool Node::isAttached() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isAttached());
+    return impl_->isAttached();
 }
 
 /*================*/ /*!
@@ -1849,49 +1849,48 @@ It is an error to attempt to attach the StructureNode to a different ImageFile.
 StructureNode::StructureNode(ImageFile destImageFile)
 : impl_(new StructureNodeImpl(destImageFile.impl()))
 {
-    CHECK_THIS_INVARIANCE()
 }
 
 //! @brief   Is this a root node.
 //! @copydetails Node::isRoot()
 bool StructureNode::isRoot() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isRoot());
+    return impl_->isRoot();
 }
 
 //! @brief   Return parent of node, or self if a root node.
 //! @copydetails Node::parent()
 Node StructureNode::parent() const
 {
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_->parent()));
+    return Node(impl_->parent());
 }
 
 //! @brief   Get absolute pathname of node.
 //! @copydetails Node::pathName()
 ustring StructureNode::pathName() const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->pathName());
+    return impl_->pathName();
 }
 
 //! @brief   Get elementName string, that identifies the node in its parent.
 //! @copydetails Node::elementName()
 ustring StructureNode::elementName() const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->elementName());
+    return impl_->elementName();
 }
 
 //! @brief   Get the ImageFile that was declared as the destination for the node when it was created.
 //! @copydetails Node::destImageFile()
 ImageFile StructureNode::destImageFile() const
 {
-    CHECK_INVARIANCE_RETURN(ImageFile, ImageFile(impl_->destImageFile()));
+    return ImageFile(impl_->destImageFile());
 }
 
 //! @brief   Has node been attached into the tree of an ImageFile.
 //! @copydetails Node::isAttached()
 bool StructureNode::isAttached() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isAttached());
+    return impl_->isAttached();
 }
 
 /*================*/ /*!
@@ -1905,7 +1904,7 @@ bool StructureNode::isAttached() const
 */ /*================*/
 int64_t StructureNode::childCount() const
 {
-    CHECK_INVARIANCE_RETURN(int64_t, impl_->childCount());
+    return impl_->childCount();
 }
 
 /*================*/ /*!
@@ -1925,7 +1924,7 @@ If this StructureNode is not attached to an ImageFile, the @a pathName origin ro
 */ /*================*/
 bool StructureNode::isDefined(const ustring& pathName) const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isDefined(pathName));
+    return impl_->isDefined(pathName);
 }
 
 /*================*/ /*!
@@ -1945,7 +1944,7 @@ The order of children may change if more children are added to the StructureNode
 */ /*================*/
 Node StructureNode::get(int64_t index) const
 {
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_->get(index)));
+    return Node(impl_->get(index));
 }
 
 /*================*/ /*!
@@ -1966,7 +1965,7 @@ If this StructureNode is not attached to an ImageFile, the @a pathName origin ro
 */ /*================*/
 Node StructureNode::get(const ustring& pathName) const
 {
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_->get(pathName)));
+    return Node(impl_->get(pathName));
 }
 
 /*================*/ /*!
@@ -2003,9 +2002,7 @@ This would be very difficult to do dynamically, as some of the naming rules invo
 */ /*================*/
 void StructureNode::set(const ustring& pathName, Node n)
 {
-    CHECK_THIS_INVARIANCE()
     impl_->set(pathName, n.impl(), false);
-    CHECK_THIS_INVARIANCE()
 }
 
 //! @brief   Diagnostic function to print internal state of object to output stream in an indented format.
@@ -2030,7 +2027,7 @@ void StructureNode::dump(int indent, std::ostream& os) const
 StructureNode::operator Node() const
 {
     /// Implicitly upcast from shared_ptr<StructureNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_));
+    return Node(impl_);
 }
 
 /*================*/ /*!
@@ -2116,49 +2113,48 @@ If @a allowHeteroChildren is true, then the types of the children of the VectorN
 VectorNode::VectorNode(ImageFile destImageFile, bool allowHeteroChildren)
 : impl_(new VectorNodeImpl(destImageFile.impl(), allowHeteroChildren))
 {
-    CHECK_THIS_INVARIANCE()
 }
 
 //! @brief   Is this a root node.
 //! @copydetails Node::isRoot()
 bool VectorNode::isRoot() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isRoot());
+    return impl_->isRoot();
 }
 
 //! @brief   Return parent of node, or self if a root node.
 //! @copydetails Node::parent()
 Node VectorNode::parent() const
 {
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_->parent()));
+    return Node(impl_->parent());
 }
 
 //! @brief   Get absolute pathname of node.
 //! @copydetails Node::pathName()
 ustring VectorNode::pathName() const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->pathName());
+    return impl_->pathName();
 }
 
 //! @brief   Get elementName string, that identifies the node in its parent..
 //! @copydetails Node::elementName()
 ustring VectorNode::elementName() const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->elementName());
+    return impl_->elementName();
 }
 
 //! @brief   Get the ImageFile that was declared as the destination for the node when it was created.
 //! @copydetails Node::destImageFile()
 ImageFile VectorNode::destImageFile() const
 {
-    CHECK_INVARIANCE_RETURN(ImageFile, ImageFile(impl_->destImageFile()));
+    return ImageFile(impl_->destImageFile());
 }
 
 //! @brief   Has node been attached into the tree of an ImageFile.
 //! @copydetails Node::isAttached()
 bool VectorNode::isAttached() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isAttached());
+    return impl_->isAttached();
 }
 
 /*================*/ /*!
@@ -2175,7 +2171,7 @@ The returned attribute is determined when the VectorNode is created, and cannot 
 */ /*================*/
 bool VectorNode::allowHeteroChildren() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->allowHeteroChildren());
+    return impl_->allowHeteroChildren();
 }
 
 /*================*/ /*!
@@ -2189,7 +2185,7 @@ bool VectorNode::allowHeteroChildren() const
 */ /*================*/
 int64_t VectorNode::childCount() const
 {
-    CHECK_INVARIANCE_RETURN(int64_t, impl_->childCount());
+    return impl_->childCount();
 }
 
 /*================*/ /*!
@@ -2211,7 +2207,7 @@ The element names of child elements of VectorNodes are numbers, encoded as strin
 */ /*================*/
 bool VectorNode::isDefined(const ustring& pathName) const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isDefined(pathName));
+    return impl_->isDefined(pathName);
 }
 
 /*================*/ /*!
@@ -2228,7 +2224,7 @@ bool VectorNode::isDefined(const ustring& pathName) const
 */ /*================*/
 Node VectorNode::get(int64_t index) const
 {
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_->get(index)));
+    return Node(impl_->get(index));
 }
 
 /*================*/ /*!
@@ -2252,7 +2248,7 @@ The element names of child elements of VectorNodes are numbers, encoded as strin
 */ /*================*/
 Node VectorNode::get(const ustring& pathName) const
 {
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_->get(pathName)));
+    return Node(impl_->get(pathName));
 }
 
 /*================*/ /*!
@@ -2277,9 +2273,7 @@ The VectorNode must not be a descendent of a homogeneous VectorNode with more th
 */ /*================*/
 void VectorNode::append(Node n)
 {
-    CHECK_THIS_INVARIANCE()
     impl_->append(n.impl());
-    CHECK_THIS_INVARIANCE()
 }
 
 //! @brief   Diagnostic function to print internal state of object to output stream in an indented format.
@@ -2305,7 +2299,7 @@ void VectorNode::dump(int indent, std::ostream& os) const
 VectorNode::operator Node() const
 {
     /// Implicitly upcast from shared_ptr<VectorNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_));
+    return Node(impl_);
 }
 
 /*================*/ /*!
@@ -2401,7 +2395,6 @@ The @a capacity must match the capacity of all other SourceDestBuffers that will
 SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, int8_t* b, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
 : impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b, capacity, doConversion, doScaling, stride))
 {
-    CHECK_THIS_INVARIANCE()
 }
 
 //! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
@@ -2409,7 +2402,6 @@ SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathNa
 SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, uint8_t* b, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
 : impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b, capacity, doConversion, doScaling, stride))
 {
-    CHECK_THIS_INVARIANCE()
 }
 
 //! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
@@ -2417,7 +2409,6 @@ SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathNa
 SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, int16_t* b, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
 : impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b, capacity, doConversion, doScaling, stride))
 {
-    CHECK_THIS_INVARIANCE()
 }
 
 //! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
@@ -2425,7 +2416,6 @@ SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathNa
 SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, uint16_t* b, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
 : impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b, capacity, doConversion, doScaling, stride))
 {
-    CHECK_THIS_INVARIANCE()
 }
 
 //! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
@@ -2433,7 +2423,6 @@ SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathNa
 SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, int32_t* b, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
 : impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b, capacity, doConversion, doScaling, stride))
 {
-    CHECK_THIS_INVARIANCE()
 }
 
 //! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
@@ -2441,7 +2430,6 @@ SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathNa
 SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, uint32_t* b, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
 : impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b, capacity, doConversion, doScaling, stride))
 {
-    CHECK_THIS_INVARIANCE()
 }
 
 //! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
@@ -2449,7 +2437,6 @@ SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathNa
 SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, int64_t* b, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
 : impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b, capacity, doConversion, doScaling, stride))
 {
-    CHECK_THIS_INVARIANCE()
 }
 
 //! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
@@ -2457,7 +2444,6 @@ SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathNa
 SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, bool* b, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
 : impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b, capacity, doConversion, doScaling, stride))
 {
-    CHECK_THIS_INVARIANCE()
 }
 
 //! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
@@ -2465,7 +2451,6 @@ SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathNa
 SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, float* b, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
 : impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b, capacity, doConversion, doScaling, stride))
 {
-    CHECK_THIS_INVARIANCE()
 }
 
 //! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
@@ -2473,7 +2458,6 @@ SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathNa
 SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, double* b, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
 : impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b, capacity, doConversion, doScaling, stride))
 {
-    CHECK_THIS_INVARIANCE()
 }
 
 /*================*/ /*!
@@ -2506,7 +2490,6 @@ The API user is responsible for ensuring that the lifetime of the @a b vector ex
 SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, std::vector<ustring>* b)
 : impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b))
 {
-    CHECK_THIS_INVARIANCE()
 }
 
 /*================*/ /*!
@@ -2523,7 +2506,7 @@ The correctness of this path name is checked when this SourceDestBuffer is assoc
 */ /*================*/
 ustring SourceDestBuffer::pathName() const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->pathName());
+    return impl_->pathName();
 }
 
 /*================*/ /*!
@@ -2543,7 +2526,7 @@ Some combinations are never possible (e.g. E57_INT16 and StringNode).
 */ /*================*/
 MemoryRepresentation SourceDestBuffer::memoryRepresentation() const
 {
-    CHECK_INVARIANCE_RETURN(MemoryRep, impl_->memoryRepresentation());
+    return impl_->memoryRepresentation();
 }
 
 /*================*/ /*!
@@ -2559,7 +2542,7 @@ If the length is incorrect (in particular, too long) memory may be corrupted or 
 */ /*================*/
 size_t SourceDestBuffer::capacity() const
 {
-    CHECK_INVARIANCE_RETURN(size_t, impl_->capacity());
+    return impl_->capacity();
 }
 
 /*================*/ /*!
@@ -2586,7 +2569,7 @@ Missing or unsupported conversions are detected when the first transfer is attem
 */ /*================*/
 bool SourceDestBuffer::doConversion() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->doConversion());
+    return impl_->doConversion();
 }
 
 /*================*/ /*!
@@ -2614,7 +2597,7 @@ Because the ASTM E57 format recommends that SI units without prefix be used (i.e
 */ /*================*/
 bool SourceDestBuffer::doScaling() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->doScaling());
+    return impl_->doScaling();
 }
 
 /*================*/ /*!
@@ -2630,7 +2613,7 @@ In the case that the element values are stored consecutively in memory, the stri
 */ /*================*/
 size_t SourceDestBuffer::stride() const
 {
-    CHECK_INVARIANCE_RETURN(size_t, impl_->stride());
+    return impl_->stride();
 }
 
 //! @brief   Diagnostic function to print internal state of object to output stream in an indented format.
@@ -2718,7 +2701,7 @@ The E57 Foundation Implementation cannot detect that a memory buffer been destro
 */ /*================*/
 unsigned CompressedVectorReader::read()
 {
-    CHECK_INVARIANCE_RETURN(unsigned, impl_->read());
+    return impl_->read();
 }
 
 /*================*/ /*!
@@ -2764,7 +2747,7 @@ The E57 Foundation Implementation cannot detect that a memory buffer been destro
 */ /*================*/
 unsigned CompressedVectorReader::read(std::vector<SourceDestBuffer>& dbufs)
 {
-    CHECK_INVARIANCE_RETURN(unsigned, impl_->read(dbufs));
+    return impl_->read(dbufs);
 }
 
 /*================*/ /*!
@@ -2790,9 +2773,7 @@ It is not an error to seek to recordNumber = childCount() (i.e. to one record pa
 */ /*================*/
 void CompressedVectorReader::seek(int64_t recordNumber)
 {
-    CHECK_THIS_INVARIANCE()
     impl_->seek(recordNumber);
-    CHECK_THIS_INVARIANCE()
 }
 
 /*================*/ /*!
@@ -2807,9 +2788,7 @@ This function will cause the CompressedVectorReader to enter the closed state, a
 */ /*================*/
 void CompressedVectorReader::close()
 {
-    CHECK_THIS_INVARIANCE()
     impl_->close();
-    CHECK_THIS_INVARIANCE()
 }
 
 /*================*/ /*!
@@ -2821,7 +2800,7 @@ void CompressedVectorReader::close()
 */ /*================*/
 bool CompressedVectorReader::isOpen()
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isOpen());
+    return impl_->isOpen();
 }
 
 /*================*/ /*!
@@ -2836,7 +2815,7 @@ It is not an error if this CompressedVectorReader is closed.
 */ /*================*/
 CompressedVectorNode CompressedVectorReader::compressedVectorNode() const
 {
-    CHECK_INVARIANCE_RETURN(CompressedVectorNode, impl_->compressedVectorNode());
+    return impl_->compressedVectorNode();
 }
 
 //! @brief   Diagnostic function to print internal state of object to output stream in an indented format.
@@ -2925,9 +2904,7 @@ If CompressedVectorWriter::close is not called before the CompressedVectorWriter
 */ /*================*/
 void CompressedVectorWriter::write(const size_t recordCount)
 {
-    CHECK_THIS_INVARIANCE()
     impl_->write(recordCount);
-    CHECK_THIS_INVARIANCE()
 }
 
 /*================*/ /*!
@@ -2972,9 +2949,7 @@ If a file I/O or checksum error occurs during the transfer, both this Compressed
 */ /*================*/
 void CompressedVectorWriter::write(std::vector<SourceDestBuffer>& sbufs, const size_t recordCount)
 {
-    CHECK_THIS_INVARIANCE()
     impl_->write(sbufs, recordCount);
-    CHECK_THIS_INVARIANCE()
 }
 
 /*================*/ /*!
@@ -2998,9 +2973,7 @@ This function will cause the CompressedVectorWriter to enter the closed state, a
 */ /*================*/
 void CompressedVectorWriter::close()
 {
-    CHECK_THIS_INVARIANCE()
     impl_->close();
-    CHECK_THIS_INVARIANCE()
 }
 
 /*================*/ /*!
@@ -3012,7 +2985,7 @@ void CompressedVectorWriter::close()
 */ /*================*/
 bool CompressedVectorWriter::isOpen()
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isOpen());
+    return impl_->isOpen();
 }
 
 /*================*/ /*!
@@ -3025,7 +2998,7 @@ bool CompressedVectorWriter::isOpen()
 */ /*================*/
 CompressedVectorNode CompressedVectorWriter::compressedVectorNode() const
 {
-    CHECK_INVARIANCE_RETURN(CompressedVectorNode, impl_->compressedVectorNode());
+    return impl_->compressedVectorNode();
 }
 
 //! @brief   Diagnostic function to print internal state of object to output stream in an indented format.
@@ -3126,49 +3099,48 @@ CompressedVectorNode::CompressedVectorNode(ImageFile destImageFile, Node prototy
     /// Because of shared_ptr quirks, can't set prototype,codecs in CompressedVectorNodeImpl(), so set it afterwards
     impl_->setPrototype(prototype.impl());
     impl_->setCodecs(codecs.impl());
-    CHECK_THIS_INVARIANCE()
 }
 
 //! @brief   Is this a root node.
 //! @copydetails Node::isRoot()
 bool CompressedVectorNode::isRoot() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isRoot());
+    return impl_->isRoot();
 }
 
 //! @brief   Return parent of node, or self if a root node.
 //! @copydetails Node::parent()
 Node CompressedVectorNode::parent() const
 {
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_->parent()));
+    return Node(impl_->parent());
 }
 
 //! @brief   Get absolute pathname of node.
 //! @copydetails Node::pathName()
 ustring CompressedVectorNode::pathName() const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->pathName());
+    return impl_->pathName();
 }
 
 //! @brief   Get elementName string, that identifies the node in its parent..
 //! @copydetails Node::elementName()
 ustring CompressedVectorNode::elementName() const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->elementName());
+    return impl_->elementName();
 }
 
 //! @brief   Get the ImageFile that was declared as the destination for the node when it was created.
 //! @copydetails Node::destImageFile()
 ImageFile CompressedVectorNode::destImageFile() const
 {
-    CHECK_INVARIANCE_RETURN(ImageFile, ImageFile(impl_->destImageFile()));
+    return ImageFile(impl_->destImageFile());
 }
 
 //! @brief   Has node been attached into the tree of an ImageFile.
 //! @copydetails Node::isAttached()
 bool CompressedVectorNode::isAttached() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isAttached());
+    return impl_->isAttached();
 }
 
 /*================*/ /*!
@@ -3184,7 +3156,7 @@ For a CompressedVectorNode with an active CompressedVectorWriter, the returned n
 */ /*================*/
 int64_t CompressedVectorNode::childCount() const
 {
-    CHECK_INVARIANCE_RETURN(int64_t, impl_->childCount());
+    return impl_->childCount();
 }
 
 /*================*/ /*!
@@ -3198,7 +3170,7 @@ int64_t CompressedVectorNode::childCount() const
 */ /*================*/
 Node CompressedVectorNode::prototype() const
 {
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_->getPrototype()));
+    return Node(impl_->getPrototype());
 }
 
 /*================*/ /*!
@@ -3212,7 +3184,7 @@ Node CompressedVectorNode::prototype() const
 */ /*================*/
 VectorNode CompressedVectorNode::codecs() const
 {
-    CHECK_INVARIANCE_RETURN(VectorNode, VectorNode(impl_->getCodecs()));
+    return VectorNode(impl_->getCodecs());
 }
 
 //! @brief   Diagnostic function to print internal state of object to output stream in an indented format.
@@ -3237,7 +3209,7 @@ void CompressedVectorNode::dump(int indent, std::ostream& os) const
 CompressedVectorNode::operator Node() const
 {
     /// Implicitly upcast from shared_ptr<CompressedVectorNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_));
+    return Node(impl_);
 }
 
 /*================*/ /*!
@@ -3302,7 +3274,7 @@ It is an error to call this function if the CompressedVectorNode already has any
 */ /*================*/
 CompressedVectorWriter CompressedVectorNode::writer(std::vector<SourceDestBuffer>& sbufs)
 {
-    CHECK_INVARIANCE_RETURN(CompressedVectorWriter, CompressedVectorWriter(impl_->writer(sbufs)));
+    return CompressedVectorWriter(impl_->writer(sbufs));
 }
 
 /*================*/ /*!
@@ -3331,7 +3303,7 @@ It is not an error to create a CompressedVectorReader for an empty CompressedVec
 */ /*================*/
 CompressedVectorReader CompressedVectorNode::reader(const std::vector<SourceDestBuffer>& dbufs)
 {
-    CHECK_INVARIANCE_RETURN(CompressedVectorReader, CompressedVectorReader(impl_->reader(dbufs)));
+    return CompressedVectorReader(impl_->reader(dbufs));
 }
 
 //=====================================================================================
@@ -3393,49 +3365,48 @@ If the IntegerNode is to be used in a prototype, it is recommended to specify a 
 IntegerNode::IntegerNode(ImageFile destImageFile, int64_t value, int64_t  minimum, int64_t  maximum)
 : impl_(new IntegerNodeImpl(destImageFile.impl(), value, minimum, maximum))
 {
-    CHECK_THIS_INVARIANCE()
 }
 
 //! @brief   Is this a root node.
 //! @copydetails Node::isRoot()
 bool IntegerNode::isRoot() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isRoot());
+    return impl_->isRoot();
 }
 
 //! @brief   Return parent of node, or self if a root node.
 //! @copydetails Node::parent()
 Node IntegerNode::parent() const
 {
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_->parent()));
+    return Node(impl_->parent());
 }
 
 //! @brief   Get absolute pathname of node.
 //! @copydetails Node::pathName()
 ustring IntegerNode::pathName() const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->pathName());
+    return impl_->pathName();
 }
 
 //! @brief   Get elementName string, that identifies the node in its parent..
 //! @copydetails Node::elementName()
 ustring IntegerNode::elementName() const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->elementName());
+    return impl_->elementName();
 }
 
 //! @brief   Get the ImageFile that was declared as the destination for the node when it was created.
 //! @copydetails Node::destImageFile()
 ImageFile IntegerNode::destImageFile() const
 {
-    CHECK_INVARIANCE_RETURN(ImageFile, ImageFile(impl_->destImageFile()));
+    return ImageFile(impl_->destImageFile());
 }
 
 //! @brief   Has node been attached into the tree of an ImageFile.
 //! @copydetails Node::isAttached()
 bool IntegerNode::isAttached() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isAttached());
+    return impl_->isAttached();
 }
 
 /*================*/ /*!
@@ -3449,7 +3420,7 @@ bool IntegerNode::isAttached() const
 */ /*================*/
 int64_t IntegerNode::value() const
 {
-    CHECK_INVARIANCE_RETURN(int64_t, impl_->value());
+    return impl_->value();
 }
 
 /*================*/ /*!
@@ -3463,7 +3434,7 @@ int64_t IntegerNode::value() const
 */ /*================*/
 int64_t IntegerNode::minimum() const
 {
-    CHECK_INVARIANCE_RETURN(int64_t, impl_->minimum());
+    return impl_->minimum();
 }
 
 /*================*/ /*!
@@ -3477,7 +3448,7 @@ int64_t IntegerNode::minimum() const
 */ /*================*/
 int64_t IntegerNode::maximum() const
 {
-    CHECK_INVARIANCE_RETURN(int64_t, impl_->maximum());
+    return impl_->maximum();
 }
 
 //! @brief   Diagnostic function to print internal state of object to output stream in an indented format.
@@ -3502,7 +3473,7 @@ void IntegerNode::dump(int indent, std::ostream& os) const
 IntegerNode::operator Node() const
 {
     /// Upcast from shared_ptr<IntegerNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_));
+    return Node(impl_);
 }
 
 /*================*/ /*!
@@ -3594,17 +3565,14 @@ If the ScaledIntegerNode is to be used in a prototype, it is recommended to spec
 ScaledIntegerNode::ScaledIntegerNode(ImageFile destImageFile, int64_t rawValue, int64_t  minimum, int64_t  maximum, double scale, double offset)
 : impl_(new ScaledIntegerNodeImpl(destImageFile.impl(), rawValue, minimum, maximum, scale, offset))
 {
-    CHECK_THIS_INVARIANCE()
 }
 ScaledIntegerNode::ScaledIntegerNode(ImageFile destImageFile, int rawValue, int64_t  minimum, int64_t  maximum, double scale, double offset)
 : impl_(new ScaledIntegerNodeImpl(destImageFile.impl(), static_cast<int64_t>(rawValue), minimum, maximum, scale, offset))
 {
-    CHECK_THIS_INVARIANCE()
 }
 ScaledIntegerNode::ScaledIntegerNode(ImageFile destImageFile, int rawValue, int  minimum, int  maximum, double scale, double offset)
 : impl_(new ScaledIntegerNodeImpl(destImageFile.impl(), static_cast<int64_t>(rawValue), static_cast<int64_t>(minimum), static_cast<int64_t>(maximum), scale, offset))
 {
-    CHECK_THIS_INVARIANCE()
 }
 /*================*/ /*!
 @brief   This second constructor create an E57 element for storing a fixed point number but does the scaling for you.
@@ -3634,48 +3602,47 @@ If the ScaledIntegerNode is to be used in a prototype, it is recommended to spec
 ScaledIntegerNode::ScaledIntegerNode(ImageFile destImageFile, double scaledValue, double  scaledMinimum, double  scaledMaximum, double scale, double offset)
 : impl_(new ScaledIntegerNodeImpl(destImageFile.impl(), scaledValue, scaledMinimum, scaledMaximum, scale, offset))
 {
-    CHECK_THIS_INVARIANCE()
 }
 //! @brief   Is this a root node.
 //! @copydetails Node::isRoot()
 bool ScaledIntegerNode::isRoot() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isRoot());
+    return impl_->isRoot();
 }
 
 //! @brief   Return parent of node, or self if a root node.
 //! @copydetails Node::parent()
 Node ScaledIntegerNode::parent() const
 {
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_->parent()));
+    return Node(impl_->parent());
 }
 
 //! @brief   Get absolute pathname of node.
 //! @copydetails Node::pathName()
 ustring ScaledIntegerNode::pathName() const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->pathName());
+    return impl_->pathName();
 }
 
 //! @brief   Get elementName string, that identifies the node in its parent..
 //! @copydetails Node::elementName()
 ustring ScaledIntegerNode::elementName() const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->elementName());
+    return impl_->elementName();
 }
 
 //! @brief   Get the ImageFile that was declared as the destination for the node when it was created.
 //! @copydetails Node::destImageFile()
 ImageFile ScaledIntegerNode::destImageFile() const
 {
-    CHECK_INVARIANCE_RETURN(ImageFile, ImageFile(impl_->destImageFile()));
+    return ImageFile(impl_->destImageFile());
 }
 
 //! @brief   Has node been attached into the tree of an ImageFile.
 //! @copydetails Node::isAttached()
 bool ScaledIntegerNode::isAttached() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isAttached());
+    return impl_->isAttached();
 }
 
 /*================*/ /*!
@@ -3689,7 +3656,7 @@ bool ScaledIntegerNode::isAttached() const
 */ /*================*/
 int64_t ScaledIntegerNode::rawValue() const
 {
-    CHECK_INVARIANCE_RETURN(int64_t, impl_->rawValue());
+    return impl_->rawValue();
 }
 
 /*================*/ /*!
@@ -3703,7 +3670,7 @@ int64_t ScaledIntegerNode::rawValue() const
 */ /*================*/
 double  ScaledIntegerNode::scaledValue() const
 {
-    CHECK_INVARIANCE_RETURN(double, impl_->scaledValue());
+    return impl_->scaledValue();
 }
 
 /*================*/ /*!
@@ -3717,7 +3684,7 @@ double  ScaledIntegerNode::scaledValue() const
 */ /*================*/
 int64_t ScaledIntegerNode::minimum() const
 {
-    CHECK_INVARIANCE_RETURN(int64_t, impl_->minimum());
+    return impl_->minimum();
 }
 /*================*/ /*!
 @brief   Get the declared scaled minimum that the scaled value may take.
@@ -3728,9 +3695,9 @@ int64_t ScaledIntegerNode::minimum() const
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     ScaledIntegerCreate.cpp example, ScaledIntegerNode::scaledMaximum, ScaledIntegerNode::scaledValue
 */ /*================*/
-double ScaledIntegerNode::scaledMinimum() const     //Added by SC
+double ScaledIntegerNode::scaledMinimum() const
 {
-    CHECK_INVARIANCE_RETURN(double, impl_->scaledMinimum());
+    return impl_->scaledMinimum();
 }
 /*================*/ /*!
 @brief   Get the declared maximum that the raw value may take.
@@ -3743,7 +3710,7 @@ double ScaledIntegerNode::scaledMinimum() const     //Added by SC
 */ /*================*/
 int64_t ScaledIntegerNode::maximum() const
 {
-    CHECK_INVARIANCE_RETURN(int64_t, impl_->maximum());
+    return impl_->maximum();
 }
 /*================*/ /*!
 @brief   Get the declared scaled maximum that the scaled value may take.
@@ -3756,7 +3723,7 @@ int64_t ScaledIntegerNode::maximum() const
 */ /*================*/
 double ScaledIntegerNode::scaledMaximum() const     //Added by SC
 {
-    CHECK_INVARIANCE_RETURN(double, impl_->scaledMaximum());
+    return impl_->scaledMaximum();
 }
 /*================*/ /*!
 @brief   Get declared scaling factor.
@@ -3769,7 +3736,7 @@ double ScaledIntegerNode::scaledMaximum() const     //Added by SC
 */ /*================*/
 double  ScaledIntegerNode::scale() const
 {
-    CHECK_INVARIANCE_RETURN(double, impl_->scale());
+    return impl_->scale();
 }
 
 /*================*/ /*!
@@ -3783,7 +3750,7 @@ double  ScaledIntegerNode::scale() const
 */ /*================*/
 double  ScaledIntegerNode::offset() const
 {
-    CHECK_INVARIANCE_RETURN(double, impl_->offset());
+    return impl_->offset();
 }
 
 //! @brief   Diagnostic function to print internal state of object to output stream in an indented format.
@@ -3808,7 +3775,7 @@ void ScaledIntegerNode::dump(int indent, std::ostream& os) const
 ScaledIntegerNode::operator Node() const
 {
     /// Upcast from shared_ptr<ScaledIntegerNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_));
+    return Node(impl_);
 }
 
 /*================*/ /*!
@@ -3910,49 +3877,48 @@ If the FloatNode is to be used in a prototype, it is recommended to specify a @a
 FloatNode::FloatNode(ImageFile destImageFile, double value, FloatPrecision precision, double minimum, double maximum)
 : impl_(new FloatNodeImpl(destImageFile.impl(), value, precision, minimum, maximum))
 {
-    CHECK_THIS_INVARIANCE()
 }
 
 //! @brief   Is this a root node.
 //! @copydetails Node::isRoot()
 bool FloatNode::isRoot() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isRoot());
+    return impl_->isRoot();
 }
 
 //! @brief   Return parent of node, or self if a root node.
 //! @copydetails Node::parent()
 Node FloatNode::parent() const
 {
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_->parent()));
+    return Node(impl_->parent());
 }
 
 //! @brief   Get absolute pathname of node.
 //! @copydetails Node::pathName()
 ustring FloatNode::pathName() const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->pathName());
+    return impl_->pathName();
 }
 
 //! @brief   Get elementName string, that identifies the node in its parent..
 //! @copydetails Node::elementName()
 ustring FloatNode::elementName() const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->elementName());
+    return impl_->elementName();
 }
 
 //! @brief   Get the ImageFile that was declared as the destination for the node when it was created.
 //! @copydetails Node::destImageFile()
 ImageFile FloatNode::destImageFile() const
 {
-    CHECK_INVARIANCE_RETURN(ImageFile, ImageFile(impl_->destImageFile()));
+    return ImageFile(impl_->destImageFile());
 }
 
 //! @brief   Has node been attached into the tree of an ImageFile.
 //! @copydetails Node::isAttached()
 bool FloatNode::isAttached() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isAttached());
+    return impl_->isAttached();
 }
 
 /*================*/ /*!
@@ -3969,7 +3935,7 @@ If precision is E57_DOUBLE, the double precision value is returned as a double.
 */ /*================*/
 double FloatNode::value() const
 {
-    CHECK_INVARIANCE_RETURN(double, impl_->value());
+    return impl_->value();
 }
 
 /*================*/ /*!
@@ -3983,7 +3949,7 @@ double FloatNode::value() const
 */ /*================*/
 FloatPrecision FloatNode::precision() const
 {
-    CHECK_INVARIANCE_RETURN(FloatPrecision, impl_->precision());
+    return impl_->precision();
 }
 
 /*================*/ /*!
@@ -4000,7 +3966,7 @@ If precision is E57_DOUBLE, the double precision minimum is returned as a double
 */ /*================*/
 double FloatNode::minimum() const
 {
-    CHECK_INVARIANCE_RETURN(double, impl_->minimum());
+    return impl_->minimum();
 }
 
 /*================*/ /*!
@@ -4017,7 +3983,7 @@ If precision is E57_DOUBLE, the double precision maximum is returned as a double
 */ /*================*/
 double FloatNode::maximum() const
 {
-    CHECK_INVARIANCE_RETURN(double, impl_->maximum());
+    return impl_->maximum();
 }
 
 //! @brief   Diagnostic function to print internal state of object to output stream in an indented format.
@@ -4042,7 +4008,7 @@ void FloatNode::dump(int indent, std::ostream& os) const
 FloatNode::operator Node() const
 {
     /// Upcast from shared_ptr<FloatNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_));
+    return Node(impl_);
 }
 
 /*================*/ /*!
@@ -4120,49 +4086,48 @@ If the StringNode is to be used in a CompressedVectorNode prototype, it is recom
 StringNode::StringNode(ImageFile destImageFile, const ustring value)
 : impl_(new StringNodeImpl(destImageFile.impl(), value))
 {
-    CHECK_THIS_INVARIANCE()
 }
 
 //! @brief   Is this a root node.
 //! @copydetails Node::isRoot()
 bool StringNode::isRoot() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isRoot());
+    return impl_->isRoot();
 }
 
 //! @brief   Return parent of node, or self if a root node.
 //! @copydetails Node::parent()
 Node StringNode::parent() const
 {
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_->parent()));
+    return Node(impl_->parent());
 }
 
 //! @brief   Get absolute pathname of node.
 //! @copydetails Node::pathName()
 ustring StringNode::pathName() const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->pathName());
+    return impl_->pathName();
 }
 
 //! @brief   Get elementName string, that identifies the node in its parent..
 //! @copydetails Node::elementName()
 ustring StringNode::elementName() const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->elementName());
+   return impl_->elementName();
 }
 
 //! @brief   Get the ImageFile that was declared as the destination for the node when it was created.
 //! @copydetails Node::destImageFile()
 ImageFile StringNode::destImageFile() const
 {
-    CHECK_INVARIANCE_RETURN(ImageFile, ImageFile(impl_->destImageFile()));
+    return ImageFile(impl_->destImageFile());
 }
 
 //! @brief   Has node been attached into the tree of an ImageFile.
 //! @copydetails Node::isAttached()
 bool StringNode::isAttached() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isAttached());
+    return impl_->isAttached();
 }
 
 /*================*/ /*!
@@ -4176,7 +4141,7 @@ bool StringNode::isAttached() const
 */ /*================*/
 ustring StringNode::value() const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->value());
+    return impl_->value();
 }
 
 //! @brief   Diagnostic function to print internal state of object to output stream in an indented format.
@@ -4201,7 +4166,7 @@ void StringNode::dump(int indent, std::ostream& os) const
 StringNode::operator Node() const
 {
     /// Upcast from shared_ptr<StringNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_));
+    return Node(impl_);
 }
 
 /*================*/ /*!
@@ -4301,49 +4266,48 @@ It is an error to attempt to attach the BlobNode to a different ImageFile.
 BlobNode::BlobNode(ImageFile destImageFile, int64_t byteCount)
 : impl_(new BlobNodeImpl(destImageFile.impl(), byteCount))
 {
-    CHECK_THIS_INVARIANCE()
 }
 
 //! @brief   Is this a root node.
 //! @copydetails Node::isRoot()
 bool BlobNode::isRoot() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isRoot());
+    return impl_->isRoot();
 }
 
 //! @brief   Return parent of node, or self if a root node.
 //! @copydetails Node::parent()
 Node BlobNode::parent() const
 {
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_->parent()));
+    return Node(impl_->parent());
 }
 
 //! @brief   Get absolute pathname of node.
 //! @copydetails Node::pathName()
 ustring BlobNode::pathName() const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->pathName());
+    return impl_->pathName();
 }
 
 //! @brief   Get elementName string, that identifies the node in its parent..
 //! @copydetails Node::elementName()
 ustring BlobNode::elementName() const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->elementName());
+    return impl_->elementName();
 }
 
 //! @brief   Get the ImageFile that was declared as the destination for the node when it was created.
 //! @copydetails Node::destImageFile()
 ImageFile BlobNode::destImageFile() const
 {
-    CHECK_INVARIANCE_RETURN(ImageFile, ImageFile(impl_->destImageFile()));
+    return ImageFile(impl_->destImageFile());
 }
 
 //! @brief   Has node been attached into the tree of an ImageFile.
 //! @copydetails Node::isAttached()
 bool BlobNode::isAttached() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isAttached());
+    return impl_->isAttached();
 }
 
 /*================*/ /*!
@@ -4357,7 +4321,7 @@ bool BlobNode::isAttached() const
 */ /*================*/
 int64_t BlobNode::byteCount() const
 {
-    CHECK_INVARIANCE_RETURN(int64_t, impl_->byteCount());
+    return impl_->byteCount();
 }
 
 /*================*/ /*!
@@ -4426,9 +4390,7 @@ The BlobNode is one of the two node types that must be attached to the root of a
 */ /*================*/
 void BlobNode::write(uint8_t* buf, int64_t start, size_t count)
 {
-    CHECK_THIS_INVARIANCE()
     impl_->write(buf, start, count);
-    CHECK_THIS_INVARIANCE()
 }
 
 //! @brief   Diagnostic function to print internal state of object to output stream in an indented format.
@@ -4453,7 +4415,7 @@ void BlobNode::dump(int indent, std::ostream& os) const
 BlobNode::operator Node() const
 {
     /// Upcast from shared_ptr<StringNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_));
+    return Node(impl_);
 }
 
 /*================*/ /*!
@@ -4601,8 +4563,6 @@ ImageFile::ImageFile(const ustring& fname, const ustring& mode, const ustring& c
 {
     /// Do second phase of construction, now that ImageFile object is complete.
     impl_->construct2(fname, mode, configuration);
-
-    CHECK_THIS_INVARIANCE()
 }
 
 /*================*/ /*!
@@ -4617,7 +4577,7 @@ The root node is empty in a newly created write mode ImageFile.
 */ /*================*/
 StructureNode ImageFile::root() const
 {
-    CHECK_INVARIANCE_RETURN(StructureNode, StructureNode(impl_->root()));
+    return StructureNode(impl_->root());
 }
 
 /*================*/ /*!
@@ -4646,9 +4606,7 @@ It is not an error if ImageFile is already closed.
 */ /*================*/
 void ImageFile::close()
 {
-    CHECK_THIS_INVARIANCE()
     impl_->close();
-    CHECK_THIS_INVARIANCE()
 }
 
 /*================*/ /*!
@@ -4663,9 +4621,7 @@ It is not an error if ImageFile is already closed.
 */ /*================*/
 void ImageFile::cancel()
 {
-    CHECK_THIS_INVARIANCE()
     impl_->cancel();
-    CHECK_THIS_INVARIANCE()
 }
 
 /*================*/ /*!
@@ -4677,7 +4633,7 @@ void ImageFile::cancel()
 */ /*================*/
 bool ImageFile::isOpen() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isOpen());
+    return impl_->isOpen();
 }
 
 /*================*/ /*!
@@ -4689,7 +4645,7 @@ bool ImageFile::isOpen() const
 */ /*================*/
 bool ImageFile::isWritable() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isWriter());
+    return impl_->isWriter();
 }
 
 /*================*/ /*!
@@ -4701,7 +4657,7 @@ bool ImageFile::isWritable() const
 */ /*================*/
 ustring ImageFile::fileName() const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->fileName());
+    return impl_->fileName();
 }
 
 /*================*/ /*!
@@ -4718,7 +4674,7 @@ CompressedVectorWriter objects are created by the CompressedVectorNode::writer f
 */ /*================*/
 int ImageFile::writerCount() const
 {
-    CHECK_INVARIANCE_RETURN(int, impl_->writerCount());
+    return impl_->writerCount();
 }
 
 /*================*/ /*!
@@ -4735,7 +4691,7 @@ CompressedVectorReader objects are created by the CompressedVectorNode::reader f
 */ /*================*/
 int ImageFile::readerCount() const
 {
-    CHECK_INVARIANCE_RETURN(int, impl_->readerCount());
+    return impl_->readerCount();
 }
 
 /*================*/ /*!
@@ -4772,9 +4728,7 @@ See the class discussion at bottom of ImageFile page for more details about name
 */ /*================*/
 void ImageFile::extensionsAdd(const ustring& prefix, const ustring& uri)
 {
-    CHECK_THIS_INVARIANCE()
     impl_->extensionsAdd(prefix, uri);
-    CHECK_THIS_INVARIANCE()
 }
 
 /*================*/ /*!
@@ -4796,7 +4750,7 @@ It is not an error if @a prefix is well-formed, but not defined in the ImageFile
 */ /*================*/
 bool ImageFile::extensionsLookupPrefix(const ustring& prefix, ustring& uri) const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->extensionsLookupPrefix(prefix, uri));
+    return impl_->extensionsLookupPrefix(prefix, uri);
 }
 
 /*================*/ /*!
@@ -4818,7 +4772,7 @@ It is not an error if @a uri is well-formed, but not defined in the ImageFile (t
 */ /*================*/
 bool ImageFile::extensionsLookupUri(const ustring& uri, ustring& prefix) const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->extensionsLookupUri(uri, prefix));
+    return impl_->extensionsLookupUri(uri, prefix);
 }
 
 /*================*/ /*!
@@ -4834,7 +4788,7 @@ The default E57 namespace does not count as an extension.
 */ /*================*/
 size_t ImageFile::extensionsCount() const
 {
-    CHECK_INVARIANCE_RETURN(size_t, impl_->extensionsCount());
+    return impl_->extensionsCount();
 }
 
 /*================*/ /*!
@@ -4855,7 +4809,7 @@ The default E57 namespace is not counted as an extension.
 */ /*================*/
 ustring ImageFile::extensionsPrefix(const size_t index) const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->extensionsPrefix(index));
+    return impl_->extensionsPrefix(index);
 }
 
 /*================*/ /*!
@@ -4876,7 +4830,7 @@ The default E57 namespace is not counted as an extension.
 */ /*================*/
 ustring ImageFile::extensionsUri(const size_t index) const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->extensionsUri(index));
+    return impl_->extensionsUri(index);
 }
 
 /*================*/ /*!
@@ -4891,7 +4845,7 @@ The element name has a prefix if the function elementNameParse(elementName,prefi
 */ /*================*/
 bool ImageFile::isElementNameExtended(const ustring& elementName) const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isElementNameExtended(elementName));
+    return impl_->isElementNameExtended(elementName);
 }
 
 /*================*/ /*!
@@ -4910,9 +4864,7 @@ If in prefixed form, the prefix does not have to be declared in the ImageFile.
 */ /*================*/
 void ImageFile::elementNameParse(const ustring& elementName, ustring& prefix, ustring& localPart) const
 {
-    CHECK_THIS_INVARIANCE()
     impl_->elementNameParse(elementName, prefix, localPart);
-    CHECK_THIS_INVARIANCE()
 }
 
 /*================*/ /*!

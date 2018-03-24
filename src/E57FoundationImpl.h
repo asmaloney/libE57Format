@@ -62,23 +62,6 @@
 //#define E57_VERBOSE     1
 //#define E57_MAX_VERBOSE 1
 
-// Uncomment the line below to enable invariance checking before and after API calls
-// ??? This debug option is not implemented yet, don't uncomment below
-//#define E57_DEBUG_INVARIANCE 1
-
-#ifdef E57_DEBUG_INVARIANCE
-#  define CHECK_THIS_INVARIANCE() {impl_->checkInvariance();}
-#  define CHECK_INVARIANCE_RETURN(RTYPE, EXPR)  { \
-    CHECK_THIS_INVARIANCE() \
-    RTYPE result = (EXPR); \
-    CHECK_THIS_INVARIANCE() \
-    return(result); \
-}
-#else
-#  define CHECK_THIS_INVARIANCE()
-#  define CHECK_INVARIANCE_RETURN(RTYPE, EXPR)  return(EXPR);
-#endif
-
 // Uncomment the line below to enable writing packets that are correct but will stress the reader.
 //#define E57_WRITE_CRAZY_PACKET_MODE 1
 
@@ -295,9 +278,6 @@ public:
 #ifdef E57_DEBUG
     virtual void            dump(int indent = 0, std::ostream& os = std::cout);
 #endif
-#ifdef E57_DEBUG_INVARIANCE
-    virtual void            checkInvariance();
-#endif
 
 protected: //=================
     //??? owned by image file?
@@ -342,9 +322,6 @@ public:
 #ifdef E57_DEBUG
     void                dump(int indent = 0, std::ostream& os = std::cout);
 #endif
-#ifdef E57_DEBUG_INVARIANCE
-    virtual void        checkInvariance();
-#endif
 
 protected: //=================
     friend class CompressedVectorReaderImpl;
@@ -373,9 +350,7 @@ public:
 #ifdef E57_DEBUG
     void                dump(int indent = 0, std::ostream& os = std::cout);
 #endif
-#ifdef E57_DEBUG_INVARIANCE
-    virtual void        checkInvariance();
-#endif
+
 protected: //=================
     bool allowHeteroChildren_;
 };
@@ -431,9 +406,6 @@ public:
 
 #ifdef E57_DEBUG
     void            dump(int indent = 0, std::ostream& os = std::cout);
-#endif
-#ifdef E57_DEBUG_INVARIANCE
-    virtual void        checkInvariance();
 #endif
 
 protected: //=================
@@ -497,9 +469,7 @@ public:
 #ifdef E57_DEBUG
     void                dump(int indent = 0, std::ostream& os = std::cout);
 #endif
-#ifdef E57_DEBUG_INVARIANCE
-    virtual void        checkInvariance();
-#endif
+
 protected: //=================
     friend class CompressedVectorReaderImpl; //???
 
@@ -530,9 +500,6 @@ public:
 
 #ifdef E57_DEBUG
     void                dump(int indent = 0, std::ostream& os = std::cout);
-#endif
-#ifdef E57_DEBUG_INVARIANCE
-    virtual void        checkInvariance();
 #endif
 
 protected: //=================
@@ -574,9 +541,6 @@ public:
 #ifdef E57_DEBUG
     void                dump(int indent = 0, std::ostream& os = std::cout);
 #endif
-#ifdef E57_DEBUG_INVARIANCE
-    virtual void        checkInvariance();
-#endif
 
 protected: //=================
     int64_t             value_;
@@ -609,9 +573,6 @@ public:
 #ifdef E57_DEBUG
     void                dump(int indent = 0, std::ostream& os = std::cout);
 #endif
-#ifdef E57_DEBUG_INVARIANCE
-    virtual void        checkInvariance();
-#endif
 
 protected: //=================
     double              value_;
@@ -638,9 +599,6 @@ public:
 #ifdef E57_DEBUG
     void                dump(int indent = 0, std::ostream& os = std::cout);
 #endif
-#ifdef E57_DEBUG_INVARIANCE
-    virtual void        checkInvariance();
-#endif
 
 protected: //=================
     ustring             value_;
@@ -666,9 +624,6 @@ public:
 
 #ifdef E57_DEBUG
     void                dump(int indent = 0, std::ostream& os = std::cout);
-#endif
-#ifdef E57_DEBUG_INVARIANCE
-    virtual void        checkInvariance();
 #endif
 
 protected: //=================
@@ -744,9 +699,6 @@ public:
     /// Diagnostic functions:
 #ifdef E57_DEBUG
     void            dump(int indent = 0, std::ostream& os = std::cout);
-#endif
-#ifdef E57_DEBUG_INVARIANCE
-    virtual void    checkInvariance();
 #endif
 
 protected: //=================
@@ -923,9 +875,6 @@ public:
 #ifdef E57_DEBUG
     void        dump(int indent = 0, std::ostream& os = std::cout);
 #endif
-#ifdef E57_DEBUG_INVARIANCE
-    virtual void    checkInvariance();
-#endif
 
 protected: //=================
     void        checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName);
@@ -963,9 +912,6 @@ public:
 
 #ifdef E57_DEBUG
     void        dump(int indent = 0, std::ostream& os = std::cout);
-#endif
-#ifdef E57_DEBUG_INVARIANCE
-    virtual void    checkInvariance();
 #endif
 
 protected: //=================

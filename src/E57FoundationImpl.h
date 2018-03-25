@@ -1,3 +1,6 @@
+#ifndef E57FOUNDATIONIMPL_H_INCLUDED
+#define E57FOUNDATIONIMPL_H_INCLUDED
+
 /*
  * E57FoundationImpl.h - private implementation header of E57 format reference implementation.
  *
@@ -26,9 +29,6 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef E57FOUNDATIONIMPL_H_INCLUDED
-#define E57FOUNDATIONIMPL_H_INCLUDED
-
 #include <algorithm>
 #include <iomanip>
 #include <iostream>
@@ -44,7 +44,7 @@
 #define E57_INTERNAL_IMPLEMENTATION_ENABLE 1
 
 #ifndef E57FOUNDATION_H_INCLUDED
-#  include "E57Foundation.h"
+#include "E57Foundation.h"
 #endif
 
 // Uncomment the lines below to enable various levels of cross checking and verification in the code.
@@ -65,17 +65,7 @@
 #pragma warning( disable : 4224)
 #endif
 
-// Turn off DLL input/export mechanism for Xerces library (usually done by defining in compile command line).
-//#define XERCES_STATIC_LIBRARY 1
-
 namespace e57 {
-
-inline ustring exception_string(const char* errorName, const char* fileName, int lineNumber) {
-    std::ostringstream ss;
-    ss << errorName << " at " << fileName << ":" << lineNumber;
-    return(ss.str());
-}
-#define EXCEPTION(e_name) (std::runtime_error(exception_string((e_name), __FILE__, __LINE__)))
 
 //!!! inline these rather than macros?
 #define E57_EXCEPTION1(ecode) (E57Exception((ecode), ustring(), __FILE__, __LINE__, __FUNCTION__))
@@ -92,23 +82,7 @@ inline std::string space(int n) {return(std::string(static_cast<size_t>(n),' '))
 /// Convert number to decimal, hexadecimal, and binary strings  (Note hex strings don't have leading zeros).
 template <class T>
 std::string toString(T x) {std::ostringstream ss; ss << x; return(ss.str());}
-#if 0 // <rs> 2011-10-03 below definition gives problems if intXX_t type equal to native type
-inline std::string toString(uint64_t x) {std::ostringstream ss; ss << x; return(ss.str());}
-inline std::string toString(uint32_t x) {std::ostringstream ss; ss << x; return(ss.str());}
-inline std::string toString(uint16_t x) {std::ostringstream ss; ss << x; return(ss.str());}
-inline std::string toString(uint8_t x)  {std::ostringstream ss; ss << x; return(ss.str());}
-inline std::string toString(int64_t x)  {std::ostringstream ss; ss << x; return(ss.str());}
-inline std::string toString(int32_t x)  {std::ostringstream ss; ss << x; return(ss.str());}
-inline std::string toString(int16_t x)  {std::ostringstream ss; ss << x; return(ss.str());}
-inline std::string toString(int8_t x)   {std::ostringstream ss; ss << x; return(ss.str());}
-#ifndef __GNUC__
-inline std::string toString(int x)      {std::ostringstream ss; ss << x; return(ss.str());}
-inline std::string toString(unsigned x) {std::ostringstream ss; ss << x; return(ss.str());}
-#endif
-inline std::string toString(float x)    {std::ostringstream ss; ss << x; return(ss.str());}
-inline std::string toString(double x)   {std::ostringstream ss; ss << x; return(ss.str());}
-inline std::string toString(bool x)     {std::ostringstream ss; ss << x; return(ss.str());}
-#endif
+
 inline std::string hexString(uint64_t x) {std::ostringstream ss; ss << "0x" << std::hex << std::setw(16)<< std::setfill('0') << x; return(ss.str());}
 inline std::string hexString(uint32_t x) {std::ostringstream ss; ss << "0x" << std::hex << std::setw(8) << std::setfill('0') << x; return(ss.str());}
 inline std::string hexString(uint16_t x) {std::ostringstream ss; ss << "0x" << std::hex << std::setw(4) << std::setfill('0') << x; return(ss.str());}
@@ -281,13 +255,13 @@ protected:
 
                                          NodeImpl(std::weak_ptr<ImageFileImpl> destImageFile);
     NodeImpl&                            operator=(NodeImpl& n);
-    virtual std::shared_ptr<NodeImpl>  lookup(const ustring& /*pathName*/) {return(std::shared_ptr<NodeImpl>());}; //???
+    virtual std::shared_ptr<NodeImpl>  lookup(const ustring& /*pathName*/) {return(std::shared_ptr<NodeImpl>());}
     std::shared_ptr<NodeImpl>          getRoot();
 
     std::weak_ptr<ImageFileImpl>       destImageFile_;
     std::weak_ptr<NodeImpl>            parent_;
-    ustring                              elementName_;
-    bool                                 isAttached_;
+    ustring                            elementName_;
+    bool                               isAttached_;
 };
 
 class StructureNodeImpl : public NodeImpl {
@@ -397,14 +371,14 @@ public:
 #endif
 
 protected:
-    friend class BitpackIntegerEncoder<uint8_t>;   //??? needed?
-    friend class BitpackIntegerEncoder<uint16_t>;  //??? needed?
-    friend class BitpackIntegerEncoder<uint32_t>;  //??? needed?
-    friend class BitpackIntegerEncoder<uint64_t>;  //??? needed?
-    friend class BitpackIntegerDecoder<uint8_t> ;  //??? needed?
-    friend class BitpackIntegerDecoder<uint16_t>;  //??? needed?
-    friend class BitpackIntegerDecoder<uint32_t>;  //??? needed?
-    friend class BitpackIntegerDecoder<uint64_t>;  //??? needed?
+    friend class BitpackIntegerEncoder<uint8_t>;
+    friend class BitpackIntegerEncoder<uint16_t>;
+    friend class BitpackIntegerEncoder<uint32_t>;
+    friend class BitpackIntegerEncoder<uint64_t>;
+    friend class BitpackIntegerDecoder<uint8_t>;
+    friend class BitpackIntegerDecoder<uint16_t>;
+    friend class BitpackIntegerDecoder<uint32_t>;
+    friend class BitpackIntegerDecoder<uint64_t>;
 
     void                    checkState_();  /// Common routine to check that constructor arguments were ok, throws if not
 
@@ -459,7 +433,7 @@ public:
 #endif
 
 protected:
-    friend class CompressedVectorReaderImpl; //???
+    friend class CompressedVectorReaderImpl;
 
     std::shared_ptr<NodeImpl> prototype_;
     std::shared_ptr<VectorNodeImpl> codecs_;
@@ -676,7 +650,7 @@ public:
     void            pathNameParse(const ustring& pathName, bool& isRelative, std::vector<ustring>& fields);
     ustring         pathNameUnparse(bool isRelative, const std::vector<ustring>& fields);
 
-    unsigned        bitsNeeded(int64_t minimum, int64_t maximum); //??? E57Utility?
+    unsigned        bitsNeeded(int64_t minimum, int64_t maximum);
     static void     readFileHeader(CheckedFile* file, E57FileHeader& header);
     void            incrWriterCount();
     void            decrWriterCount();
@@ -701,8 +675,6 @@ protected:
         ustring     uri;
                     NameSpace(ustring prefix0, ustring uri0) : prefix(prefix0),uri(uri0) {}
     };
-
-    //??? copy, default ctor, assign
 
     ustring         fileName_;
     bool            isWriter_;
@@ -1119,10 +1091,6 @@ protected:
     unsigned            bytestreamNumber_;
 };
 
-//??? into stateReset body
-    /// discard any input queued
-    /// doesn't change dbuf pointers
-
 //================================================================
 
 class BitpackDecoder : public Decoder {
@@ -1383,409 +1351,5 @@ struct IndexPacket {  /// Note this is whole packet, not just header
     void        dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 };
-
-
-#if 0 //!!!
-#define SEEKINDEX_MAX_LEVELS  6
-
-class SeekIndex {
-public:
-                SeekIndex(CheckedFile* cf);                             // for writing
-                SeekIndex(CheckedFile* cf, int64_t rootPhysicalOffset); // for reading
-    uint64_t    close();
-    void        append(uint64_t chunkRecordNumber, uint64_t chunkPhysicalOffset);
-    int64_t     entryCount();
-    void        lookup(int64_t recordNumber, int64_t& chunkRecordNumber, int64_t& chunkPhysicalOffset);
-    void        verify(uint64_t totalRecordCount, uint64_t fileSize);
-#ifdef E57_DEBUG
-    void        dump(int indent = 0, std::ostream& os = std::cout);
-#endif
-
-private:
-    /// No default ctor, copy, assign
-                    SeekIndex();
-                    SeekIndex(const SeekIndex& si);
-    SeekIndex&      operator=(const SeekIndex& si);
-
-protected:
-    CheckedFile*    cf_;
-    bool            forWriting_;
-    bool            isOpen_;
-    uint64_t        rootPhysicalOffset_;
-    uint64_t        chunkCount_;
-
-    struct LevelInfo {
-        int64_t     packetOffset;
-        IndexPacket packet;
-
-                    LevelInfo();
-    };
-    vector<LevelInfo> level_;
-};
-
-
-SeekIndex::LevelInfo::LevelInfo()
-: packetOffet(0)
-{
-    memset(&packet, 0, sizeof(packet);
-}
-
-SeekIndex::SeekIndex(CheckedFile* cf)
-: cf_(cf),
-  forWriting_(true),
-  isOpen_(true),
-  rootPhysicalOffset_(0),
-  entryCount_(0),
-  level_(0)
-{
-    /// Open for writing
-}
-
-SeekIndex::SeekIndex(CheckedFile* cf, int64_t rootPhysicalOffset)
-: cf_(cf),
-  forWriting_(false),
-  isOpen_(true),
-  rootPhysicalOffset_(rootPhysicalOffset),
-  entryCount_(0),
-  level_(0)
-{
-    /// Open for reading
-}
-
-uint64_t SeekIndex::close()
-{
-    if (forWriting_) {
-        /// Flush partial index packets
-        for (int i = 0; i < level_.size(); i++) {
-            if (i == level_.size())
-                rootPhysicalOffset_ = writePacket(i);
-            else
-                (void)writePacket(i);
-        }
-    }
-
-    isOpen_ = false;
-    return(rootPhysicalOffset_);
-}
-
-
-
-//================================================================
-void SeekIndex::appendEntry(int64_t recordIndex, int64_t chunkOffset)
-{
-    if (!isOpen_) {
-        throw E57_EXCEPTION2(E57_ERROR_BAD_SEEKINDEX_OPERATION,
-                             "recordIndex=" + toString(recordIndex)
-                             + " chunkOffset=" + toString(chunkOffset));
-    }
-    if (!forWriting_) {
-        throw E57_EXCEPTION2(E57_ERROR_BAD_SEEKINDEX_OPERATION,
-                             "recordIndex=" + toString(recordIndex)
-                             + " chunkOffset=" + toString(chunkOffset));
-    }
-
-    recursiveAppend(0, recordIndex, chunkOffset);
-}
-
-void SeekIndex::recursiveAppend(unsigned level, int64_t recordIndex, int64_t chunkOffset)
-{
-    if (level > levels_.size())
-        throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "level=" + toString(level) + " levels_.size()="+toString(levels_.size()));
-
-???
-
-
-}
-
-int64_t SeekIndex::entryCount()
-{
-    if (!isOpen_)
-        throw ???;
-    return(entryCount_);
-}
-
-void SeekIndex::lookup(int64_t recordIndex, int64_t& nearestRecordIndex, int64_t& nearestChunkOffset)
-{
-    if (!isOpen_)
-        throw ???;
-    if (forWriting_)
-        throw ???;
-    unsigned topLevel = level_.size()-1;
-    return(recursiveLookup(topLevel, recordIndex, nearestRecordIndex, nearestChunkOffset);
-}
-
-void SeekIndex::recursiveLookup(unsigned level, recordIndex, int64_t& nearestRecordIndex, int64_t& nearestChunkOffset)
-{
-???
-}
-
-
-
-SeekIndexWriter::SeekIndexWriter(ImageFile imf, CompressedVectorWriter cvWriter, uint64_t sectionPhysicalOffset)
-: imf_(imf.impl()),
-  cvWriter_(cvWriter),
-  sectionPhysicalOffset_(sectionPhysicalOffset),
-  levels_(0)
-{
-    isOpen_ = true;
-}
-
-SeekIndexWriter::~SeekIndexWriter()
-{
-    if (isOpen_)
-        close();
-}
-
-void SeekIndexWriter::close()
-{
-    if (!isOpen_)
-        return;
-
-    /// Flush all levels to disk
-    uint64_t topLevelPhysicalOffset = 0;
-    for (unsigned i=1; i < levels_.size(); i++) {
-        if (i == levels_.size())
-            topLevelPhysicalOffset = levelWrite(i);
-        else
-            levelWrite(i);
-    }
-
-    /// Store physical offset of top level in section header
-    CompressedVectorSectionHeader header;
-    imf_->file()->seek(sectionPhysicalOffset_, CheckedFile::physical);
-    imf_->file()->read(reinterpret_cast<char*>(&header), sizeof(header));
-    header.swab();
-    header.indexPhysicalOffset = topLevelPhysicalOffset;
-    header.swab();
-    imf_->file()->seek(sectionPhysicalOffset_, CheckedFile::physical);
-    imf_->file()->write(reinterpret_cast<char*>(&header), sizeof(header));
-
-    isOpen_ = false;
-}
-
-void SeekIndexWriter::append(uint64_t chunkRecordNumber, uint64_t chunkPhysicalOffset)
-{
-    if (!isOpen_)
-        throw EXCEPTION("not open");
-
-    /// Add new entry at level 0, calc updates to upper levels when packets fill up
-    recursiveAppend(0, chunkRecordNumber, chunkPhysicalOffset);
-
-    chunkCount_++;
-}
-
-void SeekIndexWriter::recursiveAppend(unsigned currentLevel, uint64_t chunkRecordNumber, uint64_t chunkPhysicalOffset)
-{
-    /// If don't have this level yet, so add new level
-    if (currentLevel > levels_.size())
-        levels_.push_back(LevelInfo());
-
-    /// If out of room at current level, write out packet to file, then update next level up
-    if (levels_.at(currentLevel).entries.size() == IndexPacket::MAX_ENTRIES) {
-        /// Get record number of first entry in packet
-        uint64_t firstChunkRecordNumber = levels_.at(currentLevel).entries.at(0).chunkRecordNumber;
-
-        /// Write packet to file, saving the starting offset
-        uint64_t packetPhysicalOffset = levelWrite(currentLevel);
-
-        /// Reset number of entries in packet to zero.
-        levels_.at(currentLevel).entries.clear();
-
-        /// Tell next higher level that we wrote the packet
-        recursiveAppend(currentLevel+1, firstChunkRecordNumber, packetPhysicalOffset);
-    }
-
-    /// Now have room to add entry in current packet, so do it.
-    levels_.at(currentLevel).entries.push_back(IndexPacketEntry(chunkRecordNumber, chunkPhysicalOffset));
-}
-
-uint64_t SeekIndexWriter::levelWrite(unsigned levelNumber)
-{
-/// implement
-    /// Allocate space in file
-
-}
-
-#ifdef E57_DEBUG
-void SeekIndexWriter::dump(int indent, std::ostream& os)
-{
-    bool                    isOpen_;
-    std::shared_ptr<ImageFileImpl> imf_;
-    CompressedVectorWriter  cvWriter_;
-    uint64_t                sectionPhysicalOffset_;
-    vector<LevelInfo>       levels_;
-    uint64_t                chunkCount_;
-
-
-    os << space(indent) << "isOpen:                " << isOpen_ << endl;
-    os << space(indent) << "sectionPhysicalOffset: " << sectionPhysicalOffset_ << endl;
-    os << space(indent) << "chunkCount_:           " << chunkCount_ << endl;
-    for (unsigned i = 0; i < levels_.size(); i++) {
-        os << space(indent+4) << "levels[" << i << "]:" << endl;
-???        levels_.at(i).dump(indent+8, os);
-
-
-        for (unsigned j = 0; j < levels_.at(i).size(); j++) {
-            os << space(indent+8) << "entries_[" << j << "]:" << endl;
-            levels_.at(i).entries.at(j).dump(indent+12, os);
-        }
-    }
-
-    os << space(indent) << ":         " << << endl;
-    os << space(indent) << ":         " << << endl;
-    os << space(indent) << ":         " << << endl;
-    os << space(indent) << ":         " << << endl;
-    os << space(indent) << "packetFlags:        " << packetFlags << endl;
-    os << space(indent) << "packetLengthMinus1: " << packetLengthMinus1 << endl;
-    os << space(indent) << "entryCount:         " << entryCount << endl;
-    unsigned i;
-    for (i=0; i < entryCount && i < 10; i++) {
-        os << space(indent) << "entry[" << i << "]:" << endl;
-        os << space(indent+4) << "chunkRecordNumber:    " << entries[i].chunkRecordNumber << endl;
-        os << space(indent+4) << "packetPhysicalOffset: " << entries[i].packetPhysicalOffset << endl;
-    }
-    if (i < entryCount)
-        os << space(indent) << entryCount-i << "more entries unprinted..." << endl;
-}
-#endif
-//================================================================
-//================================================================
-//================================================================
-
-class SeekIndexReader {
-public:
-                SeekIndexReader(ImageFile imf, uint64_t topLevelPhysicalOffset);
-    void        lookup(uint64_t recordNumber, uint64_t& chunkRecordNumber, uint64_t& chunkPhysicalOffset);
-
-#ifdef E57_DEBUG
-    void        dump(int indent = 0, std::ostream& os = std::cout);
-#endif
-protected:
-    uint64_t    topLevelPhysicalOffset_;
-    unsigned    indexDepth_;
-};
-
-void SeekIndexReader::lookup(uint64_t recordNumber, uint64_t& foundRecordNumber, uint64_t& foundPhysicalOffset)
-{
-    uint64_t nextPacketPhysicalOffset = topLevelPhysicalOffset_;
-    uint64_t nextChunkRecordNumber    = 0;
-
-    for (unsigned level = indexDepth_-1; level >= 0; level--) {
-        /// Get index packet at packetOffset into cache and get pointer
-        char* pkt;
-        unique_ptr<PacketLock> plock = imf_->cache()->lock(nextPacketOffset, pkt);
-        IndexPacket* ipkt = reinterpret_cast<IndexPacket*>(pkt);
-
-        /// Quick check that packet looks ok
-        ipkt->verify();
-
-        /// Verify it is the expected depth.
-        if (ipkt->indexLevel != level)
-            throw EXCEPTION("bad index level");
-
-        /// Binary search for last entry with record number <= recordNumber
-        unsigned low = 0;
-        unsigned high = ipkt->entryCount-1;
-        while (low < high) {
-            unsigned middle = (low + high + 1) >> 1;   /// middle > low, so will always make progress
-            if (ipkt->entries[middle].chunkRecordNumber <= recordNumber)
-                low = middle;
-            else
-                high = middle-1;
-        }
-        unsigned found = low;
-
-        /// Double check that recordNumber is in found entry.  Be careful if last entry.
-        if (recordNumber < ipkt->entries[found].chunkRecordNumber)
-            throw EXCEPTION("internal error");  /// recordNumber is before found entry
-        if (found+1 < ipkt->entryCount && recordNumber >= ipkt->entries[found+1].chunkRecordNumber)
-            throw EXCEPTION("internal error");  /// recordNumber is after found entry
-
-
-        nextPacketPhysicalOffset = ipkt->entries[found].packetPhysicalOffset;
-        nextChunkRecordNumber    = ipkt->entries[found].chunkRecordNumber;
-    }
-
-    /// Return the packet location and starting chunk record number
-    foundRecordNumber   = nextChunkRecordNumber;
-    foundPhysicalOffset = nextPacketPhysicalOffset;
-}
-
-//================================================================
-
-class SeekIndexWriter {
-public:
-            SeekIndexWriter(ImageFile imf, uint64_t sectionPhysicalOffset);
-    void    append(uint64_t chunkRecordNumber, uint64_t chunkPhysicalOffset);
-    void    close();
-
-#ifdef E57_DEBUG
-    void        dump(int indent = 0, std::ostream& os = std::cout);
-#endif
-protected:
-    uint64_t                sectionPhysicalStart_;
-    vector<SeekLevelInfo>   levels_;
-};
-
-class SeekIndexReader {
-public:
-                SeekIndexReader(ImageFile imf, uint64_t topLevelPhysicalOffset);
-    void        lookup(uint64_t recordNumber, uint64_t& chunkRecordNumber, uint64_t& chunkPhysicalOffset);
-
-#ifdef E57_DEBUG
-    void        dump(int indent = 0, std::ostream& os = std::cout);
-#endif
-protected:
-    uint64_t    topLevelPhysicalOffset_;
-    unsigned    indexDepth_;
-};
-
-void SeekIndexReader::lookup(uint64_t recordNumber, uint64_t& foundRecordNumber, uint64_t& foundPhysicalOffset)
-{
-    uint64_t nextPacketPhysicalOffset = topLevelPhysicalOffset_;
-    uint64_t nextChunkRecordNumber    = 0;
-
-    for (unsigned level = indexDepth_-1; level >= 0; level--) {
-        /// Get index packet at packetOffset into cache and get pointer
-        char* pkt;
-        unique_ptr<PacketLock> plock = imf_->cache()->lock(nextPacketOffset, pkt);
-        IndexPacket* ipkt = reinterpret_cast<IndexPacket*>(pkt);
-
-        /// Quick check that packet looks ok
-        ipkt->verify();
-
-        /// Verify it is the expected depth.
-        if (ipkt->indexLevel != level)
-            throw EXCEPTION("bad index level");
-
-        /// Binary search for last entry with record number <= recordNumber
-        unsigned low = 0;
-        unsigned high = ipkt->entryCount-1;
-        while (low < high) {
-            unsigned middle = (low + high + 1) >> 1;   /// middle > low, so will always make progress
-            if (ipkt->entries[middle].chunkRecordNumber <= recordNumber)
-                low = middle;
-            else
-                high = middle-1;
-        }
-        unsigned found = low;
-
-        /// Double check that recordNumber is in found entry.  Be careful if last entry.
-        if (recordNumber < ipkt->entries[found].chunkRecordNumber)
-            throw EXCEPTION("internal error");  /// recordNumber is before found entry
-        if (found+1 < ipkt->entryCount && recordNumber >= ipkt->entries[found+1].chunkRecordNumber)
-            throw EXCEPTION("internal error");  /// recordNumber is after found entry
-
-
-        nextPacketPhysicalOffset = ipkt->entries[found].packetPhysicalOffset;
-        nextChunkRecordNumber    = ipkt->entries[found].chunkRecordNumber;
-    }
-
-    /// Return the packet location and starting chunk record number
-    foundRecordNumber   = nextChunkRecordNumber;
-    foundPhysicalOffset = nextPacketPhysicalOffset;
-}
-
-#endif
 
 #endif // E57FOUNDATIONIMPL_H_INCLUDED

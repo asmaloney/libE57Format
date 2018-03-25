@@ -100,10 +100,12 @@ inline std::string binaryString(int32_t x) {return(binaryString(static_cast<uint
 inline std::string binaryString(int16_t x) {return(binaryString(static_cast<uint16_t>(x)));}
 inline std::string binaryString(int8_t x)  {return(binaryString(static_cast<uint8_t>(x)));}
 
-/// Forward reference
+/// Forward declaration
 template <typename RegisterT> class BitpackIntegerEncoder;
 template <typename RegisterT> class BitpackIntegerDecoder;
+
 class E57XmlParser;
+class Decoder;
 class Encoder;
 
 /// Version numbers of ASTM standard that this library supports
@@ -796,7 +798,7 @@ struct EmptyPacketHeader {
 };
 
 //================================================================
-class Decoder;
+
 struct DecodeChannel {
     SourceDestBuffer    dbuf; //??? for now, one input per channel
     std::shared_ptr<Decoder> decoder;
@@ -1085,6 +1087,10 @@ public:
 #ifdef E57_DEBUG
     virtual void        dump(int indent = 0, std::ostream& os = std::cout) = 0;
 #endif
+
+private:
+    Decoder() = delete;
+
 protected:
                         Decoder(unsigned bytestreamNumber);
 

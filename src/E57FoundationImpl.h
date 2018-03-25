@@ -136,7 +136,6 @@ const char E57_LIBRARY_ID[] = REVISION_ID;
 #endif
 
 //================================================================
-#define SAFE_MODE 1 //??? CHECKEDFILE_SAFE_MODE?
 
 class CheckedFile {
 public:
@@ -180,20 +179,11 @@ template<class FTYPE>
     bool            readOnly_;
     uint64_t        logicalLength_;
 
-#ifdef SAFE_MODE
     void        getCurrentPageAndOffset(uint64_t& page, size_t& pageOffset, OffsetMode omode = logical);
     void        readPhysicalPage(char* page_buffer, uint64_t page);
     void        writePhysicalPage(char* page_buffer, uint64_t page);
     int         open64(ustring fileName, int flags, int mode);
     uint64_t    lseek64(int64_t offset, int whence);
-#else
-    ???
-    void        finishPage();
-
-    uint32_t    pageChecksum_;
-    bool        currentPageDirty_;
-    char*       temp_page;
-#endif
 };
 
 inline uint64_t CheckedFile::logicalToPhysical(uint64_t logicalOffset)

@@ -4534,7 +4534,6 @@ void CheckedFile::read(char* buf, size_t nRead, size_t /*bufSize*/)
 //??? need to keep track of logical length?
 //??? check bufSize OK
 
-#ifdef SAFE_MODE
     uint64_t end = position(logical) + nRead;
 
     if (end > length(logical))
@@ -4563,8 +4562,6 @@ void CheckedFile::read(char* buf, size_t nRead, size_t /*bufSize*/)
 
     /// When done, leave cursor just past end of last byte read
     seek(end, logical);
-#endif  // SAFE_MODE
-
 }
 
 void CheckedFile::write(const char* buf, size_t nWrite)
@@ -4575,7 +4572,6 @@ void CheckedFile::write(const char* buf, size_t nWrite)
     if (readOnly_)
         throw E57_EXCEPTION2(E57_ERROR_FILE_IS_READ_ONLY, "fileName=" + fileName_);
 
-#ifdef SAFE_MODE
     uint64_t end = position(logical) + nWrite;
 
     uint64_t page;
@@ -4614,7 +4610,6 @@ void CheckedFile::write(const char* buf, size_t nWrite)
 
     /// When done, leave cursor just past end of buf
     seek(end, logical);
-#endif  // SAFE_MODE
 }
 
 CheckedFile& CheckedFile::operator<<(const ustring& s)
@@ -4707,7 +4702,6 @@ template<class FTYPE> CheckedFile& CheckedFile::writeFloatingPoint(FTYPE value, 
 
 void CheckedFile::seek(uint64_t offset, OffsetMode omode)
 {
-#ifdef SAFE_MODE
     //??? check for seek beyond logicalLength_
     int64_t pos = static_cast<int64_t>(omode==physical ? offset : logicalToPhysical(offset));
 
@@ -4715,7 +4709,6 @@ void CheckedFile::seek(uint64_t offset, OffsetMode omode)
     // cout << "seek offset=" << offset << " omode=" << omode << " pos=" << pos << endl; //???
 #endif
     lseek64(pos, SEEK_SET);
-#endif
 }
 
 uint64_t CheckedFile::lseek64(int64_t offset, int whence)
@@ -4751,7 +4744,6 @@ uint64_t CheckedFile::lseek64(int64_t offset, int whence)
 
 uint64_t CheckedFile::position(OffsetMode omode)
 {
-#ifdef SAFE_MODE
     /// Get current file cursor position
     uint64_t pos = lseek64(0LL, SEEK_CUR);
 
@@ -4759,12 +4751,10 @@ uint64_t CheckedFile::position(OffsetMode omode)
         return(pos);
     else
         return(physicalToLogical(pos));
-#endif  // SAFE_MODE
 }
 
 uint64_t CheckedFile::length(OffsetMode omode)
 {
-#ifdef SAFE_MODE
     if (omode==physical) {
         //??? is there a 64bit length call?
         /// Get current file cursor position
@@ -4777,9 +4767,9 @@ uint64_t CheckedFile::length(OffsetMode omode)
         lseek64(original_pos, SEEK_SET);
 
         return(end_pos);
-    } else
+    } else {
         return(logicalLength_);
-#endif  // SAFE_MODE
+    }
 }
 
 void CheckedFile::extend(uint64_t newLength, OffsetMode omode)
@@ -4790,7 +4780,6 @@ void CheckedFile::extend(uint64_t newLength, OffsetMode omode)
     if (readOnly_)
         throw E57_EXCEPTION2(E57_ERROR_FILE_IS_READ_ONLY, "fileName=" + fileName_);
 
-#ifdef SAFE_MODE
     uint64_t newLogicalLength;
     if (omode==physical)
         newLogicalLength = physicalToLogical(newLength);
@@ -4852,23 +4841,16 @@ void CheckedFile::extend(uint64_t newLength, OffsetMode omode)
 
     /// When done, leave cursor at end of file
     seek(newLogicalLength, logical);
-#endif  // SAFE_MODE
 }
 
 void CheckedFile::flush()
 {
-#ifdef SAFE_MODE
     /// Nothing to do
-#endif  // SAFE_MODE
 }
 
 void CheckedFile::close()
 {
     if (fd_ >= 0) {
-#ifndef SAFE_MODE
-        if (currentPageDirty_)
-            finishPage();
-#endif  // SAFE_MODE
 #if defined(_MSC_VER)
         int result = ::_close(fd_);
 #elif defined(__GNUC__)
@@ -4907,14 +4889,11 @@ void CheckedFile::unlink()
 
 size_t CheckedFile::efficientBufferSize(size_t logicalBytes)
 {
-#ifdef SAFE_MODE
     return(logicalBytes);
-#endif  // SAFE_MODE
 }
 
 uint32_t CheckedFile::checksum(char* buf, size_t size)
 {
-#ifdef SAFE_MODE
     /// Calc CRC32C of given data
     static CRC::Parameters<crcpp_uint32, 32> s_crcParams;
     static bool s_crcParamsInitialized = false;
@@ -4931,10 +4910,7 @@ uint32_t CheckedFile::checksum(char* buf, size_t size)
 
     swab(crc); //!!! inside BIGENDIAN?
     return(crc);
-#endif  // SAFE_MODE
 }
-
-#ifdef SAFE_MODE
 
 void CheckedFile::getCurrentPageAndOffset(uint64_t& page, size_t& pageOffset, OffsetMode omode)
 {
@@ -5006,8 +4982,6 @@ void CheckedFile::writePhysicalPage(char* page_buffer, uint64_t page)
     if (result < 0)
         throw E57_EXCEPTION2(E57_ERROR_WRITE_FAILED, "fileName=" + fileName_ + " result=" + toString(result));
 }
-
-#endif  // SAFE_MODE
 
 //=============================================================
 #ifdef UNIT_TEST

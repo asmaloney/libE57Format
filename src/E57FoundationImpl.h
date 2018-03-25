@@ -449,7 +449,7 @@ public:
     std::shared_ptr<CompressedVectorReaderImpl> reader(std::vector<SourceDestBuffer> dbufs);
 
     int64_t             getRecordCount()                        {return(recordCount_);}
-    int64_t             getBinarySectionLogicalStart()          {return(binarySectionLogicalStart_);}
+    uint64_t            getBinarySectionLogicalStart()          {return(binarySectionLogicalStart_);}
     void                setRecordCount(int64_t recordCount)    {recordCount_ = recordCount;}
     void                setBinarySectionLogicalStart(uint64_t binarySectionLogicalStart)
                                                                 {binarySectionLogicalStart_ = binarySectionLogicalStart;}

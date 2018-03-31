@@ -105,6 +105,7 @@ include_directories(
 )
 
 # CRCpp from here: https://github.com/d-bahr/CRCpp
+add_definitions( -DCRCPP_USE_CPP11 )
 include_directories( contrib/CRCpp/inc )
 
 #
@@ -116,6 +117,7 @@ add_library( E57Format STATIC
     src/E57FoundationImpl.cpp
     src/E57FoundationImpl.h
     include/E57Foundation.h
+    contrib/CRCpp/inc/CRC.h
 )
 set_target_properties( E57Format
     PROPERTIES DEBUG_POSTFIX "-d"

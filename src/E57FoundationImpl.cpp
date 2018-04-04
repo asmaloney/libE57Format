@@ -5822,7 +5822,7 @@ void CompressedVectorWriterImpl::write(const size_t requestedRecordCount)
         cout << "  currentPacketSize()=" << currentPacketSize() << endl; //???
 #endif
 
-#if E57_WRITE_CRAZY_PACKET_MODE
+#ifdef E57_WRITE_CRAZY_PACKET_MODE
 ///??? depends on number of streams
 #  define E57_TARGET_PACKET_SIZE    500
 #else

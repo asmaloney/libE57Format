@@ -119,8 +119,9 @@ add_library( E57Format STATIC
     include/E57Foundation.h
     contrib/CRCpp/inc/CRC.h
 )
-set_target_properties( E57Format
-    PROPERTIES DEBUG_POSTFIX "-d"
+set_target_properties( E57Format PROPERTIES
+    DEBUG_POSTFIX "-d"
+    POSITION_INDEPENDENT_CODE ON
 )
 
 #

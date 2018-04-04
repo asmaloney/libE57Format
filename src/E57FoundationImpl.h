@@ -231,7 +231,7 @@ public:
     void                    checkBuffers(const std::vector<SourceDestBuffer>& sdbufs, bool allowMissing);
     bool                    findTerminalPosition(std::shared_ptr<NodeImpl> ni, uint64_t& countFromLeft);
 
-    virtual void            writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=NULL) = 0;
+    virtual void            writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) = 0;
 
     virtual                 ~NodeImpl() {}
 
@@ -276,7 +276,7 @@ public:
 
     virtual void        checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin);
 
-    virtual void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=NULL);
+    virtual void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr);
 
 #ifdef E57_DEBUG
     void                dump(int indent = 0, std::ostream& os = std::cout);
@@ -300,7 +300,7 @@ public:
 
     virtual void        set(int64_t index, std::shared_ptr<NodeImpl> ni);
 
-    virtual void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=NULL);
+    virtual void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr);
 
 #ifdef E57_DEBUG
     void                dump(int indent = 0, std::ostream& os = std::cout);
@@ -408,7 +408,7 @@ public:
 
     virtual void        checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin);
 
-    virtual void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=NULL);
+    virtual void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr);
 
     /// Iterator constructors
     std::shared_ptr<CompressedVectorWriterImpl> writer(std::vector<SourceDestBuffer> sbufs);
@@ -449,7 +449,7 @@ public:
 
     virtual void        checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin);
 
-    virtual void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=NULL);
+    virtual void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr);
 
 #ifdef E57_DEBUG
     void                dump(int indent = 0, std::ostream& os = std::cout);
@@ -488,7 +488,7 @@ public:
 
     virtual void        checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin);
 
-    virtual void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=NULL);
+    virtual void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr);
 
 
 #ifdef E57_DEBUG
@@ -521,7 +521,7 @@ public:
 
     virtual void        checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin);
 
-    virtual void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=NULL);
+    virtual void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr);
 
 #ifdef E57_DEBUG
     void                dump(int indent = 0, std::ostream& os = std::cout);
@@ -547,7 +547,7 @@ public:
 
     virtual void        checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin);
 
-    virtual void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=NULL);
+    virtual void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr);
 
 #ifdef E57_DEBUG
     void                dump(int indent = 0, std::ostream& os = std::cout);
@@ -573,7 +573,7 @@ public:
 
     virtual void        checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin);
 
-    virtual void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=NULL);
+    virtual void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr);
 
 #ifdef E57_DEBUG
     void                dump(int indent = 0, std::ostream& os = std::cout);

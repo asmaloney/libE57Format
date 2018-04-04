@@ -717,7 +717,7 @@ enum ErrorCode {
 
 class E57Exception : public std::exception {
 public:
-    virtual void        report(const char* reportingFileName=NULL, int reportingLineNumber=0, const char* reportingFunctionName=NULL, std::ostream& os = std::cout) const;
+    virtual void        report(const char* reportingFileName=nullptr, int reportingLineNumber=0, const char* reportingFunctionName=nullptr, std::ostream& os = std::cout) const;
     virtual ErrorCode   errorCode() const;
     virtual ustring     context() const;
     virtual const char* what() const noexcept;
@@ -729,7 +729,7 @@ public:
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
     E57Exception(ErrorCode ecode, const ustring context,
-                 const char* srcFileName = NULL, int srcLineNumber = 0, const char* srcFunctionName = NULL);
+                 const char* srcFileName = nullptr, int srcLineNumber = 0, const char* srcFunctionName = nullptr);
     ~E57Exception() noexcept {}
 
 private:

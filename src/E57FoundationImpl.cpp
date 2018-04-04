@@ -87,44 +87,44 @@ using namespace std;
 namespace {
 
 // define convenient constants for the attribute names
-const XMLCh att_minimum[] = {
+static const XMLCh att_minimum[] = {
     chLatin_m, chLatin_i, chLatin_n, chLatin_i, chLatin_m, chLatin_u,
     chLatin_m, chNull
 };
-const XMLCh att_maximum[] = {
+static const XMLCh att_maximum[] = {
     chLatin_m, chLatin_a, chLatin_x, chLatin_i, chLatin_m, chLatin_u,
     chLatin_m, chNull
 };
-const XMLCh att_scale[] = {
+static const XMLCh att_scale[] = {
     chLatin_s, chLatin_c, chLatin_a, chLatin_l, chLatin_e, chNull
 };
-const XMLCh att_offset[] = {
+static const XMLCh att_offset[] = {
     chLatin_o, chLatin_f, chLatin_f, chLatin_s, chLatin_e, chLatin_t, chNull
 };
-const XMLCh att_precision[] = {
+static const XMLCh att_precision[] = {
     chLatin_p, chLatin_r, chLatin_e, chLatin_c, chLatin_i, chLatin_s,
     chLatin_i, chLatin_o, chLatin_n, chNull
 };
-const XMLCh att_allowHeterogeneousChildren[] = {
+static const XMLCh att_allowHeterogeneousChildren[] = {
     chLatin_a, chLatin_l, chLatin_l, chLatin_o, chLatin_w, chLatin_H,
     chLatin_e, chLatin_t, chLatin_e, chLatin_r, chLatin_o, chLatin_g,
     chLatin_e, chLatin_n, chLatin_e, chLatin_o, chLatin_u, chLatin_s,
     chLatin_C, chLatin_h, chLatin_i, chLatin_l, chLatin_d, chLatin_r,
     chLatin_e, chLatin_n, chNull
 };
-const XMLCh att_fileOffset[] = {
+static const XMLCh att_fileOffset[] = {
     chLatin_f, chLatin_i, chLatin_l, chLatin_e, chLatin_O, chLatin_f,
     chLatin_f, chLatin_s, chLatin_e, chLatin_t, chNull
 };
 
-const XMLCh att_type[] = {
+static const XMLCh att_type[] = {
     chLatin_t, chLatin_y, chLatin_p, chLatin_e, chNull
 };
-const XMLCh att_length[] = {
+static const XMLCh att_length[] = {
     chLatin_l, chLatin_e, chLatin_n, chLatin_g, chLatin_t, chLatin_h,
     chNull
 };
-const XMLCh att_recordCount[] = {
+static const XMLCh att_recordCount[] = {
     chLatin_r, chLatin_e, chLatin_c, chLatin_o, chLatin_r, chLatin_d,
     chLatin_C, chLatin_o, chLatin_u, chLatin_n, chLatin_t, chNull
 };

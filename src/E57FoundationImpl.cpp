@@ -54,10 +54,6 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 
-#ifdef E57_MAX_VERBOSE
-#include <iostream>
-#endif
-
 #ifndef O_BINARY
 #define O_BINARY (0)
 #endif

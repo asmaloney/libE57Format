@@ -2,6 +2,11 @@ dist: trusty
 sudo: false
 language: cpp
 
+env:
+  global:
+  # For coverity
+   - secure: "0SIegdp6JkQTNSJNmUSwbtlCcv4+v5IeVAREs1iKlwBU9yr1SRyOnipP1nkkfwYDYd1MQcjlHE5enZlm+mzqTyYTCXi/R4MWmMrHy92dV2p3H5cEhf5iJBXqzJlZ8tQHqY6rfVD4cR6ZLbQxvJ4Q98HBIrVfHHqrwTgX/pEWHR5c/15iiu1zeFaCePYytn6IEmowN9lWibM76b9+NlPJkaHJNWG2M5VUx4+Go8f7hY2zCe6vHk1KhNmdj+GPPm87R0qjGxTtnudLFOOjObiHJ3gByTgE54Myod+Pr8XWLK7h7DHTeZ6tGbxvaEURVEhm4rNVAhKdkCooQOkKqzsU6MrtGIHIkl+uk3boDRfT+kzmtScGLJplRfKWphplfYytZyUxyXHPglsyXYU3Qh75tkuMcWr1a0diEqXLKNsHjRw9FYl4a9Cn4tC710oK1a8FlypzlfKud20IFVKj+8kV9APNMqNIuRzPHdaGbf/kW6wV/3x/1hwUSGtk7gELKjakNLYpFac9UAzGCscsSOg5AhpVlquOItVksY68OtSDUEX3C+tXYEh5UjDvXEwJjDjLCpf9/GWXuvxZ34SjZsb2yjwj4HAIBae50C1vjRgm2pCRr//J5riOq/82YJFm6tIzFBQd6rGKFtqNQ5rDy2rAIopbCcaLgss5rXdlHLC7rwA="
+
 compiler:
   - clang
   - gcc
@@ -17,5 +22,17 @@ before_script:
   - cmake -DCMAKE_BUILD_TYPE=Debug ..
 
 script:
-  - gcc -v && g++ -v && cmake --version
-  - make -j2
+  - if [[ "${COVERITY_SCAN_BRANCH}" != 1 ]]; then
+      gcc -v && g++ -v && cmake --version
+      make -j2
+  fi
+
+addons:
+  coverity_scan:
+    project:
+      name: "asmaloney/libE57Format"
+      description: "Library for reading & writing the E57 file format (fork of E57RefImpl) "
+    notification_email: asmaloney@gmail.com
+    build_command_prepend: "mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug .."
+    build_command: "make -j2"
+    branch_pattern: coverity_scan

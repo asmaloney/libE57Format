@@ -15,7 +15,15 @@ addons:
   apt:
     packages:
       - libxerces-c-dev
-
+  coverity_scan:
+    project:
+      name: "asmaloney/libE57Format"
+      description: "Library for reading & writing the E57 file format (fork of E57RefImpl) "
+    notification_email: asmaloney@gmail.com
+    build_command_prepend: "mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug .."
+    build_command: "make -j2"
+    branch_pattern: coverity_scan
+    
 before_script:
   - mkdir build
   - cd build
@@ -26,13 +34,4 @@ script:
       gcc -v && g++ -v && cmake --version
       make -j2
     fi
-
-addons:
-  coverity_scan:
-    project:
-      name: "asmaloney/libE57Format"
-      description: "Library for reading & writing the E57 file format (fork of E57RefImpl) "
-    notification_email: asmaloney@gmail.com
-    build_command_prepend: "mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug .."
-    build_command: "make -j2"
-    branch_pattern: coverity_scan
+    

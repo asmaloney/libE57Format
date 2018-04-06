@@ -5,14 +5,11 @@ language: cpp
 env:
   global:
   # For coverity
-   - secure: "gfnlLwBrk8D0GsqjjxMCLMV7vLYlJX31r7gzm90FQB0R8EBZA8c87V82mtT/D9sRe6DPk4X42/rE9ewdkvQnC4iHMKZiQdFVn/MoBi4e8Juy9cWrAPBjvCosyjuCgFrfORlES7A1GdSuu54P5dTotXEJjaTO0S6q0cQgL7/uDfLhFz3kuIygDoi4oT12PlAfJGqXXG4aphN4DmeM5wEAEuAIjUAva354TzqT+VN7t6KMYhL7N68qoZ10Mm1XZZevXDVmjVf9zIvZsN53SvUoK1C7drWQC/O+O9dVAYIVD4LWqXXRF16PsmbF+geDQ/vdDs90nlbi4ZE4FiLvbhZKgPRw/61a2L/COdgVp0fcmwrXJTjGYt+61WtEu+9y9bPR+w9jJsR68lg+G3XCpVhUQv2PTEXrfSR5K+4RLkJRd9ML//ZficWuf1DyG2BVHiyz+/WF7HbCJx3rh9nL/c0JufCn+7WLKo7iBaBxuOrCdNO6P/SrNvmQMa/Ubu2IelI6+ieellb0pZnMyr3OcqXnrMtzJtkcyV/pG6UeBM4VKfkh9pq1xVPycOwkfVUvR87bvwkjdxPwQUt0koWWT0TwVJBcsAkFz6ODK8p0gMJeUfd716ze/R2tjJ08OnDtac5VphI63DEG+/NOzPzp9rfPrNQMNSWOQXM3Rly0Ns++L8A="
-
+   - secure: "Ddou0BLHkn4V8b/Q6E56lUVz4woSXS8eI0IzRxyYqkDvXtqqjSlxqtu2fuU/awieA6Y5rzEHZrpHnvJU80uC+gnlIfMkIU9O0Cj0rwppKTTTWpXzohrESfXzJc8iZs+3gxpReZhWp6IGrfitdudfpFAgLWBENgzemWsHy7prnDcQQA99FBUhCuhbqhtXRR8wxXUWNQr2RntbFbH22Eqcwbd5a+OYpPSCtV296ZII6/iskMI3OeXCEGnqKBxe2L9oohcrTS/0beCLM7dhCflelns8MTGa1AYmJEwXf3/n4PmwRo7EjTpSBow70n9SCps5mS42+wRDU8FMBTNgqzBNjOdDojrPhijnEPfhRzFygsyfgoEmuZjD2MuXBSIwpYa9mFusVpN2BON3zZLvmw5Y1HuBadf3yLoD0/Vy1K6YBnQRMIm5JhVYj4hY8ogtPNVfjYjckHEPlCRcwzS5rwh/sZ2eYW30LW3IusCB2wu3/iR97jamBu3sEOY67ln3M6EOjnMPHApBqsVhapQv+XtOtxaVPzKVc1u6tlzRRijPCfcN6ssNHzFh1feqFopthapY4erfA+DrjQivW+E49Yv306ig6HVBbrMkOR+TX+bgDmZisLtbJ8d2eym063KuojBRqDlq8wrz0MlUXVIz2H0FhXPIho8z9Uj7fkswM+jQiJc="
+   
 compiler:
   - clang
   - gcc
-
-before_install:
-  - echo -n | openssl s_client -connect https://scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
 
 addons:
   apt:

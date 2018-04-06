@@ -4683,7 +4683,7 @@ template<class FTYPE> CheckedFile& CheckedFile::writeFloatingPoint(FTYPE value, 
     }
 
     // Disable these checks because they compare floats using "!=" which is invalid
-#ifdef 0 //E57_MAX_DEBUG
+#if 0 //E57_MAX_DEBUG
     /// Double check same value
     FTYPE old_value = static_cast<FTYPE>(atof(old_s.c_str()));
     FTYPE new_value = static_cast<FTYPE>(atof(s.c_str()));

@@ -25,7 +25,7 @@ script:
   - if [[ "${COVERITY_SCAN_BRANCH}" != 1 ]]; then
       gcc -v && g++ -v && cmake --version
       make -j2
-  fi
+    fi
 
 addons:
   coverity_scan:

@@ -29,6 +29,9 @@ before_script:
   - cd build
   - cmake -DCMAKE_BUILD_TYPE=Debug ..
 
+before_install:
+  - echo -n | openssl s_client -connect https://scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
+
 script:
   - if [[ "${COVERITY_SCAN_BRANCH}" != 1 ]]; then
       gcc -v && g++ -v && cmake --version;

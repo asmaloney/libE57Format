@@ -267,7 +267,7 @@ ustring NodeImpl::elementName()
 {
     checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
     return(elementName_);
-};
+}
 
 shared_ptr<ImageFileImpl> NodeImpl::destImageFile()
 {
@@ -434,7 +434,7 @@ void NodeImpl::set(const std::vector<ustring>& /*fields*/, unsigned /*level*/, s
 {
     /// If get here, then tried to call set(fields...) on NodeImpl that wasn't a StructureNodeImpl, so that's an error
     throw E57_EXCEPTION1(E57_ERROR_BAD_PATH_NAME); //???
-};
+}
 
 void NodeImpl::checkBuffers(const vector<SourceDestBuffer>& sdbufs, bool allowMissing)  //??? convert sdbufs to vector of shared_ptr
 {
@@ -596,7 +596,7 @@ int64_t StructureNodeImpl::childCount()
 {
     checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
     return(children_.size());
-};
+}
 shared_ptr<NodeImpl> StructureNodeImpl::get(int64_t index)
 {
     checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
@@ -879,7 +879,7 @@ NodeType VectorNodeImpl::type()
 {
     /// don't checkImageFileOpen
     return(E57_VECTOR);
-};
+}
 
 bool VectorNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
 {
@@ -916,7 +916,7 @@ bool VectorNodeImpl::allowHeteroChildren()
 {
     checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
     return(allowHeteroChildren_);
-};
+}
 
 void VectorNodeImpl::set(int64_t index64, shared_ptr<NodeImpl> ni)
 {

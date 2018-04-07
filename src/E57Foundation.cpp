@@ -4968,13 +4968,13 @@ void E57Exception::report(const char* reportingFileName, int reportingLineNumber
     os << "  Debug info: " << endl;
     os << "    context: "             << context_ << endl;
     os << "    sourceFunctionName: "   << sourceFunctionName_ << endl;
-    if (reportingFunctionName != NULL)
+    if (reportingFunctionName != nullptr)
         os << "    reportingFunctionName: "   << reportingFunctionName << endl;
 
 
     /*** Add a line in error message that a smart editor (gnu emacs) can interpret as a link to the source code: */
     os << sourceFileName_ << "(" << sourceLineNumber_ << ") : error C" << errorCode_ << ":  <--- occurred on" << endl;
-    if (reportingFileName != NULL)
+    if (reportingFileName != nullptr)
         os << reportingFileName << "(" << reportingLineNumber << ") : error C0:  <--- reported on" << endl;
 #endif
 }

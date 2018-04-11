@@ -3774,6 +3774,11 @@ void ImageFileImpl::construct2(const ustring& fileName, const ustring& mode, con
 
         xmlReader = XMLReaderFactory::createXMLReader(); //??? auto_ptr?
 
+        if ( xmlReader == nullptr )
+        {
+           throw E57_EXCEPTION2( E57_ERROR_XML_PARSER_INIT, "could not create the xml reader" );
+        }
+
         //??? check these are right
         xmlReader->setFeature(XMLUni::fgSAX2CoreValidation,        true);
         xmlReader->setFeature(XMLUni::fgXercesDynamic,             true);

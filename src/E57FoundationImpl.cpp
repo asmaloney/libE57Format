@@ -482,10 +482,14 @@ bool NodeImpl::findTerminalPosition(shared_ptr<NodeImpl> target, uint64_t& count
                 StructureNodeImpl* sni = dynamic_cast<StructureNodeImpl*>(this);
 
                 /// Recursively visit child nodes
-                uint64_t childCount = sni->childCount();
-                for (uint64_t i = 0; i < childCount; i++) {
-                    if (sni->get(i)->findTerminalPosition(target, countFromLeft))
-                        return(true);
+                if ( sni != nullptr )
+                {
+                   uint64_t childCount = sni->childCount();
+                   for (uint64_t i = 0; i < childCount; ++i)
+                   {
+                       if (sni->get(i)->findTerminalPosition(target, countFromLeft))
+                           return(true);
+                   }
                 }
             }
             break;
@@ -493,10 +497,14 @@ bool NodeImpl::findTerminalPosition(shared_ptr<NodeImpl> target, uint64_t& count
                 VectorNodeImpl* vni = dynamic_cast<VectorNodeImpl*>(this);
 
                 /// Recursively visit child nodes
-                uint64_t childCount = vni->childCount();
-                for (uint64_t i = 0; i < childCount; i++) {
-                    if (vni->get(i)->findTerminalPosition(target, countFromLeft))
-                        return(true);
+                if ( vni != nullptr )
+                {
+                   uint64_t childCount = vni->childCount();
+                   for (uint64_t i = 0; i < childCount; ++i)
+                   {
+                       if (vni->get(i)->findTerminalPosition(target, countFromLeft))
+                           return(true);
+                   }
                 }
             }
             break;

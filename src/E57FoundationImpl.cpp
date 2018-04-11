@@ -3715,9 +3715,13 @@ bool E57XmlParser::isAttributeDefined(const Attributes& attributes, const XMLCh*
 //=============================================================================
 
 ImageFileImpl::ImageFileImpl()
-: writerCount_(0),
+: isWriter_( false ),
+  writerCount_(0),
   readerCount_(0),
-  file_(nullptr)
+  file_(nullptr),
+  xmlLogicalOffset_( 0 ),
+  xmlLogicalLength_( 0 ),
+  unusedLogicalStart_( 0 )
 {
     /// First phase of construction, can't do much until have the ImageFile object.
     /// See ImageFileImpl::construct2() for second phase.

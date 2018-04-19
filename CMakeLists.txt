@@ -106,6 +106,7 @@ include_directories(
 
 # CRCpp from here: https://github.com/d-bahr/CRCpp
 add_definitions( -DCRCPP_USE_CPP11 )
+add_definitions( -DCRCPP_BRANCHLESS )
 include_directories( contrib/CRCpp/inc )
 
 #

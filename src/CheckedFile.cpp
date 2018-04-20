@@ -30,6 +30,7 @@
 #elif defined(__GNUC__)
 #define _LARGEFILE64_SOURCE
 #define __LARGE64_FILES
+#include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
 #else
@@ -38,6 +39,7 @@
 #elif defined(LINUX)
 #define _LARGEFILE64_SOURCE
 #define __LARGE64_FILES
+#include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
 #elif defined(MACOS)

@@ -49,6 +49,7 @@
 #error "no supported OS platform defined"
 #endif
 
+#include <cstring>
 #include <fcntl.h>
 #include <unistd.h>
 

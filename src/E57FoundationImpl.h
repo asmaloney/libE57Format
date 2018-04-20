@@ -30,75 +30,15 @@
  */
 
 #include <algorithm>
-#include <iomanip>
-#include <iostream>
 #include <set>
-#include <sstream>
 #include <stack>
 #include <stdexcept>
-#include <string>
 #include <vector>
 
-// Define the following symbol adds some functions to the API for implementation purposes.
-// These functions are not available to a normal API user.
-#define E57_INTERNAL_IMPLEMENTATION_ENABLE 1
-
-#ifndef E57FOUNDATION_H_INCLUDED
-#include "E57Foundation.h"
-#endif
-
-// Uncomment the lines below to enable various levels of cross checking and verification in the code.
-// The extra code does not change the file contents.
-// Recommend that E57_DEBUG remain defined even for production versions.
-#define E57_DEBUG       1
-#define E57_MAX_DEBUG   0
-
-// Uncomment the lines below to enable various levels of printing to the console of what is going on in the code.
-//#define E57_VERBOSE     1
-//#define E57_MAX_VERBOSE 1
-
-// Uncomment the line below to enable writing packets that are correct but will stress the reader.
-//#define E57_WRITE_CRAZY_PACKET_MODE 1
-
-#ifdef _MSC_VER
-// Disable MSVC warning: warning C4224: nonstandard extension used : formal parameter 'locale' was previously defined as a type
-#pragma warning( disable : 4224)
-#endif
+#include "Common.h"
+#include "CheckedFile.h"
 
 namespace e57 {
-
-//!!! inline these rather than macros?
-#define E57_EXCEPTION1(ecode) (E57Exception((ecode), ustring(), __FILE__, __LINE__, __FUNCTION__))
-#define E57_EXCEPTION2(ecode, context) (E57Exception((ecode), (context), __FILE__, __LINE__, __FUNCTION__))
-
-// The URI of the LAS extension.    !!! should not be in E57Foundation.h, should be in separate file with names of fields
-// Used to identify the extended field names for encoding data from LAS files (LAS versions 1.0 to 1.3).
-// By convention, will typically be used with prefix "las".  ???"las13"?
-#define LAS_V1_0_URI "http://www.astm.org/COMMIT/E57/2010-las-v1.0" //??? change to v1.0 before final release
-
-/// Create whitespace of given length, for indenting printouts in dump() functions
-inline std::string space(int n) {return(std::string(static_cast<size_t>(n),' '));}
-
-/// Convert number to decimal, hexadecimal, and binary strings  (Note hex strings don't have leading zeros).
-template <class T>
-std::string toString(T x) {std::ostringstream ss; ss << x; return(ss.str());}
-
-inline std::string hexString(uint64_t x) {std::ostringstream ss; ss << "0x" << std::hex << std::setw(16)<< std::setfill('0') << x; return(ss.str());}
-inline std::string hexString(uint32_t x) {std::ostringstream ss; ss << "0x" << std::hex << std::setw(8) << std::setfill('0') << x; return(ss.str());}
-inline std::string hexString(uint16_t x) {std::ostringstream ss; ss << "0x" << std::hex << std::setw(4) << std::setfill('0') << x; return(ss.str());}
-inline std::string hexString(uint8_t x)  {std::ostringstream ss; ss << "0x" << std::hex << std::setw(2) << std::setfill('0') << static_cast<unsigned>(x); return(ss.str());}
-inline std::string binaryString(uint64_t x) {std::ostringstream ss;for(int i=63;i>=0;i--){ss<<((x&(1LL<<i))?1:0);if(i>0&&i%8==0)ss<<" ";} return(ss.str());}
-inline std::string binaryString(uint32_t x) {std::ostringstream ss;for(int i=31;i>=0;i--){ss<<((x&(1LL<<i))?1:0);if(i>0&&i%8==0)ss<<" ";} return(ss.str());}
-inline std::string binaryString(uint16_t x) {std::ostringstream ss;for(int i=15;i>=0;i--){ss<<((x&(1LL<<i))?1:0);if(i>0&&i%8==0)ss<<" ";} return(ss.str());}
-inline std::string binaryString(uint8_t x) {std::ostringstream ss;for(int i=7;i>=0;i--){ss<<((x&(1LL<<i))?1:0);if(i>0&&i%8==0)ss<<" ";} return(ss.str());}
-inline std::string hexString(int64_t x) {return(hexString(static_cast<uint64_t>(x)));}
-inline std::string hexString(int32_t x) {return(hexString(static_cast<uint32_t>(x)));}
-inline std::string hexString(int16_t x) {return(hexString(static_cast<uint16_t>(x)));}
-inline std::string hexString(int8_t x)  {return(hexString(static_cast<uint8_t>(x)));}
-inline std::string binaryString(int64_t x) {return(binaryString(static_cast<uint64_t>(x)));}
-inline std::string binaryString(int32_t x) {return(binaryString(static_cast<uint32_t>(x)));}
-inline std::string binaryString(int16_t x) {return(binaryString(static_cast<uint16_t>(x)));}
-inline std::string binaryString(int8_t x)  {return(binaryString(static_cast<uint8_t>(x)));}
 
 /// Forward declaration
 template <typename RegisterT> class BitpackIntegerEncoder;
@@ -107,99 +47,6 @@ template <typename RegisterT> class BitpackIntegerDecoder;
 class E57XmlParser;
 class Decoder;
 class Encoder;
-
-/// Version numbers of ASTM standard that this library supports
-const uint32_t E57_FORMAT_MAJOR = 1;
-const uint32_t E57_FORMAT_MINOR = 0;
-
-/// REVISION_ID should be passed from compiler command line
-
-#ifndef REVISION_ID
-#error "Need to specify REVISION_ID on command line"
-#endif
-
-const char E57_LIBRARY_ID[] = REVISION_ID;
-
-/// Section types:
-#define E57_BLOB_SECTION                0
-#define E57_COMPRESSED_VECTOR_SECTION   1
-
-/// Packet types (in a compressed vector section)
-#define E57_DATA_PACKET                 1
-#define E57_INDEX_PACKET                0
-#define E57_EMPTY_PACKET                2
-
-#ifdef E57_BIGENDIAN
-#  define  SWAB(p)  swab(p)
-#else
-#  define  SWAB(p)
-#endif
-
-//================================================================
-
-class CheckedFile {
-public:
-    enum Mode {readOnly, writeCreate, writeExisting};
-    enum OffsetMode {logical, physical};
-    static const size_t   physicalPageSizeLog2;  // physical page size is 2 raised to this power
-    static const size_t   physicalPageSize;
-    static const uint64_t physicalPageSizeMask;
-    static const size_t   logicalPageSize;
-
-                    CheckedFile(ustring fileName, Mode mode);
-                    ~CheckedFile();
-
-    void            read(char* buf, size_t nRead, size_t bufSize = 0);
-    void            write(const char* buf, size_t nWrite);
-    CheckedFile&    operator<<(const ustring& s);
-    CheckedFile&    operator<<(int64_t i);
-    CheckedFile&    operator<<(uint64_t i);
-    CheckedFile&    operator<<(float f);
-    CheckedFile&    operator<<(double d);
-    void            seek(uint64_t offset, OffsetMode omode = logical);
-    uint64_t        position(OffsetMode omode = logical);
-    uint64_t        length(OffsetMode omode = logical);
-    void            extend(uint64_t length, OffsetMode omode = logical);
-    ustring         fileName() {return(fileName_);}
-    void            flush();
-    void            close();
-    void            unlink();
-
-    static size_t   efficientBufferSize(size_t logicalSize);  //??? needed?
-
-    static inline uint64_t logicalToPhysical(uint64_t logicalOffset);
-    static inline uint64_t physicalToLogical(uint64_t physicalOffset);
-private:
-    uint32_t        checksum(char* buf, size_t size);
-template<class FTYPE>
-    CheckedFile&    writeFloatingPoint(FTYPE value, int precision);
-
-    ustring         fileName_;
-    int             fd_;
-    bool            readOnly_;
-    uint64_t        logicalLength_;
-
-    void        getCurrentPageAndOffset(uint64_t& page, size_t& pageOffset, OffsetMode omode = logical);
-    void        readPhysicalPage(char* page_buffer, uint64_t page);
-    void        writePhysicalPage(char* page_buffer, uint64_t page);
-    int         open64(ustring fileName, int flags, int mode);
-    uint64_t    lseek64(int64_t offset, int whence);
-};
-
-inline uint64_t CheckedFile::logicalToPhysical(uint64_t logicalOffset)
-{
-    uint64_t page = logicalOffset / logicalPageSize;
-    uint64_t remainder = logicalOffset - page*logicalPageSize;
-    return(page*physicalPageSize + remainder);
-}
-
-inline uint64_t CheckedFile::physicalToLogical(uint64_t physicalOffset)
-{
-    uint64_t page = physicalOffset >> physicalPageSizeLog2;
-    size_t remainder = static_cast<size_t> (physicalOffset & physicalPageSizeMask);
-
-    return(page*logicalPageSize + std::min(remainder, logicalPageSize));
-}
 
 //================================================================
 
@@ -1256,68 +1103,6 @@ protected:
     CheckedFile*        cFile_;
     std::vector<CacheEntry>  entries_;
 };
-
-//================================================================
-// Swabbing functions
-
-inline void swab(uint16_t& i) {
-    uint8_t* p = reinterpret_cast<uint8_t*>(&i);
-    uint8_t tmp = p[0];
-    p[0] = p[1];
-    p[1] = tmp;
-}
-
-inline void swab(uint32_t& i) {
-    uint8_t* p = reinterpret_cast<uint8_t*>(&i);
-    uint8_t tmp = p[0];
-    p[0] = p[3];
-    p[3] = tmp;
-    tmp = p[1];
-    p[1] = p[2];
-    p[2] = tmp;
-}
-
-inline void swab(uint64_t& i) {
-    uint8_t* p = reinterpret_cast<uint8_t*>(&i);
-    uint8_t tmp = p[0];
-    p[0] = p[7];
-    p[7] = tmp;
-    tmp = p[1];
-    p[1] = p[6];
-    p[6] = tmp;
-    tmp = p[2];
-    p[2] = p[5];
-    p[5] = tmp;
-    tmp = p[3];
-    p[3] = p[4];
-    p[4] = tmp;
-}
-
-inline void swab(float& f) {
-    uint8_t* p = reinterpret_cast<uint8_t*>(&f);
-    uint8_t tmp = p[0];
-    p[0] = p[3];
-    p[3] = tmp;
-    tmp = p[1];
-    p[1] = p[2];
-    p[2] = tmp;
-}
-
-inline void swab(double& d) {
-    uint8_t* p = reinterpret_cast<uint8_t*>(&d);
-    uint8_t tmp = p[0];
-    p[0] = p[7];
-    p[7] = tmp;
-    tmp = p[1];
-    p[1] = p[6];
-    p[6] = tmp;
-    tmp = p[2];
-    p[2] = p[5];
-    p[5] = tmp;
-    tmp = p[3];
-    p[3] = p[4];
-    p[4] = tmp;
-}
 
 } /// end namespace e57
 

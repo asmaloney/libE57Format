@@ -114,9 +114,14 @@ include_directories( contrib/CRCpp/inc )
 #
 
 add_library( E57Format STATIC
+    src/CheckedFile.h
+    src/CheckedFile.cpp
+    src/Common.h
     src/E57Foundation.cpp
     src/E57FoundationImpl.cpp
     src/E57FoundationImpl.h
+    src/E57XmlParser.h
+    src/E57XmlParser.cpp
     include/E57Foundation.h
     contrib/CRCpp/inc/CRC.h
 )

@@ -117,6 +117,10 @@ add_library( E57Format STATIC
     src/CheckedFile.h
     src/CheckedFile.cpp
     src/Common.h
+    src/Decoder.h
+    src/Decoder.cpp
+    src/Encoder.h
+    src/Encoder.cpp
     src/E57Foundation.cpp
     src/E57FoundationImpl.cpp
     src/E57FoundationImpl.h

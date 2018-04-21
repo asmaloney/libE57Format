@@ -24,6 +24,8 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
+#include <cstring>
+
 #include "Decoder.h"
 #include "E57FoundationImpl.h"
 

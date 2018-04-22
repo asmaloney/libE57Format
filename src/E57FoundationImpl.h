@@ -52,19 +52,19 @@ class Encoder;
 
 class NodeImpl : public std::enable_shared_from_this<NodeImpl> {
 public:
-    virtual NodeType        type() = 0;
-    void                    checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName);
+    virtual NodeType        type() const = 0;
+    void                    checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName) const;
     virtual bool            isTypeEquivalent(std::shared_ptr<NodeImpl> ni) = 0;
-    bool                    isRoot();
+    bool                    isRoot() const;
     std::shared_ptr<NodeImpl> parent();
-    ustring                 pathName();
-    ustring                 relativePathName(std::shared_ptr<NodeImpl> origin, ustring childPathName = ustring());
-    ustring                 elementName();
+    ustring                 pathName() const;
+    ustring                 relativePathName(std::shared_ptr<NodeImpl> origin, ustring childPathName = ustring()) const;
+    ustring                 elementName() const;
     std::shared_ptr<ImageFileImpl> destImageFile();
 
-    ustring                 imageFileName();
+    ustring                 imageFileName() const;
     virtual bool            isDefined(const ustring& pathName) = 0;
-    bool                    isAttached();
+    bool                    isAttached() const;
     virtual void            setAttachedRecursive();
 
     void                    setParent(std::shared_ptr<NodeImpl> parent, const ustring& elementName);
@@ -108,12 +108,12 @@ public:
                         StructureNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile);
     virtual             ~StructureNodeImpl() {}
 
-    virtual NodeType    type();
+    virtual NodeType    type() const;
     virtual bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni);
     virtual bool        isDefined(const ustring& pathName);
     virtual void        setAttachedRecursive();
 
-    virtual int64_t     childCount();
+    virtual int64_t     childCount() const;
     virtual std::shared_ptr<NodeImpl> get(int64_t index);
     virtual std::shared_ptr<NodeImpl> get(const ustring& pathName);
     virtual void        set(int64_t index, std::shared_ptr<NodeImpl> ni);
@@ -141,9 +141,9 @@ public:
     explicit            VectorNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, bool allowHeteroChildren);
     virtual             ~VectorNodeImpl() {}
 
-    virtual NodeType    type();
+    virtual NodeType    type() const;
     virtual bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni);
-    bool                allowHeteroChildren();
+    bool                allowHeteroChildren() const;
 
     virtual void        set(int64_t index, std::shared_ptr<NodeImpl> ni);
 
@@ -241,7 +241,7 @@ public:
                         CompressedVectorNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile);
     virtual             ~CompressedVectorNodeImpl() {}
 
-    virtual NodeType    type();
+    virtual NodeType    type() const;
     virtual bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni);
     virtual bool        isDefined(const ustring& pathName);
     virtual void        setAttachedRecursive();
@@ -286,7 +286,7 @@ public:
                         IntegerNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, int64_t value = 0, int64_t minimum = 0, int64_t maximum = 0);
     virtual             ~IntegerNodeImpl() {}
 
-    virtual NodeType    type();
+    virtual NodeType    type() const;
     virtual bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni);
     virtual bool        isDefined(const ustring& pathName);
 
@@ -320,7 +320,7 @@ public:
 
     virtual             ~ScaledIntegerNodeImpl() {}
 
-    virtual NodeType    type();
+    virtual NodeType    type() const;
     virtual bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni);
     virtual bool        isDefined(const ustring& pathName);
 
@@ -357,7 +357,7 @@ public:
                                       double minimum = E57_DOUBLE_MIN, double  maximum = E57_DOUBLE_MAX);
     virtual             ~FloatNodeImpl() {}
 
-    virtual NodeType    type();
+    virtual NodeType    type() const;
     virtual bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni);
     virtual bool        isDefined(const ustring& pathName);
 
@@ -386,7 +386,7 @@ public:
     explicit            StringNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring value = "");
     virtual             ~StringNodeImpl() {}
 
-    virtual NodeType    type();
+    virtual NodeType    type() const;
     virtual bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni);
     virtual bool        isDefined(const ustring& pathName);
 
@@ -410,7 +410,7 @@ public:
                         BlobNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, int64_t fileOffset, int64_t length);
     virtual             ~BlobNodeImpl();
 
-    virtual NodeType    type();
+    virtual NodeType    type() const;
     virtual bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni);
     virtual bool        isDefined(const ustring& pathName);
 
@@ -580,7 +580,7 @@ struct DataPacketHeader {  ///??? where put this
     uint16_t    bytestreamCount;
 
                 DataPacketHeader();
-    void        verify(unsigned bufferLength=0); //???use
+    void        verify(unsigned bufferLength = 0) const; //???use
 #ifdef E57_BIGENDIAN
     void        swab();
 #else
@@ -601,7 +601,7 @@ struct DataPacket {  /// Note this is full sized packet, not just header
     uint8_t     payload[64*1024-6]; // pad packet to full length, can't spec layout because depends bytestream data
 
                 DataPacket();
-    void        verify(unsigned bufferLength=0);
+    void        verify(unsigned bufferLength = 0) const;
     char*       getBytestream(unsigned bytestreamNumber, unsigned& bufferLength);
     unsigned    getBytestreamBufferLength(unsigned bytestreamNumber);
 
@@ -623,7 +623,7 @@ struct EmptyPacketHeader {
     uint16_t    packetLogicalLengthMinus1;
 
                 EmptyPacketHeader();
-    void        verify(unsigned bufferLength=0); //???use
+    void        verify(unsigned bufferLength = 0) const; //???use
 #ifdef E57_BIGENDIAN
     void        swab();
 #else
@@ -648,8 +648,8 @@ struct DecodeChannel {
 
                         DecodeChannel(SourceDestBuffer dbuf_arg, std::shared_ptr<Decoder> decoder_arg, unsigned bytestreamNumber_arg, uint64_t maxRecordCount_arg);
 
-    bool                isOutputBlocked();
-    bool                isInputBlocked();   /// has exhausted data in the current packet
+    bool                isOutputBlocked() const;
+    bool                isInputBlocked() const;   /// has exhausted data in the current packet
 #ifdef E57_DEBUG
     void        dump(int indent = 0, std::ostream& os = std::cout);
 #endif
@@ -666,8 +666,8 @@ public:
     unsigned    read();
     unsigned    read(std::vector<SourceDestBuffer>& dbufs);
     void        seek(uint64_t recordNumber);
-    bool        isOpen();
-    std::shared_ptr<CompressedVectorNodeImpl> compressedVectorNode();
+    bool        isOpen() const;
+    std::shared_ptr<CompressedVectorNodeImpl> compressedVectorNode() const;
     void        close();
 
 #ifdef E57_DEBUG
@@ -676,9 +676,9 @@ public:
 
 protected:
     void        checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName);
-    void        checkReaderOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName);
+    void        checkReaderOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName) const;
     void        setBuffers(std::vector<SourceDestBuffer>& dbufs); //???needed?
-    uint64_t    earliestPacketNeededForInput();
+    uint64_t    earliestPacketNeededForInput() const;
     void        feedPacketToDecoders(uint64_t currentPacketLogicalOffset);
     uint64_t    findNextDataPacket(uint64_t nextPacketLogicalOffset);
 
@@ -704,8 +704,8 @@ public:
                 ~CompressedVectorWriterImpl();
     void        write(const size_t requestedRecordCount);
     void        write(std::vector<SourceDestBuffer>& sbufs, const size_t requestedRecordCount);
-    bool        isOpen();
-    std::shared_ptr<CompressedVectorNodeImpl> compressedVectorNode();
+    bool        isOpen() const;
+    std::shared_ptr<CompressedVectorNodeImpl> compressedVectorNode() const;
     void        close();
 
 #ifdef E57_DEBUG
@@ -714,10 +714,10 @@ public:
 
 protected:
     void        checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName);
-    void        checkWriterOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName);
+    void        checkWriterOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName) const;
     void        setBuffers(std::vector<SourceDestBuffer>& sbufs); //???needed?
-    size_t      totalOutputAvailable();
-    size_t      currentPacketSize();
+    size_t      totalOutputAvailable() const;
+    size_t      currentPacketSize() const;
     uint64_t    packetWrite();
     void        flush();
 
@@ -811,7 +811,7 @@ struct IndexPacket {  /// Note this is whole packet, not just header
     } entries[MAX_ENTRIES];
 
                 IndexPacket();
-    void        verify(unsigned bufferLength=0, uint64_t totalRecordCount=0, uint64_t fileSize=0);
+    void        verify(unsigned bufferLength = 0, uint64_t totalRecordCount = 0, uint64_t fileSize = 0) const;
 #ifdef E57_BIGENDIAN
     void        swab(bool toLittleEndian);
 #else

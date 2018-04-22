@@ -119,11 +119,12 @@ NodeImpl::NodeImpl(weak_ptr<ImageFileImpl> destImageFile)
     checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);  // does checking for all node type ctors
 }
 
-void NodeImpl::checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName)
+void NodeImpl::checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName) const
 {
     /// Throw an exception if destImageFile (destImageFile_) isn't open
     shared_ptr<ImageFileImpl> destImageFile(destImageFile_);
-    if (!destImageFile->isOpen()) {
+    if (!destImageFile->isOpen())
+    {
         throw E57Exception(E57_ERROR_IMAGEFILE_NOT_OPEN,
                            "fileName=" + destImageFile->fileName(),
                            srcFileName,
@@ -132,39 +133,54 @@ void NodeImpl::checkImageFileOpen(const char* srcFileName, int srcLineNumber, co
     }
 }
 
-bool NodeImpl::isRoot()
+bool NodeImpl::isRoot() const
 {
     checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
-    return(parent_.expired());
+
+    return parent_.expired();
 };
 
 std::shared_ptr<NodeImpl> NodeImpl::parent()
 {
     checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
-    if (isRoot()) {
+
+    if (isRoot())
+    {
         /// If is root, then has self as parent (by convention)
-        return(shared_from_this());
-    } else {
+        return shared_from_this();
+    }
+    else
+    {
         std::shared_ptr<NodeImpl> myParent(parent_);
-        return(myParent);
+
+        return myParent;
     }
 }
 
-ustring NodeImpl::pathName()
+ustring NodeImpl::pathName() const
 {
     checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+
     if (isRoot())
+    {
         return("/");
-    else {
+    }
+    else
+    {
         shared_ptr<NodeImpl> p(parent_);
+
         if (p->isRoot())
+        {
             return("/" + elementName_);
+        }
         else
+        {
             return(p->pathName() + "/" + elementName_);
+        }
     }
 }
 
-ustring NodeImpl::relativePathName(shared_ptr<NodeImpl> origin, ustring childPathName)
+ustring NodeImpl::relativePathName(shared_ptr<NodeImpl> origin, ustring childPathName) const
 {
     checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
     if (origin == shared_from_this())
@@ -183,10 +199,11 @@ ustring NodeImpl::relativePathName(shared_ptr<NodeImpl> origin, ustring childPat
     }
 }
 
-ustring NodeImpl::elementName()
+ustring NodeImpl::elementName() const
 {
     checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
-    return(elementName_);
+
+    return elementName_;
 }
 
 shared_ptr<ImageFileImpl> NodeImpl::destImageFile()
@@ -196,10 +213,11 @@ shared_ptr<ImageFileImpl> NodeImpl::destImageFile()
     return(imf);
 }
 
-bool NodeImpl::isAttached()
+bool NodeImpl::isAttached() const
 {
     checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
-    return(isAttached_);
+
+    return isAttached_;
 }
 
 void NodeImpl::setAttachedRecursive()
@@ -208,11 +226,12 @@ void NodeImpl::setAttachedRecursive()
     isAttached_ = true;
 }
 
-ustring NodeImpl::imageFileName()
+ustring NodeImpl::imageFileName() const
 {
     /// don't checkImageFileOpen
     shared_ptr<ImageFileImpl> imf(destImageFile_);
-    return(imf->fileName());
+
+    return imf->fileName();
 }
 
 void NodeImpl::setParent(shared_ptr<NodeImpl> parent, const ustring& elementName)
@@ -244,8 +263,11 @@ shared_ptr<NodeImpl> NodeImpl::getRoot()
     /// don't checkImageFileOpen
     shared_ptr<NodeImpl> p(shared_from_this());
     while (!p->isRoot())
+    {
         p = shared_ptr<NodeImpl>(p->parent_);  //??? check if bad ptr?
-    return(p);
+    }
+
+    return p;
 }
 
 //??? use visitor?
@@ -459,10 +481,10 @@ StructureNodeImpl::StructureNodeImpl(weak_ptr<ImageFileImpl> destImageFile)
     checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
 }
 
-NodeType StructureNodeImpl::type()
+NodeType StructureNodeImpl::type() const
 {
     /// don't checkImageFileOpen
-    return(E57_STRUCTURE);
+    return E57_STRUCTURE;
 }
 
 //??? use visitor?
@@ -520,10 +542,11 @@ void StructureNodeImpl::setAttachedRecursive()
         children_.at(i)->setAttachedRecursive();
 }
 
-int64_t StructureNodeImpl::childCount()
+int64_t StructureNodeImpl::childCount() const
 {
     checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
-    return(children_.size());
+
+    return children_.size();
 }
 shared_ptr<NodeImpl> StructureNodeImpl::get(int64_t index)
 {
@@ -803,10 +826,10 @@ VectorNodeImpl::VectorNodeImpl(weak_ptr<ImageFileImpl> destImageFile, bool allow
     /// don't checkImageFileOpen, StructNodeImpl() will do it
 }
 
-NodeType VectorNodeImpl::type()
+NodeType VectorNodeImpl::type() const
 {
     /// don't checkImageFileOpen
-    return(E57_VECTOR);
+    return E57_VECTOR;
 }
 
 bool VectorNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
@@ -840,10 +863,10 @@ bool VectorNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
     return(true);
 }
 
-bool VectorNodeImpl::allowHeteroChildren()
+bool VectorNodeImpl::allowHeteroChildren() const
 {
     checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
-    return(allowHeteroChildren_);
+    return allowHeteroChildren_;
 }
 
 void VectorNodeImpl::set(int64_t index64, shared_ptr<NodeImpl> ni)
@@ -1742,10 +1765,10 @@ CompressedVectorNodeImpl::CompressedVectorNodeImpl(weak_ptr<ImageFileImpl> destI
     binarySectionLogicalStart_  = 0;
 }
 
-NodeType CompressedVectorNodeImpl::type()
+NodeType CompressedVectorNodeImpl::type() const
 {
     // don't checkImageFileOpen
-    return(E57_COMPRESSED_VECTOR);
+    return E57_COMPRESSED_VECTOR;
 }
 
 void CompressedVectorNodeImpl::setPrototype(shared_ptr<NodeImpl> prototype)
@@ -2041,10 +2064,10 @@ IntegerNodeImpl::IntegerNodeImpl(weak_ptr<ImageFileImpl> destImageFile, int64_t 
     }
 }
 
-NodeType IntegerNodeImpl::type()
+NodeType IntegerNodeImpl::type()  const
 {
     // don't checkImageFileOpen
-    return(E57_INTEGER);
+    return E57_INTEGER;
 }
 
 bool IntegerNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
@@ -2186,10 +2209,10 @@ ScaledIntegerNodeImpl::ScaledIntegerNodeImpl(weak_ptr<ImageFileImpl> destImageFi
                              + " scaledMaximum=" + toString(scaledMaximum));
     }
 }
-NodeType ScaledIntegerNodeImpl::type()
+NodeType ScaledIntegerNodeImpl::type() const
 {
     // don't checkImageFileOpen
-    return(E57_SCALED_INTEGER);
+    return E57_SCALED_INTEGER;
 }
 
 bool ScaledIntegerNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
@@ -2363,10 +2386,10 @@ FloatNodeImpl::FloatNodeImpl(weak_ptr<ImageFileImpl> destImageFile, double value
     }
 }
 
-NodeType FloatNodeImpl::type()
+NodeType FloatNodeImpl::type() const
 {
     /// don't checkImageFileOpen
-    return(E57_FLOAT);
+    return E57_FLOAT;
 }
 
 bool FloatNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
@@ -2518,10 +2541,10 @@ StringNodeImpl::StringNodeImpl(weak_ptr<ImageFileImpl> destImageFile, const ustr
     // don't checkImageFileOpen, NodeImpl() will do it
 }
 
-NodeType StringNodeImpl::type()
+NodeType StringNodeImpl::type() const
 {
     // don't checkImageFileOpen
-    return(E57_STRING);
+    return E57_STRING;
 }
 
 bool StringNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
@@ -2664,10 +2687,10 @@ BlobNodeImpl::BlobNodeImpl(weak_ptr<ImageFileImpl> destImageFile, int64_t fileOf
     binarySectionLogicalLength_ = sizeof(BlobSectionHeader) + blobLogicalLength_;
 }
 
-NodeType BlobNodeImpl::type()
+NodeType BlobNodeImpl::type() const
 {
     /// don't checkImageFileOpen
-    return(E57_BLOB);
+    return E57_BLOB;
 }
 
 bool BlobNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
@@ -3718,7 +3741,7 @@ DataPacketHeader::DataPacketHeader()
     memset(this, 0, sizeof(*this));
 }
 
-void DataPacketHeader::verify(unsigned bufferLength)
+void DataPacketHeader::verify(unsigned bufferLength) const
 {
     /// Verify that packet is correct type
     if (packetType != E57_DATA_PACKET)
@@ -3786,38 +3809,46 @@ DataPacket::DataPacket()
     memset(this, 0, sizeof(*this));
 }
 
-void DataPacket::verify(unsigned bufferLength)
+void DataPacket::verify(unsigned bufferLength) const
 {
     //??? do all packets need versions?  how extend without breaking older checking?  need to check file version#?
 
     /// Verify header is good
-    DataPacketHeader* hp = reinterpret_cast<DataPacketHeader*>(this);
+    const DataPacketHeader* hp = reinterpret_cast<const DataPacketHeader*>(this);
+
     hp->verify(bufferLength);
 
     /// Calc sum of lengths of each bytestream buffer in this packet
-    uint16_t* bsbLength = reinterpret_cast<uint16_t*>(&payload[0]);
+    const uint16_t* bsbLength = reinterpret_cast<const uint16_t*>(&payload[0]);
     unsigned totalStreamByteCount = 0;
+
     for (unsigned i=0; i < bytestreamCount; i++)
+    {
         totalStreamByteCount += bsbLength[i];
+    }
 
     /// Calc size of packet needed
-    unsigned packetLength = packetLogicalLengthMinus1+1;
-    unsigned needed = sizeof(DataPacketHeader) + 2*bytestreamCount + totalStreamByteCount;
+    const unsigned packetLength = packetLogicalLengthMinus1+1;
+    const unsigned needed = sizeof(DataPacketHeader) + 2*bytestreamCount + totalStreamByteCount;
 #ifdef E57_MAX_VERBOSE
     cout << "needed=" << needed << " actual=" << packetLength << endl; //???
 #endif
 
     /// If needed is not with 3 bytes of actual packet size, have an error
-    if (needed > packetLength || needed+3 < packetLength) {
+    if (needed > packetLength || needed+3 < packetLength)
+    {
         throw E57_EXCEPTION2(E57_ERROR_BAD_CV_PACKET,
                              "needed=" + toString(needed)
                              + "packetLength=" + toString(packetLength));
     }
 
     /// Verify that padding at end of packet is zero
-    for (unsigned i=needed; i < packetLength; i++) {
-        if (reinterpret_cast<char*>(this)[i] != 0)
+    for (unsigned i=needed; i < packetLength; i++)
+    {
+        if (reinterpret_cast<const char*>(this)[i] != 0)
+        {
             throw E57_EXCEPTION2(E57_ERROR_BAD_CV_PACKET, "i=" + toString(i));
+        }
     }
 }
 
@@ -3941,7 +3972,7 @@ IndexPacket::IndexPacket()
     memset(this, 0, sizeof(*this));
 }
 
-void IndexPacket::verify(unsigned bufferLength, uint64_t totalRecordCount, uint64_t fileSize)
+void IndexPacket::verify(unsigned bufferLength, uint64_t totalRecordCount, uint64_t fileSize) const
 {
     //??? do all packets need versions?  how extend without breaking older checking?  need to check file version#?
 
@@ -3999,7 +4030,7 @@ void IndexPacket::verify(unsigned bufferLength, uint64_t totalRecordCount, uint6
 
 #ifdef E57_MAX_DEBUG
     /// Verify padding at end is zero.
-    char* p = reinterpret_cast<char*>(this);
+    const char* p = reinterpret_cast<const char*>(this);
     for (unsigned i=neededLength; i < packetLength; i++) {
         if (p[i] != 0)
             throw E57_EXCEPTION2(E57_ERROR_BAD_CV_PACKET, "i=" + toString(i));
@@ -4106,7 +4137,7 @@ EmptyPacketHeader::EmptyPacketHeader()
     memset(this, 0, sizeof(*this));
 }
 
-void EmptyPacketHeader::verify(unsigned bufferLength)
+void EmptyPacketHeader::verify(unsigned bufferLength) const
 {
     /// Verify that packet is correct type
     if (packetType != E57_EMPTY_PACKET)
@@ -4307,15 +4338,15 @@ void CompressedVectorWriterImpl::close()
 #endif
 }
 
-bool CompressedVectorWriterImpl::isOpen()
+bool CompressedVectorWriterImpl::isOpen() const
 {
     /// don't checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__), or checkWriterOpen()
-    return(isOpen_);
+    return isOpen_;
 }
 
-std::shared_ptr<CompressedVectorNodeImpl> CompressedVectorWriterImpl::compressedVectorNode()
+std::shared_ptr<CompressedVectorNodeImpl> CompressedVectorWriterImpl::compressedVectorNode() const
 {
-    return(cVector_);
+    return cVector_;
 }
 
 void CompressedVectorWriterImpl::setBuffers(vector<SourceDestBuffer>& sbufs)
@@ -4452,7 +4483,7 @@ void CompressedVectorWriterImpl::write(const size_t requestedRecordCount)
     /// When we leave this function, will likely still have data in channel ioBuffers as well as partial words in Encoder registers.
 }
 
-size_t CompressedVectorWriterImpl::totalOutputAvailable()
+size_t CompressedVectorWriterImpl::totalOutputAvailable() const
 {
     size_t total = 0;
     for (size_t i=0; i < bytestreams_.size(); i++) {
@@ -4461,7 +4492,7 @@ size_t CompressedVectorWriterImpl::totalOutputAvailable()
     return(total);
 }
 
-size_t CompressedVectorWriterImpl::currentPacketSize()
+size_t CompressedVectorWriterImpl::currentPacketSize() const
 {
     /// Calc current packet size
     return(sizeof(DataPacketHeader) + bytestreams_.size()*sizeof(uint16_t) + totalOutputAvailable());
@@ -4660,9 +4691,10 @@ XXX
 #endif
 }
 
-void CompressedVectorWriterImpl::checkWriterOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName)
+void CompressedVectorWriterImpl::checkWriterOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName) const
 {
-    if (!isOpen_) {
+    if (!isOpen_)
+    {
         throw E57Exception(E57_ERROR_WRITER_NOT_OPEN,
                            "imageFileName=" + cVector_->imageFileName() + " cvPathName=" + cVector_->pathName(),
                            srcFileName,
@@ -4923,18 +4955,22 @@ unsigned CompressedVectorReaderImpl::read()
     return(outputCount);
 }
 
-uint64_t CompressedVectorReaderImpl::earliestPacketNeededForInput()
+uint64_t CompressedVectorReaderImpl::earliestPacketNeededForInput() const
 {
     uint64_t earliestPacketLogicalOffset = E57_UINT64_MAX;
     unsigned earliestChannel = 0;
-    for (unsigned i = 0; i < channels_.size(); i++) {
-        DecodeChannel* chan = &channels_[i];
+
+    for (unsigned i = 0; i < channels_.size(); i++)
+    {
+        const DecodeChannel* chan = &channels_[i];
 
         /// Test if channel needs more input.
         /// Important to call inputProcess just before this, so these tests work.
-        if (!chan->isOutputBlocked() && !chan->inputFinished) {
+        if (!chan->isOutputBlocked() && !chan->inputFinished)
+        {
             /// Check if earliest so far
-            if (chan->currentPacketLogicalOffset < earliestPacketLogicalOffset) {
+            if (chan->currentPacketLogicalOffset < earliestPacketLogicalOffset)
+            {
                 earliestPacketLogicalOffset = chan->currentPacketLogicalOffset;
                 earliestChannel = i;
             }
@@ -4946,13 +4982,14 @@ uint64_t CompressedVectorReaderImpl::earliestPacketNeededForInput()
     else
         cout << "earliestPacketNeededForInput returning " << earliestPacketLogicalOffset << " for channel[" << earliestChannel << "]" << endl;
 #endif
-    return(earliestPacketLogicalOffset);
+    return earliestPacketLogicalOffset;
 }
 
 void CompressedVectorReaderImpl::feedPacketToDecoders(uint64_t currentPacketLogicalOffset)
 {
     /// Read earliest packet into cache and send data to decoders with unblocked output
     bool channelHasExhaustedPacket = false;
+
     uint64_t nextPacketLogicalOffset = E57_UINT64_MAX;
     {
         /// Get packet at currentPacketLogicalOffset into memory.
@@ -4965,97 +5002,108 @@ void CompressedVectorReaderImpl::feedPacketToDecoders(uint64_t currentPacketLogi
             throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "packetType=" + toString(dpkt->packetType));
 
         /// Feed bytestreams to channels with unblocked output that are reading from this packet
-        for (unsigned i = 0; i < channels_.size(); i++) {
-            DecodeChannel* chan = &channels_[i];
-
+        for ( DecodeChannel &channel : channels_ )
+        {
             /// Skip channels that have already read this packet.
-            if (chan->currentPacketLogicalOffset != currentPacketLogicalOffset || chan->isOutputBlocked())
+            if (channel.currentPacketLogicalOffset != currentPacketLogicalOffset || channel.isOutputBlocked())
                 continue;
 
             /// Get bytestream buffer for this channel from packet
             unsigned bsbLength;
-            char* bsbStart = dpkt->getBytestream(chan->bytestreamNumber, bsbLength);
+            char* bsbStart = dpkt->getBytestream(channel.bytestreamNumber, bsbLength);
 
             /// Calc where we are in the buffer
-            char* uneatenStart = &bsbStart[chan->currentBytestreamBufferIndex];
-            size_t uneatenLength = bsbLength - chan->currentBytestreamBufferIndex;
+            char* uneatenStart = &bsbStart[channel.currentBytestreamBufferIndex];
+            size_t uneatenLength = bsbLength - channel.currentBytestreamBufferIndex;
 
             /// Double check we are not off end of buffer
-            if (chan->currentBytestreamBufferIndex > bsbLength) {
+            if (channel.currentBytestreamBufferIndex > bsbLength)
+            {
                 throw E57_EXCEPTION2(E57_ERROR_INTERNAL,
-                                     "currentBytestreamBufferIndex =" + toString(chan->currentBytestreamBufferIndex)
+                                     "currentBytestreamBufferIndex =" + toString(channel.currentBytestreamBufferIndex)
                                      + " bsbLength=" + toString(bsbLength));
             }
-            if (&uneatenStart[uneatenLength] > &bsbStart[bsbLength]) {
+
+            if (&uneatenStart[uneatenLength] > &bsbStart[bsbLength])
+            {
                 throw E57_EXCEPTION2(E57_ERROR_INTERNAL,
                                      "uneatenLength=" + toString(uneatenLength)
                                      + " bsbLength=" + toString(bsbLength));
             }
 #ifdef E57_MAX_VERBOSE
-            cout << "  stream[" << chan->bytestreamNumber << "]: feeding decoder " << uneatenLength << " bytes" << endl;
+            cout << "  stream[" << channel.bytestreamNumber << "]: feeding decoder " << uneatenLength << " bytes" << endl;
             if (uneatenLength == 0)
                 chan->dump(8);
 #endif
             /// Feed into decoder
-            size_t bytesProcessed = chan->decoder->inputProcess(uneatenStart, uneatenLength);
+            size_t bytesProcessed = channel.decoder->inputProcess(uneatenStart, uneatenLength);
 #ifdef E57_MAX_VERBOSE
-            cout << "  stream[" << chan->bytestreamNumber << "]: bytesProcessed=" << bytesProcessed << endl;
+            cout << "  stream[" << channel.bytestreamNumber << "]: bytesProcessed=" << bytesProcessed << endl;
 #endif
             /// Adjust counts of bytestream location
-            chan->currentBytestreamBufferIndex += bytesProcessed;
+            channel.currentBytestreamBufferIndex += bytesProcessed;
 
             /// Check if this channel has exhausted its bytestream buffer in this packet
-            if (chan->isInputBlocked()) {
+            if (channel.isInputBlocked())
+            {
 #ifdef E57_MAX_VERBOSE
-                cout << "  stream[" << chan->bytestreamNumber << "] has exhausted its input in current packet" << endl;
+                cout << "  stream[" << channel.bytestreamNumber << "] has exhausted its input in current packet" << endl;
 #endif
                 channelHasExhaustedPacket = true;
                 nextPacketLogicalOffset = currentPacketLogicalOffset + dpkt->packetLogicalLengthMinus1 + 1;
             }
         }
-
     }
 
     /// Skip over any index or empty packets to next data packet.
     nextPacketLogicalOffset = findNextDataPacket(nextPacketLogicalOffset);
 
     /// If some channel has exhausted this packet, find next data packet and update currentPacketLogicalOffset for all interested channels.
-    if (channelHasExhaustedPacket) {
-        if (nextPacketLogicalOffset < E57_UINT64_MAX) { //??? huh?
+    if (channelHasExhaustedPacket)
+    {
+        if (nextPacketLogicalOffset < E57_UINT64_MAX)
+        { //??? huh?
             /// Get packet at nextPacketLogicalOffset into memory.
             char* anyPacket = nullptr;
             unique_ptr<PacketLock> packetLock = cache_->lock(nextPacketLogicalOffset, anyPacket);
             DataPacket* dpkt = reinterpret_cast<DataPacket*>(anyPacket);
 
+#ifdef E57_MAX_VERBOSE
+            unsigned int   i = 0;
+#endif
             /// Got a data packet, update the channels with exhausted input
-            for (unsigned i = 0; i < channels_.size(); i++) {
-                DecodeChannel* chan = &channels_[i];
-                if (chan->currentPacketLogicalOffset == currentPacketLogicalOffset && chan->isInputBlocked()) {
-                    chan->currentPacketLogicalOffset = nextPacketLogicalOffset;
-                    chan->currentBytestreamBufferIndex = 0;
+            for ( DecodeChannel &channel : channels_ )
+            {
+               if (channel.currentPacketLogicalOffset == currentPacketLogicalOffset && channel.isInputBlocked())
+               {
+                    channel.currentPacketLogicalOffset = nextPacketLogicalOffset;
+                    channel.currentBytestreamBufferIndex = 0;
 
                     /// It is OK if the next packet doesn't contain any data for this channel, will skip packet on next iter of loop
-                    chan->currentBytestreamBufferLength = dpkt->getBytestreamBufferLength(chan->bytestreamNumber);
+                    channel.currentBytestreamBufferLength = dpkt->getBytestreamBufferLength(channel.bytestreamNumber);
 
 #ifdef E57_MAX_VERBOSE
-                    cout << "  set new stream buffer for channel[" << i << "], length=" << chan->currentBytestreamBufferLength << endl;
+                    cout << "  set new stream buffer for channel[" << i++ << "], length=" << channel.currentBytestreamBufferLength << endl;
 #endif
                     /// ??? perform flush if new packet flag set?
                 }
             }
-        } else {
+        }
+        else
+        {
             /// Reached end without finding data packet, mark exhausted channels as finished
 #ifdef E57_MAX_VERBOSE
             cout << "  at end of data packets" << endl;
 #endif
-            if (nextPacketLogicalOffset >= sectionEndLogicalOffset_) {
-                for (unsigned i = 0; i < channels_.size(); i++) {
-                    DecodeChannel* chan = &channels_[i];
-                    if (chan->currentPacketLogicalOffset == currentPacketLogicalOffset && chan->isInputBlocked()) {
+            if (nextPacketLogicalOffset >= sectionEndLogicalOffset_)
+            {
+                for ( DecodeChannel &channel : channels_ )
+                {
+                    if (channel.currentPacketLogicalOffset == currentPacketLogicalOffset && channel.isInputBlocked()) {
 #ifdef E57_MAX_VERBOSE
-                        cout << "  Marking channel[" << i << "] as finished" << endl;
+                        cout << "  Marking channel[" << i++ << "] as finished" << endl;
 #endif
-                        chan->inputFinished = true;
+                        channel.inputFinished = true;
                     }
                 }
             }
@@ -5071,17 +5119,21 @@ uint64_t CompressedVectorReaderImpl::findNextDataPacket(uint64_t nextPacketLogic
 #endif
 
     /// Starting at nextPacketLogicalOffset, search for next data packet until hit end of binary section.
-    while (nextPacketLogicalOffset < sectionEndLogicalOffset_) {
+    while (nextPacketLogicalOffset < sectionEndLogicalOffset_)
+    {
         char* anyPacket = nullptr;
+
         unique_ptr<PacketLock> packetLock = cache_->lock(nextPacketLogicalOffset, anyPacket);
 
         /// Guess it's a data packet, if not continue to next packet
-        DataPacket* dpkt = reinterpret_cast<DataPacket*>(anyPacket);
-        if (dpkt->packetType == E57_DATA_PACKET) {
+        const DataPacket* dpkt = reinterpret_cast<const DataPacket*>(anyPacket);
+
+        if (dpkt->packetType == E57_DATA_PACKET)
+        {
 #ifdef E57_MAX_VERBOSE
             cout << "  Found next data packet at nextPacketLogicalOffset=" << nextPacketLogicalOffset << endl;
 #endif
-            return(nextPacketLogicalOffset);
+            return nextPacketLogicalOffset;
         }
 
         /// All packets have length in same place, so can use the field to skip to next packet.
@@ -5089,7 +5141,7 @@ uint64_t CompressedVectorReaderImpl::findNextDataPacket(uint64_t nextPacketLogic
     }
 
     /// Ran off end of section, so return failure code.
-    return(E57_UINT64_MAX);
+    return E57_UINT64_MAX;
 }
 
 void CompressedVectorReaderImpl::seek(uint64_t /*recordNumber*/)
@@ -5100,13 +5152,13 @@ void CompressedVectorReaderImpl::seek(uint64_t /*recordNumber*/)
     throw E57_EXCEPTION1(E57_ERROR_NOT_IMPLEMENTED);
 }
 
-bool CompressedVectorReaderImpl::isOpen()
+bool CompressedVectorReaderImpl::isOpen() const
 {
     /// don't checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__), or checkReaderOpen()
     return(isOpen_);
 }
 
-std::shared_ptr<CompressedVectorNodeImpl> CompressedVectorReaderImpl::compressedVectorNode()
+std::shared_ptr<CompressedVectorNodeImpl> CompressedVectorReaderImpl::compressedVectorNode() const
 {
     return(cVector_);
 }
@@ -5152,7 +5204,7 @@ XXX
 #endif
 }
 
-void CompressedVectorReaderImpl::checkReaderOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName)
+void CompressedVectorReaderImpl::checkReaderOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName) const
 {
     if (!isOpen_) {
         throw E57Exception(E57_ERROR_READER_NOT_OPEN,
@@ -5254,8 +5306,10 @@ unique_ptr<PacketLock> PacketReadCache::lock(uint64_t packetLogicalOffset, char*
         throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "packetLogicalOffset=" + toString(packetLogicalOffset));
 
     /// Linear scan for matching packet offset in cache
-    for (unsigned i = 0; i < entries_.size(); i++) {
-        if (packetLogicalOffset == entries_[i].logicalOffset_) {
+    for (unsigned i = 0; i < entries_.size(); i++)
+    {
+        if (packetLogicalOffset == entries_[i].logicalOffset_)
+        {
             /// Found a match, so don't have to read anything
 #ifdef E57_MAX_VERBOSE
             cout << "  Found matching cache entry, index=" << i << endl;
@@ -5271,7 +5325,8 @@ unique_ptr<PacketLock> PacketReadCache::lock(uint64_t packetLogicalOffset, char*
 
             /// Increment cache lock just before return
             lockCount_++;
-            return(plock);
+
+            return plock;
         }
     }
     /// Get here if didn't find a match already in cache.
@@ -5279,8 +5334,11 @@ unique_ptr<PacketLock> PacketReadCache::lock(uint64_t packetLogicalOffset, char*
     /// Find least recently used (LRU) packet buffer
     unsigned oldestEntry = 0;
     unsigned oldestUsed = entries_.at(0).lastUsed_;
-    for (unsigned i = 0; i < entries_.size(); i++) {
-        if (entries_[i].lastUsed_ < oldestUsed) {
+
+    for (unsigned i = 0; i < entries_.size(); i++)
+    {
+        if (entries_[i].lastUsed_ < oldestUsed)
+        {
             oldestEntry = i;
             oldestUsed = entries_[i].lastUsed_;
         }
@@ -5299,7 +5357,8 @@ unique_ptr<PacketLock> PacketReadCache::lock(uint64_t packetLogicalOffset, char*
 
     /// Increment cache lock just before return
     lockCount_++;
-    return(plock);
+
+    return plock;
 }
 
 void PacketReadCache::markDiscarable(uint64_t packetLogicalOffset)
@@ -5351,7 +5410,8 @@ void PacketReadCache::readPacket(unsigned oldestEntry, uint64_t packetLogicalOff
     cFile_->read(entries_.at(oldestEntry).buffer_, packetLength);
 
     /// Swab if necessary, then verify that packet is good.
-    switch (header.packetType) {
+    switch (header.packetType)
+    {
         case E57_DATA_PACKET: {
                 DataPacket* dpkt = reinterpret_cast<DataPacket*>(entries_.at(oldestEntry).buffer_);
 #ifdef E57_BIGENDIAN
@@ -5448,7 +5508,7 @@ DecodeChannel::DecodeChannel(SourceDestBuffer dbuf_arg, shared_ptr<Decoder> deco
     inputFinished = 0;
 }
 
-bool DecodeChannel::isOutputBlocked()
+bool DecodeChannel::isOutputBlocked() const
 {
     /// If we have completed the entire vector, we are done
     if (decoder->totalRecordsCompleted() >= maxRecordCount)
@@ -5458,7 +5518,7 @@ bool DecodeChannel::isOutputBlocked()
     return(dbuf.impl()->nextIndex() == dbuf.impl()->capacity());
 }
 
-bool DecodeChannel::isInputBlocked()
+bool DecodeChannel::isInputBlocked() const
 {
     /// If have read until the section end, we are done
     if (inputFinished)

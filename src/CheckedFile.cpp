@@ -504,24 +504,23 @@ void CheckedFile::unlink()
 #endif
 }
 
+/// Calc CRC32C of given data
 uint32_t CheckedFile::checksum(char* buf, size_t size)
 {
-   /// Calc CRC32C of given data
-   static CRC::Parameters<crcpp_uint32, 32> s_crcParams;
-   static bool s_crcParamsInitialized = false;
-   if (!s_crcParamsInitialized)
-   {
-      s_crcParams.finalXOR = 0xFFFFFFFF;
-      s_crcParams.initialValue = 0xFFFFFFFF;
-      s_crcParams.polynomial = 0x1EDC6F41;
-      s_crcParams.reflectInput = true;
-      s_crcParams.reflectOutput = true;
-      s_crcParamsInitialized = true;
-   }
-   uint32_t crc = CRC::Calculate<crcpp_uint32, 32>(buf, size, s_crcParams);
+   static const CRC::Parameters<crcpp_uint32, 32> sCRCParams{
+      0x1EDC6F41,
+      0xFFFFFFFF,
+      0xFFFFFFFF,
+      true,
+      true
+   };
 
-   swab(crc); //!!! inside BIGENDIAN?
-   return(crc);
+   static const CRC::Table<crcpp_uint32, 32>   sCRCTable = sCRCParams.MakeTable();
+
+   uint32_t crc = CRC::Calculate<crcpp_uint32, 32>( buf, size, sCRCTable );
+
+   swab( crc ); //!!! inside BIGENDIAN?
+   return crc;
 }
 
 void CheckedFile::getCurrentPageAndOffset(uint64_t& page, size_t& pageOffset, OffsetMode omode)

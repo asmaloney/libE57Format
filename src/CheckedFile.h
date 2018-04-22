@@ -36,8 +36,17 @@ namespace e57 {
    class CheckedFile
    {
       public:
-         enum Mode {readOnly, writeCreate, writeExisting};
-         enum OffsetMode {logical, physical};
+         enum Mode {
+            ReadOnly,
+            WriteCreate,
+            WriteExisting
+         };
+
+         enum OffsetMode {
+            Logical,
+            Physical
+         };
+
          static const size_t   physicalPageSizeLog2;  // physical page size is 2 raised to this power
          static const size_t   physicalPageSize;
          static const uint64_t physicalPageSizeMask;
@@ -53,10 +62,10 @@ namespace e57 {
          CheckedFile&    operator<<(uint64_t i);
          CheckedFile&    operator<<(float f);
          CheckedFile&    operator<<(double d);
-         void            seek(uint64_t offset, OffsetMode omode = logical);
-         uint64_t        position(OffsetMode omode = logical);
-         uint64_t        length(OffsetMode omode = logical);
-         void            extend(uint64_t length, OffsetMode omode = logical);
+         void            seek(uint64_t offset, OffsetMode omode = Logical);
+         uint64_t        position(OffsetMode omode = Logical);
+         uint64_t        length(OffsetMode omode = Logical);
+         void            extend(uint64_t length, OffsetMode omode = Logical);
          e57::ustring    fileName() {return(fileName_);}
          void            flush();
          void            close();
@@ -78,7 +87,7 @@ namespace e57 {
          bool            readOnly_;
          uint64_t        logicalLength_;
 
-         void        getCurrentPageAndOffset(uint64_t& page, size_t& pageOffset, OffsetMode omode = logical);
+         void        getCurrentPageAndOffset(uint64_t& page, size_t& pageOffset, OffsetMode omode = Logical);
          void        readPhysicalPage(char* page_buffer, uint64_t page);
          void        writePhysicalPage(char* page_buffer, uint64_t page);
          int         open64(e57::ustring fileName, int flags, int mode);

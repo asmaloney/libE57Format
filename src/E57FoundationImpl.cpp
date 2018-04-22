@@ -2841,7 +2841,7 @@ void ImageFileImpl::construct2(const ustring& fileName, const ustring& mode, con
     if (!isWriter_) {
         try { //??? should one try block cover whole function?
             /// Open file for reading.
-            file_ = new CheckedFile(fileName_, CheckedFile::readOnly);
+            file_ = new CheckedFile(fileName_, CheckedFile::ReadOnly);
 
             shared_ptr<StructureNodeImpl> root(new StructureNodeImpl(imf));
             root_ = root;
@@ -2919,7 +2919,7 @@ void ImageFileImpl::construct2(const ustring& fileName, const ustring& mode, con
     } else { /// open for writing (start empty)
         try {
             /// Open file for writing, truncate if already exists.
-            file_ = new CheckedFile(fileName_, CheckedFile::writeCreate);
+            file_ = new CheckedFile(fileName_, CheckedFile::WriteCreate);
 
             shared_ptr<StructureNodeImpl> root(new StructureNodeImpl(imf));
             root_ = root;
@@ -2978,11 +2978,11 @@ void ImageFileImpl::readFileHeader(CheckedFile* file, E57FileHeader& header)
     }
 
     /// Check if file length matches actual physical length
-    if (header.filePhysicalLength != file->length(CheckedFile::physical)) {
+    if (header.filePhysicalLength != file->length(CheckedFile::Physical)) {
         throw E57_EXCEPTION2(E57_ERROR_BAD_FILE_LENGTH,
                              "fileName=" + file->fileName()
                              + " header.filePhysicalLength=" + toString(header.filePhysicalLength)
-                             + " file->length=" + toString(file->length(CheckedFile::physical)));
+                             + " file->length=" + toString(file->length(CheckedFile::Physical)));
     }
 
     /// Check that page size is correct constant
@@ -3045,8 +3045,8 @@ void ImageFileImpl::close()
     if (isWriter_) {
         /// Go to end of file, note physical position
         xmlLogicalOffset_ = unusedLogicalStart_;
-        file_->seek(xmlLogicalOffset_, CheckedFile::logical);
-        uint64_t xmlPhysicalOffset = file_->position(CheckedFile::physical);
+        file_->seek(xmlLogicalOffset_, CheckedFile::Logical);
+        uint64_t xmlPhysicalOffset = file_->position(CheckedFile::Physical);
         *file_ << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 #ifdef E57_OXYGEN_SUPPORT //???
 //???        *file_ << "<?oxygen RNGSchema=\"file:/C:/kevin/astm/DataFormat/xif/las_v0_05.rnc\" type=\"compact\"?>\n";
@@ -3056,11 +3056,11 @@ void ImageFileImpl::close()
         root_->writeXml(shared_from_this(), *file_, 0, "e57Root");
 
         /// Pad XML section so length is multiple of 4
-        while ((file_->position(CheckedFile::logical) - xmlLogicalOffset_) % 4 != 0)
+        while ((file_->position(CheckedFile::Logical) - xmlLogicalOffset_) % 4 != 0)
             *file_ << " ";
 
         /// Note logical length
-        xmlLogicalLength_ = file_->position(CheckedFile::logical) - xmlLogicalOffset_;
+        xmlLogicalLength_ = file_->position(CheckedFile::Logical) - xmlLogicalOffset_;
 
         /// Init header contents
         E57FileHeader header;
@@ -3068,7 +3068,7 @@ void ImageFileImpl::close()
         memcpy(&header.fileSignature, "ASTM-E57", 8);
         header.majorVersion       = E57_FORMAT_MAJOR;
         header.minorVersion       = E57_FORMAT_MINOR;
-        header.filePhysicalLength = file_->length(CheckedFile::physical);
+        header.filePhysicalLength = file_->length(CheckedFile::Physical);
         header.xmlPhysicalOffset  = xmlPhysicalOffset;
         header.xmlLogicalLength   = xmlLogicalLength_;
         header.pageSize           = CheckedFile::physicalPageSize;
@@ -4286,7 +4286,7 @@ void CompressedVectorWriterImpl::close()
 #endif
 #ifdef E57_DEBUG
     /// Verify OK before write it.
-    header.verify(imf->file_->length(CheckedFile::physical));
+    header.verify(imf->file_->length(CheckedFile::Physical));
 #endif
     header.swab();  /// swab if neccesary
 
@@ -4777,12 +4777,12 @@ CompressedVectorReaderImpl::CompressedVectorReaderImpl(shared_ptr<CompressedVect
                              "imageFileName=" + cVector_->imageFileName()
                              + " cvPathName=" + cVector_->pathName());
     }
-    imf->file_->seek(sectionLogicalStart, CheckedFile::logical);
+    imf->file_->seek(sectionLogicalStart, CheckedFile::Logical);
     imf->file_->read(reinterpret_cast<char*>(&sectionHeader), sizeof(sectionHeader));
     sectionHeader.swab();  /// swab if neccesary
 
 #ifdef E57_DEBUG
-    sectionHeader.verify(imf->file_->length(CheckedFile::physical));
+    sectionHeader.verify(imf->file_->length(CheckedFile::Physical));
 #endif
 
     /// Pre-calc end of section, so can tell when we are out of packets.
@@ -5336,7 +5336,7 @@ void PacketReadCache::readPacket(unsigned oldestEntry, uint64_t packetLogicalOff
 
     /// Read header of packet first to get length.  Use EmptyPacketHeader since it has the commom fields to all packets.
     EmptyPacketHeader header;
-    cFile_->seek(packetLogicalOffset, CheckedFile::logical);
+    cFile_->seek(packetLogicalOffset, CheckedFile::Logical);
     cFile_->read(reinterpret_cast<char*>(&header), sizeof(header));
     header.swab();
     /// Can't verify packet header here, because it is not really an EmptyPacketHeader.
@@ -5347,7 +5347,7 @@ void PacketReadCache::readPacket(unsigned oldestEntry, uint64_t packetLogicalOff
         throw E57_EXCEPTION2(E57_ERROR_BAD_CV_PACKET, "packetLength=" + toString(packetLength));
 
     /// Now read in whole packet into preallocated buffer_.  Note buffer is
-    cFile_->seek(packetLogicalOffset, CheckedFile::logical);
+    cFile_->seek(packetLogicalOffset, CheckedFile::Logical);
     cFile_->read(entries_.at(oldestEntry).buffer_, packetLength);
 
     /// Swab if necessary, then verify that packet is good.

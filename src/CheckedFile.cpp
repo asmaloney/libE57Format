@@ -80,23 +80,23 @@ CheckedFile::CheckedFile(ustring fileName, Mode mode)
 {
    switch (mode)
    {
-      case readOnly:
+      case ReadOnly:
          fd_ = open64(fileName_, O_RDONLY|O_BINARY, 0);
          readOnly_ = true;
-         logicalLength_ = physicalToLogical(length(physical));
+         logicalLength_ = physicalToLogical(length(Physical));
          break;
 
-      case writeCreate:
+      case WriteCreate:
          /// File truncated to zero length if already exists
          fd_ = open64(fileName_, O_RDWR|O_CREAT|O_TRUNC|O_BINARY, S_IWRITE|S_IREAD);
          readOnly_ = false;
          logicalLength_ = 0;
          break;
 
-      case writeExisting:
+      case WriteExisting:
          fd_ = open64(fileName_, O_RDWR|O_BINARY, 0);
          readOnly_ = false;
-         logicalLength_ = physicalToLogical(length(physical)); //???
+         logicalLength_ = physicalToLogical(length(Physical)); //???
          break;
    }
 }
@@ -146,22 +146,26 @@ void CheckedFile::read(char* buf, size_t nRead, size_t /*bufSize*/)
    //??? need to keep track of logical length?
    //??? check bufSize OK
 
-   uint64_t end = position(logical) + nRead;
+   const uint64_t end = position( Logical ) + nRead;
+   const uint64_t logicalLength = length( Logical );
 
-   if (end > length(logical))
-      throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "fileName=" + fileName_ + " end=" + toString(end) + " length=" + toString(length(logical)));
+   if (end > logicalLength)
+   {
+      throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "fileName=" + fileName_ + " end=" + toString(end) + " length=" + toString(logicalLength));
+   }
 
-   uint64_t page;
-   size_t   pageOffset;
+   uint64_t page = 0;
+   size_t   pageOffset = 0;
    getCurrentPageAndOffset(page, pageOffset);
 
-   size_t n = min(nRead, logicalPageSize - pageOffset);
+   size_t n = min( nRead, logicalPageSize - pageOffset );
 
    /// Allocate temp page buffer
    vector<char> page_buffer_v(physicalPageSize);
    char* page_buffer = &page_buffer_v[0];
 
-   while (nRead > 0) {
+   while (nRead > 0)
+   {
       readPhysicalPage(page_buffer, page);
       memcpy(buf, page_buffer+pageOffset, n);
 
@@ -173,7 +177,7 @@ void CheckedFile::read(char* buf, size_t nRead, size_t /*bufSize*/)
    }
 
    /// When done, leave cursor just past end of last byte read
-   seek(end, logical);
+   seek(end, Logical);
 }
 
 void CheckedFile::write(const char* buf, size_t nWrite)
@@ -184,7 +188,7 @@ void CheckedFile::write(const char* buf, size_t nWrite)
    if (readOnly_)
       throw E57_EXCEPTION2(E57_ERROR_FILE_IS_READ_ONLY, "fileName=" + fileName_);
 
-   uint64_t end = position(logical) + nWrite;
+   uint64_t end = position(Logical) + nWrite;
 
    uint64_t page;
    size_t   pageOffset;
@@ -221,7 +225,7 @@ void CheckedFile::write(const char* buf, size_t nWrite)
       logicalLength_ = end;
 
    /// When done, leave cursor just past end of buf
-   seek(end, logical);
+   seek(end, Logical);
 }
 
 CheckedFile& CheckedFile::operator<<(const ustring& s)
@@ -316,7 +320,7 @@ template<class FTYPE> CheckedFile& CheckedFile::writeFloatingPoint(FTYPE value, 
 void CheckedFile::seek(uint64_t offset, OffsetMode omode)
 {
    //??? check for seek beyond logicalLength_
-   int64_t pos = static_cast<int64_t>(omode==physical ? offset : logicalToPhysical(offset));
+   int64_t pos = static_cast<int64_t>(omode==Physical ? offset : logicalToPhysical(offset));
 
 #ifdef E57_MAX_VERBOSE
    // cout << "seek offset=" << offset << " omode=" << omode << " pos=" << pos << endl; //???
@@ -360,7 +364,7 @@ uint64_t CheckedFile::position(OffsetMode omode)
    /// Get current file cursor position
    uint64_t pos = lseek64(0LL, SEEK_CUR);
 
-   if (omode==physical)
+   if (omode==Physical)
       return(pos);
    else
       return(physicalToLogical(pos));
@@ -368,7 +372,7 @@ uint64_t CheckedFile::position(OffsetMode omode)
 
 uint64_t CheckedFile::length(OffsetMode omode)
 {
-   if (omode==physical) {
+   if (omode==Physical) {
       //??? is there a 64bit length call?
       /// Get current file cursor position
       uint64_t original_pos = lseek64(0LL, SEEK_CUR);
@@ -394,12 +398,12 @@ void CheckedFile::extend(uint64_t newLength, OffsetMode omode)
       throw E57_EXCEPTION2(E57_ERROR_FILE_IS_READ_ONLY, "fileName=" + fileName_);
 
    uint64_t newLogicalLength;
-   if (omode==physical)
+   if (omode==Physical)
       newLogicalLength = physicalToLogical(newLength);
    else
       newLogicalLength = newLength;
 
-   uint64_t currentLogicalLength = length(logical);
+   uint64_t currentLogicalLength = length(Logical);
 
    /// Make sure we are trying to make file longer
    if (newLogicalLength < currentLogicalLength) {
@@ -413,7 +417,7 @@ void CheckedFile::extend(uint64_t newLength, OffsetMode omode)
    uint64_t nWrite = newLogicalLength - currentLogicalLength;
 
    /// Seek to current end of file
-   seek(currentLogicalLength, logical);
+   seek(currentLogicalLength, Logical);
 
    uint64_t page;
    size_t   pageOffset;
@@ -453,7 +457,7 @@ void CheckedFile::extend(uint64_t newLength, OffsetMode omode)
    logicalLength_ = newLogicalLength;
 
    /// When done, leave cursor at end of file
-   seek(newLogicalLength, logical);
+   seek(newLogicalLength, Logical);
 }
 
 void CheckedFile::flush()
@@ -528,7 +532,7 @@ uint32_t CheckedFile::checksum(char* buf, size_t size)
 void CheckedFile::getCurrentPageAndOffset(uint64_t& page, size_t& pageOffset, OffsetMode omode)
 {
    uint64_t pos = position(omode);
-   if (omode == physical) {
+   if (omode == Physical) {
       page = pos >> physicalPageSizeLog2;
       pageOffset = static_cast<size_t>(pos & physicalPageSizeMask);
    } else {
@@ -543,31 +547,40 @@ void CheckedFile::readPhysicalPage(char* page_buffer, uint64_t page)
    // cout << "readPhysicalPage, page:" << page << endl;
 #endif
 
-   if (page*physicalPageSize >= length(physical)) {
+   const uint64_t physicalLength = length( Physical );
+
+   if (page*physicalPageSize >= physicalLength)
+   {
       /// If beyond end of file, just return blank buffer  ???sure isn't partially beyond end?
       memset(page_buffer, 0, physicalPageSize);
-   } else {
+   }
+   else
+   {
       /// Seek to start of physical page
-      seek(page*physicalPageSize, physical);
+      seek(page*physicalPageSize, Physical);
 
 #if defined(_MSC_VER)
       int result = ::_read(fd_, page_buffer, physicalPageSize);
 #elif defined(__GNUC__)
-      int result = ::read(fd_, page_buffer, physicalPageSize);
+      long result = ::read(fd_, page_buffer, physicalPageSize);
 #else
 #  error "no supported compiler defined"
 #endif
       if (result < 0 || static_cast<size_t>(result) != physicalPageSize)
+      {
          throw E57_EXCEPTION2(E57_ERROR_READ_FAILED, "fileName=" + fileName_ + " result=" + toString(result));
+      }
 
       uint32_t check_sum = checksum(page_buffer, logicalPageSize);
-      if(*reinterpret_cast<uint32_t*>(&page_buffer[logicalPageSize]) != check_sum) {  //??? little endian dependency
+
+      if(*reinterpret_cast<uint32_t*>(&page_buffer[logicalPageSize]) != check_sum)
+      {  //??? little endian dependency
          throw E57_EXCEPTION2(E57_ERROR_BAD_CHECKSUM,
                               "fileName=" + fileName_
-                              + " computedChecksum=" + toString(check_sum)
-                              + " storedChecksum=" + toString(*reinterpret_cast<uint32_t*>(&page_buffer[logicalPageSize]))
-                              + " page=" + toString(page)
-                              + " length=" + toString(length(physical)));
+                              + " computedChecksum=" + toString( check_sum )
+                              + " storedChecksum=" + toString( *reinterpret_cast<uint32_t*>(&page_buffer[logicalPageSize]) )
+                              + " page=" + toString( page )
+                              + " length=" + toString( physicalLength ));
       }
    }
 }
@@ -583,15 +596,18 @@ void CheckedFile::writePhysicalPage(char* page_buffer, uint64_t page)
    *reinterpret_cast<uint32_t*>(&page_buffer[logicalPageSize]) = check_sum;  //??? little endian dependency
 
    /// Seek to start of physical page
-   seek(page*physicalPageSize, physical);
+   seek(page*physicalPageSize, Physical);
 
 #if defined(_MSC_VER)
    int result = ::_write(fd_, page_buffer, physicalPageSize);
 #elif defined(__GNUC__)
-   int result = ::write(fd_, page_buffer, physicalPageSize);
+   long result = ::write(fd_, page_buffer, physicalPageSize);
 #else
 #  error "no supported compiler defined"
 #endif
+
    if (result < 0)
+   {
       throw E57_EXCEPTION2(E57_ERROR_WRITE_FAILED, "fileName=" + fileName_ + " result=" + toString(result));
+   }
 }

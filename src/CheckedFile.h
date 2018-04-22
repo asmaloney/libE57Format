@@ -71,8 +71,6 @@ namespace e57 {
          void            close();
          void            unlink();
 
-         static size_t   efficientBufferSize(size_t logicalSize);  //??? needed?
-
          static inline uint64_t logicalToPhysical(uint64_t logicalOffset);
          static inline uint64_t physicalToLogical(uint64_t physicalOffset);
 

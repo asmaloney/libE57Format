@@ -504,11 +504,6 @@ void CheckedFile::unlink()
 #endif
 }
 
-size_t CheckedFile::efficientBufferSize(size_t logicalBytes)
-{
-   return(logicalBytes);
-}
-
 uint32_t CheckedFile::checksum(char* buf, size_t size)
 {
    /// Calc CRC32C of given data

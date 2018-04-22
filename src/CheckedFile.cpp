@@ -209,6 +209,7 @@ void CheckedFile::write(const char* buf, size_t nWrite)
 
    while (nWrite > 0) {
       readPhysicalPage(page_buffer, page);
+
 #ifdef E57_MAX_VERBOSE
       // cout << "  page_buffer[0] read: '" << page_buffer[0] << "'" << endl;
       // cout << "copy " << n << "bytes to page=" << page << " pageOffset=" << pageOffset << " buf='"; //???
@@ -451,6 +452,7 @@ void CheckedFile::extend(uint64_t newLength, OffsetMode omode)
 
    while (nWrite > 0) {
       readPhysicalPage(page_buffer, page);
+
 #ifdef E57_MAX_VERBOSE
       // cout << "extend " << n << "bytes on page=" << page << " pageOffset=" << pageOffset << endl; //???
 #endif
@@ -519,7 +521,7 @@ void CheckedFile::unlink()
 }
 
 /// Calc CRC32C of given data
-uint32_t CheckedFile::checksum(char* buf, size_t size)
+uint32_t CheckedFile::checksum(char* buf, size_t size) const
 {
    static const CRC::Parameters<crcpp_uint32, 32> sCRCParams{
       0x1EDC6F41,
@@ -535,6 +537,24 @@ uint32_t CheckedFile::checksum(char* buf, size_t size)
 
    swab( crc ); //!!! inside BIGENDIAN?
    return crc;
+}
+
+void CheckedFile::verifyChecksum( char *page_buffer, size_t page )
+{
+   const uint32_t check_sum = checksum( page_buffer, logicalPageSize );
+   const uint32_t check_sum_in_page = *reinterpret_cast<uint32_t*>(&page_buffer[logicalPageSize]);
+
+   if ( check_sum_in_page != check_sum )
+   {
+      const uint64_t physicalLength = length( Physical );
+
+      throw E57_EXCEPTION2(E57_ERROR_BAD_CHECKSUM,
+                           "fileName=" + fileName_
+                           + " computedChecksum=" + toString( check_sum )
+                           + " storedChecksum=" + toString( check_sum_in_page )
+                           + " page=" + toString( page )
+                           + " length=" + toString( physicalLength ));
+   }
 }
 
 void CheckedFile::getCurrentPageAndOffset(uint64_t& page, size_t& pageOffset, OffsetMode omode)
@@ -579,17 +599,7 @@ void CheckedFile::readPhysicalPage(char* page_buffer, uint64_t page)
          throw E57_EXCEPTION2(E57_ERROR_READ_FAILED, "fileName=" + fileName_ + " result=" + toString(result));
       }
 
-      uint32_t check_sum = checksum(page_buffer, logicalPageSize);
-
-      if(*reinterpret_cast<uint32_t*>(&page_buffer[logicalPageSize]) != check_sum)
-      {  //??? little endian dependency
-         throw E57_EXCEPTION2(E57_ERROR_BAD_CHECKSUM,
-                              "fileName=" + fileName_
-                              + " computedChecksum=" + toString( check_sum )
-                              + " storedChecksum=" + toString( *reinterpret_cast<uint32_t*>(&page_buffer[logicalPageSize]) )
-                              + " page=" + toString( page )
-                              + " length=" + toString( physicalLength ));
-      }
+      verifyChecksum( page_buffer, page );
    }
 }
 

@@ -84,6 +84,7 @@ namespace e57 {
          int             fd_;
          bool            readOnly_;
          uint64_t        logicalLength_;
+         uint64_t        physicalLength_;
 
          void        getCurrentPageAndOffset(uint64_t& page, size_t& pageOffset, OffsetMode omode = Logical);
          void        readPhysicalPage(char* page_buffer, uint64_t page);

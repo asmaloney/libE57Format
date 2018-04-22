@@ -76,14 +76,21 @@ const size_t   CheckedFile::logicalPageSize = physicalPageSize - 4;
 
 CheckedFile::CheckedFile(ustring fileName, Mode mode)
    : fileName_(fileName),
-     fd_(-1)
+     fd_(-1),
+     physicalLength_( 0 )
+
 {
    switch (mode)
    {
       case ReadOnly:
          fd_ = open64(fileName_, O_RDONLY|O_BINARY, 0);
+
          readOnly_ = true;
-         logicalLength_ = physicalToLogical(length(Physical));
+
+         physicalLength_ = lseek64(0LL, SEEK_END);
+         lseek64( 0, SEEK_SET );
+
+         logicalLength_ = physicalToLogical( physicalLength_ );
          break;
 
       case WriteCreate:
@@ -370,22 +377,29 @@ uint64_t CheckedFile::position(OffsetMode omode)
       return(physicalToLogical(pos));
 }
 
-uint64_t CheckedFile::length(OffsetMode omode)
+uint64_t CheckedFile::length( OffsetMode omode )
 {
-   if (omode==Physical) {
-      //??? is there a 64bit length call?
-      /// Get current file cursor position
-      uint64_t original_pos = lseek64(0LL, SEEK_CUR);
+   if ( omode == Physical )
+   {
+      if ( readOnly_ )
+      {
+         return physicalLength_;
+      }
 
-      /// Get current file cursor position
-      uint64_t end_pos = lseek64(0LL, SEEK_END);
+      // Current file position
+      uint64_t original_pos = lseek64( 0LL, SEEK_CUR );
 
-      /// Restore original position
-      lseek64(original_pos, SEEK_SET);
+      // End file position
+      uint64_t end_pos = lseek64( 0LL, SEEK_END );
 
-      return(end_pos);
-   } else {
-      return(logicalLength_);
+      // Restore original position
+      lseek64( original_pos, SEEK_SET );
+
+      return end_pos;
+   }
+   else
+   {
+      return logicalLength_;
    }
 }
 

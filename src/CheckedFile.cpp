@@ -557,7 +557,7 @@ void CheckedFile::readPhysicalPage(char* page_buffer, uint64_t page)
 #if defined(_MSC_VER)
       int result = ::_read(fd_, page_buffer, physicalPageSize);
 #elif defined(__GNUC__)
-      long result = ::read(fd_, page_buffer, physicalPageSize);
+      ssize_t result = ::read(fd_, page_buffer, physicalPageSize);
 #else
 #  error "no supported compiler defined"
 #endif
@@ -596,7 +596,7 @@ void CheckedFile::writePhysicalPage(char* page_buffer, uint64_t page)
 #if defined(_MSC_VER)
    int result = ::_write(fd_, page_buffer, physicalPageSize);
 #elif defined(__GNUC__)
-   long result = ::write(fd_, page_buffer, physicalPageSize);
+   ssize_t result = ::write(fd_, page_buffer, physicalPageSize);
 #else
 #  error "no supported compiler defined"
 #endif

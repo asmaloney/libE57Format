@@ -2724,9 +2724,6 @@ bool BlobNodeImpl::isDefined(const ustring& pathName)
     return(pathName == "");
 }
 
-BlobNodeImpl::~BlobNodeImpl()
-{}
-
 int64_t BlobNodeImpl::byteCount()
 {
     checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);

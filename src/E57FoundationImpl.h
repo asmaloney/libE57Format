@@ -80,7 +80,7 @@ public:
 
     virtual void            writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) = 0;
 
-    virtual                 ~NodeImpl() {}
+    virtual                 ~NodeImpl() = default;
 
 #ifdef E57_DEBUG
     virtual void            dump(int indent = 0, std::ostream& os = std::cout);
@@ -106,32 +106,32 @@ protected:
 class StructureNodeImpl : public NodeImpl {
 public:
                         StructureNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile);
-    virtual             ~StructureNodeImpl() {}
+    virtual             ~StructureNodeImpl()  override = default;
 
-    virtual NodeType    type() const;
-    virtual bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni);
-    virtual bool        isDefined(const ustring& pathName);
-    virtual void        setAttachedRecursive();
+    virtual NodeType    type() const override;
+    virtual bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni) override;
+    virtual bool        isDefined(const ustring& pathName) override;
+    virtual void        setAttachedRecursive() override;
 
     virtual int64_t     childCount() const;
     virtual std::shared_ptr<NodeImpl> get(int64_t index);
-    virtual std::shared_ptr<NodeImpl> get(const ustring& pathName);
+    virtual std::shared_ptr<NodeImpl> get(const ustring& pathName) override;
     virtual void        set(int64_t index, std::shared_ptr<NodeImpl> ni);
-    virtual void        set(const ustring& pathName, std::shared_ptr<NodeImpl> ni, bool autoPathCreate = false);
-    virtual void        set(const std::vector<ustring>& fields, unsigned level, std::shared_ptr<NodeImpl> ni, bool autoPathCreate = false);
+    virtual void        set(const ustring& pathName, std::shared_ptr<NodeImpl> ni, bool autoPathCreate = false) override;
+    virtual void        set(const std::vector<ustring>& fields, unsigned level, std::shared_ptr<NodeImpl> ni, bool autoPathCreate = false) override;
     virtual void        append(std::shared_ptr<NodeImpl> ni);
 
-    virtual void        checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin);
+    virtual void        checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin) override;
 
-    virtual void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr);
+    virtual void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) override;
 
 #ifdef E57_DEBUG
-    void                dump(int indent = 0, std::ostream& os = std::cout);
+    void                dump(int indent = 0, std::ostream& os = std::cout) override;
 #endif
 
 protected:
     friend class CompressedVectorReaderImpl;
-    virtual std::shared_ptr<NodeImpl> lookup(const ustring& pathName);
+    virtual std::shared_ptr<NodeImpl> lookup(const ustring& pathName) override;
 
     std::vector<std::shared_ptr<NodeImpl> > children_;
 };
@@ -139,18 +139,18 @@ protected:
 class VectorNodeImpl : public StructureNodeImpl {
 public:
     explicit            VectorNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, bool allowHeteroChildren);
-    virtual             ~VectorNodeImpl() {}
+    virtual             ~VectorNodeImpl() override = default;
 
-    virtual NodeType    type() const;
-    virtual bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni);
+    virtual NodeType    type() const override;
+    virtual bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni) override;
     bool                allowHeteroChildren() const;
 
-    virtual void        set(int64_t index, std::shared_ptr<NodeImpl> ni);
+    virtual void        set(int64_t index, std::shared_ptr<NodeImpl> ni) override;
 
-    virtual void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr);
+    virtual void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) override;
 
 #ifdef E57_DEBUG
-    void                dump(int indent = 0, std::ostream& os = std::cout);
+    void                dump(int indent = 0, std::ostream& os = std::cout) override;
 #endif
 
 protected:
@@ -239,12 +239,12 @@ protected:
 class CompressedVectorNodeImpl : public NodeImpl {
 public:
                         CompressedVectorNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile);
-    virtual             ~CompressedVectorNodeImpl() {}
+    virtual             ~CompressedVectorNodeImpl() override = default;
 
-    virtual NodeType    type() const;
-    virtual bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni);
-    virtual bool        isDefined(const ustring& pathName);
-    virtual void        setAttachedRecursive();
+    virtual NodeType    type() const override;
+    virtual bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni) override;
+    virtual bool        isDefined(const ustring& pathName) override;
+    virtual void        setAttachedRecursive() override;
 
     void                setPrototype(std::shared_ptr<NodeImpl> prototype);
     std::shared_ptr<NodeImpl> getPrototype();
@@ -253,9 +253,9 @@ public:
 
     virtual int64_t     childCount();
 
-    virtual void        checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin);
+    virtual void        checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin) override;
 
-    virtual void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr);
+    virtual void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) override;
 
     /// Iterator constructors
     std::shared_ptr<CompressedVectorWriterImpl> writer(std::vector<SourceDestBuffer> sbufs);
@@ -268,7 +268,7 @@ public:
                                                                 {binarySectionLogicalStart_ = binarySectionLogicalStart;}
 
 #ifdef E57_DEBUG
-    void                dump(int indent = 0, std::ostream& os = std::cout);
+    void                dump(int indent = 0, std::ostream& os = std::cout) override;
 #endif
 
 protected:
@@ -284,22 +284,22 @@ protected:
 class IntegerNodeImpl : public NodeImpl {
 public:
                         IntegerNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, int64_t value = 0, int64_t minimum = 0, int64_t maximum = 0);
-    virtual             ~IntegerNodeImpl() {}
+    virtual             ~IntegerNodeImpl() override = default;
 
-    virtual NodeType    type() const;
-    virtual bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni);
-    virtual bool        isDefined(const ustring& pathName);
+    virtual NodeType    type() const override;
+    virtual bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni) override;
+    virtual bool        isDefined(const ustring& pathName) override;
 
     int64_t             value();
     int64_t             minimum();
     int64_t             maximum();
 
-    virtual void        checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin);
+    virtual void        checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin) override;
 
-    virtual void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr);
+    virtual void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) override;
 
 #ifdef E57_DEBUG
-    void                dump(int indent = 0, std::ostream& os = std::cout);
+    void                dump(int indent = 0, std::ostream& os = std::cout) override;
 #endif
 
 protected:
@@ -318,11 +318,11 @@ public:
                             double scaledValue = 0., double scaledMinimum = 0., double scaledMaximum = 0.,
                             double scale = 1.0, double offset = 0.0);
 
-    virtual             ~ScaledIntegerNodeImpl() {}
+    virtual             ~ScaledIntegerNodeImpl() override = default;
 
-    virtual NodeType    type() const;
-    virtual bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni);
-    virtual bool        isDefined(const ustring& pathName);
+    virtual NodeType    type() const override;
+    virtual bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni) override;
+    virtual bool        isDefined(const ustring& pathName) override;
 
     int64_t             rawValue();
     double              scaledValue();
@@ -333,13 +333,13 @@ public:
     double              scale();
     double              offset();
 
-    virtual void        checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin);
+    virtual void        checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin) override;
 
-    virtual void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr);
+    virtual void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) override;
 
 
 #ifdef E57_DEBUG
-    void                dump(int indent = 0, std::ostream& os = std::cout);
+    void                dump(int indent = 0, std::ostream& os = std::cout) override;
 #endif
 
 protected:
@@ -355,23 +355,23 @@ public:
                         FloatNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile,
                                       double value = 0, FloatPrecision precision = E57_DOUBLE,
                                       double minimum = E57_DOUBLE_MIN, double  maximum = E57_DOUBLE_MAX);
-    virtual             ~FloatNodeImpl() {}
+    virtual             ~FloatNodeImpl() override = default;
 
-    virtual NodeType    type() const;
-    virtual bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni);
-    virtual bool        isDefined(const ustring& pathName);
+    virtual NodeType    type() const override;
+    virtual bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni) override;
+    virtual bool        isDefined(const ustring& pathName) override;
 
     double              value();
     FloatPrecision      precision();
     double              minimum();
     double              maximum();
 
-    virtual void        checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin);
+    virtual void        checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin) override;
 
-    virtual void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr);
+    virtual void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) override;
 
 #ifdef E57_DEBUG
-    void                dump(int indent = 0, std::ostream& os = std::cout);
+    void                dump(int indent = 0, std::ostream& os = std::cout) override;
 #endif
 
 protected:
@@ -384,20 +384,20 @@ protected:
 class StringNodeImpl : public NodeImpl {
 public:
     explicit            StringNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring value = "");
-    virtual             ~StringNodeImpl() {}
+    virtual             ~StringNodeImpl() override = default;
 
-    virtual NodeType    type() const;
-    virtual bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni);
-    virtual bool        isDefined(const ustring& pathName);
+    virtual NodeType    type() const override;
+    virtual bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni) override;
+    virtual bool        isDefined(const ustring& pathName) override;
 
     ustring             value();
 
-    virtual void        checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin);
+    virtual void        checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin) override;
 
-    virtual void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr);
+    virtual void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) override;
 
 #ifdef E57_DEBUG
-    void                dump(int indent = 0, std::ostream& os = std::cout);
+    void                dump(int indent = 0, std::ostream& os = std::cout) override;
 #endif
 
 protected:
@@ -408,22 +408,22 @@ class BlobNodeImpl : public NodeImpl {
 public:
                         BlobNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, int64_t byteCount);
                         BlobNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, int64_t fileOffset, int64_t length);
-    virtual             ~BlobNodeImpl();
+    virtual             ~BlobNodeImpl() override = default;
 
-    virtual NodeType    type() const;
-    virtual bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni);
-    virtual bool        isDefined(const ustring& pathName);
+    virtual NodeType    type() const override;
+    virtual bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni) override;
+    virtual bool        isDefined(const ustring& pathName) override;
 
     int64_t             byteCount();
     void                read(uint8_t* buf, int64_t start, size_t count);
     void                write(uint8_t* buf, int64_t start, size_t count);
 
-    virtual void        checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin);
+    virtual void        checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin) override;
 
-    virtual void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr);
+    virtual void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) override;
 
 #ifdef E57_DEBUG
-    void                dump(int indent = 0, std::ostream& os = std::cout);
+    void                dump(int indent = 0, std::ostream& os = std::cout) override;
 #endif
 
 protected:

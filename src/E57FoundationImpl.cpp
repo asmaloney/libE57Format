@@ -1012,7 +1012,7 @@ SourceDestBufferImpl::SourceDestBufferImpl(weak_ptr<ImageFileImpl> destImageFile
     /// The size() of *ustrings_ will not be changed as strings are stored in it.
 }
 
-void SourceDestBufferImpl::checkState_()
+void SourceDestBufferImpl::checkState_() const
 {
     /// Implement checkImageFileOpen functionality for SourceDestBufferImpl ctors
     /// Throw an exception if destImageFile (destImageFile_) isn't open
@@ -1690,7 +1690,7 @@ void SourceDestBufferImpl::setNextString(const ustring& value)
     nextIndex_++;
 }
 
-void SourceDestBufferImpl::checkCompatible(shared_ptr<SourceDestBufferImpl> newBuf)
+void SourceDestBufferImpl::checkCompatible(shared_ptr<SourceDestBufferImpl> newBuf) const
 {
     if (pathName_ != newBuf->pathName()) {
         throw E57_EXCEPTION2(E57_ERROR_BUFFERS_NOT_COMPATIBLE,
@@ -3784,7 +3784,7 @@ void DataPacketHeader::swab()
 #endif
 
 #ifdef E57_DEBUG
-void DataPacketHeader::dump(int indent, std::ostream& os)
+void DataPacketHeader::dump(int indent, std::ostream& os) const
 {
     os << space(indent) << "packetType:                " << static_cast<unsigned>(packetType) << endl;
     os << space(indent) << "packetFlags:               " << static_cast<unsigned>(packetFlags) << endl;
@@ -3931,15 +3931,17 @@ DataPacket::swab(bool toLittleEndian)
 #endif
 
 #ifdef E57_DEBUG
-void DataPacket::dump(int indent, std::ostream& os)
+void DataPacket::dump(int indent, std::ostream& os) const
 {
     if (packetType != E57_DATA_PACKET)
         throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "packetType=" + toString(packetType));
-    reinterpret_cast<DataPacketHeader*>(this)->dump(indent, os);
+    reinterpret_cast<const DataPacketHeader*>(this)->dump(indent, os);
 
-    uint16_t* bsbLength = reinterpret_cast<uint16_t*>(&payload[0]);
-    uint8_t* p = reinterpret_cast<uint8_t*>(&bsbLength[bytestreamCount]);
-    for (unsigned i=0; i < bytestreamCount; i++) {
+    const uint16_t* bsbLength = reinterpret_cast<const uint16_t*>(&payload[0]);
+    const uint8_t* p = reinterpret_cast<const uint8_t*>(&bsbLength[bytestreamCount]);
+
+    for (unsigned i=0; i < bytestreamCount; i++)
+    {
         os << space(indent) << "bytestream[" << i << "]:" << endl;
         os << space(indent+4) << "length: " << bsbLength[i] << endl;
 /*====
@@ -3950,8 +3952,8 @@ void DataPacket::dump(int indent, std::ostream& os)
             os << space(indent+4) << bsbLength[i]-j << " more unprinted..." << endl;
 ====*/
         p += bsbLength[i];
-        if (p - reinterpret_cast<uint8_t*>(this) > E57_DATA_PACKET_MAX)
-            throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "size=" + toString(p - reinterpret_cast<uint8_t*>(this)));
+        if (p - reinterpret_cast<const uint8_t*>(this) > E57_DATA_PACKET_MAX)
+            throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "size=" + toString(p - reinterpret_cast<const uint8_t*>(this)));
     }
 }
 #endif
@@ -4103,7 +4105,7 @@ IndexPacket::swab(bool toLittleEndian)
 #endif
 
 #ifdef E57_DEBUG
-void IndexPacket::dump(int indent, std::ostream& os)
+void IndexPacket::dump(int indent, std::ostream& os) const
 {
     os << space(indent) << "packetType:                " << static_cast<unsigned>(packetType) << endl;
     os << space(indent) << "packetFlags:               " << static_cast<unsigned>(packetFlags) << endl;
@@ -4166,7 +4168,7 @@ void EmptyPacketHeader::swab()
 #endif
 
 #ifdef E57_DEBUG
-void EmptyPacketHeader::dump(int indent, std::ostream& os)
+void EmptyPacketHeader::dump(int indent, std::ostream& os) const
 {
     os << space(indent) << "packetType:                " << static_cast<unsigned>(packetType) << endl;
     os << space(indent) << "packetLogicalLengthMinus1: " << packetLogicalLengthMinus1 << endl;

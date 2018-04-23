@@ -181,16 +181,16 @@ public:
                          bool doScaling = false, size_t stride = sizeof(double));
     SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, std::vector<ustring>* b);
 
-    ustring                 pathName()      {return(pathName_);}
-    MemoryRepresentation    memoryRepresentation() {return(memoryRepresentation_);}
-    void*                   base()          {return(base_);}
-    std::vector<ustring>*   ustrings()      {return(ustrings_);}
-    bool                    doConversion()  {return(doConversion_);}
-    bool                    doScaling()     {return(doScaling_);}
-    size_t                  stride()        {return(stride_);}
-    size_t                  capacity()      {return(capacity_);}
-    unsigned                nextIndex()     {return(nextIndex_);}
-    void                    rewind()        {nextIndex_= 0;}
+    ustring                 pathName()      const { return pathName_; }
+    MemoryRepresentation    memoryRepresentation() const { return memoryRepresentation_; }
+    void*                   base()          const { return base_; }
+    std::vector<ustring>*   ustrings()      const { return ustrings_; }
+    bool                    doConversion()  const { return doConversion_; }
+    bool                    doScaling()     const { return doScaling_; }
+    size_t                  stride()        const { return stride_; }
+    size_t                  capacity()      const { return capacity_; }
+    unsigned                nextIndex()     const { return nextIndex_; }
+    void                    rewind()        { nextIndex_= 0; }
 
     int64_t         getNextInt64();
     int64_t         getNextInt64(double scale, double offset);
@@ -203,7 +203,7 @@ public:
     void            setNextDouble(double value);
     void            setNextString(const ustring& value);
 
-    void            checkCompatible(std::shared_ptr<SourceDestBufferImpl> newBuf);
+    void            checkCompatible(std::shared_ptr<SourceDestBufferImpl> newBuf) const;
 
 #ifdef E57_DEBUG
     void            dump(int indent = 0, std::ostream& os = std::cout);
@@ -219,7 +219,7 @@ protected:
     friend class BitpackIntegerDecoder<uint32_t>;
     friend class BitpackIntegerDecoder<uint64_t>;
 
-    void                    checkState_();  /// Common routine to check that constructor arguments were ok, throws if not
+    void                    checkState_() const;  /// Common routine to check that constructor arguments were ok, throws if not
 
     //??? verify alignment
     std::weak_ptr<ImageFileImpl> destImageFile_;
@@ -587,7 +587,7 @@ struct DataPacketHeader {  ///??? where put this
     void        swab(){}
 #endif
 #ifdef E57_DEBUG
-    void        dump(int indent = 0, std::ostream& os = std::cout);
+    void        dump(int indent = 0, std::ostream& os = std::cout) const;
 #endif
 };
 
@@ -611,7 +611,7 @@ struct DataPacket {  /// Note this is full sized packet, not just header
     void        swab(bool /*toLittleEndian*/){}
 #endif
 #ifdef E57_DEBUG
-    void        dump(int indent = 0, std::ostream& os = std::cout);
+    void        dump(int indent = 0, std::ostream& os = std::cout) const;
 #endif
 };
 
@@ -630,7 +630,7 @@ struct EmptyPacketHeader {
     void        swab(){}
 #endif
 #ifdef E57_DEBUG
-    void        dump(int indent = 0, std::ostream& os = std::cout);
+    void        dump(int indent = 0, std::ostream& os = std::cout) const;
 #endif
 };
 
@@ -772,7 +772,7 @@ public:
     void                 markDiscarable(uint64_t packetLogicalOffset);
 
 #ifdef E57_DEBUG
-    void                dump(int indent = 0, std::ostream& os = std::cout);
+      void                dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 protected:
     /// Only PacketLock can unlock the cache
@@ -818,7 +818,7 @@ struct IndexPacket {  /// Note this is whole packet, not just header
     void        swab(bool /*toLittleEndian*/) {}
 #endif
 #ifdef E57_DEBUG
-    void        dump(int indent = 0, std::ostream& os = std::cout);
+    void        dump(int indent = 0, std::ostream& os = std::cout) const;
 #endif
 };
 

@@ -4797,7 +4797,7 @@ CompressedVectorReaderImpl::CompressedVectorReaderImpl(shared_ptr<CompressedVect
     shared_ptr<ImageFileImpl> imf(cVector_->destImageFile_);
 
     //??? what if fault in this constructor?
-    cache_ = new PacketReadCache(imf->file_, 4/*???*/);
+    cache_ = new PacketReadCache(imf->file_, 32);
 
     /// Read CompressedVector section header
     CompressedVectorSectionHeader sectionHeader;

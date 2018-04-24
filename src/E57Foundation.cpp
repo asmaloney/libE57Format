@@ -4501,8 +4501,6 @@ Special device file name support are implementation dependent (e.g. "\\.\Physica
 It is recommended that files that meet all of the requirements for a legal ASTM E57 file format use the extension @c ".e57".
 It is recommended that files that utilize the low-level E57 element data types, but do not have all the required element names required by ASTM E57 file format standard use the file extension @c "._e57".
 @param   [in] mode Either "w" for writing or "r" for reading.
-@param   [in] configuration A string that modifies the configuration of the E57 API implementation at run-time.
-Currently, in the reference implementation, this parameter is ignored.
 @details
 
 @par Write Mode
@@ -4536,11 +4534,11 @@ There is no API support for appending data onto an existing E57 data file.
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     HelloWorld.cpp example, IntegerNode, ScaledIntegerNode, FloatNode, StringNode, BlobNode, StructureNode, VectorNode, CompressedVectorNode, E57Exception, E57Utilities::E57Utilities
 */
-ImageFile::ImageFile(const ustring& fname, const ustring& mode, const ustring& configuration)
+ImageFile::ImageFile(const ustring& fname, const ustring& mode)
 : impl_(new ImageFileImpl())
 {
     /// Do second phase of construction, now that ImageFile object is complete.
-    impl_->construct2(fname, mode, configuration);
+    impl_->construct2(fname, mode);
 }
 
 /*!

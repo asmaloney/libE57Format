@@ -456,7 +456,7 @@ struct E57FileHeader {
 class ImageFileImpl : public std::enable_shared_from_this<ImageFileImpl> {
 public:
                     ImageFileImpl();
-    void            construct2(const ustring& fileName, const ustring& mode, const ustring& configuration);
+    void            construct2(const ustring& fileName, const ustring& mode);
     std::shared_ptr<StructureNodeImpl> root();
     void            close();
     void            cancel();

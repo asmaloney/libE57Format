@@ -2835,7 +2835,7 @@ ImageFileImpl::ImageFileImpl()
     /// See ImageFileImpl::construct2() for second phase.
 }
 
-void ImageFileImpl::construct2(const ustring& fileName, const ustring& mode, const ustring& /*configuration*/)
+void ImageFileImpl::construct2(const ustring& fileName, const ustring& mode)
 {
     /// Second phase of construction, now we have a well-formed ImageFile object.
 

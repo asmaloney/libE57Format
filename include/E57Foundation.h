@@ -604,7 +604,7 @@ protected:
 
 class ImageFile {
 public:
-                    ImageFile(const ustring& fname, const ustring& mode, const ustring& configuration = "");
+                    ImageFile(const ustring& fname, const ustring& mode);
     StructureNode   root() const;
     void            close();
     void            cancel();

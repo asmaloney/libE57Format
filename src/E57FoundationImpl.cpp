@@ -2822,10 +2822,11 @@ void BlobNodeImpl::dump(int indent, ostream& os)
 //=============================================================================
 //=============================================================================
 
-ImageFileImpl::ImageFileImpl()
+ImageFileImpl::ImageFileImpl( ReadChecksumPolicy policy )
 : isWriter_( false ),
   writerCount_(0),
   readerCount_(0),
+  checksumPolicy( std::max( 0, std::min( policy, 100 ) ) ),
   file_(nullptr),
   xmlLogicalOffset_( 0 ),
   xmlLogicalLength_( 0 ),
@@ -2861,7 +2862,7 @@ void ImageFileImpl::construct2(const ustring& fileName, const ustring& mode)
     if (!isWriter_) {
         try { //??? should one try block cover whole function?
             /// Open file for reading.
-            file_ = new CheckedFile(fileName_, CheckedFile::ReadOnly);
+            file_ = new CheckedFile( fileName_, CheckedFile::ReadOnly, checksumPolicy );
 
             shared_ptr<StructureNodeImpl> root(new StructureNodeImpl(imf));
             root_ = root;
@@ -2939,7 +2940,7 @@ void ImageFileImpl::construct2(const ustring& fileName, const ustring& mode)
     } else { /// open for writing (start empty)
         try {
             /// Open file for writing, truncate if already exists.
-            file_ = new CheckedFile(fileName_, CheckedFile::WriteCreate);
+            file_ = new CheckedFile( fileName_, CheckedFile::WriteCreate, checksumPolicy );
 
             shared_ptr<StructureNodeImpl> root(new StructureNodeImpl(imf));
             root_ = root;

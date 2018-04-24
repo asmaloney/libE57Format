@@ -52,7 +52,7 @@ namespace e57 {
          static const uint64_t physicalPageSizeMask;
          static const size_t   logicalPageSize;
 
-         CheckedFile(e57::ustring fileName, Mode mode);
+         CheckedFile( e57::ustring fileName, Mode mode, ReadChecksumPolicy policy );
          ~CheckedFile();
 
          void            read(char* buf, size_t nRead, size_t bufSize = 0);
@@ -82,10 +82,13 @@ namespace e57 {
          CheckedFile&    writeFloatingPoint(FTYPE value, int precision);
 
          e57::ustring    fileName_;
-         int             fd_;
-         bool            readOnly_;
          uint64_t        logicalLength_;
          uint64_t        physicalLength_;
+
+         ReadChecksumPolicy checkSumPolicy_;
+
+         int             fd_;
+         bool            readOnly_;
 
          void        getCurrentPageAndOffset(uint64_t& page, size_t& pageOffset, OffsetMode omode = Logical);
          void        readPhysicalPage(char* page_buffer, uint64_t page);

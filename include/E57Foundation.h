@@ -89,6 +89,15 @@ enum MemoryRepresentation {
     E57_USTRING  = 11  //!< Unicode UTF-8 std::string
 };
 
+//! @brief Specifies the percentage of checksums which are verified when reading an ImageFile (0-100%).
+typedef int ReadChecksumPolicy;
+
+const ReadChecksumPolicy CHECKSUM_POLICY_NONE = 0;    //! Do not verify the checksums. (fast)
+const ReadChecksumPolicy CHECKSUM_POLICY_SPARSE = 25; //! Only verify 25% of the checksums. The last block is always verified.
+const ReadChecksumPolicy CHECKSUM_POLICY_HALF = 50;   //! Only verify 50% of the checksums. The last block is always verified.
+const ReadChecksumPolicy CHECKSUM_POLICY_ALL = 100;   //! Verify all checksums. This is the default. (slow)
+
+
 //! @brief The major version number of the Foundation API
 const int E57_FOUNDATION_API_MAJOR = 0;
 
@@ -604,7 +613,7 @@ protected:
 
 class ImageFile {
 public:
-                    ImageFile(const ustring& fname, const ustring& mode);
+                    ImageFile(const ustring& fname, const ustring& mode, ReadChecksumPolicy checksumPolicy = CHECKSUM_POLICY_ALL );
     StructureNode   root() const;
     void            close();
     void            cancel();

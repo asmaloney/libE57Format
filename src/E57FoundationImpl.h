@@ -455,7 +455,7 @@ struct E57FileHeader {
 
 class ImageFileImpl : public std::enable_shared_from_this<ImageFileImpl> {
 public:
-                    ImageFileImpl();
+                    ImageFileImpl( ReadChecksumPolicy policy );
     void            construct2(const ustring& fileName, const ustring& mode);
     std::shared_ptr<StructureNodeImpl> root();
     void            close();
@@ -519,6 +519,8 @@ protected:
     bool            isWriter_;
     int             writerCount_;
     int             readerCount_;
+
+    ReadChecksumPolicy   checksumPolicy;
 
     CheckedFile*    file_;
 

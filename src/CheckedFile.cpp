@@ -51,6 +51,7 @@
 
 #include <cstring>
 #include <fcntl.h>
+#include <cmath>
 #include <unistd.h>
 
 #include "CRC.h"
@@ -79,11 +80,11 @@ const size_t   CheckedFile::physicalPageSize = 1 << physicalPageSizeLog2;
 const uint64_t CheckedFile::physicalPageSizeMask = physicalPageSize-1;
 const size_t   CheckedFile::logicalPageSize = physicalPageSize - 4;
 
-CheckedFile::CheckedFile(ustring fileName, Mode mode)
-   : fileName_(fileName),
-     fd_(-1),
-     physicalLength_( 0 )
-
+CheckedFile::CheckedFile( ustring fileName, Mode mode, ReadChecksumPolicy policy ) :
+   fileName_(fileName),
+   physicalLength_( 0 ),
+   checkSumPolicy_( policy ),
+   fd_(-1)
 {
    switch (mode)
    {
@@ -168,18 +169,37 @@ void CheckedFile::read(char* buf, size_t nRead, size_t /*bufSize*/)
 
    uint64_t page = 0;
    size_t   pageOffset = 0;
+
    getCurrentPageAndOffset(page, pageOffset);
 
    size_t n = min( nRead, logicalPageSize - pageOffset );
 
    /// Allocate temp page buffer
-   vector<char> page_buffer_v(physicalPageSize);
+   vector<char> page_buffer_v( physicalPageSize );
    char* page_buffer = &page_buffer_v[0];
 
-   while (nRead > 0)
+   const unsigned int   checksumMod = static_cast<unsigned int>( std::nearbyint( 100.0 / checkSumPolicy_ ) );
+
+   while ( nRead > 0 )
    {
       readPhysicalPage( page_buffer, page );
-      verifyChecksum( page_buffer, page );
+
+      switch ( checkSumPolicy_ )
+      {
+         case CHECKSUM_POLICY_NONE:
+            break;
+
+         case CHECKSUM_POLICY_ALL:
+            verifyChecksum( page_buffer, page );
+            break;
+
+         default:
+            if ( !(page % checksumMod) || (nRead < physicalPageSize) )
+            {
+               verifyChecksum( page_buffer, page );
+            }
+            break;
+      }
 
       memcpy( buf, page_buffer+pageOffset, n );
 

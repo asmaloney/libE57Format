@@ -769,7 +769,6 @@ public:
                         ~PacketReadCache();
 
     std::unique_ptr<PacketLock> lock(uint64_t packetLogicalOffset, char* &pkt);  //??? pkt could be const
-    void                 markDiscarable(uint64_t packetLogicalOffset);
 
 #ifdef E57_DEBUG
       void                dump(int indent = 0, std::ostream& os = std::cout);

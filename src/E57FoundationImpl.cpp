@@ -5360,19 +5360,6 @@ unique_ptr<PacketLock> PacketReadCache::lock(uint64_t packetLogicalOffset, char*
     return plock;
 }
 
-void PacketReadCache::markDiscarable(uint64_t packetLogicalOffset)
-{
-    /// The packet is probably not going to be used again, so mark it as really old.
-
-    /// Linear scan for matching packet offset in cache
-    for (unsigned i = 0; i < entries_.size(); i++) {
-        if (packetLogicalOffset == entries_[i].logicalOffset_) {
-            entries_[i].lastUsed_ = 0;
-            return;
-        }
-    }
-}
-
 void PacketReadCache::unlock(unsigned lockedEntry)
 {
 //??? why lockedEntry not used?

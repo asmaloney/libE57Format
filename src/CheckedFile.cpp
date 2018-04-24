@@ -52,7 +52,6 @@
 #include <cstring>
 #include <fcntl.h>
 #include <cmath>
-#include <unistd.h>
 
 #include "CRC.h"
 

@@ -57,6 +57,11 @@
 
 #include "CheckedFile.h"
 
+//#define E57_CHECK_FILE_DEBUG
+#ifdef E57_CHECK_FILE_DEBUG
+#include <cassert>
+#endif
+
 #ifndef O_BINARY
 #define O_BINARY (0)
 #endif
@@ -173,14 +178,17 @@ void CheckedFile::read(char* buf, size_t nRead, size_t /*bufSize*/)
 
    while (nRead > 0)
    {
-      readPhysicalPage(page_buffer, page);
-      memcpy(buf, page_buffer+pageOffset, n);
+      readPhysicalPage( page_buffer, page );
+      verifyChecksum( page_buffer, page );
+
+      memcpy( buf, page_buffer+pageOffset, n );
 
       buf += n;
       nRead -= n;
       pageOffset = 0;
       page++;
-      n = min(nRead, logicalPageSize);
+
+      n = min( nRead, logicalPageSize );
    }
 
    /// When done, leave cursor just past end of last byte read
@@ -207,8 +215,14 @@ void CheckedFile::write(const char* buf, size_t nWrite)
    vector<char> page_buffer_v(physicalPageSize);
    char* page_buffer = &page_buffer_v[0];
 
-   while (nWrite > 0) {
-      readPhysicalPage(page_buffer, page);
+   while (nWrite > 0)
+   {
+      const uint64_t physicalLength = length( Physical );
+
+      if ( page*physicalPageSize < physicalLength )
+      {
+         readPhysicalPage( page_buffer, page );
+      }
 
 #ifdef E57_MAX_VERBOSE
       // cout << "  page_buffer[0] read: '" << page_buffer[0] << "'" << endl;
@@ -450,8 +464,14 @@ void CheckedFile::extend(uint64_t newLength, OffsetMode omode)
    vector<char> page_buffer_v(physicalPageSize);
    char* page_buffer = &page_buffer_v[0];
 
-   while (nWrite > 0) {
-      readPhysicalPage(page_buffer, page);
+   while (nWrite > 0)
+   {
+      const uint64_t physicalLength = length( Physical );
+
+      if ( page*physicalPageSize < physicalLength )
+      {
+         readPhysicalPage( page_buffer, page );
+      }
 
 #ifdef E57_MAX_VERBOSE
       // cout << "extend " << n << "bytes on page=" << page << " pageOffset=" << pageOffset << endl; //???
@@ -575,31 +595,25 @@ void CheckedFile::readPhysicalPage(char* page_buffer, uint64_t page)
    // cout << "readPhysicalPage, page:" << page << endl;
 #endif
 
+#ifdef E57_CHECK_FILE_DEBUG
    const uint64_t physicalLength = length( Physical );
 
-   if (page*physicalPageSize >= physicalLength)
-   {
-      /// If beyond end of file, just return blank buffer  ???sure isn't partially beyond end?
-      memset(page_buffer, 0, physicalPageSize);
-   }
-   else
-   {
-      /// Seek to start of physical page
-      seek(page*physicalPageSize, Physical);
+   assert( page*physicalPageSize < physicalLength );
+#endif
+
+   /// Seek to start of physical page
+   seek( page*physicalPageSize, Physical );
 
 #if defined(_MSC_VER)
-      int result = ::_read(fd_, page_buffer, physicalPageSize);
+   int result = ::_read( fd_, page_buffer, physicalPageSize );
 #elif defined(__GNUC__)
-      ssize_t result = ::read(fd_, page_buffer, physicalPageSize);
+   ssize_t result = ::read( fd_, page_buffer, physicalPageSize );
 #else
 #  error "no supported compiler defined"
 #endif
-      if (result < 0 || static_cast<size_t>(result) != physicalPageSize)
-      {
-         throw E57_EXCEPTION2(E57_ERROR_READ_FAILED, "fileName=" + fileName_ + " result=" + toString(result));
-      }
-
-      verifyChecksum( page_buffer, page );
+   if ( result < 0 || static_cast<size_t>(result) != physicalPageSize )
+   {
+      throw E57_EXCEPTION2(E57_ERROR_READ_FAILED, "fileName=" + fileName_ + " result=" + toString(result));
    }
 }
 

@@ -32,7 +32,7 @@
 //! @file  E57Foundation.h header file for the E57 Foundation API
 
 #include <cstdint>
-#include <float.h>
+#include <cfloat>
 #include <iostream>
 #include <memory>
 #include <string>

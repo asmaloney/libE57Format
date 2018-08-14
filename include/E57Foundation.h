@@ -721,7 +721,7 @@ public:
     virtual void        report(const char* reportingFileName=nullptr, int reportingLineNumber=0, const char* reportingFunctionName=nullptr, std::ostream& os = std::cout) const;
     virtual ErrorCode   errorCode() const;
     virtual ustring     context() const;
-    virtual const char* what() const noexcept;
+    const char* what() const noexcept override;
 
     // For debugging purposes:
     virtual const char* sourceFileName() const;
@@ -732,7 +732,7 @@ public:
     E57Exception() = delete;
     E57Exception(ErrorCode ecode, const ustring context,
                  const char* srcFileName = nullptr, int srcLineNumber = 0, const char* srcFunctionName = nullptr);
-    ~E57Exception() noexcept {}
+    ~E57Exception() noexcept override = default;
 
 protected:
     ErrorCode   errorCode_;

@@ -917,7 +917,7 @@ void VectorNodeImpl::dump(int indent, ostream& os)
 //=====================================================================================
 SourceDestBufferImpl::SourceDestBufferImpl(weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, int8_t* base, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
 : destImageFile_(destImageFile), pathName_(pathName), memoryRepresentation_(E57_INT8), base_(reinterpret_cast<char*>(base)),
-  capacity_(capacity), doConversion_(doConversion), doScaling_(doScaling), stride_(stride), nextIndex_(0), ustrings_(0)
+  capacity_(capacity), doConversion_(doConversion), doScaling_(doScaling), stride_(stride), nextIndex_(0), ustrings_(nullptr)
 {
     /// don't checkImageFileOpen, checkState_ will do it
     checkState_();
@@ -925,7 +925,7 @@ SourceDestBufferImpl::SourceDestBufferImpl(weak_ptr<ImageFileImpl> destImageFile
 
 SourceDestBufferImpl::SourceDestBufferImpl(weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, uint8_t* base, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
 : destImageFile_(destImageFile), pathName_(pathName), memoryRepresentation_(E57_UINT8), base_(reinterpret_cast<char*>(base)),
-  capacity_(capacity), doConversion_(doConversion), doScaling_(doScaling), stride_(stride), nextIndex_(0), ustrings_(0)
+  capacity_(capacity), doConversion_(doConversion), doScaling_(doScaling), stride_(stride), nextIndex_(0), ustrings_(nullptr)
 {
     /// don't checkImageFileOpen, checkState_ will do it
     checkState_();
@@ -933,7 +933,7 @@ SourceDestBufferImpl::SourceDestBufferImpl(weak_ptr<ImageFileImpl> destImageFile
 
 SourceDestBufferImpl::SourceDestBufferImpl(weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, int16_t* base, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
 : destImageFile_(destImageFile), pathName_(pathName), memoryRepresentation_(E57_INT16), base_(reinterpret_cast<char*>(base)),
-  capacity_(capacity), doConversion_(doConversion), doScaling_(doScaling), stride_(stride), nextIndex_(0), ustrings_(0)
+  capacity_(capacity), doConversion_(doConversion), doScaling_(doScaling), stride_(stride), nextIndex_(0), ustrings_(nullptr)
 {
     /// don't checkImageFileOpen, checkState_ will do it
     checkState_();
@@ -941,7 +941,7 @@ SourceDestBufferImpl::SourceDestBufferImpl(weak_ptr<ImageFileImpl> destImageFile
 
 SourceDestBufferImpl::SourceDestBufferImpl(weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, uint16_t* base, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
 : destImageFile_(destImageFile), pathName_(pathName), memoryRepresentation_(E57_UINT16), base_(reinterpret_cast<char*>(base)),
-  capacity_(capacity), doConversion_(doConversion), doScaling_(doScaling), stride_(stride), nextIndex_(0), ustrings_(0)
+  capacity_(capacity), doConversion_(doConversion), doScaling_(doScaling), stride_(stride), nextIndex_(0), ustrings_(nullptr)
 {
     /// don't checkImageFileOpen, checkState_ will do it
     checkState_();
@@ -949,7 +949,7 @@ SourceDestBufferImpl::SourceDestBufferImpl(weak_ptr<ImageFileImpl> destImageFile
 
 SourceDestBufferImpl::SourceDestBufferImpl(weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, int32_t* base, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
 : destImageFile_(destImageFile), pathName_(pathName), memoryRepresentation_(E57_INT32), base_(reinterpret_cast<char*>(base)),
-  capacity_(capacity), doConversion_(doConversion), doScaling_(doScaling), stride_(stride), nextIndex_(0), ustrings_(0)
+  capacity_(capacity), doConversion_(doConversion), doScaling_(doScaling), stride_(stride), nextIndex_(0), ustrings_(nullptr)
 {
     /// don't checkImageFileOpen, checkState_ will do it
     checkState_();
@@ -957,7 +957,7 @@ SourceDestBufferImpl::SourceDestBufferImpl(weak_ptr<ImageFileImpl> destImageFile
 
 SourceDestBufferImpl::SourceDestBufferImpl(weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, uint32_t* base, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
 : destImageFile_(destImageFile), pathName_(pathName), memoryRepresentation_(E57_UINT32), base_(reinterpret_cast<char*>(base)),
-  capacity_(capacity), doConversion_(doConversion), doScaling_(doScaling), stride_(stride), nextIndex_(0), ustrings_(0)
+  capacity_(capacity), doConversion_(doConversion), doScaling_(doScaling), stride_(stride), nextIndex_(0), ustrings_(nullptr)
 {
     /// don't checkImageFileOpen, checkState_ will do it
     checkState_();
@@ -965,7 +965,7 @@ SourceDestBufferImpl::SourceDestBufferImpl(weak_ptr<ImageFileImpl> destImageFile
 
 SourceDestBufferImpl::SourceDestBufferImpl(weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, int64_t* base, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
 : destImageFile_(destImageFile), pathName_(pathName), memoryRepresentation_(E57_INT64), base_(reinterpret_cast<char*>(base)),
-  capacity_(capacity), doConversion_(doConversion), doScaling_(doScaling), stride_(stride), nextIndex_(0), ustrings_(0)
+  capacity_(capacity), doConversion_(doConversion), doScaling_(doScaling), stride_(stride), nextIndex_(0), ustrings_(nullptr)
 {
     /// don't checkImageFileOpen, checkState_ will do it
     checkState_();
@@ -973,7 +973,7 @@ SourceDestBufferImpl::SourceDestBufferImpl(weak_ptr<ImageFileImpl> destImageFile
 
 SourceDestBufferImpl::SourceDestBufferImpl(weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, bool* base, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
 : destImageFile_(destImageFile), pathName_(pathName), memoryRepresentation_(E57_BOOL), base_(reinterpret_cast<char*>(base)),
-  capacity_(capacity), doConversion_(doConversion), doScaling_(doScaling), stride_(stride), nextIndex_(0), ustrings_(0)
+  capacity_(capacity), doConversion_(doConversion), doScaling_(doScaling), stride_(stride), nextIndex_(0), ustrings_(nullptr)
 {
     /// don't checkImageFileOpen, checkState_ will do it
     checkState_();
@@ -981,7 +981,7 @@ SourceDestBufferImpl::SourceDestBufferImpl(weak_ptr<ImageFileImpl> destImageFile
 
 SourceDestBufferImpl::SourceDestBufferImpl(weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, float* base, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
 : destImageFile_(destImageFile), pathName_(pathName), memoryRepresentation_(E57_REAL32), base_(reinterpret_cast<char*>(base)),
-  capacity_(capacity), doConversion_(doConversion), doScaling_(doScaling), stride_(stride), nextIndex_(0), ustrings_(0)
+  capacity_(capacity), doConversion_(doConversion), doScaling_(doScaling), stride_(stride), nextIndex_(0), ustrings_(nullptr)
 {
     /// don't checkImageFileOpen, checkState_ will do it
     checkState_();
@@ -989,20 +989,20 @@ SourceDestBufferImpl::SourceDestBufferImpl(weak_ptr<ImageFileImpl> destImageFile
 
 SourceDestBufferImpl::SourceDestBufferImpl(weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, double* base, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
 : destImageFile_(destImageFile), pathName_(pathName), memoryRepresentation_(E57_REAL64), base_(reinterpret_cast<char*>(base)),
-  capacity_(capacity), doConversion_(doConversion), doScaling_(doScaling), stride_(stride), nextIndex_(0), ustrings_(0)
+  capacity_(capacity), doConversion_(doConversion), doScaling_(doScaling), stride_(stride), nextIndex_(0), ustrings_(nullptr)
 {
     /// don't checkImageFileOpen, checkState_ will do it
     checkState_();
 }
 
 SourceDestBufferImpl::SourceDestBufferImpl(weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, vector<ustring>* b)
-: destImageFile_(destImageFile), pathName_(pathName), memoryRepresentation_(E57_USTRING), base_(0),
+: destImageFile_(destImageFile), pathName_(pathName), memoryRepresentation_(E57_USTRING), base_(nullptr),
   capacity_(0/*updated below*/), doConversion_(false), doScaling_(false), stride_(0), nextIndex_(0), ustrings_(b)
 {
     /// don't checkImageFileOpen, checkState_ will do it
 
     /// Set capacity_ after testing that b is OK
-    if (b == NULL)
+    if (b == nullptr)
         throw E57_EXCEPTION2(E57_ERROR_BAD_BUFFER, "sdbuf.pathName=" + pathName);
     capacity_ = b->size();
 
@@ -1032,7 +1032,7 @@ void SourceDestBufferImpl::checkState_() const
         //??? check base alignment, depending on CPU type
         //??? check if stride too small, positive or negative
     } else {
-        if (ustrings_ == NULL)
+        if (ustrings_ == nullptr)
             throw E57_EXCEPTION2(E57_ERROR_BAD_BUFFER, "pathName=" + pathName_);
     }
 }
@@ -4920,7 +4920,7 @@ unsigned CompressedVectorReaderImpl::read()
     /// Allow decoders to use data they already have in their queue to fill newly empty dbufs
     /// This helps to keep decoder input queues smaller, which reduces backtracking in the packet cache.
     for (unsigned i = 0; i < channels_.size(); i++)
-        channels_[i].decoder->inputProcess(NULL, 0);
+        channels_[i].decoder->inputProcess(nullptr, 0);
 
     /// Loop until every dbuf is full or we have reached end of the binary section.
     while (1) {
@@ -5287,7 +5287,7 @@ PacketReadCache::~PacketReadCache()
     /// Free allocated packet buffers
     for (unsigned i=0; i < entries_.size(); i++) {
         delete [] entries_.at(i).buffer_;
-        entries_.at(i).buffer_ = NULL;
+        entries_.at(i).buffer_ = nullptr;
     }
 }
 

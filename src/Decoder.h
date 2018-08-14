@@ -39,7 +39,7 @@ namespace e57 {
                                                          std::vector<SourceDestBuffer>& dbufs,
                                                          const ustring& codecPath);
          Decoder() = delete;
-         virtual ~Decoder() {}
+         virtual ~Decoder() = default;
 
          virtual void        destBufferSetNew(std::vector<SourceDestBuffer>& dbufs) = 0;
          virtual uint64_t    totalRecordsCompleted() = 0;

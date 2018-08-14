@@ -96,7 +96,7 @@ namespace e57 {
    {
       public :
          E57FileInputSource(CheckedFile* cf, uint64_t logicalStart, uint64_t logicalLength);
-         ~E57FileInputSource() override {}
+         ~E57FileInputSource() override = default;
          BinInputStream* makeStream() const override;
 
       private :

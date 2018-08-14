@@ -39,7 +39,7 @@ namespace e57 {
                                                          std::vector<SourceDestBuffer>& sbuf,
                                                          ustring& codecPath);
 
-         virtual             ~Encoder(){}
+         virtual             ~Encoder() = default;
 
          virtual uint64_t    processRecords(size_t recordCount) = 0;
          virtual unsigned    sourceBufferNextIndex() = 0;

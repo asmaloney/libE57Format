@@ -54,7 +54,7 @@ using std::uint64_t;
 
 // Shorthand for unicode string
 //! @brief UTF-8 encodeded Unicode string
-typedef std::string ustring;
+using ustring = std::string;
 
 //! @brief Identifiers for types of E57 elements
 enum NodeType {
@@ -90,7 +90,7 @@ enum MemoryRepresentation {
 };
 
 //! @brief Specifies the percentage of checksums which are verified when reading an ImageFile (0-100%).
-typedef int ReadChecksumPolicy;
+using ReadChecksumPolicy = int;
 
 const ReadChecksumPolicy CHECKSUM_POLICY_NONE = 0;    //! Do not verify the checksums. (fast)
 const ReadChecksumPolicy CHECKSUM_POLICY_SPARSE = 25; //! Only verify 25% of the checksums. The last block is always verified.

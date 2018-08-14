@@ -180,6 +180,8 @@ class VectorNodeImpl;
 
 class Node {
 public:
+    Node() = delete;
+
     NodeType    type() const;
     bool        isRoot() const;
     Node        parent() const;
@@ -196,8 +198,7 @@ public:
 #ifdef E57_INTERNAL_IMPLEMENTATION_ENABLE
     explicit    Node(std::shared_ptr<NodeImpl>);  // internal use only
 #endif
-private:
-                Node() = delete;
+
 protected:
     friend class NodeImpl;
 
@@ -207,7 +208,8 @@ protected:
 
 class StructureNode {
 public:
-                StructureNode(ImageFile destImageFile);
+    StructureNode() = delete;
+    StructureNode(ImageFile destImageFile);
 
     int64_t     childCount() const;
     bool        isDefined(const ustring& pathName) const;
@@ -232,8 +234,6 @@ public:
     void        checkInvariant(bool doRecurse = true, bool doUpcast=true);
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
-private:
-                StructureNode() = delete;
 protected:
     friend class ImageFile;
 
@@ -247,6 +247,7 @@ protected:
 
 class VectorNode {
 public:
+    VectorNode() = delete;
     explicit    VectorNode(ImageFile destImageFile, bool allowHeteroChildren = false);
 
     bool        allowHeteroChildren() const;
@@ -274,8 +275,6 @@ public:
     void        checkInvariant(bool doRecurse = true, bool doUpcast=true);
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
-private:
-                VectorNode() = delete;
 protected:
     friend class CompressedVectorNode;
 
@@ -287,6 +286,7 @@ protected:
 
 class SourceDestBuffer {
 public:
+    SourceDestBuffer() = delete;
     SourceDestBuffer(ImageFile destImageFile, const ustring pathName, int8_t* b,   const size_t capacity,
                      bool doConversion = false, bool doScaling = false, size_t stride = sizeof(int8_t));
     SourceDestBuffer(ImageFile destImageFile, const ustring pathName, uint8_t* b,  const size_t capacity,
@@ -321,9 +321,6 @@ public:
     void            checkInvariant(bool doRecurse = true);
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
-private:
-                    SourceDestBuffer() = delete;
-
 protected:
 
     E57_OBJECT_IMPLEMENTATION(SourceDestBuffer)  // Internal implementation details, not part of API, must be last in object
@@ -332,6 +329,8 @@ protected:
 
 class CompressedVectorReader {
 public:
+    CompressedVectorReader() = delete;
+
     unsigned    read();
     unsigned    read(std::vector<SourceDestBuffer>& dbufs);
     void        seek(int64_t recordNumber); // !!! not implemented yet
@@ -343,8 +342,6 @@ public:
     void        checkInvariant(bool doRecurse = true);
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
-private:
-                CompressedVectorReader() = delete;
 protected:
     friend class CompressedVectorNode;
 
@@ -356,6 +353,8 @@ protected:
 
 class CompressedVectorWriter {
 public:
+    CompressedVectorWriter() = delete;
+
     void        write(const size_t requestedRecordCount);
     void        write(std::vector<SourceDestBuffer>& sbufs, const size_t requestedRecordCount);
     void        close();
@@ -366,8 +365,6 @@ public:
     void        checkInvariant(bool doRecurse = true);
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
-private:
-                CompressedVectorWriter() = delete;
 protected:
     friend class CompressedVectorNode;
 
@@ -379,7 +376,8 @@ protected:
 
 class CompressedVectorNode {
 public:
-    explicit    CompressedVectorNode(ImageFile destImageFile, Node prototype, VectorNode codecs);
+    CompressedVectorNode() = delete;
+    explicit CompressedVectorNode(ImageFile destImageFile, Node prototype, VectorNode codecs);
 
     int64_t     childCount() const;
     Node        prototype() const;
@@ -406,8 +404,6 @@ public:
     void        checkInvariant(bool doRecurse = true, bool doUpcast=true);
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
-private:
-                CompressedVectorNode() = delete;
 protected:
     friend class CompressedVectorReader;
     friend class CompressedVectorWriter;
@@ -421,7 +417,8 @@ protected:
 
 class IntegerNode {
 public:
-    explicit    IntegerNode(ImageFile destImageFile, int64_t value = 0, int64_t minimum = E57_INT64_MIN, int64_t maximum = E57_INT64_MAX);
+    IntegerNode() = delete;
+    explicit IntegerNode(ImageFile destImageFile, int64_t value = 0, int64_t minimum = E57_INT64_MIN, int64_t maximum = E57_INT64_MAX);
 
     int64_t     value() const;
     int64_t     minimum() const;
@@ -444,8 +441,6 @@ public:
     void        checkInvariant(bool doRecurse = true, bool doUpcast=true);
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
-private:
-                IntegerNode() = delete;
 protected:
 
                 IntegerNode(std::shared_ptr<IntegerNodeImpl> ni);  // internal use only
@@ -456,14 +451,15 @@ protected:
 
 class ScaledIntegerNode {
 public:
-    explicit    ScaledIntegerNode(ImageFile destImageFile, int64_t value, int64_t minimum, int64_t maximum,
-                                  double scale = 1.0, double offset = 0.0);
-    explicit    ScaledIntegerNode(ImageFile destImageFile, int value, int64_t minimum, int64_t maximum,
-                                  double scale = 1.0, double offset = 0.0);
-    explicit    ScaledIntegerNode(ImageFile destImageFile, int value, int minimum, int maximum,
-                                  double scale = 1.0, double offset = 0.0);
-    explicit    ScaledIntegerNode(ImageFile destImageFile, double scaledValue, double scaledMinimum, double scaledMaximum,
-                                  double scale = 1.0, double offset = 0.0);
+    ScaledIntegerNode() = delete;
+    explicit ScaledIntegerNode(ImageFile destImageFile, int64_t value, int64_t minimum, int64_t maximum,
+                               double scale = 1.0, double offset = 0.0);
+    explicit ScaledIntegerNode(ImageFile destImageFile, int value, int64_t minimum, int64_t maximum,
+                               double scale = 1.0, double offset = 0.0);
+    explicit ScaledIntegerNode(ImageFile destImageFile, int value, int minimum, int maximum,
+                               double scale = 1.0, double offset = 0.0);
+    explicit ScaledIntegerNode(ImageFile destImageFile, double scaledValue, double scaledMinimum, double scaledMaximum,
+                               double scale = 1.0, double offset = 0.0);
 
     int64_t     rawValue() const;
     double      scaledValue() const;
@@ -491,8 +487,6 @@ public:
     void        checkInvariant(bool doRecurse = true, bool doUpcast=true);
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
-private:
-                ScaledIntegerNode() = delete;
 protected:
 
                 ScaledIntegerNode(std::shared_ptr<ScaledIntegerNodeImpl> ni);  // internal use only
@@ -503,8 +497,9 @@ protected:
 
 class FloatNode {
 public:
-    explicit    FloatNode(ImageFile destImageFile, double value = 0.0, FloatPrecision precision = E57_DOUBLE,
-                          double minimum = E57_DOUBLE_MIN, double  maximum = E57_DOUBLE_MAX);
+    FloatNode() = delete;
+    explicit FloatNode(ImageFile destImageFile, double value = 0.0, FloatPrecision precision = E57_DOUBLE,
+                       double minimum = E57_DOUBLE_MIN, double  maximum = E57_DOUBLE_MAX);
 
     double      value() const;
     FloatPrecision precision() const;
@@ -528,8 +523,6 @@ public:
     void        checkInvariant(bool doRecurse = true, bool doUpcast=true);
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
-private:
-                FloatNode() = delete;
 protected:
 
                 FloatNode(std::shared_ptr<FloatNodeImpl> ni);  // internal use only
@@ -541,7 +534,8 @@ protected:
 class StringNodeImpl;
 class StringNode {
 public:
-    explicit    StringNode(ImageFile destImageFile, const ustring value = "");
+    StringNode() = delete;
+    explicit StringNode(ImageFile destImageFile, const ustring value = "");
 
     ustring     value() const;
 
@@ -562,8 +556,6 @@ public:
     void        checkInvariant(bool doRecurse = true, bool doUpcast=true);
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
-private:
-                StringNode() = delete;
 protected:
     friend class StringNodeImpl;
                 StringNode(std::shared_ptr<StringNodeImpl> ni);  // internal use only
@@ -574,7 +566,8 @@ protected:
 
 class BlobNode {
 public:
-    explicit    BlobNode(ImageFile destImageFile, int64_t byteCount);
+    BlobNode() = delete;
+    explicit BlobNode(ImageFile destImageFile, int64_t byteCount);
 
     int64_t     byteCount() const;
     void        read(uint8_t* buf,  int64_t start, size_t byteCount);
@@ -597,8 +590,6 @@ public:
     void        checkInvariant(bool doRecurse = true, bool doUpcast=true);
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
-private:
-                BlobNode() = delete;
 protected:
     friend class E57XmlParser;
 
@@ -613,7 +604,9 @@ protected:
 
 class ImageFile {
 public:
-                    ImageFile(const ustring& fname, const ustring& mode, ReadChecksumPolicy checksumPolicy = CHECKSUM_POLICY_ALL );
+    ImageFile() = delete;
+    ImageFile(const ustring& fname, const ustring& mode, ReadChecksumPolicy checksumPolicy = CHECKSUM_POLICY_ALL );
+
     StructureNode   root() const;
     void            close();
     void            cancel();
@@ -643,7 +636,6 @@ public:
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
 private:
-                    ImageFile() = delete;
                     ImageFile(double);           // Give a second dummy constructor, better error msg for: ImageFile(0)
 protected:
     //??? workaround?
@@ -737,12 +729,11 @@ public:
     virtual int         sourceLineNumber() const;
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
+    E57Exception() = delete;
     E57Exception(ErrorCode ecode, const ustring context,
                  const char* srcFileName = nullptr, int srcLineNumber = 0, const char* srcFunctionName = nullptr);
     ~E57Exception() noexcept {}
 
-private:
-                E57Exception() = delete;
 protected:
     ErrorCode   errorCode_;
     ustring     context_;
@@ -754,7 +745,7 @@ protected:
 
 class E57Utilities {
 public:
-                E57Utilities(const ustring& /*configuration*/ = "") {}
+    E57Utilities(const ustring& /*configuration*/ = "") {}
 
     // Get latest version of ASTM standard supported, and library id string
     void        getVersions(int& astmMajor, int& astmMinor, ustring& libraryId);

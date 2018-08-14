@@ -38,7 +38,8 @@ namespace e57 {
                                                          std::shared_ptr<CompressedVectorNodeImpl> cVector,
                                                          std::vector<SourceDestBuffer>& dbufs,
                                                          const ustring& codecPath);
-         virtual             ~Decoder() {}
+         Decoder() = delete;
+         virtual ~Decoder() {}
 
          virtual void        destBufferSetNew(std::vector<SourceDestBuffer>& dbufs) = 0;
          virtual uint64_t    totalRecordsCompleted() = 0;
@@ -48,9 +49,6 @@ namespace e57 {
 #ifdef E57_DEBUG
          virtual void        dump(int indent = 0, std::ostream& os = std::cout) = 0;
 #endif
-
-      private:
-         Decoder() = delete;
 
       protected:
          Decoder(unsigned bytestreamNumber);

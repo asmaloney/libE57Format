@@ -87,17 +87,17 @@ static const XMLCh att_recordCount[] = {
 class E57FileInputStream : public BinInputStream
 {
 public :
-                            E57FileInputStream(CheckedFile* cf, uint64_t logicalStart, uint64_t logicalLength);
-    virtual                 ~E57FileInputStream() {}
-    virtual XMLFilePos      curPos() const {return(logicalPosition_);}
-    virtual XMLSize_t       readBytes(XMLByte* const toFill, const XMLSize_t maxToRead);
-    virtual const XMLCh*    getContentType() const { return nullptr; }
+    E57FileInputStream(CheckedFile* cf, uint64_t logicalStart, uint64_t logicalLength);
+    ~E57FileInputStream() override = default;
+
+    E57FileInputStream(const E57FileInputStream&) = delete;
+    E57FileInputStream& operator=(const E57FileInputStream&) = delete;
+
+    XMLFilePos      curPos() const override {return(logicalPosition_);}
+    XMLSize_t       readBytes(XMLByte* const toFill, const XMLSize_t maxToRead) override;
+    const XMLCh*    getContentType() const override { return nullptr; }
 
 private :
-    ///  Unimplemented constructors and operators
-    E57FileInputStream(const E57FileInputStream&);
-    E57FileInputStream& operator=(const E57FileInputStream&);
-
     //??? lifetime of cf_ must be longer than this object!
     CheckedFile*    cf_;
     uint64_t        logicalStart_;
@@ -208,10 +208,6 @@ void E57XmlParser::ParseInfo::dump(int indent, ostream& os)
 
 E57XmlParser::E57XmlParser(std::shared_ptr<ImageFileImpl> imf)
 : imf_(imf)
-{
-}
-
-E57XmlParser::~E57XmlParser()
 {
 }
 

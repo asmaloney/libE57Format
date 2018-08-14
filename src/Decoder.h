@@ -60,17 +60,17 @@ namespace e57 {
    class BitpackDecoder : public Decoder
    {
       public:
-         virtual void        destBufferSetNew(std::vector<SourceDestBuffer>& dbufs);
+         void        destBufferSetNew(std::vector<SourceDestBuffer>& dbufs) override;
 
-         virtual uint64_t    totalRecordsCompleted() {return(currentRecordIndex_);}
+         uint64_t    totalRecordsCompleted() override {return(currentRecordIndex_);}
 
-         virtual size_t      inputProcess(const char* source, const size_t byteCount);
-         virtual size_t      inputProcessAligned(const char* inbuf, const size_t firstBit, const size_t endBit) = 0;
+         size_t            inputProcess(const char* source, const size_t byteCount) override;
+         virtual size_t    inputProcessAligned(const char* inbuf, const size_t firstBit, const size_t endBit) = 0;
 
-         virtual void        stateReset();
+         void        stateReset() override;
 
 #ifdef E57_DEBUG
-         virtual void        dump(int indent = 0, std::ostream& os = std::cout);
+         void     dump(int indent = 0, std::ostream& os = std::cout) override;
 #endif
       protected:
          BitpackDecoder(unsigned bytestreamNumber, SourceDestBuffer& dbuf, unsigned alignmentSize, uint64_t maxRecordCount);
@@ -96,10 +96,10 @@ namespace e57 {
       public:
          BitpackFloatDecoder(unsigned bytestreamNumber, SourceDestBuffer& dbuf, FloatPrecision precision, uint64_t maxRecordCount);
 
-         virtual size_t      inputProcessAligned(const char* inbuf, const size_t firstBit, const size_t endBit);
+         size_t      inputProcessAligned(const char* inbuf, const size_t firstBit, const size_t endBit) override;
 
 #ifdef E57_DEBUG
-         virtual void        dump(int indent = 0, std::ostream& os = std::cout);
+         void        dump(int indent = 0, std::ostream& os = std::cout) override;
 #endif
       protected:
          FloatPrecision      precision_;
@@ -111,10 +111,10 @@ namespace e57 {
       public:
          BitpackStringDecoder(unsigned bytestreamNumber, SourceDestBuffer& dbuf, uint64_t maxRecordCount);
 
-         virtual size_t      inputProcessAligned(const char* inbuf, const size_t firstBit, const size_t endBit);
+         size_t      inputProcessAligned(const char* inbuf, const size_t firstBit, const size_t endBit) override;
 
 #ifdef E57_DEBUG
-         virtual void        dump(int indent = 0, std::ostream& os = std::cout);
+         void        dump(int indent = 0, std::ostream& os = std::cout) override;
 #endif
       protected:
          bool        readingPrefix_;
@@ -134,10 +134,10 @@ namespace e57 {
          BitpackIntegerDecoder(bool isScaledInteger, unsigned bytestreamNumber, SourceDestBuffer& dbuf,
                                int64_t minimum, int64_t maximum, double scale, double offset, uint64_t maxRecordCount);
 
-         virtual size_t      inputProcessAligned(const char* inbuf, const size_t firstBit, const size_t endBit);
+         size_t      inputProcessAligned(const char* inbuf, const size_t firstBit, const size_t endBit) override;
 
 #ifdef E57_DEBUG
-         virtual void        dump(int indent = 0, std::ostream& os = std::cout);
+         void        dump(int indent = 0, std::ostream& os = std::cout) override;
 #endif
       protected:
          bool        isScaledInteger_;
@@ -155,12 +155,12 @@ namespace e57 {
       public:
          ConstantIntegerDecoder(bool isScaledInteger, unsigned bytestreamNumber, SourceDestBuffer& dbuf,
                                 int64_t minimum, double scale, double offset, uint64_t maxRecordCount);
-         virtual void        destBufferSetNew(std::vector<SourceDestBuffer>& dbufs);
-         virtual uint64_t    totalRecordsCompleted() {return(currentRecordIndex_);}
-         virtual size_t      inputProcess(const char* source, const size_t byteCount);
-         virtual void        stateReset();
+         void        destBufferSetNew(std::vector<SourceDestBuffer>& dbufs) override;
+         uint64_t    totalRecordsCompleted() override {return(currentRecordIndex_);}
+         size_t      inputProcess(const char* source, const size_t byteCount) override;
+         void        stateReset() override;
 #ifdef E57_DEBUG
-         virtual void        dump(int indent = 0, std::ostream& os = std::cout);
+         void        dump(int indent = 0, std::ostream& os = std::cout) override;
 #endif
       protected:
          uint64_t            currentRecordIndex_;

@@ -70,22 +70,22 @@ namespace e57 {
    class BitpackEncoder : public Encoder
    {
       public:
-         virtual uint64_t    processRecords(size_t recordCount) = 0;
-         virtual unsigned    sourceBufferNextIndex();
-         virtual uint64_t    currentRecordIndex();
-         virtual float       bitsPerRecord() = 0;
-         virtual bool        registerFlushToOutput() = 0;
+         uint64_t    processRecords(size_t recordCount) override = 0;
+         unsigned    sourceBufferNextIndex() override;
+         uint64_t    currentRecordIndex() override;
+         float       bitsPerRecord() override = 0;
+         bool        registerFlushToOutput() override = 0;
 
-         virtual size_t      outputAvailable();                                /// number of bytes that can be read
-         virtual void        outputRead(char* dest, const size_t byteCount);       /// get data from encoder
-         virtual void        outputClear();
+         size_t      outputAvailable() override;                                /// number of bytes that can be read
+         void        outputRead(char* dest, const size_t byteCount) override;       /// get data from encoder
+         void        outputClear() override;
 
-         virtual void        sourceBufferSetNew(std::vector<SourceDestBuffer>& sbufs);
-         virtual size_t      outputGetMaxSize();
-         virtual void        outputSetMaxSize(unsigned byteCount);
+         void        sourceBufferSetNew(std::vector<SourceDestBuffer>& sbufs) override;
+         size_t      outputGetMaxSize() override;
+         void        outputSetMaxSize(unsigned byteCount) override;
 
 #ifdef E57_DEBUG
-         virtual void        dump(int indent = 0, std::ostream& os = std::cout);
+         void        dump(int indent = 0, std::ostream& os = std::cout) override;
 #endif
       protected:
          BitpackEncoder(unsigned bytestreamNumber, SourceDestBuffer& sbuf, unsigned outputMaxSize, unsigned alignmentSize);
@@ -108,12 +108,12 @@ namespace e57 {
       public:
          BitpackFloatEncoder(unsigned bytestreamNumber, SourceDestBuffer& sbuf, unsigned outputMaxSize, FloatPrecision precision);
 
-         virtual uint64_t    processRecords(size_t recordCount);
-         virtual bool        registerFlushToOutput();
-         virtual float       bitsPerRecord();
+         uint64_t    processRecords(size_t recordCount) override;
+         bool        registerFlushToOutput() override;
+         float       bitsPerRecord() override;
 
 #ifdef E57_DEBUG
-         virtual void        dump(int indent = 0, std::ostream& os = std::cout);
+         void        dump(int indent = 0, std::ostream& os = std::cout) override;
 #endif
       protected:
          FloatPrecision      precision_;
@@ -125,12 +125,12 @@ namespace e57 {
       public:
          BitpackStringEncoder(unsigned bytestreamNumber, SourceDestBuffer& sbuf, unsigned outputMaxSize);
 
-         virtual uint64_t    processRecords(size_t recordCount);
-         virtual bool        registerFlushToOutput();
-         virtual float       bitsPerRecord();
+         uint64_t    processRecords(size_t recordCount) override;
+         bool        registerFlushToOutput() override;
+         float       bitsPerRecord() override;
 
 #ifdef E57_DEBUG
-         virtual void        dump(int indent = 0, std::ostream& os = std::cout);
+         void        dump(int indent = 0, std::ostream& os = std::cout) override;
 #endif
       protected:
          uint64_t    totalBytesProcessed_;
@@ -148,12 +148,12 @@ namespace e57 {
          BitpackIntegerEncoder(bool isScaledInteger, unsigned bytestreamNumber, SourceDestBuffer& sbuf,
                                unsigned outputMaxSize, int64_t minimum, int64_t maximum, double scale, double offset);
 
-         virtual uint64_t    processRecords(size_t recordCount);
-         virtual bool        registerFlushToOutput();
-         virtual float       bitsPerRecord();
+         uint64_t    processRecords(size_t recordCount) override;
+         bool        registerFlushToOutput() override;
+         float       bitsPerRecord() override;
 
 #ifdef E57_DEBUG
-         virtual void        dump(int indent = 0, std::ostream& os = std::cout);
+         void        dump(int indent = 0, std::ostream& os = std::cout) override;
 #endif
       protected:
          bool            isScaledInteger_;
@@ -172,22 +172,22 @@ namespace e57 {
    {
       public:
          ConstantIntegerEncoder(unsigned bytestreamNumber, SourceDestBuffer& sbuf, int64_t minimum);
-         virtual uint64_t    processRecords(size_t recordCount);
-         virtual unsigned    sourceBufferNextIndex();
-         virtual uint64_t    currentRecordIndex();
-         virtual float       bitsPerRecord();
-         virtual bool        registerFlushToOutput();
+         uint64_t    processRecords(size_t recordCount) override;
+         unsigned    sourceBufferNextIndex() override;
+         uint64_t    currentRecordIndex() override;
+         float       bitsPerRecord() override;
+         bool        registerFlushToOutput() override;
 
-         virtual size_t      outputAvailable();                                /// number of bytes that can be read
-         virtual void        outputRead(char* dest, const size_t byteCount);       /// get data from encoder
-         virtual void        outputClear();
+         size_t      outputAvailable() override;                                /// number of bytes that can be read
+         void        outputRead(char* dest, const size_t byteCount) override;       /// get data from encoder
+         void        outputClear() override;
 
-         virtual void        sourceBufferSetNew(std::vector<SourceDestBuffer>& sbufs);
-         virtual size_t      outputGetMaxSize();
-         virtual void        outputSetMaxSize(unsigned byteCount);
+         void        sourceBufferSetNew(std::vector<SourceDestBuffer>& sbufs) override;
+         size_t      outputGetMaxSize() override;
+         void        outputSetMaxSize(unsigned byteCount) override;
 
 #ifdef E57_DEBUG
-         virtual void        dump(int indent = 0, std::ostream& os = std::cout);
+         void        dump(int indent = 0, std::ostream& os = std::cout) override;
 #endif
       protected:
          std::shared_ptr<SourceDestBufferImpl>  sourceBuffer_;

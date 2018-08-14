@@ -42,22 +42,22 @@ namespace e57 {
    {
       public:
          E57XmlParser(std::shared_ptr<ImageFileImpl> imf);
-         ~E57XmlParser();
+         ~E57XmlParser() override;
 
          /// SAX interface
-         void startDocument();
-         void endDocument();
-         void startElement(const XMLCh* const uri, const XMLCh* const localname, const XMLCh* const qname, const Attributes& attributes);
+         void startDocument() override;
+         void endDocument() override;
+         void startElement(const XMLCh* const uri, const XMLCh* const localname, const XMLCh* const qname, const Attributes& attributes) override;
          void endElement( const XMLCh* const uri,
                           const XMLCh* const localname,
-                          const XMLCh* const qname);
-         void characters(const XMLCh* const chars, const XMLSize_t length);
-         void processingInstruction(const XMLCh* const target, const XMLCh* const data);
+                          const XMLCh* const qname) override;
+         void characters(const XMLCh* const chars, const XMLSize_t length) override;
+         void processingInstruction(const XMLCh* const target, const XMLCh* const data) override;
 
          /// SAX error interface
-         void warning(const SAXParseException& exc);
-         void error(const SAXParseException& exc);
-         void fatalError(const SAXParseException& exc);
+         void warning(const SAXParseException& exc) override;
+         void error(const SAXParseException& exc) override;
+         void fatalError(const SAXParseException& exc) override;
       private:
          ustring toUString(const XMLCh* const xml_str);
          ustring lookupAttribute(const Attributes& attributes, const XMLCh* attribute_name);
@@ -96,8 +96,8 @@ namespace e57 {
    {
       public :
          E57FileInputSource(CheckedFile* cf, uint64_t logicalStart, uint64_t logicalLength);
-         ~E57FileInputSource(){}
-         BinInputStream* makeStream() const;
+         ~E57FileInputSource() override {}
+         BinInputStream* makeStream() const override;
 
       private :
          ///  Unimplemented constructors and operators

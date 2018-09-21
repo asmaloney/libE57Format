@@ -93,7 +93,7 @@ namespace e57 {
       /// Allocate requested number of maximum sized data packets buffers for holding data read from file
       for (unsigned i=0; i < entries_.size(); i++) {
          entries_.at(i).logicalOffset_ = 0;
-         entries_.at(i).buffer_        = new char[E57_DATA_PACKET_MAX];
+         entries_.at(i).buffer_        = new char[DATA_PACKET_MAX];
          entries_.at(i).lastUsed_      = 0;
       }
    }
@@ -205,7 +205,7 @@ namespace e57 {
       unsigned packetLength = header.packetLogicalLengthMinus1+1;
 
       /// Be paranoid about packetLength before read
-      if (packetLength > E57_DATA_PACKET_MAX)
+      if (packetLength > DATA_PACKET_MAX)
          throw E57_EXCEPTION2(E57_ERROR_BAD_CV_PACKET, "packetLength=" + toString(packetLength));
 
       /// Now read in whole packet into preallocated buffer_.  Note buffer is
@@ -215,7 +215,7 @@ namespace e57 {
       /// Swab if necessary, then verify that packet is good.
       switch (header.packetType)
       {
-         case E57_DATA_PACKET: {
+         case DATA_PACKET: {
             DataPacket* dpkt = reinterpret_cast<DataPacket*>(entries_.at(oldestEntry).buffer_);
 #ifdef E57_BIGENDIAN
             dpkt->swab(false);
@@ -227,7 +227,7 @@ namespace e57 {
 #endif
          }
             break;
-         case E57_INDEX_PACKET: {
+         case INDEX_PACKET: {
             IndexPacket* ipkt = reinterpret_cast<IndexPacket*>(entries_.at(oldestEntry).buffer_);
 #ifdef E57_BIGENDIAN
             ipkt->swab(false);
@@ -239,7 +239,7 @@ namespace e57 {
 #endif
          }
             break;
-         case E57_EMPTY_PACKET: {
+         case EMPTY_PACKET: {
             EmptyPacketHeader* hp = reinterpret_cast<EmptyPacketHeader*>(entries_.at(oldestEntry).buffer_);
             hp->swab();
             hp->verify(packetLength);
@@ -273,17 +273,17 @@ namespace e57 {
          if (entries_[i].logicalOffset_ != 0) {
             os << space(indent+4) << "packet:" << std::endl;
             switch (reinterpret_cast<EmptyPacketHeader*>(entries_.at(i).buffer_)->packetType) {
-               case E57_DATA_PACKET: {
+               case DATA_PACKET: {
                   DataPacket* dpkt = reinterpret_cast<DataPacket*>(entries_.at(i).buffer_);
                   dpkt->dump(indent+6, os);
                }
                   break;
-               case E57_INDEX_PACKET: {
+               case INDEX_PACKET: {
                   IndexPacket* ipkt = reinterpret_cast<IndexPacket*>(entries_.at(i).buffer_);
                   ipkt->dump(indent+6, os);
                }
                   break;
-               case E57_EMPTY_PACKET: {
+               case EMPTY_PACKET: {
                   EmptyPacketHeader* hp = reinterpret_cast<EmptyPacketHeader*>(entries_.at(i).buffer_);
                   hp->dump(indent+6, os);
                }
@@ -339,7 +339,7 @@ namespace e57 {
    void DataPacketHeader::verify(unsigned bufferLength) const
    {
       /// Verify that packet is correct type
-      if (packetType != E57_DATA_PACKET)
+      if (packetType != DATA_PACKET)
          throw E57_EXCEPTION2(E57_ERROR_BAD_CV_PACKET, "packetType=" + toString(packetType));
 
       /// ??? check reserved flags zero?
@@ -455,7 +455,7 @@ namespace e57 {
 #endif
 
       /// Verify that packet is correct type
-      if (packetType != E57_DATA_PACKET)
+      if (packetType != DATA_PACKET)
          throw E57_EXCEPTION2(E57_ERROR_BAD_CV_PACKET, "packetType=" + toString(packetType));
 
       /// Check bytestreamNumber in bounds
@@ -532,7 +532,7 @@ namespace e57 {
 #ifdef E57_DEBUG
    void DataPacket::dump(int indent, std::ostream& os) const
    {
-      if (packetType != E57_DATA_PACKET)
+      if (packetType != DATA_PACKET)
          throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "packetType=" + toString(packetType));
       reinterpret_cast<const DataPacketHeader*>(this)->dump(indent, os);
 
@@ -551,7 +551,7 @@ namespace e57 {
                os << space(indent+4) << bsbLength[i]-j << " more unprinted..." << endl;
    ====*/
          p += bsbLength[i];
-         if (p - reinterpret_cast<const uint8_t*>(this) > E57_DATA_PACKET_MAX)
+         if (p - reinterpret_cast<const uint8_t*>(this) > DATA_PACKET_MAX)
             throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "size=" + toString(p - reinterpret_cast<const uint8_t*>(this)));
       }
    }
@@ -576,7 +576,7 @@ namespace e57 {
       //??? do all packets need versions?  how extend without breaking older checking?  need to check file version#?
 
       /// Verify that packet is correct type
-      if (packetType != E57_INDEX_PACKET)
+      if (packetType != INDEX_PACKET)
          throw E57_EXCEPTION2(E57_ERROR_BAD_CV_PACKET, "packetType=" + toString(packetType));
 
       /// Check packetLength is at least large enough to hold header
@@ -740,7 +740,7 @@ namespace e57 {
    void EmptyPacketHeader::verify(unsigned bufferLength) const
    {
       /// Verify that packet is correct type
-      if (packetType != E57_EMPTY_PACKET)
+      if (packetType != EMPTY_PACKET)
          throw E57_EXCEPTION2(E57_ERROR_BAD_CV_PACKET, "packetType=" + toString(packetType));
 
       /// Check packetLength is at least large enough to hold header

@@ -32,16 +32,19 @@
 #include "Common.h"
 
 
-/// Packet types (in a compressed vector section)
-#define E57_INDEX_PACKET                0
-#define E57_DATA_PACKET                 1
-#define E57_EMPTY_PACKET                2
-
-#define E57_DATA_PACKET_MAX (64*1024)  /// maximum size of CompressedVector binary data packet   ??? where put this
-
 namespace e57 {
    class CheckedFile;
    class PacketLock;
+
+   /// Packet types (in a compressed vector section)
+   enum {
+      INDEX_PACKET = 0,
+      DATA_PACKET,
+      EMPTY_PACKET,
+   };
+
+   /// maximum size of CompressedVector binary data packet
+   const int   DATA_PACKET_MAX = (64*1024);
 
    class PacketReadCache {
       public:

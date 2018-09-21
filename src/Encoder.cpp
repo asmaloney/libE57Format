@@ -74,28 +74,28 @@ shared_ptr<Encoder> Encoder::EncoderFactory(unsigned bytestreamNumber,
          else if (bitsPerRecord <= 8)
          {
             shared_ptr<Encoder> encoder(new BitpackIntegerEncoder<uint8_t>(false, bytestreamNumber, sbuf,
-                                                                           E57_DATA_PACKET_MAX/*!!!*/,
+                                                                           DATA_PACKET_MAX/*!!!*/,
                                                                            ini->minimum(), ini->maximum(), 1.0, 0.0));
             return(encoder);
          }
          else if (bitsPerRecord <= 16)
          {
             shared_ptr<Encoder> encoder(new BitpackIntegerEncoder<uint16_t>(false, bytestreamNumber, sbuf,
-                                                                            E57_DATA_PACKET_MAX/*!!!*/,
+                                                                            DATA_PACKET_MAX/*!!!*/,
                                                                             ini->minimum(), ini->maximum(), 1.0, 0.0));
             return(encoder);
          }
          else if (bitsPerRecord <= 32)
          {
             shared_ptr<Encoder> encoder(new BitpackIntegerEncoder<uint32_t>(false, bytestreamNumber, sbuf,
-                                                                            E57_DATA_PACKET_MAX/*!!!*/,
+                                                                            DATA_PACKET_MAX/*!!!*/,
                                                                             ini->minimum(), ini->maximum(), 1.0, 0.0));
             return(encoder);
          }
          else
          {
             shared_ptr<Encoder> encoder(new BitpackIntegerEncoder<uint64_t>(false, bytestreamNumber, sbuf,
-                                                                            E57_DATA_PACKET_MAX/*!!!*/,
+                                                                            DATA_PACKET_MAX/*!!!*/,
                                                                             ini->minimum(), ini->maximum(), 1.0, 0.0));
             return(encoder);
          }
@@ -120,7 +120,7 @@ shared_ptr<Encoder> Encoder::EncoderFactory(unsigned bytestreamNumber,
          else if (bitsPerRecord <= 8)
          {
             shared_ptr<Encoder> encoder(new BitpackIntegerEncoder<uint8_t>(true, bytestreamNumber, sbuf,
-                                                                           E57_DATA_PACKET_MAX/*!!!*/,
+                                                                           DATA_PACKET_MAX/*!!!*/,
                                                                            sini->minimum(), sini->maximum(),
                                                                            sini->scale(), sini->offset()));
             return(encoder);
@@ -128,7 +128,7 @@ shared_ptr<Encoder> Encoder::EncoderFactory(unsigned bytestreamNumber,
          else if (bitsPerRecord <= 16)
          {
             shared_ptr<Encoder> encoder(new BitpackIntegerEncoder<uint16_t>(true, bytestreamNumber, sbuf,
-                                                                            E57_DATA_PACKET_MAX/*!!!*/,
+                                                                            DATA_PACKET_MAX/*!!!*/,
                                                                             sini->minimum(), sini->maximum(),
                                                                             sini->scale(), sini->offset()));
             return(encoder);
@@ -136,7 +136,7 @@ shared_ptr<Encoder> Encoder::EncoderFactory(unsigned bytestreamNumber,
          else if (bitsPerRecord <= 32)
          {
             shared_ptr<Encoder> encoder(new BitpackIntegerEncoder<uint32_t>(true, bytestreamNumber, sbuf,
-                                                                            E57_DATA_PACKET_MAX/*!!!*/,
+                                                                            DATA_PACKET_MAX/*!!!*/,
                                                                             sini->minimum(), sini->maximum(),
                                                                             sini->scale(), sini->offset()));
             return(encoder);
@@ -144,7 +144,7 @@ shared_ptr<Encoder> Encoder::EncoderFactory(unsigned bytestreamNumber,
          else
         {
             shared_ptr<Encoder> encoder(new BitpackIntegerEncoder<uint64_t>(true, bytestreamNumber, sbuf,
-                                                                            E57_DATA_PACKET_MAX/*!!!*/,
+                                                                            DATA_PACKET_MAX/*!!!*/,
                                                                             sini->minimum(), sini->maximum(),
                                                                             sini->scale(), sini->offset()));
             return(encoder);
@@ -156,12 +156,12 @@ shared_ptr<Encoder> Encoder::EncoderFactory(unsigned bytestreamNumber,
             throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "elementName=" + encodeNode->elementName());
 
          //!!! need to pick smarter channel buffer sizes, here and elsewhere
-         shared_ptr<Encoder> encoder(new BitpackFloatEncoder(bytestreamNumber, sbuf, E57_DATA_PACKET_MAX/*!!!*/,
+         shared_ptr<Encoder> encoder(new BitpackFloatEncoder(bytestreamNumber, sbuf, DATA_PACKET_MAX/*!!!*/,
                                                              fni->precision()));
          return(encoder);
       }
       case E57_STRING: {
-         shared_ptr<Encoder> encoder(new BitpackStringEncoder(bytestreamNumber, sbuf, E57_DATA_PACKET_MAX/*!!!*/));
+         shared_ptr<Encoder> encoder(new BitpackStringEncoder(bytestreamNumber, sbuf, DATA_PACKET_MAX/*!!!*/));
          return(encoder);
       }
       default:

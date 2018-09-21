@@ -3258,7 +3258,7 @@ void CompressedVectorWriterImpl::write(const size_t requestedRecordCount)
 ///??? depends on number of streams
 #  define E57_TARGET_PACKET_SIZE    500
 #else
-#  define E57_TARGET_PACKET_SIZE    (E57_DATA_PACKET_MAX*3/4)
+#  define E57_TARGET_PACKET_SIZE    (DATA_PACKET_MAX*3/4)
 #endif
         /// If have more than target fraction of packet, send it now
         if (currentPacketSize() >= E57_TARGET_PACKET_SIZE) {  //???
@@ -3336,7 +3336,7 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
 #endif
 
     /// Calc maximum number of bytestream values can put in data packet.
-    size_t packetMaxPayloadBytes = E57_DATA_PACKET_MAX - sizeof(DataPacketHeader) - bytestreams_.size()*sizeof(uint16_t);
+    size_t packetMaxPayloadBytes = DATA_PACKET_MAX - sizeof(DataPacketHeader) - bytestreams_.size()*sizeof(uint16_t);
 #ifdef E57_MAX_VERBOSE
     cout << "  packetMaxPayloadBytes=" << packetMaxPayloadBytes << endl; //???
 #endif
@@ -3411,7 +3411,7 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
 
 #ifdef E57_DEBUG
         /// Double check we aren't accidentally going to write off end of vector<char>
-        if (&p[n] > &packet[E57_DATA_PACKET_MAX])
+        if (&p[n] > &packet[DATA_PACKET_MAX])
             throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "n=" + toString(n));
 #endif
 
@@ -3441,7 +3441,7 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
     /// packetLength must be multiple of 4, if not, add some zero padding
     while (packetLength % 4) {
         /// Double check we aren't accidentally going to write off end of vector<char>
-        if (p >= &packet[E57_DATA_PACKET_MAX-1])
+        if (p >= &packet[DATA_PACKET_MAX-1])
             throw E57_EXCEPTION1(E57_ERROR_INTERNAL);
         *p++ = 0;
         packetLength++;
@@ -3451,7 +3451,7 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
     }
 
     /// Prepare header in dataPacket_, now that we are sure of packetLength
-    dataPacket_.packetType = E57_DATA_PACKET;
+    dataPacket_.packetType = DATA_PACKET;
     dataPacket_.packetFlags = 0;
     dataPacket_.packetLogicalLengthMinus1 = static_cast<uint16_t>(packetLength-1);          // %%% Truncation
     dataPacket_.bytestreamCount = static_cast<uint16_t>(bytestreams_.size());       // %%% Truncation
@@ -3654,7 +3654,7 @@ CompressedVectorReaderImpl::CompressedVectorReaderImpl(shared_ptr<CompressedVect
         DataPacket* dpkt = reinterpret_cast<DataPacket*>(anyPacket);
 
         /// Double check that have a data packet
-        if (dpkt->packetType != E57_DATA_PACKET)
+        if (dpkt->packetType != DATA_PACKET)
             throw E57_EXCEPTION2(E57_ERROR_BAD_CV_PACKET, "packetType=" + toString(dpkt->packetType));
 
         /// Have good packet, initialize channels
@@ -3821,7 +3821,7 @@ void CompressedVectorReaderImpl::feedPacketToDecoders(uint64_t currentPacketLogi
         DataPacket* dpkt = reinterpret_cast<DataPacket*>(anyPacket);
 
         /// Double check that have a data packet.  Should have already determined this.
-        if (dpkt->packetType != E57_DATA_PACKET)
+        if (dpkt->packetType != DATA_PACKET)
             throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "packetType=" + toString(dpkt->packetType));
 
         /// Feed bytestreams to channels with unblocked output that are reading from this packet
@@ -3951,7 +3951,7 @@ uint64_t CompressedVectorReaderImpl::findNextDataPacket(uint64_t nextPacketLogic
         /// Guess it's a data packet, if not continue to next packet
         const DataPacket* dpkt = reinterpret_cast<const DataPacket*>(anyPacket);
 
-        if (dpkt->packetType == E57_DATA_PACKET)
+        if (dpkt->packetType == DATA_PACKET)
         {
 #ifdef E57_MAX_VERBOSE
             cout << "  Found next data packet at nextPacketLogicalOffset=" << nextPacketLogicalOffset << endl;

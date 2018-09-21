@@ -42,7 +42,7 @@ namespace e57 {
    {
       public:
          E57XmlParser(std::shared_ptr<ImageFileImpl> imf);
-         ~E57XmlParser() override;
+         ~E57XmlParser() override = default;
 
          /// SAX interface
          void startDocument() override;

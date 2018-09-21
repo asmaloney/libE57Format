@@ -153,7 +153,7 @@ XMLSize_t E57FileInputStream::readBytes(       XMLByte* const  toFill
 
 ///================================================================
 
-E57FileInputSource::E57FileInputSource(CheckedFile* cf, uint64_t logicalStart, uint64_t logicalLength)
+E57XmlFileInputSource::E57XmlFileInputSource(CheckedFile* cf, uint64_t logicalStart, uint64_t logicalLength)
 : InputSource("E57File", XMLPlatformUtils::fgMemoryManager),  //??? what if want to use our own memory manager?, what bufid is good?
   cf_(cf),
   logicalStart_(logicalStart),
@@ -161,7 +161,7 @@ E57FileInputSource::E57FileInputSource(CheckedFile* cf, uint64_t logicalStart, u
 {
 }
 
-BinInputStream* E57FileInputSource::makeStream() const
+BinInputStream* E57XmlFileInputSource::makeStream() const
 {
     return new E57FileInputStream(cf_, logicalStart_, logicalLength_);
 }

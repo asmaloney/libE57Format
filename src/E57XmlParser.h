@@ -92,17 +92,17 @@ namespace e57 {
          std::stack<ParseInfo>    stack_; /// Stores the current path in tree we are reading
    };
 
-   class E57FileInputSource : public InputSource
+   class E57XmlFileInputSource : public InputSource
    {
       public :
-         E57FileInputSource(CheckedFile* cf, uint64_t logicalStart, uint64_t logicalLength);
-         ~E57FileInputSource() override = default;
+         E57XmlFileInputSource(CheckedFile* cf, uint64_t logicalStart, uint64_t logicalLength);
+         ~E57XmlFileInputSource() override = default;
          BinInputStream* makeStream() const override;
 
       private :
          ///  Unimplemented constructors and operators
-         E57FileInputSource(const E57FileInputSource&);
-         E57FileInputSource& operator=(const E57FileInputSource&);
+         E57XmlFileInputSource(const E57XmlFileInputSource&);
+         E57XmlFileInputSource& operator=(const E57XmlFileInputSource&);
 
          //??? lifetime of cf_ must be longer than this object!
          CheckedFile*    cf_;

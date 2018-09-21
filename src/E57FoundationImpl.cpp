@@ -2915,7 +2915,7 @@ void ImageFileImpl::construct2(const ustring& fileName, const ustring& mode)
             xmlReader->setErrorHandler(&parser);
 
             /// Create input source (XML section of E57 file turned into a stream).
-            E57FileInputSource xmlSection(file_, xmlLogicalOffset_, xmlLogicalLength_);
+            E57XmlFileInputSource xmlSection(file_, xmlLogicalOffset_, xmlLogicalLength_);
 
             unusedLogicalStart_ = sizeof(E57FileHeader);
 

@@ -37,6 +37,7 @@
 
 #include "Common.h"
 #include "CheckedFile.h"
+#include "Packet.h"
 
 namespace e57 {
 
@@ -469,72 +470,6 @@ struct CompressedVectorSectionHeader {
 
 //================================================================
 
-#define E57_DATA_PACKET_MAX (64*1024)  /// maximum size of CompressedVector binary data packet   ??? where put this
-
-
-struct DataPacketHeader {  ///??? where put this
-    uint8_t     packetType;         // = E57_DATA_PACKET
-    uint8_t     packetFlags;
-    uint16_t    packetLogicalLengthMinus1;
-    uint16_t    bytestreamCount;
-
-                DataPacketHeader();
-    void        verify(unsigned bufferLength = 0) const; //???use
-#ifdef E57_BIGENDIAN
-    void        swab();
-#else
-    void        swab(){}
-#endif
-#ifdef E57_DEBUG
-    void        dump(int indent = 0, std::ostream& os = std::cout) const;
-#endif
-};
-
-//================================================================
-
-struct DataPacket {  /// Note this is full sized packet, not just header
-    uint8_t     packetType;         // = E57_DATA_PACKET
-    uint8_t     packetFlags;
-    uint16_t    packetLogicalLengthMinus1;
-    uint16_t    bytestreamCount;
-    uint8_t     payload[64*1024-6]; // pad packet to full length, can't spec layout because depends bytestream data
-
-                DataPacket();
-    void        verify(unsigned bufferLength = 0) const;
-    char*       getBytestream(unsigned bytestreamNumber, unsigned& bufferLength);
-    unsigned    getBytestreamBufferLength(unsigned bytestreamNumber);
-
-#ifdef E57_BIGENDIAN
-    void        swab(bool toLittleEndian);    //??? change to swabIfBigEndian() and elsewhere
-#else
-    void        swab(bool /*toLittleEndian*/){}
-#endif
-#ifdef E57_DEBUG
-    void        dump(int indent = 0, std::ostream& os = std::cout) const;
-#endif
-};
-
-//================================================================
-
-struct EmptyPacketHeader {
-    uint8_t     packetType;    // = E57_EMPTY_PACKET
-    uint8_t     reserved1;     // must be zero
-    uint16_t    packetLogicalLengthMinus1;
-
-                EmptyPacketHeader();
-    void        verify(unsigned bufferLength = 0) const; //???use
-#ifdef E57_BIGENDIAN
-    void        swab();
-#else
-    void        swab(){}
-#endif
-#ifdef E57_DEBUG
-    void        dump(int indent = 0, std::ostream& os = std::cout) const;
-#endif
-};
-
-//================================================================
-
 struct DecodeChannel {
     SourceDestBuffer    dbuf; //??? for now, one input per channel
     std::shared_ptr<Decoder> decoder;
@@ -640,84 +575,6 @@ protected:
     uint64_t                indexPacketsCount_;             /// number of index packets written so far
 };
 
-//================================================================
-
-class PacketLock {
-public:
-                    ~PacketLock();
-
-private:
-    /// Can't be copied or assigned
-                    PacketLock(const PacketLock& plock);
-    PacketLock&     operator=(const PacketLock& plock);
-
-protected:
-    friend class PacketReadCache;
-    /// Only PacketReadCache can construct
-                     PacketLock(PacketReadCache* cache, unsigned cacheIndex);
-
-    PacketReadCache* cache_;
-    unsigned         cacheIndex_;
-};
-
-//================================================================
-
-class PacketReadCache {
-public:
-                        PacketReadCache(CheckedFile* cFile, unsigned packetCount);
-                        ~PacketReadCache();
-
-    std::unique_ptr<PacketLock> lock(uint64_t packetLogicalOffset, char* &pkt);  //??? pkt could be const
-
-#ifdef E57_DEBUG
-      void                dump(int indent = 0, std::ostream& os = std::cout);
-#endif
-protected:
-    /// Only PacketLock can unlock the cache
-    friend class PacketLock;
-    void                unlock(unsigned cacheIndex);
-
-    void                readPacket(unsigned oldestEntry, uint64_t packetLogicalOffset);
-
-    struct CacheEntry {
-        uint64_t    logicalOffset_;
-        char*       buffer_;  //??? could be const?
-        unsigned    lastUsed_;
-    };
-
-    unsigned            lockCount_;
-    unsigned            useCount_;
-    CheckedFile*        cFile_;
-    std::vector<CacheEntry>  entries_;
-};
-
 } /// end namespace e57
-
-//================================================================
-struct IndexPacket {  /// Note this is whole packet, not just header
-    static const unsigned MAX_ENTRIES = 2048;
-
-    uint8_t     packetType;     // = E57_INDEX_PACKET
-    uint8_t     packetFlags;    // flag bitfields
-    uint16_t    packetLogicalLengthMinus1;
-    uint16_t    entryCount;
-    uint8_t     indexLevel;
-    uint8_t     reserved1[9];   // must be zero
-    struct IndexPacketEntry {
-        uint64_t    chunkRecordNumber;
-        uint64_t    chunkPhysicalOffset;
-    } entries[MAX_ENTRIES];
-
-                IndexPacket();
-    void        verify(unsigned bufferLength = 0, uint64_t totalRecordCount = 0, uint64_t fileSize = 0) const;
-#ifdef E57_BIGENDIAN
-    void        swab(bool toLittleEndian);
-#else
-    void        swab(bool /*toLittleEndian*/) {}
-#endif
-#ifdef E57_DEBUG
-    void        dump(int indent = 0, std::ostream& os = std::cout) const;
-#endif
-};
 
 #endif // E57FOUNDATIONIMPL_H_INCLUDED

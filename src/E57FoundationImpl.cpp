@@ -27,7 +27,9 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
+#include <climits>
 #include <cmath>
+#include <cstring>
 
 #include "E57FoundationImpl.h"
 

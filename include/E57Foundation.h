@@ -31,9 +31,7 @@
 
 //! @file  E57Foundation.h header file for the E57 Foundation API
 
-#include <cstdint>
 #include <cfloat>
-#include <memory>
 #include <vector>
 
 #include "E57Exception.h"

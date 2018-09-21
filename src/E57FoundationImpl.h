@@ -29,11 +29,7 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include <algorithm>
 #include <set>
-#include <stack>
-#include <stdexcept>
-#include <vector>
 
 #include "Common.h"
 #include "CheckedFile.h"

@@ -121,12 +121,14 @@ add_library( E57Format STATIC
     src/Decoder.cpp
     src/Encoder.h
     src/Encoder.cpp
+    src/E57Exception.cpp
     src/E57Foundation.cpp
     src/E57FoundationImpl.cpp
     src/E57FoundationImpl.h
     src/E57Version.h
     src/E57XmlParser.h
     src/E57XmlParser.cpp
+    include/E57Exception.h
     include/E57Foundation.h
     contrib/CRCpp/inc/CRC.h
 )

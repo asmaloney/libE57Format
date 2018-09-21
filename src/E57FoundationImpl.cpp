@@ -177,7 +177,7 @@ ustring NodeImpl::relativePathName(shared_ptr<NodeImpl> origin, ustring childPat
     else {
         /// Assemble relativePathName from right to left, recursively
         shared_ptr<NodeImpl> p(parent_);
-        if (childPathName == "")
+        if (childPathName.empty())
             return(p->relativePathName(origin, elementName_));
         else
             return(p->relativePathName(origin, elementName_ + "/" + childPathName));
@@ -565,7 +565,7 @@ shared_ptr<NodeImpl> StructureNodeImpl::lookup(const ustring& pathName)
     imf->pathNameParse(pathName, isRelative, fields);  // throws if bad pathName
 
     if (isRelative || isRoot()) {
-        if (fields.size() == 0)
+        if (fields.empty())
             if (isRelative) {
                 return(shared_ptr<NodeImpl>());  /// empty pointer
             } else {
@@ -762,7 +762,7 @@ void StructureNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile
         bool gotDefaultNamespace = false;
         for (size_t i = 0; i < imf->extensionsCount(); i++) {
             const char* xmlnsExtension;
-            if (imf->extensionsPrefix(i) == "") {
+            if (imf->extensionsPrefix(i).empty()) {
                 gotDefaultNamespace = true;
                 xmlnsExtension = "xmlns";
             } else
@@ -1960,7 +1960,7 @@ shared_ptr<CompressedVectorWriterImpl> CompressedVectorNodeImpl::writer(vector<S
     }
 
     /// sbufs can't be empty
-    if (sbufs.size() == 0)
+    if (sbufs.empty())
         throw E57_EXCEPTION2(E57_ERROR_BAD_API_ARGUMENT, "fileName=" + destImageFile->fileName());
 
     if (!destImageFile->isWriter())
@@ -2003,7 +2003,7 @@ shared_ptr<CompressedVectorReaderImpl> CompressedVectorNodeImpl::reader(vector<S
     }
 
     /// dbufs can't be empty
-    if (dbufs.size() == 0)
+    if (dbufs.empty())
         throw E57_EXCEPTION2(E57_ERROR_BAD_API_ARGUMENT, "fileName=" + destImageFile->fileName());
 
     /// Can be read or write mode, but must be attached
@@ -2087,7 +2087,7 @@ bool IntegerNodeImpl::isDefined(const ustring& pathName)
     // don't checkImageFileOpen
 
     /// We have no sub-structure, so if path not empty return false
-    return(pathName == "");
+    return pathName.empty();
 }
 
 int64_t IntegerNodeImpl::value()
@@ -2240,7 +2240,7 @@ bool ScaledIntegerNodeImpl::isDefined(const ustring& pathName)
     // don't checkImageFileOpen
 
     /// We have no sub-structure, so if path not empty return false
-    return(pathName == "");
+    return pathName.empty();
 }
 
 int64_t ScaledIntegerNodeImpl::rawValue()
@@ -2413,7 +2413,7 @@ bool FloatNodeImpl::isDefined(const ustring& pathName)
     // don't checkImageFileOpen
 
     /// We have no sub-structure, so if path not empty return false
-    return(pathName == "");
+    return pathName.empty();
 }
 
 double FloatNodeImpl::value()
@@ -2551,7 +2551,7 @@ bool StringNodeImpl::isDefined(const ustring& pathName)
     // don't checkImageFileOpen
 
     /// We have no sub-structure, so if path not empty return false
-    return(pathName == "");
+    return pathName.empty();
 }
 
 ustring StringNodeImpl::value()
@@ -2582,7 +2582,7 @@ void StringNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> /*imf*/, CheckedFil
     cf << space(indent) << "<" << fieldName << " type=\"String\"";
 
     /// Write value as child text, unless it is the default value
-    if (value_ == "") {
+    if (value_.empty()) {
         cf << "/>\n";
     } else {
         cf << "><![CDATA[";
@@ -2706,7 +2706,7 @@ bool BlobNodeImpl::isDefined(const ustring& pathName)
     // don't checkImageFileOpen, NodeImpl() will do it
 
     /// We have no sub-structure, so if path not empty return false
-    return(pathName == "");
+    return pathName.empty();
 }
 
 int64_t BlobNodeImpl::byteCount()
@@ -3469,7 +3469,7 @@ CompressedVectorWriterImpl::CompressedVectorWriterImpl(shared_ptr<CompressedVect
     //???  check if cvector already been written (can't write twice)
 
     /// Empty sbufs is an error
-    if (sbufs.size() == 0) {
+    if (sbufs.empty()) {
         throw E57_EXCEPTION2(E57_ERROR_BAD_API_ARGUMENT,
                              "imageFileName=" + cVector_->imageFileName()
                              + " cvPathName=" + cVector_->pathName());
@@ -3821,8 +3821,8 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
 #ifdef E57_DEBUG
     /// Double check sum of count is <= packetMaxPayloadBytes
     size_t totalByteCount = 0;
-    for (unsigned i=0; i < count.size(); i++)
-        totalByteCount += count.at(i);
+    for (size_t i : count)
+        totalByteCount += i;
     if (totalByteCount > packetMaxPayloadBytes) {
         throw E57_EXCEPTION2(E57_ERROR_INTERNAL,
                              "totalByteCount=" + toString(totalByteCount)
@@ -4040,7 +4040,7 @@ CompressedVectorReaderImpl::CompressedVectorReaderImpl(shared_ptr<CompressedVect
     ///??? file in error state?
 
     /// Empty dbufs is an error
-    if (dbufs.size() == 0) {
+    if (dbufs.empty()) {
         throw E57_EXCEPTION2(E57_ERROR_BAD_API_ARGUMENT,
                              "imageFileName=" + cVector_->imageFileName()
                              + " cvPathName=" + cVector_->pathName());
@@ -4201,7 +4201,7 @@ unsigned CompressedVectorReaderImpl::read()
         channels_[i].decoder->inputProcess(nullptr, 0);
 
     /// Loop until every dbuf is full or we have reached end of the binary section.
-    while (1) {
+    while (true) {
         /// Find the earliest packet position for channels that are still hungry
         /// It's important to call inputProcess of the decoders before this call, so current hungriness level is reflected.
         uint64_t earliestPacketLogicalOffset = earliestPacketNeededForInput();
@@ -4770,7 +4770,7 @@ DecodeChannel::DecodeChannel(SourceDestBuffer dbuf_arg, shared_ptr<Decoder> deco
     currentPacketLogicalOffset = 0;
     currentBytestreamBufferIndex = 0;
     currentBytestreamBufferLength = 0;
-    inputFinished = 0;
+    inputFinished = false;
 }
 
 bool DecodeChannel::isOutputBlocked() const

@@ -1504,7 +1504,7 @@ void ImageFile::checkInvariant(bool doRecurse) {
        throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
 
     // Can't have empty fileName
-    if (fileName() == "")
+    if (fileName().empty())
        throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
 
     int wCount = writerCount();

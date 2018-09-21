@@ -32,18 +32,26 @@
 #include <xercesc/sax2/DefaultHandler.hpp>
 #include <xercesc/sax/InputSource.hpp>
 
-XERCES_CPP_NAMESPACE_USE
-
 #include "Common.h"
-#include "CheckedFile.h"
+
+using namespace XERCES_CPP_NAMESPACE;
+
+namespace XERCES_CPP_NAMESPACE {
+   class SAX2XMLReader;
+}
 
 namespace e57 {
    class E57XmlParser : public DefaultHandler
    {
       public:
          E57XmlParser(std::shared_ptr<ImageFileImpl> imf);
-         ~E57XmlParser() override = default;
+         ~E57XmlParser() override;
 
+         void init();
+
+         void  parse( InputSource &inputSource );
+
+      private:
          /// SAX interface
          void startDocument() override;
          void endDocument() override;
@@ -58,7 +66,7 @@ namespace e57 {
          void warning(const SAXParseException& exc) override;
          void error(const SAXParseException& exc) override;
          void fatalError(const SAXParseException& exc) override;
-      private:
+
          ustring toUString(const XMLCh* const xml_str);
          ustring lookupAttribute(const Attributes& attributes, const XMLCh* attribute_name);
          bool    isAttributeDefined(const Attributes& attributes, const XMLCh* attribute_name);
@@ -90,6 +98,8 @@ namespace e57 {
                void    dump(int indent = 0, std::ostream& os = std::cout);
          };
          std::stack<ParseInfo>    stack_; /// Stores the current path in tree we are reading
+
+         SAX2XMLReader  *xmlReader;
    };
 
    class E57XmlFileInputSource : public InputSource

@@ -24,12 +24,9 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include <xercesc/sax2/XMLReaderFactory.hpp>
-
 #include "E57FoundationImpl.h"
 #include "ImageFileImpl.h"
 
-#include "CheckedFile.h"
 #include "E57Version.h"
 #include "E57XmlParser.h"
 
@@ -111,36 +108,11 @@ namespace e57 {
             throw;  // rethrow
          }
 
-         XERCES_CPP_NAMESPACE::SAX2XMLReader* xmlReader = nullptr;
-
-         // Initialize the XML4C2 system
-         try {
-            XMLPlatformUtils::Initialize();
-         } catch (const XMLException& ex) {
-            /// Turn parser exception into E57Exception
-            throw E57_EXCEPTION2(E57_ERROR_XML_PARSER_INIT, "parserMessage=" + ustring(XMLString::transcode(ex.getMessage())));
-         }
-
-         xmlReader = XMLReaderFactory::createXMLReader(); //??? auto_ptr?
-
-         if ( xmlReader == nullptr )
-         {
-            throw E57_EXCEPTION2( E57_ERROR_XML_PARSER_INIT, "could not create the xml reader" );
-         }
-
-         //??? check these are right
-         xmlReader->setFeature(XMLUni::fgSAX2CoreValidation,        true);
-         xmlReader->setFeature(XMLUni::fgXercesDynamic,             true);
-         xmlReader->setFeature(XMLUni::fgSAX2CoreNameSpaces,        true);
-         xmlReader->setFeature(XMLUni::fgXercesSchema,              true);
-         xmlReader->setFeature(XMLUni::fgXercesSchemaFullChecking,  true);
-         xmlReader->setFeature(XMLUni::fgSAX2CoreNameSpacePrefixes, true);
-
          try {
             /// Create parser state, attach its event handers to the SAX2 reader
             E57XmlParser parser(imf);
-            xmlReader->setContentHandler(&parser);
-            xmlReader->setErrorHandler(&parser);
+
+            parser.init();
 
             /// Create input source (XML section of E57 file turned into a stream).
             E57XmlFileInputSource xmlSection(file_, xmlLogicalOffset_, xmlLogicalLength_);
@@ -148,23 +120,14 @@ namespace e57 {
             unusedLogicalStart_ = sizeof(E57FileHeader);
 
             /// Do the parse, building up the node tree
-            xmlReader->parse(xmlSection);
-
+            parser.parse( xmlSection );
          } catch (...) {
-            if (xmlReader != nullptr) {
-               delete xmlReader;
-               xmlReader = nullptr;
-            }
             if (file_ != nullptr) {
                delete file_;
                file_ = nullptr;
             }
             throw;  // rethrow
          }
-         delete xmlReader;
-
-         XMLPlatformUtils::Terminate();
-
       } else { /// open for writing (start empty)
          try {
             /// Open file for writing, truncate if already exists.

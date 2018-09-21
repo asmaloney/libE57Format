@@ -166,7 +166,8 @@ BinInputStream* E57XmlFileInputSource::makeStream() const
     return new E57FileInputStream(cf_, logicalStart_, logicalLength_);
 }
 
-
+//=============================================================================
+// E57XmlParser::ParseInfo
 
 E57XmlParser::ParseInfo::ParseInfo()
 : nodeType(static_cast<NodeType>(0)),
@@ -206,9 +207,57 @@ void E57XmlParser::ParseInfo::dump(int indent, ostream& os)
     os << space(indent) << "childText:      \"" << childText << "\"" << endl;
 }
 
+
+//=============================================================================
+// E57XmlParser
+
 E57XmlParser::E57XmlParser(std::shared_ptr<ImageFileImpl> imf)
-: imf_(imf)
+: imf_(imf),
+  xmlReader( nullptr )
 {
+}
+
+E57XmlParser::~E57XmlParser()
+{
+   delete xmlReader;
+
+   xmlReader = nullptr;
+
+   XMLPlatformUtils::Terminate();
+}
+
+void E57XmlParser::init()
+{
+   // Initialize the XML4C2 system
+   try {
+      XMLPlatformUtils::Initialize();
+   } catch (const XMLException& ex) {
+      /// Turn parser exception into E57Exception
+      throw E57_EXCEPTION2(E57_ERROR_XML_PARSER_INIT, "parserMessage=" + ustring(XMLString::transcode(ex.getMessage())));
+   }
+
+   xmlReader = XMLReaderFactory::createXMLReader(); //??? auto_ptr?
+
+   if ( xmlReader == nullptr )
+   {
+      throw E57_EXCEPTION2( E57_ERROR_XML_PARSER_INIT, "could not create the xml reader" );
+   }
+
+   //??? check these are right
+   xmlReader->setFeature(XMLUni::fgSAX2CoreValidation,        true);
+   xmlReader->setFeature(XMLUni::fgXercesDynamic,             true);
+   xmlReader->setFeature(XMLUni::fgSAX2CoreNameSpaces,        true);
+   xmlReader->setFeature(XMLUni::fgXercesSchema,              true);
+   xmlReader->setFeature(XMLUni::fgXercesSchemaFullChecking,  true);
+   xmlReader->setFeature(XMLUni::fgSAX2CoreNameSpacePrefixes, true);
+
+   xmlReader->setContentHandler( this );
+   xmlReader->setErrorHandler( this );
+}
+
+void E57XmlParser::parse( InputSource &inputSource )
+{
+   xmlReader->parse( inputSource );
 }
 
 

@@ -35,6 +35,7 @@ XERCES_CPP_NAMESPACE_USE
 #include "E57FoundationImpl.h"
 
 #include "E57XmlParser.h"
+#include "ImageFileImpl.h"
 
 using namespace e57;
 using namespace std;

@@ -121,6 +121,8 @@ add_library( E57Format STATIC
     src/Decoder.cpp
     src/Encoder.h
     src/Encoder.cpp
+    src/ImageFileImpl.cpp
+    src/ImageFileImpl.h
     src/E57Exception.cpp
     src/E57Foundation.cpp
     src/E57FoundationImpl.cpp

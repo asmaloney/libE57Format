@@ -27,6 +27,7 @@
 #include <cstring>
 
 #include "Decoder.h"
+#include "ImageFileImpl.h"
 #include "E57FoundationImpl.h"
 
 using namespace e57;

@@ -190,6 +190,8 @@ DEALINGS IN THE SOFTWARE.
 
 #include "E57FoundationImpl.h"
 
+#include "ImageFileImpl.h"
+
 using namespace e57;
 using namespace std;
 

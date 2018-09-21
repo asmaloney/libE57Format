@@ -438,7 +438,6 @@ protected:
 
 //================================================================
 
-
 class SeekIndex {
 public:
     ///!!! implement seek
@@ -490,8 +489,6 @@ struct DecodeChannel {
 };
 
 //================================================================
-
-class PacketReadCache;
 
 class CompressedVectorReaderImpl {
 public:

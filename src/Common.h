@@ -90,18 +90,6 @@ inline std::string binaryString(int32_t x) {return(binaryString(static_cast<uint
 inline std::string binaryString(int16_t x) {return(binaryString(static_cast<uint16_t>(x)));}
 inline std::string binaryString(int8_t x)  {return(binaryString(static_cast<uint8_t>(x)));}
 
-/// Version numbers of ASTM standard that this library supports
-const uint32_t E57_FORMAT_MAJOR = 1;
-const uint32_t E57_FORMAT_MINOR = 0;
-
-/// REVISION_ID should be passed from compiler command line
-
-#ifndef REVISION_ID
-#error "Need to specify REVISION_ID on command line"
-#endif
-
-const char E57_LIBRARY_ID[] = REVISION_ID;
-
 #ifdef E57_BIGENDIAN
 #  define  SWAB(p)  swab(p)
 #else

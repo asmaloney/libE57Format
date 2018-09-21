@@ -124,6 +124,7 @@ add_library( E57Format STATIC
     src/E57Foundation.cpp
     src/E57FoundationImpl.cpp
     src/E57FoundationImpl.h
+    src/E57Version.h
     src/E57XmlParser.h
     src/E57XmlParser.cpp
     include/E57Foundation.h

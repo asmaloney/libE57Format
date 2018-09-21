@@ -36,6 +36,7 @@ XERCES_CPP_NAMESPACE_USE
 
 #include "Decoder.h"
 #include "Encoder.h"
+#include "E57Version.h"
 #include "E57XmlParser.h"
 
 using namespace e57;

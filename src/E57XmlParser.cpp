@@ -30,8 +30,6 @@
 #include <xercesc/util/BinInputStream.hpp>
 #include <xercesc/util/TransService.hpp>
 
-XERCES_CPP_NAMESPACE_USE
-
 #include "E57FoundationImpl.h"
 
 #include "E57XmlParser.h"
@@ -39,6 +37,7 @@ XERCES_CPP_NAMESPACE_USE
 
 using namespace e57;
 using namespace std;
+using namespace XERCES_CPP_NAMESPACE;
 
 
 // define convenient constants for the attribute names

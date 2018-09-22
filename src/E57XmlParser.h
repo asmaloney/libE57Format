@@ -55,14 +55,11 @@ namespace e57 {
 
       private:
          /// SAX interface
-         void startDocument() override;
-         void endDocument() override;
          void startElement(const XMLCh* const uri, const XMLCh* const localname, const XMLCh* const qname, const Attributes& attributes) override;
          void endElement( const XMLCh* const uri,
                           const XMLCh* const localname,
                           const XMLCh* const qname) override;
          void characters(const XMLCh* const chars, const XMLSize_t length) override;
-         void processingInstruction(const XMLCh* const target, const XMLCh* const data) override;
 
          /// SAX error interface
          void warning(const SAXParseException& exc) override;

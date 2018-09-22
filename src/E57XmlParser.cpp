@@ -260,23 +260,6 @@ void E57XmlParser::parse( InputSource &inputSource )
    xmlReader->parse( inputSource );
 }
 
-
-void E57XmlParser::startDocument()
-{
-#ifdef E57_MAX_VERBOSE
-    cout << "startDocument" << endl;
-#endif
-}
-
-
-void E57XmlParser::endDocument()
-{
-#ifdef E57_MAX_VERBOSE
-    cout << "endDocument"<<endl;
-#endif
-}
-
-
 void E57XmlParser::startElement(const   XMLCh* const    uri,
                                 const   XMLCh* const    localName,
                                 const   XMLCh* const    qName,
@@ -790,16 +773,6 @@ void E57XmlParser::endElement(const XMLCh* const uri,
                                  + " qName=" + toUString(qName));
     }
 }
-
-
-void E57XmlParser::processingInstruction(const XMLCh* const /*target*/,
-                                         const XMLCh* const /*data*/)
-{
-#ifdef E57_MAX_VERBOSE
-    cout << "processingInstruction" << endl;
-#endif
-}
-
 
 void E57XmlParser::characters(const   XMLCh* const chars,
                               const   XMLSize_t    length)

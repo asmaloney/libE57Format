@@ -188,7 +188,7 @@ DEALINGS IN THE SOFTWARE.
 
 //! @file E57Foundation.cpp
 
-#include "E57FoundationImpl.h"
+#include "E57FormatImpl.h"
 
 #include "ImageFileImpl.h"
 

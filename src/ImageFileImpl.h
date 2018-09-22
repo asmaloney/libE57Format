@@ -29,7 +29,6 @@
 #include <memory>
 
 #include "Common.h"
-#include "E57Foundation.h"
 
 
 namespace e57 {

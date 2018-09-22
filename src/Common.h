@@ -35,7 +35,7 @@
 // Define the following symbol adds some functions to the API for implementation purposes.
 // These functions are not available to a normal API user.
 #define E57_INTERNAL_IMPLEMENTATION_ENABLE 1
-#include "E57Foundation.h"
+#include "E57Format.h"
 
 // Uncomment the lines below to enable various levels of cross checking and verification in the code.
 // The extra code does not change the file contents.

@@ -15,7 +15,9 @@ Why Fork?
 
 The E57RefImpl code hasn't been touched in years and I wanted to make changes to compile this library with macOS. Forking it gives me a bit more freedom to update the code and make changes as required.
 
-I changed the name so that it is not confused with the **E57RefImpl** project.
+I changed the name of the project so that it is not confused with the **E57RefImpl** project.
+
+I have also changed the main include file's name from `E57Foundation.h` to `E57Format.h` to make sure there is no inclusion confusion.
 
 Versions of **libE57Format** will start at 2.0.
 

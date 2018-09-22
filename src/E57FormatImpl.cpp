@@ -31,7 +31,7 @@
 #include <cmath>
 #include <cstring>
 
-#include "E57FoundationImpl.h"
+#include "E57FormatImpl.h"
 
 #include "Decoder.h"
 #include "Encoder.h"

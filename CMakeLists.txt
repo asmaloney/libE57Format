@@ -119,14 +119,14 @@ add_library( E57Format STATIC
     src/ImageFileImpl.cpp
     src/ImageFileImpl.h
     src/E57Exception.cpp
-    src/E57Foundation.cpp
-    src/E57FoundationImpl.cpp
-    src/E57FoundationImpl.h
+    src/E57Format.cpp
+    src/E57FormatImpl.cpp
+    src/E57FormatImpl.h
     src/E57Version.h
     src/E57XmlParser.h
     src/E57XmlParser.cpp
     include/E57Exception.h
-    include/E57Foundation.h
+    include/E57Format.h
     contrib/CRCpp/inc/CRC.h
 )
 set_target_properties( E57Format PROPERTIES
@@ -146,6 +146,6 @@ install(
 install(
     FILES
         include/E57Exception.h
-        include/E57Foundation.h
+        include/E57Format.h
     DESTINATION include/E57Format
 )

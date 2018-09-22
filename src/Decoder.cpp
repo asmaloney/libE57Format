@@ -28,7 +28,7 @@
 
 #include "Decoder.h"
 #include "ImageFileImpl.h"
-#include "E57FoundationImpl.h"
+#include "E57FormatImpl.h"
 
 using namespace e57;
 using namespace std;

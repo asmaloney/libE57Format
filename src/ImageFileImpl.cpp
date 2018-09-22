@@ -24,7 +24,7 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include "E57FoundationImpl.h"
+#include "E57FormatImpl.h"
 #include "ImageFileImpl.h"
 
 #include "E57Version.h"

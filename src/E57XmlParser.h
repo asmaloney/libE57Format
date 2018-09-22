@@ -41,6 +41,8 @@ namespace XERCES_CPP_NAMESPACE {
 }
 
 namespace e57 {
+   class CheckedFile;
+
    class E57XmlParser : public DefaultHandler
    {
       public:
@@ -107,13 +109,13 @@ namespace e57 {
       public :
          E57XmlFileInputSource(CheckedFile* cf, uint64_t logicalStart, uint64_t logicalLength);
          ~E57XmlFileInputSource() override = default;
+
+         E57XmlFileInputSource(const E57XmlFileInputSource&) = delete;
+         E57XmlFileInputSource& operator=(const E57XmlFileInputSource&) = delete;
+
          BinInputStream* makeStream() const override;
 
       private :
-         ///  Unimplemented constructors and operators
-         E57XmlFileInputSource(const E57XmlFileInputSource&);
-         E57XmlFileInputSource& operator=(const E57XmlFileInputSource&);
-
          //??? lifetime of cf_ must be longer than this object!
          CheckedFile*    cf_;
          uint64_t        logicalStart_;

@@ -83,6 +83,19 @@ static const XMLCh att_recordCount[] = {
     chLatin_C, chLatin_o, chLatin_u, chLatin_n, chLatin_t, chNull
 };
 
+inline int64_t  convertStrToLL( const std::string &inStr )
+{
+#if defined(_MSC_VER)
+   return _atoi64( inStr.c_str() );
+#elif defined(__GNUC__)
+   return strtoll( inStr.c_str(), nullptr, 10 );
+#else
+#  error "Need to define string to long long conversion for this compiler"
+#endif
+}
+
+//=============================================================================
+// E57FileInputStream
 
 class E57FileInputStream : public BinInputStream
 {
@@ -151,7 +164,8 @@ XMLSize_t E57FileInputStream::readBytes(       XMLByte* const  toFill
     return(readCount);
 }
 
-///================================================================
+//=============================================================================
+// E57XmlFileInputSource
 
 E57XmlFileInputSource::E57XmlFileInputSource(CheckedFile* cf, uint64_t logicalStart, uint64_t logicalLength)
 : InputSource("E57File", XMLPlatformUtils::fgMemoryManager),  //??? what if want to use our own memory manager?, what bufid is good?
@@ -295,13 +309,8 @@ void E57XmlParser::startElement(const   XMLCh* const    uri,
 
         if (isAttributeDefined(attributes, att_minimum)) {
             ustring minimum_str = lookupAttribute(attributes, att_minimum);
-#if defined(_MSC_VER)
-            pi.minimum = _atoi64(minimum_str.c_str());
-#elif defined(__GNUC__)
-            pi.minimum = strtoll(minimum_str.c_str(), nullptr, 10); //??? check endptr?
-#else
-#  error "no supported compiler defined"
-#endif
+
+            pi.minimum = convertStrToLL( minimum_str );
         } else {
             /// Not defined defined in XML, so defaults to E57_INT64_MIN
             pi.minimum = E57_INT64_MIN;
@@ -309,13 +318,8 @@ void E57XmlParser::startElement(const   XMLCh* const    uri,
 
         if (isAttributeDefined(attributes, att_maximum)) {
             ustring maximum_str   = lookupAttribute(attributes, att_maximum);
-#if defined(_MSC_VER)
-            pi.maximum = _atoi64(maximum_str.c_str());
-#elif defined(__GNUC__)
-            pi.maximum = strtoll(maximum_str.c_str(), nullptr, 10); //??? check endptr?
-#else
-#  error "no supported compiler defined"
-#endif
+
+            pi.maximum = convertStrToLL( maximum_str );
         } else {
             /// Not defined defined in XML, so defaults to E57_INT64_MAX
             pi.maximum = E57_INT64_MAX;
@@ -332,13 +336,8 @@ void E57XmlParser::startElement(const   XMLCh* const    uri,
         //??? check validity of numeric strings
         if (isAttributeDefined(attributes, att_minimum)) {
             ustring minimum_str = lookupAttribute(attributes, att_minimum);
-#if defined(_MSC_VER)
-            pi.minimum = _atoi64(minimum_str.c_str());
-#elif defined(__GNUC__)
-            pi.minimum = strtoll(minimum_str.c_str(), nullptr, 10); //??? check endptr?
-#else
-#  error "no supported compiler defined"
-#endif
+
+            pi.minimum = convertStrToLL( minimum_str );
         } else {
             /// Not defined defined in XML, so defaults to E57_INT64_MIN
             pi.minimum = E57_INT64_MIN;
@@ -346,13 +345,8 @@ void E57XmlParser::startElement(const   XMLCh* const    uri,
 
         if (isAttributeDefined(attributes, att_maximum)) {
             ustring maximum_str   = lookupAttribute(attributes, att_maximum);
-#if defined(_MSC_VER)
-            pi.maximum = _atoi64(maximum_str.c_str());
-#elif defined(__GNUC__)
-            pi.maximum = strtoll(maximum_str.c_str(), nullptr, 10); //??? check endptr?
-#else
-#  error "no supported compiler defined"
-#endif
+
+            pi.maximum = convertStrToLL( maximum_str );
         } else {
             /// Not defined defined in XML, so defaults to E57_INT64_MAX
             pi.maximum = E57_INT64_MAX;
@@ -443,23 +437,13 @@ void E57XmlParser::startElement(const   XMLCh* const    uri,
 
         /// fileOffset is required to be defined
         ustring fileOffset_str = lookupAttribute(attributes, att_fileOffset);
-#if defined(_MSC_VER)
-        pi.fileOffset = _atoi64(fileOffset_str.c_str());
-#elif defined(__GNUC__)
-        pi.fileOffset = strtoll(fileOffset_str.c_str(), nullptr, 10); //??? check endptr?
-#else
-#  error "no supported compiler defined"
-#endif
+
+        pi.fileOffset = convertStrToLL( fileOffset_str );
 
         /// length is required to be defined
         ustring length_str = lookupAttribute(attributes, att_length);
-#if defined(_MSC_VER)
-        pi.length = _atoi64(length_str.c_str());
-#elif defined(__GNUC__)
-        pi.length = strtoll(length_str.c_str(), nullptr, 10); //??? check endptr?
-#else
-#  error "no supported compiler defined"
-#endif
+
+        pi.length = convertStrToLL( length_str );
 
         /// Push info so far onto stack
         stack_.push(pi);
@@ -521,13 +505,9 @@ void E57XmlParser::startElement(const   XMLCh* const    uri,
 
         if (isAttributeDefined(attributes, att_allowHeterogeneousChildren)) {
             ustring allowHetero_str = lookupAttribute(attributes, att_allowHeterogeneousChildren);
-#if defined(_MSC_VER)
-            int64_t i64 = _atoi64(allowHetero_str.c_str());
-#elif defined(__GNUC__)
-            int64_t i64 = strtoll(allowHetero_str.c_str(), nullptr, 10); //??? check endptr?
-#else
-#  error "no supported compiler defined"
-#endif
+
+            int64_t i64 = convertStrToLL( allowHetero_str );
+
             if (i64 == 0)
                 pi.allowHeterogeneousChildren = false;
             else if (i64 == 1)
@@ -559,23 +539,13 @@ void E57XmlParser::startElement(const   XMLCh* const    uri,
 
         /// fileOffset is required to be defined
         ustring fileOffset_str = lookupAttribute(attributes, att_fileOffset);
-#if defined(_MSC_VER)
-        pi.fileOffset = _atoi64(fileOffset_str.c_str());
-#elif defined(__GNUC__)
-        pi.fileOffset = strtoll(fileOffset_str.c_str(), nullptr, 10); //??? check endptr?
-#else
-#  error "no supported compiler defined"
-#endif
+
+        pi.fileOffset = convertStrToLL( fileOffset_str );
 
         /// recordCount is required to be defined
         ustring recordCount_str = lookupAttribute(attributes, att_recordCount);
-#if defined(_MSC_VER)
-        pi.recordCount = _atoi64(recordCount_str.c_str());
-#elif defined(__GNUC__)
-        pi.recordCount = strtoll(recordCount_str.c_str(), nullptr, 10); //??? check endptr?
-#else
-#  error "no supported compiler defined"
-#endif
+
+        pi.recordCount = convertStrToLL( recordCount_str );
 
         /// Create container now, so can hold children
         shared_ptr<CompressedVectorNodeImpl> cv_ni(new CompressedVectorNodeImpl(imf_));
@@ -628,13 +598,7 @@ void E57XmlParser::endElement(const XMLCh* const uri,
             /// Convert child text (if any) to value, else default to 0.0
             int64_t intValue;
             if (pi.childText.length() > 0) {
-#if defined(_MSC_VER)
-                intValue = _atoi64(pi.childText.c_str());
-#elif defined(__GNUC__)
-                intValue = strtoll(pi.childText.c_str(), nullptr, 10); //??? check endptr?
-#else
-#  error "no supported compiler defined"
-#endif
+                intValue = convertStrToLL( pi.childText );
             } else
                 intValue = 0;
             shared_ptr<IntegerNodeImpl> i_ni(new IntegerNodeImpl(imf_, intValue, pi.minimum, pi.maximum));
@@ -644,13 +608,7 @@ void E57XmlParser::endElement(const XMLCh* const uri,
             /// Convert child text (if any) to value, else default to 0.0
             int64_t intValue;
             if (pi.childText.length() > 0) {
-#if defined(_MSC_VER)
-                intValue = _atoi64(pi.childText.c_str());
-#elif defined(__GNUC__)
-                intValue = strtoll(pi.childText.c_str(), nullptr, 10); //??? check endptr?
-#else
-#  error "no supported compiler defined"
-#endif
+                intValue = convertStrToLL( pi.childText );
             } else
                 intValue = 0;
             shared_ptr<ScaledIntegerNodeImpl> si_ni(new ScaledIntegerNodeImpl(imf_, intValue, pi.minimum, pi.maximum, pi.scale, pi.offset));

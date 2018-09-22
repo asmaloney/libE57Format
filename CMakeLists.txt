@@ -145,6 +145,7 @@ install(
 )
 install(
     FILES
+        include/E57Exception.h
         include/E57Foundation.h
     DESTINATION include/E57Format
 )

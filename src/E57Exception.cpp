@@ -75,7 +75,7 @@ namespace e57 {
    */
 
    //! @cond documentNonPublic   The following isn't part of the API, and isn't documented.
-   E57Exception::E57Exception(ErrorCode ecode, const std::string context,
+   E57Exception::E57Exception(ErrorCode ecode, const std::string &context,
                               const char* srcFileName, int srcLineNumber, const char* srcFunctionName)
    : errorCode_(ecode),
      context_(context),

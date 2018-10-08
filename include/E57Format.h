@@ -320,7 +320,6 @@ public:
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
 protected:
-
     E57_OBJECT_IMPLEMENTATION(SourceDestBuffer)  // Internal implementation details, not part of API, must be last in object
 //! \endcond
 };
@@ -440,7 +439,6 @@ public:
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
 protected:
-
                 IntegerNode(std::shared_ptr<IntegerNodeImpl> ni);  // internal use only
 
     E57_OBJECT_IMPLEMENTATION(IntegerNode)  // Internal implementation details, not part of API, must be last in object
@@ -486,7 +484,6 @@ public:
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
 protected:
-
                 ScaledIntegerNode(std::shared_ptr<ScaledIntegerNodeImpl> ni);  // internal use only
 
     E57_OBJECT_IMPLEMENTATION(ScaledIntegerNode)  // Internal implementation details, not part of API, must be last in object
@@ -522,7 +519,6 @@ public:
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
 protected:
-
                 FloatNode(std::shared_ptr<FloatNodeImpl> ni);  // internal use only
 
     E57_OBJECT_IMPLEMENTATION(FloatNode)  // Internal implementation details, not part of API, must be last in object
@@ -635,6 +631,7 @@ public:
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
 private:
                     ImageFile(double);           // Give a second dummy constructor, better error msg for: ImageFile(0)
+
 protected:
     //??? workaround?
     friend class Node;

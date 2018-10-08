@@ -56,6 +56,7 @@ namespace e57 {
 #ifdef E57_DEBUG
          void                dump(int indent = 0, std::ostream& os = std::cout);
 #endif
+
       protected:
          /// Only PacketLock can unlock the cache
          friend class PacketLock;

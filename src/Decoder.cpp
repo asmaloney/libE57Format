@@ -586,7 +586,7 @@ template <typename RegisterT>
 size_t BitpackIntegerDecoder<RegisterT>::inputProcessAligned(const char* inbuf, const size_t firstBit, const size_t endBit)
 {
 #ifdef E57_MAX_VERBOSE
-   cout << "BitpackIntegerDecoder::inputProcessAligned() called, inbuf=" << (unsigned)inbuf << " firstBit=" << firstBit << " endBit=" << endBit << endl;
+   cout << "BitpackIntegerDecoder::inputProcessAligned() called, inbuf=" << (void*)(inbuf) << " firstBit=" << firstBit << " endBit=" << endBit << endl;
 #endif
 
    /// Read from inbuf, decode, store in destBuffer
@@ -619,7 +619,7 @@ size_t BitpackIntegerDecoder<RegisterT>::inputProcessAligned(const char* inbuf, 
       recordCount = static_cast<unsigned>(maxRecordCount_ - currentRecordIndex_);
 
 #ifdef E57_MAX_VERBOSE
-   cout << "  recordCount=" << recordCount << endl; //???
+   cout << "  recordCount=" << recordCount << endl;
 #endif
 
    const RegisterT* inp = reinterpret_cast<const RegisterT*>(inbuf);
@@ -746,7 +746,7 @@ void ConstantIntegerDecoder::destBufferSetNew(vector<SourceDestBuffer>& dbufs)
 size_t ConstantIntegerDecoder::inputProcess(const char* source, const size_t availableByteCount)
 {
 #ifdef E57_MAX_VERBOSE
-   cout << "ConstantIntegerDecoder::inputprocess() called, source=" << (unsigned)source << " availableByteCount=" << availableByteCount << endl;
+   cout << "ConstantIntegerDecoder::inputprocess() called, source=" << (void*)(source) << " availableByteCount=" << availableByteCount << endl;
 #endif
 
    /// We don't need any input bytes to produce output, so ignore source and availableByteCount.

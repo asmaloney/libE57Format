@@ -140,7 +140,6 @@ namespace e57 {
             unusedLogicalStart_ = sizeof(E57FileHeader);
             xmlLogicalOffset_ = 0;
             xmlLogicalLength_ = 0;
-
          } catch (...) {
             /// Remember to close file if got any exception
             if (file_ != nullptr) {

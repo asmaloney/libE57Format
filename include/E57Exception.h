@@ -122,16 +122,12 @@ class E57Exception : public std::exception {
 };
 
 
-class E57Utilities {
-   public:
-      E57Utilities(const std::string& /*configuration*/ = "") {}
+namespace Utilities {
+   // Get latest version of ASTM standard supported, and library id string
+   void    getVersions(int& astmMajor, int& astmMinor, std::string& libraryId);
 
-      // Get latest version of ASTM standard supported, and library id string
-      void        getVersions(int& astmMajor, int& astmMinor, std::string& libraryId);
-
-      std::string errorCodeToString(ErrorCode ecode);
-
-};
+   std::string errorCodeToString(ErrorCode ecode);
+}
 }
 
 #endif

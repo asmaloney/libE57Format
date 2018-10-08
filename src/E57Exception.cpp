@@ -100,7 +100,8 @@ namespace e57 {
    */
    void E57Exception::report(const char* reportingFileName, int reportingLineNumber, const char* reportingFunctionName, std::ostream& os) const
    {
-       os << "**** Got an e57 exception: " << E57Utilities().errorCodeToString(errorCode()) << std::endl;
+      os << "**** Got an e57 exception: " << e57::Utilities::errorCodeToString(errorCode()) << std::endl;
+
    #ifdef E57_DEBUG
        os << "  Debug info: " << endl;
        os << "    context: "             << context_ << endl;
@@ -233,13 +234,13 @@ namespace e57 {
    Since the E57 Foundation Implementation may be dynamically linked underneath the Foundation API, the version string for the implementation and the ASTM version that it supports can't be determined at compile-time.
    This function returns these identifiers from the underlying implementation.
    @throw   No E57Exceptions.
-   @see     Versions.cpp example, E57Utilities::E57Utilities
+   @see     Versions.cpp example
    */
-   void E57Utilities::getVersions(int& astmMajor, int& astmMinor, std::string& libraryId)
+   void Utilities::getVersions(int& astmMajor, int& astmMinor, std::string& libraryId)
    {
-       astmMajor = E57_FORMAT_MAJOR;
-       astmMinor = E57_FORMAT_MINOR;
-       libraryId = E57_LIBRARY_ID;
+      astmMajor = E57_FORMAT_MAJOR;
+      astmMinor = E57_FORMAT_MINOR;
+      libraryId = E57_LIBRARY_ID;
    }
 
    /*!
@@ -249,9 +250,9 @@ namespace e57 {
    The errorCode is translated into a one-line English string.
    @return  English std::string describing error.
    @throw   No E57Exceptions.
-   @see     E57ExceptionsFunctions.cpp example, E57Exception::errorCode, E57Utilities::E57Utilities
+   @see     E57ExceptionsFunctions.cpp example, E57Exception::errorCode
    */
-   std::string E57Utilities::errorCodeToString(ErrorCode ecode)
+   std::string Utilities::errorCodeToString(ErrorCode ecode)
    {
        switch (ecode) {
            /*

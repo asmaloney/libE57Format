@@ -208,6 +208,10 @@ public:
     void            dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 
+private:
+    template<typename T>
+    void _setNextReal( T inValue );
+
 protected:
     friend class BitpackIntegerEncoder<uint8_t>;
     friend class BitpackIntegerEncoder<uint16_t>;

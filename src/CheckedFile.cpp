@@ -538,18 +538,7 @@ void CheckedFile::close()
 
 void CheckedFile::unlink()
 {
-   if (fd_ >= 0) {
-#if defined(_MSC_VER)
-      int result = ::_close(fd_);
-#elif defined(__GNUC__)
-      int result = ::close(fd_);
-#else
-#  error "no supported compiler defined"
-#endif
-      if (result < 0)
-         throw E57_EXCEPTION2(E57_ERROR_CLOSE_FAILED, "fileName=" + fileName_ + " result=" + toString(result));
-      fd_ = -1;
-   }
+   close();
 
    /// Try to unlink the file, don't report a failure
    int result = ::_unlink(fileName_.c_str()); //??? unicode support here

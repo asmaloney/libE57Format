@@ -642,12 +642,21 @@ size_t BitpackIntegerDecoder<RegisterT>::inputProcessAligned(const char* inbuf, 
       RegisterT low = inp[wordPosition];
       SWAB(&low);  // swab if necessary
 
-      /// Get upper word (may or may not contain interesting bits),
-      RegisterT high = inp[wordPosition+1];
-      SWAB(&high);  // swab if necessary
+#ifdef E57_MAX_VERBOSE
+      cout << "  bitOffset: " << bitOffset << endl;
+      cout << "  low: " << binaryString(low) << endl;
+#endif
 
       RegisterT w;
       if (bitOffset > 0) {
+         /// Get upper word (may or may not contain interesting bits),
+         RegisterT high = inp[wordPosition+1];
+         SWAB(&high);  // swab if necessary
+
+#ifdef E57_MAX_VERBOSE
+      cout << "  high:" << binaryString(high) << endl;
+#endif
+
          /// Shift high to just above the lower bits, shift low LSBit to bit0, OR together.
          /// Note shifts are logical (not arithmetic) because using unsigned variables.
          w = (high << (8*sizeof(RegisterT) - bitOffset)) | (low >> bitOffset);
@@ -655,10 +664,8 @@ size_t BitpackIntegerDecoder<RegisterT>::inputProcessAligned(const char* inbuf, 
          /// The left shift (used above) is not defined if shift is >= size of word
          w = low;
       }
+
 #ifdef E57_MAX_VERBOSE
-      cout << "  bitOffset: " << bitOffset << endl;
-      cout << "  low: " << binaryString(low) << endl;
-      cout << "  high:" << binaryString(high) << endl;
       cout << "  w:   " << binaryString(w) << endl;
 #endif
 

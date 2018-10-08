@@ -77,11 +77,11 @@ namespace e57 {
    //! @cond documentNonPublic   The following isn't part of the API, and isn't documented.
    E57Exception::E57Exception(ErrorCode ecode, const std::string &context,
                               const char* srcFileName, int srcLineNumber, const char* srcFunctionName)
-   : errorCode_(ecode),
-     context_(context),
-     sourceFileName_(srcFileName),
-     sourceFunctionName_(srcFunctionName),
-     sourceLineNumber_(srcLineNumber)
+      : errorCode_(ecode),
+        context_(context),
+        sourceFileName_(srcFileName),
+        sourceFunctionName_(srcFunctionName),
+        sourceLineNumber_(srcLineNumber)
    {
    }
    //! @endcond
@@ -102,19 +102,19 @@ namespace e57 {
    {
       os << "**** Got an e57 exception: " << e57::Utilities::errorCodeToString(errorCode()) << std::endl;
 
-   #ifdef E57_DEBUG
-       os << "  Debug info: " << endl;
-       os << "    context: "             << context_ << endl;
-       os << "    sourceFunctionName: "   << sourceFunctionName_ << endl;
-       if (reportingFunctionName != nullptr)
-           os << "    reportingFunctionName: "   << reportingFunctionName << endl;
+#ifdef E57_DEBUG
+      os << "  Debug info: " << endl;
+      os << "    context: "             << context_ << endl;
+      os << "    sourceFunctionName: "   << sourceFunctionName_ << endl;
+      if (reportingFunctionName != nullptr)
+         os << "    reportingFunctionName: "   << reportingFunctionName << endl;
 
 
-       /*** Add a line in error message that a smart editor (gnu emacs) can interpret as a link to the source code: */
-       os << sourceFileName_ << "(" << sourceLineNumber_ << ") : error C" << errorCode_ << ":  <--- occurred on" << endl;
-       if (reportingFileName != nullptr)
-           os << reportingFileName << "(" << reportingLineNumber << ") : error C0:  <--- reported on" << endl;
-   #endif
+      /*** Add a line in error message that a smart editor (gnu emacs) can interpret as a link to the source code: */
+      os << sourceFileName_ << "(" << sourceLineNumber_ << ") : error C" << errorCode_ << ":  <--- occurred on" << endl;
+      if (reportingFileName != nullptr)
+         os << reportingFileName << "(" << reportingLineNumber << ") : error C0:  <--- reported on" << endl;
+#endif
    }
 
    /*!
@@ -126,7 +126,7 @@ namespace e57 {
    */
    ErrorCode E57Exception::errorCode() const
    {
-       return(errorCode_);
+      return errorCode_;
    }
 
    /*!
@@ -142,7 +142,7 @@ namespace e57 {
    */
    std::string E57Exception::context() const
    {
-       return(context_);
+      return context_;
    }
 
    /*!
@@ -156,7 +156,7 @@ namespace e57 {
    */
    const char* E57Exception::what() const noexcept
    {
-       return("E57 exception");
+      return "E57 exception";
    }
 
    /*!
@@ -171,7 +171,7 @@ namespace e57 {
    */
    const char* E57Exception::sourceFileName() const
    {
-       return(sourceFileName_);
+      return sourceFileName_;
    }
 
    /*!
@@ -186,7 +186,7 @@ namespace e57 {
    */
    const char* E57Exception::sourceFunctionName() const
    {
-       return(sourceFunctionName_);
+      return sourceFunctionName_;
    }
 
    /*!
@@ -201,7 +201,7 @@ namespace e57 {
    */
    int E57Exception::sourceLineNumber() const
    {
-       return(sourceLineNumber_);
+      return sourceLineNumber_;
    }
 
 
@@ -254,118 +254,118 @@ namespace e57 {
    */
    std::string Utilities::errorCodeToString(ErrorCode ecode)
    {
-       switch (ecode) {
-           /*
+      switch (ecode) {
+         /*
             * N.B.  *** When changing error strings here, remember to update the Doxygen strings in E57Foundation.h ****
             */
-           case E57_SUCCESS:
-               return("operation was successful (E57_SUCCESS)");
-           case E57_ERROR_BAD_CV_HEADER:
-               return("a CompressedVector binary header was bad (E57_ERROR_BAD_CV_HEADER)");
-           case E57_ERROR_BAD_CV_PACKET:
-               return("a CompressedVector binary packet was bad (E57_ERROR_BAD_CV_PACKET)");
-           case E57_ERROR_CHILD_INDEX_OUT_OF_BOUNDS:
-               return("a numerical index identifying a child was out of bounds (E57_ERROR_CHILD_INDEX_OUT_OF_BOUNDS)");
-           case E57_ERROR_SET_TWICE:
-               return("attempted to set an existing child element to a new value (E57_ERROR_SET_TWICE)");
-           case E57_ERROR_HOMOGENEOUS_VIOLATION:
-               return("attempted to add an E57 Element that would have made the children of a homogenous Vector have different types (E57_ERROR_HOMOGENEOUS_VIOLATION)");
-           case E57_ERROR_VALUE_NOT_REPRESENTABLE:
-               return("a value could not be represented in the requested type (E57_ERROR_VALUE_NOT_REPRESENTABLE)");
-           case E57_ERROR_SCALED_VALUE_NOT_REPRESENTABLE:
-               return("after scaling the result could not be represented in the requested type (E57_ERROR_SCALED_VALUE_NOT_REPRESENTABLE)");
-           case E57_ERROR_REAL64_TOO_LARGE:
-               return("a 64 bit IEEE float was too large to store in a 32 bit IEEE float (E57_ERROR_REAL64_TOO_LARGE)");
-           case E57_ERROR_EXPECTING_NUMERIC:
-               return("Expecting numeric representation in user's buffer, found ustring (E57_ERROR_EXPECTING_NUMERIC)");
-           case E57_ERROR_EXPECTING_USTRING:
-               return("Expecting string representation in user's buffer, found numeric (E57_ERROR_EXPECTING_USTRING)");
-           case E57_ERROR_INTERNAL:
-               return("An unrecoverable inconsistent internal state was detected (E57_ERROR_INTERNAL)");
-           case E57_ERROR_BAD_XML_FORMAT:
-               return("E57 primitive not encoded in XML correctly (E57_ERROR_BAD_XML_FORMAT)");
-           case E57_ERROR_XML_PARSER:
-               return("XML not well formed (E57_ERROR_XML_PARSER)");
-           case E57_ERROR_BAD_API_ARGUMENT:
-               return("bad API function argument provided by user (E57_ERROR_BAD_API_ARGUMENT)");
-           case E57_ERROR_FILE_IS_READ_ONLY:
-               return("can't modify read only file (E57_ERROR_FILE_IS_READ_ONLY)");
-           case E57_ERROR_BAD_CHECKSUM:
-               return("checksum mismatch, file is corrupted (E57_ERROR_BAD_CHECKSUM)");
-           case E57_ERROR_OPEN_FAILED:
-               return("open() failed (E57_ERROR_OPEN_FAILED)");
-           case E57_ERROR_CLOSE_FAILED:
-               return("close() failed (E57_ERROR_CLOSE_FAILED)");
-           case E57_ERROR_READ_FAILED:
-               return("read() failed (E57_ERROR_READ_FAILED)");
-           case E57_ERROR_WRITE_FAILED:
-               return("write() failed (E57_ERROR_WRITE_FAILED)");
-           case E57_ERROR_LSEEK_FAILED:
-               return("lseek() failed (E57_ERROR_LSEEK_FAILED)");
-           case E57_ERROR_PATH_UNDEFINED:
-               return("E57 element path well formed but not defined (E57_ERROR_PATH_UNDEFINED)");
-           case E57_ERROR_BAD_BUFFER:
-               return("bad SourceDestBuffer (E57_ERROR_BAD_BUFFER)");
-           case E57_ERROR_NO_BUFFER_FOR_ELEMENT:
-               return("no buffer specified for an element in CompressedVectorNode during write (E57_ERROR_NO_BUFFER_FOR_ELEMENT)");
-           case E57_ERROR_BUFFER_SIZE_MISMATCH:
-               return("SourceDestBuffers not all same size (E57_ERROR_BUFFER_SIZE_MISMATCH)");
-           case E57_ERROR_BUFFER_DUPLICATE_PATHNAME:
-               return("duplicate pathname in CompressedVectorNode read/write (E57_ERROR_BUFFER_DUPLICATE_PATHNAME)");
-           case E57_ERROR_BAD_FILE_SIGNATURE:
-               return("file signature not ""ASTM-E57"" (E57_ERROR_BAD_FILE_SIGNATURE)");
-           case E57_ERROR_UNKNOWN_FILE_VERSION:
-               return("incompatible file version (E57_ERROR_UNKNOWN_FILE_VERSION)");
-           case E57_ERROR_BAD_FILE_LENGTH:
-               return("size in file header not same as actual (E57_ERROR_BAD_FILE_LENGTH)");
-           case E57_ERROR_XML_PARSER_INIT:
-               return("XML parser failed to initialize (E57_ERROR_XML_PARSER_INIT)");
-           case E57_ERROR_DUPLICATE_NAMESPACE_PREFIX:
-               return("namespace prefix already defined (E57_ERROR_DUPLICATE_NAMESPACE_PREFIX)");
-           case E57_ERROR_DUPLICATE_NAMESPACE_URI:
-               return("namespace URI already defined (E57_ERROR_DUPLICATE_NAMESPACE_URI)");
-           case E57_ERROR_BAD_PROTOTYPE:
-               return("bad prototype in CompressedVectorNode (E57_ERROR_BAD_PROTOTYPE)");
-           case E57_ERROR_BAD_CODECS:
-               return("bad codecs in CompressedVectorNode (E57_ERROR_BAD_CODECS)");
-           case E57_ERROR_VALUE_OUT_OF_BOUNDS:
-               return("element value out of min/max bounds (E57_ERROR_VALUE_OUT_OF_BOUNDS)");
-           case E57_ERROR_CONVERSION_REQUIRED:
-               return("conversion required to assign element value, but not requested (E57_ERROR_CONVERSION_REQUIRED)");
-           case E57_ERROR_BAD_PATH_NAME:
-               return("E57 path name is not well formed (E57_ERROR_BAD_PATH_NAME)");
-           case E57_ERROR_NOT_IMPLEMENTED:
-               return("functionality not implemented (E57_ERROR_NOT_IMPLEMENTED)");
-           case E57_ERROR_BAD_NODE_DOWNCAST:
-               return("bad downcast from Node to specific node type (E57_ERROR_BAD_NODE_DOWNCAST)");
-           case E57_ERROR_WRITER_NOT_OPEN:
-               return("CompressedVectorWriter is no longer open (E57_ERROR_WRITER_NOT_OPEN)");
-           case E57_ERROR_READER_NOT_OPEN:
-               return("CompressedVectorReader is no longer open (E57_ERROR_READER_NOT_OPEN)");
-           case E57_ERROR_NODE_UNATTACHED:
-               return("node is not yet attached to tree of ImageFile (E57_ERROR_NODE_UNATTACHED)");
-           case E57_ERROR_ALREADY_HAS_PARENT:
-               return("node already has a parent (E57_ERROR_ALREADY_HAS_PARENT)");
-           case E57_ERROR_DIFFERENT_DEST_IMAGEFILE:
-               return("nodes were constructed with different destImageFiles (E57_ERROR_DIFFERENT_DEST_IMAGEFILE)");
-           case E57_ERROR_IMAGEFILE_NOT_OPEN:
-               return("destImageFile is no longer open (E57_ERROR_IMAGEFILE_NOT_OPEN)");
-           case E57_ERROR_BUFFERS_NOT_COMPATIBLE:
-               return("SourceDestBuffers not compatible with previously given ones (E57_ERROR_BUFFERS_NOT_COMPATIBLE)");
-           case E57_ERROR_TOO_MANY_WRITERS:
-               return("too many open CompressedVectorWriters of an ImageFile (E57_ERROR_TOO_MANY_WRITERS)");
-           case E57_ERROR_TOO_MANY_READERS:
-               return("too many open CompressedVectorReaders of an ImageFile (E57_ERROR_TOO_MANY_READERS)");
-           case E57_ERROR_BAD_CONFIGURATION:
-               return("bad configuration string (E57_ERROR_BAD_CONFIGURATION)");
-           case E57_ERROR_INVARIANCE_VIOLATION:
-               return("class invariance constraint violation in debug mode (E57_ERROR_INVARIANCE_VIOLATION)");
-           /*
+         case E57_SUCCESS:
+            return "operation was successful (E57_SUCCESS)";
+         case E57_ERROR_BAD_CV_HEADER:
+            return "a CompressedVector binary header was bad (E57_ERROR_BAD_CV_HEADER)";
+         case E57_ERROR_BAD_CV_PACKET:
+            return "a CompressedVector binary packet was bad (E57_ERROR_BAD_CV_PACKET)";
+         case E57_ERROR_CHILD_INDEX_OUT_OF_BOUNDS:
+            return "a numerical index identifying a child was out of bounds (E57_ERROR_CHILD_INDEX_OUT_OF_BOUNDS)";
+         case E57_ERROR_SET_TWICE:
+            return "attempted to set an existing child element to a new value (E57_ERROR_SET_TWICE)";
+         case E57_ERROR_HOMOGENEOUS_VIOLATION:
+            return "attempted to add an E57 Element that would have made the children of a homogenous Vector have different types (E57_ERROR_HOMOGENEOUS_VIOLATION)";
+         case E57_ERROR_VALUE_NOT_REPRESENTABLE:
+            return "a value could not be represented in the requested type (E57_ERROR_VALUE_NOT_REPRESENTABLE)";
+         case E57_ERROR_SCALED_VALUE_NOT_REPRESENTABLE:
+            return "after scaling the result could not be represented in the requested type (E57_ERROR_SCALED_VALUE_NOT_REPRESENTABLE)";
+         case E57_ERROR_REAL64_TOO_LARGE:
+            return "a 64 bit IEEE float was too large to store in a 32 bit IEEE float (E57_ERROR_REAL64_TOO_LARGE)";
+         case E57_ERROR_EXPECTING_NUMERIC:
+            return "Expecting numeric representation in user's buffer, found ustring (E57_ERROR_EXPECTING_NUMERIC)";
+         case E57_ERROR_EXPECTING_USTRING:
+            return "Expecting string representation in user's buffer, found numeric (E57_ERROR_EXPECTING_USTRING)";
+         case E57_ERROR_INTERNAL:
+            return "An unrecoverable inconsistent internal state was detected (E57_ERROR_INTERNAL)";
+         case E57_ERROR_BAD_XML_FORMAT:
+            return "E57 primitive not encoded in XML correctly (E57_ERROR_BAD_XML_FORMAT)";
+         case E57_ERROR_XML_PARSER:
+            return "XML not well formed (E57_ERROR_XML_PARSER)";
+         case E57_ERROR_BAD_API_ARGUMENT:
+            return "bad API function argument provided by user (E57_ERROR_BAD_API_ARGUMENT)";
+         case E57_ERROR_FILE_IS_READ_ONLY:
+            return "can't modify read only file (E57_ERROR_FILE_IS_READ_ONLY)";
+         case E57_ERROR_BAD_CHECKSUM:
+            return "checksum mismatch, file is corrupted (E57_ERROR_BAD_CHECKSUM)";
+         case E57_ERROR_OPEN_FAILED:
+            return "open() failed (E57_ERROR_OPEN_FAILED)";
+         case E57_ERROR_CLOSE_FAILED:
+            return "close() failed (E57_ERROR_CLOSE_FAILED)";
+         case E57_ERROR_READ_FAILED:
+            return "read() failed (E57_ERROR_READ_FAILED)";
+         case E57_ERROR_WRITE_FAILED:
+            return "write() failed (E57_ERROR_WRITE_FAILED)";
+         case E57_ERROR_LSEEK_FAILED:
+            return "lseek() failed (E57_ERROR_LSEEK_FAILED)";
+         case E57_ERROR_PATH_UNDEFINED:
+            return "E57 element path well formed but not defined (E57_ERROR_PATH_UNDEFINED)";
+         case E57_ERROR_BAD_BUFFER:
+            return "bad SourceDestBuffer (E57_ERROR_BAD_BUFFER)";
+         case E57_ERROR_NO_BUFFER_FOR_ELEMENT:
+            return "no buffer specified for an element in CompressedVectorNode during write (E57_ERROR_NO_BUFFER_FOR_ELEMENT)";
+         case E57_ERROR_BUFFER_SIZE_MISMATCH:
+            return "SourceDestBuffers not all same size (E57_ERROR_BUFFER_SIZE_MISMATCH)";
+         case E57_ERROR_BUFFER_DUPLICATE_PATHNAME:
+            return "duplicate pathname in CompressedVectorNode read/write (E57_ERROR_BUFFER_DUPLICATE_PATHNAME)";
+         case E57_ERROR_BAD_FILE_SIGNATURE:
+            return "file signature not ""ASTM-E57"" (E57_ERROR_BAD_FILE_SIGNATURE)";
+         case E57_ERROR_UNKNOWN_FILE_VERSION:
+            return "incompatible file version (E57_ERROR_UNKNOWN_FILE_VERSION)";
+         case E57_ERROR_BAD_FILE_LENGTH:
+            return "size in file header not same as actual (E57_ERROR_BAD_FILE_LENGTH)";
+         case E57_ERROR_XML_PARSER_INIT:
+            return "XML parser failed to initialize (E57_ERROR_XML_PARSER_INIT)";
+         case E57_ERROR_DUPLICATE_NAMESPACE_PREFIX:
+            return "namespace prefix already defined (E57_ERROR_DUPLICATE_NAMESPACE_PREFIX)";
+         case E57_ERROR_DUPLICATE_NAMESPACE_URI:
+            return "namespace URI already defined (E57_ERROR_DUPLICATE_NAMESPACE_URI)";
+         case E57_ERROR_BAD_PROTOTYPE:
+            return "bad prototype in CompressedVectorNode (E57_ERROR_BAD_PROTOTYPE)";
+         case E57_ERROR_BAD_CODECS:
+            return "bad codecs in CompressedVectorNode (E57_ERROR_BAD_CODECS)";
+         case E57_ERROR_VALUE_OUT_OF_BOUNDS:
+            return "element value out of min/max bounds (E57_ERROR_VALUE_OUT_OF_BOUNDS)";
+         case E57_ERROR_CONVERSION_REQUIRED:
+            return "conversion required to assign element value, but not requested (E57_ERROR_CONVERSION_REQUIRED)";
+         case E57_ERROR_BAD_PATH_NAME:
+            return "E57 path name is not well formed (E57_ERROR_BAD_PATH_NAME)";
+         case E57_ERROR_NOT_IMPLEMENTED:
+            return "functionality not implemented (E57_ERROR_NOT_IMPLEMENTED)";
+         case E57_ERROR_BAD_NODE_DOWNCAST:
+            return "bad downcast from Node to specific node type (E57_ERROR_BAD_NODE_DOWNCAST)";
+         case E57_ERROR_WRITER_NOT_OPEN:
+            return "CompressedVectorWriter is no longer open (E57_ERROR_WRITER_NOT_OPEN)";
+         case E57_ERROR_READER_NOT_OPEN:
+            return "CompressedVectorReader is no longer open (E57_ERROR_READER_NOT_OPEN)";
+         case E57_ERROR_NODE_UNATTACHED:
+            return "node is not yet attached to tree of ImageFile (E57_ERROR_NODE_UNATTACHED)";
+         case E57_ERROR_ALREADY_HAS_PARENT:
+            return "node already has a parent (E57_ERROR_ALREADY_HAS_PARENT)";
+         case E57_ERROR_DIFFERENT_DEST_IMAGEFILE:
+            return "nodes were constructed with different destImageFiles (E57_ERROR_DIFFERENT_DEST_IMAGEFILE)";
+         case E57_ERROR_IMAGEFILE_NOT_OPEN:
+            return "destImageFile is no longer open (E57_ERROR_IMAGEFILE_NOT_OPEN)";
+         case E57_ERROR_BUFFERS_NOT_COMPATIBLE:
+            return "SourceDestBuffers not compatible with previously given ones (E57_ERROR_BUFFERS_NOT_COMPATIBLE)";
+         case E57_ERROR_TOO_MANY_WRITERS:
+            return "too many open CompressedVectorWriters of an ImageFile (E57_ERROR_TOO_MANY_WRITERS)";
+         case E57_ERROR_TOO_MANY_READERS:
+            return "too many open CompressedVectorReaders of an ImageFile (E57_ERROR_TOO_MANY_READERS)";
+         case E57_ERROR_BAD_CONFIGURATION:
+            return "bad configuration string (E57_ERROR_BAD_CONFIGURATION)";
+         case E57_ERROR_INVARIANCE_VIOLATION:
+            return "class invariance constraint violation in debug mode (E57_ERROR_INVARIANCE_VIOLATION)";
+            /*
             * N.B.  *** When changing error strings here, remember to update the Doxygen strings in E57Foundation.h ****
             */
-           default:
-               return("<unknown ErrorCode>");
-       }
+         default:
+            return "<unknown ErrorCode>";
+      }
    }
 
 }

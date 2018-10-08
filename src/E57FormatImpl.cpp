@@ -290,32 +290,12 @@ std::shared_ptr<NodeImpl> NodeImpl::get(const ustring& pathName)
     /// The non-terminal types override this virtual function.
     /// Only absolute pathNames make any sense here, because the terminal types can't have children, so relative pathNames are illegal.
 
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+   _verifyPathNameAbsolute( pathName );
 
-    /// Parse to determine if pathName is absolute
-    bool isRelative;
-    vector<ustring> fields;
-    shared_ptr<ImageFileImpl> imf(destImageFile_);
-    imf->pathNameParse(pathName, isRelative, fields);  // throws if bad pathName
-
-    /// If not an absolute path name, have error
-    if (isRelative)
-        throw E57_EXCEPTION2(E57_ERROR_BAD_PATH_NAME, "this->pathName=" + this->pathName() + " pathName=" + pathName);
-
-    /// Find root of the tree
-    shared_ptr<NodeImpl> root(shared_from_this()->getRoot());
-
-    /// Check to make sure root node is non-terminal type (otherwise have stack overflow).
-    switch (root->type()) {
-        case E57_STRUCTURE:
-        case E57_VECTOR: //??? COMPRESSED_VECTOR?
-            break;
-        default:
-            throw E57_EXCEPTION2(E57_ERROR_BAD_PATH_NAME, "this->pathName=" + this->pathName() + " pathName=" + pathName);
-    }
+    shared_ptr<NodeImpl> root = _verifyAndGetRoot();
 
     /// Forward call to the non-terminal root node
-    return(root->get(pathName));
+    return root->get( pathName );
 }
 
 void NodeImpl::set(const ustring& pathName, shared_ptr<NodeImpl> ni, bool autoPathCreate)
@@ -324,32 +304,12 @@ void NodeImpl::set(const ustring& pathName, shared_ptr<NodeImpl> ni, bool autoPa
     /// The non-terminal types override this virtual function.
     /// Only absolute pathNames make any sense here, because the terminal types can't have children, so relative pathNames are illegal.
 
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+   _verifyPathNameAbsolute( pathName );
 
-    /// Parse to determine if pathName is absolute
-    bool isRelative;
-    vector<ustring> fields;
-    shared_ptr<ImageFileImpl> imf(destImageFile_);
-    imf->pathNameParse(pathName, isRelative, fields);  // throws if bad pathName
-
-    /// If not an absolute path name, have error
-    if (isRelative)
-        throw E57_EXCEPTION2(E57_ERROR_BAD_PATH_NAME, "this->pathName=" + this->pathName() + " pathName=" + pathName);
-
-    /// Find root of the tree
-    shared_ptr<NodeImpl> root(shared_from_this()->getRoot());
-
-    /// Check to make sure root node is non-terminal type (otherwise have stack overflow).
-    switch (root->type()) {
-        case E57_STRUCTURE:
-        case E57_VECTOR: //??? COMPRESSED_VECTOR?
-            break;
-        default:
-            throw E57_EXCEPTION2(E57_ERROR_BAD_PATH_NAME, "this->pathName=" + this->pathName() + " pathName=" + pathName);
-    }
+   shared_ptr<NodeImpl> root = _verifyAndGetRoot();
 
     /// Forward call to the non-terminal root node
-    root->set(pathName, ni, autoPathCreate);
+    root->set( pathName, ni, autoPathCreate );
 }
 
 void NodeImpl::set(const std::vector<ustring>& /*fields*/, unsigned /*level*/, std::shared_ptr<NodeImpl> /*ni*/, bool /*autoPathCreate*/)
@@ -451,6 +411,43 @@ void NodeImpl::dump(int indent, ostream& os)
     os << space(indent) << "elementName: " << elementName_ << endl;
     os << space(indent) << "isAttached:  " << isAttached_ << endl;
     os << space(indent) << "path:        " << pathName() << endl;
+}
+
+bool NodeImpl::_verifyPathNameAbsolute( const ustring &inPathName )
+{
+   checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+
+   /// Parse to determine if pathName is absolute
+   bool isRelative = false;
+   vector<ustring> fields;
+   shared_ptr<ImageFileImpl> imf( destImageFile_ );
+
+   imf->pathNameParse( inPathName, isRelative, fields );  // throws if bad pathName
+
+   /// If not an absolute path name, have error
+   if ( isRelative )
+   {
+      throw E57_EXCEPTION2( E57_ERROR_BAD_PATH_NAME, "this->pathName=" + this->pathName() + " pathName=" + inPathName );
+   }
+
+   return isRelative;
+}
+
+std::shared_ptr<NodeImpl> NodeImpl::_verifyAndGetRoot()
+{
+   /// Find root of the tree
+   shared_ptr<NodeImpl> root( shared_from_this()->getRoot() );
+
+   /// Check to make sure root node is non-terminal type (otherwise have stack overflow).
+   switch (root->type()) {
+       case E57_STRUCTURE:
+       case E57_VECTOR: //??? COMPRESSED_VECTOR?
+           break;
+       default:
+           throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "root invalid for this->pathName=" + this->pathName() );
+   }
+
+   return root;
 }
 #endif
 

@@ -83,6 +83,11 @@ public:
     virtual void            dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 
+private:
+    bool _verifyPathNameAbsolute( const ustring &inPathName );
+
+    std::shared_ptr<NodeImpl>   _verifyAndGetRoot();
+
 protected:
     friend class StructureNodeImpl;
     friend class CompressedVectorWriterImpl;

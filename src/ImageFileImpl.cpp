@@ -316,24 +316,24 @@ namespace e57 {
       file_ = nullptr;
    }
 
-   bool ImageFileImpl::isOpen()
+   bool ImageFileImpl::isOpen() const
    {
-      return(file_ != nullptr);
+      return (file_ != nullptr);
    }
 
-   bool ImageFileImpl::isWriter()
+   bool ImageFileImpl::isWriter() const
    {
-      return(isWriter_);
+      return isWriter_;
    }
 
-   int ImageFileImpl::writerCount()
+   int ImageFileImpl::writerCount() const
    {
-      return(writerCount_);
+      return writerCount_;
    }
 
-   int ImageFileImpl::readerCount()
+   int ImageFileImpl::readerCount() const
    {
-      return(readerCount_);
+      return readerCount_;
    }
 
    ImageFileImpl::~ImageFileImpl()
@@ -365,15 +365,15 @@ namespace e57 {
       return(oldLogicalStart);
    }
 
-   CheckedFile* ImageFileImpl::file()
+   CheckedFile* ImageFileImpl::file() const
    {
-      return(file_);
+      return file_;
    }
 
-   ustring ImageFileImpl::fileName()
+   ustring ImageFileImpl::fileName() const
    {
       // don't checkImageFileOpen, since need to get fileName to report not open
-      return(fileName_);
+      return fileName_;
    }
 
    void ImageFileImpl::extensionsAdd(const ustring& prefix, const ustring& uri)
@@ -392,12 +392,12 @@ namespace e57 {
       nameSpaces_.push_back(NameSpace(prefix, uri));
    }
 
-   bool ImageFileImpl::extensionsLookupPrefix(const ustring& prefix, ustring& uri)
+   bool ImageFileImpl::extensionsLookupPrefix(const ustring& prefix, ustring& uri) const
    {
       checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
 
       /// Linear search for matching prefix
-      std::vector<NameSpace>::iterator it;
+      std::vector<NameSpace>::const_iterator it;
       for (it = nameSpaces_.begin(); it < nameSpaces_.end(); ++it) {
          if (it->prefix == prefix) {
             uri = it->uri;
@@ -407,12 +407,12 @@ namespace e57 {
       return(false);
    }
 
-   bool ImageFileImpl::extensionsLookupUri(const ustring& uri, ustring& prefix)
+   bool ImageFileImpl::extensionsLookupUri(const ustring& uri, ustring& prefix) const
    {
       checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
 
       /// Linear search for matching URI
-      std::vector<NameSpace>::iterator it;
+      std::vector<NameSpace>::const_iterator it;
       for (it = nameSpaces_.begin(); it < nameSpaces_.end(); ++it) {
          if (it->uri == uri) {
             prefix = it->prefix;
@@ -422,19 +422,19 @@ namespace e57 {
       return(false);
    }
 
-   size_t ImageFileImpl::extensionsCount()
+   size_t ImageFileImpl::extensionsCount() const
    {
       checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
       return(nameSpaces_.size());
    }
 
-   ustring ImageFileImpl::extensionsPrefix(const size_t index)
+   ustring ImageFileImpl::extensionsPrefix(const size_t index) const
    {
       checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
       return(nameSpaces_[index].prefix);  //??? throw e57 exception here if out of bounds?
    }
 
-   ustring ImageFileImpl::extensionsUri(const size_t index)
+   ustring ImageFileImpl::extensionsUri(const size_t index) const
    {
       checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
       return(nameSpaces_[index].uri);  //??? throw e57 exception here if out of bounds?
@@ -657,7 +657,7 @@ namespace e57 {
       return(path);
    }
 
-   void ImageFileImpl::checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName)
+   void ImageFileImpl::checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName) const
    {
       if (!isOpen()) {
          throw E57Exception(E57_ERROR_IMAGEFILE_NOT_OPEN,
@@ -668,7 +668,7 @@ namespace e57 {
       }
    }
 
-   void ImageFileImpl::dump(int indent, std::ostream& os)
+   void ImageFileImpl::dump(int indent, std::ostream& os) const
    {
       /// no checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__)
       os << space(indent) << "fileName:    " << fileName_ << std::endl;

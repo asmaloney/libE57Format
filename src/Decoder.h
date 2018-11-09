@@ -45,7 +45,7 @@ namespace e57 {
          virtual uint64_t    totalRecordsCompleted() = 0;
          virtual size_t      inputProcess(const char* source, const size_t count) = 0;
          virtual void        stateReset() = 0;
-         unsigned            bytestreamNumber() {return(bytestreamNumber_);}
+         unsigned            bytestreamNumber() const { return bytestreamNumber_; }
 #ifdef E57_DEBUG
          virtual void        dump(int indent = 0, std::ostream& os = std::cout) = 0;
 #endif

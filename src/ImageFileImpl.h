@@ -62,23 +62,23 @@ namespace e57 {
          std::shared_ptr<StructureNodeImpl> root();
          void            close();
          void            cancel();
-         bool            isOpen();
-         bool            isWriter();
-         int             writerCount();
-         int             readerCount();
+         bool            isOpen() const;
+         bool            isWriter() const;
+         int             writerCount() const;
+         int             readerCount() const;
          ~ImageFileImpl();
 
          uint64_t        allocateSpace(uint64_t byteCount, bool doExtendNow);
-         CheckedFile*    file();
-         ustring         fileName();
+         CheckedFile*    file() const;
+         ustring         fileName() const;
 
          /// Manipulate registered extensions in the file
          void            extensionsAdd(const ustring& prefix, const ustring& uri);
-         bool            extensionsLookupPrefix(const ustring& prefix, ustring& uri);
-         bool            extensionsLookupUri(const ustring& uri, ustring& prefix);
-         size_t          extensionsCount();
-         ustring         extensionsPrefix(const size_t index);
-         ustring         extensionsUri(const size_t index);
+         bool            extensionsLookupPrefix(const ustring& prefix, ustring& uri) const;
+         bool            extensionsLookupUri(const ustring& uri, ustring& prefix) const;
+         size_t          extensionsCount() const;
+         ustring         extensionsPrefix(const size_t index) const;
+         ustring         extensionsUri(const size_t index) const;
 
          /// Utility functions:
          bool            isElementNameExtended(const ustring& elementName);
@@ -100,7 +100,7 @@ namespace e57 {
 
          /// Diagnostic functions:
 #ifdef E57_DEBUG
-         void            dump(int indent = 0, std::ostream& os = std::cout);
+         void            dump(int indent = 0, std::ostream& os = std::cout) const;
 #endif
 
       protected:
@@ -109,7 +109,7 @@ namespace e57 {
          friend class CompressedVectorWriterImpl;
          friend class CompressedVectorReaderImpl; //??? add file() instead of accessing file_, others friends too
 
-         void checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName);
+         void checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName) const;
 
          struct NameSpace {
                ustring     prefix;

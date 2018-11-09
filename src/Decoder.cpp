@@ -27,8 +27,8 @@
 #include <cstring>
 
 #include "Decoder.h"
-#include "ImageFileImpl.h"
 #include "E57FormatImpl.h"
+#include "ImageFileImpl.h"
 
 using namespace e57;
 using namespace std;
@@ -200,7 +200,7 @@ void BitpackDecoder::destBufferSetNew(vector<SourceDestBuffer>& dbufs)
 size_t BitpackDecoder::inputProcess(const char* source, const size_t availableByteCount)
 {
 #ifdef E57_MAX_VERBOSE
-   cout << "BitpackDecoder::inputprocess() called, source=" << (unsigned)source << " availableByteCount="<< availableByteCount << endl;
+   cout << "BitpackDecoder::inputprocess() called, source=" << (source ? source : "none") << " availableByteCount="<< availableByteCount << endl;
 #endif
    size_t bytesUnsaved = availableByteCount;
    size_t bitsEaten = 0;
@@ -327,7 +327,7 @@ BitpackFloatDecoder::BitpackFloatDecoder(unsigned bytestreamNumber, SourceDestBu
 size_t BitpackFloatDecoder::inputProcessAligned(const char* inbuf, const size_t firstBit, const size_t endBit)
 {
 #ifdef E57_MAX_VERBOSE
-   cout << "BitpackFloatDecoder::inputProcessAligned() called, inbuf=" << (unsigned)inbuf << " firstBit=" << firstBit << " endBit=" << endBit << endl;
+   cout << "BitpackFloatDecoder::inputProcessAligned() called, inbuf=" << inbuf << " firstBit=" << firstBit << " endBit=" << endBit << endl;
 #endif
    /// Read from inbuf, decode, store in destBuffer
    /// Repeat until have filled destBuffer, or completed all records
@@ -431,7 +431,7 @@ BitpackStringDecoder::BitpackStringDecoder(unsigned bytestreamNumber, SourceDest
 size_t BitpackStringDecoder::inputProcessAligned(const char* inbuf, const size_t firstBit, const size_t endBit)
 {
 #ifdef E57_MAX_VERBOSE
-   cout << "BitpackStringDecoder::inputProcessAligned() called, inbuf=" << (unsigned)inbuf << " firstBit=" << firstBit << " endBit=" << endBit << endl;
+   cout << "BitpackStringDecoder::inputProcessAligned() called, inbuf=" << inbuf << " firstBit=" << firstBit << " endBit=" << endBit << endl;
 #endif
    /// Read from inbuf, decode, store in destBuffer
    /// Repeat until have filled destBuffer, or completed all records

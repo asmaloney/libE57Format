@@ -114,7 +114,10 @@ namespace e57 {
          struct NameSpace {
                ustring     prefix;
                ustring     uri;
-               NameSpace(ustring prefix0, ustring uri0) : prefix(prefix0),uri(uri0) {}
+               NameSpace(const ustring &prefix0, const ustring &uri0) :
+                  prefix(prefix0),
+                  uri(uri0)
+               {}
          };
 
          ustring         fileName_;

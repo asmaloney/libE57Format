@@ -64,7 +64,7 @@ namespace e57 {
 
          uint64_t    totalRecordsCompleted() override {return(currentRecordIndex_);}
 
-         size_t            inputProcess(const char* source, const size_t byteCount) override;
+         size_t            inputProcess(const char* source, const size_t availableByteCount) override;
          virtual size_t    inputProcessAligned(const char* inbuf, const size_t firstBit, const size_t endBit) = 0;
 
          void        stateReset() override;
@@ -156,8 +156,8 @@ namespace e57 {
          ConstantIntegerDecoder(bool isScaledInteger, unsigned bytestreamNumber, SourceDestBuffer& dbuf,
                                 int64_t minimum, double scale, double offset, uint64_t maxRecordCount);
          void        destBufferSetNew(std::vector<SourceDestBuffer>& dbufs) override;
-         uint64_t    totalRecordsCompleted() override {return(currentRecordIndex_);}
-         size_t      inputProcess(const char* source, const size_t byteCount) override;
+         uint64_t    totalRecordsCompleted() override { return currentRecordIndex_; }
+         size_t      inputProcess(const char* source, const size_t availableByteCount) override;
          void        stateReset() override;
 #ifdef E57_DEBUG
          void        dump(int indent = 0, std::ostream& os = std::cout) override;

@@ -55,16 +55,16 @@ namespace e57 {
 
       private:
          /// SAX interface
-         void startElement(const XMLCh* const uri, const XMLCh* const localname, const XMLCh* const qname, const Attributes& attributes) override;
+         void startElement(const XMLCh* const uri, const XMLCh* const localName, const XMLCh* const qName, const Attributes& attributes) override;
          void endElement( const XMLCh* const uri,
-                          const XMLCh* const localname,
-                          const XMLCh* const qname) override;
+                          const XMLCh* const localName,
+                          const XMLCh* const qName) override;
          void characters(const XMLCh* const chars, const XMLSize_t length) override;
 
          /// SAX error interface
-         void warning(const SAXParseException& exc) override;
-         void error(const SAXParseException& exc) override;
-         void fatalError(const SAXParseException& exc) override;
+         void warning(const SAXParseException& ex) override;
+         void error(const SAXParseException& ex) override;
+         void fatalError(const SAXParseException& ex) override;
 
          ustring toUString(const XMLCh* const xml_str);
          ustring lookupAttribute(const Attributes& attributes, const XMLCh* attribute_name);

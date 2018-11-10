@@ -391,7 +391,7 @@ protected:
 
 class StringNodeImpl : public NodeImpl {
 public:
-    explicit StringNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring value = "");
+    explicit StringNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring &value = "");
     ~StringNodeImpl() override = default;
 
     NodeType    type() const override;

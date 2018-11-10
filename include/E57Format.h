@@ -352,8 +352,8 @@ class CompressedVectorWriter {
 public:
     CompressedVectorWriter() = delete;
 
-    void        write(const size_t requestedRecordCount);
-    void        write(std::vector<SourceDestBuffer>& sbufs, const size_t requestedRecordCount);
+    void        write(const size_t recordCount);
+    void        write(std::vector<SourceDestBuffer>& sbufs, const size_t recordCount);
     void        close();
     bool        isOpen();
     CompressedVectorNode compressedVectorNode() const;
@@ -448,11 +448,11 @@ protected:
 class ScaledIntegerNode {
 public:
     ScaledIntegerNode() = delete;
-    explicit ScaledIntegerNode(ImageFile destImageFile, int64_t value, int64_t minimum, int64_t maximum,
+    explicit ScaledIntegerNode(ImageFile destImageFile, int64_t rawValue, int64_t minimum, int64_t maximum,
                                double scale = 1.0, double offset = 0.0);
-    explicit ScaledIntegerNode(ImageFile destImageFile, int value, int64_t minimum, int64_t maximum,
+    explicit ScaledIntegerNode(ImageFile destImageFile, int rawValue, int64_t minimum, int64_t maximum,
                                double scale = 1.0, double offset = 0.0);
-    explicit ScaledIntegerNode(ImageFile destImageFile, int value, int minimum, int maximum,
+    explicit ScaledIntegerNode(ImageFile destImageFile, int rawValue, int minimum, int maximum,
                                double scale = 1.0, double offset = 0.0);
     explicit ScaledIntegerNode(ImageFile destImageFile, double scaledValue, double scaledMinimum, double scaledMaximum,
                                double scale = 1.0, double offset = 0.0);
@@ -564,8 +564,8 @@ public:
     explicit BlobNode(ImageFile destImageFile, int64_t byteCount);
 
     int64_t     byteCount() const;
-    void        read(uint8_t* buf,  int64_t start, size_t byteCount);
-    void        write(uint8_t* buf, int64_t start, size_t byteCount);
+    void        read(uint8_t* buf,  int64_t start, size_t count);
+    void        write(uint8_t* buf, int64_t start, size_t count);
 
     // Up/Down cast conversion
                 operator Node() const;

@@ -163,27 +163,27 @@ protected:
 
 class SourceDestBufferImpl : public std::enable_shared_from_this<SourceDestBufferImpl> {
 public:
-    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, int8_t* b,   const size_t capacity, bool doConversion = false,
+    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring &pathName, int8_t* b,   const size_t capacity, bool doConversion = false,
                          bool doScaling = false, size_t stride = sizeof(int8_t));
-    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, uint8_t* b,  const size_t capacity, bool doConversion = false,
+    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring &pathName, uint8_t* b,  const size_t capacity, bool doConversion = false,
                          bool doScaling = false, size_t stride = sizeof(uint8_t));
-    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, int16_t* b,  const size_t capacity, bool doConversion = false,
+    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring &pathName, int16_t* b,  const size_t capacity, bool doConversion = false,
                          bool doScaling = false, size_t stride = sizeof(int16_t));
-    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, uint16_t* b, const size_t capacity, bool doConversion = false,
+    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring &pathName, uint16_t* b, const size_t capacity, bool doConversion = false,
                          bool doScaling = false, size_t stride = sizeof(uint16_t));
-    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, int32_t* b,  const size_t capacity, bool doConversion = false,
+    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring &pathName, int32_t* b,  const size_t capacity, bool doConversion = false,
                          bool doScaling = false, size_t stride = sizeof(int32_t));
-    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, uint32_t* b, const size_t capacity, bool doConversion = false,
+    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring &pathName, uint32_t* b, const size_t capacity, bool doConversion = false,
                          bool doScaling = false, size_t stride = sizeof(uint32_t));
-    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, int64_t* b,  const size_t capacity, bool doConversion = false,
+    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring &pathName, int64_t* b,  const size_t capacity, bool doConversion = false,
                          bool doScaling = false, size_t stride = sizeof(int64_t));
-    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, bool* b,     const size_t capacity, bool doConversion = false,
+    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring &pathName, bool* b,     const size_t capacity, bool doConversion = false,
                          bool doScaling = false, size_t stride = sizeof(bool));
-    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, float* b,    const size_t capacity, bool doConversion = false,
+    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring &pathName, float* b,    const size_t capacity, bool doConversion = false,
                          bool doScaling = false, size_t stride = sizeof(float));
-    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, double* b,   const size_t capacity, bool doConversion = false,
+    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring &pathName, double* b,   const size_t capacity, bool doConversion = false,
                          bool doScaling = false, size_t stride = sizeof(double));
-    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, std::vector<ustring>* b);
+    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring &pathName, std::vector<ustring>* b);
 
     ustring                 pathName()      const { return pathName_; }
     MemoryRepresentation    memoryRepresentation() const { return memoryRepresentation_; }

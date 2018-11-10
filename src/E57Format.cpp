@@ -2372,70 +2372,70 @@ The @a capacity must match the capacity of all other SourceDestBuffers that will
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     SourceDestBufferNumericCreate.cpp example, SourceDestVufferStringCreate.cpp example, ImageFile::reader, ImageFile::writer, CompressedVectorReader::read(std::vector<SourceDestBuffer>&), CompressedVectorWriter::write(std::vector<SourceDestBuffer>&)
 */
-SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, int8_t* b, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
+SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring &pathName, int8_t* b, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
 : impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b, capacity, doConversion, doScaling, stride))
 {
 }
 
 //! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
 //! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const ustring,int8_t*,size_t,bool,bool,size_t)
-SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, uint8_t* b, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
+SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring &pathName, uint8_t* b, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
 : impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b, capacity, doConversion, doScaling, stride))
 {
 }
 
 //! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
 //! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const ustring,int8_t*,size_t,bool,bool,size_t)
-SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, int16_t* b, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
+SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring &pathName, int16_t* b, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
 : impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b, capacity, doConversion, doScaling, stride))
 {
 }
 
 //! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
 //! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const ustring,int8_t*,size_t,bool,bool,size_t)
-SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, uint16_t* b, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
+SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring &pathName, uint16_t* b, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
 : impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b, capacity, doConversion, doScaling, stride))
 {
 }
 
 //! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
 //! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const ustring,int8_t*,size_t,bool,bool,size_t)
-SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, int32_t* b, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
+SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring &pathName, int32_t* b, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
 : impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b, capacity, doConversion, doScaling, stride))
 {
 }
 
 //! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
 //! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const ustring,int8_t*,size_t,bool,bool,size_t)
-SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, uint32_t* b, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
+SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring &pathName, uint32_t* b, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
 : impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b, capacity, doConversion, doScaling, stride))
 {
 }
 
 //! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
 //! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const ustring,int8_t*,size_t,bool,bool,size_t)
-SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, int64_t* b, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
+SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring &pathName, int64_t* b, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
 : impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b, capacity, doConversion, doScaling, stride))
 {
 }
 
 //! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
 //! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const ustring,int8_t*,size_t,bool,bool,size_t)
-SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, bool* b, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
+SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring &pathName, bool* b, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
 : impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b, capacity, doConversion, doScaling, stride))
 {
 }
 
 //! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
 //! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const ustring,int8_t*,size_t,bool,bool,size_t)
-SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, float* b, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
+SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring &pathName, float* b, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
 : impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b, capacity, doConversion, doScaling, stride))
 {
 }
 
 //! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
 //! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const ustring,int8_t*,size_t,bool,bool,size_t)
-SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, double* b, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
+SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring &pathName, double* b, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
 : impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b, capacity, doConversion, doScaling, stride))
 {
 }
@@ -2467,7 +2467,7 @@ The API user is responsible for ensuring that the lifetime of the @a b vector ex
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     SourceDestBufferStringCreate.cpp example, SourceDestBufferNumericCreate.cpp example, SourceDestBuffer::doConversion for discussion on representations compatible with string SourceDestBuffers.
 */
-SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, std::vector<ustring>* b)
+SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring &pathName, std::vector<ustring>* b)
 : impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b))
 {
 }
@@ -4063,7 +4063,7 @@ If the StringNode is to be used in a CompressedVectorNode prototype, it is recom
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     StringCreate.cpp example, StringNode::value, Node, CompressedVectorNode, CompressedVectorNode::prototype
 */
-StringNode::StringNode(ImageFile destImageFile, const ustring value)
+StringNode::StringNode(ImageFile destImageFile, const ustring &value)
 : impl_(new StringNodeImpl(destImageFile.impl(), value))
 {
 }

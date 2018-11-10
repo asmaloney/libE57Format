@@ -285,27 +285,27 @@ protected:
 class SourceDestBuffer {
 public:
     SourceDestBuffer() = delete;
-    SourceDestBuffer(ImageFile destImageFile, const ustring pathName, int8_t* b,   const size_t capacity,
+    SourceDestBuffer(ImageFile destImageFile, const ustring &pathName, int8_t* b,   const size_t capacity,
                      bool doConversion = false, bool doScaling = false, size_t stride = sizeof(int8_t));
-    SourceDestBuffer(ImageFile destImageFile, const ustring pathName, uint8_t* b,  const size_t capacity,
+    SourceDestBuffer(ImageFile destImageFile, const ustring &pathName, uint8_t* b,  const size_t capacity,
                      bool doConversion = false, bool doScaling = false, size_t stride = sizeof(uint8_t));
-    SourceDestBuffer(ImageFile destImageFile, const ustring pathName, int16_t* b,  const size_t capacity,
+    SourceDestBuffer(ImageFile destImageFile, const ustring &pathName, int16_t* b,  const size_t capacity,
                      bool doConversion = false, bool doScaling = false, size_t stride = sizeof(int16_t));
-    SourceDestBuffer(ImageFile destImageFile, const ustring pathName, uint16_t* b, const size_t capacity,
+    SourceDestBuffer(ImageFile destImageFile, const ustring &pathName, uint16_t* b, const size_t capacity,
                      bool doConversion = false, bool doScaling = false, size_t stride = sizeof(uint16_t));
-    SourceDestBuffer(ImageFile destImageFile, const ustring pathName, int32_t* b,  const size_t capacity,
+    SourceDestBuffer(ImageFile destImageFile, const ustring &pathName, int32_t* b,  const size_t capacity,
                      bool doConversion = false, bool doScaling = false, size_t stride = sizeof(int32_t));
-    SourceDestBuffer(ImageFile destImageFile, const ustring pathName, uint32_t* b, const size_t capacity,
+    SourceDestBuffer(ImageFile destImageFile, const ustring &pathName, uint32_t* b, const size_t capacity,
                      bool doConversion = false, bool doScaling = false, size_t stride = sizeof(uint32_t));
-    SourceDestBuffer(ImageFile destImageFile, const ustring pathName, int64_t* b,  const size_t capacity,
+    SourceDestBuffer(ImageFile destImageFile, const ustring &pathName, int64_t* b,  const size_t capacity,
                      bool doConversion = false, bool doScaling = false, size_t stride = sizeof(int64_t));
-    SourceDestBuffer(ImageFile destImageFile, const ustring pathName, bool* b,     const size_t capacity,
+    SourceDestBuffer(ImageFile destImageFile, const ustring &pathName, bool* b,     const size_t capacity,
                      bool doConversion = false, bool doScaling = false, size_t stride = sizeof(bool));
-    SourceDestBuffer(ImageFile destImageFile, const ustring pathName, float* b,    const size_t  capacity,
+    SourceDestBuffer(ImageFile destImageFile, const ustring &pathName, float* b,    const size_t  capacity,
                      bool doConversion = false, bool doScaling = false, size_t stride = sizeof(float));
-    SourceDestBuffer(ImageFile destImageFile, const ustring pathName, double* b,   const size_t capacity,
+    SourceDestBuffer(ImageFile destImageFile, const ustring &pathName, double* b,   const size_t capacity,
                      bool doConversion = false, bool doScaling = false, size_t stride = sizeof(double));
-    SourceDestBuffer(ImageFile destImageFile, const ustring pathName, std::vector<ustring>* b);
+    SourceDestBuffer(ImageFile destImageFile, const ustring &pathName, std::vector<ustring>* b);
 
     ustring         pathName() const;
     enum MemoryRepresentation  memoryRepresentation() const;
@@ -529,7 +529,7 @@ class StringNodeImpl;
 class StringNode {
 public:
     StringNode() = delete;
-    explicit StringNode(ImageFile destImageFile, const ustring value = "");
+    explicit StringNode(ImageFile destImageFile, const ustring &value = "");
 
     ustring     value() const;
 

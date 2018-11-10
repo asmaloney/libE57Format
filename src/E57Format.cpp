@@ -1494,7 +1494,8 @@ Checking the invariant recursively may be expensive if the tree is large, so sho
 @throw   ::E57_ERROR_INVARIANCE_VIOLATION or any other E57 ErrorCode
 @see     CheckInvariant.cpp example, Node::checkInvariant
 */
-void ImageFile::checkInvariant(bool doRecurse) {
+void ImageFile::checkInvariant(bool doRecurse) const
+{
     // If this ImageFile is not open, can't test invariant (almost every call would throw)
     if (!isOpen())
         return;
@@ -1565,7 +1566,8 @@ void ImageFile::checkInvariant(bool doRecurse) {
 }
 
 //! @brief Check whether SourceDestBuffer class invariant is true
-void SourceDestBuffer::checkInvariant(bool /*doRecurse*/) {
+void SourceDestBuffer::checkInvariant(bool /*doRecurse*/) const
+{
     // Stride must be >= a memory type dependent value
     size_t min_stride = 0;
     switch (memoryRepresentation()) {

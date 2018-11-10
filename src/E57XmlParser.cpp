@@ -200,7 +200,7 @@ E57XmlParser::ParseInfo::ParseInfo()
 {
 }
 
-void E57XmlParser::ParseInfo::dump(int indent, ostream& os)
+void E57XmlParser::ParseInfo::dump(int indent, ostream& os) const
 {
     os << space(indent) << "nodeType:       " << nodeType << endl;
     os << space(indent) << "minimum:        " << minimum << endl;

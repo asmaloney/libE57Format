@@ -316,7 +316,7 @@ public:
 
     // Diagnostic functions:
     void            dump(int indent = 0, std::ostream& os = std::cout) const;
-    void            checkInvariant(bool doRecurse = true);
+    void            checkInvariant(bool doRecurse = true) const;
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
 protected:
@@ -624,7 +624,7 @@ public:
 
     // Diagnostic functions:
     void            dump(int indent = 0, std::ostream& os = std::cout) const;
-    void            checkInvariant(bool doRecurse = true);
+    void            checkInvariant(bool doRecurse = true) const;
     bool            operator==(ImageFile imf2) const;
     bool            operator!=(ImageFile imf2) const;
 

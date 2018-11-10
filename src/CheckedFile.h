@@ -65,8 +65,8 @@ namespace e57 {
          void            seek(uint64_t offset, OffsetMode omode = Logical);
          uint64_t        position(OffsetMode omode = Logical);
          uint64_t        length(OffsetMode omode = Logical);
-         void            extend(uint64_t length, OffsetMode omode = Logical);
-         e57::ustring    fileName() {return(fileName_);}
+         void            extend(uint64_t newLength, OffsetMode omode = Logical);
+         e57::ustring    fileName() const { return fileName_; }
          void            flush();
          void            close();
          void            unlink();

@@ -94,7 +94,7 @@ namespace e57 {
                std::shared_ptr<NodeImpl> container_ni;
 
                ParseInfo();  // default ctor
-               void    dump(int indent = 0, std::ostream& os = std::cout);
+               void    dump(int indent = 0, std::ostream& os = std::cout) const;
          };
          std::stack<ParseInfo>    stack_; /// Stores the current path in tree we are reading
 

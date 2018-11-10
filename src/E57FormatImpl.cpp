@@ -405,7 +405,7 @@ bool NodeImpl::findTerminalPosition(shared_ptr<NodeImpl> target, uint64_t& count
 }
 
 #ifdef E57_DEBUG
-void NodeImpl::dump(int indent, ostream& os)
+void NodeImpl::dump(int indent, ostream& os) const
 {
     /// don't checkImageFileOpen
     os << space(indent) << "elementName: " << elementName_ << endl;
@@ -783,7 +783,7 @@ void StructureNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile
 
 //??? use visitor?
 #ifdef E57_DEBUG
-void StructureNodeImpl::dump(int indent, ostream& os)
+void StructureNodeImpl::dump(int indent, ostream& os) const
 {
     /// don't checkImageFileOpen
     os << space(indent) << "type:        Structure" << " (" << type() << ")" << endl;
@@ -878,7 +878,7 @@ void VectorNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& c
 }
 
 #ifdef E57_DEBUG
-void VectorNodeImpl::dump(int indent, ostream& os)
+void VectorNodeImpl::dump(int indent, ostream& os) const
 {
     /// don't checkImageFileOpen
     os << space(indent) << "type:        Vector" << " (" << type() << ")" << endl;
@@ -1853,7 +1853,7 @@ void CompressedVectorNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> imf, Chec
 }
 
 #ifdef E57_DEBUG
-void CompressedVectorNodeImpl::dump(int indent, ostream& os)
+void CompressedVectorNodeImpl::dump(int indent, ostream& os) const
 {
     os << space(indent) << "type:        CompressedVector" << " (" << type() << ")" << endl;
     NodeImpl::dump(indent, os);
@@ -2076,7 +2076,7 @@ void IntegerNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> /*imf???*/, Checke
 }
 
 #ifdef E57_DEBUG
-void IntegerNodeImpl::dump(int indent, ostream& os)
+void IntegerNodeImpl::dump(int indent, ostream& os) const
 {
     // don't checkImageFileOpen
     os << space(indent) << "type:        Integer" << " (" << type() << ")" << endl;
@@ -2261,7 +2261,7 @@ void ScaledIntegerNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> /*imf*/, Che
 }
 
 #ifdef E57_DEBUG
-void ScaledIntegerNodeImpl::dump(int indent, ostream& os)
+void ScaledIntegerNodeImpl::dump(int indent, ostream& os) const
 {
     // don't checkImageFileOpen
     os << space(indent) << "type:        ScaledInteger" << " (" << type() << ")" << endl;
@@ -2349,28 +2349,28 @@ bool FloatNodeImpl::isDefined(const ustring& pathName)
     return pathName.empty();
 }
 
-double FloatNodeImpl::value()
+double FloatNodeImpl::value() const
 {
     checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
-    return(value_);
+    return value_;
 }
 
-FloatPrecision FloatNodeImpl::precision()
+FloatPrecision FloatNodeImpl::precision() const
 {
     checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
-    return(precision_);
+    return precision_;
 }
 
-double FloatNodeImpl::minimum()
+double FloatNodeImpl::minimum() const
 {
     checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
-    return(minimum_);
+    return minimum_;
 }
 
-double FloatNodeImpl::maximum()
+double FloatNodeImpl::maximum() const
 {
     checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
-    return(maximum_);
+    return maximum_;
 }
 
 void FloatNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, shared_ptr<NodeImpl> origin)
@@ -2425,7 +2425,7 @@ void FloatNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> /*imf*/, CheckedFile
 }
 
 #ifdef E57_DEBUG
-void FloatNodeImpl::dump(int indent, ostream& os)
+void FloatNodeImpl::dump(int indent, ostream& os) const
 {
     // don't checkImageFileOpen
     os << space(indent) << "type:        Float" << " (" << type() << ")" << endl;
@@ -2546,7 +2546,7 @@ void StringNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> /*imf*/, CheckedFil
 }
 
 #ifdef E57_DEBUG
-void StringNodeImpl::dump(int indent, ostream& os)
+void StringNodeImpl::dump(int indent, ostream& os) const
 {
     os << space(indent) << "type:        String" << " (" << type() << ")" << endl;
     NodeImpl::dump(indent, os);
@@ -2717,7 +2717,7 @@ void BlobNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> /*imf*/, CheckedFile&
 }
 
 #ifdef E57_DEBUG
-void BlobNodeImpl::dump(int indent, ostream& os)
+void BlobNodeImpl::dump(int indent, ostream& os) const
 {
     // don't checkImageFileOpen
     os << space(indent) << "type:        Blob" << " (" << type() << ")" << endl;
@@ -2725,14 +2725,14 @@ void BlobNodeImpl::dump(int indent, ostream& os)
     os << space(indent) << "blobLogicalLength_:           " << blobLogicalLength_ << endl;
     os << space(indent) << "binarySectionLogicalStart:    " << binarySectionLogicalStart_ << endl;
     os << space(indent) << "binarySectionLogicalLength:   " << binarySectionLogicalLength_ << endl;
-    size_t i;
-    for (i = 0; i < blobLogicalLength_ && i < 10; i++) {
-        uint8_t b;
-        read(&b, i, 1);
-        os << space(indent) << "data[" << i << "]: "<< static_cast<int>(b) << endl;
-    }
-    if (i < blobLogicalLength_)
-        os << space(indent) << "more data unprinted..." << endl;
+//    size_t i;
+//    for (i = 0; i < blobLogicalLength_ && i < 10; i++) {
+//        uint8_t b;
+//        read(&b, i, 1);
+//        os << space(indent) << "data[" << i << "]: "<< static_cast<int>(b) << endl;
+//    }
+//    if (i < blobLogicalLength_)
+//        os << space(indent) << "more data unprinted..." << endl;
 }
 #endif
 
@@ -2928,7 +2928,7 @@ void CompressedVectorSectionHeader::swab()
 #endif
 
 #ifdef E57_DEBUG
-void CompressedVectorSectionHeader::dump(int indent, std::ostream& os)
+void CompressedVectorSectionHeader::dump(int indent, std::ostream& os) const
 {
     os << space(indent) << "sectionId:            " << static_cast<unsigned>(sectionId) << endl;
     os << space(indent) << "sectionLogicalLength: " << sectionLogicalLength << endl;
@@ -3432,7 +3432,7 @@ void CompressedVectorWriterImpl::flush()
         bytestreams_.at(i)->registerFlushToOutput();
 }
 
-void CompressedVectorWriterImpl::checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName)
+void CompressedVectorWriterImpl::checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName) const
 {
 #if 0
 !!! how get destImageFile?
@@ -3945,7 +3945,7 @@ void CompressedVectorReaderImpl::close()
     isOpen_ = false;
 }
 
-void CompressedVectorReaderImpl::checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName)
+void CompressedVectorReaderImpl::checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName) const
 {
 #if 0
 !!! how get destImageFile?

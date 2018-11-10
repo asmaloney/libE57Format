@@ -51,7 +51,7 @@ namespace e57 {
          void        swab(){}
 #endif
 #ifdef E57_DEBUG
-         void        dump(int indent = 0, std::ostream& os = std::cout);
+         void        dump(int indent = 0, std::ostream& os = std::cout) const;
 #endif
    };
 

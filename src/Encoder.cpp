@@ -175,7 +175,7 @@ Encoder::Encoder(unsigned bytestreamNumber)
 }
 
 #ifdef E57_DEBUG
-void Encoder::dump(int indent, std::ostream& os)
+void Encoder::dump(int indent, std::ostream& os) const
 {
    os << space(indent) << "bytestreamNumber:       " << bytestreamNumber_ << endl;
 }
@@ -309,7 +309,7 @@ void BitpackEncoder::outBufferShiftDown()
 }
 
 #ifdef E57_DEBUG
-void BitpackEncoder::dump(int indent, std::ostream& os)
+void BitpackEncoder::dump(int indent, std::ostream& os) const
 {
    Encoder::dump(indent, os);
    os << space(indent) << "sourceBuffer:" << endl;
@@ -408,7 +408,7 @@ float BitpackFloatEncoder::bitsPerRecord()
 }
 
 #ifdef E57_DEBUG
-void BitpackFloatEncoder::dump(int indent, std::ostream& os)
+void BitpackFloatEncoder::dump(int indent, std::ostream& os) const
 {
    BitpackEncoder::dump(indent, os);
    if (precision_ == E57_SINGLE)
@@ -540,7 +540,7 @@ float BitpackStringEncoder::bitsPerRecord()
 }
 
 #ifdef E57_DEBUG
-void BitpackStringEncoder::dump(int indent, std::ostream& os)
+void BitpackStringEncoder::dump(int indent, std::ostream& os) const
 {
    BitpackEncoder::dump(indent, os);
    os << space(indent) << "totalBytesProcessed:    " << totalBytesProcessed_ << endl;
@@ -740,7 +740,7 @@ float BitpackIntegerEncoder<RegisterT>::bitsPerRecord()
 
 #ifdef E57_DEBUG
 template <typename RegisterT>
-void BitpackIntegerEncoder<RegisterT>::dump(int indent, std::ostream& os)
+void BitpackIntegerEncoder<RegisterT>::dump(int indent, std::ostream& os) const
 {
    BitpackEncoder::dump(indent, os);
    os << space(indent) << "isScaledInteger:  " << isScaledInteger_ << endl;
@@ -842,7 +842,7 @@ void ConstantIntegerEncoder::outputSetMaxSize(unsigned /*byteCount*/)
 }
 
 #ifdef E57_DEBUG
-void ConstantIntegerEncoder::dump(int indent, std::ostream& os)
+void ConstantIntegerEncoder::dump(int indent, std::ostream& os) const
 {
    Encoder::dump(indent, os);
    os << space(indent) << "currentRecordIndex:  " << currentRecordIndex_ << endl;

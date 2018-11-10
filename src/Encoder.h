@@ -55,10 +55,10 @@ namespace e57 {
          virtual size_t      outputGetMaxSize() = 0;
          virtual void        outputSetMaxSize(unsigned byteCount) = 0;
 
-         unsigned            bytestreamNumber() {return(bytestreamNumber_);}
+         unsigned            bytestreamNumber() const { return bytestreamNumber_; }
 
 #ifdef E57_DEBUG
-         virtual void        dump(int indent = 0, std::ostream& os = std::cout);
+         virtual void        dump(int indent = 0, std::ostream& os = std::cout) const;
 #endif
       protected:
          Encoder(unsigned bytestreamNumber);
@@ -85,7 +85,7 @@ namespace e57 {
          void        outputSetMaxSize(unsigned byteCount) override;
 
 #ifdef E57_DEBUG
-         void        dump(int indent = 0, std::ostream& os = std::cout) override;
+         void        dump(int indent = 0, std::ostream& os = std::cout) const override;
 #endif
       protected:
          BitpackEncoder(unsigned bytestreamNumber, SourceDestBuffer& sbuf, unsigned outputMaxSize, unsigned alignmentSize);
@@ -113,7 +113,7 @@ namespace e57 {
          float       bitsPerRecord() override;
 
 #ifdef E57_DEBUG
-         void        dump(int indent = 0, std::ostream& os = std::cout) override;
+         void        dump(int indent = 0, std::ostream& os = std::cout) const override;
 #endif
       protected:
          FloatPrecision      precision_;
@@ -130,7 +130,7 @@ namespace e57 {
          float       bitsPerRecord() override;
 
 #ifdef E57_DEBUG
-         void        dump(int indent = 0, std::ostream& os = std::cout) override;
+         void        dump(int indent = 0, std::ostream& os = std::cout) const override;
 #endif
       protected:
          uint64_t    totalBytesProcessed_;
@@ -153,7 +153,7 @@ namespace e57 {
          float       bitsPerRecord() override;
 
 #ifdef E57_DEBUG
-         void        dump(int indent = 0, std::ostream& os = std::cout) override;
+         void        dump(int indent = 0, std::ostream& os = std::cout) const override;
 #endif
       protected:
          bool            isScaledInteger_;
@@ -187,7 +187,7 @@ namespace e57 {
          void        outputSetMaxSize(unsigned byteCount) override;
 
 #ifdef E57_DEBUG
-         void        dump(int indent = 0, std::ostream& os = std::cout) override;
+         void        dump(int indent = 0, std::ostream& os = std::cout) const override;
 #endif
       protected:
          std::shared_ptr<SourceDestBufferImpl>  sourceBuffer_;

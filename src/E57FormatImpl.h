@@ -80,7 +80,7 @@ public:
     virtual                 ~NodeImpl() = default;
 
 #ifdef E57_DEBUG
-    virtual void            dump(int indent = 0, std::ostream& os = std::cout);
+    virtual void            dump(int indent = 0, std::ostream& os = std::cout) const;
 #endif
 
 private:
@@ -130,7 +130,7 @@ public:
     void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) override;
 
 #ifdef E57_DEBUG
-    void    dump(int indent = 0, std::ostream& os = std::cout) override;
+    void    dump(int indent = 0, std::ostream& os = std::cout) const override;
 #endif
 
 protected:
@@ -154,7 +154,7 @@ public:
     void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) override;
 
 #ifdef E57_DEBUG
-    void    dump(int indent = 0, std::ostream& os = std::cout) override;
+    void    dump(int indent = 0, std::ostream& os = std::cout) const override;
 #endif
 
 protected:
@@ -276,7 +276,7 @@ public:
                                                                 {binarySectionLogicalStart_ = binarySectionLogicalStart;}
 
 #ifdef E57_DEBUG
-    void                dump(int indent = 0, std::ostream& os = std::cout) override;
+    void                dump(int indent = 0, std::ostream& os = std::cout) const override;
 #endif
 
 protected:
@@ -307,7 +307,7 @@ public:
     void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) override;
 
 #ifdef E57_DEBUG
-    void                dump(int indent = 0, std::ostream& os = std::cout) override;
+    void        dump(int indent = 0, std::ostream& os = std::cout) const override;
 #endif
 
 protected:
@@ -347,7 +347,7 @@ public:
 
 
 #ifdef E57_DEBUG
-    void    dump(int indent = 0, std::ostream& os = std::cout) override;
+    void    dump(int indent = 0, std::ostream& os = std::cout) const override;
 #endif
 
 protected:
@@ -369,17 +369,17 @@ public:
     bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni) override;
     bool        isDefined(const ustring& pathName) override;
 
-    double              value();
-    FloatPrecision      precision();
-    double              minimum();
-    double              maximum();
+    double              value() const;
+    FloatPrecision      precision() const;
+    double              minimum() const;
+    double              maximum() const;
 
     void        checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin) override;
 
     void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) override;
 
 #ifdef E57_DEBUG
-    void    dump(int indent = 0, std::ostream& os = std::cout) override;
+    void    dump(int indent = 0, std::ostream& os = std::cout) const override;
 #endif
 
 protected:
@@ -405,7 +405,7 @@ public:
     void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) override;
 
 #ifdef E57_DEBUG
-    void    dump(int indent = 0, std::ostream& os = std::cout) override;
+    void    dump(int indent = 0, std::ostream& os = std::cout) const override;
 #endif
 
 protected:
@@ -431,7 +431,7 @@ public:
     void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) override;
 
 #ifdef E57_DEBUG
-    void    dump(int indent = 0, std::ostream& os = std::cout) override;
+    void    dump(int indent = 0, std::ostream& os = std::cout) const override;
 #endif
 
 protected:
@@ -468,7 +468,7 @@ struct CompressedVectorSectionHeader {
     void        swab(){}
 #endif
 #ifdef E57_DEBUG
-    void        dump(int indent = 0, std::ostream& os = std::cout);
+    void        dump(int indent = 0, std::ostream& os = std::cout) const;
 #endif
 };
 
@@ -511,7 +511,7 @@ public:
 #endif
 
 protected:
-    void        checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName);
+    void        checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName) const;
     void        checkReaderOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName) const;
     void        setBuffers(std::vector<SourceDestBuffer>& dbufs); //???needed?
     uint64_t    earliestPacketNeededForInput() const;
@@ -549,7 +549,7 @@ public:
 #endif
 
 protected:
-    void        checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName);
+    void        checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName) const;
     void        checkWriterOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName) const;
     void        setBuffers(std::vector<SourceDestBuffer>& sbufs); //???needed?
     size_t      totalOutputAvailable() const;

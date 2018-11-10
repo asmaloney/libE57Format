@@ -33,7 +33,7 @@
 namespace e57 {
 
 #ifdef E57_DEBUG
-   void E57FileHeader::dump(int indent, std::ostream& os)
+   void E57FileHeader::dump(int indent, std::ostream& os) const
    {
       os << space(indent) << "fileSignature:      "
          << fileSignature[0] << fileSignature[1] << fileSignature[2] << fileSignature[3]

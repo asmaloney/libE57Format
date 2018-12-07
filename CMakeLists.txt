@@ -118,6 +118,8 @@ add_library( E57Format STATIC
     src/Packet.cpp
     src/ImageFileImpl.cpp
     src/ImageFileImpl.h
+    src/SourceDestBufferImpl.h
+    src/SourceDestBufferImpl.cpp
     src/E57Exception.cpp
     src/E57Format.cpp
     src/E57FormatImpl.cpp

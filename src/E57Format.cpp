@@ -191,6 +191,7 @@ DEALINGS IN THE SOFTWARE.
 #include "E57FormatImpl.h"
 
 #include "ImageFileImpl.h"
+#include "SourceDestBufferImpl.h"
 
 using namespace e57;
 using namespace std;

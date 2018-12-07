@@ -29,6 +29,7 @@
 #include "Decoder.h"
 #include "E57FormatImpl.h"
 #include "ImageFileImpl.h"
+#include "SourceDestBufferImpl.h"
 
 using namespace e57;
 using namespace std;
@@ -571,7 +572,7 @@ BitpackIntegerDecoder<RegisterT>::BitpackIntegerDecoder(bool isScaledInteger, un
    : BitpackDecoder(bytestreamNumber, dbuf, sizeof(RegisterT), maxRecordCount)
 {
    /// Get pointer to parent ImageFileImpl
-   shared_ptr<ImageFileImpl> imf(dbuf.impl()->destImageFile_);  //??? should be function for this,  imf->parentFile()  --> ImageFile?
+   shared_ptr<ImageFileImpl> imf(dbuf.impl()->destImageFile());  //??? should be function for this,  imf->parentFile()  --> ImageFile?
 
    isScaledInteger_    = isScaledInteger;
    minimum_            = minimum;

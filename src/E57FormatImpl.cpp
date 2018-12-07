@@ -515,8 +515,10 @@ void StructureNodeImpl::setAttachedRecursive()
     isAttached_ = true;
 
     /// Not a leaf node, so mark all our children
-    for (unsigned i = 0; i < children_.size(); i++)
-        children_.at(i)->setAttachedRecursive();
+    for ( auto &child : children_ )
+    {
+       child->setAttachedRecursive();
+    }
 }
 
 int64_t StructureNodeImpl::childCount() const
@@ -671,18 +673,23 @@ void StructureNodeImpl::set(const vector<ustring>& fields, unsigned level, share
     //??? check if field is numeric string (e.g. "17"), verify number is same as index, else throw bad_path
 
     /// Check if trying to set the root node "/", which is illegal
-    if (level == 0 && fields.size() == 0)
+    if (level == 0 && fields.empty())
         throw E57_EXCEPTION2(E57_ERROR_SET_TWICE, "this->pathName=" + this->pathName() + " element=/");
 
     /// Serial search for matching field name, if find match, have error since can't set twice
-    for (unsigned i = 0; i < children_.size(); i++) {
-        if (fields.at(level) == children_.at(i)->elementName()) {
-            if (level == fields.size()-1) {
+    for ( auto &child : children_ )
+    {
+        if (fields.at(level) == child->elementName())
+        {
+            if (level == fields.size() - 1)
+            {
                 /// Enforce "set once" policy, don't allow reset
                 throw E57_EXCEPTION2(E57_ERROR_SET_TWICE, "this->pathName=" + this->pathName() + " element=" + fields[level]);
-            } else {
+            }
+            else
+            {
                 /// Recurse on child
-                children_.at(i)->set(fields, level+1, ni);
+                child->set(fields, level+1, ni);
             }
             return;
         }
@@ -731,8 +738,10 @@ void StructureNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, sha
     /// don't checkImageFileOpen
 
     /// Not a leaf node, so check all our children
-    for (unsigned i = 0; i < children_.size(); i++)
-        children_.at(i)->checkLeavesInSet(pathNames, origin);
+    for ( auto &child : children_ )
+    {
+       child->checkLeavesInSet( pathNames, origin );
+    }
 }
 
 //??? use visitor?
@@ -766,12 +775,14 @@ void StructureNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile
         if (!gotDefaultNamespace)
             cf << "\n" << space(indent+fieldName.length()+2) << "xmlns=\"" << E57_V1_0_URI << "\"";
     }
-    if (children_.size() > 0) {
+    if ( !children_.empty() ) {
         cf << ">\n";
 
         /// Write all children nested inside Structure element
-        for (unsigned i = 0; i < children_.size(); i++)
-            children_.at(i)->writeXml(imf, cf, indent+2);
+        for ( auto &child : children_ )
+        {
+           child->writeXml(imf, cf, indent+2);
+        }
 
         /// Write closing tag
         cf << space(indent) << "</" << fieldName << ">\n";
@@ -851,9 +862,12 @@ void VectorNodeImpl::set(int64_t index64, shared_ptr<NodeImpl> ni)
     checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
     if (!allowHeteroChildren_) {
         /// New node type must match all existing children
-        for (unsigned i = 0; i < children_.size(); i++) {
-            if (!children_.at(i)->isTypeEquivalent(ni))
+        for ( auto &child : children_ )
+        {
+            if (!child->isTypeEquivalent(ni))
+            {
                 throw E57_EXCEPTION2(E57_ERROR_HOMOGENEOUS_VIOLATION, "this->pathName=" + this->pathName());
+            }
         }
     }
 
@@ -872,8 +886,10 @@ void VectorNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& c
         fieldName = elementName_;
 
     cf << space(indent) << "<" << fieldName << " type=\"Vector\" allowHeterogeneousChildren=\"" << static_cast<int64_t>(allowHeteroChildren_) << "\">\n";
-    for (unsigned i = 0; i < children_.size(); i++)
-        children_.at(i)->writeXml(imf, cf, indent+2, "vectorChild");
+    for ( auto &child : children_ )
+    {
+       child->writeXml(imf, cf, indent+2, "vectorChild");
+    }
     cf << space(indent) << "</"<< fieldName << ">\n";
 }
 
@@ -3164,16 +3180,20 @@ void CompressedVectorWriterImpl::write(const size_t requestedRecordCount)
     }
 
     /// Rewind all sbufs so start reading from beginning
-    for (unsigned i=0; i < sbufs_.size(); i++)
-        sbufs_.at(i).impl()->rewind();
+    for ( auto &sbuf : sbufs_ )
+    {
+       sbuf.impl()->rewind();
+    }
 
     /// Loop until all channels have completed requestedRecordCount transfers
     uint64_t endRecordIndex = recordCount_ + requestedRecordCount;
     for (;;) {
         /// Calc remaining record counts for all channels
         uint64_t totalRecordCount = 0;
-        for (unsigned i=0; i < bytestreams_.size(); i++)
-            totalRecordCount += endRecordIndex - bytestreams_.at(i)->currentRecordIndex();
+        for ( auto &bytestream : bytestreams_ )
+        {
+            totalRecordCount += endRecordIndex - bytestream->currentRecordIndex();
+        }
 #ifdef E57_MAX_VERBOSE
         cout << "  totalRecordCount=" << totalRecordCount << endl; //???
 #endif
@@ -3207,8 +3227,10 @@ void CompressedVectorWriterImpl::write(const size_t requestedRecordCount)
         ///??? useful?
         /// Get approximation of number of bytes per record of CompressedVector and total of bytes used
         float totalBitsPerRecord = 0;  // an estimate of future performance
-        for (unsigned i=0; i < bytestreams_.size(); i++)
-            totalBitsPerRecord += bytestreams_.at(i)->bitsPerRecord();
+        for ( auto &bytestream : bytestreams_ )
+        {
+            totalBitsPerRecord += bytestream->bitsPerRecord();
+        }
 
 #ifdef E57_MAX_VERBOSE
         float totalBytesPerRecord = max(totalBitsPerRecord/8, 0.1F); //??? trust
@@ -3225,15 +3247,17 @@ void CompressedVectorWriterImpl::write(const size_t requestedRecordCount)
         /// Process channels that are furthest behind first. ???
 
         ///!!!! For now just process one record per loop until packet is full enough, or completed request
-        for (unsigned i=0; i < bytestreams_.size(); i++) {
-             if (bytestreams_.at(i)->currentRecordIndex() < endRecordIndex) {
+        for ( auto &bytestream : bytestreams_ )
+        {
+             if (bytestream->currentRecordIndex() < endRecordIndex)
+             {
 #if 0
-                bytestreams_.at(i)->processRecords(1);
+                bytestream->processRecords(1);
 #else
                 //!!! For now, process up to 50 records at a time
-                uint64_t recordCount = endRecordIndex - bytestreams_.at(i)->currentRecordIndex();
+                uint64_t recordCount = endRecordIndex - bytestream->currentRecordIndex();
                 recordCount = (recordCount<50ULL)?recordCount:50ULL; //min(recordCount, 50ULL);
-                bytestreams_.at(i)->processRecords(static_cast<unsigned>(recordCount));
+                bytestream->processRecords(static_cast<unsigned>(recordCount));
 #endif
             }
         }
@@ -3247,10 +3271,13 @@ void CompressedVectorWriterImpl::write(const size_t requestedRecordCount)
 size_t CompressedVectorWriterImpl::totalOutputAvailable() const
 {
     size_t total = 0;
-    for (size_t i=0; i < bytestreams_.size(); i++) {
-        total += bytestreams_.at(i)->outputAvailable();
+
+    for ( const auto & bytestream : bytestreams_ )
+    {
+        total += bytestream->outputAvailable();
     }
-    return(total);
+
+    return total;
 }
 
 size_t CompressedVectorWriterImpl::currentPacketSize() const
@@ -3428,8 +3455,10 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
 
 void CompressedVectorWriterImpl::flush()
 {
-    for (unsigned i=0; i < bytestreams_.size(); i++)
-        bytestreams_.at(i)->registerFlushToOutput();
+    for ( auto &bytestream : bytestreams_ )
+    {
+       bytestream->registerFlushToOutput();
+    }
 }
 
 void CompressedVectorWriterImpl::checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName) const
@@ -3548,7 +3577,7 @@ CompressedVectorReaderImpl::CompressedVectorReaderImpl(shared_ptr<CompressedVect
         if (!proto_->findTerminalPosition(readNode, bytestreamNumber))
             throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "dbufIndex=" + toString(i));
 
-        channels_.push_back(DecodeChannel(dbufs.at(i), decoder, static_cast<unsigned>(bytestreamNumber), cVector_->childCount()));
+        channels_.emplace_back(dbufs.at(i), decoder, static_cast<unsigned>(bytestreamNumber), cVector_->childCount());
     }
 
     recordCount_ = 0;
@@ -3593,14 +3622,16 @@ CompressedVectorReaderImpl::CompressedVectorReaderImpl(shared_ptr<CompressedVect
 
         /// Double check that have a data packet
         if (dpkt->packetType != DATA_PACKET)
-            throw E57_EXCEPTION2(E57_ERROR_BAD_CV_PACKET, "packetType=" + toString(dpkt->packetType));
+        {
+           throw E57_EXCEPTION2(E57_ERROR_BAD_CV_PACKET, "packetType=" + toString(dpkt->packetType));
+        }
 
         /// Have good packet, initialize channels
-        for (unsigned i = 0; i < channels_.size(); i++) {
-            DecodeChannel* chan = &channels_.at(i);
-            chan->currentPacketLogicalOffset    = dataLogicalOffset;
-            chan->currentBytestreamBufferIndex  = 0;
-            chan->currentBytestreamBufferLength = dpkt->getBytestreamBufferLength(chan->bytestreamNumber);
+        for ( auto &channel : channels_ )
+        {
+            channel.currentPacketLogicalOffset    = dataLogicalOffset;
+            channel.currentBytestreamBufferIndex  = 0;
+            channel.currentBytestreamBufferLength = dpkt->getBytestreamBufferLength(channel.bytestreamNumber);
         }
     }
 
@@ -3636,13 +3667,16 @@ void CompressedVectorReaderImpl::setBuffers(vector<SourceDestBuffer>& dbufs)
     proto_->checkBuffers(dbufs, true);
 
     /// If had previous dbufs_, check to see if new ones have changed in incompatible way
-    if (dbufs_.size() > 0) {
-        if (dbufs_.size() != dbufs.size()) {
+    if (!dbufs_.empty())
+    {
+        if (dbufs_.size() != dbufs.size())
+        {
             throw E57_EXCEPTION2(E57_ERROR_BUFFERS_NOT_COMPATIBLE,
                                  "oldSize=" + toString(dbufs_.size())
                                  + " newSize=" + toString(dbufs.size()));
         }
-        for (size_t i = 0; i < dbufs_.size(); i++) {
+        for (size_t i = 0; i < dbufs_.size(); i++)
+        {
             shared_ptr<SourceDestBufferImpl> oldBuf = dbufs_[i].impl();
             shared_ptr<SourceDestBufferImpl> newBuf = dbufs[i].impl();
 
@@ -3675,16 +3709,21 @@ unsigned CompressedVectorReaderImpl::read()
     checkReaderOpen(__FILE__, __LINE__, __FUNCTION__);
 
     /// Rewind all dbufs so start writing to them at beginning
-    for (unsigned i=0; i < dbufs_.size(); i++)
-        dbufs_[i].impl()->rewind();
+    for ( auto &dbuf : dbufs_ )
+    {
+       dbuf.impl()->rewind();
+    }
 
     /// Allow decoders to use data they already have in their queue to fill newly empty dbufs
     /// This helps to keep decoder input queues smaller, which reduces backtracking in the packet cache.
-    for (unsigned i = 0; i < channels_.size(); i++)
-        channels_[i].decoder->inputProcess(nullptr, 0);
+    for ( auto &channel : channels_ )
+    {
+       channel.decoder->inputProcess( nullptr, 0 );
+    }
 
     /// Loop until every dbuf is full or we have reached end of the binary section.
-    while (true) {
+    while (true)
+    {
         /// Find the earliest packet position for channels that are still hungry
         /// It's important to call inputProcess of the decoders before this call, so current hungriness level is reflected.
         uint64_t earliestPacketLogicalOffset = earliestPacketNeededForInput();
@@ -3699,12 +3738,17 @@ unsigned CompressedVectorReaderImpl::read()
 
     /// Verify that each channel produced the same number of records
     unsigned outputCount = 0;
-    for (unsigned i = 0; i < channels_.size(); i++) {
+    for (unsigned i = 0; i < channels_.size(); i++)
+    {
         DecodeChannel* chan = &channels_[i];
         if (i == 0)
-            outputCount = chan->dbuf.impl()->nextIndex();
-        else {
-            if (outputCount != chan->dbuf.impl()->nextIndex()){
+        {
+           outputCount = chan->dbuf.impl()->nextIndex();
+        }
+        else
+        {
+            if (outputCount != chan->dbuf.impl()->nextIndex())
+            {
                 throw E57_EXCEPTION2(E57_ERROR_INTERNAL,
                                      "outputCount=" + toString(outputCount)
                                      + " nextIndex=" + toString(chan->dbuf.impl()->nextIndex()));
@@ -3713,13 +3757,15 @@ unsigned CompressedVectorReaderImpl::read()
     }
 
     /// Return number of records transferred to each dbuf.
-    return(outputCount);
+    return outputCount;
 }
 
 uint64_t CompressedVectorReaderImpl::earliestPacketNeededForInput() const
 {
     uint64_t earliestPacketLogicalOffset = E57_UINT64_MAX;
+#ifdef E57_MAX_VERBOSE
     unsigned earliestChannel = 0;
+#endif
 
     for (unsigned i = 0; i < channels_.size(); i++)
     {
@@ -3733,7 +3779,9 @@ uint64_t CompressedVectorReaderImpl::earliestPacketNeededForInput() const
             if (chan->currentPacketLogicalOffset < earliestPacketLogicalOffset)
             {
                 earliestPacketLogicalOffset = chan->currentPacketLogicalOffset;
+#ifdef E57_MAX_VERBOSE
                 earliestChannel = i;
+#endif
             }
         }
     }

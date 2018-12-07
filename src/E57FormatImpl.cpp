@@ -2350,13 +2350,17 @@ void CompressedVectorWriterImpl::setBuffers(vector<SourceDestBuffer>& sbufs)
     /// don't checkImageFileOpen
 
     /// If had previous sbufs_, check to see if new ones have changed in incompatible way
-    if (sbufs_.size() > 0) {
-        if (sbufs_.size() != sbufs.size()) {
+    if ( !sbufs_.empty() )
+    {
+        if (sbufs_.size() != sbufs.size())
+        {
             throw E57_EXCEPTION2(E57_ERROR_BUFFERS_NOT_COMPATIBLE,
                                  "oldSize=" + toString(sbufs_.size())
                                  + " newSize=" + toString(sbufs.size()));
         }
-        for (size_t i = 0; i < sbufs_.size(); i++) {
+
+        for (size_t i = 0; i < sbufs_.size(); ++i)
+        {
             shared_ptr<SourceDestBufferImpl> oldbuf = sbufs_[i].impl();
             shared_ptr<SourceDestBufferImpl> newBuf = sbufs[i].impl();
 
@@ -2731,9 +2735,6 @@ void CompressedVectorWriterImpl::dump(int indent, std::ostream& os)
         os << space(indent) << "bytestreams[" << i << "]:" << endl;
         bytestreams_.at(i)->dump(indent+4, os);
     }
-
-    os << space(indent) << "seekIndex:" << endl;
-    seekIndex_.dump(indent+4, os);
 
     /// Don't call dump() for DataPacket, since it may contain junk when debugging.  Just print a few byte values.
     os << space(indent) << "dataPacket:" << endl;

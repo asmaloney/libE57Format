@@ -213,7 +213,7 @@ public:
     bool        isDefined(const ustring& pathName) const;
     Node        get(int64_t index) const;
     Node        get(const ustring& pathName) const;
-    void        set(const ustring& pathName, Node n);
+    void        set(const ustring& pathName, const Node &n);
 
     // Up/Down cast conversion
                 operator Node() const;
@@ -374,7 +374,7 @@ protected:
 class CompressedVectorNode {
 public:
     CompressedVectorNode() = delete;
-    explicit CompressedVectorNode(ImageFile destImageFile, Node prototype, VectorNode codecs);
+    explicit CompressedVectorNode(ImageFile destImageFile, const Node &prototype, const VectorNode &codecs);
 
     int64_t     childCount() const;
     Node        prototype() const;

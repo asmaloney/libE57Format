@@ -52,7 +52,7 @@ namespace e57 {
          static const uint64_t physicalPageSizeMask;
          static const size_t   logicalPageSize;
 
-         CheckedFile( e57::ustring fileName, Mode mode, ReadChecksumPolicy policy );
+         CheckedFile( const e57::ustring &fileName, Mode mode, ReadChecksumPolicy policy );
          ~CheckedFile();
 
          void            read(char* buf, size_t nRead, size_t bufSize = 0);
@@ -93,7 +93,7 @@ namespace e57 {
          void        getCurrentPageAndOffset(uint64_t& page, size_t& pageOffset, OffsetMode omode = Logical);
          void        readPhysicalPage(char* page_buffer, uint64_t page);
          void        writePhysicalPage(char* page_buffer, uint64_t page);
-         int         open64(e57::ustring fileName, int flags, int mode);
+         int         open64( const e57::ustring &fileName, int flags, int mode );
          uint64_t    lseek64(int64_t offset, int whence);
    };
 

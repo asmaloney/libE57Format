@@ -74,9 +74,6 @@ namespace e57 {
          void        dump(int indent = 0, std::ostream& os = std::cout) const;
 #endif
    };
-}
-
-namespace e57 {
 
    //=============================================================================
    // PacketReadCache

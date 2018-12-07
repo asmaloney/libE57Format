@@ -49,9 +49,9 @@
 #error "no supported OS platform defined"
 #endif
 
+#include <cmath>
 #include <cstring>
 #include <fcntl.h>
-#include <cmath>
 
 #include "CRC.h"
 
@@ -79,7 +79,7 @@ const size_t   CheckedFile::physicalPageSize = 1 << physicalPageSizeLog2;
 const uint64_t CheckedFile::physicalPageSizeMask = physicalPageSize-1;
 const size_t   CheckedFile::logicalPageSize = physicalPageSize - 4;
 
-CheckedFile::CheckedFile( ustring fileName, Mode mode, ReadChecksumPolicy policy ) :
+CheckedFile::CheckedFile( const ustring &fileName, Mode mode, ReadChecksumPolicy policy ) :
    fileName_(fileName),
    physicalLength_( 0 ),
    checkSumPolicy_( policy ),
@@ -113,7 +113,7 @@ CheckedFile::CheckedFile( ustring fileName, Mode mode, ReadChecksumPolicy policy
    }
 }
 
-int CheckedFile::open64(ustring fileName, int flags, int mode)
+int CheckedFile::open64( const ustring &fileName, int flags, int mode )
 {
    //??? handle utf-8 file names?
 #if defined(_MSC_VER)

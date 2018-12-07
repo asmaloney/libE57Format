@@ -1983,7 +1983,7 @@ This would be very difficult to do dynamically, as some of the naming rules invo
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     StructureCreate.cpp example, VectorNode::append
 */
-void StructureNode::set(const ustring& pathName, Node n)
+void StructureNode::set(const ustring& pathName, const Node &n)
 {
     impl_->set(pathName, n.impl(), false);
 }
@@ -3076,7 +3076,7 @@ Since currently only one codec is supported (bitPackCodec), and it is the defaul
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     CompressedVectorCreate.cpp example, SourceDestBuffer, Node, CompressedVectorNode::reader, CompressedVectorNode::writer
 */
-CompressedVectorNode::CompressedVectorNode(ImageFile destImageFile, Node prototype, VectorNode codecs)
+CompressedVectorNode::CompressedVectorNode(ImageFile destImageFile, const Node &prototype, const VectorNode &codecs)
 : impl_(new CompressedVectorNodeImpl(destImageFile.impl()))
 {
     /// Because of shared_ptr quirks, can't set prototype,codecs in CompressedVectorNodeImpl(), so set it afterwards

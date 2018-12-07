@@ -38,10 +38,6 @@
 
 namespace e57 {
 
-/// Forward declaration
-template <typename RegisterT> class BitpackIntegerEncoder;
-template <typename RegisterT> class BitpackIntegerDecoder;
-
 class E57XmlParser;
 class Decoder;
 class Encoder;
@@ -360,17 +356,6 @@ protected:
     uint64_t            binarySectionLogicalLength_;
 };
 
-
-//================================================================
-
-class SeekIndex {
-public:
-    ///!!! implement seek
-#ifdef E57_DEBUG
-    void        dump(int /*indent*/ = 0, std::ostream& /*os*/ = std::cout) {/*???*/}
-#endif
-};
-
 //================================================================
 
 struct CompressedVectorSectionHeader {
@@ -484,7 +469,6 @@ protected:
     std::shared_ptr<NodeImpl>                 proto_;
 
     std::vector<std::shared_ptr<Encoder> >  bytestreams_;
-    SeekIndex               seekIndex_;
     DataPacket              dataPacket_;
 
     bool                    isOpen_;

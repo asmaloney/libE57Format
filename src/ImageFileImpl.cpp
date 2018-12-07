@@ -389,7 +389,7 @@ namespace e57 {
          throw E57_EXCEPTION2(E57_ERROR_DUPLICATE_NAMESPACE_URI, "prefix=" + prefix + " uri=" + uri);;
 
       /// Append at end of list
-      nameSpaces_.push_back(NameSpace(prefix, uri));
+      nameSpaces_.emplace_back(prefix, uri);
    }
 
    bool ImageFileImpl::extensionsLookupPrefix(const ustring& prefix, ustring& uri) const

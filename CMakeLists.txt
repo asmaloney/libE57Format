@@ -114,6 +114,8 @@ add_library( E57Format STATIC
     src/Decoder.cpp
     src/Encoder.h
     src/Encoder.cpp
+    src/NodeImpl.h
+    src/NodeImpl.cpp
     src/Packet.h
     src/Packet.cpp
     src/ImageFileImpl.cpp

@@ -29,11 +29,8 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include <set>
-
-#include "Common.h"
-
 #include "CheckedFile.h"
+#include "NodeImpl.h"
 #include "Packet.h"
 
 namespace e57 {
@@ -43,64 +40,6 @@ class Decoder;
 class Encoder;
 
 //================================================================
-
-class NodeImpl : public std::enable_shared_from_this<NodeImpl> {
-public:
-    virtual NodeType        type() const = 0;
-    void                    checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName) const;
-    virtual bool            isTypeEquivalent(std::shared_ptr<NodeImpl> ni) = 0;
-    bool                    isRoot() const;
-    std::shared_ptr<NodeImpl> parent();
-    ustring                 pathName() const;
-    ustring                 relativePathName(std::shared_ptr<NodeImpl> origin, ustring childPathName = ustring()) const;
-    ustring                 elementName() const;
-    std::shared_ptr<ImageFileImpl> destImageFile();
-
-    ustring                 imageFileName() const;
-    virtual bool            isDefined(const ustring& pathName) = 0;
-    bool                    isAttached() const;
-    virtual void            setAttachedRecursive();
-
-    void                    setParent(std::shared_ptr<NodeImpl> parent, const ustring& elementName);
-    bool                    isTypeConstrained();
-
-    virtual std::shared_ptr<NodeImpl> get(const ustring& pathName);
-    virtual void            set(const ustring& pathName, std::shared_ptr<NodeImpl> ni, bool autoPathCreate = false);
-    virtual void            set(const std::vector<ustring>& fields, unsigned level, std::shared_ptr<NodeImpl> ni, bool autoPathCreate = false);
-
-    virtual void            checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin) = 0;
-    void                    checkBuffers(const std::vector<SourceDestBuffer>& sdbufs, bool allowMissing);
-    bool                    findTerminalPosition(std::shared_ptr<NodeImpl> ni, uint64_t& countFromLeft);
-
-    virtual void            writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) = 0;
-
-    virtual                 ~NodeImpl() = default;
-
-#ifdef E57_DEBUG
-    virtual void            dump(int indent = 0, std::ostream& os = std::cout) const;
-#endif
-
-private:
-    bool _verifyPathNameAbsolute( const ustring &inPathName );
-
-    std::shared_ptr<NodeImpl>   _verifyAndGetRoot();
-
-protected:
-    friend class StructureNodeImpl;
-    friend class CompressedVectorWriterImpl;
-    friend class Decoder;
-    friend class Encoder;
-
-                                         NodeImpl(std::weak_ptr<ImageFileImpl> destImageFile);
-    NodeImpl&                            operator=(NodeImpl& n);
-    virtual std::shared_ptr<NodeImpl>  lookup(const ustring& /*pathName*/) {return(std::shared_ptr<NodeImpl>());}
-    std::shared_ptr<NodeImpl>          getRoot();
-
-    std::weak_ptr<ImageFileImpl>       destImageFile_;
-    std::weak_ptr<NodeImpl>            parent_;
-    ustring                            elementName_;
-    bool                               isAttached_;
-};
 
 class StructureNodeImpl : public NodeImpl {
 public:

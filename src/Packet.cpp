@@ -24,6 +24,8 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
+#include <cstring>
+
 #include "CheckedFile.h"
 #include "Packet.h"
 

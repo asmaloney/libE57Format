@@ -595,11 +595,15 @@ namespace e57 {
       size_t start = 0;
 
       /// Check if absolute path
-      if (pathName[start] == '/') {
+      if (pathName[start] == '/')
+      {
          isRelative = false;
          start = 1;
-      } else
+      }
+      else
+      {
          isRelative = true;
+      }
 
       /// Save strings in between each forward slash '/'
       /// Don't ignore whitespace
@@ -639,20 +643,26 @@ namespace e57 {
 #endif
    }
 
-   ustring ImageFileImpl::pathNameUnparse(bool isRelative, const std::vector<ustring>& fields)
+   ustring ImageFileImpl::pathNameUnparse( bool isRelative, const std::vector<ustring> &fields )
    {
-      /// no checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__)
-
       ustring path;
 
-      if (!isRelative)
-         path.push_back('/');
-      for (unsigned i = 0; i < fields.size(); i++) {
-         path.append(fields.at(i));
-         if (i < fields.size()-1)
-            path.push_back('/');
+      if ( !isRelative )
+      {
+         path.push_back( '/' );
       }
-      return(path);
+
+      for ( unsigned i = 0; i < fields.size(); ++i )
+      {
+         path.append( fields.at( i ) );
+
+         if ( i < fields.size() - 1 )
+         {
+            path.push_back( '/' );
+         }
+      }
+
+      return path;
    }
 
    void ImageFileImpl::checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName) const

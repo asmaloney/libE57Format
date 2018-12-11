@@ -101,40 +101,46 @@ PacketReadCache::~PacketReadCache()
    }
 }
 
-std::unique_ptr<PacketLock> PacketReadCache::lock(uint64_t packetLogicalOffset, char* &pkt)
+std::unique_ptr<PacketLock> PacketReadCache::lock( uint64_t packetLogicalOffset, char* &pkt )
 {
 #ifdef E57_MAX_VERBOSE
    cout << "PacketReadCache::lock() called, packetLogicalOffset=" << packetLogicalOffset << endl;
 #endif
 
    /// Only allow one locked packet at a time.
-   if (lockCount_ > 0)
+   if ( lockCount_ > 0 )
+   {
       throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "lockCount=" + toString(lockCount_));
+   }
 
    /// Offset can't be 0
-   if (packetLogicalOffset == 0)
+   if ( packetLogicalOffset == 0 )
+   {
       throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "packetLogicalOffset=" + toString(packetLogicalOffset));
+   }
 
    /// Linear scan for matching packet offset in cache
-   for (unsigned i = 0; i < entries_.size(); i++)
+   for ( unsigned i = 0; i < entries_.size(); ++i )
    {
-      if (packetLogicalOffset == entries_[i].logicalOffset_)
+      auto  &entry = entries_[i];
+
+      if (packetLogicalOffset == entry.logicalOffset_)
       {
          /// Found a match, so don't have to read anything
 #ifdef E57_MAX_VERBOSE
          cout << "  Found matching cache entry, index=" << i << endl;
 #endif
          /// Mark entry with current useCount (keeps track of age of entry).
-         entries_[i].lastUsed_ = ++useCount_;
+         entry.lastUsed_ = ++useCount_;
 
          /// Publish buffer address to caller
-         pkt = entries_[i].buffer_;
+         pkt = entry.buffer_;
 
          /// Create lock so we are sure that we will be unlocked when use is finished.
-         std::unique_ptr<PacketLock> plock(new PacketLock(this, i));
+         std::unique_ptr<PacketLock> plock( new PacketLock( this, i ) );
 
          /// Increment cache lock just before return
-         lockCount_++;
+         ++lockCount_;
 
          return plock;
       }
@@ -145,12 +151,14 @@ std::unique_ptr<PacketLock> PacketReadCache::lock(uint64_t packetLogicalOffset, 
    unsigned oldestEntry = 0;
    unsigned oldestUsed = entries_.at(0).lastUsed_;
 
-   for (unsigned i = 0; i < entries_.size(); i++)
+   for ( unsigned i = 0; i < entries_.size(); ++i )
    {
-      if (entries_[i].lastUsed_ < oldestUsed)
+      const auto  &entry = entries_[i];
+
+      if ( entry.lastUsed_ < oldestUsed )
       {
          oldestEntry = i;
-         oldestUsed = entries_[i].lastUsed_;
+         oldestUsed = entry.lastUsed_;
       }
    }
 #ifdef E57_MAX_VERBOSE
@@ -163,10 +171,10 @@ std::unique_ptr<PacketLock> PacketReadCache::lock(uint64_t packetLogicalOffset, 
    pkt = entries_[oldestEntry].buffer_;
 
    /// Create lock so we are sure we will be unlocked when use is finished.
-   std::unique_ptr<PacketLock> plock(new PacketLock(this, oldestEntry));
+   std::unique_ptr<PacketLock> plock( new PacketLock( this, oldestEntry ) );
 
    /// Increment cache lock just before return
-   lockCount_++;
+   ++lockCount_;
 
    return plock;
 }
@@ -179,9 +187,11 @@ void PacketReadCache::unlock(unsigned lockedEntry)
 #endif
 
    if (lockCount_ != 1)
+   {
       throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "lockCount=" + toString(lockCount_));
+   }
 
-   lockCount_--;
+   --lockCount_;
 }
 
 void PacketReadCache::readPacket(unsigned oldestEntry, uint64_t packetLogicalOffset)
@@ -192,6 +202,7 @@ void PacketReadCache::readPacket(unsigned oldestEntry, uint64_t packetLogicalOff
 
    /// Read header of packet first to get length.  Use EmptyPacketHeader since it has the commom fields to all packets.
    EmptyPacketHeader header;
+
    cFile_->seek(packetLogicalOffset, CheckedFile::Logical);
    cFile_->read(reinterpret_cast<char*>(&header), sizeof(header));
 
@@ -200,17 +211,21 @@ void PacketReadCache::readPacket(unsigned oldestEntry, uint64_t packetLogicalOff
 
    /// Be paranoid about packetLength before read
    if (packetLength > DATA_PACKET_MAX)
+   {
       throw E57_EXCEPTION2(E57_ERROR_BAD_CV_PACKET, "packetLength=" + toString(packetLength));
+   }
+
+   auto  &entry = entries_.at(oldestEntry);
 
    /// Now read in whole packet into preallocated buffer_.  Note buffer is
    cFile_->seek(packetLogicalOffset, CheckedFile::Logical);
-   cFile_->read(entries_.at(oldestEntry).buffer_, packetLength);
+   cFile_->read(entry.buffer_, packetLength);
 
-   /// Swab if necessary, then verify that packet is good.
+   /// Verify that packet is good.
    switch (header.packetType)
    {
       case DATA_PACKET: {
-         DataPacket* dpkt = reinterpret_cast<DataPacket*>(entries_.at(oldestEntry).buffer_);
+         DataPacket* dpkt = reinterpret_cast<DataPacket*>(entry.buffer_);
 
          dpkt->verify(packetLength);
 #ifdef E57_MAX_VERBOSE
@@ -220,7 +235,7 @@ void PacketReadCache::readPacket(unsigned oldestEntry, uint64_t packetLogicalOff
       }
          break;
       case INDEX_PACKET: {
-         IndexPacket* ipkt = reinterpret_cast<IndexPacket*>(entries_.at(oldestEntry).buffer_);
+         IndexPacket* ipkt = reinterpret_cast<IndexPacket*>(entry.buffer_);
 
          ipkt->verify(packetLength);
 #ifdef E57_MAX_VERBOSE
@@ -230,7 +245,7 @@ void PacketReadCache::readPacket(unsigned oldestEntry, uint64_t packetLogicalOff
       }
          break;
       case EMPTY_PACKET: {
-         EmptyPacketHeader* hp = reinterpret_cast<EmptyPacketHeader*>(entries_.at(oldestEntry).buffer_);
+         EmptyPacketHeader* hp = reinterpret_cast<EmptyPacketHeader*>(entry.buffer_);
 
          hp->verify(packetLength);
 #ifdef E57_MAX_VERBOSE
@@ -243,11 +258,11 @@ void PacketReadCache::readPacket(unsigned oldestEntry, uint64_t packetLogicalOff
          throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "packetType=" + toString(header.packetType));
    }
 
-   entries_[oldestEntry].logicalOffset_ = packetLogicalOffset;
+   entry.logicalOffset_ = packetLogicalOffset;
 
    /// Mark entry with current useCount (keeps track of age of entry).
    /// This is a cache, so a small hiccup when useCount_ overflows won't hurt.
-   entries_[oldestEntry].lastUsed_ = ++useCount_;
+   entry.lastUsed_ = ++useCount_;
 }
 
 #ifdef E57_DEBUG

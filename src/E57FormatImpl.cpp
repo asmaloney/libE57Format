@@ -2138,17 +2138,21 @@ void CompressedVectorReaderImpl::feedPacketToDecoders(uint64_t currentPacketLogi
 
         /// Double check that have a data packet.  Should have already determined this.
         if (dpkt->packetType != DATA_PACKET)
-            throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "packetType=" + toString(dpkt->packetType));
+        {
+           throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "packetType=" + toString(dpkt->packetType));
+        }
 
         /// Feed bytestreams to channels with unblocked output that are reading from this packet
         for ( DecodeChannel &channel : channels_ )
         {
             /// Skip channels that have already read this packet.
             if (channel.currentPacketLogicalOffset != currentPacketLogicalOffset || channel.isOutputBlocked())
-                continue;
+            {
+               continue;
+            }
 
             /// Get bytestream buffer for this channel from packet
-            unsigned bsbLength;
+            unsigned bsbLength = 0;
             char* bsbStart = dpkt->getBytestream(channel.bytestreamNumber, bsbLength);
 
             /// Calc where we are in the buffer
@@ -2213,7 +2217,7 @@ void CompressedVectorReaderImpl::feedPacketToDecoders(uint64_t currentPacketLogi
             /// Got a data packet, update the channels with exhausted input
             for ( DecodeChannel &channel : channels_ )
             {
-               if (channel.currentPacketLogicalOffset == currentPacketLogicalOffset && channel.isInputBlocked())
+               if ((channel.currentPacketLogicalOffset == currentPacketLogicalOffset) && channel.isInputBlocked())
                {
                     channel.currentPacketLogicalOffset = nextPacketLogicalOffset;
                     channel.currentBytestreamBufferIndex = 0;
@@ -2238,7 +2242,7 @@ void CompressedVectorReaderImpl::feedPacketToDecoders(uint64_t currentPacketLogi
             {
                 for ( DecodeChannel &channel : channels_ )
                 {
-                    if (channel.currentPacketLogicalOffset == currentPacketLogicalOffset && channel.isInputBlocked()) {
+                    if ((channel.currentPacketLogicalOffset == currentPacketLogicalOffset) && channel.isInputBlocked()) {
 #ifdef E57_MAX_VERBOSE
                         cout << "  Marking channel[" << i++ << "] as finished" << endl;
 #endif

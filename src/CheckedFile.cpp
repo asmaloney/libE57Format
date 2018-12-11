@@ -548,6 +548,12 @@ void CheckedFile::unlink()
 #endif
 }
 
+inline uint32_t swap_uint32( uint32_t val )
+{
+    val = ((val << 8) & 0xFF00FF00 ) | ((val >> 8) & 0xFF00FF );
+    return (val << 16) | (val >> 16);
+}
+
 /// Calc CRC32C of given data
 uint32_t CheckedFile::checksum(char* buf, size_t size) const
 {
@@ -563,7 +569,9 @@ uint32_t CheckedFile::checksum(char* buf, size_t size) const
 
    uint32_t crc = CRC::Calculate<crcpp_uint32, 32>( buf, size, sCRCTable );
 
-   swab( crc ); //!!! inside BIGENDIAN?
+   // (Andy) I don't understand why we need to swap bytes here
+   crc = swap_uint32( crc );
+
    return crc;
 }
 

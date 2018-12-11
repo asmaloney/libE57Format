@@ -44,7 +44,7 @@ namespace e57 {
    };
 
    /// maximum size of CompressedVector binary data packet
-   const int   DATA_PACKET_MAX = (64*1024);
+   constexpr int   DATA_PACKET_MAX = (64*1024);
 
    class PacketReadCache {
       public:
@@ -102,11 +102,7 @@ namespace e57 {
 
          DataPacketHeader();
          void        verify(unsigned bufferLength = 0) const; //???use
-#ifdef E57_BIGENDIAN
-         void        swab();
-#else
-         void        swab(){}
-#endif
+
 #ifdef E57_DEBUG
          void        dump(int indent = 0, std::ostream& os = std::cout) const;
 #endif
@@ -124,11 +120,6 @@ namespace e57 {
          char*       getBytestream(unsigned bytestreamNumber, unsigned& bufferLength);
          unsigned    getBytestreamBufferLength(unsigned bytestreamNumber);
 
-#ifdef E57_BIGENDIAN
-         void        swab(bool toLittleEndian);    //??? change to swabIfBigEndian() and elsewhere
-#else
-         void        swab(bool /*toLittleEndian*/){}
-#endif
 #ifdef E57_DEBUG
          void        dump(int indent = 0, std::ostream& os = std::cout) const;
 #endif

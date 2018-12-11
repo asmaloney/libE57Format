@@ -164,7 +164,6 @@ namespace e57 {
 #ifdef E57_MAX_VERBOSE
       header.dump(); //???
 #endif
-      header.swab();  /// swab if neccesary
 
       /// Check signature
       if (strncmp(header.fileSignature, "ASTM-E57", 8) != 0)
@@ -286,7 +285,6 @@ namespace e57 {
 #ifdef E57_MAX_VERBOSE
          header.dump(); //???
 #endif
-         header.swab();  /// swab if neccesary
 
          /// Write header at beginning of file
          file_->seek(0);

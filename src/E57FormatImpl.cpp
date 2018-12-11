@@ -46,40 +46,15 @@ using namespace std;
 #define E57_BLOB_SECTION                0
 #define E57_COMPRESSED_VECTOR_SECTION   1
 
-#ifdef E57_BIGENDIAN
-void E57FileHeader::swab()
-{
-    /// Byte swap fields in-place, if CPU is BIG_ENDIAN
-    SWAB(&majorVersion);
-    SWAB(&minorVersion);
-    SWAB(&filePhysicalLength);
-    SWAB(&xmlPhysicalOffset);
-    SWAB(&xmlLogicalLength);
-    SWAB(&pageSize);
-};
-#endif
-
 struct BlobSectionHeader {
     uint8_t     sectionId;              // = E57_BLOB_SECTION
     uint8_t     reserved1[7];           // must be zero
     uint64_t    sectionLogicalLength;   // byte length of whole section
-#ifdef E57_BIGENDIAN
-    void        swab();
-#else
-    void        swab(){}
-#endif
+
 #ifdef E57_DEBUG
     void        dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 };
-
-#ifdef E57_BIGENDIAN
-void BlobSectionHeader::swab()
-{
-    /// Byte swap fields in-place if CPU is BIG_ENDIAN
-    SWAB(&sectionLogicalLength);
-};
-#endif
 
 #ifdef E57_DEBUG
 void BlobSectionHeader::dump(int indent, std::ostream& os)
@@ -1101,7 +1076,6 @@ BlobNodeImpl::BlobNodeImpl(weak_ptr<ImageFileImpl> destImageFile, int64_t byteCo
 #ifdef E57_MAX_VERBOSE
     header.dump(); //???
 #endif
-    header.swab();  /// swab if neccesary
 
     /// Write header at beginning of section
     imf->file_->seek(binarySectionLogicalStart_);
@@ -1435,16 +1409,6 @@ void CompressedVectorSectionHeader::verify(uint64_t filePhysicalSize)
     }
 }
 
-#ifdef E57_BIGENDIAN
-void CompressedVectorSectionHeader::swab()
-{
-    /// Byte swap fields in-place, if CPU is BIG_ENDIAN
-    swab(&sectionLogicalLength);
-    swab(&dataPhysicalOffset);
-    swab(&indexPhysicalOffset);
-};
-#endif
-
 #ifdef E57_DEBUG
 void CompressedVectorSectionHeader::dump(int indent, std::ostream& os) const
 {
@@ -1598,7 +1562,6 @@ void CompressedVectorWriterImpl::close()
     /// Verify OK before write it.
     header.verify(imf->file_->length(CheckedFile::Physical));
 #endif
-    header.swab();  /// swab if neccesary
 
     /// Write header at beginning of section, previously allocated
     imf->file_->seek(sectionHeaderLogicalStart_);
@@ -1930,11 +1893,6 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
     /// Double check that data packet is well formed
     dataPacket_.verify(packetLength);
 
-#ifdef E57_BIGENDIAN
-    /// On bigendian CPUs, swab packet to little-endian byte order before writing.
-    dataPacket_.swab(true);
-#endif
-
     /// Write whole data packet at beginning of free space in file
     uint64_t packetLogicalOffset = imf->allocateSpace(packetLength, false);
     uint64_t packetPhysicalOffset = imf->file_->logicalToPhysical(packetLogicalOffset);
@@ -2104,7 +2062,6 @@ CompressedVectorReaderImpl::CompressedVectorReaderImpl(shared_ptr<CompressedVect
     }
     imf->file_->seek(sectionLogicalStart, CheckedFile::Logical);
     imf->file_->read(reinterpret_cast<char*>(&sectionHeader), sizeof(sectionHeader));
-    sectionHeader.swab();  /// swab if neccesary
 
 #ifdef E57_DEBUG
     sectionHeader.verify(imf->file_->length(CheckedFile::Physical));

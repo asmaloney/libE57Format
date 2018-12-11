@@ -45,11 +45,6 @@ namespace e57 {
          uint64_t    pageSize;
          //  char        e57LibraryVersion[8];   //Not in V1.0 Standard
 
-#ifdef E57_BIGENDIAN
-         void        swab();
-#else
-         void        swab(){}
-#endif
 #ifdef E57_DEBUG
          void        dump(int indent = 0, std::ostream& os = std::cout) const;
 #endif

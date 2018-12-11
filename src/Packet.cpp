@@ -24,10 +24,8 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include <cstring>
-
-#include "Packet.h"
 #include "CheckedFile.h"
+#include "Packet.h"
 
 
 namespace e57 {
@@ -48,11 +46,7 @@ namespace e57 {
 
          IndexPacket();
          void        verify(unsigned bufferLength = 0, uint64_t totalRecordCount = 0, uint64_t fileSize = 0) const;
-#ifdef E57_BIGENDIAN
-         void        swab(bool toLittleEndian);
-#else
-         void        swab(bool /*toLittleEndian*/) {}
-#endif
+
 #ifdef E57_DEBUG
          void        dump(int indent = 0, std::ostream& os = std::cout) const;
 #endif
@@ -65,11 +59,7 @@ namespace e57 {
 
          EmptyPacketHeader();
          void        verify(unsigned bufferLength = 0) const; //???use
-#ifdef E57_BIGENDIAN
-         void        swab();
-#else
-         void        swab(){}
-#endif
+
 #ifdef E57_DEBUG
          void        dump(int indent = 0, std::ostream& os = std::cout) const;
 #endif
@@ -197,7 +187,7 @@ namespace e57 {
       EmptyPacketHeader header;
       cFile_->seek(packetLogicalOffset, CheckedFile::Logical);
       cFile_->read(reinterpret_cast<char*>(&header), sizeof(header));
-      header.swab();
+
       /// Can't verify packet header here, because it is not really an EmptyPacketHeader.
       unsigned packetLength = header.packetLogicalLengthMinus1+1;
 
@@ -214,9 +204,7 @@ namespace e57 {
       {
          case DATA_PACKET: {
             DataPacket* dpkt = reinterpret_cast<DataPacket*>(entries_.at(oldestEntry).buffer_);
-#ifdef E57_BIGENDIAN
-            dpkt->swab(false);
-#endif
+
             dpkt->verify(packetLength);
 #ifdef E57_MAX_VERBOSE
             cout << "  data packet:" << endl;
@@ -226,9 +214,7 @@ namespace e57 {
             break;
          case INDEX_PACKET: {
             IndexPacket* ipkt = reinterpret_cast<IndexPacket*>(entries_.at(oldestEntry).buffer_);
-#ifdef E57_BIGENDIAN
-            ipkt->swab(false);
-#endif
+
             ipkt->verify(packetLength);
 #ifdef E57_MAX_VERBOSE
             cout << "  index packet:" << endl;
@@ -238,7 +224,7 @@ namespace e57 {
             break;
          case EMPTY_PACKET: {
             EmptyPacketHeader* hp = reinterpret_cast<EmptyPacketHeader*>(entries_.at(oldestEntry).buffer_);
-            hp->swab();
+
             hp->verify(packetLength);
 #ifdef E57_MAX_VERBOSE
             cout << "  empty packet:" << endl;
@@ -369,15 +355,6 @@ namespace e57 {
       }
    }
 
-#ifdef E57_BIGENDIAN
-   void DataPacketHeader::swab()
-   {
-      /// Byte swap fields in-place, if CPU is BIG_ENDIAN
-      swab(&packetLogicalLengthMinus1);
-      swab(&bytestreamCount);
-   };
-#endif
-
 #ifdef E57_DEBUG
    void DataPacketHeader::dump(int indent, std::ostream& os) const
    {
@@ -493,38 +470,6 @@ namespace e57 {
       (void) getBytestream(bytestreamNumber, byteCount);
       return(byteCount);
    }
-
-#ifdef E57_BIGENDIAN
-   DataPacket::swab(bool toLittleEndian)
-   {
-      /// Be a little paranoid
-      if (packetType != E57_INDEX_PACKET)
-         throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "packetType=" + toString(packetType));
-
-      swab(packetLogicalLengthMinus1);
-
-      /// Need to watch out if packet starts out in natural CPU ordering or not
-      unsigned goodEntryCount;
-      if (toLittleEndian) {
-         /// entryCount starts out in correct order, save it before trashing
-         goodEntryCount = entryCount;
-         swab(entryCount);
-      } else {
-         /// Have to fix entryCount before can use.
-         swab(entryCount);
-         goodEntryCount = entryCount;
-      }
-
-      /// Make sure we wont go off end of buffer (e.g. if we accidentally swab)
-      if (goodEntryCount > MAX_ENTRIES)
-         throw E57_EXCEPTION2(E57_ERROR_BAD_CV_PACKET, "goodEntryCount=" + toString(goodEntryCount));
-
-      for (unsigned i=0; i < goodEntryCount; i++) {
-         swab(entries[i].chunkRecordNumber);
-         swab(entries[i].chunkPhysicalOffset);
-      }
-   }
-#endif
 
 #ifdef E57_DEBUG
    void DataPacket::dump(int indent, std::ostream& os) const
@@ -669,38 +614,6 @@ namespace e57 {
 #endif
    }
 
-#ifdef E57_BIGENDIAN
-   IndexPacket::swab(bool toLittleEndian)
-   {
-      /// Be a little paranoid
-      if (packetType != E57_INDEX_PACKET)
-         throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "packetType=" + toString(packetType));
-
-      swab(packetLogicalLengthMinus1);
-
-      /// Need to watch out if packet starts out in natural CPU ordering or not
-      unsigned goodEntryCount;
-      if (toLittleEndian) {
-         /// entryCount starts out in correct order, save it before trashing
-         goodEntryCount = entryCount;
-         swab(entryCount);
-      } else {
-         /// Have to fix entryCount before can use.
-         swab(entryCount);
-         goodEntryCount = entryCount;
-      }
-
-      /// Make sure we wont go off end of buffer (e.g. if we accidentally swab)
-      if (goodEntryCount > MAX_ENTRIES)
-         throw E57_EXCEPTION2(E57_ERROR_BAD_CV_PACKET, "goodEntryCount=" + toString(goodEntryCount));
-
-      for (unsigned i=0; i < goodEntryCount; i++) {
-         swab(entries[i].chunkRecordNumber);
-         swab(entries[i].chunkPhysicalOffset);
-      }
-   }
-#endif
-
 #ifdef E57_DEBUG
    void IndexPacket::dump(int indent, std::ostream& os) const
    {
@@ -756,14 +669,6 @@ namespace e57 {
                               + " bufferLength=" + toString(bufferLength));
       }
    }
-
-#ifdef E57_BIGENDIAN
-   void EmptyPacketHeader::swab()
-   {
-      /// Byte swap fields in-place, if CPU is BIG_ENDIAN
-      SWAB(&packetLogicalLengthMinus1);
-   };
-#endif
 
 #ifdef E57_DEBUG
    void EmptyPacketHeader::dump(int indent, std::ostream& os) const

@@ -374,7 +374,7 @@ size_t BitpackFloatDecoder::inputProcessAligned(const char* inbuf, const size_t 
       /// Copy floats from inbuf to destBuffer_
       for (unsigned i=0; i < n; i++) {
          float value = *inp;
-         SWAB(&value);  /// swab if neccesary
+
 #ifdef E57_MAX_VERBOSE
          cout << "  got float value=" << value << endl;
 #endif
@@ -388,7 +388,7 @@ size_t BitpackFloatDecoder::inputProcessAligned(const char* inbuf, const size_t 
       /// Copy doubles from inbuf to destBuffer_
       for (unsigned i=0; i < n; i++) {
          double value = *inp;
-         SWAB(&value);  /// swab if neccesary
+
 #ifdef E57_MAX_VERBOSE
          cout << "  got double value=" << value << endl;
 #endif
@@ -641,7 +641,6 @@ size_t BitpackIntegerDecoder<RegisterT>::inputProcessAligned(const char* inbuf, 
    for (size_t i = 0; i < recordCount; i++) {
       /// Get lower word (contains at least the LSbit of the value),
       RegisterT low = inp[wordPosition];
-      SWAB(&low);  // swab if necessary
 
 #ifdef E57_MAX_VERBOSE
       cout << "  bitOffset: " << bitOffset << endl;
@@ -652,7 +651,6 @@ size_t BitpackIntegerDecoder<RegisterT>::inputProcessAligned(const char* inbuf, 
       if (bitOffset > 0) {
          /// Get upper word (may or may not contain interesting bits),
          RegisterT high = inp[wordPosition+1];
-         SWAB(&high);  // swab if necessary
 
 #ifdef E57_MAX_VERBOSE
       cout << "  high:" << binaryString(high) << endl;

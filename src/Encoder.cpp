@@ -372,7 +372,6 @@ uint64_t BitpackFloatEncoder::processRecords(size_t recordCount)
 #ifdef E57_MAX_VERBOSE
          cout << "encoding float: " << outp[i] << endl;
 #endif
-         SWAB(&outp[i]);  /// swab if neccesary
       }
    } else {  /// E57_DOUBLE precision
       /// Form the starting address for next available location in outBuffer
@@ -384,7 +383,6 @@ uint64_t BitpackFloatEncoder::processRecords(size_t recordCount)
 #ifdef E57_MAX_VERBOSE
          cout << "encoding double: " << outp[i] << endl;
 #endif
-         SWAB(&outp[i]);  /// swab if neccesary
       }
    }
 
@@ -661,7 +659,7 @@ uint64_t BitpackIntegerEncoder<RegisterT>::processRecords(size_t recordCount)
          }
 #endif
          outp[outTransferred] = register_;
-         SWAB(&outp[outTransferred]);  /// swab if neccesary
+
          outTransferred++;
 
          register_ = static_cast<RegisterT>(uValue) >> (8*sizeof(RegisterT) - registerBitsUsed_);
@@ -678,7 +676,7 @@ uint64_t BitpackIntegerEncoder<RegisterT>::processRecords(size_t recordCount)
          }
 #endif
          outp[outTransferred] = register_;
-         SWAB(&outp[outTransferred]);  /// swab if neccesary
+
          outTransferred++;
 
          register_ = 0;

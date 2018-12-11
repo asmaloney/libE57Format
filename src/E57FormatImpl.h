@@ -270,11 +270,7 @@ struct CompressedVectorSectionHeader {
 
                 CompressedVectorSectionHeader();
     void        verify(uint64_t filePhysicalSize=0);
-#ifdef E57_BIGENDIAN
-    void        swab();
-#else
-    void        swab(){}
-#endif
+
 #ifdef E57_DEBUG
     void        dump(int indent = 0, std::ostream& os = std::cout) const;
 #endif

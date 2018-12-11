@@ -41,7 +41,7 @@
 // The extra code does not change the file contents.
 // Recommend that E57_DEBUG remain defined even for production versions.
 #define E57_DEBUG       1
-#define E57_MAX_DEBUG   0
+//#define E57_MAX_DEBUG   1
 
 // Uncomment the lines below to enable various levels of printing to the console of what is going on in the code.
 //#define E57_VERBOSE     1

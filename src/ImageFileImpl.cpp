@@ -274,8 +274,9 @@ namespace e57 {
 
          /// Init header contents
          E57FileHeader header;
-         memset(&header, 0, sizeof(header));  /// need to init to zero, ok since no constructor
+
          memcpy(&header.fileSignature, "ASTM-E57", 8);
+
          header.majorVersion       = E57_FORMAT_MAJOR;
          header.minorVersion       = E57_FORMAT_MINOR;
          header.filePhysicalLength = file_->length(CheckedFile::Physical);

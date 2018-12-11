@@ -33,21 +33,21 @@
 using namespace e57;
 
 struct IndexPacket {  /// Note this is whole packet, not just header
-      static const unsigned MAX_ENTRIES = 2048;
+      static constexpr unsigned MAX_ENTRIES = 2048;
 
-      uint8_t     packetType;     // = E57_INDEX_PACKET
-      uint8_t     packetFlags;    // flag bitfields
-      uint16_t    packetLogicalLengthMinus1;
-      uint16_t    entryCount;
-      uint8_t     indexLevel;
-      uint8_t     reserved1[9];   // must be zero
+      uint8_t     packetType = INDEX_PACKET;
+      uint8_t     packetFlags = 0;    // flag bitfields
+      uint16_t    packetLogicalLengthMinus1 = 0;
+      uint16_t    entryCount = 0;
+      uint8_t     indexLevel = 0;
+      uint8_t     reserved1[9] = {};   // must be zero
 
-      struct IndexPacketEntry {
-            uint64_t    chunkRecordNumber;
-            uint64_t    chunkPhysicalOffset;
+      struct IndexPacketEntry
+      {
+            uint64_t    chunkRecordNumber = 0;
+            uint64_t    chunkPhysicalOffset = 0;
       } entries[MAX_ENTRIES];
 
-      IndexPacket();
       void        verify(unsigned bufferLength = 0, uint64_t totalRecordCount = 0, uint64_t fileSize = 0) const;
 
 #ifdef E57_DEBUG
@@ -56,11 +56,10 @@ struct IndexPacket {  /// Note this is whole packet, not just header
 };
 
 struct EmptyPacketHeader {
-      uint8_t     packetType;    // = E57_EMPTY_PACKET
-      uint8_t     reserved1;     // must be zero
-      uint16_t    packetLogicalLengthMinus1;
+      uint8_t     packetType = EMPTY_PACKET;
+      uint8_t     reserved1 = 0;     // must be zero
+      uint16_t    packetLogicalLengthMinus1 = 0;
 
-      EmptyPacketHeader();
       void        verify(unsigned bufferLength = 0) const; //???use
 
 #ifdef E57_DEBUG
@@ -524,17 +523,6 @@ void DataPacket::dump(int indent, std::ostream& os) const
 //=============================================================================
 // IndexPacket
 
-IndexPacket::IndexPacket()
-{
-   /// Double check that packet struct is correct length.  Watch out for RTTI increasing the size.
-   if (sizeof(*this) != 16+16*MAX_ENTRIES)
-      throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "size=" + toString(sizeof(*this)));
-
-   /// Now confident we have correct size, zero packet.
-   /// This guarantees that index packets are always completely initialized to zero.
-   memset(this, 0, sizeof(*this));
-}
-
 void IndexPacket::verify(unsigned bufferLength, uint64_t totalRecordCount, uint64_t fileSize) const
 {
    //??? do all packets need versions?  how extend without breaking older checking?  need to check file version#?
@@ -659,17 +647,6 @@ void IndexPacket::dump(int indent, std::ostream& os) const
 
 //=============================================================================
 // EmptyPacketHeader
-
-EmptyPacketHeader::EmptyPacketHeader()
-{
-   /// Double check that packet struct is correct length.  Watch out for RTTI increasing the size.
-   if (sizeof(*this) != 4)
-      throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "size=" + toString(sizeof(*this)));
-
-   /// Now confident we have correct size, zero packet.
-   /// This guarantees that EmptyPacket headers are always completely initialized to zero.
-   memset(this, 0, sizeof(*this));
-}
 
 void EmptyPacketHeader::verify(unsigned bufferLength) const
 {

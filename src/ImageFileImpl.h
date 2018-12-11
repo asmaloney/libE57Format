@@ -35,14 +35,15 @@ namespace e57 {
    class CheckedFile;
 
    /// Note: If any fields are added to this structure, swab() may need to be updated.
-   struct E57FileHeader {
-         char        fileSignature[8];
-         uint32_t    majorVersion;
-         uint32_t    minorVersion;
-         uint64_t    filePhysicalLength;
-         uint64_t    xmlPhysicalOffset;
-         uint64_t    xmlLogicalLength;
-         uint64_t    pageSize;
+   struct E57FileHeader
+   {
+         char        fileSignature[8] = {};
+         uint32_t    majorVersion = 0;
+         uint32_t    minorVersion = 0;
+         uint64_t    filePhysicalLength = 0;
+         uint64_t    xmlPhysicalOffset = 0;
+         uint64_t    xmlLogicalLength = 0;
+         uint64_t    pageSize = 0;
          //  char        e57LibraryVersion[8];   //Not in V1.0 Standard
 
 #ifdef E57_DEBUG
@@ -50,7 +51,8 @@ namespace e57 {
 #endif
    };
 
-   class ImageFileImpl : public std::enable_shared_from_this<ImageFileImpl> {
+   class ImageFileImpl : public std::enable_shared_from_this<ImageFileImpl>
+   {
       public:
          ImageFileImpl( ReadChecksumPolicy policy );
          void            construct2(const ustring& fileName, const ustring& mode);

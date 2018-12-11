@@ -71,12 +71,10 @@ std::shared_ptr<NodeImpl> NodeImpl::parent()
         /// If is root, then has self as parent (by convention)
         return shared_from_this();
     }
-    else
-    {
-        std::shared_ptr<NodeImpl> myParent(parent_);
 
-        return myParent;
-    }
+    std::shared_ptr<NodeImpl> myParent(parent_);
+
+    return myParent;
 }
 
 ustring NodeImpl::pathName() const
@@ -87,38 +85,40 @@ ustring NodeImpl::pathName() const
     {
         return("/");
     }
-    else
-    {
-        shared_ptr<NodeImpl> p(parent_);
 
-        if (p->isRoot())
-        {
-            return("/" + elementName_);
-        }
-        else
-        {
-            return(p->pathName() + "/" + elementName_);
-        }
+    shared_ptr<NodeImpl> p(parent_);
+
+    if (p->isRoot())
+    {
+        return("/" + elementName_);
     }
+
+    return(p->pathName() + "/" + elementName_);
 }
 
 ustring NodeImpl::relativePathName(const shared_ptr<NodeImpl> &origin, ustring childPathName) const
 {
     checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
     if (origin == shared_from_this())
-        return(childPathName);
+    {
+       return(childPathName);
+    }
 
     if (isRoot())
-        /// Got to top and didn't find origin, must be error
-        throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "this->elementName=" + this->elementName() + " childPathName="+childPathName);
-    else {
-        /// Assemble relativePathName from right to left, recursively
-        shared_ptr<NodeImpl> p(parent_);
-        if (childPathName.empty())
-            return(p->relativePathName(origin, elementName_));
-        else
-            return(p->relativePathName(origin, elementName_ + "/" + childPathName));
+    {
+       /// Got to top and didn't find origin, must be error
+       throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "this->elementName=" + this->elementName() + " childPathName="+childPathName);
     }
+
+    /// Assemble relativePathName from right to left, recursively
+    shared_ptr<NodeImpl> p( parent_ );
+
+    if ( childPathName.empty() )
+    {
+       return p->relativePathName( origin, elementName_ );
+    }
+
+    return p->relativePathName( origin, elementName_ + "/" + childPathName );
 }
 
 ustring NodeImpl::elementName() const

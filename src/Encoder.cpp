@@ -424,7 +424,6 @@ BitpackStringEncoder::BitpackStringEncoder(unsigned bytestreamNumber, SourceDest
      totalBytesProcessed_(0),
      isStringActive_(false),
      prefixComplete_(false),
-     currentString_(),
      currentCharPosition_(0)
 {
 }
@@ -530,12 +529,13 @@ bool BitpackStringEncoder::registerFlushToOutput()
 float BitpackStringEncoder::bitsPerRecord()
 {
    /// Return average number of bits in strings + 8 bits for prefix
-   if (currentRecordIndex_ > 0) {
-      return((8.0F*totalBytesProcessed_) / currentRecordIndex_ + 8);
-   } else {
-      /// We haven't completed a record yet, so guess 100 bytes per record
-      return(100*8.0F);
+   if (currentRecordIndex_ > 0)
+   {
+      return (8.0f*totalBytesProcessed_) / currentRecordIndex_ + 8;
    }
+
+   /// We haven't completed a record yet, so guess 100 bytes per record
+   return 100*8.0f;
 }
 
 #ifdef E57_DEBUG
@@ -717,18 +717,22 @@ bool BitpackIntegerEncoder<RegisterT>::registerFlushToOutput()
    dump(4);
 #endif
    /// If have any used bits in register, transfer to output, padded in MSBits with zeros to RegisterT boundary
-   if (registerBitsUsed_ > 0) {
-      if (outBufferEnd_ < outBuffer_.size() - sizeof(RegisterT)) {
+   if (registerBitsUsed_ > 0)
+   {
+      if (outBufferEnd_ < outBuffer_.size() - sizeof(RegisterT))
+      {
          RegisterT* outp = reinterpret_cast<RegisterT*>(&outBuffer_[outBufferEnd_]);
          *outp = register_;
          register_ = 0;
          registerBitsUsed_ = 0;
          outBufferEnd_ += sizeof(RegisterT);
-         return(true);  // flush succeeded  ??? is this used? correctly?
-      } else
-         return(false);  // flush didn't complete (not enough room).
-   } else
-      return(true);
+         return true;  // flush succeeded  ??? is this used? correctly?
+      }
+
+      return false;  // flush didn't complete (not enough room).
+   }
+
+   return true;
 }
 
 template <typename RegisterT>

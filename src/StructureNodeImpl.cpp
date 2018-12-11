@@ -156,17 +156,21 @@ shared_ptr<NodeImpl> StructureNodeImpl::lookup(const ustring& pathName)
                     break;
             }
             if (i == children_.size())
-                return(shared_ptr<NodeImpl>());  /// empty pointer
-            if (fields.size() == 1) {
-                return(children_.at(i));
-            } else {
-                //??? use level here rather than unparse
-                /// Remove first field in path
-                fields.erase(fields.begin());
-
-                /// Call lookup on child object with remaining fields in path name
-                return(children_.at(i)->lookup(imf->pathNameUnparse(true, fields)));
+            {
+               return(shared_ptr<NodeImpl>());  /// empty pointer
             }
+
+            if (fields.size() == 1)
+            {
+                return(children_.at(i));
+            }
+
+            //??? use level here rather than unparse
+            /// Remove first field in path
+            fields.erase(fields.begin());
+
+            /// Call lookup on child object with remaining fields in path name
+            return children_.at(i)->lookup(imf->pathNameUnparse(true, fields));
         }
     } else {  /// Absolute pathname and we aren't at the root
         /// Find root of the tree
@@ -261,18 +265,17 @@ void StructureNodeImpl::set(const vector<ustring>& fields, unsigned level, share
     /// Serial search for matching field name, if find match, have error since can't set twice
     for ( auto &child : children_ )
     {
-        if (fields.at(level) == child->elementName())
+        if ( fields.at(level) == child->elementName() )
         {
-            if (level == fields.size() - 1)
+            if ( level == fields.size() - 1 )
             {
                 /// Enforce "set once" policy, don't allow reset
                 throw E57_EXCEPTION2(E57_ERROR_SET_TWICE, "this->pathName=" + this->pathName() + " element=" + fields[level]);
             }
-            else
-            {
-                /// Recurse on child
-                child->set(fields, level+1, ni);
-            }
+
+            /// Recurse on child
+            child->set( fields, level+1, ni );
+
             return;
         }
     }

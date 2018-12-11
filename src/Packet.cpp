@@ -651,7 +651,9 @@ void IndexPacket::dump(int indent, std::ostream& os) const
       os << space(indent+4) << "chunkPhysicalOffset:  " << entries[i].chunkPhysicalOffset << std::endl;
    }
    if (i < entryCount)
+   {
       os << space(indent) << entryCount-i << "more entries unprinted..." << std::endl;
+   }
 }
 #endif
 

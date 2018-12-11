@@ -397,7 +397,8 @@ uint64_t CheckedFile::lseek64(int64_t offset, int whence)
                            + " whence=" + toString(whence)
                            + " result=" + toString(result));
    }
-   return(static_cast<uint64_t>(result));
+
+   return static_cast<uint64_t>(result);
 }
 
 uint64_t CheckedFile::position(OffsetMode omode)
@@ -405,10 +406,12 @@ uint64_t CheckedFile::position(OffsetMode omode)
    /// Get current file cursor position
    uint64_t pos = lseek64(0LL, SEEK_CUR);
 
-   if (omode==Physical)
-      return(pos);
-   else
-      return(physicalToLogical(pos));
+   if ( omode == Physical )
+   {
+      return pos;
+   }
+
+   return physicalToLogical( pos );
 }
 
 uint64_t CheckedFile::length( OffsetMode omode )
@@ -431,10 +434,8 @@ uint64_t CheckedFile::length( OffsetMode omode )
 
       return end_pos;
    }
-   else
-   {
-      return logicalLength_;
-   }
+
+   return logicalLength_;
 }
 
 void CheckedFile::extend(uint64_t newLength, OffsetMode omode)
@@ -443,13 +444,19 @@ void CheckedFile::extend(uint64_t newLength, OffsetMode omode)
    // cout << "extend newLength=" << newLength << " omode="<< omode << endl; //???
 #endif
    if (readOnly_)
+   {
       throw E57_EXCEPTION2(E57_ERROR_FILE_IS_READ_ONLY, "fileName=" + fileName_);
+   }
 
    uint64_t newLogicalLength;
    if (omode==Physical)
+   {
       newLogicalLength = physicalToLogical(newLength);
+   }
    else
+   {
       newLogicalLength = newLength;
+   }
 
    uint64_t currentLogicalLength = length(Logical);
 

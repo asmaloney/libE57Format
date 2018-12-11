@@ -30,8 +30,8 @@
 #include <xercesc/util/BinInputStream.hpp>
 #include <xercesc/util/TransService.hpp>
 
+#include "CheckedFile.h"
 #include "E57FormatImpl.h"
-
 #include "E57XmlParser.h"
 #include "ImageFileImpl.h"
 

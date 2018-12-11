@@ -24,11 +24,11 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
+#include "CheckedFile.h"
 #include "E57FormatImpl.h"
-#include "ImageFileImpl.h"
-
 #include "E57Version.h"
 #include "E57XmlParser.h"
+#include "ImageFileImpl.h"
 
 namespace e57 {
 

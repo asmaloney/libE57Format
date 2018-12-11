@@ -122,6 +122,8 @@ add_library( E57Format STATIC
     src/ImageFileImpl.h
     src/SourceDestBufferImpl.h
     src/SourceDestBufferImpl.cpp
+    src/StructureNodeImpl.h
+    src/StructureNodeImpl.cpp
     src/E57Exception.cpp
     src/E57Format.cpp
     src/E57FormatImpl.cpp

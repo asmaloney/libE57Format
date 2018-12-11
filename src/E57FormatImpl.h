@@ -29,9 +29,8 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include "CheckedFile.h"
-#include "NodeImpl.h"
 #include "Packet.h"
+#include "StructureNodeImpl.h"
 
 namespace e57 {
 
@@ -40,41 +39,6 @@ class Decoder;
 class Encoder;
 
 //================================================================
-
-class StructureNodeImpl : public NodeImpl {
-public:
-    StructureNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile);
-    ~StructureNodeImpl()  override = default;
-
-    NodeType    type() const override;
-    bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni) override;
-    bool        isDefined(const ustring& pathName) override;
-    void        setAttachedRecursive() override;
-
-    virtual int64_t     childCount() const;
-
-    virtual std::shared_ptr<NodeImpl>  get(int64_t index);
-    std::shared_ptr<NodeImpl>          get(const ustring& pathName) override;
-
-    virtual void  set(int64_t index, std::shared_ptr<NodeImpl> ni);
-    void          set(const ustring& pathName, std::shared_ptr<NodeImpl> ni, bool autoPathCreate = false) override;
-    void          set(const std::vector<ustring>& fields, unsigned level, std::shared_ptr<NodeImpl> ni, bool autoPathCreate = false) override;
-    virtual void  append(std::shared_ptr<NodeImpl> ni);
-
-    void        checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin) override;
-
-    void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) override;
-
-#ifdef E57_DEBUG
-    void    dump(int indent = 0, std::ostream& os = std::cout) const override;
-#endif
-
-protected:
-    friend class CompressedVectorReaderImpl;
-    std::shared_ptr<NodeImpl> lookup(const ustring& pathName) override;
-
-    std::vector<std::shared_ptr<NodeImpl> > children_;
-};
 
 class VectorNodeImpl : public StructureNodeImpl {
 public:

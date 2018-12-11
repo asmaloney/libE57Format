@@ -27,7 +27,6 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include <climits>
 #include <cmath>
 #include <cstring>
 

@@ -24,6 +24,8 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
+#include <climits>
+
 #include "CheckedFile.h"
 #include "ImageFileImpl.h"
 #include "StructureNodeImpl.h"

@@ -102,7 +102,7 @@ ustring NodeImpl::pathName() const
     }
 }
 
-ustring NodeImpl::relativePathName(shared_ptr<NodeImpl> origin, ustring childPathName) const
+ustring NodeImpl::relativePathName(const shared_ptr<NodeImpl> &origin, ustring childPathName) const
 {
     checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
     if (origin == shared_from_this())
@@ -294,7 +294,7 @@ void NodeImpl::checkBuffers(const vector<SourceDestBuffer>& sdbufs, bool allowMi
     }
 }
 
-bool NodeImpl::findTerminalPosition(shared_ptr<NodeImpl> target, uint64_t& countFromLeft)
+bool NodeImpl::findTerminalPosition(const shared_ptr<NodeImpl> &target, uint64_t& countFromLeft)
 {
     /// don't checkImageFileOpen
 

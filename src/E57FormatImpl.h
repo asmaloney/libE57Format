@@ -73,9 +73,9 @@ public:
     bool        isDefined(const ustring& pathName) override;
     void        setAttachedRecursive() override;
 
-    void                setPrototype(std::shared_ptr<NodeImpl> prototype);
+    void                setPrototype(const std::shared_ptr<NodeImpl>& prototype);
     std::shared_ptr<NodeImpl> getPrototype();
-    void                setCodecs(std::shared_ptr<VectorNodeImpl> codecs);
+    void                setCodecs(const std::shared_ptr<VectorNodeImpl> &codecs);
     std::shared_ptr<VectorNodeImpl> getCodecs();
 
     virtual int64_t     childCount();

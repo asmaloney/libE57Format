@@ -182,7 +182,7 @@ NodeType CompressedVectorNodeImpl::type() const
     return E57_COMPRESSED_VECTOR;
 }
 
-void CompressedVectorNodeImpl::setPrototype(shared_ptr<NodeImpl> prototype)
+void CompressedVectorNodeImpl::setPrototype(const shared_ptr<NodeImpl> &prototype)
 {
     // don't checkImageFileOpen, ctor did it
 
@@ -222,7 +222,7 @@ shared_ptr<NodeImpl> CompressedVectorNodeImpl::getPrototype()
     return(prototype_);  //??? check defined
 }
 
-void CompressedVectorNodeImpl::setCodecs(shared_ptr<VectorNodeImpl> codecs)
+void CompressedVectorNodeImpl::setCodecs(const shared_ptr<VectorNodeImpl> &codecs)
 {
     // don't checkImageFileOpen, ctor did it
 
@@ -1292,7 +1292,7 @@ void CompressedVectorSectionHeader::dump(int indent, std::ostream& os) const
 ///================================================================
 
 struct SortByBytestreamNumber {
-    bool operator () (shared_ptr<Encoder> lhs , shared_ptr<Encoder> rhs) const {
+    bool operator () (const shared_ptr<Encoder> &lhs , const shared_ptr<Encoder> &rhs) const {
         return(lhs->bytestreamNumber() < rhs->bytestreamNumber());
     }
 };

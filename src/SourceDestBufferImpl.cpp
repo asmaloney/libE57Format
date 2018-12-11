@@ -748,7 +748,7 @@ void SourceDestBufferImpl::setNextString(const ustring& value)
     nextIndex_++;
 }
 
-void SourceDestBufferImpl::checkCompatible(shared_ptr<SourceDestBufferImpl> newBuf) const
+void SourceDestBufferImpl::checkCompatible(const shared_ptr<SourceDestBufferImpl> &newBuf) const
 {
     if (pathName_ != newBuf->pathName()) {
         throw E57_EXCEPTION2(E57_ERROR_BUFFERS_NOT_COMPATIBLE,

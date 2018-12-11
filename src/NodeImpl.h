@@ -43,7 +43,7 @@ public:
     bool                    isRoot() const;
     std::shared_ptr<NodeImpl> parent();
     ustring                 pathName() const;
-    ustring                 relativePathName(std::shared_ptr<NodeImpl> origin, ustring childPathName = ustring()) const;
+    ustring                 relativePathName(const std::shared_ptr<NodeImpl> &origin, ustring childPathName = ustring()) const;
     ustring                 elementName() const;
     std::shared_ptr<ImageFileImpl> destImageFile();
 
@@ -61,7 +61,7 @@ public:
 
     virtual void            checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin) = 0;
     void                    checkBuffers(const std::vector<SourceDestBuffer>& sdbufs, bool allowMissing);
-    bool                    findTerminalPosition(std::shared_ptr<NodeImpl> ni, uint64_t& countFromLeft);
+    bool                    findTerminalPosition(const std::shared_ptr<NodeImpl> &target, uint64_t& countFromLeft);
 
     virtual void            writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) = 0;
 

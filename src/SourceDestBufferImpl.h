@@ -81,7 +81,7 @@ public:
     void            setNextDouble(double value);
     void            setNextString(const ustring& value);
 
-    void            checkCompatible(std::shared_ptr<SourceDestBufferImpl> newBuf) const;
+    void            checkCompatible(const std::shared_ptr<SourceDestBufferImpl> &newBuf) const;
 
 #ifdef E57_DEBUG
     void            dump(int indent = 0, std::ostream& os = std::cout);

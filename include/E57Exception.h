@@ -89,22 +89,24 @@ enum ErrorCode {
    E57_ERROR_INVARIANCE_VIOLATION              = 50  //!< class invariance constraint violation in debug mode
 };
 
-class E57Exception : public std::exception {
+class E57Exception : public std::exception
+{
    public:
-      virtual void        report(const char* reportingFileName=nullptr, int reportingLineNumber=0, const char* reportingFunctionName=nullptr, std::ostream& os = std::cout) const;
-      virtual ErrorCode   errorCode() const;
-      virtual std::string context() const;
+      void        report(const char* reportingFileName=nullptr, int reportingLineNumber=0, const char* reportingFunctionName=nullptr, std::ostream& os = std::cout) const;
+      ErrorCode   errorCode() const;
+      std::string context() const;
       const char* what() const noexcept override;
 
       // For debugging purposes:
-      virtual const char* sourceFileName() const;
-      virtual const char* sourceFunctionName() const;
-      virtual int         sourceLineNumber() const;
+      const char* sourceFileName() const;
+      const char* sourceFunctionName() const;
+      int         sourceLineNumber() const;
 
       //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
       E57Exception() = delete;
       E57Exception(ErrorCode ecode, const std::string &context,
-                   const char* srcFileName = nullptr, int srcLineNumber = 0, const char* srcFunctionName = nullptr);
+                   const char* srcFileName = nullptr, int srcLineNumber = 0,
+                   const char* srcFunctionName = nullptr);
       ~E57Exception() noexcept override = default;
 
    protected:

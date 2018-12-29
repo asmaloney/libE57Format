@@ -37,7 +37,7 @@ using namespace std;
 StructureNodeImpl::StructureNodeImpl(weak_ptr<ImageFileImpl> destImageFile)
 : NodeImpl(destImageFile)
 {
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
 }
 
 NodeType StructureNodeImpl::type() const
@@ -86,7 +86,7 @@ bool StructureNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
 
 bool StructureNodeImpl::isDefined(const ustring& pathName)
 {
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
     shared_ptr<NodeImpl> ni(lookup(pathName));
     return(ni != nullptr);
 }
@@ -105,13 +105,13 @@ void StructureNodeImpl::setAttachedRecursive()
 
 int64_t StructureNodeImpl::childCount() const
 {
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
 
     return children_.size();
 }
 shared_ptr<NodeImpl> StructureNodeImpl::get(int64_t index)
 {
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
         if (index < 0 || index >= static_cast<int64_t>(children_.size())) { // %%% Possible truncation on platforms where size_t = uint64
         throw E57_EXCEPTION2(E57_ERROR_CHILD_INDEX_OUT_OF_BOUNDS,
                              "this->pathName=" + this->pathName()
@@ -124,7 +124,7 @@ shared_ptr<NodeImpl> StructureNodeImpl::get(int64_t index)
 
 shared_ptr<NodeImpl> StructureNodeImpl::get(const ustring& pathName)
 {
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
     shared_ptr<NodeImpl> ni(lookup(pathName));
     if (!ni)
         throw E57_EXCEPTION2(E57_ERROR_PATH_UNDEFINED, "this->pathName=" + this->pathName() + " pathName=" + pathName);
@@ -183,7 +183,7 @@ shared_ptr<NodeImpl> StructureNodeImpl::lookup(const ustring& pathName)
 
 void StructureNodeImpl::set(int64_t index64, shared_ptr<NodeImpl> ni)
 {
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
 
     auto index = static_cast<unsigned>(index64);
 
@@ -227,7 +227,7 @@ void StructureNodeImpl::set(int64_t index64, shared_ptr<NodeImpl> ni)
 
 void StructureNodeImpl::set(const ustring& pathName, shared_ptr<NodeImpl> ni, bool autoPathCreate)
 {
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
     //??? parse pathName! throw if impossible, absolute and multi-level paths...
     //??? enforce type constraints on path (non-zero index types match zero index types for VECTOR, COMPRESSED_VECTOR
 
@@ -258,7 +258,7 @@ void StructureNodeImpl::set(const vector<ustring>& fields, unsigned level, share
         cout << "  field[" << i << "]: " << fields.at(i) << endl;
 #endif
 
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
     //??? check if field is numeric string (e.g. "17"), verify number is same as index, else throw bad_path
 
     /// Check if trying to set the root node "/", which is illegal

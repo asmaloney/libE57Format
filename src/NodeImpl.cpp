@@ -38,7 +38,7 @@ NodeImpl::NodeImpl(weak_ptr<ImageFileImpl> destImageFile)
 : destImageFile_(destImageFile),
   isAttached_(false)
 {
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);  // does checking for all node type ctors
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));  // does checking for all node type ctors
 }
 
 void NodeImpl::checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName) const
@@ -57,14 +57,14 @@ void NodeImpl::checkImageFileOpen(const char* srcFileName, int srcLineNumber, co
 
 bool NodeImpl::isRoot() const
 {
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
 
     return parent_.expired();
 };
 
 std::shared_ptr<NodeImpl> NodeImpl::parent()
 {
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
 
     if (isRoot())
     {
@@ -79,7 +79,7 @@ std::shared_ptr<NodeImpl> NodeImpl::parent()
 
 ustring NodeImpl::pathName() const
 {
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
 
     if (isRoot())
     {
@@ -98,7 +98,7 @@ ustring NodeImpl::pathName() const
 
 ustring NodeImpl::relativePathName(const shared_ptr<NodeImpl> &origin, ustring childPathName) const
 {
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
     if (origin == shared_from_this())
     {
        return(childPathName);
@@ -123,7 +123,7 @@ ustring NodeImpl::relativePathName(const shared_ptr<NodeImpl> &origin, ustring c
 
 ustring NodeImpl::elementName() const
 {
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
 
     return elementName_;
 }
@@ -137,7 +137,7 @@ shared_ptr<ImageFileImpl> NodeImpl::destImageFile()
 
 bool NodeImpl::isAttached() const
 {
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
 
     return isAttached_;
 }
@@ -369,7 +369,7 @@ void NodeImpl::dump(int indent, ostream& os) const
 
 bool NodeImpl::_verifyPathNameAbsolute( const ustring &inPathName )
 {
-   checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+   checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
 
    /// Parse to determine if pathName is absolute
    bool isRelative = false;

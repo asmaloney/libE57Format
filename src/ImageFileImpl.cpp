@@ -239,7 +239,7 @@ namespace e57 {
 
    std::shared_ptr<StructureNodeImpl> ImageFileImpl::root()
    {
-      checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+      checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
       return(root_);
    }
 
@@ -377,7 +377,7 @@ namespace e57 {
 
    void ImageFileImpl::extensionsAdd(const ustring& prefix, const ustring& uri)
    {
-      checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+      checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
       //??? check if prefix characters ok, check if uri has a double quote char (others?)
 
       /// Check to make sure that neither prefix or uri is already defined.
@@ -393,7 +393,7 @@ namespace e57 {
 
    bool ImageFileImpl::extensionsLookupPrefix(const ustring& prefix, ustring& uri) const
    {
-      checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+      checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
 
       /// Linear search for matching prefix
       std::vector<NameSpace>::const_iterator it;
@@ -408,7 +408,7 @@ namespace e57 {
 
    bool ImageFileImpl::extensionsLookupUri(const ustring& uri, ustring& prefix) const
    {
-      checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+      checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
 
       /// Linear search for matching URI
       std::vector<NameSpace>::const_iterator it;
@@ -423,19 +423,19 @@ namespace e57 {
 
    size_t ImageFileImpl::extensionsCount() const
    {
-      checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+      checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
       return(nameSpaces_.size());
    }
 
    ustring ImageFileImpl::extensionsPrefix(const size_t index) const
    {
-      checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+      checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
       return(nameSpaces_[index].prefix);  //??? throw e57 exception here if out of bounds?
    }
 
    ustring ImageFileImpl::extensionsUri(const size_t index) const
    {
-      checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+      checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
       return(nameSpaces_[index].uri);  //??? throw e57 exception here if out of bounds?
    }
 
@@ -466,7 +466,7 @@ namespace e57 {
       //cout << "isElementNameLegal elementName=""" << elementName << """" << endl;
 #endif
       try {
-         checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+         checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
 
          /// Throws if elementName bad
          checkElementNameLegal(elementName, allowNumber);
@@ -484,7 +484,7 @@ namespace e57 {
       //cout << "isPathNameLegal elementName=""" << pathName << """" << endl;
 #endif
       try {
-         checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+         checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
 
          /// Throws if pathName bad
          pathNameCheckWellFormed(pathName);

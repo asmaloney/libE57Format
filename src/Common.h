@@ -58,8 +58,8 @@
 namespace e57 {
 
 //!!! inline these rather than macros?
-#define E57_EXCEPTION1(ecode) (E57Exception((ecode), ustring(), __FILE__, __LINE__, __FUNCTION__))
-#define E57_EXCEPTION2(ecode, context) (E57Exception((ecode), (context), __FILE__, __LINE__, __FUNCTION__))
+#define E57_EXCEPTION1(ecode) (E57Exception((ecode), ustring(), __FILE__, __LINE__, static_cast<const char *>(__FUNCTION__)))
+#define E57_EXCEPTION2(ecode, context) (E57Exception((ecode), (context), __FILE__, __LINE__, static_cast<const char *>(__FUNCTION__)))
 
 // The URI of the LAS extension.
 // Used to identify the extended field names for encoding data from LAS files (LAS versions 1.0 to 1.3).

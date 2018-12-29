@@ -111,13 +111,13 @@ bool VectorNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
 
 bool VectorNodeImpl::allowHeteroChildren() const
 {
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
     return allowHeteroChildren_;
 }
 
 void VectorNodeImpl::set(int64_t index64, shared_ptr<NodeImpl> ni)
 {
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
     if (!allowHeteroChildren_) {
         /// New node type must match all existing children
         for ( auto &child : children_ )
@@ -217,7 +217,7 @@ void CompressedVectorNodeImpl::setPrototype(const shared_ptr<NodeImpl> &prototyp
 
 shared_ptr<NodeImpl> CompressedVectorNodeImpl::getPrototype()
 {
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
     return(prototype_);  //??? check defined
 }
 
@@ -255,7 +255,7 @@ void CompressedVectorNodeImpl::setCodecs(const shared_ptr<VectorNodeImpl> &codec
 
 shared_ptr<VectorNodeImpl> CompressedVectorNodeImpl::getCodecs()
 {
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
     return(codecs_);  //??? check defined
 }
 
@@ -309,7 +309,7 @@ void CompressedVectorNodeImpl::setAttachedRecursive()
 
 int64_t CompressedVectorNodeImpl::childCount()
 {
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
     return(recordCount_);
 }
 
@@ -366,7 +366,7 @@ void CompressedVectorNodeImpl::dump(int indent, ostream& os) const
 
 shared_ptr<CompressedVectorWriterImpl> CompressedVectorNodeImpl::writer(vector<SourceDestBuffer> sbufs)
 {
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
 
     shared_ptr<ImageFileImpl> destImageFile(destImageFile_);
 
@@ -409,7 +409,7 @@ shared_ptr<CompressedVectorWriterImpl> CompressedVectorNodeImpl::writer(vector<S
 
 shared_ptr<CompressedVectorReaderImpl> CompressedVectorNodeImpl::reader(vector<SourceDestBuffer> dbufs)
 {
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
 
     shared_ptr<ImageFileImpl> destImageFile(destImageFile_);
 
@@ -517,19 +517,19 @@ bool IntegerNodeImpl::isDefined(const ustring& pathName)
 
 int64_t IntegerNodeImpl::value()
 {
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
     return(value_);
 }
 
 int64_t IntegerNodeImpl::minimum()
 {
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
     return(minimum_);
 }
 
 int64_t IntegerNodeImpl::maximum()
 {
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
     return(maximum_);
 }
 
@@ -670,47 +670,47 @@ bool ScaledIntegerNodeImpl::isDefined(const ustring& pathName)
 
 int64_t ScaledIntegerNodeImpl::rawValue()
 {
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
     return(value_);
 }
 
 double ScaledIntegerNodeImpl::scaledValue()
 {
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
     return(value_ * scale_ + offset_);
 }
 
 int64_t ScaledIntegerNodeImpl::minimum()
 {
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
     return(minimum_);
 }
 double ScaledIntegerNodeImpl::scaledMinimum()
 {
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
     return(minimum_ * scale_ + offset_);
 }
 
 int64_t ScaledIntegerNodeImpl::maximum()
 {
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
     return(maximum_);
 }
 double ScaledIntegerNodeImpl::scaledMaximum()
 {
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
     return(maximum_ * scale_ + offset_);
 }
 
 double ScaledIntegerNodeImpl::scale()
 {
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
     return(scale_);
 }
 
 double ScaledIntegerNodeImpl::offset()
 {
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
     return(offset_);
 }
 
@@ -843,25 +843,25 @@ bool FloatNodeImpl::isDefined(const ustring& pathName)
 
 double FloatNodeImpl::value() const
 {
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
     return value_;
 }
 
 FloatPrecision FloatNodeImpl::precision() const
 {
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
     return precision_;
 }
 
 double FloatNodeImpl::minimum() const
 {
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
     return minimum_;
 }
 
 double FloatNodeImpl::maximum() const
 {
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
     return maximum_;
 }
 
@@ -981,7 +981,7 @@ bool StringNodeImpl::isDefined(const ustring& pathName)
 
 ustring StringNodeImpl::value()
 {
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
     return(value_);
 }
 
@@ -1036,7 +1036,6 @@ void StringNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> /*imf*/, CheckedFil
              /// Keep looping to send the ">" plus the remaining part of the string
              currentPosition = found+2;
         }
-
         cf << "]]></" << fieldName << ">\n";
     }
 }
@@ -1139,7 +1138,7 @@ bool BlobNodeImpl::isDefined(const ustring& pathName)
 
 int64_t BlobNodeImpl::byteCount()
 {
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
     return(blobLogicalLength_);
 }
 
@@ -1147,7 +1146,7 @@ void BlobNodeImpl::read(uint8_t* buf, int64_t start, size_t count)
 {
     //??? check start not negative
 
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
     if (static_cast<uint64_t>(start)+count > blobLogicalLength_) {
         throw E57_EXCEPTION2(E57_ERROR_BAD_API_ARGUMENT,
                              "this->pathName=" + this->pathName()
@@ -1163,7 +1162,7 @@ void BlobNodeImpl::read(uint8_t* buf, int64_t start, size_t count)
 void BlobNodeImpl::write(uint8_t* buf, int64_t start, size_t count)
 {
     //??? check start not negative
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
 
     shared_ptr<ImageFileImpl> destImageFile(destImageFile_);
 
@@ -1397,7 +1396,7 @@ void CompressedVectorWriterImpl::close()
     /// Before anything that can throw, decrement writer count
     imf->decrWriterCount();
 
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
     /// don't call checkWriterOpen();
 
     if (!isOpen_)
@@ -1509,8 +1508,8 @@ void CompressedVectorWriterImpl::write(const size_t requestedRecordCount)
 #ifdef E57_MAX_VERBOSE
     cout << "CompressedVectorWriterImpl::write() called" << endl; //???
 #endif
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
-    checkWriterOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
+    checkWriterOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
 
     /// Check that requestedRecordCount is not larger than the sbufs
     if (requestedRecordCount > sbufs_.at(0).impl()->capacity()) {
@@ -1878,7 +1877,7 @@ CompressedVectorReaderImpl::CompressedVectorReaderImpl(shared_ptr<CompressedVect
 #ifdef E57_MAX_VERBOSE
     cout << "CompressedVectorReaderImpl() called" << endl; //???
 #endif
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
 
     /// Allow reading of a completed CompressedVector, whether file is being read or currently being written.
     ///??? what other situations need checking for?
@@ -2025,7 +2024,7 @@ unsigned CompressedVectorReaderImpl::read(vector<SourceDestBuffer>& dbufs)
 {
     /// don't checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__), read() will do it
 
-    checkReaderOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkReaderOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
 
     /// Check compatible with current dbufs
     setBuffers(dbufs);
@@ -2038,8 +2037,8 @@ unsigned CompressedVectorReaderImpl::read()
 #ifdef E57_MAX_VERBOSE
     cout << "CompressedVectorReaderImpl::read() called" << endl; //???
 #endif
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
-    checkReaderOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
+    checkReaderOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
 
     /// Rewind all dbufs so start writing to them at beginning
     for ( auto &dbuf : dbufs_ )
@@ -2292,7 +2291,7 @@ uint64_t CompressedVectorReaderImpl::findNextDataPacket(uint64_t nextPacketLogic
 
 void CompressedVectorReaderImpl::seek(uint64_t /*recordNumber*/)
 {
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
 
     ///!!! implement
     throw E57_EXCEPTION1(E57_ERROR_NOT_IMPLEMENTED);
@@ -2315,7 +2314,7 @@ void CompressedVectorReaderImpl::close()
     shared_ptr<ImageFileImpl> imf(cVector_->destImageFile_);
     imf->decrReaderCount();
 
-    checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
+    checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
 
     /// No error if reader not open
     if (!isOpen_)

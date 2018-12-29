@@ -184,7 +184,8 @@ shared_ptr<NodeImpl> StructureNodeImpl::lookup(const ustring& pathName)
 void StructureNodeImpl::set(int64_t index64, shared_ptr<NodeImpl> ni)
 {
     checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
-    unsigned index = static_cast<unsigned>(index64);
+
+    auto index = static_cast<unsigned>(index64);
 
     /// Allow index == current number of elements, interpret as append
     if (index64 < 0 || index64 > UINT_MAX || index > children_.size()) {

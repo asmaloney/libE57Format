@@ -364,7 +364,7 @@ uint64_t BitpackFloatEncoder::processRecords(size_t recordCount)
 
    if (precision_ == E57_SINGLE) {
       /// Form the starting address for next available location in outBuffer
-      float* outp = reinterpret_cast<float*>(&outBuffer_[outBufferEnd_]);
+      auto outp = reinterpret_cast<float*>(&outBuffer_[outBufferEnd_]);
 
       /// Copy floats from sourceBuffer_ to outBuffer_
       for (unsigned i=0; i < recordCount; i++) {
@@ -375,7 +375,7 @@ uint64_t BitpackFloatEncoder::processRecords(size_t recordCount)
       }
    } else {  /// E57_DOUBLE precision
       /// Form the starting address for next available location in outBuffer
-      double* outp = reinterpret_cast<double*>(&outBuffer_[outBufferEnd_]);
+      auto outp = reinterpret_cast<double*>(&outBuffer_[outBufferEnd_]);
 
       /// Copy doubles from sourceBuffer_ to outBuffer_
       for (unsigned i=0; i < recordCount; i++) {
@@ -454,7 +454,7 @@ uint64_t BitpackStringEncoder::processRecords(size_t recordCount)
             cout << "encoding short string: (len=" << len << ") """ << currentString_ << """" << endl;
 #endif
             /// We can use the short length prefix: b0=0, b7-b1=len
-            uint8_t lengthPrefix = static_cast<uint8_t>(len << 1);
+            auto lengthPrefix = static_cast<uint8_t>(len << 1);
             *outp++ = lengthPrefix;
             bytesFree--;
          } else {
@@ -607,7 +607,7 @@ uint64_t BitpackIntegerEncoder<RegisterT>::processRecords(size_t recordCount)
 #endif
 
    /// Form the starting address for next available location in outBuffer
-   RegisterT* outp = reinterpret_cast<RegisterT*>(&outBuffer_[outBufferEnd_]);
+   auto outp = reinterpret_cast<RegisterT*>(&outBuffer_[outBufferEnd_]);
    unsigned outTransferred = 0;
 
    /// Copy bits from sourceBuffer_ to outBuffer_
@@ -628,7 +628,7 @@ uint64_t BitpackIntegerEncoder<RegisterT>::processRecords(size_t recordCount)
                               + " maximum=" + toString(maximum_));
       }
 
-      uint64_t uValue = static_cast<uint64_t>(rawValue - minimum_);
+      auto uValue = static_cast<uint64_t>(rawValue - minimum_);
 
 #ifdef E57_MAX_VERBOSE
       cout << "encoding integer rawValue=" << binaryString(rawValue)  << " = " << hexString(rawValue)  << endl;
@@ -721,7 +721,7 @@ bool BitpackIntegerEncoder<RegisterT>::registerFlushToOutput()
    {
       if (outBufferEnd_ < outBuffer_.size() - sizeof(RegisterT))
       {
-         RegisterT* outp = reinterpret_cast<RegisterT*>(&outBuffer_[outBufferEnd_]);
+         auto outp = reinterpret_cast<RegisterT*>(&outBuffer_[outBufferEnd_]);
          *outp = register_;
          register_ = 0;
          registerBitsUsed_ = 0;

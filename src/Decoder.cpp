@@ -369,7 +369,7 @@ size_t BitpackFloatDecoder::inputProcessAligned(const char* inbuf, const size_t 
 
    if (precision_ == E57_SINGLE) {
       /// Form the starting address for first data location in inBuffer
-      const float* inp = reinterpret_cast<const float*>(inbuf);
+      auto inp = reinterpret_cast<const float*>(inbuf);
 
       /// Copy floats from inbuf to destBuffer_
       for (unsigned i=0; i < n; i++) {
@@ -383,7 +383,7 @@ size_t BitpackFloatDecoder::inputProcessAligned(const char* inbuf, const size_t 
       }
    } else {  /// E57_DOUBLE precision
       /// Form the starting address for first data location in inBuffer
-      const double* inp = reinterpret_cast<const double*>(inbuf);
+      auto inp = reinterpret_cast<const double*>(inbuf);
 
       /// Copy doubles from inbuf to destBuffer_
       for (unsigned i=0; i < n; i++) {
@@ -623,7 +623,7 @@ size_t BitpackIntegerDecoder<RegisterT>::inputProcessAligned(const char* inbuf, 
    cout << "  recordCount=" << recordCount << endl;
 #endif
 
-   const RegisterT* inp = reinterpret_cast<const RegisterT*>(inbuf);
+   auto inp = reinterpret_cast<const RegisterT*>(inbuf);
    unsigned wordPosition = 0;      /// The index in inbuf of the word we are currently working on.
 
    ///  For example on little endian machine:

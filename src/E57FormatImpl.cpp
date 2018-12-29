@@ -1691,7 +1691,7 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
     memset(packet, 0, sizeof(DataPacketHeader));
 
     /// Write bytestreamBufferLength[bytestreamCount] after header, in dataPacket_
-    uint16_t* bsbLength = reinterpret_cast<uint16_t*>(&packet[sizeof(DataPacketHeader)]);
+    auto bsbLength = reinterpret_cast<uint16_t*>(&packet[sizeof(DataPacketHeader)]);
 #ifdef E57_MAX_VERBOSE
     cout << "  bsbLength=" << (unsigned)bsbLength << endl; //???
 #endif
@@ -1726,7 +1726,7 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
     }
 
     /// Length of packet is difference in beginning pointer and ending pointer
-    unsigned packetLength = static_cast<unsigned>(p - packet);  ///??? pointer diff portable?
+    auto packetLength = static_cast<unsigned>(p - packet);  ///??? pointer diff portable?
 #ifdef E57_MAX_VERBOSE
     cout << "  packetLength=" << packetLength << endl; //???
 #endif
@@ -1947,7 +1947,7 @@ CompressedVectorReaderImpl::CompressedVectorReaderImpl(shared_ptr<CompressedVect
         char* anyPacket = nullptr;
         unique_ptr<PacketLock> packetLock = cache_->lock(dataLogicalOffset, anyPacket);
 
-        DataPacket* dpkt = reinterpret_cast<DataPacket*>(anyPacket);
+        auto dpkt = reinterpret_cast<DataPacket*>(anyPacket);
 
         /// Double check that have a data packet
         if (dpkt->packetType != DATA_PACKET)
@@ -2133,7 +2133,7 @@ void CompressedVectorReaderImpl::feedPacketToDecoders(uint64_t currentPacketLogi
         /// Get packet at currentPacketLogicalOffset into memory.
         char* anyPacket = nullptr;
         unique_ptr<PacketLock> packetLock = cache_->lock(currentPacketLogicalOffset, anyPacket);
-        DataPacket* dpkt = reinterpret_cast<DataPacket*>(anyPacket);
+        auto dpkt = reinterpret_cast<DataPacket*>(anyPacket);
 
         /// Double check that have a data packet.  Should have already determined this.
         if (dpkt->packetType != DATA_PACKET)
@@ -2208,7 +2208,7 @@ void CompressedVectorReaderImpl::feedPacketToDecoders(uint64_t currentPacketLogi
             /// Get packet at nextPacketLogicalOffset into memory.
             char* anyPacket = nullptr;
             unique_ptr<PacketLock> packetLock = cache_->lock(nextPacketLogicalOffset, anyPacket);
-            DataPacket* dpkt = reinterpret_cast<DataPacket*>(anyPacket);
+            auto dpkt = reinterpret_cast<DataPacket*>(anyPacket);
 
 #ifdef E57_MAX_VERBOSE
             unsigned int   i = 0;
@@ -2268,7 +2268,7 @@ uint64_t CompressedVectorReaderImpl::findNextDataPacket(uint64_t nextPacketLogic
         unique_ptr<PacketLock> packetLock = cache_->lock(nextPacketLogicalOffset, anyPacket);
 
         /// Guess it's a data packet, if not continue to next packet
-        const DataPacket* dpkt = reinterpret_cast<const DataPacket*>(anyPacket);
+        auto dpkt = reinterpret_cast<const DataPacket*>(anyPacket);
 
         if (dpkt->packetType == DATA_PACKET)
         {

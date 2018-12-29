@@ -224,7 +224,7 @@ void PacketReadCache::readPacket(unsigned oldestEntry, uint64_t packetLogicalOff
    switch (header.packetType)
    {
       case DATA_PACKET: {
-         DataPacket* dpkt = reinterpret_cast<DataPacket*>(entry.buffer_);
+         auto dpkt = reinterpret_cast<DataPacket*>(entry.buffer_);
 
          dpkt->verify(packetLength);
 #ifdef E57_MAX_VERBOSE
@@ -234,7 +234,7 @@ void PacketReadCache::readPacket(unsigned oldestEntry, uint64_t packetLogicalOff
       }
          break;
       case INDEX_PACKET: {
-         IndexPacket* ipkt = reinterpret_cast<IndexPacket*>(entry.buffer_);
+         auto ipkt = reinterpret_cast<IndexPacket*>(entry.buffer_);
 
          ipkt->verify(packetLength);
 #ifdef E57_MAX_VERBOSE
@@ -244,7 +244,7 @@ void PacketReadCache::readPacket(unsigned oldestEntry, uint64_t packetLogicalOff
       }
          break;
       case EMPTY_PACKET: {
-         EmptyPacketHeader* hp = reinterpret_cast<EmptyPacketHeader*>(entry.buffer_);
+         auto hp = reinterpret_cast<EmptyPacketHeader*>(entry.buffer_);
 
          hp->verify(packetLength);
 #ifdef E57_MAX_VERBOSE
@@ -278,17 +278,17 @@ void PacketReadCache::dump(int indent, std::ostream& os)
          os << space(indent+4) << "packet:" << std::endl;
          switch (reinterpret_cast<EmptyPacketHeader*>(entries_.at(i).buffer_)->packetType) {
             case DATA_PACKET: {
-               DataPacket* dpkt = reinterpret_cast<DataPacket*>(entries_.at(i).buffer_);
+               auto dpkt = reinterpret_cast<DataPacket*>(entries_.at(i).buffer_);
                dpkt->dump(indent+6, os);
             }
                break;
             case INDEX_PACKET: {
-               IndexPacket* ipkt = reinterpret_cast<IndexPacket*>(entries_.at(i).buffer_);
+               auto ipkt = reinterpret_cast<IndexPacket*>(entries_.at(i).buffer_);
                ipkt->dump(indent+6, os);
             }
                break;
             case EMPTY_PACKET: {
-               EmptyPacketHeader* hp = reinterpret_cast<EmptyPacketHeader*>(entries_.at(i).buffer_);
+               auto hp = reinterpret_cast<EmptyPacketHeader*>(entries_.at(i).buffer_);
                hp->dump(indent+6, os);
             }
                break;
@@ -405,12 +405,12 @@ void DataPacket::verify(unsigned bufferLength) const
    //??? do all packets need versions?  how extend without breaking older checking?  need to check file version#?
 
    /// Verify header is good
-   const DataPacketHeader* hp = reinterpret_cast<const DataPacketHeader*>(this);
+   auto hp = reinterpret_cast<const DataPacketHeader*>(this);
 
    hp->verify(bufferLength);
 
    /// Calc sum of lengths of each bytestream buffer in this packet
-   const uint16_t* bsbLength = reinterpret_cast<const uint16_t*>(&payload[0]);
+   auto bsbLength = reinterpret_cast<const uint16_t*>(&payload[0]);
    unsigned totalStreamByteCount = 0;
 
    for (unsigned i=0; i < bytestreamCount; i++)
@@ -461,8 +461,8 @@ char* DataPacket::getBytestream(unsigned bytestreamNumber, unsigned& byteCount)
    }
 
    /// Calc positions in packet
-   uint16_t* bsbLength = reinterpret_cast<uint16_t*>(&payload[0]);
-   char* streamBase = reinterpret_cast<char*>(&bsbLength[bytestreamCount]);
+   auto bsbLength = reinterpret_cast<uint16_t*>(&payload[0]);
+   auto streamBase = reinterpret_cast<char*>(&bsbLength[bytestreamCount]);
 
    /// Sum size of preceeding stream buffers to get position
    unsigned totalPreceeding = 0;
@@ -499,8 +499,8 @@ void DataPacket::dump(int indent, std::ostream& os) const
       throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "packetType=" + toString(packetType));
    reinterpret_cast<const DataPacketHeader*>(this)->dump(indent, os);
 
-   const uint16_t* bsbLength = reinterpret_cast<const uint16_t*>(&payload[0]);
-   const uint8_t* p = reinterpret_cast<const uint8_t*>(&bsbLength[bytestreamCount]);
+   auto bsbLength = reinterpret_cast<const uint16_t*>(&payload[0]);
+   auto p = reinterpret_cast<const uint8_t*>(&bsbLength[bytestreamCount]);
 
    for (unsigned i=0; i < bytestreamCount; i++)
    {

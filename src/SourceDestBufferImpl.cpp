@@ -399,7 +399,7 @@ int64_t SourceDestBufferImpl::getNextInt64(double scale, double offset)
                              + " value=" + toString(doubleRawValue));
     }
 
-    int64_t rawValue = static_cast<int64_t>(doubleRawValue);
+    auto rawValue = static_cast<int64_t>(doubleRawValue);
 
     nextIndex_++;
     return(rawValue);

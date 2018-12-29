@@ -177,7 +177,7 @@ void CheckedFile::read(char* buf, size_t nRead, size_t /*bufSize*/)
    vector<char> page_buffer_v( physicalPageSize );
    char* page_buffer = &page_buffer_v[0];
 
-   const unsigned int   checksumMod = static_cast<unsigned int>( std::nearbyint( 100.0 / checkSumPolicy_ ) );
+   auto   checksumMod = static_cast<const unsigned int>( std::nearbyint( 100.0 / checkSumPolicy_ ) );
 
    while ( nRead > 0 )
    {
@@ -361,7 +361,7 @@ template<class FTYPE> CheckedFile& CheckedFile::writeFloatingPoint(FTYPE value, 
 void CheckedFile::seek(uint64_t offset, OffsetMode omode)
 {
    //??? check for seek beyond logicalLength_
-   int64_t pos = static_cast<int64_t>(omode==Physical ? offset : logicalToPhysical(offset));
+   auto pos = static_cast<int64_t>(omode==Physical ? offset : logicalToPhysical(offset));
 
 #ifdef E57_MAX_VERBOSE
    // cout << "seek offset=" << offset << " omode=" << omode << " pos=" << pos << endl; //???
@@ -574,7 +574,7 @@ uint32_t CheckedFile::checksum(char* buf, size_t size) const
 
    static const CRC::Table<crcpp_uint32, 32>   sCRCTable = sCRCParams.MakeTable();
 
-   uint32_t crc = CRC::Calculate<crcpp_uint32, 32>( buf, size, sCRCTable );
+   auto crc = CRC::Calculate<crcpp_uint32, 32>( buf, size, sCRCTable );
 
    // (Andy) I don't understand why we need to swap bytes here
    crc = swap_uint32( crc );

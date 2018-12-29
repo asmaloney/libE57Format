@@ -42,7 +42,10 @@ shared_ptr<Encoder> Encoder::EncoderFactory(unsigned bytestreamNumber,
 {
    //??? For now, only handle one input
    if (sbufs.size() != 1)
+   {
       throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "sbufsSize=" + toString(sbufs.size()));
+   }
+
    SourceDestBuffer sbuf = sbufs.at(0);
 
    /// Get node we are going to encode from the CompressedVector's prototype
@@ -54,11 +57,15 @@ shared_ptr<Encoder> Encoder::EncoderFactory(unsigned bytestreamNumber,
    cout << "Node to encode:" << endl; //???
    encodeNode->dump(2);
 #endif
-   switch (encodeNode->type()) {
-      case E57_INTEGER: {
+   switch (encodeNode->type())
+   {
+      case E57_INTEGER:
+      {
          shared_ptr<IntegerNodeImpl> ini = dynamic_pointer_cast<IntegerNodeImpl>(encodeNode);  // downcast to correct type
          if (!ini)  // check if failed
+         {
             throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "elementName=" + encodeNode->elementName());
+         }
 
          /// Get pointer to parent ImageFileImpl, to call bitsNeeded()
          shared_ptr<ImageFileImpl> imf(encodeNode->destImageFile_);  //??? should be function for this,  imf->parentFile()  --> ImageFile?
@@ -70,38 +77,39 @@ shared_ptr<Encoder> Encoder::EncoderFactory(unsigned bytestreamNumber,
          if (bitsPerRecord == 0)
          {
             shared_ptr<Encoder> encoder(new ConstantIntegerEncoder(bytestreamNumber, sbuf, ini->minimum()));
-            return(encoder);
+
+            return encoder;
          }
          else if (bitsPerRecord <= 8)
          {
             shared_ptr<Encoder> encoder(new BitpackIntegerEncoder<uint8_t>(false, bytestreamNumber, sbuf,
                                                                            DATA_PACKET_MAX/*!!!*/,
                                                                            ini->minimum(), ini->maximum(), 1.0, 0.0));
-            return(encoder);
+            return encoder;
          }
          else if (bitsPerRecord <= 16)
          {
             shared_ptr<Encoder> encoder(new BitpackIntegerEncoder<uint16_t>(false, bytestreamNumber, sbuf,
                                                                             DATA_PACKET_MAX/*!!!*/,
                                                                             ini->minimum(), ini->maximum(), 1.0, 0.0));
-            return(encoder);
+            return encoder;
          }
          else if (bitsPerRecord <= 32)
          {
             shared_ptr<Encoder> encoder(new BitpackIntegerEncoder<uint32_t>(false, bytestreamNumber, sbuf,
                                                                             DATA_PACKET_MAX/*!!!*/,
                                                                             ini->minimum(), ini->maximum(), 1.0, 0.0));
-            return(encoder);
+            return encoder;
          }
-         else
-         {
-            shared_ptr<Encoder> encoder(new BitpackIntegerEncoder<uint64_t>(false, bytestreamNumber, sbuf,
-                                                                            DATA_PACKET_MAX/*!!!*/,
-                                                                            ini->minimum(), ini->maximum(), 1.0, 0.0));
-            return(encoder);
-         }
+
+         shared_ptr<Encoder> encoder(new BitpackIntegerEncoder<uint64_t>(false, bytestreamNumber, sbuf,
+                                                                         DATA_PACKET_MAX/*!!!*/,
+                                                                         ini->minimum(), ini->maximum(), 1.0, 0.0));
+         return encoder;
       }
-      case E57_SCALED_INTEGER: {
+
+      case E57_SCALED_INTEGER:
+      {
          shared_ptr<ScaledIntegerNodeImpl> sini = dynamic_pointer_cast<ScaledIntegerNodeImpl>(encodeNode);  // downcast to correct type
          if (!sini)  // check if failed
             throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "elementName=" + encodeNode->elementName());
@@ -116,7 +124,8 @@ shared_ptr<Encoder> Encoder::EncoderFactory(unsigned bytestreamNumber,
          if (bitsPerRecord == 0)
          {
             shared_ptr<Encoder> encoder(new ConstantIntegerEncoder(bytestreamNumber, sbuf, sini->minimum()));
-            return(encoder);
+
+            return encoder;
          }
          else if (bitsPerRecord <= 8)
          {
@@ -124,7 +133,7 @@ shared_ptr<Encoder> Encoder::EncoderFactory(unsigned bytestreamNumber,
                                                                            DATA_PACKET_MAX/*!!!*/,
                                                                            sini->minimum(), sini->maximum(),
                                                                            sini->scale(), sini->offset()));
-            return(encoder);
+            return encoder;
          }
          else if (bitsPerRecord <= 16)
          {
@@ -132,7 +141,7 @@ shared_ptr<Encoder> Encoder::EncoderFactory(unsigned bytestreamNumber,
                                                                             DATA_PACKET_MAX/*!!!*/,
                                                                             sini->minimum(), sini->maximum(),
                                                                             sini->scale(), sini->offset()));
-            return(encoder);
+            return encoder;
          }
          else if (bitsPerRecord <= 32)
          {
@@ -140,33 +149,41 @@ shared_ptr<Encoder> Encoder::EncoderFactory(unsigned bytestreamNumber,
                                                                             DATA_PACKET_MAX/*!!!*/,
                                                                             sini->minimum(), sini->maximum(),
                                                                             sini->scale(), sini->offset()));
-            return(encoder);
+            return encoder;
          }
-         else
-        {
-            shared_ptr<Encoder> encoder(new BitpackIntegerEncoder<uint64_t>(true, bytestreamNumber, sbuf,
-                                                                            DATA_PACKET_MAX/*!!!*/,
-                                                                            sini->minimum(), sini->maximum(),
-                                                                            sini->scale(), sini->offset()));
-            return(encoder);
-         }
+
+         shared_ptr<Encoder> encoder(new BitpackIntegerEncoder<uint64_t>(true, bytestreamNumber, sbuf,
+                                                                         DATA_PACKET_MAX/*!!!*/,
+                                                                         sini->minimum(), sini->maximum(),
+                                                                         sini->scale(), sini->offset()));
+         return encoder;
       }
-      case E57_FLOAT: {
+
+      case E57_FLOAT:
+      {
          shared_ptr<FloatNodeImpl> fni = dynamic_pointer_cast<FloatNodeImpl>(encodeNode);  // downcast to correct type
          if (!fni)  // check if failed
+         {
             throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "elementName=" + encodeNode->elementName());
+         }
 
          //!!! need to pick smarter channel buffer sizes, here and elsewhere
          shared_ptr<Encoder> encoder(new BitpackFloatEncoder(bytestreamNumber, sbuf, DATA_PACKET_MAX/*!!!*/,
                                                              fni->precision()));
-         return(encoder);
+         return encoder;
       }
-      case E57_STRING: {
+
+      case E57_STRING:
+      {
          shared_ptr<Encoder> encoder(new BitpackStringEncoder(bytestreamNumber, sbuf, DATA_PACKET_MAX/*!!!*/));
-         return(encoder);
+
+         return encoder;
       }
+
       default:
+      {
          throw E57_EXCEPTION2(E57_ERROR_BAD_PROTOTYPE, "nodeType=" + toString(encodeNode->type()));
+      }
    }
 }
 

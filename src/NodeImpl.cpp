@@ -299,11 +299,15 @@ bool NodeImpl::findTerminalPosition(const shared_ptr<NodeImpl> &target, uint64_t
     /// don't checkImageFileOpen
 
     if (this == &*target) //??? ok?
-        return(true);
+    {
+       return true;
+    }
 
-    switch (type()) {
-        case E57_STRUCTURE: {
-                StructureNodeImpl* sni = dynamic_cast<StructureNodeImpl*>(this);
+    switch (type())
+    {
+        case E57_STRUCTURE:
+            {
+                auto sni = dynamic_cast<StructureNodeImpl*>(this);
 
                 /// Recursively visit child nodes
                 if ( sni != nullptr )
@@ -319,8 +323,10 @@ bool NodeImpl::findTerminalPosition(const shared_ptr<NodeImpl> &target, uint64_t
                 }
             }
             break;
-        case E57_VECTOR: {
-                VectorNodeImpl* vni = dynamic_cast<VectorNodeImpl*>(this);
+
+        case E57_VECTOR:
+            {
+                auto vni = dynamic_cast<VectorNodeImpl*>(this);
 
                 /// Recursively visit child nodes
                 if ( vni != nullptr )
@@ -336,8 +342,10 @@ bool NodeImpl::findTerminalPosition(const shared_ptr<NodeImpl> &target, uint64_t
                 }
             }
             break;
+
         case E57_COMPRESSED_VECTOR:
             break;  //??? for now, don't search into contents of compressed vector
+
         case E57_INTEGER:
         case E57_SCALED_INTEGER:
         case E57_FLOAT:

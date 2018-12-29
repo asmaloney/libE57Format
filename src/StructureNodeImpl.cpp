@@ -217,7 +217,9 @@ void StructureNodeImpl::set(int64_t index64, shared_ptr<NodeImpl> ni)
 
     /// If this struct is type constrained, can't add new child
     if (isTypeConstrained())
-        throw E57_EXCEPTION2(E57_ERROR_HOMOGENEOUS_VIOLATION, "this->pathName=" + this->pathName());
+    {
+       throw E57_EXCEPTION2(E57_ERROR_HOMOGENEOUS_VIOLATION, "this->pathName=" + this->pathName());
+    }
 
     ni->setParent(shared_from_this(), elementName.str());
     children_.push_back(ni);

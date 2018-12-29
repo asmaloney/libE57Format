@@ -1016,23 +1016,27 @@ void StringNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> /*imf*/, CheckedFil
         size_t len = value_.length();
 
         /// Loop, searching for occurences of "]]>", which will be split across two CDATA directives
-        while (currentPosition < len) {
+        while (currentPosition < len)
+        {
             size_t found = value_.find("]]>", currentPosition);
-            if (found == string::npos) {
+
+            if (found == string::npos)
+            {
                 /// Didn't find any more "]]>", so can send the rest.
                 cf << value_.substr(currentPosition);
                 break;
-            } else {
-                /// Must output in two pieces, first send upto end of "]]"  (don't send the following ">").
-                cf << value_.substr(currentPosition, found-currentPosition+2);
-
-                /// Then start a new CDATA
-                cf << "]]><![CDATA[";
-
-                /// Keep looping to send the ">" plus the remaining part of the string
-                currentPosition = found+2;
             }
+
+             /// Must output in two pieces, first send upto end of "]]"  (don't send the following ">").
+             cf << value_.substr(currentPosition, found-currentPosition+2);
+
+             /// Then start a new CDATA
+             cf << "]]><![CDATA[";
+
+             /// Keep looping to send the ">" plus the remaining part of the string
+             currentPosition = found+2;
         }
+
         cf << "]]></" << fieldName << ">\n";
     }
 }

@@ -496,7 +496,10 @@ unsigned DataPacket::getBytestreamBufferLength(unsigned bytestreamNumber)
 void DataPacket::dump(int indent, std::ostream& os) const
 {
    if (packetType != DATA_PACKET)
+   {
       throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "packetType=" + toString(packetType));
+   }
+
    reinterpret_cast<const DataPacketHeader*>(this)->dump(indent, os);
 
    auto bsbLength = reinterpret_cast<const uint16_t*>(&payload[0]);
@@ -515,7 +518,9 @@ void DataPacket::dump(int indent, std::ostream& os) const
    ====*/
       p += bsbLength[i];
       if (p - reinterpret_cast<const uint8_t*>(this) > DATA_PACKET_MAX)
+      {
          throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "size=" + toString(p - reinterpret_cast<const uint8_t*>(this)));
+      }
    }
 }
 #endif

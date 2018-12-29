@@ -54,11 +54,15 @@ shared_ptr<Decoder> Decoder::DecoderFactory(unsigned bytestreamNumber, //!!! nam
 
    uint64_t  maxRecordCount = cVector->childCount();
 
-   switch (decodeNode->type()) {
-      case E57_INTEGER: {
+   switch (decodeNode->type())
+   {
+      case E57_INTEGER:
+      {
          shared_ptr<IntegerNodeImpl> ini = dynamic_pointer_cast<IntegerNodeImpl>(decodeNode);  // downcast to correct type
          if (!ini)  // check if failed
+         {
             throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "elementName=" + decodeNode->elementName());
+         }
 
          /// Get pointer to parent ImageFileImpl, to call bitsNeeded()
          shared_ptr<ImageFileImpl> imf(decodeNode->destImageFile_);  //??? should be function for this,  imf->parentFile()  --> ImageFile?
@@ -71,41 +75,43 @@ shared_ptr<Decoder> Decoder::DecoderFactory(unsigned bytestreamNumber, //!!! nam
          {
             shared_ptr<Decoder> decoder(new ConstantIntegerDecoder(false, bytestreamNumber, dbufs.at(0),
                                                                    ini->minimum(), 1.0, 0.0, maxRecordCount));
-            return(decoder);
+            return decoder;
          }
          else if (bitsPerRecord <= 8)
          {
             shared_ptr<Decoder> decoder(new BitpackIntegerDecoder<uint8_t>(false, bytestreamNumber, dbufs.at(0),
                                                                            ini->minimum(), ini->maximum(),
                                                                            1.0, 0.0, maxRecordCount));
-            return(decoder);
+            return decoder;
          }
          else if (bitsPerRecord <= 16)
          {
             shared_ptr<Decoder> decoder(new BitpackIntegerDecoder<uint16_t>(false, bytestreamNumber, dbufs.at(0),
                                                                             ini->minimum(), ini->maximum(),
                                                                             1.0, 0.0, maxRecordCount));
-            return(decoder);
+            return decoder;
          }
          else if (bitsPerRecord <= 32)
          {
             shared_ptr<Decoder> decoder(new BitpackIntegerDecoder<uint32_t>(false, bytestreamNumber, dbufs.at(0),
                                                                             ini->minimum(), ini->maximum(),
                                                                             1.0, 0.0, maxRecordCount));
-            return(decoder);
+            return decoder;
          }
-         else
-         {
-            shared_ptr<Decoder> decoder(new BitpackIntegerDecoder<uint64_t>(false, bytestreamNumber, dbufs.at(0),
-                                                                            ini->minimum(), ini->maximum(),
-                                                                            1.0, 0.0, maxRecordCount));
-            return(decoder);
-         }
+
+         shared_ptr<Decoder> decoder(new BitpackIntegerDecoder<uint64_t>(false, bytestreamNumber, dbufs.at(0),
+                                                                         ini->minimum(), ini->maximum(),
+                                                                         1.0, 0.0, maxRecordCount));
+         return decoder;
       }
-      case E57_SCALED_INTEGER: {
+
+      case E57_SCALED_INTEGER:
+      {
          shared_ptr<ScaledIntegerNodeImpl> sini = dynamic_pointer_cast<ScaledIntegerNodeImpl>(decodeNode);  // downcast to correct type
          if (!sini)  // check if failed
+         {
             throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "elementName=" + decodeNode->elementName());
+         }
 
          /// Get pointer to parent ImageFileImpl, to call bitsNeeded()
          shared_ptr<ImageFileImpl> imf(decodeNode->destImageFile_);  //??? should be function for this,  imf->parentFile()  --> ImageFile?
@@ -119,7 +125,7 @@ shared_ptr<Decoder> Decoder::DecoderFactory(unsigned bytestreamNumber, //!!! nam
             shared_ptr<Decoder> decoder(new ConstantIntegerDecoder(true, bytestreamNumber, dbufs.at(0),
                                                                    sini->minimum(), sini->scale(),
                                                                    sini->offset(), maxRecordCount));
-            return(decoder);
+            return decoder;
          }
          else if (bitsPerRecord <= 8)
          {
@@ -127,7 +133,7 @@ shared_ptr<Decoder> Decoder::DecoderFactory(unsigned bytestreamNumber, //!!! nam
                                                                            sini->minimum(), sini->maximum(),
                                                                            sini->scale(), sini->offset(),
                                                                            maxRecordCount));
-            return(decoder);
+            return decoder;
          }
          else if (bitsPerRecord <= 16)
          {
@@ -135,7 +141,7 @@ shared_ptr<Decoder> Decoder::DecoderFactory(unsigned bytestreamNumber, //!!! nam
                                                                             sini->minimum(), sini->maximum(),
                                                                             sini->scale(), sini->offset(),
                                                                             maxRecordCount));
-            return(decoder);
+            return decoder;
          }
          else if (bitsPerRecord <= 32)
          {
@@ -143,30 +149,36 @@ shared_ptr<Decoder> Decoder::DecoderFactory(unsigned bytestreamNumber, //!!! nam
                                                                             sini->minimum(), sini->maximum(),
                                                                             sini->scale(), sini->offset(),
                                                                             maxRecordCount));
-            return(decoder);
+            return decoder;
          }
-         else
-         {
-            shared_ptr<Decoder> decoder(new BitpackIntegerDecoder<uint64_t>(true, bytestreamNumber, dbufs.at(0),
-                                                                            sini->minimum(), sini->maximum(),
-                                                                            sini->scale(), sini->offset(),
-                                                                            maxRecordCount));
-            return(decoder);
-         }
+
+         shared_ptr<Decoder> decoder(new BitpackIntegerDecoder<uint64_t>(true, bytestreamNumber, dbufs.at(0),
+                                                                         sini->minimum(), sini->maximum(),
+                                                                         sini->scale(), sini->offset(),
+                                                                         maxRecordCount));
+         return decoder;
       }
-      case E57_FLOAT: {
+
+      case E57_FLOAT:
+      {
          shared_ptr<FloatNodeImpl> fni = dynamic_pointer_cast<FloatNodeImpl>(decodeNode);  // downcast to correct type
          if (!fni)  // check if failed
+         {
             throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "elementName=" + decodeNode->elementName());
+         }
 
          shared_ptr<Decoder> decoder(new BitpackFloatDecoder(bytestreamNumber, dbufs.at(0),
                                                              fni->precision(), maxRecordCount));
-         return(decoder);
+         return decoder;
       }
-      case E57_STRING: {
+
+      case E57_STRING:
+      {
          shared_ptr<Decoder> decoder(new BitpackStringDecoder(bytestreamNumber, dbufs.at(0), maxRecordCount));
-         return(decoder);
+
+         return decoder;
       }
+
       default:
          throw E57_EXCEPTION2(E57_ERROR_BAD_PROTOTYPE, "nodeType=" + toString(decodeNode->type()));
    }
@@ -372,7 +384,8 @@ size_t BitpackFloatDecoder::inputProcessAligned(const char* inbuf, const size_t 
       auto inp = reinterpret_cast<const float*>(inbuf);
 
       /// Copy floats from inbuf to destBuffer_
-      for (unsigned i=0; i < n; i++) {
+      for (unsigned i=0; i < n; i++)
+      {
          float value = *inp;
 
 #ifdef E57_MAX_VERBOSE
@@ -386,7 +399,8 @@ size_t BitpackFloatDecoder::inputProcessAligned(const char* inbuf, const size_t 
       auto inp = reinterpret_cast<const double*>(inbuf);
 
       /// Copy doubles from inbuf to destBuffer_
-      for (unsigned i=0; i < n; i++) {
+      for (unsigned i=0; i < n; i++)
+      {
          double value = *inp;
 
 #ifdef E57_MAX_VERBOSE

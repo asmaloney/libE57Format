@@ -614,7 +614,9 @@ namespace e57 {
          /// Get element name from in between '/', check valid
          ustring elementName = pathName.substr(start, slash-start);
          if (!isElementNameLegal(elementName))
+         {
             throw E57_EXCEPTION2(E57_ERROR_BAD_PATH_NAME, "pathName=" + pathName + " elementName=" + elementName);
+         }
 
          /// Add to list
          fields.push_back(elementName);
@@ -623,7 +625,8 @@ namespace e57 {
             break;
 
          /// Handle case when pathname ends in /, e.g. "/foo/", add empty field at end of list
-         if (slash == pathName.size()-1) {
+         if (slash == pathName.size()-1)
+         {
             fields.emplace_back("");
             break;
          }

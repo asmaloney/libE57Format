@@ -35,9 +35,7 @@ namespace e57 {
 
 //! @brief Numeric error identifiers used in E57Exception
 enum ErrorCode {
-   /*
-     * N.B.  *** When changing error strings here, remember to update the error strings in E57Foundation.cpp ****
-     */
+   // N.B.  *** When changing error strings here, remember to update the error strings in E57Exception.cpp ****
    E57_SUCCESS                                 = 0,  //!< operation was successful
    E57_ERROR_BAD_CV_HEADER                     = 1,  //!< a CompressedVector binary header was bad
    E57_ERROR_BAD_CV_PACKET                     = 2,  //!< a CompressedVector binary packet was bad
@@ -89,9 +87,6 @@ enum ErrorCode {
    E57_ERROR_TOO_MANY_READERS                  = 48, //!< too many open CompressedVectorReaders of an ImageFile
    E57_ERROR_BAD_CONFIGURATION                 = 49, //!< bad configuration string
    E57_ERROR_INVARIANCE_VIOLATION              = 50  //!< class invariance constraint violation in debug mode
-   /*
-     * N.B.  *** When changing error strings here, remember to update the error strings in E57Foundation.cpp ****
-     */
 };
 
 class E57Exception : public std::exception {

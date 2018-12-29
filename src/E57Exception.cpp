@@ -29,22 +29,22 @@
 namespace e57 {
    /*!
    @class E57Exception
-   @brief   Object thrown by E57 Foundation API functions to communicate the conditions of an error.
+   @brief   Object thrown by E57 API functions to communicate the conditions of an error.
    @details
-   The E57Exception object communicates information about errors occuring in calls to the E57 Foundation API functions.
-   The error information is communicated from the location in the E57 Foundation Implementation where the error was detected to the @c catch statement in the code of the API user.
-   The state of E57Exception object has one mandatory field, the errorCode, and several optional fields that can be set depending on the debug level of the E57 Foundation Implementation.
-   There are three optional fields that encode the location in the source code of the E57 Foundation Implementation where the error was detected: @c sourceFileName, @c sourceFunctionName, and @c sourceLineNumber.
+   The E57Exception object communicates information about errors occuring in calls to the E57 API functions.
+   The error information is communicated from the location in the E57 implementation where the error was detected to the @c catch statement in the code of the API user.
+   The state of E57Exception object has one mandatory field, the errorCode, and several optional fields that can be set depending on the debug level of the E57 implementation.
+   There are three optional fields that encode the location in the source code of the E57 implementation where the error was detected: @c sourceFileName, @c sourceFunctionName, and @c sourceLineNumber.
    Another optional field is the @c context string that is human (or at least programmer) readable, which can capture some variable values that might be useful in debugging.
    The E57Exception class is derived from std::exception.
    So applications that only catch std::exceptions will detect E57Exceptions (but with no information about the origin of the error).
 
    Many other APIs use error codes (defined integer constants) returned from the API functions to communicate success or failure of the requested command.
-   In contrast, the E57 Foundation API uses the C++ exception mechanism to communicate failure (success is communicated by the return of the function without exception).
+   In contrast, the E57 API uses the C++ exception mechanism to communicate failure (success is communicated by the return of the function without exception).
    E57Exception(E57_SUCCESS) is never thrown.
-   The Foundation API ErrorCode is packaged inside the E57Exception.
-   The documentation for each function in the Foundation API declares which ErrorCode values (inside an E57Exception) can possibly be thrown by the function.
-   Some Foundation API functions do not throw any E57Exceptions, and this is documented by the designation "No E57Exceptions." in the "Exceptions:" section of the function documentation page.
+   The API ErrorCode is packaged inside the E57Exception.
+   The documentation for each function in the API declares which ErrorCode values (inside an E57Exception) can possibly be thrown by the function.
+   Some API functions do not throw any E57Exceptions, and this is documented by the designation "No E57Exceptions." in the "Exceptions:" section of the function documentation page.
 
    If an API function does throw an E57Exception, the API user will rightfully be concerned about the state of all of the API objects.
    There are four categories of guarantee about the state of all objects that the API specifies.
@@ -59,7 +59,7 @@ namespace e57 {
    4) <b>All objects in undocumented state</b> - A very serious consistency error has been detected, and the state of all API objects is suspect.  The only safe thing to do is to call their destructors.
 
    Almost all of the API functions can throw the following two ErrorCodes: E57_ERROR_IMAGEFILE_NOT_OPEN and E57_ERROR_INTERNAL.
-   In some E57 Foundation Implementations, the tree information may be stored on disk rather than in memory.
+   In some E57 implementations, the tree information may be stored on disk rather than in memory.
    If the disk file is closed, even the most basic information may not be available about nodes in the tree.
    So if the ImageFile is closed (by calling ImageFile::close), the API user must be ready for many of the API functions to throw E57Exception(E57_ERROR_IMAGEFILE_NOT_OPEN).
    Secondly, regarding the E57_ERROR_INTERNAL error, there is a lot of consistancy checking in the Reference Implementation, and there may be much more added.
@@ -93,7 +93,7 @@ namespace e57 {
    @param   [in] reportingFunctionName String name of function containing catch statement that caught the exception.  NULL if unknown.
    @param   [in] os Output string to print a summary of exception information and location of catch statement.
    @details
-   The amount of information printed to output stream may depend on whether the E57 Foundation Implementation was built with debugging enabled.
+   The amount of information printed to output stream may depend on whether the E57 implementation was built with debugging enabled.
    @post    No visible state is modified.
    @throw   No E57Exceptions.
    @see     E57ExceptionFunctions.cpp example, ErrorCode, HelloWorld.cpp example
@@ -163,7 +163,7 @@ namespace e57 {
    @brief   Get name of source file where exception occurred, for debugging.
    @details
    May return the value of the macro variable __FILE__ at the location where the E57Exception was constructed.
-   May return the empty string ("") in some E57 Foundation Implementations.
+   May return the empty string ("") in some E57 implementations.
    @post    No visible state is modified.
    @return  The name of source file where exception occurred, for debugging.
    @throw   No E57Exceptions.
@@ -178,11 +178,10 @@ namespace e57 {
    @brief   Get name of function in source code where the error occurred , for debugging.
    @details
    May return the value of the macro variable __FUNCTION__ at the location where the E57Exception was constructed.
-   May return the empty string ("") in some E57 Foundation Implementations.
+   May return the empty string ("") in some E57 implementations.
    @post    No visible state is modified.
    @return  The name of source code function where the error occurred , for debugging.
    @throw   No E57Exceptions.
-   @see     E57ExceptionsFunctions.cpp example
    */
    const char* E57Exception::sourceFunctionName() const
    {
@@ -193,11 +192,10 @@ namespace e57 {
    @brief   Get line number in source code file where exception occurred, for debugging.
    @details
    May return the value of the macro variable __LINE__ at the location where the E57Exception was constructed.
-   May return the empty string ("") in some E57 Foundation Implementations.
+   May return the empty string ("") in some E57 implementations.
    @post    No visible state is modified.
    @return  The line number in source code file where exception occurred, for debugging.
    @throw   No E57Exceptions.
-   @see     E57ExceptionsFunctions.cpp example
    */
    int E57Exception::sourceLineNumber() const
    {
@@ -231,7 +229,7 @@ namespace e57 {
    @param   [out] astmMinor    The minor version number of the ASTM E57 standard supported.
    @param   [out] libraryId    A string identifying the implementation of the API.
    @details
-   Since the E57 Foundation Implementation may be dynamically linked underneath the Foundation API, the version string for the implementation and the ASTM version that it supports can't be determined at compile-time.
+   Since the E57 implementation may be dynamically linked underneath the API, the version string for the implementation and the ASTM version that it supports can't be determined at compile-time.
    This function returns these identifiers from the underlying implementation.
    @throw   No E57Exceptions.
    @see     Versions.cpp example
@@ -254,10 +252,9 @@ namespace e57 {
    */
    std::string Utilities::errorCodeToString(ErrorCode ecode)
    {
-      switch (ecode) {
-         /*
-            * N.B.  *** When changing error strings here, remember to update the Doxygen strings in E57Foundation.h ****
-            */
+      switch (ecode)
+      {
+         // N.B.  *** When changing error strings here, remember to update the Doxygen strings in E57Exception.h ****
          case E57_SUCCESS:
             return "operation was successful (E57_SUCCESS)";
          case E57_ERROR_BAD_CV_HEADER:
@@ -360,11 +357,6 @@ namespace e57 {
             return "bad configuration string (E57_ERROR_BAD_CONFIGURATION)";
          case E57_ERROR_INVARIANCE_VIOLATION:
             return "class invariance constraint violation in debug mode (E57_ERROR_INVARIANCE_VIOLATION)";
-            /*
-            * N.B.  *** When changing error strings here, remember to update the Doxygen strings in E57Foundation.h ****
-            */
-         default:
-            return "<unknown ErrorCode>";
       }
    }
 

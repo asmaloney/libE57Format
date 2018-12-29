@@ -1,6 +1,5 @@
 /*
- * E57FoundationImpl.cpp - implementation of private functions of E57 format
- *   reference implementation.
+ * E57FormatImpl.cpp - implementation of private functions of E57 format.
  *
  * Copyright 2009 - 2010 Kevin Ackley (kackley@gwi.net)
  *

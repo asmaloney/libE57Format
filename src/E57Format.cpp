@@ -1,5 +1,5 @@
 /*
- * E57Foundation.cpp - implementation of public functions of the E57 format
+ * E57Format.cpp - implementation of public functions of the E57 format
  *   Reference Implementation.
  *
  * Copyright 2009 - 2010 Kevin Ackley (kackley@gwi.net)
@@ -1805,7 +1805,7 @@ A class invariant is a list of statements about an object that are always true b
 An invariant is useful for testing correct operation of an implementation.
 Statements in an invariant can involve only externally visible state, or can refer to internal implementation-specific state that is not visible to the API user.
 The following C++ code checks externally visible state for consistancy and throws an exception if the invariant is violated:
-@dontinclude E57Foundation.cpp
+@dontinclude E57Format.cpp
 @skip begin StructureNode::checkInvariant
 @skip checkInvariant(
 @until end StructureNode::checkInvariant
@@ -2062,7 +2062,7 @@ A class invariant is a list of statements about an object that are always true b
 An invariant is useful for testing correct operation of an implementation.
 Statements in an invariant can involve only externally visible state, or can refer to internal implementation-specific state that is not visible to the API user.
 The following C++ code checks externally visible state for consistency and throws an exception if the invariant is violated:
-@dontinclude E57Foundation.cpp
+@dontinclude E57Format.cpp
 @skip begin VectorNode::checkInvariant
 @skip checkInvariant(
 @until end VectorNode::checkInvariant
@@ -2334,7 +2334,7 @@ A class invariant is a list of statements about an object that are always true b
 An invariant is useful for testing correct operation of an implementation.
 Statements in an invariant can involve only externally visible state, or can refer to internal implementation-specific state that is not visible to the API user.
 The following C++ code checks externally visible state for consistency and throws an exception if the invariant is violated:
-@dontinclude E57Foundation.cpp
+@dontinclude E57Format.cpp
 @skip begin SourceDestBuffer::checkInvariant
 @skip checkInvariant(
 @until end SourceDestBuffer::checkInvariant
@@ -2636,7 +2636,7 @@ A class invariant is a list of statements about an object that are always true b
 An invariant is useful for testing correct operation of an implementation.
 Statements in an invariant can involve only externally visible state, or can refer to internal implementation-specific state that is not visible to the API user.
 The following C++ code checks externally visible state for consistency and throws an exception if the invariant is violated:
-@dontinclude E57Foundation.cpp
+@dontinclude E57Format.cpp
 @skip begin CompressedVectorReader::checkInvariant
 @skip checkInvariant(
 @until end CompressedVectorReader::checkInvariant
@@ -2838,7 +2838,7 @@ A class invariant is a list of statements about an object that are always true b
 An invariant is useful for testing correct operation of an implementation.
 Statements in an invariant can involve only externally visible state, or can refer to internal implementation-specific state that is not visible to the API user.
 The following C++ code checks externally visible state for consistency and throws an exception if the invariant is violated:
-@dontinclude E57Foundation.cpp
+@dontinclude E57Format.cpp
 @skip begin CompressedVectorWriter::checkInvariant
 @skip checkInvariant(
 @until end CompressedVectorWriter::checkInvariant
@@ -3033,7 +3033,7 @@ A class invariant is a list of statements about an object that are always true b
 An invariant is useful for testing correct operation of an implementation.
 Statements in an invariant can involve only externally visible state, or can refer to internal implementation-specific state that is not visible to the API user.
 The following C++ code checks externally visible state for consistency and throws an exception if the invariant is violated:
-@dontinclude E57Foundation.cpp
+@dontinclude E57Format.cpp
 @skip begin CompressedVectorNode::checkInvariant
 @skip checkInvariant(
 @until end CompressedVectorNode::checkInvariant
@@ -3308,7 +3308,7 @@ A class invariant is a list of statements about an object that are always true b
 An invariant is useful for testing correct operation of an implementation.
 Statements in an invariant can involve only externally visible state, or can refer to internal implementation-specific state that is not visible to the API user.
 The following C++ code checks externally visible state for consistency and throws an exception if the invariant is violated:
-@dontinclude E57Foundation.cpp
+@dontinclude E57Format.cpp
 @skip begin IntegerNode::checkInvariant
 @skip checkInvariant(
 @until end IntegerNode::checkInvariant
@@ -3505,7 +3505,7 @@ A class invariant is a list of statements about an object that are always true b
 An invariant is useful for testing correct operation of an implementation.
 Statements in an invariant can involve only externally visible state, or can refer to internal implementation-specific state that is not visible to the API user.
 The following C++ code checks externally visible state for consistancy and throws an exception if the invariant is violated:
-@dontinclude E57Foundation.cpp
+@dontinclude E57Format.cpp
 @skip begin ScaledIntegerNode::checkInvariant
 @skip checkInvariant(
 @until end ScaledIntegerNode::checkInvariant
@@ -3814,7 +3814,7 @@ A class invariant is a list of statements about an object that are always true b
 An invariant is useful for testing correct operation of an implementation.
 Statements in an invariant can involve only externally visible state, or can refer to internal implementation-specific state that is not visible to the API user.
 The following C++ code checks externally visible state for consistency and throws an exception if the invariant is violated:
-@dontinclude E57Foundation.cpp
+@dontinclude E57Format.cpp
 @skip begin FloatNode::checkInvariant
 @skip checkInvariant(
 @until end FloatNode::checkInvariant
@@ -4036,7 +4036,7 @@ A class invariant is a list of statements about an object that are always true b
 An invariant is useful for testing correct operation of an implementation.
 Statements in an invariant can involve only externally visible state, or can refer to internal implementation-specific state that is not visible to the API user.
 The following C++ code checks externally visible state for consistency and throws an exception if the invariant is violated:
-@dontinclude E57Foundation.cpp
+@dontinclude E57Format.cpp
 @skip begin StringNode::checkInvariant
 @skip checkInvariant(
 @until end StringNode::checkInvariant
@@ -4212,7 +4212,7 @@ A class invariant is a list of statements about an object that are always true b
 An invariant is useful for testing correct operation of an implementation.
 Statements in an invariant can involve only externally visible state, or, can refer to internal implementation-specific state that is not visible to the API user.
 The following C++ code checks externally visible state for consistency and throws an exception if the invariant is violated:
-@dontinclude E57Foundation.cpp
+@dontinclude E57Format.cpp
 @skip begin BlobNode::checkInvariant
 @skip checkInvariant(
 @until end BlobNode::checkInvariant
@@ -4491,7 +4491,7 @@ A class invariant is a list of statements about an object that are always true b
 An invariant is useful for testing correct operation of an implementation.
 Statements in an invariant can involve only externally visible state, or can refer to internal implementation-specific state that is not visible to the API user.
 The following C++ code checks externally visible state for consistency and throws an exception if the invariant is violated:
-@dontinclude E57Foundation.cpp
+@dontinclude E57Format.cpp
 @skip begin ImageFile::checkInvariant
 @skip checkInvariant(
 @until end ImageFile::checkInvariant

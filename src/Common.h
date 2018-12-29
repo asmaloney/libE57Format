@@ -61,7 +61,7 @@ namespace e57 {
 #define E57_EXCEPTION1(ecode) (E57Exception((ecode), ustring(), __FILE__, __LINE__, __FUNCTION__))
 #define E57_EXCEPTION2(ecode, context) (E57Exception((ecode), (context), __FILE__, __LINE__, __FUNCTION__))
 
-// The URI of the LAS extension.    !!! should not be in E57Foundation.h, should be in separate file with names of fields
+// The URI of the LAS extension.
 // Used to identify the extended field names for encoding data from LAS files (LAS versions 1.0 to 1.3).
 // By convention, will typically be used with prefix "las".  ???"las13"?
 #define LAS_V1_0_URI "http://www.astm.org/COMMIT/E57/2010-las-v1.0" //??? change to v1.0 before final release

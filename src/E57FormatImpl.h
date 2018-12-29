@@ -1,8 +1,8 @@
-#ifndef E57FOUNDATIONIMPL_H_INCLUDED
-#define E57FOUNDATIONIMPL_H_INCLUDED
+#ifndef E57FORMATIMPL_H_INCLUDED
+#define E57FORMATIMPL_H_INCLUDED
 
 /*
- * E57FoundationImpl.h - private implementation header of E57 format reference implementation.
+ * E57FormatImpl.h - private implementation header of E57 format implementation.
  *
  * Copyright 2009 - 2010 Kevin Ackley (kackley@gwi.net)
  *
@@ -382,4 +382,4 @@ protected:
 
 } /// end namespace e57
 
-#endif // E57FOUNDATIONIMPL_H_INCLUDED
+#endif // E57FORMATIMPL_H_INCLUDED

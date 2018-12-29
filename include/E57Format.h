@@ -1,8 +1,8 @@
-#ifndef E57FOUNDATION_H_INCLUDED
-#define E57FOUNDATION_H_INCLUDED
+#ifndef E57FORMAT_H_INCLUDED
+#define E57FORMAT_H_INCLUDED
 
 /*
- * E57Foundation.h - public header of E57 Foundation API for reading/writing .e57 files.
+ * E57Format.h - public header of E57 API for reading/writing .e57 files.
  *
  * Copyright 2009 - 2010 Kevin Ackley (kackley@gwi.net)
  *
@@ -29,7 +29,7 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-//! @file  E57Foundation.h header file for the E57 Foundation API
+//! @file  E57Format.h header file for the E57 API
 
 #include <cfloat>
 #include <memory>
@@ -37,9 +37,7 @@
 
 #include "E57Exception.h"
 
-#ifndef DOXYGEN  // Doxygen is not handling namespaces well in @includelineno commands, so disable
 namespace e57 {
-#endif
 
 using std::int8_t;
 using std::uint8_t;
@@ -95,7 +93,6 @@ const ReadChecksumPolicy CHECKSUM_POLICY_SPARSE = 25; //! Only verify 25% of the
 const ReadChecksumPolicy CHECKSUM_POLICY_HALF = 50;   //! Only verify 50% of the checksums. The last block is always verified.
 const ReadChecksumPolicy CHECKSUM_POLICY_ALL = 100;   //! Verify all checksums. This is the default. (slow)
 
-
 //! @brief The major version number of the Foundation API
 const int E57_FOUNDATION_API_MAJOR = 0;
 
@@ -133,8 +130,7 @@ const double E57_DOUBLE_MAX = DBL_MAX;
 //! @endcond
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't documented.
-//??? Can define operator-> that will make implementation more readable
-// Internal implementation files should include e57FoundationImpl.h first which defines symbol E57_INTERNAL_IMPLEMENTATION_ENABLE.
+// Internal implementation files should include E57FormatImpl.h first which defines symbol E57_INTERNAL_IMPLEMENTATION_ENABLE.
 // Normal API users should not define this symbol.
 // Basically the internal version allows access to the pointer to the implementation (impl_)
 #ifdef E57_INTERNAL_IMPLEMENTATION_ENABLE
@@ -650,9 +646,6 @@ protected:
 //! \endcond
 };
 
+} // end namespace e57
 
-#ifndef DOXYGEN
-}  // end namespace e57
-#endif
-
-#endif // E57FOUNDATION_H_INCLUDED
+#endif // E57FORMAT_H_INCLUDED

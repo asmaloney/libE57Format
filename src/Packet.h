@@ -32,12 +32,14 @@
 #include "Common.h"
 
 
-namespace e57 {
+namespace e57
+{
    class CheckedFile;
    class PacketLock;
 
    /// Packet types (in a compressed vector section)
-   enum {
+   enum
+   {
       INDEX_PACKET = 0,
       DATA_PACKET,
       EMPTY_PACKET,
@@ -46,10 +48,10 @@ namespace e57 {
    /// maximum size of CompressedVector binary data packet
    constexpr int   DATA_PACKET_MAX = (64*1024);
 
-   class PacketReadCache {
+   class PacketReadCache
+   {
       public:
          PacketReadCache(CheckedFile* cFile, unsigned packetCount);
-         ~PacketReadCache();
 
          std::unique_ptr<PacketLock> lock(uint64_t packetLogicalOffset, char* &pkt);  //??? pkt could be const
 
@@ -64,19 +66,22 @@ namespace e57 {
 
          void                readPacket(unsigned oldestEntry, uint64_t packetLogicalOffset);
 
-         struct CacheEntry {
-               uint64_t    logicalOffset_;
-               char*       buffer_;  //??? could be const?
-               unsigned    lastUsed_;
+         struct CacheEntry
+         {
+               uint64_t    logicalOffset_ = 0;
+               char        buffer_[DATA_PACKET_MAX];  //! No need to init since it's a data buffer
+               unsigned    lastUsed_ = 0;
          };
 
-         unsigned            lockCount_;
-         unsigned            useCount_;
-         CheckedFile*        cFile_;
+         unsigned    lockCount_ = 0;
+         unsigned    useCount_ = 0;
+         CheckedFile *cFile_ = nullptr;
+
          std::vector<CacheEntry>  entries_;
    };
 
-   class PacketLock {
+   class PacketLock
+   {
       public:
          ~PacketLock();
 
@@ -90,32 +95,34 @@ namespace e57 {
          /// Only PacketReadCache can construct
          PacketLock(PacketReadCache* cache, unsigned cacheIndex);
 
-         PacketReadCache* cache_;
-         unsigned         cacheIndex_;
+         PacketReadCache* cache_ = nullptr;
+         unsigned int     cacheIndex_ = 0;
    };
 
-   struct DataPacketHeader {  ///??? where put this
-         uint8_t     packetType;         // = E57_DATA_PACKET
-         uint8_t     packetFlags;
-         uint16_t    packetLogicalLengthMinus1;
-         uint16_t    bytestreamCount;
-
+   class DataPacketHeader
+   {
+      public:
          DataPacketHeader();
-         void        verify(unsigned bufferLength = 0) const; //???use
+
+         void  reset();
+
+         void  verify(unsigned bufferLength = 0) const; //???use
 
 #ifdef E57_DEBUG
-         void        dump(int indent = 0, std::ostream& os = std::cout) const;
+         void  dump(int indent = 0, std::ostream& os = std::cout) const;
 #endif
+         const uint8_t     packetType = DATA_PACKET;
+
+         uint8_t     packetFlags = 0;
+         uint16_t    packetLogicalLengthMinus1 = 0;
+         uint16_t    bytestreamCount = 0;
    };
 
-   struct DataPacket {  /// Note this is full sized packet, not just header
-         uint8_t     packetType;         // = E57_DATA_PACKET
-         uint8_t     packetFlags;
-         uint16_t    packetLogicalLengthMinus1;
-         uint16_t    bytestreamCount;
-         uint8_t     payload[64*1024-6]; // pad packet to full length, can't spec layout because depends bytestream data
-
+   class DataPacket
+   {
+      public:
          DataPacket();
+
          void        verify(unsigned bufferLength = 0) const;
          char*       getBytestream(unsigned bytestreamNumber, unsigned& bufferLength);
          unsigned    getBytestreamBufferLength(unsigned bytestreamNumber);
@@ -123,6 +130,12 @@ namespace e57 {
 #ifdef E57_DEBUG
          void        dump(int indent = 0, std::ostream& os = std::cout) const;
 #endif
+
+         static constexpr int  PayloadSize = DATA_PACKET_MAX - sizeof(DataPacketHeader);
+
+         DataPacketHeader  header;
+
+         uint8_t     payload[PayloadSize];  //! No need to init since it's a data buffer
    };
 }
 #endif

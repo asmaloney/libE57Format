@@ -32,10 +32,12 @@
 
 using namespace e57;
 
-struct IndexPacket {  /// Note this is whole packet, not just header
+struct IndexPacket
+{
       static constexpr unsigned MAX_ENTRIES = 2048;
 
-      uint8_t     packetType = INDEX_PACKET;
+      const uint8_t     packetType = INDEX_PACKET;
+
       uint8_t     packetFlags = 0;    // flag bitfields
       uint16_t    packetLogicalLengthMinus1 = 0;
       uint16_t    entryCount = 0;
@@ -55,8 +57,10 @@ struct IndexPacket {  /// Note this is whole packet, not just header
 #endif
 };
 
-struct EmptyPacketHeader {
-      uint8_t     packetType = EMPTY_PACKET;
+struct EmptyPacketHeader
+{
+      const uint8_t     packetType = EMPTY_PACKET;
+
       uint8_t     reserved1 = 0;     // must be zero
       uint16_t    packetLogicalLengthMinus1 = 0;
 
@@ -71,32 +75,12 @@ struct EmptyPacketHeader {
 // PacketReadCache
 
 PacketReadCache::PacketReadCache(CheckedFile* cFile, unsigned packetCount)
-   : lockCount_(0),
-     useCount_(0),
-     cFile_(cFile),
+   : cFile_(cFile),
      entries_(packetCount)
 {
    if (packetCount == 0)
    {
       throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "packetCount=" + toString(packetCount));
-   }
-
-   /// Allocate requested number of maximum sized data packets buffers for holding data read from file
-   for ( auto &entry : entries_ )
-   {
-      entry.logicalOffset_ = 0;
-      entry.buffer_        = new char[DATA_PACKET_MAX];
-      entry.lastUsed_      = 0;
-   }
-}
-
-PacketReadCache::~PacketReadCache()
-{
-   /// Free allocated packet buffers
-   for ( auto &entry : entries_ )
-   {
-      delete [] entry.buffer_;
-      entry.buffer_ = nullptr;
    }
 }
 
@@ -333,18 +317,25 @@ DataPacketHeader::DataPacketHeader()
 {
    /// Double check that packet struct is correct length.  Watch out for RTTI increasing the size.
    if (sizeof(*this) != 6)
+   {
       throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "size=" + toString(sizeof(*this)));
+   }
+}
 
-   /// Now confident we have correct size, zero packet.
-   /// This guarantees that data packet headers are always completely initialized to zero.
-   memset(this, 0, sizeof(*this));
+void DataPacketHeader::reset()
+{
+   packetFlags = 0;
+   packetLogicalLengthMinus1 = 0;
+   bytestreamCount = 0;
 }
 
 void DataPacketHeader::verify(unsigned bufferLength) const
 {
    /// Verify that packet is correct type
    if (packetType != DATA_PACKET)
+   {
       throw E57_EXCEPTION2(E57_ERROR_BAD_CV_PACKET, "packetType=" + toString(packetType));
+   }
 
    /// ??? check reserved flags zero?
 
@@ -393,11 +384,9 @@ DataPacket::DataPacket()
 {
    /// Double check that packet struct is correct length.  Watch out for RTTI increasing the size.
    if (sizeof(*this) != 64*1024)
+   {
       throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "size=" + toString(sizeof(*this)));
-
-   /// Now confident we have correct size, zero packet.
-   /// This guarantees that data packets are always completely initialized to zero.
-   memset(this, 0, sizeof(*this));
+   }
 }
 
 void DataPacket::verify(unsigned bufferLength) const
@@ -413,14 +402,14 @@ void DataPacket::verify(unsigned bufferLength) const
    auto bsbLength = reinterpret_cast<const uint16_t*>(&payload[0]);
    unsigned totalStreamByteCount = 0;
 
-   for (unsigned i=0; i < bytestreamCount; i++)
+   for (unsigned i=0; i < header.bytestreamCount; i++)
    {
       totalStreamByteCount += bsbLength[i];
    }
 
    /// Calc size of packet needed
-   const unsigned packetLength = packetLogicalLengthMinus1+1;
-   const unsigned needed = sizeof(DataPacketHeader) + 2*bytestreamCount + totalStreamByteCount;
+   const unsigned packetLength = header.packetLogicalLengthMinus1+1;
+   const unsigned needed = sizeof(DataPacketHeader) + 2*header.bytestreamCount + totalStreamByteCount;
 #ifdef E57_MAX_VERBOSE
    cout << "needed=" << needed << " actual=" << packetLength << endl; //???
 #endif
@@ -450,19 +439,22 @@ char* DataPacket::getBytestream(unsigned bytestreamNumber, unsigned& byteCount)
 #endif
 
    /// Verify that packet is correct type
-   if (packetType != DATA_PACKET)
-      throw E57_EXCEPTION2(E57_ERROR_BAD_CV_PACKET, "packetType=" + toString(packetType));
+   if (header.packetType != DATA_PACKET)
+   {
+      throw E57_EXCEPTION2(E57_ERROR_BAD_CV_PACKET, "packetType=" + toString(header.packetType));
+   }
 
    /// Check bytestreamNumber in bounds
-   if (bytestreamNumber >= bytestreamCount) {
+   if (bytestreamNumber >= header.bytestreamCount)
+   {
       throw E57_EXCEPTION2(E57_ERROR_INTERNAL,
                            "bytestreamNumber=" + toString(bytestreamNumber)
-                           + "bytestreamCount=" + toString(bytestreamCount));
+                           + "bytestreamCount=" + toString(header.bytestreamCount));
    }
 
    /// Calc positions in packet
    auto bsbLength = reinterpret_cast<uint16_t*>(&payload[0]);
-   auto streamBase = reinterpret_cast<char*>(&bsbLength[bytestreamCount]);
+   auto streamBase = reinterpret_cast<char*>(&bsbLength[header.bytestreamCount]);
 
    /// Sum size of preceeding stream buffers to get position
    unsigned totalPreceeding = 0;
@@ -472,12 +464,13 @@ char* DataPacket::getBytestream(unsigned bytestreamNumber, unsigned& byteCount)
    byteCount = bsbLength[bytestreamNumber];
 
    /// Double check buffer is completely within packet
-   if (sizeof(DataPacketHeader) + 2*bytestreamCount + totalPreceeding + byteCount > packetLogicalLengthMinus1 + 1U) {
+   if (sizeof(DataPacketHeader) + 2*header.bytestreamCount + totalPreceeding + byteCount > header.packetLogicalLengthMinus1 + 1U)
+   {
       throw E57_EXCEPTION2(E57_ERROR_INTERNAL,
-                           "bytestreamCount=" + toString(bytestreamCount)
+                           "bytestreamCount=" + toString(header.bytestreamCount)
                            + " totalPreceeding=" + toString(totalPreceeding)
                            + " byteCount=" + toString(byteCount)
-                           + " packetLogicalLengthMinus1=" + toString(packetLogicalLengthMinus1));
+                           + " packetLogicalLengthMinus1=" + toString(header.packetLogicalLengthMinus1));
    }
 
    /// Return start of buffer
@@ -495,17 +488,17 @@ unsigned DataPacket::getBytestreamBufferLength(unsigned bytestreamNumber)
 #ifdef E57_DEBUG
 void DataPacket::dump(int indent, std::ostream& os) const
 {
-   if (packetType != DATA_PACKET)
+   if (header.packetType != DATA_PACKET)
    {
-      throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "packetType=" + toString(packetType));
+      throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "packetType=" + toString(header.packetType));
    }
 
    reinterpret_cast<const DataPacketHeader*>(this)->dump(indent, os);
 
    auto bsbLength = reinterpret_cast<const uint16_t*>(&payload[0]);
-   auto p = reinterpret_cast<const uint8_t*>(&bsbLength[bytestreamCount]);
+   auto p = reinterpret_cast<const uint8_t*>(&bsbLength[header.bytestreamCount]);
 
-   for (unsigned i=0; i < bytestreamCount; i++)
+   for (unsigned i=0; i < header.bytestreamCount; i++)
    {
       os << space(indent) << "bytestream[" << i << "]:" << std::endl;
       os << space(indent+4) << "length: " << bsbLength[i] << std::endl;

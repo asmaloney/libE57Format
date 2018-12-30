@@ -1318,9 +1318,6 @@ CompressedVectorWriterImpl::CompressedVectorWriterImpl(shared_ptr<CompressedVect
     /// Check sbufs well formed (matches proto exactly)
     setBuffers(sbufs); //??? copy code here?
 
-    /// Zero dataPacket_ at start
-    memset(&dataPacket_, 0, sizeof(dataPacket_));
-
     /// For each individual sbuf, create an appropriate Encoder based on the cVector_ attributes
     for (unsigned i=0; i < sbufs_.size(); i++) {
         /// Create vector of single sbuf  ??? for now, may have groups later
@@ -1691,7 +1688,7 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
 #endif
 
     /// To be safe, clear header part of packet
-    memset(packet, 0, sizeof(DataPacketHeader));
+    dataPacket_.header.reset();
 
     /// Write bytestreamBufferLength[bytestreamCount] after header, in dataPacket_
     auto bsbLength = reinterpret_cast<uint16_t*>(&packet[sizeof(DataPacketHeader)]);
@@ -1757,10 +1754,8 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
     }
 
     /// Prepare header in dataPacket_, now that we are sure of packetLength
-    dataPacket_.packetType = DATA_PACKET;
-    dataPacket_.packetFlags = 0;
-    dataPacket_.packetLogicalLengthMinus1 = static_cast<uint16_t>(packetLength-1);          // %%% Truncation
-    dataPacket_.bytestreamCount = static_cast<uint16_t>(bytestreams_.size());       // %%% Truncation
+    dataPacket_.header.packetLogicalLengthMinus1 = static_cast<uint16_t>(packetLength-1);          // %%% Truncation
+    dataPacket_.header.bytestreamCount = static_cast<uint16_t>(bytestreams_.size());       // %%% Truncation
 
     /// Double check that data packet is well formed
     dataPacket_.verify(packetLength);
@@ -1953,9 +1948,9 @@ CompressedVectorReaderImpl::CompressedVectorReaderImpl(shared_ptr<CompressedVect
         auto dpkt = reinterpret_cast<DataPacket*>(anyPacket);
 
         /// Double check that have a data packet
-        if (dpkt->packetType != DATA_PACKET)
+        if (dpkt->header.packetType != DATA_PACKET)
         {
-           throw E57_EXCEPTION2(E57_ERROR_BAD_CV_PACKET, "packetType=" + toString(dpkt->packetType));
+           throw E57_EXCEPTION2(E57_ERROR_BAD_CV_PACKET, "packetType=" + toString(dpkt->header.packetType));
         }
 
         /// Have good packet, initialize channels
@@ -2139,9 +2134,9 @@ void CompressedVectorReaderImpl::feedPacketToDecoders(uint64_t currentPacketLogi
         auto dpkt = reinterpret_cast<DataPacket*>(anyPacket);
 
         /// Double check that have a data packet.  Should have already determined this.
-        if (dpkt->packetType != DATA_PACKET)
+        if (dpkt->header.packetType != DATA_PACKET)
         {
-           throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "packetType=" + toString(dpkt->packetType));
+           throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "packetType=" + toString(dpkt->header.packetType));
         }
 
         /// Feed bytestreams to channels with unblocked output that are reading from this packet
@@ -2195,7 +2190,7 @@ void CompressedVectorReaderImpl::feedPacketToDecoders(uint64_t currentPacketLogi
                 cout << "  stream[" << channel.bytestreamNumber << "] has exhausted its input in current packet" << endl;
 #endif
                 channelHasExhaustedPacket = true;
-                nextPacketLogicalOffset = currentPacketLogicalOffset + dpkt->packetLogicalLengthMinus1 + 1;
+                nextPacketLogicalOffset = currentPacketLogicalOffset + dpkt->header.packetLogicalLengthMinus1 + 1;
             }
         }
     }
@@ -2273,7 +2268,7 @@ uint64_t CompressedVectorReaderImpl::findNextDataPacket(uint64_t nextPacketLogic
         /// Guess it's a data packet, if not continue to next packet
         auto dpkt = reinterpret_cast<const DataPacket*>(anyPacket);
 
-        if (dpkt->packetType == DATA_PACKET)
+        if (dpkt->header.packetType == DATA_PACKET)
         {
 #ifdef E57_MAX_VERBOSE
             cout << "  Found next data packet at nextPacketLogicalOffset=" << nextPacketLogicalOffset << endl;
@@ -2282,7 +2277,7 @@ uint64_t CompressedVectorReaderImpl::findNextDataPacket(uint64_t nextPacketLogic
         }
 
         /// All packets have length in same place, so can use the field to skip to next packet.
-        nextPacketLogicalOffset += dpkt->packetLogicalLengthMinus1 + 1;
+        nextPacketLogicalOffset += dpkt->header.packetLogicalLengthMinus1 + 1;
     }
 
     /// Ran off end of section, so return failure code.

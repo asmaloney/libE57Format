@@ -76,13 +76,13 @@ namespace e57 {
 
    //! @cond documentNonPublic   The following isn't part of the API, and isn't documented.
    E57Exception::E57Exception(ErrorCode ecode, const std::string &context,
-                              const char* srcFileName, int srcLineNumber, const char* srcFunctionName)
+                              const std::string &srcFileName, int srcLineNumber, const char* srcFunctionName)
       : errorCode_(ecode),
         context_(context),
-        sourceFileName_(srcFileName),
         sourceFunctionName_(srcFunctionName),
         sourceLineNumber_(srcLineNumber)
    {
+      sourceFileName_  = srcFileName.substr( srcFileName.find_last_of( "/\\" ) + 1 );
    }
    //! @endcond
 
@@ -171,7 +171,7 @@ namespace e57 {
    */
    const char* E57Exception::sourceFileName() const
    {
-      return sourceFileName_;
+      return sourceFileName_.c_str();
    }
 
    /*!

@@ -105,14 +105,14 @@ class E57Exception : public std::exception
       //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
       E57Exception() = delete;
       E57Exception(ErrorCode ecode, const std::string &context,
-                   const char* srcFileName = nullptr, int srcLineNumber = 0,
+                   const std::string &srcFileName = nullptr, int srcLineNumber = 0,
                    const char* srcFunctionName = nullptr);
       ~E57Exception() noexcept override = default;
 
    protected:
       ErrorCode   errorCode_;
       std::string context_;
-      const char* sourceFileName_;
+      std::string sourceFileName_;
       const char* sourceFunctionName_;
       int         sourceLineNumber_;
       //! \endcond

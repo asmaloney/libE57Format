@@ -73,17 +73,16 @@
 using namespace e57;
 using namespace std;
 
-
-const size_t   CheckedFile::physicalPageSizeLog2 = 10;  // physical page size is 2 raised to this power
-const size_t   CheckedFile::physicalPageSize = 1 << physicalPageSizeLog2;
-const uint64_t CheckedFile::physicalPageSizeMask = physicalPageSize-1;
-const size_t   CheckedFile::logicalPageSize = physicalPageSize - 4;
+// These extra definitions are required in C++11.
+// In C++17, "static constexpr" is implicitly inline, so these are not required.
+constexpr size_t     CheckedFile::physicalPageSizeLog2;
+constexpr size_t     CheckedFile::physicalPageSize;
+constexpr uint64_t   CheckedFile::physicalPageSizeMask;
+constexpr size_t     CheckedFile::logicalPageSize;
 
 CheckedFile::CheckedFile( const ustring &fileName, Mode mode, ReadChecksumPolicy policy ) :
    fileName_(fileName),
-   physicalLength_( 0 ),
-   checkSumPolicy_( policy ),
-   fd_(-1)
+   checkSumPolicy_( policy )
 {
    switch (mode)
    {
@@ -101,13 +100,11 @@ CheckedFile::CheckedFile( const ustring &fileName, Mode mode, ReadChecksumPolicy
       case WriteCreate:
          /// File truncated to zero length if already exists
          fd_ = open64(fileName_, O_RDWR|O_CREAT|O_TRUNC|O_BINARY, S_IWRITE|S_IREAD);
-         readOnly_ = false;
-         logicalLength_ = 0;
          break;
 
       case WriteExisting:
          fd_ = open64(fileName_, O_RDWR|O_BINARY, 0);
-         readOnly_ = false;
+
          logicalLength_ = physicalToLogical(length(Physical)); //???
          break;
    }
@@ -119,24 +116,26 @@ int CheckedFile::open64( const ustring &fileName, int flags, int mode )
 #if defined(_MSC_VER)
    int handle;
    int err = _sopen_s(&handle, fileName_.c_str(), flags, _SH_DENYNO, mode);
-   if (handle < 0) {
+   if (handle < 0)
+   {
       throw E57_EXCEPTION2(E57_ERROR_OPEN_FAILED,
                            "err=" + toString(err)
                            + " fileName=" + fileName
                            + " flags=" + toString(flags)
                            + " mode=" + toString(mode));
    }
-   return(handle);
+   return handle;
 #elif defined(__GNUC__)
    int result = open(fileName_.c_str(), flags, mode);
-   if (result < 0) {
+   if (result < 0)
+   {
       throw E57_EXCEPTION2(E57_ERROR_OPEN_FAILED,
                            "result=" + toString(result)
                            + " fileName=" + fileName
                            + " flags=" + toString(flags)
                            + " mode=" + toString(mode));
    }
-   return(result);
+   return result;
 #else
 #  error "no supported compiler defined"
 #endif
@@ -205,7 +204,7 @@ void CheckedFile::read(char* buf, size_t nRead, size_t /*bufSize*/)
       buf += n;
       nRead -= n;
       pageOffset = 0;
-      page++;
+      ++page;
 
       n = min( nRead, logicalPageSize );
    }
@@ -220,12 +219,15 @@ void CheckedFile::write(const char* buf, size_t nWrite)
    // cout << "write nWrite=" << nWrite << " position()="<< position() << endl; //???
 #endif
    if (readOnly_)
+   {
       throw E57_EXCEPTION2(E57_ERROR_FILE_IS_READ_ONLY, "fileName=" + fileName_);
+   }
 
    uint64_t end = position(Logical) + nWrite;
 
-   uint64_t page;
-   size_t   pageOffset;
+   uint64_t page = 0;
+   size_t   pageOffset = 0;
+
    getCurrentPageAndOffset(page, pageOffset);
 
    size_t n = min(nWrite, logicalPageSize - pageOffset);
@@ -246,11 +248,11 @@ void CheckedFile::write(const char* buf, size_t nWrite)
 #ifdef E57_MAX_VERBOSE
       // cout << "  page_buffer[0] read: '" << page_buffer[0] << "'" << endl;
       // cout << "copy " << n << "bytes to page=" << page << " pageOffset=" << pageOffset << " buf='"; //???
-      for (size_t i=0; i < n; i++)
+      //for (size_t i=0; i < n; i++)
          // cout << buf[i];
          // cout << "'" << endl;
 #endif
-         memcpy(page_buffer+pageOffset, buf, n);
+      memcpy(page_buffer+pageOffset, buf, n);
       writePhysicalPage(page_buffer, page);
 #ifdef E57_MAX_VERBOSE
       // cout << "  page_buffer[0] after write: '" << page_buffer[0] << "'" << endl; //???
@@ -263,7 +265,9 @@ void CheckedFile::write(const char* buf, size_t nWrite)
    }
 
    if (end > logicalLength_)
+   {
       logicalLength_ = end;
+   }
 
    /// When done, leave cursor just past end of buf
    seek(end, Logical);
@@ -292,13 +296,13 @@ CheckedFile& CheckedFile::operator<<(uint64_t i)
 CheckedFile& CheckedFile::operator<<(float f)
 {
    //??? is 7 digits right number?
-   return(writeFloatingPoint(f, 7));
+   return writeFloatingPoint( f, 7 );
 }
 
 CheckedFile& CheckedFile::operator<<(double d)
 {
    //??? is 17 digits right number?
-   return(writeFloatingPoint(d, 17));
+   return writeFloatingPoint( d, 17 );
 }
 
 template<class FTYPE> CheckedFile& CheckedFile::writeFloatingPoint(FTYPE value, int precision)
@@ -315,7 +319,7 @@ template<class FTYPE> CheckedFile& CheckedFile::writeFloatingPoint(FTYPE value, 
    /// E.g. 2.00000000000000000e+005  ==> 2e+005
 
    ustring s = ss.str();
-   size_t len = s.length();
+   const size_t len = s.length();
 
 #ifdef E57_MAX_DEBUG
    ustring old_s = s;
@@ -327,21 +331,30 @@ template<class FTYPE> CheckedFile& CheckedFile::writeFloatingPoint(FTYPE value, 
    ustring exponent = s.substr(len-5, 5);
 
    /// Double check that we understand the formatting
-   if (exponent[0] == 'e') {
+   if (exponent[0] == 'e')
+   {
       /// Trim of any trailing zeros in mantissa
       while (mantissa[mantissa.length()-1] == '0')
+      {
          mantissa = mantissa.substr(0, mantissa.length()-1);
+      }
 
       /// Make one attempt to trim off trailing decimal point
       if (mantissa[mantissa.length()-1] == '.')
+      {
          mantissa = mantissa.substr(0, mantissa.length()-1);
+      }
 
       /// Reassemble whole floating point number
       /// Check if can drop exponent.
       if (exponent.compare("e+000") == 0)
+      {
          s = mantissa;
+      }
       else
+      {
          s = mantissa + exponent;
+      }
    }
 
    // Disable these checks because they compare floats using "!=" which is invalid
@@ -361,7 +374,7 @@ template<class FTYPE> CheckedFile& CheckedFile::writeFloatingPoint(FTYPE value, 
 void CheckedFile::seek(uint64_t offset, OffsetMode omode)
 {
    //??? check for seek beyond logicalLength_
-   auto pos = static_cast<int64_t>(omode==Physical ? offset : logicalToPhysical(offset));
+   const auto pos = static_cast<int64_t>(omode==Physical ? offset : logicalToPhysical(offset));
 
 #ifdef E57_MAX_VERBOSE
    // cout << "seek offset=" << offset << " omode=" << omode << " pos=" << pos << endl; //???
@@ -390,7 +403,8 @@ uint64_t CheckedFile::lseek64(int64_t offset, int whence)
 #else
 #  error "no supported OS platform defined"
 #endif
-   if (result < 0) {
+   if (result < 0)
+   {
       throw E57_EXCEPTION2(E57_ERROR_LSEEK_FAILED,
                            "fileName=" + fileName_
                            + " offset=" + toString(offset)
@@ -404,7 +418,7 @@ uint64_t CheckedFile::lseek64(int64_t offset, int whence)
 uint64_t CheckedFile::position(OffsetMode omode)
 {
    /// Get current file cursor position
-   uint64_t pos = lseek64(0LL, SEEK_CUR);
+   const uint64_t pos = lseek64(0LL, SEEK_CUR);
 
    if ( omode == Physical )
    {
@@ -448,7 +462,8 @@ void CheckedFile::extend(uint64_t newLength, OffsetMode omode)
       throw E57_EXCEPTION2(E57_ERROR_FILE_IS_READ_ONLY, "fileName=" + fileName_);
    }
 
-   uint64_t newLogicalLength;
+   uint64_t newLogicalLength = 0;
+
    if (omode==Physical)
    {
       newLogicalLength = physicalToLogical(newLength);
@@ -474,17 +489,23 @@ void CheckedFile::extend(uint64_t newLength, OffsetMode omode)
    /// Seek to current end of file
    seek(currentLogicalLength, Logical);
 
-   uint64_t page;
-   size_t   pageOffset;
+   uint64_t page = 0;
+   size_t   pageOffset = 0;
+
    getCurrentPageAndOffset(page, pageOffset);
 
    /// Calc first write size (may be partial page)
    /// Watch out for different int sizes here.
-   size_t n;
+   size_t n = 0;
+
    if (nWrite < logicalPageSize - pageOffset)
+   {
       n = static_cast<size_t>(nWrite);
+   }
    else
+   {
       n = logicalPageSize - pageOffset;
+   }
 
    /// Allocate temp page buffer
    vector<char> page_buffer_v(physicalPageSize);
@@ -507,12 +528,16 @@ void CheckedFile::extend(uint64_t newLength, OffsetMode omode)
 
       nWrite -= n;
       pageOffset = 0;
-      page++;
+      ++page;
 
       if (nWrite < logicalPageSize)
+      {
          n = static_cast<size_t>(nWrite);
+      }
       else
+      {
          n = logicalPageSize;
+      }
    }
 
    //??? what if loop above throws, logicalLength_ may be wrong
@@ -522,14 +547,10 @@ void CheckedFile::extend(uint64_t newLength, OffsetMode omode)
    seek(newLogicalLength, Logical);
 }
 
-void CheckedFile::flush()
-{
-   /// Nothing to do
-}
-
 void CheckedFile::close()
 {
-   if (fd_ >= 0) {
+   if (fd_ >= 0)
+   {
 #if defined(_MSC_VER)
       int result = ::_close(fd_);
 #elif defined(__GNUC__)
@@ -538,7 +559,10 @@ void CheckedFile::close()
 #  error "no supported compiler defined"
 #endif
       if (result < 0)
+      {
          throw E57_EXCEPTION2(E57_ERROR_CLOSE_FAILED, "fileName=" + fileName_ + " result=" + toString(result));
+      }
+
       fd_ = -1;
    }
 }
@@ -551,13 +575,16 @@ void CheckedFile::unlink()
    int result = ::_unlink(fileName_.c_str()); //??? unicode support here
 #ifdef E57_MAX_VERBOSE
    if (result < 0)
+   {
       cout << "::unlink() failed, result=" << result << endl;
+   }
 #endif
 }
 
 inline uint32_t swap_uint32( uint32_t val )
 {
     val = ((val << 8) & 0xFF00FF00 ) | ((val >> 8) & 0xFF00FF );
+
     return (val << 16) | (val >> 16);
 }
 
@@ -602,11 +629,15 @@ void CheckedFile::verifyChecksum( char *page_buffer, size_t page )
 
 void CheckedFile::getCurrentPageAndOffset(uint64_t& page, size_t& pageOffset, OffsetMode omode)
 {
-   uint64_t pos = position(omode);
-   if (omode == Physical) {
+   const uint64_t pos = position( omode );
+
+   if (omode == Physical)
+   {
       page = pos >> physicalPageSizeLog2;
       pageOffset = static_cast<size_t>(pos & physicalPageSizeMask);
-   } else {
+   }
+   else
+   {
       page = pos / logicalPageSize;
       pageOffset = static_cast<size_t>(pos - page * logicalPageSize);
    }
@@ -634,6 +665,7 @@ void CheckedFile::readPhysicalPage(char* page_buffer, uint64_t page)
 #else
 #  error "no supported compiler defined"
 #endif
+
    if ( result < 0 || static_cast<size_t>(result) != physicalPageSize )
    {
       throw E57_EXCEPTION2(E57_ERROR_READ_FAILED, "fileName=" + fileName_ + " result=" + toString(result));

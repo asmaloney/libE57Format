@@ -29,7 +29,8 @@
 
 #include "Common.h"
 
-namespace e57 {
+namespace e57
+{
 
    class Decoder
    {
@@ -53,7 +54,7 @@ namespace e57 {
       protected:
          Decoder(unsigned bytestreamNumber);
 
-         unsigned            bytestreamNumber_;
+         unsigned int   bytestreamNumber_;
    };
 
 
@@ -77,17 +78,17 @@ namespace e57 {
 
          void                inBufferShiftDown();
 
-         uint64_t            currentRecordIndex_;
-         uint64_t            maxRecordCount_;
+         uint64_t            currentRecordIndex_ = 0;
+         uint64_t            maxRecordCount_ = 0;
 
          std::shared_ptr<SourceDestBufferImpl> destBuffer_;
 
          std::vector<char>   inBuffer_;
-         size_t              inBufferFirstBit_;
-         size_t              inBufferEndByte_;
-         unsigned            inBufferAlignmentSize_;
-         unsigned            bitsPerWord_;
-         unsigned            bytesPerWord_;
+         size_t              inBufferFirstBit_ = 0;
+         size_t              inBufferEndByte_ = 0;
+         unsigned int        inBufferAlignmentSize_;
+         unsigned int        bitsPerWord_;
+         unsigned int        bytesPerWord_;
    };
 
 
@@ -102,7 +103,7 @@ namespace e57 {
          void        dump(int indent = 0, std::ostream& os = std::cout) override;
 #endif
       protected:
-         FloatPrecision      precision_;
+         FloatPrecision      precision_ = E57_SINGLE;
    };
 
 
@@ -117,13 +118,13 @@ namespace e57 {
          void        dump(int indent = 0, std::ostream& os = std::cout) override;
 #endif
       protected:
-         bool        readingPrefix_;
-         int         prefixLength_;
-         uint8_t     prefixBytes_[8];
-         int         nBytesPrefixRead_;
-         uint64_t    stringLength_;
+         bool        readingPrefix_ = true;
+         int         prefixLength_ = 1;
+         uint8_t     prefixBytes_[8] = {};
+         int         nBytesPrefixRead_ = 0;
+         uint64_t    stringLength_ = 0;
          ustring     currentString_;
-         uint64_t    nBytesStringRead_;
+         uint64_t    nBytesStringRead_ = 0;
    };
 
 
@@ -163,7 +164,7 @@ namespace e57 {
          void        dump(int indent = 0, std::ostream& os = std::cout) override;
 #endif
       protected:
-         uint64_t            currentRecordIndex_;
+         uint64_t            currentRecordIndex_ = 0;
          uint64_t            maxRecordCount_;
 
          std::shared_ptr<SourceDestBufferImpl> destBuffer_;

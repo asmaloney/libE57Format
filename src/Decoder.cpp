@@ -190,23 +190,23 @@ Decoder::Decoder(unsigned bytestreamNumber)
 }
 
 BitpackDecoder::BitpackDecoder(unsigned bytestreamNumber, SourceDestBuffer& dbuf, unsigned alignmentSize, uint64_t maxRecordCount)
-   : Decoder(bytestreamNumber),
-     destBuffer_(dbuf.impl()),
-     inBuffer_(1024)            //!!! need to pick smarter channel buffer sizes
+   : Decoder( bytestreamNumber ),
+     maxRecordCount_( maxRecordCount ),
+     destBuffer_( dbuf.impl() ),
+     inBuffer_( 1024 ),           //!!! need to pick smarter channel buffer sizes
+     inBufferAlignmentSize_( alignmentSize ),
+     bitsPerWord_( 8*alignmentSize ),
+     bytesPerWord_( alignmentSize )
 {
-   currentRecordIndex_     = 0;
-   maxRecordCount_         = maxRecordCount;
-   inBufferFirstBit_       = 0;
-   inBufferEndByte_        = 0;
-   inBufferAlignmentSize_  = alignmentSize;
-   bitsPerWord_            = 8*alignmentSize;
-   bytesPerWord_           = alignmentSize;
 }
 
 void BitpackDecoder::destBufferSetNew(vector<SourceDestBuffer>& dbufs)
 {
    if (dbufs.size() != 1)
+   {
       throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "dbufsSize=" + toString(dbufs.size()));
+   }
+
    destBuffer_ = dbufs.at(0).impl();
 }
 
@@ -432,15 +432,8 @@ void BitpackFloatDecoder::dump(int indent, std::ostream& os)
 //================================================================
 
 BitpackStringDecoder::BitpackStringDecoder(unsigned bytestreamNumber, SourceDestBuffer& dbuf, uint64_t maxRecordCount)
-   : BitpackDecoder(bytestreamNumber, dbuf, sizeof(char), maxRecordCount),
-     readingPrefix_(true),
-     prefixLength_(1),
-     nBytesPrefixRead_(0),
-     stringLength_(0),
-     currentString_(""),
-     nBytesStringRead_(0)
+   : BitpackDecoder(bytestreamNumber, dbuf, sizeof(char), maxRecordCount)
 {
-   memset(prefixBytes_, 0, sizeof(prefixBytes_));
 }
 
 size_t BitpackStringDecoder::inputProcessAligned(const char* inbuf, const size_t firstBit, const size_t endBit)
@@ -564,14 +557,14 @@ void BitpackStringDecoder::dump(int indent, std::ostream& os)
    BitpackDecoder::dump(indent, os);
    os << space(indent) << "readingPrefix:      " << readingPrefix_ << endl;
    os << space(indent) << "prefixLength:       " << prefixLength_ << endl;
-   os << space(indent) << "prefixBytes[8]:     " << static_cast<unsigned>(prefixBytes_[0]) << " "
-                                                                                           << static_cast<unsigned>(prefixBytes_[1]) << " "
-                                                                                                                                     << static_cast<unsigned>(prefixBytes_[2]) << " "
-                                                                                                                                                                               << static_cast<unsigned>(prefixBytes_[3]) << " "
-                                                                                                                                                                                                                         << static_cast<unsigned>(prefixBytes_[4]) << " "
-                                                                                                                                                                                                                                                                   << static_cast<unsigned>(prefixBytes_[5]) << " "
-                                                                                                                                                                                                                                                                                                             << static_cast<unsigned>(prefixBytes_[6]) << " "
-                                                                                                                                                                                                                                                                                                                                                       << static_cast<unsigned>(prefixBytes_[7]) << endl;
+   os << space(indent) << "prefixBytes[8]:     " << static_cast<unsigned>(prefixBytes_[0])
+         << " " << static_cast<unsigned>(prefixBytes_[1])
+         << " " << static_cast<unsigned>(prefixBytes_[2])
+         << " " << static_cast<unsigned>(prefixBytes_[3])
+         << " " << static_cast<unsigned>(prefixBytes_[4])
+         << " " << static_cast<unsigned>(prefixBytes_[5])
+         << " " << static_cast<unsigned>(prefixBytes_[6])
+         << " " << static_cast<unsigned>(prefixBytes_[7]) << endl;
    os << space(indent) << "nBytesPrefixRead:   " << nBytesPrefixRead_ << endl;
    os << space(indent) << "stringLength:       " << stringLength_ << endl;
    os << space(indent) << "currentString:      """ << currentString_ << """" << endl;
@@ -583,16 +576,16 @@ void BitpackStringDecoder::dump(int indent, std::ostream& os)
 
 template <typename RegisterT>
 BitpackIntegerDecoder<RegisterT>::BitpackIntegerDecoder(bool isScaledInteger, unsigned bytestreamNumber, SourceDestBuffer& dbuf, int64_t minimum, int64_t maximum, double scale, double offset, uint64_t maxRecordCount)
-   : BitpackDecoder(bytestreamNumber, dbuf, sizeof(RegisterT), maxRecordCount)
+   : BitpackDecoder(bytestreamNumber, dbuf, sizeof(RegisterT), maxRecordCount),
+     isScaledInteger_( isScaledInteger ),
+     minimum_( minimum ),
+     maximum_( maximum ),
+     scale_( scale ),
+     offset_( offset )
 {
    /// Get pointer to parent ImageFileImpl
    shared_ptr<ImageFileImpl> imf(dbuf.impl()->destImageFile());  //??? should be function for this,  imf->parentFile()  --> ImageFile?
 
-   isScaledInteger_    = isScaledInteger;
-   minimum_            = minimum;
-   maximum_            = maximum;
-   scale_              = scale;
-   offset_             = offset;
    bitsPerRecord_      = imf->bitsNeeded(minimum_, maximum_);
    destBitMask_        = (bitsPerRecord_==64) ? ~0 : (1ULL<<bitsPerRecord_)-1;
 }
@@ -739,20 +732,22 @@ void BitpackIntegerDecoder<RegisterT>::dump(int indent, std::ostream& os)
 ConstantIntegerDecoder::ConstantIntegerDecoder(bool isScaledInteger, unsigned bytestreamNumber, SourceDestBuffer& dbuf,
                                                int64_t minimum, double scale, double offset, uint64_t maxRecordCount)
    : Decoder(bytestreamNumber),
-     destBuffer_(dbuf.impl())
+     maxRecordCount_( maxRecordCount ),
+     destBuffer_(dbuf.impl()),
+     isScaledInteger_( isScaledInteger ),
+     minimum_( minimum ),
+     scale_( scale ),
+     offset_( offset )
 {
-   currentRecordIndex_ = 0;
-   maxRecordCount_     = maxRecordCount;
-   isScaledInteger_    = isScaledInteger;
-   minimum_            = minimum;
-   scale_              = scale;
-   offset_             = offset;
 }
 
 void ConstantIntegerDecoder::destBufferSetNew(vector<SourceDestBuffer>& dbufs)
 {
    if (dbufs.size() != 1)
+   {
       throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "dbufsSize=" + toString(dbufs.size()));
+   }
+
    destBuffer_ = dbufs.at(0).impl();
 }
 

@@ -68,6 +68,24 @@ void BlobSectionHeader::dump(int indent, std::ostream& os)
 }
 #endif
 
+
+struct CompressedVectorSectionHeader
+{
+    const uint8_t     sectionId = COMPRESSED_VECTOR_SECTION;
+
+    uint8_t     reserved1[7] = {};          // must be zero
+    uint64_t    sectionLogicalLength = 0;   // byte length of whole section
+    uint64_t    dataPhysicalOffset = 0;     // offset of first data packet
+    uint64_t    indexPhysicalOffset = 0;    // offset of first index packet
+
+                CompressedVectorSectionHeader();
+    void        verify(uint64_t filePhysicalSize=0);
+
+#ifdef E57_DEBUG
+    void        dump(int indent = 0, std::ostream& os = std::cout) const;
+#endif
+};
+
 //================================================================================================
 
 VectorNodeImpl::VectorNodeImpl(weak_ptr<ImageFileImpl> destImageFile, bool allowHeteroChildren)
@@ -1239,11 +1257,9 @@ CompressedVectorSectionHeader::CompressedVectorSectionHeader()
 {
     /// Double check that header is correct length.  Watch out for RTTI increasing the size.
     if (sizeof(*this) != 32)
-        throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "size=" + toString(sizeof(*this)));
-
-    /// Now confident we have correct size, zero header.
-    /// This guarantees that headers are always completely initialized to zero.
-    memset(this, 0, sizeof(*this));
+    {
+       throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "size=" + toString(sizeof(*this)));
+    }
 }
 
 void CompressedVectorSectionHeader::verify(uint64_t filePhysicalSize)
@@ -1253,9 +1269,12 @@ void CompressedVectorSectionHeader::verify(uint64_t filePhysicalSize)
         throw E57_EXCEPTION2(E57_ERROR_BAD_CV_HEADER, "sectionId=" + toString(sectionId));
 
     /// Verify reserved fields are zero. ???  if fileversion==1.0 ???
-    for (unsigned i=0; i < sizeof(reserved1); i++) {
+    for (unsigned i=0; i < sizeof(reserved1); i++)
+    {
         if (reserved1[i] != 0)
-            throw E57_EXCEPTION2(E57_ERROR_BAD_CV_HEADER, "i=" + toString(i) + " reserved=" + toString(reserved1[i]));
+        {
+           throw E57_EXCEPTION2(E57_ERROR_BAD_CV_HEADER, "i=" + toString(i) + " reserved=" + toString(reserved1[i]));
+        }
     }
 
     /// Check section length is multiple of 4
@@ -1422,7 +1441,6 @@ void CompressedVectorWriterImpl::close()
 
     /// Prepare CompressedVectorSectionHeader
     CompressedVectorSectionHeader header;
-    header.sectionId            = COMPRESSED_VECTOR_SECTION;
     header.sectionLogicalLength = sectionLogicalLength_;
     header.dataPhysicalOffset   = dataPhysicalOffset_;   ///??? can be zero, if no data written ???not set yet
     header.indexPhysicalOffset  = topIndexPhysicalOffset_;  ///??? can be zero, if no data written ???not set yet

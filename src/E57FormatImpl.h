@@ -261,23 +261,6 @@ protected:
 
 //================================================================
 
-struct CompressedVectorSectionHeader {
-    uint8_t     sectionId;              // = E57_COMPRESSED_VECTOR_SECTION
-    uint8_t     reserved1[7];           // must be zero
-    uint64_t    sectionLogicalLength;   // byte length of whole section
-    uint64_t    dataPhysicalOffset;     // offset of first data packet
-    uint64_t    indexPhysicalOffset;    // offset of first index packet
-
-                CompressedVectorSectionHeader();
-    void        verify(uint64_t filePhysicalSize=0);
-
-#ifdef E57_DEBUG
-    void        dump(int indent = 0, std::ostream& os = std::cout) const;
-#endif
-};
-
-//================================================================
-
 struct DecodeChannel {
     SourceDestBuffer    dbuf; //??? for now, one input per channel
     std::shared_ptr<Decoder> decoder;

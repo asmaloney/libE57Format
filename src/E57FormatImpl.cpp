@@ -41,14 +41,19 @@
 using namespace e57;
 using namespace std;
 
-/// Section types:
-#define E57_BLOB_SECTION                0
-#define E57_COMPRESSED_VECTOR_SECTION   1
+/// Section types
+enum
+{
+   BLOB_SECTION = 0,
+   COMPRESSED_VECTOR_SECTION,
+};
 
-struct BlobSectionHeader {
-    uint8_t     sectionId;              // = E57_BLOB_SECTION
-    uint8_t     reserved1[7];           // must be zero
-    uint64_t    sectionLogicalLength;   // byte length of whole section
+struct BlobSectionHeader
+{
+    const uint8_t     sectionId = BLOB_SECTION;
+
+    uint8_t     reserved1[7] = {};           // must be zero
+    uint64_t    sectionLogicalLength = 0;    // byte length of whole section
 
 #ifdef E57_DEBUG
     void        dump(int indent = 0, std::ostream& os = std::cout);
@@ -1072,8 +1077,6 @@ BlobNodeImpl::BlobNodeImpl(weak_ptr<ImageFileImpl> destImageFile, int64_t byteCo
 
     /// Prepare BlobSectionHeader
     BlobSectionHeader header;
-    memset(&header, 0, sizeof(header));  /// need to init to zero, ok since no constructor
-    header.sectionId = E57_BLOB_SECTION;
     header.sectionLogicalLength = binarySectionLogicalLength_;
 #ifdef E57_MAX_VERBOSE
     header.dump(); //???
@@ -1246,7 +1249,7 @@ CompressedVectorSectionHeader::CompressedVectorSectionHeader()
 void CompressedVectorSectionHeader::verify(uint64_t filePhysicalSize)
 {
     /// Verify that section is correct type
-    if (sectionId != E57_COMPRESSED_VECTOR_SECTION)
+    if (sectionId != COMPRESSED_VECTOR_SECTION)
         throw E57_EXCEPTION2(E57_ERROR_BAD_CV_HEADER, "sectionId=" + toString(sectionId));
 
     /// Verify reserved fields are zero. ???  if fileversion==1.0 ???
@@ -1419,7 +1422,7 @@ void CompressedVectorWriterImpl::close()
 
     /// Prepare CompressedVectorSectionHeader
     CompressedVectorSectionHeader header;
-    header.sectionId            = E57_COMPRESSED_VECTOR_SECTION;
+    header.sectionId            = COMPRESSED_VECTOR_SECTION;
     header.sectionLogicalLength = sectionLogicalLength_;
     header.dataPhysicalOffset   = dataPhysicalOffset_;   ///??? can be zero, if no data written ???not set yet
     header.indexPhysicalOffset  = topIndexPhysicalOffset_;  ///??? can be zero, if no data written ???not set yet

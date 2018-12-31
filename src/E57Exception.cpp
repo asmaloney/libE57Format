@@ -1,5 +1,3 @@
-#include "E57Exception.h"
-#include "E57Version.h"
 /*
  * Copyright 2009 - 2010 Kevin Ackley (kackley@gwi.net)
  *
@@ -26,7 +24,11 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-namespace e57 {
+#include "E57Exception.h"
+#include "E57Version.h"
+
+namespace e57
+{
    /*!
    @class E57Exception
    @brief   Object thrown by E57 API functions to communicate the conditions of an error.

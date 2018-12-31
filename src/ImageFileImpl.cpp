@@ -198,7 +198,9 @@ namespace e57 {
       /// Check that page size is correct constant
       if (header.majorVersion != 0 &&
           header.pageSize != CheckedFile::physicalPageSize)
+      {
          throw E57_EXCEPTION2(E57_ERROR_BAD_FILE_LENGTH, "fileName=" + file->fileName());
+      }
    }
 
    void ImageFileImpl::incrWriterCount()

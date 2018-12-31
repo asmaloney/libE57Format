@@ -162,6 +162,7 @@ shared_ptr<Decoder> Decoder::DecoderFactory(unsigned bytestreamNumber, //!!! nam
       case E57_FLOAT:
       {
          shared_ptr<FloatNodeImpl> fni = dynamic_pointer_cast<FloatNodeImpl>(decodeNode);  // downcast to correct type
+
          if (!fni)  // check if failed
          {
             throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "elementName=" + decodeNode->elementName());
@@ -180,7 +181,9 @@ shared_ptr<Decoder> Decoder::DecoderFactory(unsigned bytestreamNumber, //!!! nam
       }
 
       default:
+      {
          throw E57_EXCEPTION2(E57_ERROR_BAD_PROTOTYPE, "nodeType=" + toString(decodeNode->type()));
+      }
    }
 }
 

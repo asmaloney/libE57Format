@@ -347,7 +347,7 @@ template<class FTYPE> CheckedFile& CheckedFile::writeFloatingPoint(FTYPE value, 
 
       /// Reassemble whole floating point number
       /// Check if can drop exponent.
-      if (exponent.compare("e+000") == 0)
+      if (exponent == "e+000")
       {
          s = mantissa;
       }

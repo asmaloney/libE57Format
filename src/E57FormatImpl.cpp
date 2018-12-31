@@ -1597,10 +1597,6 @@ void CompressedVectorWriterImpl::write(const size_t requestedRecordCount)
         cout << "  totalBytesPerRecord=" << totalBytesPerRecord << endl; //???
 #endif
 
-//!!!        unsigned spaceRemaining = E57_DATA_PACKET_MAX - currentPacketSize();
-//!!!        unsigned appoxRecordsNeeded = static_cast<unsigned>(floor(spaceRemaining / totalBytesPerRecord)); //??? divide by zero if all constants
-
-
         /// Don't allow straggler to get too far behind. ???
         /// Don't allow a single channel to get too far ahead ???
         /// Process channels that are furthest behind first. ???
@@ -1610,14 +1606,10 @@ void CompressedVectorWriterImpl::write(const size_t requestedRecordCount)
         {
              if (bytestream->currentRecordIndex() < endRecordIndex)
              {
-#if 0
-                bytestream->processRecords(1);
-#else
                 //!!! For now, process up to 50 records at a time
                 uint64_t recordCount = endRecordIndex - bytestream->currentRecordIndex();
                 recordCount = (recordCount<50ULL)?recordCount:50ULL; //min(recordCount, 50ULL);
                 bytestream->processRecords(static_cast<unsigned>(recordCount));
-#endif
             }
         }
     }
@@ -1815,22 +1807,7 @@ void CompressedVectorWriterImpl::flush()
 
 void CompressedVectorWriterImpl::checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName) const
 {
-#if 0
-!!! how get destImageFile?
-    /// Throw an exception if destImageFile (destImageFile_) isn't open
-    shared_ptr<CompressedVectorNodeImpl> cv(cVector_);
-
-!!! how get destImageFile?
-    shared_ptr<ImageFileImpl> destImageFile(destImageFile_);
-    if (!destImageFile->isOpen()) {
-        throw E57Exception(E57_ERROR_IMAGEFILE_NOT_OPEN,
-                           "fileName=" + destImageFile->fileName(),
-                           srcFileName,
-                           srcLineNumber,
-                           srcFunctionName);
-    }
-XXX
-#endif
+   // unimplemented...
 }
 
 void CompressedVectorWriterImpl::checkWriterOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName) const
@@ -2349,22 +2326,7 @@ void CompressedVectorReaderImpl::close()
 
 void CompressedVectorReaderImpl::checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName) const
 {
-#if 0
-!!! how get destImageFile?
-    /// Throw an exception if destImageFile (destImageFile_) isn't open
-    shared_ptr<CompressedVectorNodeImpl> cv(cVector_);
-
-!!! how get destImageFile?
-    shared_ptr<ImageFileImpl> destImageFile(destImageFile_);
-    if (!destImageFile->isOpen()) {
-        throw E57Exception(E57_ERROR_IMAGEFILE_NOT_OPEN,
-                           "fileName=" + destImageFile->fileName());
-                           srcFileName,
-                           srcLineNumber,
-                           srcFunctionName);
-    }
-XXX
-#endif
+   // unimplemented...
 }
 
 void CompressedVectorReaderImpl::checkReaderOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName) const

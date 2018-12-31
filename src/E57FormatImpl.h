@@ -32,7 +32,8 @@
 #include "Packet.h"
 #include "StructureNodeImpl.h"
 
-namespace e57 {
+namespace e57
+{
 
 class E57XmlParser;
 class Decoder;
@@ -40,12 +41,14 @@ class Encoder;
 
 //================================================================
 
-class VectorNodeImpl : public StructureNodeImpl {
+class VectorNodeImpl : public StructureNodeImpl
+{
 public:
     explicit VectorNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, bool allowHeteroChildren);
              ~VectorNodeImpl() override = default;
 
-    NodeType    type() const override;
+    NodeType    type() const override { return E57_VECTOR; }
+
     bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni) override;
     bool        allowHeteroChildren() const;
 
@@ -57,18 +60,19 @@ public:
     void    dump(int indent = 0, std::ostream& os = std::cout) const override;
 #endif
 
-protected:
+private:
     bool allowHeteroChildren_;
 };
 
 //================================================================
 
-class CompressedVectorNodeImpl : public NodeImpl {
+class CompressedVectorNodeImpl : public NodeImpl
+{
 public:
     CompressedVectorNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile);
     ~CompressedVectorNodeImpl() override = default;
 
-    NodeType    type() const override;
+    NodeType    type() const override { return E57_COMPRESSED_VECTOR; }
     bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni) override;
     bool        isDefined(const ustring& pathName) override;
     void        setAttachedRecursive() override;
@@ -98,22 +102,23 @@ public:
     void                dump(int indent = 0, std::ostream& os = std::cout) const override;
 #endif
 
-protected:
+private:
     friend class CompressedVectorReaderImpl;
 
     std::shared_ptr<NodeImpl> prototype_;
     std::shared_ptr<VectorNodeImpl> codecs_;
 
-    int64_t                     recordCount_;
-    uint64_t                    binarySectionLogicalStart_;
+    int64_t                     recordCount_ = 0;
+    uint64_t                    binarySectionLogicalStart_ = 0;
 };
 
-class IntegerNodeImpl : public NodeImpl {
+class IntegerNodeImpl : public NodeImpl
+{
 public:
     IntegerNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, int64_t value = 0, int64_t minimum = 0, int64_t maximum = 0);
     ~IntegerNodeImpl() override = default;
 
-    NodeType    type() const override;
+    NodeType    type() const override { return E57_INTEGER; }
     bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni) override;
     bool        isDefined(const ustring& pathName) override;
 
@@ -129,13 +134,14 @@ public:
     void        dump(int indent = 0, std::ostream& os = std::cout) const override;
 #endif
 
-protected:
+private:
     int64_t             value_;
     int64_t             minimum_;
     int64_t             maximum_;
 };
 
-class ScaledIntegerNodeImpl : public NodeImpl {
+class ScaledIntegerNodeImpl : public NodeImpl
+{
 public:
     ScaledIntegerNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile,
                           int64_t value = 0, int64_t minimum = 0, int64_t maximum = 0,
@@ -147,7 +153,7 @@ public:
 
     ~ScaledIntegerNodeImpl() override = default;
 
-    NodeType    type() const override;
+    NodeType    type() const override { return E57_SCALED_INTEGER; }
     bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni) override;
     bool        isDefined(const ustring& pathName) override;
 
@@ -169,7 +175,7 @@ public:
     void    dump(int indent = 0, std::ostream& os = std::cout) const override;
 #endif
 
-protected:
+private:
     int64_t             value_;
     int64_t             minimum_;
     int64_t             maximum_;
@@ -177,14 +183,15 @@ protected:
     double              offset_;
 };
 
-class FloatNodeImpl : public NodeImpl {
+class FloatNodeImpl : public NodeImpl
+{
 public:
     FloatNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile,
                   double value = 0, FloatPrecision precision = E57_DOUBLE,
                   double minimum = E57_DOUBLE_MIN, double  maximum = E57_DOUBLE_MAX);
     ~FloatNodeImpl() override = default;
 
-    NodeType    type() const override;
+    NodeType    type() const override { return E57_FLOAT; }
     bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni) override;
     bool        isDefined(const ustring& pathName) override;
 
@@ -201,19 +208,20 @@ public:
     void    dump(int indent = 0, std::ostream& os = std::cout) const override;
 #endif
 
-protected:
+private:
     double              value_;
     FloatPrecision      precision_;
     double              minimum_;
     double              maximum_;
 };
 
-class StringNodeImpl : public NodeImpl {
+class StringNodeImpl : public NodeImpl
+{
 public:
     explicit StringNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring &value = "");
     ~StringNodeImpl() override = default;
 
-    NodeType    type() const override;
+    NodeType    type() const override { return E57_STRING; }
     bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni) override;
     bool        isDefined(const ustring& pathName) override;
 
@@ -227,17 +235,18 @@ public:
     void    dump(int indent = 0, std::ostream& os = std::cout) const override;
 #endif
 
-protected:
+private:
     ustring             value_;
 };
 
-class BlobNodeImpl : public NodeImpl {
+class BlobNodeImpl : public NodeImpl
+{
 public:
     BlobNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, int64_t byteCount);
     BlobNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, int64_t fileOffset, int64_t length);
     ~BlobNodeImpl() override = default;
 
-    NodeType    type() const override;
+    NodeType    type() const override { return E57_BLOB; }
     bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni) override;
     bool        isDefined(const ustring& pathName) override;
 
@@ -253,7 +262,7 @@ public:
     void    dump(int indent = 0, std::ostream& os = std::cout) const override;
 #endif
 
-protected:
+private:
     uint64_t            blobLogicalLength_;
     uint64_t            binarySectionLogicalStart_;
     uint64_t            binarySectionLogicalLength_;
@@ -261,7 +270,8 @@ protected:
 
 //================================================================
 
-struct DecodeChannel {
+struct DecodeChannel
+{
     SourceDestBuffer    dbuf; //??? for now, one input per channel
     std::shared_ptr<Decoder> decoder;
     unsigned            bytestreamNumber;
@@ -282,7 +292,8 @@ struct DecodeChannel {
 
 //================================================================
 
-class CompressedVectorReaderImpl {
+class CompressedVectorReaderImpl
+{
 public:
                 CompressedVectorReaderImpl(std::shared_ptr<CompressedVectorNodeImpl> ni, std::vector<SourceDestBuffer>& dbufs);
                 ~CompressedVectorReaderImpl();
@@ -309,12 +320,12 @@ private:
 
     //??? no default ctor, copy, assignment?
 
-    bool                                        isOpen_;
-    std::vector<SourceDestBuffer>               dbufs_;
+    bool                                      isOpen_;
+    std::vector<SourceDestBuffer>             dbufs_;
     std::shared_ptr<CompressedVectorNodeImpl> cVector_;
     std::shared_ptr<NodeImpl>                 proto_;
-    std::vector<DecodeChannel>                  channels_;
-    PacketReadCache*                            cache_;
+    std::vector<DecodeChannel>                channels_;
+    PacketReadCache*                          cache_;
 
     uint64_t    recordCount_;                   /// number of records written so far
     uint64_t    maxRecordCount_;
@@ -323,7 +334,8 @@ private:
 
 //================================================================
 
-class CompressedVectorWriterImpl {
+class CompressedVectorWriterImpl
+{
 public:
                 CompressedVectorWriterImpl(std::shared_ptr<CompressedVectorNodeImpl> ni, std::vector<SourceDestBuffer>& sbufs);
                 ~CompressedVectorWriterImpl();
@@ -337,7 +349,7 @@ public:
     void        dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 
-protected:
+private:
     void        checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName) const;
     void        checkWriterOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName) const;
     void        setBuffers(std::vector<SourceDestBuffer>& sbufs); //???needed?
@@ -348,7 +360,7 @@ protected:
 
     //??? no default ctor, copy, assignment?
 
-    std::vector<SourceDestBuffer>               sbufs_;
+    std::vector<SourceDestBuffer>             sbufs_;
     std::shared_ptr<CompressedVectorNodeImpl> cVector_;
     std::shared_ptr<NodeImpl>                 proto_;
 

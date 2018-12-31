@@ -95,12 +95,6 @@ VectorNodeImpl::VectorNodeImpl(weak_ptr<ImageFileImpl> destImageFile, bool allow
     /// don't checkImageFileOpen, StructNodeImpl() will do it
 }
 
-NodeType VectorNodeImpl::type() const
-{
-    /// don't checkImageFileOpen
-    return E57_VECTOR;
-}
-
 bool VectorNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
 {
     /// don't checkImageFileOpen
@@ -193,15 +187,6 @@ CompressedVectorNodeImpl::CompressedVectorNodeImpl(weak_ptr<ImageFileImpl> destI
 : NodeImpl(destImageFile)
 {
     // don't checkImageFileOpen, NodeImpl() will do it
-
-    recordCount_                = 0;
-    binarySectionLogicalStart_  = 0;
-}
-
-NodeType CompressedVectorNodeImpl::type() const
-{
-    // don't checkImageFileOpen
-    return E57_COMPRESSED_VECTOR;
 }
 
 void CompressedVectorNodeImpl::setPrototype(const shared_ptr<NodeImpl> &prototype)
@@ -313,7 +298,6 @@ bool CompressedVectorNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
 bool CompressedVectorNodeImpl::isDefined(const ustring& pathName)
 {
     throw E57_EXCEPTION2(E57_ERROR_NOT_IMPLEMENTED, "this->pathName=" + this->pathName() + " pathName=" + pathName);
-    return(false);
 }
 
 void CompressedVectorNodeImpl::setAttachedRecursive()
@@ -488,19 +472,14 @@ IntegerNodeImpl::IntegerNodeImpl(weak_ptr<ImageFileImpl> destImageFile, int64_t 
     // don't checkImageFileOpen, NodeImpl() will do it
 
     /// Enforce the given bounds
-    if (value < minimum || maximum < value) {
+    if (value < minimum || maximum < value)
+    {
         throw E57_EXCEPTION2(E57_ERROR_VALUE_OUT_OF_BOUNDS,
                              "this->pathName=" + this->pathName()
                              + " value=" + toString(value)
                              + " minimum=" + toString(minimum)
                              + " maximum=" + toString(maximum));
     }
-}
-
-NodeType IntegerNodeImpl::type()  const
-{
-    // don't checkImageFileOpen
-    return E57_INTEGER;
 }
 
 bool IntegerNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
@@ -641,11 +620,6 @@ ScaledIntegerNodeImpl::ScaledIntegerNodeImpl(weak_ptr<ImageFileImpl> destImageFi
                              + " scaledMinimum=" + toString(scaledMinimum)
                              + " scaledMaximum=" + toString(scaledMaximum));
     }
-}
-NodeType ScaledIntegerNodeImpl::type() const
-{
-    // don't checkImageFileOpen
-    return E57_SCALED_INTEGER;
 }
 
 bool ScaledIntegerNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
@@ -802,7 +776,8 @@ FloatNodeImpl::FloatNodeImpl(weak_ptr<ImageFileImpl> destImageFile, double value
 
     /// Since this ctor also used to construct single precision, and defaults for minimum/maximum are for double precision,
     /// adjust bounds smaller if single.
-    if (precision_ == E57_SINGLE) {
+    if (precision_ == E57_SINGLE)
+    {
         if (minimum_ < E57_FLOAT_MIN)
             minimum_ = E57_FLOAT_MIN;
         if (maximum_ > E57_FLOAT_MAX)
@@ -810,19 +785,14 @@ FloatNodeImpl::FloatNodeImpl(weak_ptr<ImageFileImpl> destImageFile, double value
     }
 
     /// Enforce the given bounds on raw value
-    if (value < minimum || maximum < value) {
+    if (value < minimum || maximum < value)
+    {
         throw E57_EXCEPTION2(E57_ERROR_VALUE_OUT_OF_BOUNDS,
                              "this->pathName=" + this->pathName()
                              + " value=" + toString(value)
                              + " minimum=" + toString(minimum)
                              + " maximum=" + toString(maximum));
     }
-}
-
-NodeType FloatNodeImpl::type() const
-{
-    /// don't checkImageFileOpen
-    return E57_FLOAT;
 }
 
 bool FloatNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
@@ -974,12 +944,6 @@ StringNodeImpl::StringNodeImpl(weak_ptr<ImageFileImpl> destImageFile, const ustr
     // don't checkImageFileOpen, NodeImpl() will do it
 }
 
-NodeType StringNodeImpl::type() const
-{
-    // don't checkImageFileOpen
-    return E57_STRING;
-}
-
 bool StringNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
 {
     // don't checkImageFileOpen
@@ -1118,12 +1082,6 @@ BlobNodeImpl::BlobNodeImpl(weak_ptr<ImageFileImpl> destImageFile, int64_t fileOf
     blobLogicalLength_ = length;
     binarySectionLogicalStart_ = imf->file_->physicalToLogical(fileOffset);
     binarySectionLogicalLength_ = sizeof(BlobSectionHeader) + blobLogicalLength_;
-}
-
-NodeType BlobNodeImpl::type() const
-{
-    /// don't checkImageFileOpen
-    return E57_BLOB;
 }
 
 bool BlobNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
@@ -1315,7 +1273,8 @@ void CompressedVectorSectionHeader::dump(int indent, std::ostream& os) const
 
 ///================================================================
 
-struct SortByBytestreamNumber {
+struct SortByBytestreamNumber
+{
     bool operator () (const shared_ptr<Encoder> &lhs , const shared_ptr<Encoder> &rhs) const {
         return(lhs->bytestreamNumber() < rhs->bytestreamNumber());
     }

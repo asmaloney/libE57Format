@@ -87,7 +87,7 @@ PacketReadCache::PacketReadCache(CheckedFile* cFile, unsigned packetCount)
 std::unique_ptr<PacketLock> PacketReadCache::lock( uint64_t packetLogicalOffset, char* &pkt )
 {
 #ifdef E57_MAX_VERBOSE
-   cout << "PacketReadCache::lock() called, packetLogicalOffset=" << packetLogicalOffset << endl;
+   std::cout << "PacketReadCache::lock() called, packetLogicalOffset=" << packetLogicalOffset << std::endl;
 #endif
 
    /// Only allow one locked packet at a time.
@@ -111,7 +111,7 @@ std::unique_ptr<PacketLock> PacketReadCache::lock( uint64_t packetLogicalOffset,
       {
          /// Found a match, so don't have to read anything
 #ifdef E57_MAX_VERBOSE
-         cout << "  Found matching cache entry, index=" << i << endl;
+         std::cout << "  Found matching cache entry, index=" << i << std::endl;
 #endif
          /// Mark entry with current useCount (keeps track of age of entry).
          entry.lastUsed_ = ++useCount_;
@@ -145,7 +145,7 @@ std::unique_ptr<PacketLock> PacketReadCache::lock( uint64_t packetLogicalOffset,
       }
    }
 #ifdef E57_MAX_VERBOSE
-   cout << "  Oldest entry=" << oldestEntry << " lastUsed=" << oldestUsed << endl;
+   std::cout << "  Oldest entry=" << oldestEntry << " lastUsed=" << oldestUsed << std::endl;
 #endif
 
    readPacket(oldestEntry, packetLogicalOffset);
@@ -166,7 +166,7 @@ void PacketReadCache::unlock(unsigned lockedEntry)
 {
    //??? why lockedEntry not used?
 #ifdef E57_MAX_VERBOSE
-   cout << "PacketReadCache::unlock() called, lockedEntry=" << lockedEntry << endl;
+   std::cout << "PacketReadCache::unlock() called, lockedEntry=" << lockedEntry << std::endl;
 #endif
 
    if (lockCount_ != 1)
@@ -180,7 +180,7 @@ void PacketReadCache::unlock(unsigned lockedEntry)
 void PacketReadCache::readPacket(unsigned oldestEntry, uint64_t packetLogicalOffset)
 {
 #ifdef E57_MAX_VERBOSE
-   cout << "PacketReadCache::readPacket() called, oldestEntry=" << oldestEntry << " packetLogicalOffset=" << packetLogicalOffset << endl;
+   std::cout << "PacketReadCache::readPacket() called, oldestEntry=" << oldestEntry << " packetLogicalOffset=" << packetLogicalOffset << std::endl;
 #endif
 
    /// Read header of packet first to get length.  Use EmptyPacketHeader since it has the commom fields to all packets.
@@ -212,7 +212,7 @@ void PacketReadCache::readPacket(unsigned oldestEntry, uint64_t packetLogicalOff
 
          dpkt->verify(packetLength);
 #ifdef E57_MAX_VERBOSE
-         cout << "  data packet:" << endl;
+         std::cout << "  data packet:" << std::endl;
          dpkt->dump(4); //???
 #endif
       }
@@ -222,7 +222,7 @@ void PacketReadCache::readPacket(unsigned oldestEntry, uint64_t packetLogicalOff
 
          ipkt->verify(packetLength);
 #ifdef E57_MAX_VERBOSE
-         cout << "  index packet:" << endl;
+         std::cout << "  index packet:" << std::endl;
          ipkt->dump(4); //???
 #endif
       }
@@ -232,7 +232,7 @@ void PacketReadCache::readPacket(unsigned oldestEntry, uint64_t packetLogicalOff
 
          hp->verify(packetLength);
 #ifdef E57_MAX_VERBOSE
-         cout << "  empty packet:" << endl;
+         std::cout << "  empty packet:" << std::endl;
          hp->dump(4); //???
 #endif
       }
@@ -293,14 +293,14 @@ PacketLock::PacketLock(PacketReadCache* cache, unsigned cacheIndex)
      cacheIndex_(cacheIndex)
 {
 #ifdef E57_MAX_VERBOSE
-   cout << "PacketLock() called" << endl;
+   std::cout << "PacketLock() called" << std::endl;
 #endif
 }
 
 PacketLock::~PacketLock()
 {
 #ifdef E57_MAX_VERBOSE
-   cout << "~PacketLock() called" << endl;
+   std::cout << "~PacketLock() called" << std::endl;
 #endif
    try {
       /// Note cache must live longer than lock, this is reasonable assumption.
@@ -411,7 +411,7 @@ void DataPacket::verify(unsigned bufferLength) const
    const unsigned packetLength = header.packetLogicalLengthMinus1+1;
    const unsigned needed = sizeof(DataPacketHeader) + 2*header.bytestreamCount + totalStreamByteCount;
 #ifdef E57_MAX_VERBOSE
-   cout << "needed=" << needed << " actual=" << packetLength << endl; //???
+   std::cout << "needed=" << needed << " actual=" << packetLength << std::endl; //???
 #endif
 
    /// If needed is not with 3 bytes of actual packet size, have an error
@@ -435,7 +435,7 @@ void DataPacket::verify(unsigned bufferLength) const
 char* DataPacket::getBytestream(unsigned bytestreamNumber, unsigned& byteCount)
 {
 #ifdef E57_MAX_VERBOSE
-   cout << "getBytestream called, bytestreamNumber=" << bytestreamNumber << endl;
+   std::cout << "getBytestream called, bytestreamNumber=" << bytestreamNumber << std::endl;
 #endif
 
    /// Verify that packet is correct type

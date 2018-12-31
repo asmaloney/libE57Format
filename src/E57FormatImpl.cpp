@@ -1697,7 +1697,7 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
     /// Use temp buf in object (is 64KBytes long) instead of allocating each time here
     char* packet = reinterpret_cast<char*>(&dataPacket_);
 #ifdef E57_MAX_VERBOSE
-    cout << "  packet=" << (unsigned)packet << endl; //???
+    cout << "  packet=" << packet << endl; //???
 #endif
 
     /// To be safe, clear header part of packet
@@ -1706,7 +1706,7 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
     /// Write bytestreamBufferLength[bytestreamCount] after header, in dataPacket_
     auto bsbLength = reinterpret_cast<uint16_t*>(&packet[sizeof(DataPacketHeader)]);
 #ifdef E57_MAX_VERBOSE
-    cout << "  bsbLength=" << (unsigned)bsbLength << endl; //???
+    cout << "  bsbLength=" << bsbLength << endl; //???
 #endif
     for (unsigned i=0; i < bytestreams_.size(); i++) {
         bsbLength[i] = static_cast<uint16_t>(count.at(i));      // %%% Truncation
@@ -1718,7 +1718,7 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
     /// Get pointer to end of data so far
     char* p = reinterpret_cast<char*>(&bsbLength[bytestreams_.size()]);
 #ifdef E57_MAX_VERBOSE
-    cout << "  after bsbLength, p=" << (unsigned)p << endl; //???
+    cout << "  after bsbLength, p=" << p << endl; //???
 #endif
 
     /// Write contents of each bytestream in dataPacket_

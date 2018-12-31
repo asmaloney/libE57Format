@@ -236,7 +236,7 @@ size_t BitpackEncoder::outputAvailable()
 void BitpackEncoder::outputRead(char* dest, const size_t byteCount)
 {
 #ifdef E57_MAX_VERBOSE
-   cout << "BitpackEncoder::outputRead() called, dest=" << (unsigned)dest << " byteCount="<< byteCount << endl; //???
+   cout << "BitpackEncoder::outputRead() called, dest=" << dest << " byteCount="<< byteCount << endl; //???
 #endif
 
    /// Check we have enough bytes in queue

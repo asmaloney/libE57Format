@@ -66,7 +66,7 @@ namespace e57 {
       /// Second phase of construction, now we have a well-formed ImageFile object.
 
 #ifdef E57_MAX_VERBOSE
-      cout << "ImageFileImpl() called, fileName=" << fileName << " mode=" << mode << endl;
+      std::cout << "ImageFileImpl() called, fileName=" << fileName << " mode=" << mode << std::endl;
 #endif
       unusedLogicalStart_ = sizeof(E57FileHeader);
       fileName_ = fileName;
@@ -588,7 +588,7 @@ namespace e57 {
    void ImageFileImpl::pathNameParse(const ustring& pathName, bool& isRelative, std::vector<ustring>& fields)
    {
 #ifdef E57_MAX_VERBOSE
-      cout << "pathNameParse pathname=""" << pathName << """" << endl;
+      std::cout << "pathNameParse pathname=""" << pathName << """" << std::endl;
 #endif
       /// no checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__)
 
@@ -642,10 +642,12 @@ namespace e57 {
          throw E57_EXCEPTION2(E57_ERROR_BAD_PATH_NAME, "pathName=" + pathName);
 
 #ifdef E57_MAX_VERBOSE
-      cout << "pathNameParse returning: isRelative=" << isRelative << " fields.size()=" << fields.size() << " fields=";
+      std::cout << "pathNameParse returning: isRelative=" << isRelative << " fields.size()=" << fields.size() << " fields=";
       for (int i = 0; i < fields.size(); i++)
-         cout << fields[i] << ",";
-      cout << endl;
+      {
+         std::cout << fields[i] << ",";
+      }
+      std::cout << std::endl;
 #endif
    }
 

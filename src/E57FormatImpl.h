@@ -297,11 +297,13 @@ public:
     void        dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 
-protected:
+private:
     void        checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName) const;
     void        checkReaderOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName) const;
     void        setBuffers(std::vector<SourceDestBuffer>& dbufs); //???needed?
     uint64_t    earliestPacketNeededForInput() const;
+
+    DataPacket *dataPacket( uint64_t inLogicalOffset ) const;
     void        feedPacketToDecoders(uint64_t currentPacketLogicalOffset);
     uint64_t    findNextDataPacket(uint64_t nextPacketLogicalOffset);
 

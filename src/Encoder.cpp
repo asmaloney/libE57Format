@@ -80,21 +80,24 @@ shared_ptr<Encoder> Encoder::EncoderFactory(unsigned bytestreamNumber,
 
             return encoder;
          }
-         else if (bitsPerRecord <= 8)
+
+         if (bitsPerRecord <= 8)
          {
             shared_ptr<Encoder> encoder(new BitpackIntegerEncoder<uint8_t>(false, bytestreamNumber, sbuf,
                                                                            DATA_PACKET_MAX/*!!!*/,
                                                                            ini->minimum(), ini->maximum(), 1.0, 0.0));
             return encoder;
          }
-         else if (bitsPerRecord <= 16)
+
+         if (bitsPerRecord <= 16)
          {
             shared_ptr<Encoder> encoder(new BitpackIntegerEncoder<uint16_t>(false, bytestreamNumber, sbuf,
                                                                             DATA_PACKET_MAX/*!!!*/,
                                                                             ini->minimum(), ini->maximum(), 1.0, 0.0));
             return encoder;
          }
-         else if (bitsPerRecord <= 32)
+
+         if (bitsPerRecord <= 32)
          {
             shared_ptr<Encoder> encoder(new BitpackIntegerEncoder<uint32_t>(false, bytestreamNumber, sbuf,
                                                                             DATA_PACKET_MAX/*!!!*/,
@@ -127,7 +130,8 @@ shared_ptr<Encoder> Encoder::EncoderFactory(unsigned bytestreamNumber,
 
             return encoder;
          }
-         else if (bitsPerRecord <= 8)
+
+         if (bitsPerRecord <= 8)
          {
             shared_ptr<Encoder> encoder(new BitpackIntegerEncoder<uint8_t>(true, bytestreamNumber, sbuf,
                                                                            DATA_PACKET_MAX/*!!!*/,
@@ -135,7 +139,8 @@ shared_ptr<Encoder> Encoder::EncoderFactory(unsigned bytestreamNumber,
                                                                            sini->scale(), sini->offset()));
             return encoder;
          }
-         else if (bitsPerRecord <= 16)
+
+         if (bitsPerRecord <= 16)
          {
             shared_ptr<Encoder> encoder(new BitpackIntegerEncoder<uint16_t>(true, bytestreamNumber, sbuf,
                                                                             DATA_PACKET_MAX/*!!!*/,
@@ -143,7 +148,8 @@ shared_ptr<Encoder> Encoder::EncoderFactory(unsigned bytestreamNumber,
                                                                             sini->scale(), sini->offset()));
             return encoder;
          }
-         else if (bitsPerRecord <= 32)
+
+         if (bitsPerRecord <= 32)
          {
             shared_ptr<Encoder> encoder(new BitpackIntegerEncoder<uint32_t>(true, bytestreamNumber, sbuf,
                                                                             DATA_PACKET_MAX/*!!!*/,

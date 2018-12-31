@@ -77,21 +77,24 @@ shared_ptr<Decoder> Decoder::DecoderFactory(unsigned bytestreamNumber, //!!! nam
                                                                    ini->minimum(), 1.0, 0.0, maxRecordCount));
             return decoder;
          }
-         else if (bitsPerRecord <= 8)
+
+         if (bitsPerRecord <= 8)
          {
             shared_ptr<Decoder> decoder(new BitpackIntegerDecoder<uint8_t>(false, bytestreamNumber, dbufs.at(0),
                                                                            ini->minimum(), ini->maximum(),
                                                                            1.0, 0.0, maxRecordCount));
             return decoder;
          }
-         else if (bitsPerRecord <= 16)
+
+         if (bitsPerRecord <= 16)
          {
             shared_ptr<Decoder> decoder(new BitpackIntegerDecoder<uint16_t>(false, bytestreamNumber, dbufs.at(0),
                                                                             ini->minimum(), ini->maximum(),
                                                                             1.0, 0.0, maxRecordCount));
             return decoder;
          }
-         else if (bitsPerRecord <= 32)
+
+         if (bitsPerRecord <= 32)
          {
             shared_ptr<Decoder> decoder(new BitpackIntegerDecoder<uint32_t>(false, bytestreamNumber, dbufs.at(0),
                                                                             ini->minimum(), ini->maximum(),
@@ -127,7 +130,8 @@ shared_ptr<Decoder> Decoder::DecoderFactory(unsigned bytestreamNumber, //!!! nam
                                                                    sini->offset(), maxRecordCount));
             return decoder;
          }
-         else if (bitsPerRecord <= 8)
+
+         if (bitsPerRecord <= 8)
          {
             shared_ptr<Decoder> decoder(new BitpackIntegerDecoder<uint8_t>(true, bytestreamNumber, dbufs.at(0),
                                                                            sini->minimum(), sini->maximum(),
@@ -135,7 +139,8 @@ shared_ptr<Decoder> Decoder::DecoderFactory(unsigned bytestreamNumber, //!!! nam
                                                                            maxRecordCount));
             return decoder;
          }
-         else if (bitsPerRecord <= 16)
+
+         if (bitsPerRecord <= 16)
          {
             shared_ptr<Decoder> decoder(new BitpackIntegerDecoder<uint16_t>(true, bytestreamNumber, dbufs.at(0),
                                                                             sini->minimum(), sini->maximum(),
@@ -143,7 +148,8 @@ shared_ptr<Decoder> Decoder::DecoderFactory(unsigned bytestreamNumber, //!!! nam
                                                                             maxRecordCount));
             return decoder;
          }
-         else if (bitsPerRecord <= 32)
+
+         if (bitsPerRecord <= 32)
          {
             shared_ptr<Decoder> decoder(new BitpackIntegerDecoder<uint32_t>(true, bytestreamNumber, dbufs.at(0),
                                                                             sini->minimum(), sini->maximum(),

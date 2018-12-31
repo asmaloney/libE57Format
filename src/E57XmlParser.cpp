@@ -195,8 +195,7 @@ E57XmlParser::ParseInfo::ParseInfo()
   fileOffset(0),
   length(0),
   allowHeterogeneousChildren(false),
-  recordCount(0),
-  childText()
+  recordCount(0)
 {
 }
 

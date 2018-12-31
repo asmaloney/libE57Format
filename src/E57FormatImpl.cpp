@@ -1867,8 +1867,10 @@ void CompressedVectorWriterImpl::dump(int indent, std::ostream& os)
 
     /// Don't call dump() for DataPacket, since it may contain junk when debugging.  Just print a few byte values.
     os << space(indent) << "dataPacket:" << endl;
-    uint8_t* p = reinterpret_cast<uint8_t*>(&dataPacket_);
-    for (unsigned i = 0; i < 40; ++i) {
+    auto p = reinterpret_cast<uint8_t*>(&dataPacket_);
+
+    for (unsigned i = 0; i < 40; ++i)
+    {
         os << space(indent+4) << "dataPacket[" << i << "]: " << static_cast<unsigned>(p[i]) << endl;
     }
     os << space(indent+4) << "more unprinted..." << endl;

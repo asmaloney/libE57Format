@@ -53,7 +53,8 @@ using std::uint64_t;
 using ustring = std::string;
 
 //! @brief Identifiers for types of E57 elements
-enum NodeType {
+enum NodeType
+{
     E57_STRUCTURE         = 1,  //!< StructureNode class
     E57_VECTOR            = 2,  //!< VectorNode class
     E57_COMPRESSED_VECTOR = 3,  //!< CompressedVectorNode class
@@ -65,13 +66,15 @@ enum NodeType {
 };
 
 //! @brief The IEEE floating point number precisions supported
-enum FloatPrecision {
+enum FloatPrecision
+{
     E57_SINGLE = 1,  //!< 32 bit IEEE floating point number format
     E57_DOUBLE = 2   //!< 64 bit IEEE floating point number format
 };
 
 //! @brief Identifies the representations of memory elements API can transfer data to/from
-enum MemoryRepresentation {
+enum MemoryRepresentation
+{
     E57_INT8     = 1,  //!< 8 bit signed integer
     E57_UINT8    = 2,  //!< 8 bit unsigned integer
     E57_INT16    = 3,  //!< 16 bit signed integer
@@ -167,12 +170,14 @@ class ScaledIntegerNodeImpl;
 class SourceDestBuffer;
 class SourceDestBufferImpl;
 class StringNode;
+class StringNodeImpl;
 class StructureNode;
 class StructureNodeImpl;
 class VectorNode;
 class VectorNodeImpl;
 
-class Node {
+class Node
+{
 public:
     Node() = delete;
 
@@ -193,14 +198,15 @@ public:
     explicit    Node(std::shared_ptr<NodeImpl>);  // internal use only
 #endif
 
-protected:
+private:
     friend class NodeImpl;
 
     E57_OBJECT_IMPLEMENTATION(Node)  // Internal implementation details, not part of API, must be last in object
 //! \endcond
 };
 
-class StructureNode {
+class StructureNode
+{
 public:
     StructureNode() = delete;
     StructureNode(ImageFile destImageFile);
@@ -228,7 +234,7 @@ public:
     void        checkInvariant(bool doRecurse = true, bool doUpcast=true);
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
-protected:
+private:
     friend class ImageFile;
 
                 StructureNode(std::shared_ptr<StructureNodeImpl> ni);    // internal use only
@@ -239,7 +245,8 @@ protected:
 };
 
 
-class VectorNode {
+class VectorNode
+{
 public:
     VectorNode() = delete;
     explicit    VectorNode(ImageFile destImageFile, bool allowHeteroChildren = false);
@@ -269,7 +276,7 @@ public:
     void        checkInvariant(bool doRecurse = true, bool doUpcast=true);
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
-protected:
+private:
     friend class CompressedVectorNode;
 
                 VectorNode(std::shared_ptr<VectorNodeImpl> ni);  // internal use only
@@ -278,7 +285,8 @@ protected:
 //! \endcond
 };
 
-class SourceDestBuffer {
+class SourceDestBuffer
+{
 public:
     SourceDestBuffer() = delete;
     SourceDestBuffer(ImageFile destImageFile, const ustring &pathName, int8_t* b,   const size_t capacity,
@@ -315,12 +323,13 @@ public:
     void            checkInvariant(bool doRecurse = true) const;
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
-protected:
+private:
     E57_OBJECT_IMPLEMENTATION(SourceDestBuffer)  // Internal implementation details, not part of API, must be last in object
 //! \endcond
 };
 
-class CompressedVectorReader {
+class CompressedVectorReader
+{
 public:
     CompressedVectorReader() = delete;
 
@@ -335,7 +344,7 @@ public:
     void        checkInvariant(bool doRecurse = true);
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
-protected:
+private:
     friend class CompressedVectorNode;
 
                 CompressedVectorReader(std::shared_ptr<CompressedVectorReaderImpl> ni);
@@ -344,7 +353,8 @@ protected:
 //! \endcond
 };
 
-class CompressedVectorWriter {
+class CompressedVectorWriter
+{
 public:
     CompressedVectorWriter() = delete;
 
@@ -358,7 +368,7 @@ public:
     void        checkInvariant(bool doRecurse = true);
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
-protected:
+private:
     friend class CompressedVectorNode;
 
                 CompressedVectorWriter(std::shared_ptr<CompressedVectorWriterImpl> ni);
@@ -367,7 +377,8 @@ protected:
 //! \endcond
 };
 
-class CompressedVectorNode {
+class CompressedVectorNode
+{
 public:
     CompressedVectorNode() = delete;
     explicit CompressedVectorNode(ImageFile destImageFile, const Node &prototype, const VectorNode &codecs);
@@ -397,7 +408,7 @@ public:
     void        checkInvariant(bool doRecurse = true, bool doUpcast=true);
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
-protected:
+private:
     friend class CompressedVectorReader;
     friend class CompressedVectorWriter;
     friend class E57XmlParser;
@@ -408,7 +419,8 @@ protected:
 //! \endcond
 };
 
-class IntegerNode {
+class IntegerNode
+{
 public:
     IntegerNode() = delete;
     explicit IntegerNode(ImageFile destImageFile, int64_t value = 0, int64_t minimum = E57_INT64_MIN, int64_t maximum = E57_INT64_MAX);
@@ -434,14 +446,15 @@ public:
     void        checkInvariant(bool doRecurse = true, bool doUpcast=true);
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
-protected:
+private:
                 IntegerNode(std::shared_ptr<IntegerNodeImpl> ni);  // internal use only
 
     E57_OBJECT_IMPLEMENTATION(IntegerNode)  // Internal implementation details, not part of API, must be last in object
 //! \endcond
 };
 
-class ScaledIntegerNode {
+class ScaledIntegerNode
+{
 public:
     ScaledIntegerNode() = delete;
     explicit ScaledIntegerNode(ImageFile destImageFile, int64_t rawValue, int64_t minimum, int64_t maximum,
@@ -479,14 +492,15 @@ public:
     void        checkInvariant(bool doRecurse = true, bool doUpcast=true);
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
-protected:
+private:
                 ScaledIntegerNode(std::shared_ptr<ScaledIntegerNodeImpl> ni);  // internal use only
 
     E57_OBJECT_IMPLEMENTATION(ScaledIntegerNode)  // Internal implementation details, not part of API, must be last in object
 //! \endcond
 };
 
-class FloatNode {
+class FloatNode
+{
 public:
     FloatNode() = delete;
     explicit FloatNode(ImageFile destImageFile, double value = 0.0, FloatPrecision precision = E57_DOUBLE,
@@ -514,15 +528,15 @@ public:
     void        checkInvariant(bool doRecurse = true, bool doUpcast=true);
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
-protected:
+private:
                 FloatNode(std::shared_ptr<FloatNodeImpl> ni);  // internal use only
 
     E57_OBJECT_IMPLEMENTATION(FloatNode)  // Internal implementation details, not part of API, must be last in object
 //! \endcond
 };
 
-class StringNodeImpl;
-class StringNode {
+class StringNode
+{
 public:
     StringNode() = delete;
     explicit StringNode(ImageFile destImageFile, const ustring &value = "");
@@ -546,7 +560,7 @@ public:
     void        checkInvariant(bool doRecurse = true, bool doUpcast=true);
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
-protected:
+private:
     friend class StringNodeImpl;
                 StringNode(std::shared_ptr<StringNodeImpl> ni);  // internal use only
 
@@ -554,7 +568,8 @@ protected:
 //! \endcond
 };
 
-class BlobNode {
+class BlobNode
+{
 public:
     BlobNode() = delete;
     explicit BlobNode(ImageFile destImageFile, int64_t byteCount);
@@ -580,7 +595,7 @@ public:
     void        checkInvariant(bool doRecurse = true, bool doUpcast=true);
 
 //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
-protected:
+private:
     friend class E57XmlParser;
 
                 BlobNode(std::shared_ptr<BlobNodeImpl> ni);       // internal use only
@@ -592,7 +607,8 @@ protected:
 //! \endcond
 };
 
-class ImageFile {
+class ImageFile
+{
 public:
     ImageFile() = delete;
     ImageFile(const ustring& fname, const ustring& mode, ReadChecksumPolicy checksumPolicy = CHECKSUM_POLICY_ALL );
@@ -628,8 +644,6 @@ public:
 private:
                     ImageFile(double);           // Give a second dummy constructor, better error msg for: ImageFile(0)
 
-protected:
-    //??? workaround?
     friend class Node;
     friend class StructureNode;
     friend class VectorNode;

@@ -31,25 +31,13 @@
 #include "Common.h"
 
 
-namespace e57 {
+namespace e57
+{
    class CheckedFile;
 
-   /// Note: If any fields are added to this structure, swab() may need to be updated.
-   struct E57FileHeader
-   {
-         char        fileSignature[8] = {};
-         uint32_t    majorVersion = 0;
-         uint32_t    minorVersion = 0;
-         uint64_t    filePhysicalLength = 0;
-         uint64_t    xmlPhysicalOffset = 0;
-         uint64_t    xmlLogicalLength = 0;
-         uint64_t    pageSize = 0;
-         //  char        e57LibraryVersion[8];   //Not in V1.0 Standard
+   struct E57FileHeader;
+   struct NameSpace;
 
-#ifdef E57_DEBUG
-         void        dump(int indent = 0, std::ostream& os = std::cout) const;
-#endif
-   };
 
    class ImageFileImpl : public std::enable_shared_from_this<ImageFileImpl>
    {
@@ -89,7 +77,6 @@ namespace e57 {
          ustring         pathNameUnparse(bool isRelative, const std::vector<ustring>& fields);
 
          unsigned        bitsNeeded(int64_t minimum, int64_t maximum);
-         static void     readFileHeader(CheckedFile* file, E57FileHeader& header);
          void            incrWriterCount();
          void            decrWriterCount();
          void            incrReaderCount();
@@ -100,22 +87,15 @@ namespace e57 {
          void            dump(int indent = 0, std::ostream& os = std::cout) const;
 #endif
 
-      protected:
+      private:
          friend class E57XmlParser;
          friend class BlobNodeImpl;
          friend class CompressedVectorWriterImpl;
          friend class CompressedVectorReaderImpl; //??? add file() instead of accessing file_, others friends too
 
-         void checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName) const;
+         static void     readFileHeader(CheckedFile* file, E57FileHeader& header);
 
-         struct NameSpace {
-               ustring     prefix;
-               ustring     uri;
-               NameSpace(const ustring &prefix0, const ustring &uri0) :
-                  prefix(prefix0),
-                  uri(uri0)
-               {}
-         };
+         void checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName) const;
 
          ustring         fileName_;
          bool            isWriter_;
@@ -139,7 +119,6 @@ namespace e57 {
          /// Smart pointer to metadata tree
          std::shared_ptr<StructureNodeImpl> root_;
    };
-
 }
 
 #endif

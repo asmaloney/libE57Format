@@ -30,7 +30,34 @@
 #include "E57XmlParser.h"
 #include "ImageFileImpl.h"
 
-namespace e57 {
+namespace e57
+{
+   struct NameSpace
+   {
+         ustring     prefix;
+         ustring     uri;
+
+         NameSpace(const ustring &prefix0, const ustring &uri0) :
+            prefix(prefix0),
+            uri(uri0)
+         {}
+   };
+
+   struct E57FileHeader
+   {
+         char        fileSignature[8] = {};
+         uint32_t    majorVersion = 0;
+         uint32_t    minorVersion = 0;
+         uint64_t    filePhysicalLength = 0;
+         uint64_t    xmlPhysicalOffset = 0;
+         uint64_t    xmlLogicalLength = 0;
+         uint64_t    pageSize = 0;
+         //  char        e57LibraryVersion[8];   //Not in V1.0 Standard
+
+#ifdef E57_DEBUG
+         void        dump(int indent = 0, std::ostream& os = std::cout) const;
+#endif
+   };
 
 #ifdef E57_DEBUG
    void E57FileHeader::dump(int indent, std::ostream& os) const
@@ -74,62 +101,21 @@ namespace e57 {
       /// Get shared_ptr to this object
       std::shared_ptr<ImageFileImpl> imf = shared_from_this();
 
-      //??? allow "rw" or "a"?
-      if (mode == "w")
-         isWriter_ = true;
-      else if (mode == "r")
-         isWriter_ = false;
-      else
+      // Accept "w" or "r" modes
+      isWriter_ = (mode == "w");
+
+      if (mode != "r")
+      {
          throw E57_EXCEPTION2(E57_ERROR_BAD_API_ARGUMENT, "mode=" + ustring(mode));
+      }
 
-      /// If mode is read, do it
       file_ = nullptr;
-      if (!isWriter_) {
-         try { //??? should one try block cover whole function?
-            /// Open file for reading.
-            file_ = new CheckedFile( fileName_, CheckedFile::ReadOnly, checksumPolicy );
 
-            std::shared_ptr<StructureNodeImpl> root(new StructureNodeImpl(imf));
-            root_ = root;
-            root_->setAttachedRecursive();
-
-            E57FileHeader header;
-            readFileHeader(file_, header);
-
-            ///!!! stash major,minor numbers for API?
-            xmlLogicalOffset_ = file_->physicalToLogical(header.xmlPhysicalOffset);
-            xmlLogicalLength_ = header.xmlLogicalLength;
-         } catch (...) {
-            /// Remember to close file if got any exception
-            if (file_ != nullptr) {
-               delete file_;
-               file_ = nullptr;
-            }
-            throw;  // rethrow
-         }
-
-         try {
-            /// Create parser state, attach its event handers to the SAX2 reader
-            E57XmlParser parser(imf);
-
-            parser.init();
-
-            /// Create input source (XML section of E57 file turned into a stream).
-            E57XmlFileInputSource xmlSection(file_, xmlLogicalOffset_, xmlLogicalLength_);
-
-            unusedLogicalStart_ = sizeof(E57FileHeader);
-
-            /// Do the parse, building up the node tree
-            parser.parse( xmlSection );
-         } catch (...) {
-            if (file_ != nullptr) {
-               delete file_;
-               file_ = nullptr;
-            }
-            throw;  // rethrow
-         }
-      } else { /// open for writing (start empty)
-         try {
+      // Writing
+      if ( isWriter_ )
+      {
+         try
+         {
             /// Open file for writing, truncate if already exists.
             file_ = new CheckedFile( fileName_, CheckedFile::WriteCreate, checksumPolicy );
 
@@ -140,66 +126,63 @@ namespace e57 {
             unusedLogicalStart_ = sizeof(E57FileHeader);
             xmlLogicalOffset_ = 0;
             xmlLogicalLength_ = 0;
-         } catch (...) {
-            /// Remember to close file if got any exception
-            if (file_ != nullptr) {
-               delete file_;
-               file_ = nullptr;
-            }
-            throw;  // rethrow
          }
-      }
-   }
+         catch (...)
+         {
+            delete file_;
+            file_ = nullptr;
 
-   void ImageFileImpl::readFileHeader(CheckedFile* file, E57FileHeader& header)
-   {
-#ifdef E57_DEBUG
-      /// Double check that compiler thinks sizeof header is what it is supposed to be
-      if (sizeof(E57FileHeader) != 48)
-         throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "headerSize=" + toString(sizeof(E57FileHeader)));
-#endif
+            throw;
+         }
 
-      /// Fetch the file header
-      file->read(reinterpret_cast<char*>(&header), sizeof(header));
-#ifdef E57_MAX_VERBOSE
-      header.dump(); //???
-#endif
-
-      /// Check signature
-      if (strncmp(header.fileSignature, "ASTM-E57", 8) != 0)
-         throw E57_EXCEPTION2(E57_ERROR_BAD_FILE_SIGNATURE, "fileName="+file->fileName());
-
-      /// Check file version compatibility
-      if (header.majorVersion > E57_FORMAT_MAJOR) {
-         throw E57_EXCEPTION2(E57_ERROR_UNKNOWN_FILE_VERSION,
-                              "fileName=" + file->fileName()
-                              + " header.majorVersion=" + toString(header.majorVersion)
-                              + " header.minorVersion=" + toString(header.minorVersion));
+         return;
       }
 
-      /// If is a prototype version (majorVersion==0), then minorVersion has to match too.
-      /// In production versions (majorVersion==E57_FORMAT_MAJOR), should be able to handle any minor version.
-      if (header.majorVersion == E57_FORMAT_MAJOR &&
-          header.minorVersion > E57_FORMAT_MINOR) {
-         throw E57_EXCEPTION2(E57_ERROR_UNKNOWN_FILE_VERSION,
-                              "fileName=" + file->fileName()
-                              + " header.majorVersion=" + toString(header.majorVersion)
-                              + " header.minorVersion=" + toString(header.minorVersion));
-      }
-
-      /// Check if file length matches actual physical length
-      if (header.filePhysicalLength != file->length(CheckedFile::Physical)) {
-         throw E57_EXCEPTION2(E57_ERROR_BAD_FILE_LENGTH,
-                              "fileName=" + file->fileName()
-                              + " header.filePhysicalLength=" + toString(header.filePhysicalLength)
-                              + " file->length=" + toString(file->length(CheckedFile::Physical)));
-      }
-
-      /// Check that page size is correct constant
-      if (header.majorVersion != 0 &&
-          header.pageSize != CheckedFile::physicalPageSize)
+      // Reading
+      try
       {
-         throw E57_EXCEPTION2(E57_ERROR_BAD_FILE_LENGTH, "fileName=" + file->fileName());
+         /// Open file for reading.
+         file_ = new CheckedFile( fileName_, CheckedFile::ReadOnly, checksumPolicy );
+
+         std::shared_ptr<StructureNodeImpl> root(new StructureNodeImpl(imf));
+         root_ = root;
+         root_->setAttachedRecursive();
+
+         E57FileHeader header;
+         readFileHeader(file_, header);
+
+         xmlLogicalOffset_ = file_->physicalToLogical(header.xmlPhysicalOffset);
+         xmlLogicalLength_ = header.xmlLogicalLength;
+      }
+      catch (...)
+      {
+         delete file_;
+         file_ = nullptr;
+
+         throw;
+      }
+
+      try
+      {
+         /// Create parser state, attach its event handers to the SAX2 reader
+         E57XmlParser parser(imf);
+
+         parser.init();
+
+         /// Create input source (XML section of E57 file turned into a stream).
+         E57XmlFileInputSource xmlSection(file_, xmlLogicalOffset_, xmlLogicalLength_);
+
+         unusedLogicalStart_ = sizeof(E57FileHeader);
+
+         /// Do the parse, building up the node tree
+         parser.parse( xmlSection );
+      }
+      catch (...)
+      {
+         delete file_;
+         file_ = nullptr;
+
+         throw;
       }
    }
 
@@ -212,7 +195,8 @@ namespace e57 {
    {
       writerCount_--;
 #ifdef E57_MAX_DEBUG
-      if (writerCount_ < 0) {
+      if (writerCount_ < 0)
+      {
          throw E57_EXCEPTION2(E57_ERROR_INTERNAL,
                               "fileName=" + fileName_
                               + " writerCount=" + toString(writerCount_)
@@ -230,7 +214,8 @@ namespace e57 {
    {
       readerCount_--;
 #ifdef E57_MAX_DEBUG
-      if (readerCount_ < 0) {
+      if (readerCount_ < 0)
+      {
          throw E57_EXCEPTION2(E57_ERROR_INTERNAL,
                               "fileName=" + fileName_
                               + " writerCount=" + toString(writerCount_)
@@ -242,19 +227,20 @@ namespace e57 {
    std::shared_ptr<StructureNodeImpl> ImageFileImpl::root()
    {
       checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
-      return(root_);
+
+      return root_;
    }
 
    void ImageFileImpl::close()
    {
-      //??? check if already closed
-      //??? flush, close
-
       /// If file already closed, have nothing to do
-      if (file_ == nullptr)
+      if ( file_ == nullptr )
+      {
          return;
+      }
 
-      if (isWriter_) {
+      if ( isWriter_ )
+      {
          /// Go to end of file, note physical position
          xmlLogicalOffset_ = unusedLogicalStart_;
          file_->seek(xmlLogicalOffset_, CheckedFile::Logical);
@@ -269,7 +255,9 @@ namespace e57 {
 
          /// Pad XML section so length is multiple of 4
          while ((file_->position(CheckedFile::Logical) - xmlLogicalOffset_) % 4 != 0)
+         {
             *file_ << " ";
+         }
 
          /// Note logical length
          xmlLogicalLength_ = file_->position(CheckedFile::Logical) - xmlLogicalOffset_;
@@ -286,7 +274,7 @@ namespace e57 {
          header.xmlLogicalLength   = xmlLogicalLength_;
          header.pageSize           = CheckedFile::physicalPageSize;
 #ifdef E57_MAX_VERBOSE
-         header.dump(); //???
+         header.dump();
 #endif
 
          /// Write header at beginning of file
@@ -304,14 +292,20 @@ namespace e57 {
    {
       /// If file already closed, have nothing to do
       if (file_ == nullptr)
+      {
          return;
+      }
 
       /// Close the file and ulink (delete) it.
       /// It is legal to cancel a read file, but file isn't deleted.
       if (isWriter_)
+      {
          file_->unlink();
+      }
       else
+      {
          file_->close();
+      }
 
       delete file_;
       file_ = nullptr;
@@ -341,15 +335,17 @@ namespace e57 {
    {
       /// Try to cancel if not already closed, but don't allow any exceptions to propogate to caller (because in dtor).
       /// If writing, this will unlink the file, so make sure call ImageFileImpl::close explicitly before dtor runs.
-      try {
+      try
+      {
          cancel();
-      } catch (...) {};
+      }
+      catch (...)
+      {
+      };
 
       /// Just in case cancel failed without freeing file_, do free here.
-      if (file_ != nullptr) {
-         delete file_;
-         file_ = nullptr;
-      }
+      delete file_;
+      file_ = nullptr;
    }
 
    uint64_t ImageFileImpl::allocateSpace(uint64_t byteCount, bool doExtendNow)
@@ -361,9 +357,11 @@ namespace e57 {
 
       /// If caller won't write to file immediately, it should request that the file be extended with zeros here
       if (doExtendNow)
+      {
          file_->extend(unusedLogicalStart_);
+      }
 
-      return(oldLogicalStart);
+      return oldLogicalStart;
    }
 
    CheckedFile* ImageFileImpl::file() const
@@ -384,10 +382,16 @@ namespace e57 {
 
       /// Check to make sure that neither prefix or uri is already defined.
       ustring dummy;
+
       if (extensionsLookupPrefix(prefix, dummy))
+      {
          throw E57_EXCEPTION2(E57_ERROR_DUPLICATE_NAMESPACE_PREFIX, "prefix=" + prefix + " uri=" + uri);
+      }
+
       if (extensionsLookupUri(uri, dummy))
+      {
          throw E57_EXCEPTION2(E57_ERROR_DUPLICATE_NAMESPACE_URI, "prefix=" + prefix + " uri=" + uri);;
+      }
 
       /// Append at end of list
       nameSpaces_.emplace_back(prefix, uri);
@@ -399,13 +403,17 @@ namespace e57 {
 
       /// Linear search for matching prefix
       std::vector<NameSpace>::const_iterator it;
-      for (it = nameSpaces_.begin(); it < nameSpaces_.end(); ++it) {
-         if (it->prefix == prefix) {
+
+      for (it = nameSpaces_.begin(); it < nameSpaces_.end(); ++it)
+      {
+         if (it->prefix == prefix)
+         {
             uri = it->uri;
-            return(true);
+            return true;
          }
       }
-      return(false);
+
+      return false;
    }
 
    bool ImageFileImpl::extensionsLookupUri(const ustring& uri, ustring& prefix) const
@@ -414,31 +422,38 @@ namespace e57 {
 
       /// Linear search for matching URI
       std::vector<NameSpace>::const_iterator it;
-      for (it = nameSpaces_.begin(); it < nameSpaces_.end(); ++it) {
-         if (it->uri == uri) {
+
+      for (it = nameSpaces_.begin(); it < nameSpaces_.end(); ++it)
+      {
+         if (it->uri == uri)
+         {
             prefix = it->prefix;
-            return(true);
+            return true;
          }
       }
-      return(false);
+
+      return false;
    }
 
    size_t ImageFileImpl::extensionsCount() const
    {
       checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
-      return(nameSpaces_.size());
+
+      return nameSpaces_.size();
    }
 
    ustring ImageFileImpl::extensionsPrefix(const size_t index) const
    {
       checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
-      return(nameSpaces_[index].prefix);  //??? throw e57 exception here if out of bounds?
+
+      return nameSpaces_[index].prefix;  //??? throw e57 exception here if out of bounds?
    }
 
    ustring ImageFileImpl::extensionsUri(const size_t index) const
    {
       checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
-      return(nameSpaces_[index].uri);  //??? throw e57 exception here if out of bounds?
+
+      return nameSpaces_[index].uri;  //??? throw e57 exception here if out of bounds?
    }
 
    bool ImageFileImpl::isElementNameExtended(const ustring& elementName)
@@ -447,19 +462,26 @@ namespace e57 {
 
       /// Make sure doesn't have any "/" in it
       size_t found = elementName.find_first_of('/');
+
       if (found != std::string::npos)
-         return(false);
+      {
+         return false;
+      }
 
       ustring prefix, localPart;
-      try {
+
+      try
+      {
          /// Throws if elementName bad
          elementNameParse(elementName, prefix, localPart);
-      } catch(E57Exception& /*ex*/) {
-         return(false);
+      }
+      catch(E57Exception& /*ex*/)
+      {
+         return false;
       }
 
       /// If get here, the name was good, so test if found a prefix part
-      return(prefix.length() > 0);
+      return (prefix.length() > 0);
    }
 
    bool ImageFileImpl::isElementNameLegal(const ustring& elementName, bool allowNumber)
@@ -467,17 +489,20 @@ namespace e57 {
 #ifdef E57_MAX_VERBOSE
       //cout << "isElementNameLegal elementName=""" << elementName << """" << endl;
 #endif
-      try {
+      try
+      {
          checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
 
          /// Throws if elementName bad
          checkElementNameLegal(elementName, allowNumber);
-      } catch(E57Exception& /*ex*/) {
-         return(false);
+      }
+      catch(E57Exception& /*ex*/)
+      {
+         return false;
       }
 
       /// If get here, the name was good
-      return(true);
+      return true;
    }
 
    bool ImageFileImpl::isPathNameLegal(const ustring& pathName)
@@ -485,32 +510,39 @@ namespace e57 {
 #ifdef E57_MAX_VERBOSE
       //cout << "isPathNameLegal elementName=""" << pathName << """" << endl;
 #endif
-      try {
+      try
+      {
          checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
 
          /// Throws if pathName bad
          pathNameCheckWellFormed(pathName);
-      } catch(E57Exception& /*ex*/) {
-         return(false);
+      }
+      catch(E57Exception& /*ex*/)
+      {
+         return false;
       }
 
       /// If get here, the name was good
-      return(true);
+      return true;
    }
 
    void ImageFileImpl::checkElementNameLegal(const ustring& elementName, bool allowNumber)
    {
       /// no checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__)
 
-      ustring prefix, localPart;
+      ustring prefix;
+      ustring localPart;
 
       /// Throws if bad elementName
       elementNameParse(elementName, prefix, localPart, allowNumber);
 
       /// If has prefix, it must be registered
       ustring uri;
+
       if (prefix.length() > 0 && !extensionsLookupPrefix(prefix, uri))
+      {
          throw E57_EXCEPTION2(E57_ERROR_BAD_PATH_NAME, "elementName=" + elementName + " prefix=" + prefix);
+      }
    }
 
    void ImageFileImpl::elementNameParse(const ustring& elementName, ustring& prefix, ustring& localPart, bool allowNumber)
@@ -523,17 +555,26 @@ namespace e57 {
 
       /// Empty name is bad
       if (len == 0)
+      {
          throw E57_EXCEPTION2(E57_ERROR_BAD_PATH_NAME, "elementName=" + elementName);
+      }
+
       unsigned char c = elementName[0];
 
       /// If allowing numeric element name, check if first char is digit
-      if (allowNumber && '0'<=c && c<='9') {
+      if (allowNumber && '0'<=c && c<='9')
+      {
          /// All remaining characters must be digits
-         for (size_t i = 1; i < len; i++) {
+         for (size_t i = 1; i < len; i++)
+         {
             c = elementName[i];
+
             if (!('0'<=c && c<='9'))
+            {
                throw E57_EXCEPTION2(E57_ERROR_BAD_PATH_NAME, "elementName=" + elementName);
+            }
          }
+
          return;
       }
 
@@ -541,35 +582,48 @@ namespace e57 {
       /// Don't test any part of a multi-byte code point sequence (c >= 128).
       /// Don't allow ':' as first char.
       if (c<128 && !(('a'<=c && c<='z') || ('A'<=c && c<='Z') || c=='_'))
+      {
          throw E57_EXCEPTION2(E57_ERROR_BAD_PATH_NAME, "elementName=" + elementName);
+      }
 
       /// If each following char is ASCII (<128), check for legality
       /// Don't test any part of a multi-byte code point sequence (c >= 128).
-      for (size_t i = 1; i < len; i++) {
+      for (size_t i = 1; i < len; i++)
+      {
          c = elementName[i];
+
          if (c<128 && !(('a'<=c && c<='z') || ('A'<=c && c<='Z') || c=='_' || c==':' || ('0'<=c && c<='9') || c=='-' || c=='.'))
+         {
             throw E57_EXCEPTION2(E57_ERROR_BAD_PATH_NAME, "elementName=" + elementName);
+         }
       }
 
       /// Check if has at least one colon, try to split it into prefix & localPart
       size_t found = elementName.find_first_of(':');
-      if (found != std::string::npos) {
+
+      if (found != std::string::npos)
+      {
          /// Check doesn't have two colons
          if (elementName.find_first_of(':', found+1) != std::string::npos)
+         {
             throw E57_EXCEPTION2(E57_ERROR_BAD_PATH_NAME, "elementName=" + elementName);
+         }
 
          /// Split element name at the colon
          /// ??? split before check first/subsequent char legal?
          prefix    = elementName.substr(0, found);
          localPart = elementName.substr(found+1);
 
-         if (prefix.length() == 0 || localPart.length() == 0) {
+         if (prefix.length() == 0 || localPart.length() == 0)
+         {
             throw E57_EXCEPTION2(E57_ERROR_BAD_PATH_NAME,
                                  "elementName=" + elementName +
                                  " prefix=" + prefix +
                                  " localPart=" + localPart);
          }
-      } else {
+      }
+      else
+      {
          prefix = "";
          localPart = elementName;
       }
@@ -580,8 +634,9 @@ namespace e57 {
       /// no checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__)
 
       /// Just call pathNameParse() which throws if not well formed
-      bool isRelative;
+      bool isRelative = false;
       std::vector<ustring> fields;
+
       pathNameParse(pathName, isRelative, fields);
    }
 
@@ -610,11 +665,13 @@ namespace e57 {
 
       /// Save strings in between each forward slash '/'
       /// Don't ignore whitespace
-      while (start < pathName.size()) {
+      while (start < pathName.size())
+      {
          size_t slash = pathName.find_first_of('/', start);
 
          /// Get element name from in between '/', check valid
          ustring elementName = pathName.substr(start, slash-start);
+
          if (!isElementNameLegal(elementName))
          {
             throw E57_EXCEPTION2(E57_ERROR_BAD_PATH_NAME, "pathName=" + pathName + " elementName=" + elementName);
@@ -624,7 +681,9 @@ namespace e57 {
          fields.push_back(elementName);
 
          if (slash == std::string::npos)
+         {
             break;
+         }
 
          /// Handle case when pathname ends in /, e.g. "/foo/", add empty field at end of list
          if (slash == pathName.size()-1)
@@ -639,7 +698,9 @@ namespace e57 {
 
       /// Empty relative path is not allowed
       if (isRelative && fields.empty())
+      {
          throw E57_EXCEPTION2(E57_ERROR_BAD_PATH_NAME, "pathName=" + pathName);
+      }
 
 #ifdef E57_MAX_VERBOSE
       std::cout << "pathNameParse returning: isRelative=" << isRelative << " fields.size()=" << fields.size() << " fields=";
@@ -673,9 +734,70 @@ namespace e57 {
       return path;
    }
 
+   void ImageFileImpl::readFileHeader(CheckedFile* file, E57FileHeader& header)
+   {
+#ifdef E57_DEBUG
+      /// Double check that compiler thinks sizeof header is what it is supposed to be
+      if (sizeof(E57FileHeader) != 48)
+      {
+         throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "headerSize=" + toString(sizeof(E57FileHeader)));
+      }
+#endif
+
+      /// Fetch the file header
+      file->read(reinterpret_cast<char*>(&header), sizeof(header));
+
+#ifdef E57_MAX_VERBOSE
+      header.dump();
+#endif
+
+      /// Check signature
+      if (strncmp(header.fileSignature, "ASTM-E57", 8) != 0)
+      {
+         throw E57_EXCEPTION2(E57_ERROR_BAD_FILE_SIGNATURE, "fileName="+file->fileName());
+      }
+
+      /// Check file version compatibility
+      if (header.majorVersion > E57_FORMAT_MAJOR)
+      {
+         throw E57_EXCEPTION2(E57_ERROR_UNKNOWN_FILE_VERSION,
+                              "fileName=" + file->fileName()
+                              + " header.majorVersion=" + toString(header.majorVersion)
+                              + " header.minorVersion=" + toString(header.minorVersion));
+      }
+
+      /// If is a prototype version (majorVersion==0), then minorVersion has to match too.
+      /// In production versions (majorVersion==E57_FORMAT_MAJOR), should be able to handle any minor version.
+      if (header.majorVersion == E57_FORMAT_MAJOR &&
+          header.minorVersion > E57_FORMAT_MINOR)
+      {
+         throw E57_EXCEPTION2(E57_ERROR_UNKNOWN_FILE_VERSION,
+                              "fileName=" + file->fileName()
+                              + " header.majorVersion=" + toString(header.majorVersion)
+                              + " header.minorVersion=" + toString(header.minorVersion));
+      }
+
+      /// Check if file length matches actual physical length
+      if (header.filePhysicalLength != file->length(CheckedFile::Physical))
+      {
+         throw E57_EXCEPTION2(E57_ERROR_BAD_FILE_LENGTH,
+                              "fileName=" + file->fileName()
+                              + " header.filePhysicalLength=" + toString(header.filePhysicalLength)
+                              + " file->length=" + toString(file->length(CheckedFile::Physical)));
+      }
+
+      /// Check that page size is correct constant
+      if (header.majorVersion != 0 &&
+          header.pageSize != CheckedFile::physicalPageSize)
+      {
+         throw E57_EXCEPTION2(E57_ERROR_BAD_FILE_LENGTH, "fileName=" + file->fileName());
+      }
+   }
+
    void ImageFileImpl::checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName) const
    {
-      if (!isOpen()) {
+      if (!isOpen())
+      {
          throw E57Exception(E57_ERROR_IMAGEFILE_NOT_OPEN,
                             "fileName=" + fileName(),
                             srcFileName,
@@ -705,34 +827,50 @@ namespace e57 {
       ///??? move to E57Utility?
 
       uint64_t stateCountMinus1 = maximum - minimum;
+
       unsigned log2 = 0;
-      if (stateCountMinus1 & 0xFFFFFFFF00000000LL) {
+
+      if (stateCountMinus1 & 0xFFFFFFFF00000000LL)
+      {
          stateCountMinus1 >>= 32;
          log2 += 32;
       }
-      if (stateCountMinus1 & 0xFFFF0000LL) {
+
+      if (stateCountMinus1 & 0xFFFF0000LL)
+      {
          stateCountMinus1 >>= 16;
          log2 += 16;
       }
-      if (stateCountMinus1 & 0xFF00LL) {
+
+      if (stateCountMinus1 & 0xFF00LL)
+      {
          stateCountMinus1 >>= 8;
          log2 += 8;
       }
-      if (stateCountMinus1 & 0xF0LL) {
+
+      if (stateCountMinus1 & 0xF0LL)
+      {
          stateCountMinus1 >>= 4;
          log2 += 4;
       }
-      if (stateCountMinus1 & 0xCLL) {
+
+      if (stateCountMinus1 & 0xCLL)
+      {
          stateCountMinus1 >>= 2;
          log2 += 2;
       }
-      if (stateCountMinus1 & 0x2LL) {
+
+      if (stateCountMinus1 & 0x2LL)
+      {
          stateCountMinus1 >>= 1;
          log2 += 1;
       }
-      if (stateCountMinus1 & 1LL)
-         log2++;
-      return(log2);
-   }
 
+      if (stateCountMinus1 & 1LL)
+      {
+         log2++;
+      }
+
+      return log2;
+   }
 }

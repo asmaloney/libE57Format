@@ -28,84 +28,73 @@
 
 #include "Common.h"
 
-namespace e57 {
-
-class ImageFileImpl;
-
-class SourceDestBufferImpl : public std::enable_shared_from_this<SourceDestBufferImpl>
+namespace e57
 {
-public:
-    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring &pathName, int8_t* b,   const size_t capacity, bool doConversion = false,
-                         bool doScaling = false, size_t stride = sizeof(int8_t));
-    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring &pathName, uint8_t* b,  const size_t capacity, bool doConversion = false,
-                         bool doScaling = false, size_t stride = sizeof(uint8_t));
-    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring &pathName, int16_t* b,  const size_t capacity, bool doConversion = false,
-                         bool doScaling = false, size_t stride = sizeof(int16_t));
-    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring &pathName, uint16_t* b, const size_t capacity, bool doConversion = false,
-                         bool doScaling = false, size_t stride = sizeof(uint16_t));
-    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring &pathName, int32_t* b,  const size_t capacity, bool doConversion = false,
-                         bool doScaling = false, size_t stride = sizeof(int32_t));
-    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring &pathName, uint32_t* b, const size_t capacity, bool doConversion = false,
-                         bool doScaling = false, size_t stride = sizeof(uint32_t));
-    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring &pathName, int64_t* b,  const size_t capacity, bool doConversion = false,
-                         bool doScaling = false, size_t stride = sizeof(int64_t));
-    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring &pathName, bool* b,     const size_t capacity, bool doConversion = false,
-                         bool doScaling = false, size_t stride = sizeof(bool));
-    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring &pathName, float* b,    const size_t capacity, bool doConversion = false,
-                         bool doScaling = false, size_t stride = sizeof(float));
-    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring &pathName, double* b,   const size_t capacity, bool doConversion = false,
-                         bool doScaling = false, size_t stride = sizeof(double));
-    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring &pathName, std::vector<ustring>* b);
+   class ImageFileImpl;
 
-    std::weak_ptr<ImageFileImpl> destImageFile() const { return destImageFile_; }
+   class SourceDestBufferImpl : public std::enable_shared_from_this<SourceDestBufferImpl>
+   {
+      public:
+         using DestImagePtr = std::weak_ptr<ImageFileImpl>;
 
-    ustring                 pathName()      const { return pathName_; }
-    MemoryRepresentation    memoryRepresentation() const { return memoryRepresentation_; }
-    void*                   base()          const { return base_; }
-    std::vector<ustring>*   ustrings()      const { return ustrings_; }
-    bool                    doConversion()  const { return doConversion_; }
-    bool                    doScaling()     const { return doScaling_; }
-    size_t                  stride()        const { return stride_; }
-    size_t                  capacity()      const { return capacity_; }
-    unsigned                nextIndex()     const { return nextIndex_; }
-    void                    rewind()        { nextIndex_= 0; }
+      public:
+         SourceDestBufferImpl( DestImagePtr destImageFile, const ustring &pathName,
+                               const size_t capacity, bool doConversion = false,
+                               bool doScaling = false );
 
-    int64_t         getNextInt64();
-    int64_t         getNextInt64(double scale, double offset);
-    float           getNextFloat();
-    double          getNextDouble();
-    ustring         getNextString();
-    void            setNextInt64(int64_t value);
-    void            setNextInt64(int64_t value, double scale, double offset);
-    void            setNextFloat(float value);
-    void            setNextDouble(double value);
-    void            setNextString(const ustring& value);
+         template<typename T>
+         void  setTypeInfo( T *base, size_t stride = sizeof(T) );
 
-    void            checkCompatible(const std::shared_ptr<SourceDestBufferImpl> &newBuf) const;
+         SourceDestBufferImpl( DestImagePtr destImageFile, const ustring &pathName, std::vector<ustring>* b );
+
+         DestImagePtr destImageFile() const { return destImageFile_; }
+
+         ustring                 pathName()      const { return pathName_; }
+         MemoryRepresentation    memoryRepresentation() const { return memoryRepresentation_; }
+         void*                   base()          const { return base_; }
+         std::vector<ustring>*   ustrings()      const { return ustrings_; }
+         bool                    doConversion()  const { return doConversion_; }
+         bool                    doScaling()     const { return doScaling_; }
+         size_t                  stride()        const { return stride_; }
+         size_t                  capacity()      const { return capacity_; }
+         unsigned                nextIndex()     const { return nextIndex_; }
+         void                    rewind()        { nextIndex_= 0; }
+
+         int64_t         getNextInt64();
+         int64_t         getNextInt64(double scale, double offset);
+         float           getNextFloat();
+         double          getNextDouble();
+         ustring         getNextString();
+         void            setNextInt64(int64_t value);
+         void            setNextInt64(int64_t value, double scale, double offset);
+         void            setNextFloat(float value);
+         void            setNextDouble(double value);
+         void            setNextString(const ustring& value);
+
+         void            checkCompatible( const std::shared_ptr<SourceDestBufferImpl> &newBuf ) const;
 
 #ifdef E57_DEBUG
-    void            dump(int indent = 0, std::ostream& os = std::cout);
+         void            dump( int indent = 0, std::ostream& os = std::cout );
 #endif
 
-private:
-    template<typename T>
-    void _setNextReal( T inValue );
+      private:
+         template<typename T>
+         void _setNextReal( T inValue );
 
-    void                    checkState_() const;  /// Common routine to check that constructor arguments were ok, throws if not
+         void checkState_() const;  /// Common routine to check that constructor arguments were ok, throws if not
 
-    //??? verify alignment
-    std::weak_ptr<ImageFileImpl> destImageFile_;
-    ustring                 pathName_;      /// Pathname from CompressedVectorNode to source/dest object, e.g. "Indices/0"
-    MemoryRepresentation    memoryRepresentation_;    /// Type of element (e.g. E57_INT8, E57_UINT64, DOUBLE...)
-    char*                   base_;          /// Address of first element, for non-ustring buffers
-    size_t                  capacity_;      /// Total number of elements in array
-    bool                    doConversion_;  /// Convert memory representation to/from disk representation
-    bool                    doScaling_;     /// Apply scale factor for integer type
-    size_t                  stride_;        /// Distance between each element (different than size_ if elements not contiguous)
-    unsigned                nextIndex_;     /// Number of elements that have been set (dest buffer) or read (source buffer) since rewind().
-    std::vector<ustring>*   ustrings_;      /// Optional array of ustrings (used if memoryRepresentation_==E57_USTRING) ???ownership
-};
-
+         //??? verify alignment
+         DestImagePtr            destImageFile_;
+         ustring                 pathName_;              /// Pathname from CompressedVectorNode to source/dest object, e.g. "Indices/0"
+         MemoryRepresentation    memoryRepresentation_;  /// Type of element (e.g. E57_INT8, E57_UINT64, DOUBLE...)
+         char*                   base_ = nullptr;        /// Address of first element, for non-ustring buffers
+         size_t                  capacity_ = 0;          /// Total number of elements in array
+         bool                    doConversion_ = false;  /// Convert memory representation to/from disk representation
+         bool                    doScaling_ = false;     /// Apply scale factor for integer type
+         size_t                  stride_ = 0;            /// Distance between each element (different than size_ if elements not contiguous)
+         unsigned                nextIndex_ = 0;         /// Number of elements that have been set (dest buffer) or read (source buffer) since rewind().
+         std::vector<ustring>*   ustrings_ = nullptr;    /// Optional array of ustrings (used if memoryRepresentation_==E57_USTRING) ???ownership
+   };
 }
 
 #endif

@@ -736,13 +736,8 @@ namespace e57
 
    void ImageFileImpl::readFileHeader(CheckedFile* file, E57FileHeader& header)
    {
-#ifdef E57_DEBUG
       /// Double check that compiler thinks sizeof header is what it is supposed to be
-      if (sizeof(E57FileHeader) != 48)
-      {
-         throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "headerSize=" + toString(sizeof(E57FileHeader)));
-      }
-#endif
+      static_assert( sizeof( E57FileHeader ) == 48, "Unexpected size of E57FileHeader" );
 
       /// Fetch the file header
       file->read(reinterpret_cast<char*>(&header), sizeof(header));

@@ -316,10 +316,7 @@ PacketLock::~PacketLock()
 DataPacketHeader::DataPacketHeader()
 {
    /// Double check that packet struct is correct length.  Watch out for RTTI increasing the size.
-   if (sizeof(*this) != 6)
-   {
-      throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "size=" + toString(sizeof(*this)));
-   }
+   static_assert( sizeof( DataPacketHeader ) == 6, "Unexpected size of DataPacketHeader" );
 }
 
 void DataPacketHeader::reset()
@@ -383,10 +380,7 @@ void DataPacketHeader::dump(int indent, std::ostream& os) const
 DataPacket::DataPacket()
 {
    /// Double check that packet struct is correct length.  Watch out for RTTI increasing the size.
-   if (sizeof(*this) != 64*1024)
-   {
-      throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "size=" + toString(sizeof(*this)));
-   }
+   static_assert( sizeof( DataPacket ) == 64*1024, "Unexpected size of DataPacket" );
 }
 
 void DataPacket::verify(unsigned bufferLength) const

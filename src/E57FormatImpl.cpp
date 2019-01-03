@@ -1213,11 +1213,8 @@ void BlobNodeImpl::dump(int indent, ostream& os) const
 
 CompressedVectorSectionHeader::CompressedVectorSectionHeader()
 {
-    /// Double check that header is correct length.  Watch out for RTTI increasing the size.
-    if (sizeof(*this) != 32)
-    {
-       throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "size=" + toString(sizeof(*this)));
-    }
+   /// Double check that header is correct length.  Watch out for RTTI increasing the size.
+   static_assert( sizeof( CompressedVectorSectionHeader ) == 32, "Unexpected size of CompressedVectorSectionHeader" );
 }
 
 void CompressedVectorSectionHeader::verify(uint64_t filePhysicalSize)

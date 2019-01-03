@@ -62,9 +62,9 @@ namespace e57
 #ifdef E57_DEBUG
    void E57FileHeader::dump(int indent, std::ostream& os) const
    {
-      os << space(indent) << "fileSignature:      "
-         << fileSignature[0] << fileSignature[1] << fileSignature[2] << fileSignature[3]
-         << fileSignature[4] << fileSignature[5] << fileSignature[6] << fileSignature[7] << std::endl;
+      os << space(indent) << "fileSignature:      ";
+      os.write( fileSignature, sizeof( fileSignature ) );
+      os << std::endl;
       os << space(indent) << "majorVersion:       " << majorVersion << std::endl;
       os << space(indent) << "minorVersion:       " << minorVersion << std::endl;
       os << space(indent) << "filePhysicalLength: " << filePhysicalLength << std::endl;

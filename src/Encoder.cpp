@@ -25,6 +25,7 @@
  */
 
 #include <cstring>
+#include <algorithm>
 
 #include "Encoder.h"
 #include "E57FormatImpl.h"

@@ -27,11 +27,6 @@
 #
 # Requirements:
 #     Xerces library: http://xerces.apache.org/
-# Notes:
-#     Since there is not standard cmake module to find the xerces library
-#     we provide one with this distribution. It should be able to find
-#     the library from the XERCES_ROOT cmake variable. Standard layout, as
-#     with the binary packages from apache is assumed.
 # If you find any errors or have suggestion to improve the build script:
 # patches are most welcome! Please send them to the development mailing list.
 
@@ -68,18 +63,20 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     )
 endif(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 
-find_package(Threads REQUIRED)
+find_package( Threads REQUIRED )
 
-include(FindXercesC)
-find_package(XercesC REQUIRED)
+# Xerces-c
+find_package( XercesC )
 
-set(XML_INCLUDE_DIRS ${XercesC_INCLUDE_DIR})
-set(XML_LIBRARIES ${XercesC_LIBRARY})
+if ( NOT XercesC_FOUND )
+    set( XercesC_INCLUDE_DIR "" CACHE PATH "Xerces include directory" )
+endif()
+
+set( XML_INCLUDE_DIRS ${XercesC_INCLUDE_DIR} )
 
 if (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
     add_definitions(-DLINUX)
     find_package(ICU REQUIRED)
-    set(XML_LIBRARIES ${XML_LIBRARIES} ${ICU_LIBRARIES})
     set(XML_INCLUDE_DIRS ${XML_INCLUDE_DIRS} ${ICU_INCLUDE_DIRS})
 elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
     add_definitions(-DMACOS)
@@ -87,7 +84,6 @@ elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
     add_definitions(-DWINDOWS)
 endif()
 
-add_definitions(-DXERCES_STATIC_LIBRARY)
 add_definitions(-DREVISION_ID="${PROJECT_NAME}-${${PROJECT_NAME}_MAJOR_VERSION}.${${PROJECT_NAME}_MINOR_VERSION}-${${PROJECT_NAME}_BUILD_TAG}")
 
 include_directories(

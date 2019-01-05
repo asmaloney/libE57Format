@@ -24,6 +24,7 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
+#include <algorithm>
 #include <cstring>
 
 #include "Decoder.h"

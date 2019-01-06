@@ -70,15 +70,11 @@ endif(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 
 find_package(Threads REQUIRED)
 
-if (${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
-	set( XercesC_INCLUDE_DIR "" CACHE PATH "Xerces include directory" )
-else()
-	include(FindXercesC)
-	find_package(XercesC REQUIRED)
-endif()
+include(FindXercesC)
+find_package(XercesC REQUIRED)
 
 set(XML_INCLUDE_DIRS ${XercesC_INCLUDE_DIR})
-#set(XML_LIBRARIES ${XercesC_LIBRARY})
+set(XML_LIBRARIES ${XercesC_LIBRARY})
 
 if (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
     add_definitions(-DLINUX)

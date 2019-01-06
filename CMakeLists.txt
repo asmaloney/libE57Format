@@ -72,6 +72,14 @@ if ( NOT XercesC_FOUND )
     set( XercesC_INCLUDE_DIR "" CACHE PATH "Xerces include directory" )
 endif()
 
+if ( WIN32 )
+    option( USING_STATIC_XERCES "Turn on if you are linking with Xerces as a static lib" OFF )
+
+    if ( USING_STATIC_XERCES )
+        add_definitions( -DXERCES_STATIC_LIBRARY )
+    endif()
+endif()
+
 set( XML_INCLUDE_DIRS ${XercesC_INCLUDE_DIR} )
 
 if (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")

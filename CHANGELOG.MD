@@ -1,12 +1,25 @@
 libE57Format
 ==
-- v2.0 (not yet released) (initial release)
+- v2.0 (06 Jan 2019)
   - forked from E57RefImpl
   - removed all but the main sources for reading and writing E57 files
+  - now requires C++11
+  - now requires cmake 3.1+
+  - no longer uses BOOST
   - multiple fixes for compilation on macOS
-  - removed BOOST requirement
-  - require C++11
-  
+  - fix a couple of fallthrough bugs which would result in undefined behaviour
+  - turn off `E57_MAX_DEBUG` by default
+  - improve file read times
+  - add a checksum policy (see _ReadChecksumPolicy_ in *E57Format.h*) so the library user can decide how frequently to check them
+  - remove "big endian" byte swap code (not sure it was working and no way to test)
+  - lots and lots of code cleanups
+    - refactored the code into multiple files
+    - removed unused macros and code
+    - remove non-useful comments
+    - add proper initialization of class and struct members
+    - modernize using c++11
+  - [Windows] add cmake option ()`USING_STATIC_XERCES`) to tell the build if you are using a static Xerces lib
+
 E57RefImpl
 ==
 

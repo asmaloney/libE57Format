@@ -10,6 +10,9 @@ The original source is from [E57RefImpl 1.1.332](https://sourceforge.net/project
 
 This version also removes the dependency on [Boost](http://www.boost.org/) and requires C++11.
 
+Many, many other changes were made prior to the first release of this fork. See the [CHANGELOG](CHANGELOG.md) and git history for details.
+
+
 Why Fork?
 --
 
@@ -19,7 +22,7 @@ I changed the name of the project so that it is not confused with the **E57RefIm
 
 I have also changed the main include file's name from `E57Foundation.h` to `E57Format.h` to make sure there is no inclusion confusion.
 
-Versions of **libE57Format** will start at 2.0.
+Versions of **libE57Format** start at 2.0.
 
 Tools
 --

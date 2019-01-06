@@ -84,6 +84,7 @@ elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
     add_definitions(-DWINDOWS)
 endif()
 
+add_definitions(-DXERCES_STATIC_LIBRARY)
 add_definitions(-DREVISION_ID="${PROJECT_NAME}-${${PROJECT_NAME}_MAJOR_VERSION}.${${PROJECT_NAME}_MINOR_VERSION}-${${PROJECT_NAME}_BUILD_TAG}")
 
 include_directories(

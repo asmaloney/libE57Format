@@ -46,6 +46,7 @@ project(E57Format)
 # developer adjustable version numbers
 set(${PROJECT_NAME}_MAJOR_VERSION 2)
 set(${PROJECT_NAME}_MINOR_VERSION 0)
+set(${PROJECT_NAME}_PATCH_VERSION 1)
 
 include(Tags)
 
@@ -92,7 +93,7 @@ elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
     add_definitions(-DWINDOWS)
 endif()
 
-add_definitions(-DREVISION_ID="${PROJECT_NAME}-${${PROJECT_NAME}_MAJOR_VERSION}.${${PROJECT_NAME}_MINOR_VERSION}-${${PROJECT_NAME}_BUILD_TAG}")
+add_definitions(-DREVISION_ID="${PROJECT_NAME}-${${PROJECT_NAME}_MAJOR_VERSION}.${${PROJECT_NAME}_MINOR_VERSION}.${${PROJECT_NAME}_PATCH_VERSION}-${${PROJECT_NAME}_BUILD_TAG}")
 
 include_directories(
     ${PROJECT_BINARY_DIR}/include

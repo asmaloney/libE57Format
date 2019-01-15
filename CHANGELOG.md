@@ -1,5 +1,9 @@
 libE57Format
 ==
+- v2.0.1 (15 Jan 2019)
+  - writing files was broken and would produce the following error:
+    Error: bad API function argument provided by user (E57_ERROR_BAD_API_ARGUMENT) (ImageFileImpl.cpp line 109)
+    
 - v2.0 (06 Jan 2019)
   - forked from E57RefImpl
   - removed all but the main sources for reading and writing E57 files

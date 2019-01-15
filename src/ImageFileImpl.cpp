@@ -104,7 +104,7 @@ namespace e57
       // Accept "w" or "r" modes
       isWriter_ = (mode == "w");
 
-      if (mode != "r")
+      if ( !isWriter_ && (mode != "r") )
       {
          throw E57_EXCEPTION2(E57_ERROR_BAD_API_ARGUMENT, "mode=" + ustring(mode));
       }

@@ -45,7 +45,7 @@ SourceDestBufferImpl::SourceDestBufferImpl( DestImagePtr destImageFile, const us
 template<typename T>
 void SourceDestBufferImpl::setTypeInfo( T *base, size_t stride )
 {
-   static_assert( std::is_integral<T>::value || std::is_floating_point<T>::value, "Integral or flosting point required." );
+   static_assert( std::is_integral<T>::value || std::is_floating_point<T>::value, "Integral or floating point required." );
 
    base_ = reinterpret_cast<char*>( base );
    stride_ = stride;

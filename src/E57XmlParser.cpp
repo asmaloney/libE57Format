@@ -224,7 +224,7 @@ void E57XmlParser::ParseInfo::dump(int indent, ostream& os) const
 //=============================================================================
 // E57XmlParser
 
-E57XmlParser::E57XmlParser(std::shared_ptr<ImageFileImpl> imf)
+E57XmlParser::E57XmlParser(ImageFileImplSharedPtr imf)
 : imf_(imf),
   xmlReader( nullptr )
 {
@@ -583,8 +583,10 @@ void E57XmlParser::endElement(const XMLCh* const uri,
 #endif
 
     /// We should now have all the info we need to create the node
-    shared_ptr<NodeImpl> current_ni;
-    switch (pi.nodeType) {
+    NodeImplSharedPtr current_ni;
+
+    switch (pi.nodeType)
+    {
         case E57_STRUCTURE:
         case E57_VECTOR:
             current_ni = pi.container_ni;
@@ -659,7 +661,8 @@ void E57XmlParser::endElement(const XMLCh* const uri,
     }
 
     /// Get next level up node (when entered function), which should be a container.
-    shared_ptr<NodeImpl> parent_ni = stack_.top().container_ni;
+    NodeImplSharedPtr parent_ni = stack_.top().container_ni;
+
     if (!parent_ni) {
         throw E57_EXCEPTION2(E57_ERROR_BAD_XML_FORMAT,
                              "fileName=" + imf_->fileName()

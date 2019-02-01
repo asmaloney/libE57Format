@@ -37,23 +37,23 @@ public:
     ~StructureNodeImpl()  override = default;
 
     NodeType    type() const override;
-    bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni) override;
+    bool        isTypeEquivalent(NodeImplSharedPtr ni) override;
     bool        isDefined(const ustring& pathName) override;
     void        setAttachedRecursive() override;
 
     virtual int64_t     childCount() const;
 
-    virtual std::shared_ptr<NodeImpl>  get(int64_t index);
-    std::shared_ptr<NodeImpl>          get(const ustring& pathName) override;
+    virtual NodeImplSharedPtr  get(int64_t index);
+    NodeImplSharedPtr          get(const ustring& pathName) override;
 
-    virtual void  set(int64_t index, std::shared_ptr<NodeImpl> ni);
-    void          set(const ustring& pathName, std::shared_ptr<NodeImpl> ni, bool autoPathCreate = false) override;
-    void          set(const std::vector<ustring>& fields, unsigned level, std::shared_ptr<NodeImpl> ni, bool autoPathCreate = false) override;
-    virtual void  append(std::shared_ptr<NodeImpl> ni);
+    virtual void  set(int64_t index, NodeImplSharedPtr ni);
+    void          set(const ustring& pathName, NodeImplSharedPtr ni, bool autoPathCreate = false) override;
+    void          set(const std::vector<ustring>& fields, unsigned level, NodeImplSharedPtr ni, bool autoPathCreate = false) override;
+    virtual void  append(NodeImplSharedPtr ni);
 
-    void        checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin) override;
+    void        checkLeavesInSet(const std::set<ustring>& pathNames, NodeImplSharedPtr origin) override;
 
-    void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) override;
+    void        writeXml(ImageFileImplSharedPtr imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) override;
 
 #ifdef E57_DEBUG
     void    dump(int indent = 0, std::ostream& os = std::cout) const override;
@@ -61,9 +61,9 @@ public:
 
 protected:
     friend class CompressedVectorReaderImpl;
-    std::shared_ptr<NodeImpl> lookup(const ustring& pathName) override;
+    NodeImplSharedPtr lookup(const ustring& pathName) override;
 
-    std::vector<std::shared_ptr<NodeImpl> > children_;
+    std::vector<NodeImplSharedPtr> children_;
 };
 
 }

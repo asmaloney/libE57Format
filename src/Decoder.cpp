@@ -44,9 +44,9 @@ shared_ptr<Decoder> Decoder::DecoderFactory(unsigned bytestreamNumber, //!!! nam
    //!!! verify single dbuf
 
    /// Get node we are going to decode from the CompressedVector's prototype
-   shared_ptr<NodeImpl> prototype = cVector->getPrototype();
+   NodeImplSharedPtr prototype = cVector->getPrototype();
    ustring path = dbufs.at(0).pathName();
-   shared_ptr<NodeImpl> decodeNode = prototype->get(path);
+   NodeImplSharedPtr decodeNode = prototype->get(path);
 
 #ifdef E57_MAX_VERBOSE
    cout << "Node to decode:" << endl; //???
@@ -66,7 +66,7 @@ shared_ptr<Decoder> Decoder::DecoderFactory(unsigned bytestreamNumber, //!!! nam
          }
 
          /// Get pointer to parent ImageFileImpl, to call bitsNeeded()
-         shared_ptr<ImageFileImpl> imf(decodeNode->destImageFile_);  //??? should be function for this,  imf->parentFile()  --> ImageFile?
+         ImageFileImplSharedPtr imf(decodeNode->destImageFile_);  //??? should be function for this,  imf->parentFile()  --> ImageFile?
 
          unsigned bitsPerRecord = imf->bitsNeeded(ini->minimum(), ini->maximum());
 
@@ -118,7 +118,7 @@ shared_ptr<Decoder> Decoder::DecoderFactory(unsigned bytestreamNumber, //!!! nam
          }
 
          /// Get pointer to parent ImageFileImpl, to call bitsNeeded()
-         shared_ptr<ImageFileImpl> imf(decodeNode->destImageFile_);  //??? should be function for this,  imf->parentFile()  --> ImageFile?
+         ImageFileImplSharedPtr imf(decodeNode->destImageFile_);  //??? should be function for this,  imf->parentFile()  --> ImageFile?
 
          unsigned bitsPerRecord = imf->bitsNeeded(sini->minimum(), sini->maximum());
 
@@ -594,7 +594,7 @@ BitpackIntegerDecoder<RegisterT>::BitpackIntegerDecoder(bool isScaledInteger, un
      offset_( offset )
 {
    /// Get pointer to parent ImageFileImpl
-   shared_ptr<ImageFileImpl> imf(dbuf.impl()->destImageFile());  //??? should be function for this,  imf->parentFile()  --> ImageFile?
+   ImageFileImplSharedPtr imf(dbuf.impl()->destImageFile());  //??? should be function for this,  imf->parentFile()  --> ImageFile?
 
    bitsPerRecord_      = imf->bitsNeeded(minimum_, maximum_);
    destBitMask_        = (bitsPerRecord_==64) ? ~0 : (1ULL<<bitsPerRecord_)-1;

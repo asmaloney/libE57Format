@@ -199,12 +199,12 @@ void SourceDestBufferImpl::checkState_() const
 {
     /// Implement checkImageFileOpen functionality for SourceDestBufferImpl ctors
     /// Throw an exception if destImageFile (destImageFile_) isn't open
-    shared_ptr<ImageFileImpl> destImageFile(destImageFile_);
+    ImageFileImplSharedPtr destImageFile(destImageFile_);
     if (!destImageFile->isOpen())
         throw E57_EXCEPTION2(E57_ERROR_IMAGEFILE_NOT_OPEN, "fileName=" + destImageFile->fileName());
 
     /// Check pathName is well formed (can't verify path is defined until associate sdbuffer with CompressedVector later)
-    shared_ptr<ImageFileImpl> imf(destImageFile_);
+    ImageFileImplSharedPtr imf(destImageFile_);
     imf->pathNameCheckWellFormed(pathName_);
 
     if (memoryRepresentation_ != E57_USTRING) {

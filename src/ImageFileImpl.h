@@ -38,7 +38,6 @@ namespace e57
    struct E57FileHeader;
    struct NameSpace;
 
-
    class ImageFileImpl : public std::enable_shared_from_this<ImageFileImpl>
    {
       public:

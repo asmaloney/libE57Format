@@ -50,9 +50,9 @@ shared_ptr<Encoder> Encoder::EncoderFactory(unsigned bytestreamNumber,
    SourceDestBuffer sbuf = sbufs.at(0);
 
    /// Get node we are going to encode from the CompressedVector's prototype
-   shared_ptr<NodeImpl> prototype = cVector->getPrototype();
+   NodeImplSharedPtr prototype = cVector->getPrototype();
    ustring path = sbuf.pathName();
-   shared_ptr<NodeImpl> encodeNode = prototype->get(path);
+   NodeImplSharedPtr encodeNode = prototype->get(path);
 
 #ifdef E57_MAX_VERBOSE
    cout << "Node to encode:" << endl; //???
@@ -69,7 +69,7 @@ shared_ptr<Encoder> Encoder::EncoderFactory(unsigned bytestreamNumber,
          }
 
          /// Get pointer to parent ImageFileImpl, to call bitsNeeded()
-         shared_ptr<ImageFileImpl> imf(encodeNode->destImageFile_);  //??? should be function for this,  imf->parentFile()  --> ImageFile?
+         ImageFileImplSharedPtr imf(encodeNode->destImageFile_);  //??? should be function for this,  imf->parentFile()  --> ImageFile?
 
          unsigned bitsPerRecord = imf->bitsNeeded(ini->minimum(), ini->maximum());
 
@@ -119,7 +119,7 @@ shared_ptr<Encoder> Encoder::EncoderFactory(unsigned bytestreamNumber,
             throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "elementName=" + encodeNode->elementName());
 
          /// Get pointer to parent ImageFileImpl, to call bitsNeeded()
-         shared_ptr<ImageFileImpl> imf(encodeNode->destImageFile_);  //??? should be function for this,  imf->parentFile()  --> ImageFile?
+         ImageFileImplSharedPtr imf(encodeNode->destImageFile_);  //??? should be function for this,  imf->parentFile()  --> ImageFile?
 
          unsigned bitsPerRecord = imf->bitsNeeded(sini->minimum(), sini->maximum());
 
@@ -582,7 +582,7 @@ BitpackIntegerEncoder<RegisterT>::BitpackIntegerEncoder(bool isScaledInteger, un
    : BitpackEncoder(bytestreamNumber, sbuf, outputMaxSize, sizeof(RegisterT))
 {
    /// Get pointer to parent ImageFileImpl
-   shared_ptr<ImageFileImpl> imf(sbuf.impl()->destImageFile());  //??? should be function for this,  imf->parentFile()  --> ImageFile?
+   ImageFileImplSharedPtr imf(sbuf.impl()->destImageFile());  //??? should be function for this,  imf->parentFile()  --> ImageFile?
 
    isScaledInteger_    = isScaledInteger;
    minimum_            = minimum;

@@ -46,7 +46,7 @@ namespace e57 {
    class E57XmlParser : public DefaultHandler
    {
       public:
-         E57XmlParser(std::shared_ptr<ImageFileImpl> imf);
+         E57XmlParser(ImageFileImplSharedPtr imf);
          ~E57XmlParser() override;
 
          void init();
@@ -70,7 +70,7 @@ namespace e57 {
          ustring lookupAttribute(const Attributes& attributes, const XMLCh* attribute_name);
          bool    isAttributeDefined(const Attributes& attributes, const XMLCh* attribute_name);
 
-         std::shared_ptr<ImageFileImpl> imf_;   /// Image file we are reading
+         ImageFileImplSharedPtr imf_;   /// Image file we are reading
 
          struct ParseInfo {
                /// All the fields need to remember while parsing the XML
@@ -91,7 +91,7 @@ namespace e57 {
                ustring         childText;      // used by all types, accumlates all child text between tags
 
                /// Holds node for Structure, Vector, and CompressedVector so can append child elements
-               std::shared_ptr<NodeImpl> container_ni;
+               NodeImplSharedPtr container_ni;
 
                ParseInfo();  // default ctor
                void    dump(int indent = 0, std::ostream& os = std::cout) const;

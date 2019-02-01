@@ -95,7 +95,7 @@ VectorNodeImpl::VectorNodeImpl(weak_ptr<ImageFileImpl> destImageFile, bool allow
     /// don't checkImageFileOpen, StructNodeImpl() will do it
 }
 
-bool VectorNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
+bool VectorNodeImpl::isTypeEquivalent(NodeImplSharedPtr ni)
 {
     /// don't checkImageFileOpen
 
@@ -132,7 +132,7 @@ bool VectorNodeImpl::allowHeteroChildren() const
     return allowHeteroChildren_;
 }
 
-void VectorNodeImpl::set(int64_t index64, shared_ptr<NodeImpl> ni)
+void VectorNodeImpl::set(int64_t index64, NodeImplSharedPtr ni)
 {
     checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
     if (!allowHeteroChildren_) {
@@ -150,7 +150,7 @@ void VectorNodeImpl::set(int64_t index64, shared_ptr<NodeImpl> ni)
     StructureNodeImpl::set(index64, ni);
 }
 
-void VectorNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName)
+void VectorNodeImpl::writeXml(ImageFileImplSharedPtr imf, CheckedFile& cf, int indent, const char* forcedFieldName)
 {
     /// don't checkImageFileOpen
 
@@ -189,7 +189,7 @@ CompressedVectorNodeImpl::CompressedVectorNodeImpl(weak_ptr<ImageFileImpl> destI
     // don't checkImageFileOpen, NodeImpl() will do it
 }
 
-void CompressedVectorNodeImpl::setPrototype(const shared_ptr<NodeImpl> &prototype)
+void CompressedVectorNodeImpl::setPrototype(const NodeImplSharedPtr &prototype)
 {
     // don't checkImageFileOpen, ctor did it
 
@@ -208,8 +208,8 @@ void CompressedVectorNodeImpl::setPrototype(const shared_ptr<NodeImpl> &prototyp
     }
 
     /// Verify that prototype is destined for same ImageFile as this is
-    shared_ptr<ImageFileImpl> thisDest(destImageFile());
-    shared_ptr<ImageFileImpl> prototypeDest(prototype->destImageFile());
+    ImageFileImplSharedPtr thisDest(destImageFile());
+    ImageFileImplSharedPtr prototypeDest(prototype->destImageFile());
     if (thisDest != prototypeDest) {
         throw E57_EXCEPTION2(E57_ERROR_DIFFERENT_DEST_IMAGEFILE,
                              "this->destImageFile" + thisDest->fileName()
@@ -223,7 +223,7 @@ void CompressedVectorNodeImpl::setPrototype(const shared_ptr<NodeImpl> &prototyp
     /// This means that prototype is a root node (has no parent).
 }
 
-shared_ptr<NodeImpl> CompressedVectorNodeImpl::getPrototype()
+NodeImplSharedPtr CompressedVectorNodeImpl::getPrototype()
 {
     checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
     return(prototype_);  //??? check defined
@@ -247,8 +247,8 @@ void CompressedVectorNodeImpl::setCodecs(const shared_ptr<VectorNodeImpl> &codec
     }
 
     /// Verify that codecs is destined for same ImageFile as this is
-    shared_ptr<ImageFileImpl> thisDest(destImageFile());
-    shared_ptr<ImageFileImpl> codecsDest(codecs->destImageFile());
+    ImageFileImplSharedPtr thisDest(destImageFile());
+    ImageFileImplSharedPtr codecsDest(codecs->destImageFile());
     if (thisDest != codecsDest) {
         throw E57_EXCEPTION2(E57_ERROR_DIFFERENT_DEST_IMAGEFILE,
                              "this->destImageFile" + thisDest->fileName()
@@ -267,7 +267,7 @@ shared_ptr<VectorNodeImpl> CompressedVectorNodeImpl::getCodecs()
     return(codecs_);  //??? check defined
 }
 
-bool CompressedVectorNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
+bool CompressedVectorNodeImpl::isTypeEquivalent(NodeImplSharedPtr ni)
 {
     // don't checkImageFileOpen
 
@@ -320,7 +320,7 @@ int64_t CompressedVectorNodeImpl::childCount()
     return(recordCount_);
 }
 
-void CompressedVectorNodeImpl::checkLeavesInSet(const std::set<ustring>& /*pathNames*/, shared_ptr<NodeImpl> /*origin*/)
+void CompressedVectorNodeImpl::checkLeavesInSet(const std::set<ustring>& /*pathNames*/, NodeImplSharedPtr /*origin*/)
 {
     // don't checkImageFileOpen
 
@@ -328,7 +328,7 @@ void CompressedVectorNodeImpl::checkLeavesInSet(const std::set<ustring>& /*pathN
     throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "this->pathName=" + this->pathName());
 }
 
-void CompressedVectorNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName)
+void CompressedVectorNodeImpl::writeXml(ImageFileImplSharedPtr imf, CheckedFile& cf, int indent, const char* forcedFieldName)
 {
     // don't checkImageFileOpen
 
@@ -375,7 +375,7 @@ shared_ptr<CompressedVectorWriterImpl> CompressedVectorNodeImpl::writer(vector<S
 {
     checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
 
-    shared_ptr<ImageFileImpl> destImageFile(destImageFile_);
+    ImageFileImplSharedPtr destImageFile(destImageFile_);
 
     /// Check don't have any writers/readers open for this ImageFile
     if (destImageFile->writerCount() > 0) {
@@ -402,7 +402,7 @@ shared_ptr<CompressedVectorWriterImpl> CompressedVectorNodeImpl::writer(vector<S
         throw E57_EXCEPTION2(E57_ERROR_NODE_UNATTACHED, "fileName=" + destImageFile->fileName());
 
     /// Get pointer to me (really shared_ptr<CompressedVectorNodeImpl>)
-    shared_ptr<NodeImpl> ni(shared_from_this());
+    NodeImplSharedPtr ni(shared_from_this());
 
     /// Downcast pointer to right type
     shared_ptr<CompressedVectorNodeImpl> cai(dynamic_pointer_cast<CompressedVectorNodeImpl>(ni));
@@ -418,7 +418,7 @@ shared_ptr<CompressedVectorReaderImpl> CompressedVectorNodeImpl::reader(vector<S
 {
     checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
 
-    shared_ptr<ImageFileImpl> destImageFile(destImageFile_);
+    ImageFileImplSharedPtr destImageFile(destImageFile_);
 
     /// Check don't have any writers/readers open for this ImageFile
     if (destImageFile->writerCount() > 0) {
@@ -443,7 +443,7 @@ shared_ptr<CompressedVectorReaderImpl> CompressedVectorNodeImpl::reader(vector<S
         throw E57_EXCEPTION2(E57_ERROR_NODE_UNATTACHED, "fileName=" + destImageFile->fileName());
 
     /// Get pointer to me (really shared_ptr<CompressedVectorNodeImpl>)
-    shared_ptr<NodeImpl> ni(shared_from_this());
+    NodeImplSharedPtr ni(shared_from_this());
 #ifdef E57_MAX_VERBOSE
     //cout << "constructing CAReader, ni:" << endl;
     //ni->dump(4);
@@ -482,7 +482,7 @@ IntegerNodeImpl::IntegerNodeImpl(weak_ptr<ImageFileImpl> destImageFile, int64_t 
     }
 }
 
-bool IntegerNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
+bool IntegerNodeImpl::isTypeEquivalent(NodeImplSharedPtr ni)
 {
     // don't checkImageFileOpen
 
@@ -535,7 +535,7 @@ int64_t IntegerNodeImpl::maximum()
     return(maximum_);
 }
 
-void IntegerNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, shared_ptr<NodeImpl> origin)
+void IntegerNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, NodeImplSharedPtr origin)
 {
     // don't checkImageFileOpen
 
@@ -544,7 +544,7 @@ void IntegerNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, share
         throw E57_EXCEPTION2(E57_ERROR_NO_BUFFER_FOR_ELEMENT, "this->pathName=" + this->pathName());
 }
 
-void IntegerNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> /*imf???*/, CheckedFile& cf, int indent, const char* forcedFieldName)
+void IntegerNodeImpl::writeXml(ImageFileImplSharedPtr /*imf???*/, CheckedFile& cf, int indent, const char* forcedFieldName)
 {
     // don't checkImageFileOpen
 
@@ -622,7 +622,7 @@ ScaledIntegerNodeImpl::ScaledIntegerNodeImpl(weak_ptr<ImageFileImpl> destImageFi
     }
 }
 
-bool ScaledIntegerNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
+bool ScaledIntegerNodeImpl::isTypeEquivalent(NodeImplSharedPtr ni)
 {
     // don't checkImageFileOpen
 
@@ -711,7 +711,7 @@ double ScaledIntegerNodeImpl::offset()
     return(offset_);
 }
 
-void ScaledIntegerNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, shared_ptr<NodeImpl> origin)
+void ScaledIntegerNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, NodeImplSharedPtr origin)
 {
     // don't checkImageFileOpen
 
@@ -720,7 +720,7 @@ void ScaledIntegerNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames,
         throw E57_EXCEPTION2(E57_ERROR_NO_BUFFER_FOR_ELEMENT, "this->pathName=" + this->pathName());
 }
 
-void ScaledIntegerNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> /*imf*/, CheckedFile& cf, int indent, const char* forcedFieldName)
+void ScaledIntegerNodeImpl::writeXml(ImageFileImplSharedPtr /*imf*/, CheckedFile& cf, int indent, const char* forcedFieldName)
 {
     // don't checkImageFileOpen
 
@@ -795,7 +795,7 @@ FloatNodeImpl::FloatNodeImpl(weak_ptr<ImageFileImpl> destImageFile, double value
     }
 }
 
-bool FloatNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
+bool FloatNodeImpl::isTypeEquivalent(NodeImplSharedPtr ni)
 {
     // don't checkImageFileOpen
 
@@ -858,7 +858,7 @@ double FloatNodeImpl::maximum() const
     return maximum_;
 }
 
-void FloatNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, shared_ptr<NodeImpl> origin)
+void FloatNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, NodeImplSharedPtr origin)
 {
     // don't checkImageFileOpen
 
@@ -867,7 +867,7 @@ void FloatNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, shared_
         throw E57_EXCEPTION2(E57_ERROR_NO_BUFFER_FOR_ELEMENT, "this->pathName=" + this->pathName());
 }
 
-void FloatNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> /*imf*/, CheckedFile& cf, int indent, const char* forcedFieldName)
+void FloatNodeImpl::writeXml(ImageFileImplSharedPtr /*imf*/, CheckedFile& cf, int indent, const char* forcedFieldName)
 {
     // don't checkImageFileOpen
 
@@ -944,7 +944,7 @@ StringNodeImpl::StringNodeImpl(weak_ptr<ImageFileImpl> destImageFile, const ustr
     // don't checkImageFileOpen, NodeImpl() will do it
 }
 
-bool StringNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
+bool StringNodeImpl::isTypeEquivalent(NodeImplSharedPtr ni)
 {
     // don't checkImageFileOpen
 
@@ -972,7 +972,7 @@ ustring StringNodeImpl::value()
     return(value_);
 }
 
-void StringNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, shared_ptr<NodeImpl> origin)
+void StringNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, NodeImplSharedPtr origin)
 {
     // don't checkImageFileOpen
 
@@ -981,7 +981,7 @@ void StringNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, shared
         throw E57_EXCEPTION2(E57_ERROR_NO_BUFFER_FOR_ELEMENT, "this->pathName=" + this->pathName());
 }
 
-void StringNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> /*imf*/, CheckedFile& cf, int indent, const char* forcedFieldName)
+void StringNodeImpl::writeXml(ImageFileImplSharedPtr /*imf*/, CheckedFile& cf, int indent, const char* forcedFieldName)
 {
     // don't checkImageFileOpen
 
@@ -1043,7 +1043,7 @@ BlobNodeImpl::BlobNodeImpl(weak_ptr<ImageFileImpl> destImageFile, int64_t byteCo
 {
     // don't checkImageFileOpen, NodeImpl() will do it
 
-    shared_ptr<ImageFileImpl> imf(destImageFile);
+    ImageFileImplSharedPtr imf(destImageFile);
 
     /// This what caller thinks blob length is
     blobLogicalLength_ = byteCount;
@@ -1076,7 +1076,7 @@ BlobNodeImpl::BlobNodeImpl(weak_ptr<ImageFileImpl> destImageFile, int64_t fileOf
 
     // don't checkImageFileOpen, NodeImpl() will do it
 
-    shared_ptr<ImageFileImpl> imf(destImageFile);
+    ImageFileImplSharedPtr imf(destImageFile);
 
     /// Init state from values read from XML
     blobLogicalLength_ = length;
@@ -1084,7 +1084,7 @@ BlobNodeImpl::BlobNodeImpl(weak_ptr<ImageFileImpl> destImageFile, int64_t fileOf
     binarySectionLogicalLength_ = sizeof(BlobSectionHeader) + blobLogicalLength_;
 }
 
-bool BlobNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
+bool BlobNodeImpl::isTypeEquivalent(NodeImplSharedPtr ni)
 {
     // don't checkImageFileOpen, NodeImpl() will do it
 
@@ -1133,7 +1133,8 @@ void BlobNodeImpl::read(uint8_t* buf, int64_t start, size_t count)
                              + " count=" + toString(count)
                              + " length=" + toString(blobLogicalLength_));
     }
-    shared_ptr<ImageFileImpl> imf(destImageFile_);
+
+    ImageFileImplSharedPtr imf(destImageFile_);
     imf->file_->seek(binarySectionLogicalStart_ + sizeof(BlobSectionHeader) + start);
     imf->file_->read(reinterpret_cast<char*>(buf), static_cast<size_t>(count));  //??? arg1 void* ?
 }
@@ -1143,7 +1144,7 @@ void BlobNodeImpl::write(uint8_t* buf, int64_t start, size_t count)
     //??? check start not negative
     checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
 
-    shared_ptr<ImageFileImpl> destImageFile(destImageFile_);
+    ImageFileImplSharedPtr destImageFile(destImageFile_);
 
     if (!destImageFile->isWriter())
         throw E57_EXCEPTION2(E57_ERROR_FILE_IS_READ_ONLY, "fileName=" + destImageFile->fileName());
@@ -1158,12 +1159,12 @@ void BlobNodeImpl::write(uint8_t* buf, int64_t start, size_t count)
                              + " length=" + toString(blobLogicalLength_));
     }
 
-    shared_ptr<ImageFileImpl> imf(destImageFile_);
+    ImageFileImplSharedPtr imf(destImageFile_);
     imf->file_->seek(binarySectionLogicalStart_ + sizeof(BlobSectionHeader) + start);
     imf->file_->write(reinterpret_cast<char*>(buf), static_cast<size_t>(count));  //??? arg1 void* ?
 }
 
-void BlobNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, shared_ptr<NodeImpl> origin)
+void BlobNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, NodeImplSharedPtr origin)
 {
     // don't checkImageFileOpen
 
@@ -1172,7 +1173,7 @@ void BlobNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, shared_p
         throw E57_EXCEPTION2(E57_ERROR_NO_BUFFER_FOR_ELEMENT, "this->pathName=" + this->pathName());
 }
 
-void BlobNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> /*imf*/, CheckedFile& cf, int indent, const char* forcedFieldName)
+void BlobNodeImpl::writeXml(ImageFileImplSharedPtr /*imf*/, CheckedFile& cf, int indent, const char* forcedFieldName)
 {
     // don't checkImageFileOpen
 
@@ -1305,7 +1306,7 @@ CompressedVectorWriterImpl::CompressedVectorWriterImpl(shared_ptr<CompressedVect
         ustring codecPath = sbufs_.at(i).pathName();
 
         /// Calc which stream the given path belongs to.  This depends on position of the node in the proto tree.
-        shared_ptr<NodeImpl> readNode = proto_->get(sbufs.at(i).pathName());
+        NodeImplSharedPtr readNode = proto_->get(sbufs.at(i).pathName());
         uint64_t bytestreamNumber = 0;
         if (!proto_->findTerminalPosition(readNode, bytestreamNumber))
             throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "sbufIndex=" + toString(i));
@@ -1327,7 +1328,7 @@ CompressedVectorWriterImpl::CompressedVectorWriterImpl(shared_ptr<CompressedVect
     }
 #endif
 
-    shared_ptr<ImageFileImpl> imf(ni->destImageFile_);
+    ImageFileImplSharedPtr imf(ni->destImageFile_);
 
     /// Reserve space for CompressedVector binary section header, record location so can save to when writer closes.
     /// Request that file be extended with zeros since we will write to it at a later time (when writer closes).
@@ -1366,7 +1367,7 @@ void CompressedVectorWriterImpl::close()
 #ifdef E57_MAX_VERBOSE
     cout << "CompressedVectorWriterImpl::close() called" << endl; //???
 #endif
-    shared_ptr<ImageFileImpl> imf(cVector_->destImageFile_);
+    ImageFileImplSharedPtr imf(cVector_->destImageFile_);
 
     /// Before anything that can throw, decrement writer count
     imf->decrWriterCount();
@@ -1648,7 +1649,7 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
 #endif
 
     /// Get smart pointer to ImageFileImpl from associated CompressedVector
-    shared_ptr<ImageFileImpl> imf(cVector_->destImageFile_);
+    ImageFileImplSharedPtr imf(cVector_->destImageFile_);
 
     /// Use temp buf in object (is 64KBytes long) instead of allocating each time here
     char* packet = reinterpret_cast<char*>(&dataPacket_);
@@ -1856,7 +1857,7 @@ CompressedVectorReaderImpl::CompressedVectorReaderImpl(shared_ptr<CompressedVect
         shared_ptr<Decoder> decoder =  Decoder::DecoderFactory(i, cVector_, theDbuf, ustring());
 
         /// Calc which stream the given path belongs to.  This depends on position of the node in the proto tree.
-        shared_ptr<NodeImpl> readNode = proto_->get(dbufs.at(i).pathName());
+        NodeImplSharedPtr readNode = proto_->get(dbufs.at(i).pathName());
         uint64_t bytestreamNumber = 0;
         if (!proto_->findTerminalPosition(readNode, bytestreamNumber))
             throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "dbufIndex=" + toString(i));
@@ -1869,7 +1870,7 @@ CompressedVectorReaderImpl::CompressedVectorReaderImpl(shared_ptr<CompressedVect
     /// Get how many records are actually defined
     maxRecordCount_ = cvi->childCount();
 
-    shared_ptr<ImageFileImpl> imf(cVector_->destImageFile_);
+    ImageFileImplSharedPtr imf(cVector_->destImageFile_);
 
     //??? what if fault in this constructor?
     cache_ = new PacketReadCache(imf->file_, 32);
@@ -2267,7 +2268,7 @@ std::shared_ptr<CompressedVectorNodeImpl> CompressedVectorReaderImpl::compressed
 void CompressedVectorReaderImpl::close()
 {
     /// Before anything that can throw, decrement reader count
-    shared_ptr<ImageFileImpl> imf(cVector_->destImageFile_);
+    ImageFileImplSharedPtr imf(cVector_->destImageFile_);
     imf->decrReaderCount();
 
     checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));

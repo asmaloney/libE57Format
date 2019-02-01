@@ -99,7 +99,7 @@ namespace e57
       fileName_ = fileName;
 
       /// Get shared_ptr to this object
-      std::shared_ptr<ImageFileImpl> imf = shared_from_this();
+      ImageFileImplSharedPtr imf = shared_from_this();
 
       // Accept "w" or "r" modes
       isWriter_ = (mode == "w");

@@ -47,7 +47,7 @@ NodeType StructureNodeImpl::type() const
 }
 
 //??? use visitor?
-bool StructureNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
+bool StructureNodeImpl::isTypeEquivalent(NodeImplSharedPtr ni)
 {
     /// don't checkImageFileOpen
 
@@ -87,7 +87,7 @@ bool StructureNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
 bool StructureNodeImpl::isDefined(const ustring& pathName)
 {
     checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
-    shared_ptr<NodeImpl> ni(lookup(pathName));
+    NodeImplSharedPtr ni(lookup(pathName));
     return(ni != nullptr);
 }
 
@@ -109,7 +109,7 @@ int64_t StructureNodeImpl::childCount() const
 
     return children_.size();
 }
-shared_ptr<NodeImpl> StructureNodeImpl::get(int64_t index)
+NodeImplSharedPtr StructureNodeImpl::get(int64_t index)
 {
     checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
         if (index < 0 || index >= static_cast<int64_t>(children_.size())) { // %%% Possible truncation on platforms where size_t = uint64
@@ -122,30 +122,31 @@ shared_ptr<NodeImpl> StructureNodeImpl::get(int64_t index)
 }
 
 
-shared_ptr<NodeImpl> StructureNodeImpl::get(const ustring& pathName)
+NodeImplSharedPtr StructureNodeImpl::get(const ustring& pathName)
 {
     checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
-    shared_ptr<NodeImpl> ni(lookup(pathName));
+    NodeImplSharedPtr ni(lookup(pathName));
+
     if (!ni)
         throw E57_EXCEPTION2(E57_ERROR_PATH_UNDEFINED, "this->pathName=" + this->pathName() + " pathName=" + pathName);
     return(ni);
 }
 
-shared_ptr<NodeImpl> StructureNodeImpl::lookup(const ustring& pathName)
+NodeImplSharedPtr StructureNodeImpl::lookup(const ustring& pathName)
 {
     /// don't checkImageFileOpen
     //??? use lookup(fields, level) instead, for speed.
     bool isRelative;
     vector<ustring> fields;
-    shared_ptr<ImageFileImpl> imf(destImageFile_);
+    ImageFileImplSharedPtr imf(destImageFile_);
     imf->pathNameParse(pathName, isRelative, fields);  // throws if bad pathName
 
     if (isRelative || isRoot()) {
         if (fields.empty())
             if (isRelative) {
-                return(shared_ptr<NodeImpl>());  /// empty pointer
+                return NodeImplSharedPtr();  /// empty pointer
             } else {
-                shared_ptr<NodeImpl> root(getRoot());
+                NodeImplSharedPtr root(getRoot());
                 return(root);
             }
         else {
@@ -157,7 +158,7 @@ shared_ptr<NodeImpl> StructureNodeImpl::lookup(const ustring& pathName)
             }
             if (i == children_.size())
             {
-               return(shared_ptr<NodeImpl>());  /// empty pointer
+               return NodeImplSharedPtr();  /// empty pointer
             }
 
             if (fields.size() == 1)
@@ -174,14 +175,14 @@ shared_ptr<NodeImpl> StructureNodeImpl::lookup(const ustring& pathName)
         }
     } else {  /// Absolute pathname and we aren't at the root
         /// Find root of the tree
-        shared_ptr<NodeImpl> root(getRoot());
+        NodeImplSharedPtr root(getRoot());
 
         /// Call lookup on root
         return(root->lookup(pathName));
     }
 }
 
-void StructureNodeImpl::set(int64_t index64, shared_ptr<NodeImpl> ni)
+void StructureNodeImpl::set(int64_t index64, NodeImplSharedPtr ni)
 {
     checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
 
@@ -203,8 +204,8 @@ void StructureNodeImpl::set(int64_t index64, shared_ptr<NodeImpl> ni)
     }
 
     /// Verify that child is destined for same ImageFile as this is
-    shared_ptr<ImageFileImpl> thisDest(destImageFile());
-    shared_ptr<ImageFileImpl> niDest(ni->destImageFile());
+    ImageFileImplSharedPtr thisDest(destImageFile());
+    ImageFileImplSharedPtr niDest(ni->destImageFile());
     if (thisDest != niDest) {
         throw E57_EXCEPTION2(E57_ERROR_DIFFERENT_DEST_IMAGEFILE,
                              "this->destImageFile" + thisDest->fileName()
@@ -225,7 +226,7 @@ void StructureNodeImpl::set(int64_t index64, shared_ptr<NodeImpl> ni)
     children_.push_back(ni);
 }
 
-void StructureNodeImpl::set(const ustring& pathName, shared_ptr<NodeImpl> ni, bool autoPathCreate)
+void StructureNodeImpl::set(const ustring& pathName, NodeImplSharedPtr ni, bool autoPathCreate)
 {
     checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
     //??? parse pathName! throw if impossible, absolute and multi-level paths...
@@ -239,7 +240,7 @@ void StructureNodeImpl::set(const ustring& pathName, shared_ptr<NodeImpl> ni, bo
     vector<ustring> fields;
 
     /// Path may be absolute or relative with several levels.  Break string into individual levels.
-    shared_ptr<ImageFileImpl> imf(destImageFile_);
+    ImageFileImplSharedPtr imf(destImageFile_);
     imf->pathNameParse(pathName, isRelative, fields);  // throws if bad pathName
     if (isRelative) {
         /// Relative path, starting from current object, e.g. "foo/17/bar"
@@ -250,7 +251,7 @@ void StructureNodeImpl::set(const ustring& pathName, shared_ptr<NodeImpl> ni, bo
     }
 }
 
-void StructureNodeImpl::set(const vector<ustring>& fields, unsigned level, shared_ptr<NodeImpl> ni, bool autoPathCreate)
+void StructureNodeImpl::set(const vector<ustring>& fields, unsigned level, NodeImplSharedPtr ni, bool autoPathCreate)
 {
 #ifdef E57_MAX_VERBOSE
     cout << "StructureNodeImpl::set: level=" << level << endl;
@@ -302,7 +303,7 @@ void StructureNodeImpl::set(const vector<ustring>& fields, unsigned level, share
         //??? what if extra fields are numbers?
 
         /// Do autoPathCreate: Create nested Struct objects for extra field names in path
-        shared_ptr<NodeImpl> parent(shared_from_this());
+        NodeImplSharedPtr parent(shared_from_this());
         for (;level != fields.size()-1; level++) {
             shared_ptr<StructureNodeImpl> child(new StructureNodeImpl(destImageFile_));
             parent->set(fields.at(level), child);
@@ -312,7 +313,7 @@ void StructureNodeImpl::set(const vector<ustring>& fields, unsigned level, share
     }
 }
 
-void StructureNodeImpl::append(shared_ptr<NodeImpl> ni)
+void StructureNodeImpl::append(NodeImplSharedPtr ni)
 {
     /// don't checkImageFileOpen, set() will do it
 
@@ -321,7 +322,7 @@ void StructureNodeImpl::append(shared_ptr<NodeImpl> ni)
 }
 
 //??? use visitor?
-void StructureNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, shared_ptr<NodeImpl> origin)
+void StructureNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, NodeImplSharedPtr origin)
 {
     /// don't checkImageFileOpen
 
@@ -333,7 +334,7 @@ void StructureNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, sha
 }
 
 //??? use visitor?
-void StructureNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName)
+void StructureNodeImpl::writeXml(ImageFileImplSharedPtr imf, CheckedFile& cf, int indent, const char* forcedFieldName)
 {
     /// don't checkImageFileOpen
 

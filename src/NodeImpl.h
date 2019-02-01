@@ -39,31 +39,31 @@ class NodeImpl : public std::enable_shared_from_this<NodeImpl>
 public:
     virtual NodeType        type() const = 0;
     void                    checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName) const;
-    virtual bool            isTypeEquivalent(std::shared_ptr<NodeImpl> ni) = 0;
+    virtual bool            isTypeEquivalent(NodeImplSharedPtr ni) = 0;
     bool                    isRoot() const;
-    std::shared_ptr<NodeImpl> parent();
+    NodeImplSharedPtr       parent();
     ustring                 pathName() const;
-    ustring                 relativePathName(const std::shared_ptr<NodeImpl> &origin, ustring childPathName = ustring()) const;
+    ustring                 relativePathName(const NodeImplSharedPtr &origin, ustring childPathName = ustring()) const;
     ustring                 elementName() const;
-    std::shared_ptr<ImageFileImpl> destImageFile();
+    ImageFileImplSharedPtr  destImageFile();
 
     ustring                 imageFileName() const;
     virtual bool            isDefined(const ustring& pathName) = 0;
     bool                    isAttached() const;
     virtual void            setAttachedRecursive();
 
-    void                    setParent(std::shared_ptr<NodeImpl> parent, const ustring& elementName);
+    void                    setParent(NodeImplSharedPtr parent, const ustring& elementName);
     bool                    isTypeConstrained();
 
-    virtual std::shared_ptr<NodeImpl> get(const ustring& pathName);
-    virtual void            set(const ustring& pathName, std::shared_ptr<NodeImpl> ni, bool autoPathCreate = false);
-    virtual void            set(const std::vector<ustring>& fields, unsigned level, std::shared_ptr<NodeImpl> ni, bool autoPathCreate = false);
+    virtual NodeImplSharedPtr get(const ustring& pathName);
+    virtual void            set(const ustring& pathName, NodeImplSharedPtr ni, bool autoPathCreate = false);
+    virtual void            set(const std::vector<ustring>& fields, unsigned level, NodeImplSharedPtr ni, bool autoPathCreate = false);
 
-    virtual void            checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin) = 0;
+    virtual void            checkLeavesInSet(const std::set<ustring>& pathNames, NodeImplSharedPtr origin) = 0;
     void                    checkBuffers(const std::vector<SourceDestBuffer>& sdbufs, bool allowMissing);
-    bool                    findTerminalPosition(const std::shared_ptr<NodeImpl> &target, uint64_t& countFromLeft);
+    bool                    findTerminalPosition(const NodeImplSharedPtr &target, uint64_t& countFromLeft);
 
-    virtual void            writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) = 0;
+    virtual void            writeXml(ImageFileImplSharedPtr imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) = 0;
 
     virtual                 ~NodeImpl() = default;
 
@@ -74,7 +74,7 @@ public:
 private:
     bool _verifyPathNameAbsolute( const ustring &inPathName );
 
-    std::shared_ptr<NodeImpl>   _verifyAndGetRoot();
+    NodeImplSharedPtr   _verifyAndGetRoot();
 
 protected:
     friend class StructureNodeImpl;
@@ -82,10 +82,10 @@ protected:
     friend class Decoder;
     friend class Encoder;
 
-                                         NodeImpl(std::weak_ptr<ImageFileImpl> destImageFile);
-    NodeImpl&                            operator=(NodeImpl& n);
-    virtual std::shared_ptr<NodeImpl>  lookup(const ustring& /*pathName*/) {return(std::shared_ptr<NodeImpl>());}
-    std::shared_ptr<NodeImpl>          getRoot();
+                               NodeImpl(std::weak_ptr<ImageFileImpl> destImageFile);
+    NodeImpl&                  operator=(NodeImpl& n);
+    virtual NodeImplSharedPtr  lookup(const ustring& /*pathName*/) {return NodeImplSharedPtr();}
+    NodeImplSharedPtr          getRoot();
 
     std::weak_ptr<ImageFileImpl>       destImageFile_;
     std::weak_ptr<NodeImpl>            parent_;

@@ -90,6 +90,9 @@ inline std::string binaryString(int32_t x) {return(binaryString(static_cast<uint
 inline std::string binaryString(int16_t x) {return(binaryString(static_cast<uint16_t>(x)));}
 inline std::string binaryString(int8_t x)  {return(binaryString(static_cast<uint8_t>(x)));}
 
+using ImageFileImplSharedPtr = std::shared_ptr<class ImageFileImpl>;
+using NodeImplSharedPtr = std::shared_ptr<class NodeImpl>;
+
 }
 
 #endif

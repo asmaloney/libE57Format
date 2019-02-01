@@ -49,12 +49,12 @@ public:
 
     NodeType    type() const override { return E57_VECTOR; }
 
-    bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni) override;
+    bool        isTypeEquivalent(NodeImplSharedPtr ni) override;
     bool        allowHeteroChildren() const;
 
-    void        set(int64_t index, std::shared_ptr<NodeImpl> ni) override;
+    void        set(int64_t index, NodeImplSharedPtr ni) override;
 
-    void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) override;
+    void        writeXml(ImageFileImplSharedPtr imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) override;
 
 #ifdef E57_DEBUG
     void    dump(int indent = 0, std::ostream& os = std::cout) const override;
@@ -73,20 +73,20 @@ public:
     ~CompressedVectorNodeImpl() override = default;
 
     NodeType    type() const override { return E57_COMPRESSED_VECTOR; }
-    bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni) override;
+    bool        isTypeEquivalent(NodeImplSharedPtr ni) override;
     bool        isDefined(const ustring& pathName) override;
     void        setAttachedRecursive() override;
 
-    void                setPrototype(const std::shared_ptr<NodeImpl>& prototype);
-    std::shared_ptr<NodeImpl> getPrototype();
+    void                setPrototype(const NodeImplSharedPtr &prototype);
+    NodeImplSharedPtr   getPrototype();
     void                setCodecs(const std::shared_ptr<VectorNodeImpl> &codecs);
     std::shared_ptr<VectorNodeImpl> getCodecs();
 
     virtual int64_t     childCount();
 
-    void        checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin) override;
+    void        checkLeavesInSet(const std::set<ustring>& pathNames, NodeImplSharedPtr origin) override;
 
-    void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) override;
+    void        writeXml(ImageFileImplSharedPtr imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) override;
 
     /// Iterator constructors
     std::shared_ptr<CompressedVectorWriterImpl> writer(std::vector<SourceDestBuffer> sbufs);
@@ -105,11 +105,11 @@ public:
 private:
     friend class CompressedVectorReaderImpl;
 
-    std::shared_ptr<NodeImpl> prototype_;
+    NodeImplSharedPtr prototype_;
     std::shared_ptr<VectorNodeImpl> codecs_;
 
-    int64_t                     recordCount_ = 0;
-    uint64_t                    binarySectionLogicalStart_ = 0;
+    int64_t    recordCount_ = 0;
+    uint64_t   binarySectionLogicalStart_ = 0;
 };
 
 class IntegerNodeImpl : public NodeImpl
@@ -119,16 +119,16 @@ public:
     ~IntegerNodeImpl() override = default;
 
     NodeType    type() const override { return E57_INTEGER; }
-    bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni) override;
+    bool        isTypeEquivalent(NodeImplSharedPtr ni) override;
     bool        isDefined(const ustring& pathName) override;
 
     int64_t             value();
     int64_t             minimum();
     int64_t             maximum();
 
-    void        checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin) override;
+    void        checkLeavesInSet(const std::set<ustring>& pathNames, NodeImplSharedPtr origin) override;
 
-    void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) override;
+    void        writeXml(ImageFileImplSharedPtr imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) override;
 
 #ifdef E57_DEBUG
     void        dump(int indent = 0, std::ostream& os = std::cout) const override;
@@ -154,7 +154,7 @@ public:
     ~ScaledIntegerNodeImpl() override = default;
 
     NodeType    type() const override { return E57_SCALED_INTEGER; }
-    bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni) override;
+    bool        isTypeEquivalent(NodeImplSharedPtr ni) override;
     bool        isDefined(const ustring& pathName) override;
 
     int64_t             rawValue();
@@ -166,9 +166,9 @@ public:
     double              scale();
     double              offset();
 
-    void        checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin) override;
+    void        checkLeavesInSet(const std::set<ustring>& pathNames, NodeImplSharedPtr origin) override;
 
-    void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) override;
+    void        writeXml(ImageFileImplSharedPtr imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) override;
 
 
 #ifdef E57_DEBUG
@@ -192,7 +192,7 @@ public:
     ~FloatNodeImpl() override = default;
 
     NodeType    type() const override { return E57_FLOAT; }
-    bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni) override;
+    bool        isTypeEquivalent(NodeImplSharedPtr ni) override;
     bool        isDefined(const ustring& pathName) override;
 
     double              value() const;
@@ -200,9 +200,9 @@ public:
     double              minimum() const;
     double              maximum() const;
 
-    void        checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin) override;
+    void        checkLeavesInSet(const std::set<ustring>& pathNames, NodeImplSharedPtr origin) override;
 
-    void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) override;
+    void        writeXml(ImageFileImplSharedPtr imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) override;
 
 #ifdef E57_DEBUG
     void    dump(int indent = 0, std::ostream& os = std::cout) const override;
@@ -222,14 +222,14 @@ public:
     ~StringNodeImpl() override = default;
 
     NodeType    type() const override { return E57_STRING; }
-    bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni) override;
+    bool        isTypeEquivalent(NodeImplSharedPtr ni) override;
     bool        isDefined(const ustring& pathName) override;
 
     ustring             value();
 
-    void        checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin) override;
+    void        checkLeavesInSet(const std::set<ustring>& pathNames, NodeImplSharedPtr origin) override;
 
-    void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) override;
+    void        writeXml(ImageFileImplSharedPtr imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) override;
 
 #ifdef E57_DEBUG
     void    dump(int indent = 0, std::ostream& os = std::cout) const override;
@@ -247,16 +247,16 @@ public:
     ~BlobNodeImpl() override = default;
 
     NodeType    type() const override { return E57_BLOB; }
-    bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni) override;
+    bool        isTypeEquivalent(NodeImplSharedPtr ni) override;
     bool        isDefined(const ustring& pathName) override;
 
     int64_t             byteCount();
     void                read(uint8_t* buf, int64_t start, size_t count);
     void                write(uint8_t* buf, int64_t start, size_t count);
 
-    void        checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin) override;
+    void        checkLeavesInSet(const std::set<ustring>& pathNames, NodeImplSharedPtr origin) override;
 
-    void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) override;
+    void        writeXml(ImageFileImplSharedPtr imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) override;
 
 #ifdef E57_DEBUG
     void    dump(int indent = 0, std::ostream& os = std::cout) const override;
@@ -323,7 +323,7 @@ private:
     bool                                      isOpen_;
     std::vector<SourceDestBuffer>             dbufs_;
     std::shared_ptr<CompressedVectorNodeImpl> cVector_;
-    std::shared_ptr<NodeImpl>                 proto_;
+    NodeImplSharedPtr                         proto_;
     std::vector<DecodeChannel>                channels_;
     PacketReadCache*                          cache_;
 
@@ -362,7 +362,7 @@ private:
 
     std::vector<SourceDestBuffer>             sbufs_;
     std::shared_ptr<CompressedVectorNodeImpl> cVector_;
-    std::shared_ptr<NodeImpl>                 proto_;
+    NodeImplSharedPtr                         proto_;
 
     std::vector<std::shared_ptr<Encoder> >  bytestreams_;
     DataPacket              dataPacket_;

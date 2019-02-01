@@ -1785,7 +1785,7 @@ bool Node::operator!=(Node n2) const
 }
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't documented.
-Node::Node(shared_ptr<NodeImpl> ni)
+Node::Node(NodeImplSharedPtr ni)
 : impl_(ni)
 {}
 //! @endcond
@@ -2009,7 +2009,7 @@ void StructureNode::dump(int indent, std::ostream& os) const
 */
 StructureNode::operator Node() const
 {
-    /// Implicitly upcast from shared_ptr<StructureNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
+    /// Implicitly upcast from shared_ptr<StructureNodeImpl> to SharedNodeImplPtr and construct a Node object
     return Node(impl_);
 }
 
@@ -2025,7 +2025,7 @@ This function must be explicitly called (c++ compiler cannot insert it automatic
 */
 StructureNode::StructureNode(const Node& n)
 {
-    /// Downcast from shared_ptr<NodeImpl> to shared_ptr<StructureNodeImpl>
+    /// Downcast from SharedNodeImplPtr to shared_ptr<StructureNodeImpl>
     shared_ptr<StructureNodeImpl> ni(dynamic_pointer_cast<StructureNodeImpl>(n.impl()));
     if (!ni)
         throw E57_EXCEPTION2(E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString(n.type()));
@@ -2281,7 +2281,7 @@ void VectorNode::dump(int indent, std::ostream& os) const
 */
 VectorNode::operator Node() const
 {
-    /// Implicitly upcast from shared_ptr<VectorNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
+    /// Implicitly upcast from shared_ptr<VectorNodeImpl> to SharedNodeImplPtr and construct a Node object
     return Node(impl_);
 }
 
@@ -2297,7 +2297,7 @@ This function must be explicitly called (c++ compiler cannot insert it automatic
 */
 VectorNode::VectorNode(const Node& n)
 {
-    /// Downcast from shared_ptr<NodeImpl> to shared_ptr<VectorNodeImpl>
+    /// Downcast from SharedNodeImplPtr to shared_ptr<VectorNodeImpl>
     shared_ptr<VectorNodeImpl> ni(dynamic_pointer_cast<VectorNodeImpl>(n.impl()));
     if (!ni)
         throw E57_EXCEPTION2(E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString(n.type()));
@@ -3201,7 +3201,7 @@ void CompressedVectorNode::dump(int indent, std::ostream& os) const
 */
 CompressedVectorNode::operator Node() const
 {
-    /// Implicitly upcast from shared_ptr<CompressedVectorNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
+    /// Implicitly upcast from shared_ptr<CompressedVectorNodeImpl> to SharedNodeImplPtr and construct a Node object
     return Node(impl_);
 }
 
@@ -3217,7 +3217,7 @@ This function must be explicitly called (c++ compiler cannot insert it automatic
 */
 CompressedVectorNode::CompressedVectorNode(const Node& n)
 {
-    /// Downcast from shared_ptr<NodeImpl> to shared_ptr<CompressedVectorNodeImpl>
+    /// Downcast from SharedNodeImplPtr to shared_ptr<CompressedVectorNodeImpl>
     shared_ptr<CompressedVectorNodeImpl> ni(dynamic_pointer_cast<CompressedVectorNodeImpl>(n.impl()));
     if (!ni)
         throw E57_EXCEPTION2(E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString(n.type()));
@@ -3465,7 +3465,7 @@ void IntegerNode::dump(int indent, std::ostream& os) const
 */
 IntegerNode::operator Node() const
 {
-    /// Upcast from shared_ptr<IntegerNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
+    /// Upcast from shared_ptr<IntegerNodeImpl> to SharedNodeImplPtr and construct a Node object
     return Node(impl_);
 }
 
@@ -3481,7 +3481,7 @@ This function must be explicitly called (c++ compiler cannot insert it automatic
 */
 IntegerNode::IntegerNode(const Node& n)
 {
-    /// Downcast from shared_ptr<NodeImpl> to shared_ptr<IntegerNodeImpl>
+    /// Downcast from SharedNodeImplPtr to shared_ptr<IntegerNodeImpl>
     shared_ptr<IntegerNodeImpl> ni(dynamic_pointer_cast<IntegerNodeImpl>(n.impl()));
     if (!ni)
         throw E57_EXCEPTION2(E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString(n.type()));
@@ -3767,7 +3767,7 @@ void ScaledIntegerNode::dump(int indent, std::ostream& os) const
 */
 ScaledIntegerNode::operator Node() const
 {
-    /// Upcast from shared_ptr<ScaledIntegerNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
+    /// Upcast from shared_ptr<ScaledIntegerNodeImpl> to SharedNodeImplPtr and construct a Node object
     return Node(impl_);
 }
 
@@ -3783,7 +3783,7 @@ This function must be explicitly called (c++ compiler cannot insert it automatic
 */
 ScaledIntegerNode::ScaledIntegerNode(const Node& n)
 {
-    /// Downcast from shared_ptr<NodeImpl> to shared_ptr<ScaledIntegerNodeImpl>
+    /// Downcast from SharedNodeImplPtr to shared_ptr<ScaledIntegerNodeImpl>
     shared_ptr<ScaledIntegerNodeImpl> ni(dynamic_pointer_cast<ScaledIntegerNodeImpl>(n.impl()));
     if (!ni)
         throw E57_EXCEPTION2(E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString(n.type()));
@@ -4000,7 +4000,7 @@ void FloatNode::dump(int indent, std::ostream& os) const
 */
 FloatNode::operator Node() const
 {
-    /// Upcast from shared_ptr<FloatNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
+    /// Upcast from shared_ptr<FloatNodeImpl> to SharedNodeImplPtr and construct a Node object
     return Node(impl_);
 }
 
@@ -4016,7 +4016,7 @@ This function must be explicitly called (c++ compiler cannot insert it automatic
 */
 FloatNode::FloatNode(const Node& n)
 {
-    /// Downcast from shared_ptr<NodeImpl> to shared_ptr<FloatNodeImpl>
+    /// Downcast from SharedNodeImplPtr to shared_ptr<FloatNodeImpl>
     shared_ptr<FloatNodeImpl> ni(dynamic_pointer_cast<FloatNodeImpl>(n.impl()));
     if (!ni)
         throw E57_EXCEPTION2(E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString(n.type()));
@@ -4158,7 +4158,7 @@ void StringNode::dump(int indent, std::ostream& os) const
 */
 StringNode::operator Node() const
 {
-    /// Upcast from shared_ptr<StringNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
+    /// Upcast from shared_ptr<StringNodeImpl> to SharedNodeImplPtr and construct a Node object
     return Node(impl_);
 }
 
@@ -4174,7 +4174,7 @@ This function must be explicitly called (c++ compiler cannot insert it automatic
 */
 StringNode::StringNode(const Node& n)
 {
-    /// Downcast from shared_ptr<NodeImpl> to shared_ptr<StringNodeImpl>
+    /// Downcast from SharedNodeImplPtr to shared_ptr<StringNodeImpl>
     shared_ptr<StringNodeImpl> ni(dynamic_pointer_cast<StringNodeImpl>(n.impl()));
     if (!ni)
         throw E57_EXCEPTION2(E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString(n.type()));
@@ -4407,7 +4407,7 @@ void BlobNode::dump(int indent, std::ostream& os) const
 */
 BlobNode::operator Node() const
 {
-    /// Upcast from shared_ptr<StringNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
+    /// Upcast from shared_ptr<StringNodeImpl> to SharedNodeImplPtr and construct a Node object
     return Node(impl_);
 }
 
@@ -4423,7 +4423,7 @@ This function must be explicitly called (c++ compiler cannot insert it automatic
 */
 BlobNode::BlobNode(const Node& n)
 {
-    /// Downcast from shared_ptr<NodeImpl> to shared_ptr<BlobNodeImpl>
+    /// Downcast from SharedNodeImplPtr to shared_ptr<BlobNodeImpl>
     shared_ptr<BlobNodeImpl> ni(dynamic_pointer_cast<BlobNodeImpl>(n.impl()));
     if (!ni)
         throw E57_EXCEPTION2(E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString(n.type()));
@@ -4898,7 +4898,7 @@ bool ImageFile::operator!=(ImageFile imf2) const
 }
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't documented.
-ImageFile::ImageFile(shared_ptr<ImageFileImpl> imfi)
+ImageFile::ImageFile(ImageFileImplSharedPtr imfi)
 : impl_(imfi)
 {}
 //! @endcond

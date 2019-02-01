@@ -44,7 +44,7 @@ NodeImpl::NodeImpl(weak_ptr<ImageFileImpl> destImageFile)
 void NodeImpl::checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName) const
 {
     /// Throw an exception if destImageFile (destImageFile_) isn't open
-    shared_ptr<ImageFileImpl> destImageFile(destImageFile_);
+    ImageFileImplSharedPtr destImageFile(destImageFile_);
     if (!destImageFile->isOpen())
     {
         throw E57Exception(E57_ERROR_IMAGEFILE_NOT_OPEN,
@@ -62,7 +62,7 @@ bool NodeImpl::isRoot() const
     return parent_.expired();
 };
 
-std::shared_ptr<NodeImpl> NodeImpl::parent()
+NodeImplSharedPtr NodeImpl::parent()
 {
     checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
 
@@ -72,7 +72,7 @@ std::shared_ptr<NodeImpl> NodeImpl::parent()
         return shared_from_this();
     }
 
-    std::shared_ptr<NodeImpl> myParent(parent_);
+    NodeImplSharedPtr myParent(parent_);
 
     return myParent;
 }
@@ -86,7 +86,7 @@ ustring NodeImpl::pathName() const
         return("/");
     }
 
-    shared_ptr<NodeImpl> p(parent_);
+    NodeImplSharedPtr p(parent_);
 
     if (p->isRoot())
     {
@@ -96,7 +96,7 @@ ustring NodeImpl::pathName() const
     return(p->pathName() + "/" + elementName_);
 }
 
-ustring NodeImpl::relativePathName(const shared_ptr<NodeImpl> &origin, ustring childPathName) const
+ustring NodeImpl::relativePathName(const NodeImplSharedPtr &origin, ustring childPathName) const
 {
     checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
     if (origin == shared_from_this())
@@ -111,7 +111,7 @@ ustring NodeImpl::relativePathName(const shared_ptr<NodeImpl> &origin, ustring c
     }
 
     /// Assemble relativePathName from right to left, recursively
-    shared_ptr<NodeImpl> p( parent_ );
+    NodeImplSharedPtr p( parent_ );
 
     if ( childPathName.empty() )
     {
@@ -128,11 +128,10 @@ ustring NodeImpl::elementName() const
     return elementName_;
 }
 
-shared_ptr<ImageFileImpl> NodeImpl::destImageFile()
+ImageFileImplSharedPtr NodeImpl::destImageFile()
 {
     /// don't checkImageFileOpen
-    shared_ptr<ImageFileImpl> imf(destImageFile_);
-    return(imf);
+    return ImageFileImplSharedPtr( destImageFile_ );
 }
 
 bool NodeImpl::isAttached() const
@@ -151,12 +150,12 @@ void NodeImpl::setAttachedRecursive()
 ustring NodeImpl::imageFileName() const
 {
     /// don't checkImageFileOpen
-    shared_ptr<ImageFileImpl> imf(destImageFile_);
+    ImageFileImplSharedPtr imf(destImageFile_);
 
     return imf->fileName();
 }
 
-void NodeImpl::setParent(shared_ptr<NodeImpl> parent, const ustring& elementName)
+void NodeImpl::setParent(NodeImplSharedPtr parent, const ustring& elementName)
 {
     /// don't checkImageFileOpen
 
@@ -180,13 +179,13 @@ void NodeImpl::setParent(shared_ptr<NodeImpl> parent, const ustring& elementName
         setAttachedRecursive();
 }
 
-shared_ptr<NodeImpl> NodeImpl::getRoot()
+NodeImplSharedPtr NodeImpl::getRoot()
 {
     /// don't checkImageFileOpen
-    shared_ptr<NodeImpl> p(shared_from_this());
+    NodeImplSharedPtr p(shared_from_this());
     while (!p->isRoot())
     {
-        p = shared_ptr<NodeImpl>(p->parent_);  //??? check if bad ptr?
+        p = NodeImplSharedPtr(p->parent_);  //??? check if bad ptr?
     }
 
     return p;
@@ -197,10 +196,11 @@ bool NodeImpl::isTypeConstrained()
 {
     /// don't checkImageFileOpen
     /// A node is type constrained if any of its parents is an homo VECTOR or COMPRESSED_VECTOR with more than one child
-    shared_ptr<NodeImpl> p(shared_from_this());
+    NodeImplSharedPtr p(shared_from_this());
+
     while (!p->isRoot()) {
         /// We have a parent since we are not root
-        p = shared_ptr<NodeImpl>(p->parent_);  //??? check if bad ptr?
+        p = NodeImplSharedPtr(p->parent_);  //??? check if bad ptr?
 
         switch (p->type()) {
             case E57_VECTOR:
@@ -226,7 +226,7 @@ bool NodeImpl::isTypeConstrained()
     return(false);
 }
 
-std::shared_ptr<NodeImpl> NodeImpl::get(const ustring& pathName)
+NodeImplSharedPtr NodeImpl::get(const ustring& pathName)
 {
     /// This is common virtual function for terminal E57 element types: Integer, ScaledInteger, Float, Blob.
     /// The non-terminal types override this virtual function.
@@ -234,27 +234,27 @@ std::shared_ptr<NodeImpl> NodeImpl::get(const ustring& pathName)
 
    _verifyPathNameAbsolute( pathName );
 
-    shared_ptr<NodeImpl> root = _verifyAndGetRoot();
+    NodeImplSharedPtr root = _verifyAndGetRoot();
 
     /// Forward call to the non-terminal root node
     return root->get( pathName );
 }
 
-void NodeImpl::set(const ustring& pathName, shared_ptr<NodeImpl> ni, bool autoPathCreate)
+void NodeImpl::set(const ustring& pathName, NodeImplSharedPtr ni, bool autoPathCreate)
 {
-    /// This is common virtual function for terminal E57 element types: Integer, ScaledInteger, Float, Blob.
-    /// The non-terminal types override this virtual function.
-    /// Only absolute pathNames make any sense here, because the terminal types can't have children, so relative pathNames are illegal.
+   /// This is common virtual function for terminal E57 element types: Integer, ScaledInteger, Float, Blob.
+   /// The non-terminal types override this virtual function.
+   /// Only absolute pathNames make any sense here, because the terminal types can't have children, so relative pathNames are illegal.
 
    _verifyPathNameAbsolute( pathName );
 
-   shared_ptr<NodeImpl> root = _verifyAndGetRoot();
+   NodeImplSharedPtr root = _verifyAndGetRoot();
 
-    /// Forward call to the non-terminal root node
-    root->set( pathName, ni, autoPathCreate );
+   /// Forward call to the non-terminal root node
+   root->set( pathName, ni, autoPathCreate );
 }
 
-void NodeImpl::set(const std::vector<ustring>& /*fields*/, unsigned /*level*/, std::shared_ptr<NodeImpl> /*ni*/, bool /*autoPathCreate*/)
+void NodeImpl::set(const std::vector<ustring>& /*fields*/, unsigned /*level*/, NodeImplSharedPtr /*ni*/, bool /*autoPathCreate*/)
 {
     /// If get here, then tried to call set(fields...) on NodeImpl that wasn't a StructureNodeImpl, so that's an error
     throw E57_EXCEPTION1(E57_ERROR_BAD_PATH_NAME); //???
@@ -294,7 +294,7 @@ void NodeImpl::checkBuffers(const vector<SourceDestBuffer>& sdbufs, bool allowMi
     }
 }
 
-bool NodeImpl::findTerminalPosition(const shared_ptr<NodeImpl> &target, uint64_t& countFromLeft)
+bool NodeImpl::findTerminalPosition(const NodeImplSharedPtr &target, uint64_t& countFromLeft)
 {
     /// don't checkImageFileOpen
 
@@ -374,7 +374,7 @@ bool NodeImpl::_verifyPathNameAbsolute( const ustring &inPathName )
    /// Parse to determine if pathName is absolute
    bool isRelative = false;
    vector<ustring> fields;
-   shared_ptr<ImageFileImpl> imf( destImageFile_ );
+   ImageFileImplSharedPtr imf( destImageFile_ );
 
    imf->pathNameParse( inPathName, isRelative, fields );  // throws if bad pathName
 
@@ -387,10 +387,10 @@ bool NodeImpl::_verifyPathNameAbsolute( const ustring &inPathName )
    return isRelative;
 }
 
-std::shared_ptr<NodeImpl> NodeImpl::_verifyAndGetRoot()
+NodeImplSharedPtr NodeImpl::_verifyAndGetRoot()
 {
    /// Find root of the tree
-   shared_ptr<NodeImpl> root( shared_from_this()->getRoot() );
+   NodeImplSharedPtr root( shared_from_this()->getRoot() );
 
    /// Check to make sure root node is non-terminal type (otherwise have stack overflow).
    switch (root->type()) {

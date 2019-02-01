@@ -29,8 +29,10 @@
 
 #include <iomanip>
 #include <iostream>
+#include <set>
 #include <sstream>
 #include <string>
+#include <vector>
 
 // Define the following symbol adds some functions to the API for implementation purposes.
 // These functions are not available to a normal API user.
@@ -91,7 +93,12 @@ inline std::string binaryString(int16_t x) {return(binaryString(static_cast<uint
 inline std::string binaryString(int8_t x)  {return(binaryString(static_cast<uint8_t>(x)));}
 
 using ImageFileImplSharedPtr = std::shared_ptr<class ImageFileImpl>;
+using ImageFileImplWeakPtr = std::weak_ptr<class ImageFileImpl>;
 using NodeImplSharedPtr = std::shared_ptr<class NodeImpl>;
+using NodeImplWeakPtr = std::weak_ptr<class NodeImpl>;
+
+using StringList = std::vector<std::string>;
+using StringSet = std::set<std::string>;
 
 }
 

@@ -88,7 +88,7 @@ struct CompressedVectorSectionHeader
 
 //================================================================================================
 
-VectorNodeImpl::VectorNodeImpl(weak_ptr<ImageFileImpl> destImageFile, bool allowHeteroChildren)
+VectorNodeImpl::VectorNodeImpl(ImageFileImplWeakPtr destImageFile, bool allowHeteroChildren)
 : StructureNodeImpl(destImageFile),
   allowHeteroChildren_(allowHeteroChildren)
 {
@@ -183,7 +183,7 @@ void VectorNodeImpl::dump(int indent, ostream& os) const
 #endif
 
 //=============================================================================
-CompressedVectorNodeImpl::CompressedVectorNodeImpl(weak_ptr<ImageFileImpl> destImageFile)
+CompressedVectorNodeImpl::CompressedVectorNodeImpl(ImageFileImplWeakPtr destImageFile)
 : NodeImpl(destImageFile)
 {
     // don't checkImageFileOpen, NodeImpl() will do it
@@ -320,7 +320,7 @@ int64_t CompressedVectorNodeImpl::childCount()
     return(recordCount_);
 }
 
-void CompressedVectorNodeImpl::checkLeavesInSet(const std::set<ustring>& /*pathNames*/, NodeImplSharedPtr /*origin*/)
+void CompressedVectorNodeImpl::checkLeavesInSet(const StringSet& /*pathNames*/, NodeImplSharedPtr /*origin*/)
 {
     // don't checkImageFileOpen
 
@@ -463,7 +463,7 @@ shared_ptr<CompressedVectorReaderImpl> CompressedVectorNodeImpl::reader(vector<S
 }
 
 //=====================================================================
-IntegerNodeImpl::IntegerNodeImpl(weak_ptr<ImageFileImpl> destImageFile, int64_t value, int64_t minimum, int64_t maximum)
+IntegerNodeImpl::IntegerNodeImpl(ImageFileImplWeakPtr destImageFile, int64_t value, int64_t minimum, int64_t maximum)
 : NodeImpl(destImageFile),
   value_(value),
   minimum_(minimum),
@@ -535,7 +535,7 @@ int64_t IntegerNodeImpl::maximum()
     return(maximum_);
 }
 
-void IntegerNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, NodeImplSharedPtr origin)
+void IntegerNodeImpl::checkLeavesInSet(const StringSet &pathNames, NodeImplSharedPtr origin)
 {
     // don't checkImageFileOpen
 
@@ -582,7 +582,7 @@ void IntegerNodeImpl::dump(int indent, ostream& os) const
 #endif
 
 //=============================================================================
-ScaledIntegerNodeImpl::ScaledIntegerNodeImpl(weak_ptr<ImageFileImpl> destImageFile, int64_t rawValue, int64_t minimum, int64_t maximum, double scale, double offset)
+ScaledIntegerNodeImpl::ScaledIntegerNodeImpl(ImageFileImplWeakPtr destImageFile, int64_t rawValue, int64_t minimum, int64_t maximum, double scale, double offset)
 : NodeImpl(destImageFile),
   value_(rawValue),
   minimum_(minimum),
@@ -602,7 +602,7 @@ ScaledIntegerNodeImpl::ScaledIntegerNodeImpl(weak_ptr<ImageFileImpl> destImageFi
     }
 }
 //=============================================================================
-ScaledIntegerNodeImpl::ScaledIntegerNodeImpl(weak_ptr<ImageFileImpl> destImageFile, double scaledValue, double scaledMinimum, double scaledMaximum, double scale, double offset)
+ScaledIntegerNodeImpl::ScaledIntegerNodeImpl(ImageFileImplWeakPtr destImageFile, double scaledValue, double scaledMinimum, double scaledMaximum, double scale, double offset)
 : NodeImpl(destImageFile),
   value_(static_cast<int64_t>(floor((scaledValue - offset)/scale +.5))),
   minimum_(static_cast<int64_t>(floor((scaledMinimum - offset)/scale +.5))),
@@ -711,7 +711,7 @@ double ScaledIntegerNodeImpl::offset()
     return(offset_);
 }
 
-void ScaledIntegerNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, NodeImplSharedPtr origin)
+void ScaledIntegerNodeImpl::checkLeavesInSet(const StringSet &pathNames, NodeImplSharedPtr origin)
 {
     // don't checkImageFileOpen
 
@@ -765,7 +765,7 @@ void ScaledIntegerNodeImpl::dump(int indent, ostream& os) const
 
 //=============================================================================
 
-FloatNodeImpl::FloatNodeImpl(weak_ptr<ImageFileImpl> destImageFile, double value, FloatPrecision precision, double minimum, double maximum)
+FloatNodeImpl::FloatNodeImpl(ImageFileImplWeakPtr destImageFile, double value, FloatPrecision precision, double minimum, double maximum)
 : NodeImpl(destImageFile),
   value_(value),
   precision_(precision),
@@ -858,7 +858,7 @@ double FloatNodeImpl::maximum() const
     return maximum_;
 }
 
-void FloatNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, NodeImplSharedPtr origin)
+void FloatNodeImpl::checkLeavesInSet(const StringSet &pathNames, NodeImplSharedPtr origin)
 {
     // don't checkImageFileOpen
 
@@ -937,7 +937,7 @@ void FloatNodeImpl::dump(int indent, ostream& os) const
 
 //=============================================================================
 
-StringNodeImpl::StringNodeImpl(weak_ptr<ImageFileImpl> destImageFile, const ustring &value)
+StringNodeImpl::StringNodeImpl(ImageFileImplWeakPtr destImageFile, const ustring &value)
 : NodeImpl(destImageFile),
   value_(value)
 {
@@ -972,7 +972,7 @@ ustring StringNodeImpl::value()
     return(value_);
 }
 
-void StringNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, NodeImplSharedPtr origin)
+void StringNodeImpl::checkLeavesInSet(const StringSet &pathNames, NodeImplSharedPtr origin)
 {
     // don't checkImageFileOpen
 
@@ -1038,7 +1038,7 @@ void StringNodeImpl::dump(int indent, ostream& os) const
 
 //=============================================================================
 
-BlobNodeImpl::BlobNodeImpl(weak_ptr<ImageFileImpl> destImageFile, int64_t byteCount)
+BlobNodeImpl::BlobNodeImpl(ImageFileImplWeakPtr destImageFile, int64_t byteCount)
 : NodeImpl(destImageFile)
 {
     // don't checkImageFileOpen, NodeImpl() will do it
@@ -1069,7 +1069,7 @@ BlobNodeImpl::BlobNodeImpl(weak_ptr<ImageFileImpl> destImageFile, int64_t byteCo
     imf->file_->write(reinterpret_cast<char*>(&header), sizeof(header));
 }
 
-BlobNodeImpl::BlobNodeImpl(weak_ptr<ImageFileImpl> destImageFile, int64_t fileOffset, int64_t length)
+BlobNodeImpl::BlobNodeImpl(ImageFileImplWeakPtr destImageFile, int64_t fileOffset, int64_t length)
 : NodeImpl(destImageFile)
 {
     /// Init blob object that already exists in E57 file currently reading.
@@ -1164,7 +1164,7 @@ void BlobNodeImpl::write(uint8_t* buf, int64_t start, size_t count)
     imf->file_->write(reinterpret_cast<char*>(buf), static_cast<size_t>(count));  //??? arg1 void* ?
 }
 
-void BlobNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, NodeImplSharedPtr origin)
+void BlobNodeImpl::checkLeavesInSet(const StringSet &pathNames, NodeImplSharedPtr origin)
 {
     // don't checkImageFileOpen
 

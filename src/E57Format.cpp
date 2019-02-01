@@ -2480,7 +2480,7 @@ The API user is responsible for ensuring that the lifetime of the @a b vector ex
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     SourceDestBufferStringCreate.cpp example, SourceDestBufferNumericCreate.cpp example, SourceDestBuffer::doConversion for discussion on representations compatible with string SourceDestBuffers.
 */
-SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring &pathName, std::vector<ustring>* b)
+SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring &pathName, StringList *b)
 : impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b))
 {
 }

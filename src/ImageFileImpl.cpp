@@ -635,12 +635,12 @@ namespace e57
 
       /// Just call pathNameParse() which throws if not well formed
       bool isRelative = false;
-      std::vector<ustring> fields;
+      StringList fields;
 
       pathNameParse(pathName, isRelative, fields);
    }
 
-   void ImageFileImpl::pathNameParse(const ustring& pathName, bool& isRelative, std::vector<ustring>& fields)
+   void ImageFileImpl::pathNameParse(const ustring &pathName, bool &isRelative, StringList &fields)
    {
 #ifdef E57_MAX_VERBOSE
       std::cout << "pathNameParse pathname=""" << pathName << """" << std::endl;

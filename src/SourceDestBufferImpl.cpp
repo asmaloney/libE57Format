@@ -33,7 +33,7 @@ using namespace e57;
 using namespace std;
 
 
-SourceDestBufferImpl::SourceDestBufferImpl( DestImagePtr destImageFile, const ustring &pathName, const size_t capacity, bool doConversion, bool doScaling )
+SourceDestBufferImpl::SourceDestBufferImpl( ImageFileImplWeakPtr destImageFile, const ustring &pathName, const size_t capacity, bool doConversion, bool doScaling )
    : destImageFile_( destImageFile ),
      pathName_( pathName ),
      capacity_( capacity ),
@@ -77,7 +77,7 @@ template void SourceDestBufferImpl::setTypeInfo<float>( float *base, size_t stri
 template void SourceDestBufferImpl::setTypeInfo<double>( double *base, size_t stride );
 
 
-SourceDestBufferImpl::SourceDestBufferImpl(DestImagePtr destImageFile, const ustring &pathName, vector<ustring>* b)
+SourceDestBufferImpl::SourceDestBufferImpl(ImageFileImplWeakPtr destImageFile, const ustring &pathName, vector<ustring>* b)
    : destImageFile_(destImageFile),
      pathName_(pathName),
      memoryRepresentation_(E57_USTRING),

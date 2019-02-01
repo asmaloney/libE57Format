@@ -34,7 +34,7 @@ using namespace e57;
 using namespace std;
 
 
-StructureNodeImpl::StructureNodeImpl(weak_ptr<ImageFileImpl> destImageFile)
+StructureNodeImpl::StructureNodeImpl(ImageFileImplWeakPtr destImageFile)
 : NodeImpl(destImageFile)
 {
     checkImageFileOpen(__FILE__, __LINE__, static_cast<const char *>(__FUNCTION__));
@@ -322,7 +322,7 @@ void StructureNodeImpl::append(NodeImplSharedPtr ni)
 }
 
 //??? use visitor?
-void StructureNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, NodeImplSharedPtr origin)
+void StructureNodeImpl::checkLeavesInSet(const StringSet &pathNames, NodeImplSharedPtr origin)
 {
     /// don't checkImageFileOpen
 

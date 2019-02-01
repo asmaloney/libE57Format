@@ -72,8 +72,8 @@ namespace e57
          void            elementNameParse(const ustring& elementName, ustring& prefix, ustring& localPart, bool allowNumber = true);
 
          void            pathNameCheckWellFormed(const ustring& pathName);
-         void            pathNameParse(const ustring& pathName, bool& isRelative, std::vector<ustring>& fields);
-         ustring         pathNameUnparse(bool isRelative, const std::vector<ustring>& fields);
+         void            pathNameParse(const ustring &pathName, bool &isRelative, StringList &fields);
+         ustring         pathNameUnparse(bool isRelative, const StringList &fields);
 
          unsigned        bitsNeeded(int64_t minimum, int64_t maximum);
          void            incrWriterCount();

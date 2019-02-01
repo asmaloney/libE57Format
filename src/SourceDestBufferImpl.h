@@ -35,24 +35,21 @@ namespace e57
    class SourceDestBufferImpl : public std::enable_shared_from_this<SourceDestBufferImpl>
    {
       public:
-         using DestImagePtr = std::weak_ptr<ImageFileImpl>;
-
-      public:
-         SourceDestBufferImpl( DestImagePtr destImageFile, const ustring &pathName,
+         SourceDestBufferImpl( ImageFileImplWeakPtr destImageFile, const ustring &pathName,
                                const size_t capacity, bool doConversion = false,
                                bool doScaling = false );
 
          template<typename T>
          void  setTypeInfo( T *base, size_t stride = sizeof(T) );
 
-         SourceDestBufferImpl( DestImagePtr destImageFile, const ustring &pathName, std::vector<ustring>* b );
+         SourceDestBufferImpl( ImageFileImplWeakPtr destImageFile, const ustring &pathName, StringList *b );
 
-         DestImagePtr destImageFile() const { return destImageFile_; }
+         ImageFileImplWeakPtr destImageFile() const { return destImageFile_; }
 
          ustring                 pathName()      const { return pathName_; }
          MemoryRepresentation    memoryRepresentation() const { return memoryRepresentation_; }
          void*                   base()          const { return base_; }
-         std::vector<ustring>*   ustrings()      const { return ustrings_; }
+         StringList              *ustrings()     const { return ustrings_; }
          bool                    doConversion()  const { return doConversion_; }
          bool                    doScaling()     const { return doScaling_; }
          size_t                  stride()        const { return stride_; }
@@ -84,7 +81,7 @@ namespace e57
          void checkState_() const;  /// Common routine to check that constructor arguments were ok, throws if not
 
          //??? verify alignment
-         DestImagePtr            destImageFile_;
+         ImageFileImplWeakPtr    destImageFile_;
          ustring                 pathName_;              /// Pathname from CompressedVectorNode to source/dest object, e.g. "Indices/0"
          MemoryRepresentation    memoryRepresentation_;  /// Type of element (e.g. E57_INT8, E57_UINT64, DOUBLE...)
          char*                   base_ = nullptr;        /// Address of first element, for non-ustring buffers
@@ -93,7 +90,7 @@ namespace e57
          bool                    doScaling_ = false;     /// Apply scale factor for integer type
          size_t                  stride_ = 0;            /// Distance between each element (different than size_ if elements not contiguous)
          unsigned                nextIndex_ = 0;         /// Number of elements that have been set (dest buffer) or read (source buffer) since rewind().
-         std::vector<ustring>*   ustrings_ = nullptr;    /// Optional array of ustrings (used if memoryRepresentation_==E57_USTRING) ???ownership
+         StringList              *ustrings_ = nullptr;   /// Optional array of ustrings (used if memoryRepresentation_==E57_USTRING) ???ownership
    };
 }
 

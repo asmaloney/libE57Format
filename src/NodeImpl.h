@@ -26,8 +26,6 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include <set>
-
 #include "Common.h"
 
 namespace e57 {
@@ -57,9 +55,9 @@ public:
 
     virtual NodeImplSharedPtr get(const ustring& pathName);
     virtual void            set(const ustring& pathName, NodeImplSharedPtr ni, bool autoPathCreate = false);
-    virtual void            set(const std::vector<ustring>& fields, unsigned level, NodeImplSharedPtr ni, bool autoPathCreate = false);
+    virtual void            set(const StringList &fields, unsigned level, NodeImplSharedPtr ni, bool autoPathCreate = false);
 
-    virtual void            checkLeavesInSet(const std::set<ustring>& pathNames, NodeImplSharedPtr origin) = 0;
+    virtual void            checkLeavesInSet(const StringSet &pathNames, NodeImplSharedPtr origin) = 0;
     void                    checkBuffers(const std::vector<SourceDestBuffer>& sdbufs, bool allowMissing);
     bool                    findTerminalPosition(const NodeImplSharedPtr &target, uint64_t& countFromLeft);
 
@@ -82,15 +80,15 @@ protected:
     friend class Decoder;
     friend class Encoder;
 
-                               NodeImpl(std::weak_ptr<ImageFileImpl> destImageFile);
+                               NodeImpl(ImageFileImplWeakPtr destImageFile);
     NodeImpl&                  operator=(NodeImpl& n);
     virtual NodeImplSharedPtr  lookup(const ustring& /*pathName*/) {return NodeImplSharedPtr();}
     NodeImplSharedPtr          getRoot();
 
-    std::weak_ptr<ImageFileImpl>       destImageFile_;
-    std::weak_ptr<NodeImpl>            parent_;
-    ustring                            elementName_;
-    bool                               isAttached_;
+    ImageFileImplWeakPtr   destImageFile_;
+    NodeImplWeakPtr        parent_;
+    ustring                elementName_;
+    bool                   isAttached_;
 };
 
 }

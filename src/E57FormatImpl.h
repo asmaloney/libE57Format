@@ -44,7 +44,7 @@ class Encoder;
 class VectorNodeImpl : public StructureNodeImpl
 {
 public:
-    explicit VectorNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, bool allowHeteroChildren);
+    explicit VectorNodeImpl(ImageFileImplWeakPtr destImageFile, bool allowHeteroChildren);
              ~VectorNodeImpl() override = default;
 
     NodeType    type() const override { return E57_VECTOR; }
@@ -69,7 +69,7 @@ private:
 class CompressedVectorNodeImpl : public NodeImpl
 {
 public:
-    CompressedVectorNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile);
+    CompressedVectorNodeImpl(ImageFileImplWeakPtr destImageFile);
     ~CompressedVectorNodeImpl() override = default;
 
     NodeType    type() const override { return E57_COMPRESSED_VECTOR; }
@@ -84,7 +84,7 @@ public:
 
     virtual int64_t     childCount();
 
-    void        checkLeavesInSet(const std::set<ustring>& pathNames, NodeImplSharedPtr origin) override;
+    void        checkLeavesInSet(const StringSet &pathNames, NodeImplSharedPtr origin) override;
 
     void        writeXml(ImageFileImplSharedPtr imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) override;
 
@@ -115,7 +115,7 @@ private:
 class IntegerNodeImpl : public NodeImpl
 {
 public:
-    IntegerNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, int64_t value = 0, int64_t minimum = 0, int64_t maximum = 0);
+    IntegerNodeImpl(ImageFileImplWeakPtr destImageFile, int64_t value = 0, int64_t minimum = 0, int64_t maximum = 0);
     ~IntegerNodeImpl() override = default;
 
     NodeType    type() const override { return E57_INTEGER; }
@@ -126,7 +126,7 @@ public:
     int64_t             minimum();
     int64_t             maximum();
 
-    void        checkLeavesInSet(const std::set<ustring>& pathNames, NodeImplSharedPtr origin) override;
+    void        checkLeavesInSet(const StringSet &pathNames, NodeImplSharedPtr origin) override;
 
     void        writeXml(ImageFileImplSharedPtr imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) override;
 
@@ -143,11 +143,11 @@ private:
 class ScaledIntegerNodeImpl : public NodeImpl
 {
 public:
-    ScaledIntegerNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile,
+    ScaledIntegerNodeImpl(ImageFileImplWeakPtr destImageFile,
                           int64_t value = 0, int64_t minimum = 0, int64_t maximum = 0,
                           double scale = 1.0, double offset = 0.0);
 
-    ScaledIntegerNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile,
+    ScaledIntegerNodeImpl(ImageFileImplWeakPtr destImageFile,
                           double scaledValue = 0., double scaledMinimum = 0., double scaledMaximum = 0.,
                           double scale = 1.0, double offset = 0.0);
 
@@ -166,7 +166,7 @@ public:
     double              scale();
     double              offset();
 
-    void        checkLeavesInSet(const std::set<ustring>& pathNames, NodeImplSharedPtr origin) override;
+    void        checkLeavesInSet(const StringSet &pathNames, NodeImplSharedPtr origin) override;
 
     void        writeXml(ImageFileImplSharedPtr imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) override;
 
@@ -186,7 +186,7 @@ private:
 class FloatNodeImpl : public NodeImpl
 {
 public:
-    FloatNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile,
+    FloatNodeImpl(ImageFileImplWeakPtr destImageFile,
                   double value = 0, FloatPrecision precision = E57_DOUBLE,
                   double minimum = E57_DOUBLE_MIN, double  maximum = E57_DOUBLE_MAX);
     ~FloatNodeImpl() override = default;
@@ -200,7 +200,7 @@ public:
     double              minimum() const;
     double              maximum() const;
 
-    void        checkLeavesInSet(const std::set<ustring>& pathNames, NodeImplSharedPtr origin) override;
+    void        checkLeavesInSet(const StringSet &pathNames, NodeImplSharedPtr origin) override;
 
     void        writeXml(ImageFileImplSharedPtr imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) override;
 
@@ -218,7 +218,7 @@ private:
 class StringNodeImpl : public NodeImpl
 {
 public:
-    explicit StringNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring &value = "");
+    explicit StringNodeImpl(ImageFileImplWeakPtr destImageFile, const ustring &value = "");
     ~StringNodeImpl() override = default;
 
     NodeType    type() const override { return E57_STRING; }
@@ -227,7 +227,7 @@ public:
 
     ustring             value();
 
-    void        checkLeavesInSet(const std::set<ustring>& pathNames, NodeImplSharedPtr origin) override;
+    void        checkLeavesInSet(const StringSet &pathNames, NodeImplSharedPtr origin) override;
 
     void        writeXml(ImageFileImplSharedPtr imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) override;
 
@@ -242,8 +242,8 @@ private:
 class BlobNodeImpl : public NodeImpl
 {
 public:
-    BlobNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, int64_t byteCount);
-    BlobNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, int64_t fileOffset, int64_t length);
+    BlobNodeImpl(ImageFileImplWeakPtr destImageFile, int64_t byteCount);
+    BlobNodeImpl(ImageFileImplWeakPtr destImageFile, int64_t fileOffset, int64_t length);
     ~BlobNodeImpl() override = default;
 
     NodeType    type() const override { return E57_BLOB; }
@@ -254,7 +254,7 @@ public:
     void                read(uint8_t* buf, int64_t start, size_t count);
     void                write(uint8_t* buf, int64_t start, size_t count);
 
-    void        checkLeavesInSet(const std::set<ustring>& pathNames, NodeImplSharedPtr origin) override;
+    void        checkLeavesInSet(const StringSet &pathNames, NodeImplSharedPtr origin) override;
 
     void        writeXml(ImageFileImplSharedPtr imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) override;
 

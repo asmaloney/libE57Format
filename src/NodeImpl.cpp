@@ -34,7 +34,7 @@ using namespace e57;
 using namespace std;
 
 
-NodeImpl::NodeImpl(weak_ptr<ImageFileImpl> destImageFile)
+NodeImpl::NodeImpl(ImageFileImplWeakPtr destImageFile)
 : destImageFile_(destImageFile),
   isAttached_(false)
 {
@@ -254,7 +254,7 @@ void NodeImpl::set(const ustring& pathName, NodeImplSharedPtr ni, bool autoPathC
    root->set( pathName, ni, autoPathCreate );
 }
 
-void NodeImpl::set(const std::vector<ustring>& /*fields*/, unsigned /*level*/, NodeImplSharedPtr /*ni*/, bool /*autoPathCreate*/)
+void NodeImpl::set(const StringList& /*fields*/, unsigned /*level*/, NodeImplSharedPtr /*ni*/, bool /*autoPathCreate*/)
 {
     /// If get here, then tried to call set(fields...) on NodeImpl that wasn't a StructureNodeImpl, so that's an error
     throw E57_EXCEPTION1(E57_ERROR_BAD_PATH_NAME); //???
@@ -266,7 +266,8 @@ void NodeImpl::checkBuffers(const vector<SourceDestBuffer>& sdbufs, bool allowMi
 
     /// don't checkImageFileOpen
 
-    std::set<ustring> pathNames;
+    StringSet pathNames;
+
     for (unsigned i = 0; i < sdbufs.size(); i++) {
         ustring pathName = sdbufs.at(i).impl()->pathName();
 

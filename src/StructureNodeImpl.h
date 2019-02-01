@@ -33,7 +33,7 @@ namespace e57 {
 class StructureNodeImpl : public NodeImpl
 {
 public:
-    StructureNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile);
+    StructureNodeImpl(ImageFileImplWeakPtr destImageFile);
     ~StructureNodeImpl()  override = default;
 
     NodeType    type() const override;
@@ -48,10 +48,10 @@ public:
 
     virtual void  set(int64_t index, NodeImplSharedPtr ni);
     void          set(const ustring& pathName, NodeImplSharedPtr ni, bool autoPathCreate = false) override;
-    void          set(const std::vector<ustring>& fields, unsigned level, NodeImplSharedPtr ni, bool autoPathCreate = false) override;
+    void          set(const StringList &fields, unsigned level, NodeImplSharedPtr ni, bool autoPathCreate = false) override;
     virtual void  append(NodeImplSharedPtr ni);
 
-    void        checkLeavesInSet(const std::set<ustring>& pathNames, NodeImplSharedPtr origin) override;
+    void        checkLeavesInSet(const StringSet &pathNames, NodeImplSharedPtr origin) override;
 
     void        writeXml(ImageFileImplSharedPtr imf, CheckedFile& cf, int indent, const char* forcedFieldName=nullptr) override;
 

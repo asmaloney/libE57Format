@@ -67,7 +67,7 @@ endif(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 find_package( Threads REQUIRED )
 
 # Xerces-c
-find_package( XercesC )
+find_package( XercesC REQUIRED )
 
 if ( NOT XercesC_FOUND )
     set( XercesC_INCLUDE_DIR "" CACHE PATH "Xerces include directory" )

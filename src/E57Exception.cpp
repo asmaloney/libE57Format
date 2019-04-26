@@ -105,17 +105,17 @@ namespace e57
       os << "**** Got an e57 exception: " << e57::Utilities::errorCodeToString(errorCode()) << std::endl;
 
 #ifdef E57_DEBUG
-      os << "  Debug info: " << endl;
-      os << "    context: "             << context_ << endl;
-      os << "    sourceFunctionName: "   << sourceFunctionName_ << endl;
+      os << "  Debug info: " << std::endl;
+      os << "    context: "             << context_ << std::endl;
+      os << "    sourceFunctionName: "   << sourceFunctionName_ << std::endl;
       if (reportingFunctionName != nullptr)
-         os << "    reportingFunctionName: "   << reportingFunctionName << endl;
+         os << "    reportingFunctionName: "   << reportingFunctionName << std::endl;
 
 
       /*** Add a line in error message that a smart editor (gnu emacs) can interpret as a link to the source code: */
-      os << sourceFileName_ << "(" << sourceLineNumber_ << ") : error C" << errorCode_ << ":  <--- occurred on" << endl;
+      os << sourceFileName_ << "(" << sourceLineNumber_ << ") : error C" << errorCode_ << ":  <--- occurred on" << std::endl;
       if (reportingFileName != nullptr)
-         os << reportingFileName << "(" << reportingLineNumber << ") : error C0:  <--- reported on" << endl;
+         os << reportingFileName << "(" << reportingLineNumber << ") : error C0:  <--- reported on" << std::endl;
 #endif
    }
 

@@ -83,14 +83,6 @@ endif()
 
 set( XML_INCLUDE_DIRS ${XercesC_INCLUDE_DIR} )
 
-if (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
-    add_definitions(-DLINUX)
-elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
-    add_definitions(-DMACOS)
-elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
-    add_definitions(-DWINDOWS)
-endif()
-
 add_definitions(-DREVISION_ID="${PROJECT_NAME}-${${PROJECT_NAME}_MAJOR_VERSION}.${${PROJECT_NAME}_MINOR_VERSION}.${${PROJECT_NAME}_PATCH_VERSION}-${${PROJECT_NAME}_BUILD_TAG}")
 
 include_directories(

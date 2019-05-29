@@ -4557,6 +4557,12 @@ ImageFile::ImageFile(const ustring& fname, const ustring& mode, ReadChecksumPoli
     impl_->construct2(fname, mode);
 }
 
+ImageFile::ImageFile(const char* input, const uint64_t size, ReadChecksumPolicy checksumPolicy)
+: impl_( new ImageFileImpl( checksumPolicy ) )
+{
+    impl_->construct2(input, size);
+}
+
 /*!
 @brief   Get the pre-established root StructureNode of the E57 ImageFile.
 @details The root node of an ImageFile always exists and is always type StructureNode.

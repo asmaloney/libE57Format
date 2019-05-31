@@ -81,41 +81,66 @@ constexpr uint64_t   CheckedFile::physicalPageSizeMask;
 constexpr size_t     CheckedFile::logicalPageSize;
 
 
-BufferView::BufferView(const char* input, uint64_t size): 
-   stream_(input),
-   streamSize_(size)
-{}
+/// Tool class to read buffer efficiently without 
+/// multiplying copy operations.
+///
+/// WARNING: pointer input is handled by user!
+class e57::BufferView
+{
+   public:
+      /// @param[IN] input: filled buffer owned by caller.
+      /// @param[IN] size: size of input
+      BufferView( const char* input, uint64_t size ) : 
+         stream_( input ),
+         streamSize_( size )
+      {
 
-uint64_t BufferView::pos() const{
-   return cursorStream_;
-}
+      }
 
-bool BufferView::seek(uint64_t offset, int whence){
-   if(whence == SEEK_CUR){
-      cursorStream_ += offset;
-   }
-   else if(whence == SEEK_SET){
-      cursorStream_ = offset;
-   }
-   else if(whence == SEEK_END){
-      cursorStream_ = streamSize_ - offset;
-   }
+      uint64_t pos() const
+      {
+         return cursorStream_;
+      }
 
-   if(cursorStream_ > streamSize_){
-      cursorStream_ = streamSize_;
-      return false;
-   }
-   
-   return true;
-}
+      bool seek( uint64_t offset, int whence )
+      {
+         if ( whence == SEEK_CUR )
+         {
+            cursorStream_ += offset;
+         }
+         else if ( whence == SEEK_SET )
+         {
+            cursorStream_ = offset;
+         }
+         else if ( whence == SEEK_END )
+         {
+            cursorStream_ = streamSize_ - offset;
+         }
 
-void BufferView::read(char* buffer, uint64_t count){
-   const uint64_t start = cursorStream_;
-   for(uint64_t i = 0; i<count; ++i){
-      buffer[i] = stream_[start + i];
-      ++cursorStream_;
-   }
-}
+         if ( cursorStream_ > streamSize_ )
+         {
+            cursorStream_ = streamSize_;
+            return false;
+         }
+         
+         return true;
+      }
+
+      void read( char* buffer, uint64_t count )
+      {
+         const uint64_t start = cursorStream_;
+         for ( uint64_t i = 0; i < count; ++i )
+         {
+            buffer[i] = stream_[start + i];
+            ++cursorStream_;
+         }
+      }
+
+   private:
+      const uint64_t  streamSize_;
+      uint64_t        cursorStream_ = 0;
+      const char*     stream_;
+};
 
 
 CheckedFile::CheckedFile( const ustring &fileName, Mode mode, ReadChecksumPolicy policy ) :
@@ -150,7 +175,7 @@ CheckedFile::CheckedFile( const ustring &fileName, Mode mode, ReadChecksumPolicy
 
 
 CheckedFile::CheckedFile( const char* input, const uint64_t size, ReadChecksumPolicy policy ) :
-   fileName_("<StreamBuffer>"),
+   fileName_( "<StreamBuffer>" ),
    checkSumPolicy_( policy )
 {
    bufView_ = new BufferView(input, size);
@@ -437,39 +462,51 @@ void CheckedFile::seek(uint64_t offset, OffsetMode omode)
 
 uint64_t CheckedFile::lseek64(int64_t offset, int whence)
 {
-   int64_t result = -1;
-   if(fd_ >= 0){
+   if ( fd_ < 0 && bufView_ != nullptr )
+   {
+      int64_t result;
+      if ( bufView_->seek(offset, whence) )
+      {
+         result = bufView_->pos();
+      }
+      else
+      {
+         result = -1;
+      }
+
+      if ( result < 0 )
+      {
+         throw E57_EXCEPTION2(E57_ERROR_LSEEK_FAILED,
+                              "fileName=" + fileName_
+                              + " offset=" + toString(offset)
+                              + " whence=" + toString(whence)
+                              + " result=" + toString(result));
+      }
+
+      return static_cast<uint64_t>(result);
+   }
+
 #if defined(_WIN32)
 #  if defined(_MSC_VER) || defined(__MINGW32__) //<rs 2010-06-16> mingw _is_ WIN32!
-   result = _lseeki64(fd_, offset, whence);
+   __int64 result = _lseeki64(fd_, offset, whence);
 #  elif defined(__GNUC__) //<rs 2010-06-16> this most likely will not get triggered (cygwin != WIN32)?
 #    ifdef E57_MAX_DEBUG
    if (sizeof(off_t) != sizeof(offset))
       throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "sizeof(off_t)=" + toString(sizeof(off_t)));
 #    endif
-   result = ::lseek(fd_, offset, whence);
+   int64_t result = ::lseek(fd_, offset, whence);
 #  else
 #    error "no supported compiler defined"
 #  endif
 #elif defined(__linux__)
-   result = ::lseek64(fd_, offset, whence);
+   int64_t result = ::lseek64(fd_, offset, whence);
 #elif defined(__APPLE__)
-   result = ::lseek(fd_, offset, whence);
+   int64_t result = ::lseek(fd_, offset, whence);
 #else
 #  error "no supported OS platform defined"
 #endif
-   }
-   else if(bufView_ != nullptr){
-      if(bufView_->seek(offset, whence)){
-         result = bufView_->pos();
-      }
-      else{
-         cerr << "CheckedFile::lseek64 Error: cursorStream_ is out of bound!" << endl;
-         result = -1;
-      }
-   } 
 
-   if (result < 0)
+   if ( result < 0 )
    {
       throw E57_EXCEPTION2(E57_ERROR_LSEEK_FAILED,
                            "fileName=" + fileName_
@@ -636,7 +673,7 @@ void CheckedFile::close()
       delete bufView_;
       bufView_ = nullptr;
 
-      // WARNING: do NOT delete buffer of streamView_ because
+      // WARNING: do NOT delete buffer of bufView_ because
       // pointer is handled by user !!
    }
 }
@@ -732,20 +769,26 @@ void CheckedFile::readPhysicalPage(char* page_buffer, uint64_t page)
    /// Seek to start of physical page
    seek( page*physicalPageSize, Physical );
 
-   size_t result = -1;
-   if(fd_ >= 0){
+   if ( fd_ < 0 && bufView_ != nullptr )
+   {
+      bufView_->read(page_buffer, physicalPageSize);
+      size_t result = physicalPageSize;
+
+      if ( result < 0 || static_cast<size_t>(result) != physicalPageSize )
+      {
+         throw E57_EXCEPTION2(E57_ERROR_READ_FAILED, "fileName=" + fileName_ + " result=" + toString(result));
+      }
+
+      return;
+   }
+
 #if defined(_MSC_VER)
-      result = ::_read( fd_, page_buffer, physicalPageSize );
+      __int64 result = result = ::_read( fd_, page_buffer, physicalPageSize );
 #elif defined(__GNUC__)
-      result = ::read( fd_, page_buffer, physicalPageSize );
+      ssize_t result = ::read( fd_, page_buffer, physicalPageSize );
 #else
 #  error "no supported compiler defined"
 #endif
-   }
-   else if(bufView_ != nullptr){
-      bufView_->read(page_buffer, physicalPageSize);
-      result = physicalPageSize;
-   }
 
    if ( result < 0 || static_cast<size_t>(result) != physicalPageSize )
    {

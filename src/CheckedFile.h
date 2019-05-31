@@ -33,19 +33,10 @@
 
 namespace e57 {
    /// Tool class to read buffer efficiently without 
-   /// multiplying copy operations
-   class BufferView {
-      public:
-         BufferView(const char* input, uint64_t size);
-         uint64_t pos() const;
-         bool seek(uint64_t offset, int whence);
-         void read(char* buffer, uint64_t count);
-
-      private:
-         const uint64_t  streamSize_;
-         uint64_t        cursorStream_ = 0;
-         const char*     stream_;
-   };
+   /// multiplying copy operations.
+   ///
+   /// WARNING: pointer input is handled by user!
+   class BufferView;
 
    class CheckedFile
    {

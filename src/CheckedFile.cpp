@@ -460,28 +460,19 @@ void CheckedFile::seek(uint64_t offset, OffsetMode omode)
 
 uint64_t CheckedFile::lseek64(int64_t offset, int whence)
 {
-   if ( fd_ < 0 && bufView_ != nullptr )
+   if ( (fd_ < 0) && (bufView_ != nullptr) )
    {
-      int64_t result;
-      if ( bufView_->seek(offset, whence) )
+      const auto uoffset = static_cast<uint64_t>( offset );
+	  
+      if ( bufView_->seek(uoffset, whence) )
       {
-         result = bufView_->pos();
-      }
-      else
-      {
-         result = -1;
+         return bufView_->pos();
       }
 
-      if ( result < 0 )
-      {
-         throw E57_EXCEPTION2(E57_ERROR_LSEEK_FAILED,
-                              "fileName=" + fileName_
-                              + " offset=" + toString(offset)
-                              + " whence=" + toString(whence)
-                              + " result=" + toString(result));
-      }
-
-      return static_cast<uint64_t>(result);
+      throw E57_EXCEPTION2(E57_ERROR_LSEEK_FAILED,
+                           "fileName=" + fileName_
+                           + " offset=" + toString(offset)
+                           + " whence=" + toString(whence));
    }
 
 #if defined(_WIN32)

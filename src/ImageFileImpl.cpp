@@ -186,6 +186,69 @@ namespace e57
       }
    }
 
+   void ImageFileImpl::construct2(const char* input, const uint64_t size)
+   {
+      /// Second phase of construction, now we have a well-formed ImageFile object.
+
+#ifdef E57_MAX_VERBOSE
+      std::cout << "ImageFileImpl() called, fileName=" << fileName << " mode=" << mode << std::endl;
+#endif
+      unusedLogicalStart_ = sizeof(E57FileHeader);
+      fileName_ = "<StreamBuffer>";
+
+      /// Get shared_ptr to this object
+      ImageFileImplSharedPtr imf = shared_from_this();
+
+      isWriter_ = false;
+      file_ = nullptr;
+
+      try
+      {
+         /// Open file for reading.
+         file_ = new CheckedFile( input, size, checksumPolicy );
+
+         std::shared_ptr<StructureNodeImpl> root(new StructureNodeImpl(imf));
+         root_ = root;
+         root_->setAttachedRecursive();
+
+         E57FileHeader header;
+         readFileHeader(file_, header);
+
+         xmlLogicalOffset_ = file_->physicalToLogical(header.xmlPhysicalOffset);
+         xmlLogicalLength_ = header.xmlLogicalLength;
+      }
+      catch (...)
+      {
+         delete file_;
+         file_ = nullptr;
+
+         throw;
+      }
+
+      try
+      {
+         /// Create parser state, attach its event handers to the SAX2 reader
+         E57XmlParser parser(imf);
+
+         parser.init();
+
+         /// Create input source (XML section of E57 file turned into a stream).
+         E57XmlFileInputSource xmlSection(file_, xmlLogicalOffset_, xmlLogicalLength_);
+
+         unusedLogicalStart_ = sizeof(E57FileHeader);
+
+         /// Do the parse, building up the node tree
+         parser.parse( xmlSection );
+      }
+      catch (...)
+      {
+         delete file_;
+         file_ = nullptr;
+
+         throw;
+      }
+   }
+
    void ImageFileImpl::incrWriterCount()
    {
       writerCount_++;

@@ -612,6 +612,7 @@ class ImageFile
 public:
     ImageFile() = delete;
     ImageFile(const ustring& fname, const ustring& mode, ReadChecksumPolicy checksumPolicy = CHECKSUM_POLICY_ALL );
+    ImageFile(const char* input, const uint64_t size, ReadChecksumPolicy checksumPolicy = CHECKSUM_POLICY_ALL );
 
     StructureNode   root() const;
     void            close();

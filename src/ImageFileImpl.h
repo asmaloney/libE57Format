@@ -43,6 +43,7 @@ namespace e57
       public:
          ImageFileImpl( ReadChecksumPolicy policy );
          void            construct2(const ustring& fileName, const ustring& mode);
+         void            construct2(const char* input, const uint64_t size);
          std::shared_ptr<StructureNodeImpl> root();
          void            close();
          void            cancel();

@@ -80,6 +80,68 @@ constexpr size_t     CheckedFile::physicalPageSize;
 constexpr uint64_t   CheckedFile::physicalPageSizeMask;
 constexpr size_t     CheckedFile::logicalPageSize;
 
+
+/// Tool class to read buffer efficiently without 
+/// multiplying copy operations.
+///
+/// WARNING: pointer input is handled by user!
+class e57::BufferView
+{
+   public:
+      /// @param[IN] input: filled buffer owned by caller.
+      /// @param[IN] size: size of input
+      BufferView( const char* input, uint64_t size ) : 
+         stream_( input ),
+         streamSize_( size )
+      {
+      }
+
+      uint64_t pos() const
+      {
+         return cursorStream_;
+      }
+
+      bool seek( uint64_t offset, int whence )
+      {
+         if ( whence == SEEK_CUR )
+         {
+            cursorStream_ += offset;
+         }
+         else if ( whence == SEEK_SET )
+         {
+            cursorStream_ = offset;
+         }
+         else if ( whence == SEEK_END )
+         {
+            cursorStream_ = streamSize_ - offset;
+         }
+
+         if ( cursorStream_ > streamSize_ )
+         {
+            cursorStream_ = streamSize_;
+            return false;
+         }
+         
+         return true;
+      }
+
+      void read( char* buffer, uint64_t count )
+      {
+         const uint64_t start = cursorStream_;
+         for ( uint64_t i = 0; i < count; ++i )
+         {
+            buffer[i] = stream_[start + i];
+            ++cursorStream_;
+         }
+      }
+
+   private:
+      const uint64_t  streamSize_;
+      uint64_t        cursorStream_ = 0;
+      const char*     stream_;
+};
+
+
 CheckedFile::CheckedFile( const ustring &fileName, Mode mode, ReadChecksumPolicy policy ) :
    fileName_(fileName),
    checkSumPolicy_( policy )
@@ -108,6 +170,21 @@ CheckedFile::CheckedFile( const ustring &fileName, Mode mode, ReadChecksumPolicy
          logicalLength_ = physicalToLogical(length(Physical)); //???
          break;
    }
+}
+
+
+CheckedFile::CheckedFile( const char* input, const uint64_t size, ReadChecksumPolicy policy ) :
+   fileName_( "<StreamBuffer>" ),
+   checkSumPolicy_( policy )
+{
+   bufView_ = new BufferView(input, size);
+
+   readOnly_ = true;
+
+   physicalLength_ = lseek64(0LL, SEEK_END);
+   lseek64( 0, SEEK_SET );
+
+   logicalLength_ = physicalToLogical( physicalLength_ );
 }
 
 int CheckedFile::open64( const ustring &fileName, int flags, int mode )
@@ -384,6 +461,30 @@ void CheckedFile::seek(uint64_t offset, OffsetMode omode)
 
 uint64_t CheckedFile::lseek64(int64_t offset, int whence)
 {
+   if ( fd_ < 0 && bufView_ != nullptr )
+   {
+      int64_t result;
+      if ( bufView_->seek(offset, whence) )
+      {
+         result = bufView_->pos();
+      }
+      else
+      {
+         result = -1;
+      }
+
+      if ( result < 0 )
+      {
+         throw E57_EXCEPTION2(E57_ERROR_LSEEK_FAILED,
+                              "fileName=" + fileName_
+                              + " offset=" + toString(offset)
+                              + " whence=" + toString(whence)
+                              + " result=" + toString(result));
+      }
+
+      return static_cast<uint64_t>(result);
+   }
+
 #if defined(_WIN32)
 #  if defined(_MSC_VER) || defined(__MINGW32__) //<rs 2010-06-16> mingw _is_ WIN32!
    __int64 result = _lseeki64(fd_, offset, whence);
@@ -403,7 +504,8 @@ uint64_t CheckedFile::lseek64(int64_t offset, int whence)
 #else
 #  error "no supported OS platform defined"
 #endif
-   if (result < 0)
+
+   if ( result < 0 )
    {
       throw E57_EXCEPTION2(E57_ERROR_LSEEK_FAILED,
                            "fileName=" + fileName_
@@ -476,7 +578,8 @@ void CheckedFile::extend(uint64_t newLength, OffsetMode omode)
    uint64_t currentLogicalLength = length(Logical);
 
    /// Make sure we are trying to make file longer
-   if (newLogicalLength < currentLogicalLength) {
+   if (newLogicalLength < currentLogicalLength) 
+   {
       throw E57_EXCEPTION2(E57_ERROR_INTERNAL,
                            "fileName=" + fileName_
                            + " newLength=" + toString(newLogicalLength)
@@ -564,6 +667,15 @@ void CheckedFile::close()
       }
 
       fd_ = -1;
+   }
+
+   if (bufView_ != nullptr) 
+   {
+      delete bufView_;
+      bufView_ = nullptr;
+
+      // WARNING: do NOT delete buffer of bufView_ because
+      // pointer is handled by user !!
    }
 }
 
@@ -657,6 +769,19 @@ void CheckedFile::readPhysicalPage(char* page_buffer, uint64_t page)
 
    /// Seek to start of physical page
    seek( page*physicalPageSize, Physical );
+
+   if ( fd_ < 0 && bufView_ != nullptr )
+   {
+      bufView_->read(page_buffer, physicalPageSize);
+      size_t result = physicalPageSize;
+
+      if ( result < 0 || static_cast<size_t>(result) != physicalPageSize )
+      {
+         throw E57_EXCEPTION2(E57_ERROR_READ_FAILED, "fileName=" + fileName_ + " result=" + toString(result));
+      }
+
+      return;
+   }
 
 #if defined(_MSC_VER)
    int result = ::_read( fd_, page_buffer, physicalPageSize );

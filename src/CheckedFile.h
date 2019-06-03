@@ -32,6 +32,11 @@
 #include "Common.h"
 
 namespace e57 {
+   /// Tool class to read buffer efficiently without 
+   /// multiplying copy operations.
+   ///
+   /// WARNING: pointer input is handled by user!
+   class BufferView;
 
    class CheckedFile
    {
@@ -56,6 +61,7 @@ namespace e57 {
          };
 
          CheckedFile( const e57::ustring &fileName, Mode mode, ReadChecksumPolicy policy );
+         CheckedFile( const char* input, const uint64_t size, ReadChecksumPolicy policy );
          ~CheckedFile();
 
          void            read(char* buf, size_t nRead, size_t bufSize = 0);
@@ -97,6 +103,7 @@ namespace e57 {
          ReadChecksumPolicy checkSumPolicy_ = CHECKSUM_POLICY_ALL;
 
          int             fd_ = -1;
+         BufferView*     bufView_ = nullptr;
          bool            readOnly_ = false;
    };
 

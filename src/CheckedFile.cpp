@@ -94,7 +94,6 @@ class e57::BufferView
          stream_( input ),
          streamSize_( size )
       {
-
       }
 
       uint64_t pos() const
@@ -579,7 +578,8 @@ void CheckedFile::extend(uint64_t newLength, OffsetMode omode)
    uint64_t currentLogicalLength = length(Logical);
 
    /// Make sure we are trying to make file longer
-   if (newLogicalLength < currentLogicalLength) {
+   if (newLogicalLength < currentLogicalLength) 
+   {
       throw E57_EXCEPTION2(E57_ERROR_INTERNAL,
                            "fileName=" + fileName_
                            + " newLength=" + toString(newLogicalLength)
@@ -669,7 +669,8 @@ void CheckedFile::close()
       fd_ = -1;
    }
 
-   if (bufView_ != nullptr) {
+   if (bufView_ != nullptr) 
+   {
       delete bufView_;
       bufView_ = nullptr;
 
@@ -783,9 +784,9 @@ void CheckedFile::readPhysicalPage(char* page_buffer, uint64_t page)
    }
 
 #if defined(_MSC_VER)
-      __int64 result = result = ::_read( fd_, page_buffer, physicalPageSize );
+   int result = ::_read( fd_, page_buffer, physicalPageSize );
 #elif defined(__GNUC__)
-      ssize_t result = ::read( fd_, page_buffer, physicalPageSize );
+   ssize_t result = ::read( fd_, page_buffer, physicalPageSize );
 #else
 #  error "no supported compiler defined"
 #endif

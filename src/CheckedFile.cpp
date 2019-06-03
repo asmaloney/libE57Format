@@ -760,16 +760,9 @@ void CheckedFile::readPhysicalPage(char* page_buffer, uint64_t page)
    /// Seek to start of physical page
    seek( page*physicalPageSize, Physical );
 
-   if ( fd_ < 0 && bufView_ != nullptr )
+   if ( (fd_ < 0) && (bufView_ != nullptr) )
    {
       bufView_->read(page_buffer, physicalPageSize);
-      size_t result = physicalPageSize;
-
-      if ( result < 0 || static_cast<size_t>(result) != physicalPageSize )
-      {
-         throw E57_EXCEPTION2(E57_ERROR_READ_FAILED, "fileName=" + fileName_ + " result=" + toString(result));
-      }
-
       return;
    }
 

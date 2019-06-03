@@ -61,7 +61,7 @@ namespace e57 {
          };
 
          CheckedFile( const e57::ustring &fileName, Mode mode, ReadChecksumPolicy policy );
-         CheckedFile( const char* input, const uint64_t size, ReadChecksumPolicy policy );
+         CheckedFile( const char* input, uint64_t size, ReadChecksumPolicy policy );
          ~CheckedFile();
 
          void            read(char* buf, size_t nRead, size_t bufSize = 0);

@@ -172,8 +172,7 @@ CheckedFile::CheckedFile( const ustring &fileName, Mode mode, ReadChecksumPolicy
    }
 }
 
-
-CheckedFile::CheckedFile( const char* input, const uint64_t size, ReadChecksumPolicy policy ) :
+CheckedFile::CheckedFile( const char* input, uint64_t size, ReadChecksumPolicy policy ) :
    fileName_( "<StreamBuffer>" ),
    checkSumPolicy_( policy )
 {

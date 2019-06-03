@@ -91,8 +91,8 @@ class e57::BufferView
       /// @param[IN] input: filled buffer owned by caller.
       /// @param[IN] size: size of input
       BufferView( const char* input, uint64_t size ) : 
-         stream_( input ),
-         streamSize_( size )
+		 streamSize_( size ),
+         stream_( input )
       {
       }
 

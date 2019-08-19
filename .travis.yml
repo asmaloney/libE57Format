@@ -37,6 +37,6 @@ before_script:
 
 script:
   - if [[ "${COVERITY_SCAN_BRANCH}" != 1 ]]; then
-      gcc -v && g++ -v && cmake --version;
+      $CC_FOR_BUILD -v && $CXX_FOR_BUILD -v && cmake --version;
       make -j2;
     fi

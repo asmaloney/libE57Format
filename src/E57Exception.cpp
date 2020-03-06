@@ -365,6 +365,8 @@ namespace e57
             return "bad configuration string (E57_ERROR_BAD_CONFIGURATION)";
          case E57_ERROR_INVARIANCE_VIOLATION:
             return "class invariance constraint violation in debug mode (E57_ERROR_INVARIANCE_VIOLATION)";
+         default:
+            return "unknown error (" + std::to_string(ecode) + ")";
       }
    }
 

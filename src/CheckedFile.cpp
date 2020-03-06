@@ -26,6 +26,7 @@
 
 #if defined(_WIN32)
 #if defined(_MSC_VER)
+#include <codecvt>
 #include <io.h>
 #elif defined(__GNUC__)
 #define _LARGEFILE64_SOURCE
@@ -188,10 +189,13 @@ CheckedFile::CheckedFile( const char* input, uint64_t size, ReadChecksumPolicy p
 
 int CheckedFile::open64( const ustring &fileName, int flags, int mode )
 {
-   //??? handle utf-8 file names?
 #if defined(_MSC_VER)
+   // Handle UTF-8 file names - Windows requires conversion to UTF-16
+   std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+   std::wstring widePath = converter.from_bytes( fileName );
+
    int handle;
-   int err = _sopen_s(&handle, fileName_.c_str(), flags, _SH_DENYNO, mode);
+   int err = _wsopen_s(&handle, widePath.c_str(), flags, _SH_DENYNO, mode);
    if (handle < 0)
    {
       throw E57_EXCEPTION2(E57_ERROR_OPEN_FAILED,

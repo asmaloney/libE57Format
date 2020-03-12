@@ -69,38 +69,13 @@ find_package( Threads REQUIRED )
 # Xerces-c
 find_package( XercesC REQUIRED )
 
-if ( NOT XercesC_FOUND )
-    set( XercesC_INCLUDE_DIR "" CACHE PATH "Xerces include directory" )
-endif()
-
-if ( WIN32 )
-    option( USING_STATIC_XERCES "Turn on if you are linking with Xerces as a static lib" OFF )
-
-    if ( USING_STATIC_XERCES )
-        add_definitions( -DXERCES_STATIC_LIBRARY )
-    endif()
-endif()
-
-set( XML_INCLUDE_DIRS ${XercesC_INCLUDE_DIR} )
-
-add_definitions(-DREVISION_ID="${PROJECT_NAME}-${${PROJECT_NAME}_MAJOR_VERSION}.${${PROJECT_NAME}_MINOR_VERSION}.${${PROJECT_NAME}_PATCH_VERSION}-${${PROJECT_NAME}_BUILD_TAG}")
-
-include_directories(
-    ${PROJECT_BINARY_DIR}/include
-    include
-    src/
-    ${XML_INCLUDE_DIRS}
-)
-
 # CRCpp from here: https://github.com/d-bahr/CRCpp
-add_definitions( -DCRCPP_USE_CPP11 )
-add_definitions( -DCRCPP_BRANCHLESS )
-include_directories( contrib/CRCpp/inc )
 
 #
 # The reference implementation
 #
 
+# Target
 add_library( E57Format STATIC
     src/CheckedFile.h
     src/CheckedFile.cpp
@@ -130,10 +105,41 @@ add_library( E57Format STATIC
     include/E57Format.h
     contrib/CRCpp/inc/CRC.h
 )
+
+# Target properties
 set_target_properties( E57Format PROPERTIES
     DEBUG_POSTFIX "-d"
     POSITION_INDEPENDENT_CODE ON
 )
+
+# Target definitions
+target_compile_definitions( E57Format
+    PRIVATE
+        -DCRCPP_USE_CPP11
+        -DCRCPP_BRANCHLESS
+        -DREVISION_ID="${PROJECT_NAME}-${${PROJECT_NAME}_MAJOR_VERSION}.${${PROJECT_NAME}_MINOR_VERSION}.${${PROJECT_NAME}_PATCH_VERSION}-${${PROJECT_NAME}_BUILD_TAG}"
+)
+
+if ( WIN32 )
+    option( USING_STATIC_XERCES "Turn on if you are linking with Xerces as a static lib" OFF )
+    if ( USING_STATIC_XERCES )
+        add_compile_definitions( -DXERCES_STATIC_LIBRARY )
+    endif()
+endif()
+
+# Target includes
+target_include_directories( E57Format
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
+        $<INSTALL_INTERFACE:include/E57Format>
+    PRIVATE
+        src/
+        contrib/CRCpp/inc
+)
+
+# Target Libraries
+target_link_libraries( E57Format PRIVATE XercesC::XercesC )
 
 #
 # Install section
@@ -142,11 +148,28 @@ set_target_properties( E57Format PROPERTIES
 install(
     TARGETS
         E57Format
+    EXPORT
+        E57Format-export
     ARCHIVE DESTINATION lib
 )
+
 install(
     FILES
         include/E57Exception.h
         include/E57Format.h
     DESTINATION include/E57Format
+)
+
+# CMake package files
+install(
+    EXPORT
+        E57Format-export   
+    DESTINATION lib/cmake/E57Format
+)
+
+install(
+    FILES
+        ${CMAKE_CURRENT_SOURCE_DIR}/cmake/E57Format-config.cmake
+    DESTINATION
+        lib/cmake/E57Format
 )

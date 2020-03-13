@@ -31,8 +31,7 @@
 # patches are most welcome! Please send them to the development mailing list.
 
 
-cmake_minimum_required(VERSION 3.1.0 FATAL_ERROR)
-set(CMAKE_CXX_STANDARD 11)
+cmake_minimum_required(VERSION 3.1.0)
 
 # Override flags to enable prepare for linking to static runtime
 set(CMAKE_USER_MAKE_RULES_OVERRIDE ${CMAKE_CURRENT_SOURCE_DIR}/cmake/c_flag_overrides.cmake)
@@ -102,8 +101,11 @@ add_library( E57Format STATIC
 
 # Target properties
 set_target_properties( E57Format PROPERTIES
-    DEBUG_POSTFIX "-d"
-    POSITION_INDEPENDENT_CODE ON
+	CXX_STANDARD 11
+	CXX_STANDARD_REQUIRED YES
+	CXX_EXTENSIONS NO
+	DEBUG_POSTFIX "-d"
+	POSITION_INDEPENDENT_CODE ON
 )
 
 # Target definitions

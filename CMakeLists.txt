@@ -44,22 +44,28 @@ project( E57Format
     VERSION 2.0.2
 )
 
+include( Tags )
 
-include(Tags)
+# Check if we are building ourself or being included and use this to set some defaults
+if ( ${PROJECT_NAME} STREQUAL ${CMAKE_PROJECT_NAME} )
+    set( E57_BUILDING_SELF ON )
+endif()
 
 # propose a default installation directory
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-    string(REGEX REPLACE "/${PROJECT_NAME}" "" CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
-    set(T_ ${PROJECT_NAME})
-    set(T_ ${T_}-${PROJECT_VERSION_MAJOR})
-    set(T_ ${T_}.${PROJECT_VERSION_MINOR})
-    set(T_ ${T_}-${${PROJECT_NAME}_BUILD_TAG})
-    set(CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}/${T_}
-        CACHE PATH
-        "Install path prefix, prepended onto install directories."
-        FORCE
-    )
-endif(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+if ( E57_BUILDING_SELF )
+    if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+        string(REGEX REPLACE "/${PROJECT_NAME}" "" CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
+        set(T_ ${PROJECT_NAME})
+        set(T_ ${T_}-${PROJECT_VERSION_MAJOR})
+        set(T_ ${T_}.${PROJECT_VERSION_MINOR})
+        set(T_ ${T_}-${${PROJECT_NAME}_BUILD_TAG})
+        set(CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}/${T_}
+            CACHE PATH
+            "Install path prefix, prepended onto install directories."
+            FORCE
+        )
+    endif(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+endif()
 
 find_package( Threads REQUIRED )
 

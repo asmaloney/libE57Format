@@ -1,6 +1,8 @@
-# $Id: CMakeLists.txt 332 2013-04-03 14:24:08Z roland_schwarz $
-# This is the CMake project file for the libe57 reference implementation
+# This is a rewrite over time of the CMake file from the libe57 reference implementation
+#   https://en.wikipedia.org/wiki/Ship_of_Theseus
+# Use git blame to see all the changes and who has contributed.
 #
+# The original cmake file is:
 # Copyright 2010-2012 Roland Schwarz, Riegl LMS GmbH
 #
 # Permission is hereby granted, free of charge, to any person or organization
@@ -24,21 +26,15 @@
 # FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
-#
-# Requirements:
-#     Xerces library: http://xerces.apache.org/
-# If you find any errors or have suggestion to improve the build script:
-# patches are most welcome! Please send them to the development mailing list.
 
-
-cmake_minimum_required(VERSION 3.1.0)
+cmake_minimum_required( VERSION 3.1.0 )
 
 # Override flags to enable prepare for linking to static runtime
-set(CMAKE_USER_MAKE_RULES_OVERRIDE ${CMAKE_CURRENT_SOURCE_DIR}/cmake/c_flag_overrides.cmake)
-set(CMAKE_USER_MAKE_RULES_OVERRIDE_CXX ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cxx_flag_overrides.cmake)
+set( CMAKE_USER_MAKE_RULES_OVERRIDE ${CMAKE_CURRENT_SOURCE_DIR}/cmake/c_flag_overrides.cmake )
+set( CMAKE_USER_MAKE_RULES_OVERRIDE_CXX ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cxx_flag_overrides.cmake )
 
 # Set a private module find path
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/")
+set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/" )
 
 project( E57Format
     VERSION 2.0.2
@@ -53,18 +49,18 @@ endif()
 
 # propose a default installation directory
 if ( E57_BUILDING_SELF )
-    if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-        string(REGEX REPLACE "/${PROJECT_NAME}" "" CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
-        set(T_ ${PROJECT_NAME})
-        set(T_ ${T_}-${PROJECT_VERSION_MAJOR})
-        set(T_ ${T_}.${PROJECT_VERSION_MINOR})
-        set(T_ ${T_}-${${PROJECT_NAME}_BUILD_TAG})
-        set(CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}/${T_}
-            CACHE PATH
-            "Install path prefix, prepended onto install directories."
-            FORCE
+    if( CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT )
+        string( REGEX REPLACE "/${PROJECT_NAME}" "" CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX} )
+        set( T_ ${PROJECT_NAME} )
+        set( T_ ${T_}-${PROJECT_VERSION_MAJOR} )
+        set( T_ ${T_}.${PROJECT_VERSION_MINOR} )
+        set( T_ ${T_}-${${PROJECT_NAME}_BUILD_TAG} )
+        set( CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}/${T_}
+                CACHE PATH
+                "Install path prefix, prepended onto install directories."
+                FORCE
         )
-    endif(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+    endif()
 endif()
 
 find_package( Threads REQUIRED )

@@ -69,12 +69,6 @@ find_package( Threads REQUIRED )
 # Xerces-c
 find_package( XercesC REQUIRED )
 
-# CRCpp from here: https://github.com/d-bahr/CRCpp
-
-#
-# The reference implementation
-#
-
 # Target
 add_library( E57Format STATIC
     src/CheckedFile.h
@@ -135,16 +129,13 @@ target_include_directories( E57Format
         $<INSTALL_INTERFACE:include/E57Format>
     PRIVATE
         src/
-        contrib/CRCpp/inc
+        contrib/CRCpp/inc   # CRCpp from here: https://github.com/d-bahr/CRCpp
 )
 
 # Target Libraries
 target_link_libraries( E57Format PRIVATE XercesC::XercesC )
 
-#
-# Install section
-#
-
+# Install
 install(
     TARGETS
         E57Format
@@ -163,7 +154,7 @@ install(
 # CMake package files
 install(
     EXPORT
-        E57Format-export   
+        E57Format-export
     DESTINATION lib/cmake/E57Format
 )
 

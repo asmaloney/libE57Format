@@ -44,63 +44,20 @@
 
 //! @file E57SimpleImpl.cpp
 
-#if defined(_WIN32)
-#    include <io.h>
-#    include <fcntl.h>
-#    include <sys/stat.h>
-#    include <windows.h>
-#else
-#  define _LARGEFILE64_SOURCE
-#  define __LARGE64_FILES
-#  include <sys/types.h>
-#  include <unistd.h>
-#endif
-
 #include "E57SimpleImpl.h"
 
 #include <sstream>
 #include <cmath>
+#include <random>
 
 using namespace e57;
 using namespace std;
 
-namespace e57 {
-char *	GetNewGuid(void);
-double	GetGPSTime(void);
-
-double	GetGPSDateTimeFromUTC(
-	int utc_year,		//!< The year 1900-9999
-	int utc_month,		//!< The month 1-12
-	int utc_day,		//!< The day 1-31
-	int utc_hour,		//!< The hour 0-23
-	int utc_minute,		//!< The minute 0-59
-	float utc_seconds	//!< The seconds 0.0 - 59.999
-	);
-
-void	GetUTCFromGPSDateTime(
-    double gpsTime,		//!< GPS Date Time
-	int &utc_year,		//!< The year 1900-9999
-	int &utc_month,		//!< The month 1-12
-	int &utc_day,		//!< The day 1-31
-	int &utc_hour,		//!< The hour 0-23
-	int &utc_minute,		//!< The minute 0-59
-	float &utc_seconds	//!< The seconds 0.0 - 59.999
-	);
-#if defined(WIN32)
-double	GetGPSDateTimeFromSystemTime(
-	SYSTEMTIME	sysTim		//!< Windows System Time
-	);
-void	GetSystemTimeFromGPSDateTime(
-	double		gpsTime,	//!< GPS Date Time
-	SYSTEMTIME	&sysTim		//!< Windows System Time
-	);
-#endif
-};
 ////////////////////////////////////////////////////////////////////
 //
 //	e57::GetGPSTime
 //
-double e57::GetGPSTime(void)
+double e57::GetGPSTime()
 {
 #ifdef _C_TIMECONV_H_
 
@@ -119,116 +76,11 @@ BOOL ret = TIMECONV_GetSystemTime(&utc_year, &utc_month, &utc_day, &utc_hour, &u
 	&utc_offset, &julian_date, &gps_week, &gps_tow);
 
 double gpsTime = (gps_week * 604800.) + gps_tow;
-
-#elif defined(WIN32)
-SYSTEMTIME		currentSystemTime;
-GetSystemTime(&currentSystemTime);	//current UTC Time
-double gpsTime = e57::GetGPSDateTimeFromSystemTime(currentSystemTime);
 #endif
     // TODO
     return 0;//gpsTime;
 };
-#if defined(WIN32)
-////////////////////////////////////////////////////////////////////
-//
-//	e57::GetGPSDateTimeFromSystemTime
-//
-double	e57::GetGPSDateTimeFromSystemTime(
-	SYSTEMTIME	sysTim		//!< Windows System Time
-	)
-{
-#ifdef _C_TIMECONV_H_
-	int utc_year = sysTim.wYear;		//!< The year 1900-9999
-	int utc_month = sysTim.wMonth;		//!< The month 0-11
-	int utc_day = sysTim.wDay;			//!< The day 1-31
-	int utc_hour = sysTim.wHour;		//!< The hour 0-23
-	int utc_minute = sysTim.wMinute;	//!< The minute 0-59
-	float utc_seconds = sysTim.wSecond;	//!< The seconds 0.0 - 59.999
-	utc_seconds += sysTim.wMilliseconds/1000;
 
-	double gpsTime = e57::GetGPSDateTimeFromUTC(
-		utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds);
-#else
-	FILETIME		currentFileTime;
-	SystemTimeToFileTime(&sysTim,&currentFileTime);
-
-	ULARGE_INTEGER	currentTime;
-	currentTime.LowPart = currentFileTime.dwLowDateTime;
-	currentTime.HighPart = currentFileTime.dwHighDateTime;
-
-	SYSTEMTIME		gpsSystemTime = {1980,1,0,6,0,0,0,0};	//GPS started in Jan. 6, 1980
-	FILETIME		gpsFileTime;
-	SystemTimeToFileTime(&gpsSystemTime,&gpsFileTime);
-
-	ULARGE_INTEGER	gpsStartTime;
-	gpsStartTime.LowPart = gpsFileTime.dwLowDateTime;
-	gpsStartTime.HighPart = gpsFileTime.dwHighDateTime;
-
-	double gpsTime = (double) (currentTime.QuadPart - gpsStartTime.QuadPart);	//number of 100 nanosecond;
-	gpsTime /= 10000000.;	//number of seconds
-	gpsTime += 15.;			//Add utc offset leap seconds
-#endif
-	return gpsTime;
-};
-////////////////////////////////////////////////////////////////////
-//
-//	e57::GetSystemTimeFromGPSDateTime
-//
-void	e57::GetSystemTimeFromGPSDateTime(
-	double		gpsTime,	//!< GPS Date Time
-	SYSTEMTIME	&sysTim		//!< Windows System Time
-	)
-{
-#ifdef _C_TIMECONV_H_
-	int utc_year;		//!< The year 1900-9999
-	int utc_month;		//!< The month 0-11
-	int utc_day;		//!< The day 1-31
-	int utc_hour;		//!< The hour 0-23
-	int utc_minute;		//!< The minute 0-59
-	float utc_seconds;	//!< The seconds 0.0 - 59.999
-
-	e57::GetUTCFromGPSDateTime(gpsTime, utc_year, utc_month,
-		utc_day, utc_hour, utc_minute, utc_seconds);
-
-	double julian_date = 0;
-	unsigned char day_of_week = 0;
-
-	TIMECONV_GetJulianDateFromUTCTime( utc_year, utc_month, utc_day,
-		utc_hour, utc_minute, utc_seconds, &julian_date );
-
-	TIMECONV_GetDayOfWeekFromJulianDate( julian_date, &day_of_week );
-
-	sysTim.wDayOfWeek = day_of_week;
-	sysTim.wYear = utc_year;
-	sysTim.wMonth = utc_month;
-	sysTim.wDay = utc_day;
-	sysTim.wHour = utc_hour;
-	sysTim.wMinute = utc_minute;
-	sysTim.wSecond = (WORD)(floor(utc_seconds));
-	sysTim.wMilliseconds = (WORD)((utc_seconds - sysTim.wSecond)*1000);
-
-#else
-	gpsTime -= 15.;			//Sub utc offset leap seconds
-	gpsTime *= 10000000.;	//convert to 100 nanoseconds;
-
-	SYSTEMTIME		gpsSystemTime = {1980,1,0,6,0,0,0,0};	//GPS started in Jan. 6, 1980
-	FILETIME		gpsFileTime;
-	SystemTimeToFileTime(&gpsSystemTime,&gpsFileTime);
-
-	ULARGE_INTEGER	gpsStartTime;
-	gpsStartTime.LowPart = gpsFileTime.dwLowDateTime;
-	gpsStartTime.HighPart = gpsFileTime.dwHighDateTime;
-
-	ULARGE_INTEGER	currentTime;
-	currentTime.QuadPart = ((ULONGLONG)gpsTime) + gpsStartTime.QuadPart;
-
-	FILETIME		currentFileTime;
-	currentFileTime.dwLowDateTime = currentTime.LowPart;
-	currentFileTime.dwHighDateTime = currentTime.HighPart;
-	FileTimeToSystemTime(&currentFileTime,&sysTim);
-#endif
-};
-#endif
 ////////////////////////////////////////////////////////////////////
 //
 //	e57::GetGPSDateTimeFromUTC
@@ -268,19 +120,6 @@ double	e57::GetGPSDateTimeFromUTC(
 		&gps_tow );
 
 	double gpsTime = (gps_week * 604800.) + gps_tow;
-
-#elif defined(WIN32)
-	SYSTEMTIME	sysTim;
-	sysTim.wDayOfWeek = day_of_week;
-	sysTim.wYear = utc_year;
-	sysTim.wMonth = utc_month;
-	sysTim.wDay = utc_day;
-	sysTim.wHour = utc_hour;
-	sysTim.wMinute = utc_minute;
-	sysTim.wSecond = (WORD)(floor(utc_seconds));
-	sysTim.wMilliseconds = (WORD)((utc_seconds - t.wSecond)*1000);
-
-	double gpsTime = e57::GetGPSDateTimeFromSystemTime(sysTim);
 #endif
     // TODO
     return 0;//gpsTime;
@@ -326,18 +165,6 @@ void	e57::GetUTCFromGPSDateTime(
 	utc_Day = utc_day;
 	utc_Hour = utc_hour;
 	utc_Minute = utc_minute;
-
-#elif defined(WIN32)
-	SYSTEMTIME	sysTim;
-	e57::GetSystemTimeFromGPSDateTime(gpsTime,sysTim);
-
-	utc_year = sysTim.wYear;		//!< The year 1900-9999
-	utc_month = sysTim.wMonth;		//!< The month 0-11
-	utc_day = sysTim.wDay;			//!< The day 1-31
-	utc_hour = sysTim.wHour;		//!< The hour 0-23
-	utc_minute = sysTim.wMinute;	//!< The minute 0-59
-	utc_seconds = sysTim.wSecond;	//!< The seconds 0.0 - 59.999
-	utc_seconds += sysTim.wMilliseconds/1000;
 #endif
 	return;
 };
@@ -345,31 +172,30 @@ void	e57::GetUTCFromGPSDateTime(
 //
 //	e57::GetNewGuid
 //
-char * e57::GetNewGuid(void)
+std::string e57::GetNewGuid()
 {
-//	static char	fileGuid[64];
-#if defined(_MSC_VER)
-	GUID		guid;
-	CoCreateGuid((GUID*)&guid);
-	OLECHAR wbuffer[64];
-	StringFromGUID2(guid,&wbuffer[0],64);
-	size_t	converted = 0;
-	wcstombs_s(&converted, fileGuid,wbuffer,64);
+    static constexpr const char UUID_CHARS[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    static std::random_device              rd;
+    static std::mt19937                    gen(rd());
+    static std::uniform_int_distribution<> dis(0, 61 /* number of chars in UUID_CHARS */);
 
-#elif 0
-	boost::uuids::random_generator gen;
-	boost::uuids::uuid u = gen();
-	std::stringstream s;
-	s << u;
-	std::string c = s.str();
+    std::string uuid (36,' ');
 
-	fileGuid[0] = '{';
-	memcpy(&fileGuid[1],&c[0],36);
-	fileGuid[37] = '}';
-	fileGuid[38] = 0;
-#endif
-    // TODO
-	return "fileGuid";
+    uuid[8] = '-';
+    uuid[13] = '-';
+    uuid[18] = '-';
+    uuid[23] = '-';
+
+    uuid[14] = '4';
+
+    for(int i=0; i < 36; ++i)
+    {
+      if (i != 8 && i != 13 && i != 18 && i != 14 && i != 23)
+      {
+        uuid[i] = UUID_CHARS[dis(gen)];
+      }
+    }
+    return uuid;
 };
 ////////////////////////////////////////////////////////////////////
 //
@@ -384,7 +210,7 @@ char * e57::GetNewGuid(void)
 {
 };
 
-	ReaderImpl::~ReaderImpl(void)
+	ReaderImpl::~ReaderImpl()
 {
 	if(IsOpen())
 		Close();
@@ -392,7 +218,7 @@ char * e57::GetNewGuid(void)
 
 
 //! This function returns true if the file is open
-bool	ReaderImpl :: IsOpen(void)
+bool	ReaderImpl :: IsOpen()
 {
 	if( imf_.isOpen())
 		return true;
@@ -400,7 +226,7 @@ bool	ReaderImpl :: IsOpen(void)
 };
 
 //! This function closes the file
-bool	ReaderImpl :: Close(void)
+bool	ReaderImpl :: Close()
 {
 	if(IsOpen())
 	{
@@ -454,7 +280,7 @@ bool	ReaderImpl :: GetE57Root(
 //	Camera Image picture data
 //
 //! This function returns the total number of Picture Blocks
-int32_t	ReaderImpl :: GetImage2DCount( void)
+int32_t	ReaderImpl :: GetImage2DCount()
 {
 	return (int32_t) images2D_.childCount();
 };
@@ -638,7 +464,10 @@ int64_t ReaderImpl :: ReadImage2DNode(
 	int64_t transferred = 0;
 	switch(imageType)
 	{
-	case	E57_JPEG_IMAGE:
+        case E57_NO_IMAGE: {
+            return 0;
+        }
+        case	E57_JPEG_IMAGE:
 		{
 			if(image.isDefined("jpegImage"))
 			{
@@ -787,7 +616,9 @@ int64_t	ReaderImpl :: ReadImage2DData(
 
 	switch(imageProjection)
 	{
-	case	E57_VISUAL:
+        case E57_NO_PROJECTION:
+            return 0;
+        case	E57_VISUAL:
 		if(image.isDefined("visualReferenceRepresentation"))
 		{
 			StructureNode visualReferenceRepresentation(image.get("visualReferenceRepresentation"));
@@ -827,30 +658,30 @@ int64_t	ReaderImpl :: ReadImage2DData(
 //	Scanner Image 3d data
 //
 //! This function returns the total number of Image Blocks
-int32_t	ReaderImpl :: GetData3DCount( void)
+int32_t	ReaderImpl :: GetData3DCount()
 {
 	return (int32_t) data3D_.childCount();
 };
 
 //! This function returns the file raw E57Root Structure Node
-StructureNode	ReaderImpl :: GetRawE57Root(void)
+StructureNode	ReaderImpl :: GetRawE57Root()
 {
 	return root_;
 };	//!< /return Returns the E57Root StructureNode
 
 //! This function returns the raw Data3D Vector Node
-VectorNode		ReaderImpl :: GetRawData3D(void)
+VectorNode		ReaderImpl :: GetRawData3D()
 {
 	return data3D_;
 };//!< /return Returns the raw Data3D VectorNode
 
 //! This function returns the raw Images2D Vector Node
-VectorNode		ReaderImpl :: GetRawImages2D(void)
+VectorNode		ReaderImpl :: GetRawImages2D()
 {
 	return images2D_;
 };	//!< /return Returns the raw Image2D VectorNode
 //! This function returns the ram ImageFile Node which is need to add enhancements
-ImageFile		ReaderImpl :: GetRawIMF(void)
+ImageFile		ReaderImpl :: GetRawIMF()
 {
 	return imf_;
 };  //!< /return Returns the raw ImageFile
@@ -1496,15 +1327,15 @@ bool	ReaderImpl :: ReadData3DGroupsData(
 			{
 				ustring		name = lineGroupRecord.get(protoIndex).elementName();
 	
-				if((name.compare("idElementValue") == 0) && lineGroupRecord.isDefined("idElementValue") && (idElementValue != NULL))
+				if((name.compare("idElementValue") == 0) && lineGroupRecord.isDefined("idElementValue") && (idElementValue != nullptr))
 					groupSDBuffers.push_back(SourceDestBuffer(imf_, "idElementValue",
 						idElementValue,   (unsigned) groupCount, true));
 
-				if((name.compare("startPointIndex") == 0) && lineGroupRecord.isDefined("startPointIndex") && (startPointIndex != NULL))
+				if((name.compare("startPointIndex") == 0) && lineGroupRecord.isDefined("startPointIndex") && (startPointIndex != nullptr))
 					groupSDBuffers.push_back(SourceDestBuffer(imf_, "startPointIndex",
 						startPointIndex,  (unsigned) groupCount, true));
 
-				if((name.compare("pointCount") == 0) && lineGroupRecord.isDefined("pointCount") && (pointCount != NULL))
+				if((name.compare("pointCount") == 0) && lineGroupRecord.isDefined("pointCount") && (pointCount != nullptr))
 					groupSDBuffers.push_back(SourceDestBuffer(imf_, "pointCount",
 						pointCount,       (unsigned) groupCount, true));
 			}
@@ -1553,8 +1384,6 @@ CompressedVectorReader	ReaderImpl :: SetUpData3DPointsData(
 	bool		(*pointDataExtension)(ImageFile	imf, StructureNode proto, int protoIndex, vector<SourceDestBuffer> & destBuffers)
 	)
 {
-	int64_t		readCount = 0;
-
 	StructureNode scan(data3D_.get(dataIndex));
 	CompressedVectorNode points(scan.get("points"));
 	StructureNode proto(points.prototype());
@@ -1570,72 +1399,72 @@ CompressedVectorReader	ReaderImpl :: SetUpData3DPointsData(
 		NodeType	type = proto.get(protoIndex).type();
 		bool		scaled = type == E57_SCALED_INTEGER ? true : false;
 
-		if((name.compare("cartesianX") == 0) && proto.isDefined("cartesianX") && (cartesianX != NULL))
+		if((name.compare("cartesianX") == 0) && proto.isDefined("cartesianX") && (cartesianX != nullptr))
 			destBuffers.push_back(SourceDestBuffer(imf_, "cartesianX",
 				cartesianX,  (unsigned) count, true, scaled));
-		else if((name.compare("cartesianY") == 0) && proto.isDefined("cartesianY") && (cartesianY != NULL))
+		else if((name.compare("cartesianY") == 0) && proto.isDefined("cartesianY") && (cartesianY != nullptr))
 			destBuffers.push_back(SourceDestBuffer(imf_, "cartesianY",
 				cartesianY,  (unsigned) count, true,scaled));
-		else if((name.compare("cartesianZ") == 0) && proto.isDefined("cartesianZ") && (cartesianZ != NULL))
+		else if((name.compare("cartesianZ") == 0) && proto.isDefined("cartesianZ") && (cartesianZ != nullptr))
 			destBuffers.push_back(SourceDestBuffer(imf_, "cartesianZ",
 				cartesianZ,  (unsigned) count, true, scaled));
-		else if((name.compare("cartesianInvalidState") == 0) && proto.isDefined("cartesianInvalidState") && (cartesianInvalidState != NULL))
+		else if((name.compare("cartesianInvalidState") == 0) && proto.isDefined("cartesianInvalidState") && (cartesianInvalidState != nullptr))
 			destBuffers.push_back(SourceDestBuffer(imf_, "cartesianInvalidState",
 				cartesianInvalidState,       (unsigned) count, true));
 
-		else if((name.compare("sphericalRange") == 0) && proto.isDefined("sphericalRange") && (sphericalRange != NULL))
+		else if((name.compare("sphericalRange") == 0) && proto.isDefined("sphericalRange") && (sphericalRange != nullptr))
 			destBuffers.push_back(SourceDestBuffer(imf_, "sphericalRange",
 				sphericalRange,  (unsigned) count, true, scaled));
-		else if((name.compare("sphericalAzimuth") == 0) && proto.isDefined("sphericalAzimuth") && (sphericalAzimuth != NULL))
+		else if((name.compare("sphericalAzimuth") == 0) && proto.isDefined("sphericalAzimuth") && (sphericalAzimuth != nullptr))
 			destBuffers.push_back(SourceDestBuffer(imf_, "sphericalAzimuth",
 				sphericalAzimuth,  (unsigned) count, true, scaled));
-		else if((name.compare("sphericalElevation") == 0) && proto.isDefined("sphericalElevation") && (sphericalElevation != NULL))
+		else if((name.compare("sphericalElevation") == 0) && proto.isDefined("sphericalElevation") && (sphericalElevation != nullptr))
 			destBuffers.push_back(SourceDestBuffer(imf_, "sphericalElevation",
 				sphericalElevation,  (unsigned) count, true, scaled));
-		else if((name.compare("sphericalInvalidState") == 0) && proto.isDefined("sphericalInvalidState") && (sphericalInvalidState != NULL))
+		else if((name.compare("sphericalInvalidState") == 0) && proto.isDefined("sphericalInvalidState") && (sphericalInvalidState != nullptr))
 			destBuffers.push_back(SourceDestBuffer(imf_, "sphericalInvalidState",
 				sphericalInvalidState,       (unsigned) count, true));
 
-		else if((name.compare("rowIndex") == 0) && proto.isDefined("rowIndex") && (rowIndex != NULL))
+		else if((name.compare("rowIndex") == 0) && proto.isDefined("rowIndex") && (rowIndex != nullptr))
 			destBuffers.push_back(SourceDestBuffer(imf_, "rowIndex",
 				rowIndex,    (unsigned) count, true));
-		else if((name.compare("columnIndex") == 0) && proto.isDefined("columnIndex") && (columnIndex != NULL))
+		else if((name.compare("columnIndex") == 0) && proto.isDefined("columnIndex") && (columnIndex != nullptr))
 			destBuffers.push_back(SourceDestBuffer(imf_, "columnIndex",
 				columnIndex, (unsigned) count, true));
-		else if((name.compare("returnIndex") == 0) && proto.isDefined("returnIndex") && (returnIndex != NULL))
+		else if((name.compare("returnIndex") == 0) && proto.isDefined("returnIndex") && (returnIndex != nullptr))
 			destBuffers.push_back(SourceDestBuffer(imf_, "returnIndex",
 				returnIndex, (unsigned) count, true));
-		else if((name.compare("returnCount") == 0) && proto.isDefined("returnCount") && (returnCount != NULL))
+		else if((name.compare("returnCount") == 0) && proto.isDefined("returnCount") && (returnCount != nullptr))
 			destBuffers.push_back(SourceDestBuffer(imf_, "returnCount",
 				returnCount, (unsigned) count, true));
 
-		else if((name.compare("timeStamp") == 0) && proto.isDefined("timeStamp") && (timeStamp != NULL))
+		else if((name.compare("timeStamp") == 0) && proto.isDefined("timeStamp") && (timeStamp != nullptr))
 			destBuffers.push_back(SourceDestBuffer(imf_, "timeStamp",
 				timeStamp,   (unsigned) count, true, scaled));
-		else if((name.compare("isTimeStampInvalid") == 0) && proto.isDefined("isTimeStampInvalid") && (isTimeStampInvalid != NULL))
+		else if((name.compare("isTimeStampInvalid") == 0) && proto.isDefined("isTimeStampInvalid") && (isTimeStampInvalid != nullptr))
 			destBuffers.push_back(SourceDestBuffer(imf_, "isTimeStampInvalid",
 				isTimeStampInvalid,(unsigned) count, true));
 
-		else if((name.compare("intensity") == 0) && proto.isDefined("intensity") && (intensity != NULL))
+		else if((name.compare("intensity") == 0) && proto.isDefined("intensity") && (intensity != nullptr))
 			destBuffers.push_back(SourceDestBuffer(imf_, "intensity",   intensity,
 				(unsigned) count, true, scaled));
-		else if((name.compare("isIntensityInvalid") == 0) && proto.isDefined("isIntensityInvalid") && (isIntensityInvalid != NULL))
+		else if((name.compare("isIntensityInvalid") == 0) && proto.isDefined("isIntensityInvalid") && (isIntensityInvalid != nullptr))
 			destBuffers.push_back(SourceDestBuffer(imf_, "isIntensityInvalid",
 				isIntensityInvalid,(unsigned) count, true));
 
-		else if((name.compare("colorRed") == 0) && proto.isDefined("colorRed") && (colorRed != NULL))
+		else if((name.compare("colorRed") == 0) && proto.isDefined("colorRed") && (colorRed != nullptr))
 			destBuffers.push_back(SourceDestBuffer(imf_, "colorRed",
 				colorRed,    (unsigned) count, true, scaled));
-		else if((name.compare("colorGreen") == 0) && proto.isDefined("colorGreen") && (colorGreen != NULL))
+		else if((name.compare("colorGreen") == 0) && proto.isDefined("colorGreen") && (colorGreen != nullptr))
 			destBuffers.push_back(SourceDestBuffer(imf_, "colorGreen",
 				colorGreen,  (unsigned) count, true, scaled));
-		else if((name.compare("colorBlue") == 0) && proto.isDefined("colorBlue") && (colorBlue != NULL))
+		else if((name.compare("colorBlue") == 0) && proto.isDefined("colorBlue") && (colorBlue != nullptr))
 			destBuffers.push_back(SourceDestBuffer(imf_, "colorBlue",
 				colorBlue,   (unsigned) count, true, scaled));
-		else if((name.compare("isColorInvalid") == 0) && proto.isDefined("isColorInvalid") && (isColorInvalid != NULL))
+		else if((name.compare("isColorInvalid") == 0) && proto.isDefined("isColorInvalid") && (isColorInvalid != nullptr))
 			destBuffers.push_back(SourceDestBuffer(imf_, "isColorInvalid",
 				isColorInvalid, (unsigned) count, true));
-		else if(pointDataExtension != NULL)
+		else if(pointDataExtension != nullptr)
 			(*pointDataExtension)(imf_,proto,(int) protoIndex,destBuffers);
 	}
 
@@ -1698,13 +1527,13 @@ CompressedVectorReader	ReaderImpl :: SetUpData3DPointsData(
 	root_.set("images2D", images2D_);
 };
 //! This function is the destructor for the writer class
-	WriterImpl::~WriterImpl(void)
+	WriterImpl::~WriterImpl()
 {
 	if(IsOpen())
 		Close();
 };
 //! This function returns true if the file is open
-bool	WriterImpl :: IsOpen(void)
+bool	WriterImpl :: IsOpen()
 {
 	if(imf_.isOpen())
 		return true;
@@ -1712,7 +1541,7 @@ bool	WriterImpl :: IsOpen(void)
 };
 
 //! This function closes the file
-bool	WriterImpl :: Close(void)
+bool	WriterImpl :: Close()
 {
 	if(IsOpen())
 	{
@@ -1722,24 +1551,24 @@ bool	WriterImpl :: Close(void)
 	return false;
 };
 //! This function returns the file raw E57Root Structure Node
-StructureNode	WriterImpl :: GetRawE57Root(void)
+StructureNode	WriterImpl :: GetRawE57Root()
 {
 	return root_;
 };	//!< /return Returns the E57Root StructureNode
 
 //! This function returns the raw Data3D Vector Node
-VectorNode		WriterImpl :: GetRawData3D(void)
+VectorNode		WriterImpl :: GetRawData3D()
 {
 	return data3D_;
 };//!< /return Returns the raw Data3D VectorNode
 
 //! This function returns the raw Images2D Vector Node
-VectorNode		WriterImpl :: GetRawImages2D(void)
+VectorNode		WriterImpl :: GetRawImages2D()
 {
 	return images2D_;
 };	//!< /return Returns the raw Image2D VectorNode
 //! This function returns the ram ImageFile Node which is need to add enhancements
-ImageFile		WriterImpl :: GetRawIMF(void)
+ImageFile		WriterImpl :: GetRawIMF()
 {
 	return imf_;
 };  //!< /return Returns the raw ImageFile
@@ -1945,7 +1774,10 @@ int64_t WriterImpl :: WriteImage2DNode(
 	int64_t transferred = 0;
 	switch(imageType)
 	{
-	case	E57_JPEG_IMAGE:
+        case E57_NO_IMAGE: {
+            return 0;
+        }
+        case	E57_JPEG_IMAGE:
 		{
 			if(image.isDefined("jpegImage"))
 			{
@@ -1996,7 +1828,9 @@ int64_t	WriterImpl :: WriteImage2DData(
 
 	switch(imageProjection)
 	{
-	case	E57_VISUAL:
+        case E57_NO_PROJECTION:
+            return 0;
+        case	E57_VISUAL:
 		if(image.isDefined("visualReferenceRepresentation"))
 		{
 			StructureNode visualReferenceRepresentation(image.get("visualReferenceRepresentation"));
@@ -2037,11 +1871,6 @@ int32_t	WriterImpl :: NewData3D(
 	)	//!< /return Returns the index of the new scan.
 {
 	int32_t pos = -1;
-
-	int32_t row = (int32_t) data3DHeader.indexBounds.rowMaximum -
-		(int32_t) data3DHeader.indexBounds.rowMinimum + 1;
-	int32_t col = (int32_t) data3DHeader.indexBounds.columnMaximum -
-		(int32_t) data3DHeader.indexBounds.columnMinimum + 1;
 
 	if(data3DHeader.guid.empty())
 		return -1;
@@ -2549,7 +2378,7 @@ int32_t	WriterImpl :: NewData3D(
 //   proto.set("demo:extra2", StringNode(imf_));	//Extension here
 
 // do call back to setup any point data extension before the CompressedVectorNode is created.
-	if(pointExtension != NULL)
+	if(pointExtension != nullptr)
 		(*pointExtension)(imf_, proto);
 
 // Make empty codecs vector for use in creating points CompressedVector.
@@ -2611,22 +2440,22 @@ CompressedVectorWriter	WriterImpl :: SetUpData3DPointsData(
 	StructureNode proto(points.prototype());
 
 	vector<SourceDestBuffer> sourceBuffers;
-	if(proto.isDefined("cartesianX") && (cartesianX != NULL))
+	if(proto.isDefined("cartesianX") && (cartesianX != nullptr))
 		sourceBuffers.push_back(SourceDestBuffer(imf_, "cartesianX",  cartesianX,  (unsigned) count, true, true));
-	if(proto.isDefined("cartesianY") && (cartesianY != NULL))
+	if(proto.isDefined("cartesianY") && (cartesianY != nullptr))
 		sourceBuffers.push_back(SourceDestBuffer(imf_, "cartesianY",  cartesianY,  (unsigned) count, true, true));
 #ifdef TEST_EXTENSIONS
 	if(proto.isDefined("ext:extraField1"))
 		sourceBuffers.push_back(SourceDestBuffer(imf_,"ext:extraField1", extraField1, (unsigned) count, true));
 #endif
-	if(proto.isDefined("cartesianZ") && (cartesianZ != NULL))
+	if(proto.isDefined("cartesianZ") && (cartesianZ != nullptr))
 		sourceBuffers.push_back(SourceDestBuffer(imf_, "cartesianZ",  cartesianZ,  (unsigned) count, true, true));
 
-	if(proto.isDefined("sphericalRange") && (sphericalRange != NULL))
+	if(proto.isDefined("sphericalRange") && (sphericalRange != nullptr))
 		sourceBuffers.push_back(SourceDestBuffer(imf_, "sphericalRange",  sphericalRange,  (unsigned) count, true, true));
-	if(proto.isDefined("sphericalAzimuth") && (sphericalAzimuth != NULL))
+	if(proto.isDefined("sphericalAzimuth") && (sphericalAzimuth != nullptr))
 		sourceBuffers.push_back(SourceDestBuffer(imf_, "sphericalAzimuth",  sphericalAzimuth,  (unsigned) count, true, true));
-	if(proto.isDefined("sphericalElevation") && (sphericalElevation != NULL))
+	if(proto.isDefined("sphericalElevation") && (sphericalElevation != nullptr))
 		sourceBuffers.push_back(SourceDestBuffer(imf_, "sphericalElevation",  sphericalElevation,  (unsigned) count, true, true));
 
 #ifdef TEST_EXTENSIONS
@@ -2634,45 +2463,45 @@ CompressedVectorWriter	WriterImpl :: SetUpData3DPointsData(
 		sourceBuffers.push_back(SourceDestBuffer(imf_,"ext:extraField2", extraField2, (unsigned) count, true));
 #endif
 
-	if(proto.isDefined("intensity") && (intensity != NULL))
+	if(proto.isDefined("intensity") && (intensity != nullptr))
 		sourceBuffers.push_back(SourceDestBuffer(imf_, "intensity",   intensity,   (unsigned) count, true, true));
 
-	if(proto.isDefined("colorRed") && (colorRed != NULL))
+	if(proto.isDefined("colorRed") && (colorRed != nullptr))
 		sourceBuffers.push_back(SourceDestBuffer(imf_, "colorRed",    colorRed,    (unsigned) count, true));
-	if(proto.isDefined("colorGreen") && (colorGreen != NULL))
+	if(proto.isDefined("colorGreen") && (colorGreen != nullptr))
 		sourceBuffers.push_back(SourceDestBuffer(imf_, "colorGreen",  colorGreen,  (unsigned) count, true));
-	if(proto.isDefined("colorBlue") && (colorBlue != NULL))
+	if(proto.isDefined("colorBlue") && (colorBlue != nullptr))
 		sourceBuffers.push_back(SourceDestBuffer(imf_, "colorBlue",   colorBlue,   (unsigned) count, true));
 
-	if(proto.isDefined("returnIndex") && (returnIndex != NULL))
+	if(proto.isDefined("returnIndex") && (returnIndex != nullptr))
 		sourceBuffers.push_back(SourceDestBuffer(imf_, "returnIndex", returnIndex, (unsigned) count, true));
-	if(proto.isDefined("returnCount") && (returnCount != NULL))
+	if(proto.isDefined("returnCount") && (returnCount != nullptr))
 		sourceBuffers.push_back(SourceDestBuffer(imf_, "returnCount", returnCount, (unsigned) count, true));
 
-	if(proto.isDefined("rowIndex") && (rowIndex != NULL))
+	if(proto.isDefined("rowIndex") && (rowIndex != nullptr))
 		sourceBuffers.push_back(SourceDestBuffer(imf_, "rowIndex",    rowIndex,    (unsigned) count, true));
-	if(proto.isDefined("columnIndex") && (columnIndex != NULL))
+	if(proto.isDefined("columnIndex") && (columnIndex != nullptr))
 		sourceBuffers.push_back(SourceDestBuffer(imf_, "columnIndex", columnIndex, (unsigned) count, true));
 
-	if(proto.isDefined("timeStamp") && (timeStamp != NULL))
+	if(proto.isDefined("timeStamp") && (timeStamp != nullptr))
 		sourceBuffers.push_back(SourceDestBuffer(imf_, "timeStamp",   timeStamp,   (unsigned) count, true, true));
 
 #ifdef TEST_EXTENSIONS
 	if(proto.isDefined("ext:extraField3"))
 		sourceBuffers.push_back(SourceDestBuffer(imf_,"ext:extraField3", extraField3, (unsigned) count, true));
 #endif
-	if(proto.isDefined("cartesianInvalidState") && (cartesianInvalidState != NULL))
+	if(proto.isDefined("cartesianInvalidState") && (cartesianInvalidState != nullptr))
 		sourceBuffers.push_back(SourceDestBuffer(imf_, "cartesianInvalidState",       cartesianInvalidState,       (unsigned) count, true));
-	if(proto.isDefined("sphericalInvalidState") && (sphericalInvalidState != NULL))
+	if(proto.isDefined("sphericalInvalidState") && (sphericalInvalidState != nullptr))
 		sourceBuffers.push_back(SourceDestBuffer(imf_, "sphericalInvalidState",       sphericalInvalidState,       (unsigned) count, true));
-	if(proto.isDefined("isIntensityInvalid") && (isIntensityInvalid != NULL))
+	if(proto.isDefined("isIntensityInvalid") && (isIntensityInvalid != nullptr))
 		sourceBuffers.push_back(SourceDestBuffer(imf_, "isIntensityInvalid",       isIntensityInvalid,       (unsigned) count, true));
-	if(proto.isDefined("isColorInvalid") && (isColorInvalid != NULL))
+	if(proto.isDefined("isColorInvalid") && (isColorInvalid != nullptr))
 		sourceBuffers.push_back(SourceDestBuffer(imf_, "isColorInvalid",       isColorInvalid,       (unsigned) count, true));
-	if(proto.isDefined("isTimeStampInvalid") && (isTimeStampInvalid != NULL))
+	if(proto.isDefined("isTimeStampInvalid") && (isTimeStampInvalid != nullptr))
 		sourceBuffers.push_back(SourceDestBuffer(imf_, "isTimeStampInvalid",       isTimeStampInvalid,       (unsigned) count, true));
 
-	if(pointDataExtension != NULL)
+	if(pointDataExtension != nullptr)
 		(*pointDataExtension)(imf_,proto, sourceBuffers);
 
 // create the writer, all buffers must be setup before this call

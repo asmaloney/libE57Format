@@ -183,15 +183,15 @@ class DateTime {
 public:
 
 //! @brief This function is the constructor for the DateTime class
-				DateTime(void);
+				DateTime();
 //! @brief This function is the destructor for the DateTime class
-				~DateTime(void);
+				~DateTime();
 
 	double		dateTimeValue;		//!< The time, in seconds, since GPS time was zero. This time specification may include fractions of a second.
 	int32_t		isAtomicClockReferenced;	//!< This element should be present, and its value set to 1 if, and only if, the time stored in the dateTimeValue element is obtained from an atomic clock time source. Shall be either 0 or 1.
 
 //! @brief This function sets dateTimeValue to be the current GPS time
-	void		SetCurrentGPSTime(void);
+	void		SetCurrentGPSTime();
 
 //! @brief This function sets dateTimeValue to be the given date and time
 	void		SetUTCDateTime(int year,		//!< The year 1900-9999
@@ -210,16 +210,6 @@ public:
 							int &minute,	//!< The minute 0-59
 							float &seconds	//!< The seconds 0.0 - 59.999
 							);
-#if defined(WIN32)
-//! @brief This function sets the date and time from the Windows System Time;
-	void		SetSystemTime(
-							SYSTEMTIME	sysTim		//!< Windows System Time
-							);
-//! @brief This function gets the date and time from the Windows System Time;
-	void		GetSystemTime(
-							SYSTEMTIME	&sysTim		//!< Windows System Time
-							);
-#endif
 };
 
 ////////////////////////////////////////////////////////////////////
@@ -232,11 +222,11 @@ public:
 class E57Root {
 public:
 //! @brief This function is the constructor for the images3D class
-					E57Root(void);
+					E57Root();
 //! @brief This function is the destructor for the reader class
-					~E57Root(void);
+					~E57Root();
 //! @brief This function clears all the data members of the E57Root class
-	void			Reset(void);
+	void			Reset();
 
 	ustring			formatName;			//!< Contains the string “ASTM E57 3D Image File”
 	ustring			guid;				//!< A globally unique identification string for the current version of the file
@@ -389,11 +379,11 @@ public:
 class Data3D {
 public:
 //! @brief This function is the constructor for the Data3D class
-					Data3D(void);
+					Data3D();
 //! @brief This function is the destructor for the Data3D class
-					~Data3D(void);
+					~Data3D();
 //! @brief This function clears all the data members of the Data3D class
-	void			Reset(void);
+	void			Reset();
 
 	ustring			name;					//!< A user-defined name for the Data3D.
 	ustring			guid;					//!< A globally unique identification string for the current version of the Data3D object
@@ -514,11 +504,11 @@ public:
 class Image2D {
 public:
 //! @brief This function is the constructor for the Image2D class
-					Image2D(void);
+					Image2D();
 //! @brief This function is the destructor for the Image2D class
-					~Image2D(void);
+					~Image2D();
 //! @brief This function clears all the data members of the Image2D class
-	void			Reset(void);
+	void			Reset();
 
 	ustring			name;					//!< A user-defined name for the Image2D.
 	ustring			guid;					//!< A globally unique identification string for the current version of the Image2D object
@@ -579,10 +569,10 @@ public:
 					const ustring & filePath		//!< file path string
 					);
 //! @brief This function returns true if the file is open
-	bool		IsOpen(void) const;
+	bool		IsOpen() const;
 
 //! @brief This function closes the file
-	bool		Close(void) const;
+	bool		Close() const;
 
 ////////////////////////////////////////////////////////////////////
 //
@@ -598,7 +588,7 @@ public:
 //	Camera Image 2D picture data
 //
 //! @brief This function returns the total number of Picture Blocks
-	int32_t		GetImage2DCount( void) const;	//!< @return Returns the number of Image2D blocks
+	int32_t		GetImage2DCount() const;	//!< @return Returns the number of Image2D blocks
 
 //! @brief This function returns the image2D header and positions the cursor
 	bool		ReadImage2D( 
@@ -654,7 +644,7 @@ enum Image2DProjection {
 //	Scanner 3d data
 //
 //! @brief This function returns the total number of Data3D Blocks
-	int32_t		GetData3DCount( void) const; //!< @return Returns number of Data3D blocks.
+	int32_t		GetData3DCount() const; //!< @return Returns number of Data3D blocks.
 
 //! @brief This function returns the Data3D header and positions the cursor
 	bool		ReadData3D( 
@@ -693,29 +683,29 @@ Call the CompressedVectorReader::read() until all data is read.
 						double*		cartesianX,			//!< pointer to a buffer with the X coordinate (in meters) of the point in Cartesian coordinates
 						double*		cartesianY,			//!< pointer to a buffer with the Y coordinate (in meters) of the point in Cartesian coordinates
 						double*		cartesianZ,			//!< pointer to a buffer with the Z coordinate (in meters) of the point in Cartesian coordinates
-						int8_t*		cartesianInvalidState = NULL,	//!< Value = 0 if the point is considered valid, 1 otherwise
+						int8_t*		cartesianInvalidState = nullptr,	//!< Value = 0 if the point is considered valid, 1 otherwise
 
-						double*		intensity = NULL,	//!< pointer to a buffer with the Point response intensity. Unit is unspecified
-						int8_t*		isIntensityInvalid = NULL,	//!< Value = 0 if the intensity is considered valid, 1 otherwise
+						double*		intensity = nullptr,	//!< pointer to a buffer with the Point response intensity. Unit is unspecified
+						int8_t*		isIntensityInvalid = nullptr,	//!< Value = 0 if the intensity is considered valid, 1 otherwise
 
-						uint16_t*	colorRed = NULL,	//!< pointer to a buffer with the Red color coefficient. Unit is unspecified
-						uint16_t*	colorGreen = NULL,	//!< pointer to a buffer with the Green color coefficient. Unit is unspecified
-						uint16_t*	colorBlue = NULL,	//!< pointer to a buffer with the Blue color coefficient. Unit is unspecified
-						int8_t*		isColorInvalid = NULL,	//!< Value = 0 if the color is considered valid, 1 otherwise
+						uint16_t*	colorRed = nullptr,	//!< pointer to a buffer with the Red color coefficient. Unit is unspecified
+						uint16_t*	colorGreen = nullptr,	//!< pointer to a buffer with the Green color coefficient. Unit is unspecified
+						uint16_t*	colorBlue = nullptr,	//!< pointer to a buffer with the Blue color coefficient. Unit is unspecified
+						int8_t*		isColorInvalid = nullptr,	//!< Value = 0 if the color is considered valid, 1 otherwise
 
-						double*		sphericalRange = NULL,		//!< pointer to a buffer with the range (in meters) of points in spherical coordinates. Shall be non-negative
-						double*		sphericalAzimuth = NULL,	//!< pointer to a buffer with the Azimuth angle (in radians) of point in spherical coordinates
-						double*		sphericalElevation = NULL,	//!< pointer to a buffer with the Elevation angle (in radians) of point in spherical coordinates
-						int8_t*		sphericalInvalidState = NULL, //!< Value = 0 if the range is considered valid, 1 otherwise
+						double*		sphericalRange = nullptr,		//!< pointer to a buffer with the range (in meters) of points in spherical coordinates. Shall be non-negative
+						double*		sphericalAzimuth = nullptr,	//!< pointer to a buffer with the Azimuth angle (in radians) of point in spherical coordinates
+						double*		sphericalElevation = nullptr,	//!< pointer to a buffer with the Elevation angle (in radians) of point in spherical coordinates
+						int8_t*		sphericalInvalidState = nullptr, //!< Value = 0 if the range is considered valid, 1 otherwise
 
-						int32_t*	rowIndex = NULL,	//!< pointer to a buffer with the row number of point (zero based). This is useful for data that is stored in a regular grid.  Shall be in the interval (0, 2^31).
-						int32_t*	columnIndex = NULL,	//!< pointer to a buffer with the column number of point (zero based). This is useful for data that is stored in a regular grid. Shall be in the interval (0, 2^31).
-						int8_t*		returnIndex = NULL,	//!< pointer to a buffer with the number of this return (zero based). That is, 0 is the first return, 1 is the second, and so on. Shall be in the interval (0, returnCount). Only for multi-return sensors. 
-						int8_t*		returnCount = NULL,	//!< pointer to a buffer with the total number of returns for the pulse that this corresponds to. Shall be in the interval (0, 2^7). Only for multi-return sensors. 
+						int32_t*	rowIndex = nullptr,	//!< pointer to a buffer with the row number of point (zero based). This is useful for data that is stored in a regular grid.  Shall be in the interval (0, 2^31).
+						int32_t*	columnIndex = nullptr,	//!< pointer to a buffer with the column number of point (zero based). This is useful for data that is stored in a regular grid. Shall be in the interval (0, 2^31).
+						int8_t*		returnIndex = nullptr,	//!< pointer to a buffer with the number of this return (zero based). That is, 0 is the first return, 1 is the second, and so on. Shall be in the interval (0, returnCount). Only for multi-return sensors. 
+						int8_t*		returnCount = nullptr,	//!< pointer to a buffer with the total number of returns for the pulse that this corresponds to. Shall be in the interval (0, 2^7). Only for multi-return sensors. 
 
-						double*		timeStamp = NULL,	//!< pointer to a buffer with the time (in seconds) since the start time for the data, which is given by acquisitionStart in the parent Data3D Structure. Shall be non-negative
-						int8_t*		isTimeStampInvalid = NULL,	//!< Value = 0 if the timeStamp is considered valid, 1 otherwise
-                                                  bool		(*pointDataExtension)(ImageFile	imf, StructureNode proto, int protvector, std::vector<SourceDestBuffer> & destBuffers) = NULL
+						double*		timeStamp = nullptr,	//!< pointer to a buffer with the time (in seconds) since the start time for the data, which is given by acquisitionStart in the parent Data3D Structure. Shall be non-negative
+						int8_t*		isTimeStampInvalid = nullptr,	//!< Value = 0 if the timeStamp is considered valid, 1 otherwise
+                                                  bool		(*pointDataExtension)(ImageFile	imf, StructureNode proto, int protvector, std::vector<SourceDestBuffer> & destBuffers) = nullptr
 
 						) const;					//!< @return Return true if sucessful, false otherwise
 
@@ -724,13 +714,13 @@ Call the CompressedVectorReader::read() until all data is read.
 //	Raw File information
 //
 //! @brief This function returns the file raw E57Root Structure Node
-	StructureNode		GetRawE57Root(void);	//!< @return Returns the E57Root StructureNode
+	StructureNode		GetRawE57Root();	//!< @return Returns the E57Root StructureNode
 //! @brief This function returns the raw Data3D Vector Node
-	VectorNode			GetRawData3D(void);		//!< @return Returns the raw Data3D VectorNode
+	VectorNode			GetRawData3D();		//!< @return Returns the raw Data3D VectorNode
 //! @brief This function returns the raw Image2D Vector Node
-	VectorNode			GetRawImages2D(void);	//!< @return Returns the raw Image2D VectorNode
+	VectorNode			GetRawImages2D();	//!< @return Returns the raw Image2D VectorNode
 //! @brief This function returns the ram ImageFile Node which is need to add enhancements
-	ImageFile			GetRawIMF(void);		//!< /return Returns the raw ImageFile
+	ImageFile			GetRawIMF();		//!< /return Returns the raw ImageFile
 private:   //=================
 					Reader();                 // No default constructor is defined for Node
 protected: //=================
@@ -758,10 +748,10 @@ public:
 					);
 
 //! @brief This function returns true if the file is open
-	bool		IsOpen(void) const;	//!< @return Returns true if the file is open and ready.
+	bool		IsOpen() const;	//!< @return Returns true if the file is open and ready.
 
 //! @brief This function closes the file
-	bool		Close(void) const;
+	bool		Close() const;
 
 ////////////////////////////////////////////////////////////////////
 //
@@ -789,7 +779,7 @@ public:
 
 	int32_t		NewData3D( 
 						Data3D &	data3DHeader,	//!< pointer to the Data3D structure to receive the image information
-						bool		(*pointExtension)(ImageFile	imf, StructureNode proto) = NULL
+						bool		(*pointExtension)(ImageFile	imf, StructureNode proto) = nullptr
 						) const;							//!< @return Returns the index of the new scan's data3D block.
 
 //! @brief This function writes out blocks of point data
@@ -799,29 +789,29 @@ public:
 						double*		cartesianX,			//!< pointer to a buffer with the X coordinate (in meters) of the point in Cartesian coordinates
 						double*		cartesianY,			//!< pointer to a buffer with the Y coordinate (in meters) of the point in Cartesian coordinates
 						double*		cartesianZ,			//!< pointer to a buffer with the Z coordinate (in meters) of the point in Cartesian coordinates
-						int8_t*		cartesianInvalidState = NULL,	//!< Value = 0 if the point is considered valid, 1 otherwise
+						int8_t*		cartesianInvalidState = nullptr,	//!< Value = 0 if the point is considered valid, 1 otherwise
 
-						double*		intensity = NULL,	//!< pointer to a buffer with the Point response intensity. Unit is unspecified
-						int8_t*		isIntensityInvalid = NULL,	//!< Value = 0 if the intensity is considered valid, 1 otherwise
+						double*		intensity = nullptr,	//!< pointer to a buffer with the Point response intensity. Unit is unspecified
+						int8_t*		isIntensityInvalid = nullptr,	//!< Value = 0 if the intensity is considered valid, 1 otherwise
 
-						uint16_t*	colorRed = NULL,	//!< pointer to a buffer with the Red color coefficient. Unit is unspecified
-						uint16_t*	colorGreen = NULL,	//!< pointer to a buffer with the Green color coefficient. Unit is unspecified
-						uint16_t*	colorBlue = NULL,	//!< pointer to a buffer with the Blue color coefficient. Unit is unspecified
-						int8_t*		isColorInvalid = NULL,	//!< Value = 0 if the color is considered valid, 1 otherwise
+						uint16_t*	colorRed = nullptr,	//!< pointer to a buffer with the Red color coefficient. Unit is unspecified
+						uint16_t*	colorGreen = nullptr,	//!< pointer to a buffer with the Green color coefficient. Unit is unspecified
+						uint16_t*	colorBlue = nullptr,	//!< pointer to a buffer with the Blue color coefficient. Unit is unspecified
+						int8_t*		isColorInvalid = nullptr,	//!< Value = 0 if the color is considered valid, 1 otherwise
 
-						double*		sphericalRange = NULL,		//!< pointer to a buffer with the range (in meters) of points in spherical coordinates. Shall be non-negative
-						double*		sphericalAzimuth = NULL,	//!< pointer to a buffer with the Azimuth angle (in radians) of point in spherical coordinates
-						double*		sphericalElevation = NULL,	//!< pointer to a buffer with the Elevation angle (in radians) of point in spherical coordinates
-						int8_t*		sphericalInvalidState = NULL, //!< Value = 0 if the range is considered valid, 1 otherwise
+						double*		sphericalRange = nullptr,		//!< pointer to a buffer with the range (in meters) of points in spherical coordinates. Shall be non-negative
+						double*		sphericalAzimuth = nullptr,	//!< pointer to a buffer with the Azimuth angle (in radians) of point in spherical coordinates
+						double*		sphericalElevation = nullptr,	//!< pointer to a buffer with the Elevation angle (in radians) of point in spherical coordinates
+						int8_t*		sphericalInvalidState = nullptr, //!< Value = 0 if the range is considered valid, 1 otherwise
 
-						int32_t*	rowIndex = NULL,	//!< pointer to a buffer with the row number of point (zero based). This is useful for data that is stored in a regular grid.Shall be in the interval (0, 2^31).
-						int32_t*	columnIndex = NULL,	//!< pointer to a buffer with the column number of point (zero based). This is useful for data that is stored in a regular grid. Shall be in the interval (0, 2^31).
-						int8_t*		returnIndex = NULL,	//!< pointer to a buffer with the number of this return (zero based). That is, 0 is the first return, 1 is the second, and so on. Shall be in the interval (0, returnCount). Only for multi-return sensors. 
-						int8_t*		returnCount = NULL,	//!< pointer to a buffer with the total number of returns for the pulse that this corresponds to. Shall be in the interval (0, 2^7). Only for multi-return sensors. 
+						int32_t*	rowIndex = nullptr,	//!< pointer to a buffer with the row number of point (zero based). This is useful for data that is stored in a regular grid.Shall be in the interval (0, 2^31).
+						int32_t*	columnIndex = nullptr,	//!< pointer to a buffer with the column number of point (zero based). This is useful for data that is stored in a regular grid. Shall be in the interval (0, 2^31).
+						int8_t*		returnIndex = nullptr,	//!< pointer to a buffer with the number of this return (zero based). That is, 0 is the first return, 1 is the second, and so on. Shall be in the interval (0, returnCount). Only for multi-return sensors. 
+						int8_t*		returnCount = nullptr,	//!< pointer to a buffer with the total number of returns for the pulse that this corresponds to. Shall be in the interval (0, 2^7). Only for multi-return sensors. 
 
-						double*		timeStamp = NULL,	//!< pointer to a buffer with the time (in seconds) since the start time for the data, which is given by acquisitionStart in the parent Data3D Structure. Shall be non-negative
-						int8_t*		isTimeStampInvalid = NULL,	//!< Value = 0 if the timeStamp is considered valid, 1 otherwise
-                        bool        (*pointDataExtension)(ImageFile    imf, StructureNode proto, std::vector<SourceDestBuffer> & sourceBuffers) = NULL
+						double*		timeStamp = nullptr,	//!< pointer to a buffer with the time (in seconds) since the start time for the data, which is given by acquisitionStart in the parent Data3D Structure. Shall be non-negative
+						int8_t*		isTimeStampInvalid = nullptr,	//!< Value = 0 if the timeStamp is considered valid, 1 otherwise
+                        bool        (*pointDataExtension)(ImageFile    imf, StructureNode proto, std::vector<SourceDestBuffer> & sourceBuffers) = nullptr
 						) const ;		//!< @return Return true if sucessful, false otherwise
 
 
@@ -839,13 +829,13 @@ public:
 //	Raw File information
 //
 //! @brief This function returns the file raw E57Root Structure Node
-	StructureNode		GetRawE57Root(void);	//!< @return Returns the E57Root StructureNode
+	StructureNode		GetRawE57Root();	//!< @return Returns the E57Root StructureNode
 //! @brief This function returns the raw Data3D Vector Node
-	VectorNode			GetRawData3D(void);		//!< @return Returns the raw Data3D VectorNode
+	VectorNode			GetRawData3D();		//!< @return Returns the raw Data3D VectorNode
 //! @brief This function returns the raw Image2D Vector Node
-	VectorNode			GetRawImages2D(void);	//!< @return Returns the raw Image2D VectorNode
+	VectorNode			GetRawImages2D();	//!< @return Returns the raw Image2D VectorNode
 //! @brief This function returns the ram ImageFile Node which is need to add enhancements
-	ImageFile			GetRawIMF(void);		//!< /return Returns the raw ImageFile
+	ImageFile			GetRawIMF();		//!< /return Returns the raw ImageFile
 private:   //=================
 					Writer();                 // No default constructor is defined for Node
 protected: //=================

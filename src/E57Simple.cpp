@@ -777,22 +777,9 @@ DEALINGS IN THE SOFTWARE.
 
 //! @file E57Simple.cpp
 
-#if defined(_WIN32)
-#    include <io.h>
-#    include <fcntl.h>
-#    include <sys/stat.h>
-#    include <windows.h>
-#else
-#  define _LARGEFILE64_SOURCE
-#  define __LARGE64_FILES
-#  include <sys/types.h>
-#  include <unistd.h>
-#endif
-
 #include "E57Simple.h"
 #include "E57SimpleImpl.h"
 
-#include <stdint.h>
 #define _USE_MATH_DEFINES // for M_PI
 #include <cmath>
 
@@ -803,17 +790,17 @@ using namespace std;
 //
 //	e57::DateTime
 //
-	DateTime::DateTime(void)
+	DateTime::DateTime()
 {
 	dateTimeValue = 0.;
 	isAtomicClockReferenced = 0;
 };
 
-	DateTime::~DateTime(void)
+	DateTime::~DateTime()
 {
 };
 
-void	DateTime::SetCurrentGPSTime(void)
+void	DateTime::SetCurrentGPSTime()
 {
 	dateTimeValue = e57::GetGPSTime();
 	isAtomicClockReferenced = 0;
@@ -846,37 +833,21 @@ void	DateTime::GetUTCDateTime(
 	e57::GetUTCFromGPSDateTime(dateTimeValue, utc_year, utc_month,
 		utc_day, utc_hour, utc_minute, utc_seconds);
 };
-#if defined(WIN32)
 
-void	DateTime::SetSystemTime(
-	SYSTEMTIME	sysTim		//!< Windows System Time
-	)
-{
-	dateTimeValue = e57::GetGPSDateTimeFromSystemTime(sysTim);
-	isAtomicClockReferenced = 0;
-};
-
-void	DateTime::GetSystemTime(
-	SYSTEMTIME	&sysTim		//!< Windows System Time
-	)
-{
-	e57::GetSystemTimeFromGPSDateTime(dateTimeValue,sysTim);
-};
-#endif
 ////////////////////////////////////////////////////////////////////
 //
 //	e57::E57Root
 //
-	E57Root::E57Root(void)
+	E57Root::E57Root()
 {
 	Reset();
 };
 
-	E57Root::~E57Root(void)
+	E57Root::~E57Root()
 {
 };
 
-void E57Root::Reset(void)
+void E57Root::Reset()
 {
 	versionMajor = 1;
 	versionMinor = 0;
@@ -889,15 +860,15 @@ void E57Root::Reset(void)
 //
 //	e57::Data3D
 //
-	Data3D::Data3D(void)
+	Data3D::Data3D()
 {
 	Reset();
 };
 
-	Data3D::~Data3D(void)
+	Data3D::~Data3D()
 {
 };
-void Data3D::Reset(void)
+void Data3D::Reset()
 {
 	originalGuids.clear();
 	temperature = E57_FLOAT_MAX;
@@ -999,16 +970,16 @@ void Data3D::Reset(void)
 //
 //	e57::Image2D
 //
-	Image2D::Image2D(void)
+	Image2D::Image2D()
 {
 	Reset();
 };
 
-	Image2D::~Image2D(void)
+	Image2D::~Image2D()
 {
 };
 
-void Image2D::Reset(void)
+void Image2D::Reset()
 {
 	acquisitionDateTime.dateTimeValue = 0.;
 	acquisitionDateTime.isAtomicClockReferenced = 0;
@@ -1065,12 +1036,12 @@ void Image2D::Reset(void)
 {
 }
 
-bool		Reader :: IsOpen(void) const
+bool		Reader :: IsOpen() const
 {
 	return impl_->IsOpen();
 };
 
-bool		Reader :: Close(void) const
+bool		Reader :: Close() const
 {
 	return impl_->Close();
 };
@@ -1081,7 +1052,7 @@ bool		Reader :: GetE57Root(
 	return impl_->GetE57Root(fileHeader);
 };
 
-int32_t		Reader :: GetImage2DCount( void) const
+int32_t		Reader :: GetImage2DCount() const
 {
 	return impl_->GetImage2DCount();
 };
@@ -1120,30 +1091,30 @@ int64_t		Reader :: ReadImage2DData(
 	return impl_->ReadImage2DData(imageIndex, imageProjection, imageType, pBuffer, start, count);
 };
 
-int32_t		Reader :: GetData3DCount( void) const
+int32_t		Reader :: GetData3DCount() const
 {
 	return impl_->GetData3DCount();
 };
 
 // This function returns the ram ImageFile Node which is need to add enhancements
-ImageFile		Reader :: GetRawIMF(void)
+ImageFile		Reader :: GetRawIMF()
 {
 	return impl_->GetRawIMF();
 }
 // This function returns the file raw E57Root Structure Node
-StructureNode	Reader :: GetRawE57Root(void)
+StructureNode	Reader :: GetRawE57Root()
 {
 	return impl_->GetRawE57Root();
 };	// /return Returns the E57Root StructureNode
 
 // This function returns the raw Data3D Vector Node
-VectorNode		Reader :: GetRawData3D(void)
+VectorNode		Reader :: GetRawData3D()
 {
 	return impl_->GetRawData3D();
 };// /return Returns the raw Data3D VectorNode
 
 // This function returns the raw Images2D Vector Node
-VectorNode		Reader :: GetRawImages2D(void)
+VectorNode		Reader :: GetRawImages2D()
 {
 	return impl_->GetRawImages2D();
 };	// /return Returns the raw Image2D VectorNode
@@ -1233,36 +1204,36 @@ CompressedVectorReader	Reader :: SetUpData3DPointsData(
 {
 }
 
-bool		Writer :: IsOpen(void) const
+bool		Writer :: IsOpen() const
 {
 	return impl_->IsOpen();
 };
 
-bool		Writer :: Close(void) const
+bool		Writer :: Close() const
 {
 	return impl_->Close();
 };
 
 // This function returns the ram ImageFile Node which is need to add enhancements
-ImageFile		Writer :: GetRawIMF(void)
+ImageFile		Writer :: GetRawIMF()
 {
 	return impl_->GetRawIMF();
 }
 
 // This function returns the file raw E57Root Structure Node
-StructureNode	Writer :: GetRawE57Root(void)
+StructureNode	Writer :: GetRawE57Root()
 {
 	return impl_->GetRawE57Root();
 };	// /return Returns the E57Root StructureNode
 
 // This function returns the raw Data3D Vector Node
-VectorNode		Writer :: GetRawData3D(void)
+VectorNode		Writer :: GetRawData3D()
 {
 	return impl_->GetRawData3D();
 };// /return Returns the raw Data3D VectorNode
 
 // This function returns the raw Images2D Vector Node
-VectorNode		Writer :: GetRawImages2D(void)
+VectorNode		Writer :: GetRawImages2D()
 {
 	return impl_->GetRawImages2D();
 };	// /return Returns the raw Image2D VectorNode

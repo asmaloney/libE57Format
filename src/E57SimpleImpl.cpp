@@ -55,121 +55,6 @@ using namespace std;
 
 ////////////////////////////////////////////////////////////////////
 //
-//	e57::GetGPSTime
-//
-double e57::GetGPSTime()
-{
-#ifdef _C_TIMECONV_H_
-
-unsigned short     utc_year;     //!< Universal Time Coordinated    [year]
-unsigned char      utc_month;    //!< Universal Time Coordinated    [1-12 months] 
-unsigned char      utc_day;      //!< Universal Time Coordinated    [1-31 days]
-unsigned char      utc_hour;     //!< Universal Time Coordinated    [hours]
-unsigned char      utc_minute;   //!< Universal Time Coordinated    [minutes]
-float              utc_seconds;  //!< Universal Time Coordinated    [s]
-unsigned char      utc_offset;   //!< Integer seconds that GPS is ahead of UTC time, always positive             [s], obtained from a look up table
-double             julian_date;  //!< Number of days since noon Universal Time Jan 1, 4713 BCE (Julian calendar) [days]
-unsigned short     gps_week;     //!< GPS week (0-1024+)            [week]
-double             gps_tow;	  //!< GPS time of week (0-604800.0) [s]
-
-BOOL ret = TIMECONV_GetSystemTime(&utc_year, &utc_month, &utc_day, &utc_hour, &utc_minute, &utc_seconds,
-	&utc_offset, &julian_date, &gps_week, &gps_tow);
-
-double gpsTime = (gps_week * 604800.) + gps_tow;
-#endif
-    // TODO
-    return 0;//gpsTime;
-};
-
-////////////////////////////////////////////////////////////////////
-//
-//	e57::GetGPSDateTimeFromUTC
-//
-double	e57::GetGPSDateTimeFromUTC(
-	int utc_year,		//!< The year 1900-9999
-	int utc_month,		//!< The month 0-11
-	int utc_day,		//!< The day 1-31
-	int utc_hour,		//!< The hour 0-23
-	int utc_minute,		//!< The minute 0-59
-	float utc_seconds	//!< The seconds 0.0 - 59.999
-	)
-{
-#ifdef _C_TIMECONV_H_
- 	double             julian_date;  //!< Number of days since noon Universal Time Jan 1, 4713 BCE (Julian calendar) [days]
-	unsigned char      utc_offset;   //!< Integer seconds that GPS is ahead of UTC time, always positive  
-	unsigned short     gps_week;     //!< GPS week (0-1024+)            [week]
-	double             gps_tow;	  //!< GPS time of week (0-604800.0) [s]
-
-	BOOL result = TIMECONV_GetJulianDateFromUTCTime(
-	    utc_year,
-		utc_month,
-		utc_day,
-		utc_hour,
-		utc_minute,
-		utc_seconds,
-		&julian_date );
- 
-	result = TIMECONV_DetermineUTCOffset(
-		julian_date,
-		&utc_offset );
- 
-	result = TIMECONV_GetGPSTimeFromJulianDate(
-		julian_date,
-		utc_offset,
-		&gps_week,
-		&gps_tow );
-
-	double gpsTime = (gps_week * 604800.) + gps_tow;
-#endif
-    // TODO
-    return 0;//gpsTime;
-};
-////////////////////////////////////////////////////////////////////
-//
-//	e57::GetUTCFromGPSDateTime
-//
-void	e57::GetUTCFromGPSDateTime(
-    double gpsTime,		//!< GPS Date Time
-	int &utc_Year,		//!< The year 1900-9999
-	int &utc_Month,		//!< The month 0-11
-	int &utc_Day,		//!< The day 1-31
-	int &utc_Hour,		//!< The hour 0-23
-	int &utc_Minute,		//!< The minute 0-59
-	float &utc_seconds	//!< The seconds 0.0 - 59.999
-	)
-{
-#ifdef _C_TIMECONV_H_
-	unsigned short     utc_year;     //!< Universal Time Coordinated    [year]
-	unsigned char      utc_month;    //!< Universal Time Coordinated    [1-12 months] 
-	unsigned char      utc_day;      //!< Universal Time Coordinated    [1-31 days]
-	unsigned char      utc_hour;     //!< Universal Time Coordinated    [hours]
-	unsigned char      utc_minute;   //!< Universal Time Coordinated    [minutes]
- 	unsigned short     gps_week;     //!< GPS week (0-1024+)            [week]
-	double             gps_tow;	  //!< GPS time of week (0-604800.0) [s]
-
-	gps_week = ((int)floor(gpsTime))/604800;
-	gps_tow = gpsTime - gps_week * 604800.;
-
-	BOOL result = TIMECONV_GetUTCTimeFromGPSTime(
-		gps_week,
-		gps_tow,
-		&utc_year,
-		&utc_month,
-		&utc_day,
-		&utc_hour,
-		&utc_minute,
-		&utc_seconds);
-
-	utc_Year = utc_year;
-	utc_Month = utc_month;
-	utc_Day = utc_day;
-	utc_Hour = utc_hour;
-	utc_Minute = utc_minute;
-#endif
-	return;
-};
-////////////////////////////////////////////////////////////////////
-//
 //	e57::GetNewGuid
 //
 std::string e57::GetNewGuid()
@@ -246,7 +131,7 @@ bool	ReaderImpl :: GetE57Root(
 {
 	if(IsOpen())
 	{
-		fileHeader.Reset();
+        fileHeader = {};
 
 		fileHeader.formatName = StringNode(root_.get("formatName")).value();
 		fileHeader.versionMajor = (int32_t) IntegerNode(root_.get("versionMajor")).value();
@@ -296,7 +181,7 @@ bool	ReaderImpl :: ReadImage2D(
 		if( (imageIndex < 0) || (imageIndex >= images2D_.childCount()))
 			return false;
 
-		image2DHeader.Reset();
+        image2DHeader = {};
 
 		StructureNode image(images2D_.get(imageIndex));
 
@@ -696,7 +581,7 @@ bool	ReaderImpl :: ReadData3D(
 		if( (dataIndex < 0) || (dataIndex >= data3D_.childCount()))
 			return false;
 
-		data3DHeader.Reset();
+        data3DHeader = {};
 
 		StructureNode scan(data3D_.get(dataIndex));
 		CompressedVectorNode points(scan.get("points"));
@@ -1521,10 +1406,14 @@ CompressedVectorReader	ReaderImpl :: SetUpData3DPointsData(
 
 // Create creationDateTime structure
 /// Path name: "/creationDateTime
+// TODO currently no support for handling UTC <-> GPS time conversions
+// note that "creationDateTime" is optional in the standard
+#if 0
     StructureNode creationDateTime = StructureNode(imf_);
 	creationDateTime.set("dateTimeValue", FloatNode(imf_, GetGPSTime()));
 	creationDateTime.set("isAtomicClockReferenced", IntegerNode(imf_,0));
     root_.set("creationDateTime", creationDateTime);
+#endif
 
 	root_.set("data3D", data3D_);
 	root_.set("images2D", images2D_);

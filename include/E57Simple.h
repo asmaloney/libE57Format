@@ -54,6 +54,9 @@
 
 #include "E57Format.h"
 
+#define E57_NOT_SCALED_USE_FLOAT        0.
+#define E57_NOT_SCALED_USE_INTEGER  -1.
+
 namespace e57 {
 
 class ReaderImpl;
@@ -65,11 +68,10 @@ class WriterImpl;
 //
 
 //! @brief The e57::Translation defines a rigid body translation in Cartesian coordinates.
-class Translation {
-public:
-	double		x;	//!< The X coordinate of the translation (in meters)
-	double		y;	//!< The Y coordinate of the translation (in meters)
-	double		z;	//!< The Z coordinate of the translation (in meters)
+struct Translation {
+    double		x {0.};	//!< The X coordinate of the translation (in meters)
+    double		y {0.};	//!< The Y coordinate of the translation (in meters)
+    double		z {0.};	//!< The Z coordinate of the translation (in meters)
 };
 ////////////////////////////////////////////////////////////////////
 //
@@ -77,12 +79,11 @@ public:
 //
 //! @brief The e57::Quaternion is a quaternion which represents a rigid body rotation.
 
-class Quaternion {
-public:
-	double		w;	//!< The real part of the quaternion. Shall be nonnegative
-	double		x;	//!< The i coefficient of the quaternion
-	double		y;	//!< The j coefficient of the quaternion
-	double		z;	//!< The k coefficient of the quaternion
+struct Quaternion {
+    double		w {1.};	//!< The real part of the quaternion. Shall be nonnegative
+    double		x {0.};	//!< The i coefficient of the quaternion
+    double		y {0.};	//!< The j coefficient of the quaternion
+    double		z {0.};	//!< The k coefficient of the quaternion
 };
 
 ////////////////////////////////////////////////////////////////////
@@ -91,8 +92,7 @@ public:
 //
 //! @brief The e57::RigidBodyTransform is a structure that defines a rigid body transform in cartesian coordinates.
 
-class RigidBodyTransform {
-public:
+struct RigidBodyTransform {
 	e57::Quaternion		rotation;		//!< A unit quaternion representing the rotation, R, of the transform
 	e57::Translation	translation;	//!< The translation point vector, t, of the transform
 };
@@ -103,14 +103,13 @@ public:
 //
 //! @brief The e57::CartesianBounds structure specifies an axis-aligned box in local cartesian coordinates.
 
-class CartesianBounds {
-public:
-	double		xMinimum;	//!< The minimum extent of the bounding box in the X direction
-	double		xMaximum;	//!< The maximum extent of the bounding box in the X direction
-	double		yMinimum;	//!< The minimum extent of the bounding box in the Y direction
-	double		yMaximum;	//!< The maximum extent of the bounding box in the Y direction
-	double		zMinimum;	//!< The minimum extent of the bounding box in the Z direction
-	double		zMaximum;	//!< The maximum extent of the bounding box in the Z direction
+struct CartesianBounds {
+    double		xMinimum {-E57_DOUBLE_MAX};	//!< The minimum extent of the bounding box in the X direction
+    double		xMaximum {E57_DOUBLE_MAX};	//!< The maximum extent of the bounding box in the X direction
+    double		yMinimum {-E57_DOUBLE_MAX};	//!< The minimum extent of the bounding box in the Y direction
+    double		yMaximum {E57_DOUBLE_MAX};	//!< The maximum extent of the bounding box in the Y direction
+    double		zMinimum {-E57_DOUBLE_MAX};	//!< The minimum extent of the bounding box in the Z direction
+    double		zMaximum {E57_DOUBLE_MAX};	//!< The maximum extent of the bounding box in the Z direction
 };
 
 ////////////////////////////////////////////////////////////////////
@@ -119,8 +118,8 @@ public:
 //
 //! @brief The e57::SphericalBounds structure stores the bounds of some data in spherical coordinates.
 
-class SphericalBounds {
-public:
+struct SphericalBounds {
+    SphericalBounds(); // constructor in the cpp to avoid exposing M_PI
 	double		rangeMinimum;		//!< The minimum extent of the bounding region in the r direction
 	double		rangeMaximum;		//!< The maximum extent of the bounding region in the r direction
 	double		elevationMinimum;	//!< The minimum extent of the bounding region from the horizontal plane
@@ -135,14 +134,13 @@ public:
 //
 //! @brief The e57::IndexBounds structure stores the minimum and maximum of rowIndex, columnIndex, and returnIndex fields for a set of points.
 
-class IndexBounds {
-public:
-	int64_t		rowMinimum;		//!< The minimum rowIndex value of any point represented by this IndexBounds object.
-	int64_t		rowMaximum;		//!< The maximum rowIndex value of any point represented by this IndexBounds object.
-	int64_t		columnMinimum;	//!< The minimum columnIndex value of any point represented by this IndexBounds object.
-	int64_t		columnMaximum;	//!< The maximum columnIndex value of any point represented by this IndexBounds object.
-	int64_t		returnMinimum;	//!< The minimum returnIndex value of any point represented by this IndexBounds object.
-	int64_t		returnMaximum;	//!< The maximum returnIndex value of any point represented by this IndexBounds object.
+struct IndexBounds {
+    int64_t		rowMinimum {0};		//!< The minimum rowIndex value of any point represented by this IndexBounds object.
+    int64_t		rowMaximum {0};		//!< The maximum rowIndex value of any point represented by this IndexBounds object.
+    int64_t		columnMinimum {0};	//!< The minimum columnIndex value of any point represented by this IndexBounds object.
+    int64_t		columnMaximum {0};	//!< The maximum columnIndex value of any point represented by this IndexBounds object.
+    int64_t		returnMinimum {0};	//!< The minimum returnIndex value of any point represented by this IndexBounds object.
+    int64_t		returnMaximum {0};	//!< The maximum returnIndex value of any point represented by this IndexBounds object.
 };
 ////////////////////////////////////////////////////////////////////
 //
@@ -150,10 +148,9 @@ public:
 //
 //! @brief The e57::IntensityLimits Structure specifies the limits for the value of signal intensity that a sensor is capable of producing
 
-class IntensityLimits {
-public:
-	double		intensityMinimum;		//!< The minimum producible intensity value. Unit is unspecified.
-	double		intensityMaximum;		//!< The maximum producible intensity value. Unit is unspecified.
+struct IntensityLimits {
+    double		intensityMinimum {0.};		//!< The minimum producible intensity value. Unit is unspecified.
+    double		intensityMaximum {0.};		//!< The maximum producible intensity value. Unit is unspecified.
 };
 ////////////////////////////////////////////////////////////////////
 //
@@ -161,14 +158,13 @@ public:
 //
 //! @brief The e57::ColorLimits Structure specifies the limits for the value of red, green, and blue color that a sensor is capable of producing.
 
-class ColorLimits {
-public:
-	double		colorRedMinimum;		//!< The minimum producible red color value. Unit is unspecified.
-	double		colorRedMaximum;		//!< The maximum producible red color value. Unit is unspecified.
-	double		colorGreenMinimum;		//!< The minimum producible green color value. Unit is unspecified.
-	double		colorGreenMaximum;		//!< The maximum producible green color value. Unit is unspecified.
-	double		colorBlueMinimum;		//!< The minimum producible blue color value. Unit is unspecified.
-	double		colorBlueMaximum;		//!< The maximum producible blue color value. Unit is unspecified.
+struct ColorLimits {
+    double		colorRedMinimum {0.};		//!< The minimum producible red color value. Unit is unspecified.
+    double		colorRedMaximum {0.};		//!< The maximum producible red color value. Unit is unspecified.
+    double		colorGreenMinimum {0.};		//!< The minimum producible green color value. Unit is unspecified.
+    double		colorGreenMaximum {0.};		//!< The maximum producible green color value. Unit is unspecified.
+    double		colorBlueMinimum {0.};		//!< The minimum producible blue color value. Unit is unspecified.
+    double		colorBlueMaximum {0.};		//!< The maximum producible blue color value. Unit is unspecified.
 };
 ////////////////////////////////////////////////////////////////////
 //
@@ -179,37 +175,9 @@ public:
 	562 floating point number, stored as an E57 Float element which is based on the Global Positioning
 	563 System (GPS) time scale. */
 
-class DateTime {
-public:
-
-//! @brief This function is the constructor for the DateTime class
-				DateTime();
-//! @brief This function is the destructor for the DateTime class
-				~DateTime();
-
-	double		dateTimeValue;		//!< The time, in seconds, since GPS time was zero. This time specification may include fractions of a second.
-	int32_t		isAtomicClockReferenced;	//!< This element should be present, and its value set to 1 if, and only if, the time stored in the dateTimeValue element is obtained from an atomic clock time source. Shall be either 0 or 1.
-
-//! @brief This function sets dateTimeValue to be the current GPS time
-	void		SetCurrentGPSTime();
-
-//! @brief This function sets dateTimeValue to be the given date and time
-	void		SetUTCDateTime(int year,		//!< The year 1900-9999
-							int month,		//!< The month 0-11
-							int day,		//!< The day 1-31
-							int hour,		//!< The hour 0-23
-							int minute,		//!< The minute 0-59
-							float seconds	//!< The seconds 0.0 - 59.999
-							);
-
-//! @brief This function gets the date and time from the gps dateTimeValue;
-	void		GetUTCDateTime(int &year,		//!< The year 1900-9999
-							int &month,		//!< The month 0-11
-							int &day,		//!< The day 1-31
-							int &hour,		//!< The hour 0-23
-							int &minute,	//!< The minute 0-59
-							float &seconds	//!< The seconds 0.0 - 59.999
-							);
+struct DateTime {
+    double		dateTimeValue {0.};		//!< The time, in seconds, since GPS time was zero. This time specification may include fractions of a second.
+    int32_t		isAtomicClockReferenced {0};	//!< This element should be present, and its value set to 1 if, and only if, the time stored in the dateTimeValue element is obtained from an atomic clock time source. Shall be either 0 or 1.
 };
 
 ////////////////////////////////////////////////////////////////////
@@ -219,23 +187,15 @@ public:
 
 //! @brief The e57::E57Root is a structure that stores the top-level information for the XML section of the file.
 
-class E57Root {
-public:
-//! @brief This function is the constructor for the images3D class
-					E57Root();
-//! @brief This function is the destructor for the reader class
-					~E57Root();
-//! @brief This function clears all the data members of the E57Root class
-	void			Reset();
-
+struct E57Root {
 	ustring			formatName;			//!< Contains the string “ASTM E57 3D Image File”
 	ustring			guid;				//!< A globally unique identification string for the current version of the file
-	uint32_t		versionMajor;		//!< Major version number, should be 1
-	uint32_t		versionMinor;		//!< Minor version number, should be 0
+    uint32_t		versionMajor {1};		//!< Major version number, should be 1
+    uint32_t		versionMinor {0};		//!< Minor version number, should be 0
 	ustring			e57LibraryVersion;	//!< The version identifier for the E57 file format library that wrote the file.
 	e57::DateTime	creationDateTime;	//!< Date/time that the file was created
-	int32_t			data3DSize;			//!< Size of the Data3D vector for storing 3D imaging data
-	int32_t			images2DSize;		//!< Size of the A heterogeneous Vector of Images2D Structures for storing 2D images from a camera or similar device.
+    int32_t			data3DSize {0};			//!< Size of the Data3D vector for storing 3D imaging data
+    int32_t			images2DSize {0};		//!< Size of the A heterogeneous Vector of Images2D Structures for storing 2D images from a camera or similar device.
 	ustring			coordinateMetadata;	//!< Information describing the Coordinate Reference System to be used for the file
 };
 
@@ -245,11 +205,10 @@ public:
 //
 //! @brief The e57::LineGroupRecord is a structure that stores information about a single group of points in a row or column
 
-class LineGroupRecord {
-public:
-	int64_t					idElementValue;		//!< The value of the identifying element of all members in this group. Shall be in the interval [0, 2^63).
-	int64_t					startPointIndex;	//!< The record number of the first point in the continuous interval. Shall be in the interval [0, 2^63).
-	int64_t					pointCount;			//!< The number of PointRecords in the group. Shall be in the interval [1, 2^63). May be zero.
+struct LineGroupRecord {
+    int64_t					idElementValue {0};		//!< The value of the identifying element of all members in this group. Shall be in the interval [0, 2^63).
+    int64_t					startPointIndex {0};	//!< The record number of the first point in the continuous interval. Shall be in the interval [0, 2^63).
+    int64_t					pointCount {0};			//!< The number of PointRecords in the group. Shall be in the interval [1, 2^63). May be zero.
 	e57::CartesianBounds	cartesianBounds;	//!< The bounding box (in Cartesian coordinates) of all points in the group (in the local coordinate system of the points).
 	e57::SphericalBounds	sphericalBounds;	//!< The bounding region (in spherical coordinates) of all the points in the group (in the local coordinate system of the points).
 };
@@ -260,11 +219,10 @@ public:
 //
 //! @brief The e57::GroupingByLine is a structure that stores a set of point groups organized by the rowIndex or columnIndex attribute of the PointRecord
 
-class GroupingByLine {
-public:
+struct GroupingByLine {
 	ustring		idElementName;		//!< The name of the PointRecord element that identifies which group the point is in. The value of this string must be “rowIndex” or “columnIndex”
-	int64_t		groupsSize;			//!< Size of the groups compressedVector of LineGroupRecord structures
-	int64_t		pointCountSize;		//!< This is the size value for the e57::LineGroupRecord::pointCount.
+    int64_t		groupsSize {0};			//!< Size of the groups compressedVector of LineGroupRecord structures
+    int64_t		pointCountSize {0};		//!< This is the size value for the e57::LineGroupRecord::pointCount.
 };
 
 ////////////////////////////////////////////////////////////////////
@@ -273,8 +231,7 @@ public:
 //
 //! @brief The e57::PointGroupingSchemes structure structure supports the division of points within an Data3D into logical groupings
 
-class PointGroupingSchemes {
-public:
+struct PointGroupingSchemes {
 	e57::GroupingByLine	groupingByLine;	//!< Grouping information by row or column index
 };
 
@@ -284,53 +241,49 @@ public:
 //
 //! @brief The e57::PointStandardizedFieldsAvailable is a structure use to interrogate if standardized fields are available
 
-class PointStandardizedFieldsAvailable {
-public:
-	bool		cartesianXField;			//!< Indicates that the PointRecord cartesianX field is active
-	bool		cartesianYField;			//!< Indicates that the PointRecord cartesianY field is active
-	bool		cartesianZField;			//!< Indicates that the PointRecord cartesianZ field is active
-	bool		cartesianInvalidStateField; //!< Indicates that the PointRecord cartesianInvalidState field is active
+struct PointStandardizedFieldsAvailable {
+    bool		cartesianXField {false};			//!< Indicates that the PointRecord cartesianX field is active
+    bool		cartesianYField {false};			//!< Indicates that the PointRecord cartesianY field is active
+    bool		cartesianZField {false};			//!< Indicates that the PointRecord cartesianZ field is active
+    bool		cartesianInvalidStateField {false}; //!< Indicates that the PointRecord cartesianInvalidState field is active
 
-	bool		sphericalRangeField;		//!< Indicates that the PointRecord sphericalRange field is active
-	bool		sphericalAzimuthField;		//!< Indicates that the PointRecord sphericalAzimuth field is active
-	bool		sphericalElevationField;	//!< Indicates that the PointRecord sphericalElevation field is active
-	bool		sphericalInvalidStateField; //!< Indicates that the PointRecord sphericalInvalidState field is active
+    bool		sphericalRangeField {false};		//!< Indicates that the PointRecord sphericalRange field is active
+    bool		sphericalAzimuthField {false};		//!< Indicates that the PointRecord sphericalAzimuth field is active
+    bool		sphericalElevationField {false};	//!< Indicates that the PointRecord sphericalElevation field is active
+    bool		sphericalInvalidStateField {false}; //!< Indicates that the PointRecord sphericalInvalidState field is active
 
-	double		pointRangeMinimum;			//!< Indicates that the PointRecord cartesian and range fields should be configured with this minimum value -E57_FLOAT_MAX or -E57_DOUBLE_MAX. If using a ScaledIntegerNode then this needs to be a minimum range value.
-	double		pointRangeMaximum;			//!< Indicates that the PointRecord cartesian and range fields should be configured with this maximum value E57_FLOAT_MAX or E57_DOUBLE_MAX. If using a ScaledIntegerNode then this needs to be a maximum range value.
-	double		pointRangeScaledInteger;	//!< Indicates that the PointRecord cartesain and range fields should be configured as a ScaledIntegerNode with this scale setting. If 0. then use FloatNode.
+    double		pointRangeMinimum {E57_FLOAT_MIN};			//!< Indicates that the PointRecord cartesian and range fields should be configured with this minimum value -E57_FLOAT_MAX or -E57_DOUBLE_MAX. If using a ScaledIntegerNode then this needs to be a minimum range value.
+    double		pointRangeMaximum {E57_FLOAT_MAX};			//!< Indicates that the PointRecord cartesian and range fields should be configured with this maximum value E57_FLOAT_MAX or E57_DOUBLE_MAX. If using a ScaledIntegerNode then this needs to be a maximum range value.
+    double		pointRangeScaledInteger {E57_NOT_SCALED_USE_FLOAT};	//!< Indicates that the PointRecord cartesain and range fields should be configured as a ScaledIntegerNode with this scale setting. If 0. then use FloatNode.
 
-	double		angleMinimum;				//!< Indicates that the PointRecord angle fields should be configured with this minimum value -E57_FLOAT_MAX or -E57_DOUBLE_MAX. If using a ScaledIntegerNode then this needs to be a minimum angle value.
-	double		angleMaximum;				//!< Indicates that the PointRecord angle fields should be configured with this maximum value E57_FLOAT_MAX or E57_DOUBLE_MAX. If using a ScaledIntegerNode then this needs to be a maximum angle value.
-	double		angleScaledInteger;			//!< Indicates that the PointRecord angle fields should be configured as a ScaledIntegerNode with this scale setting. If 0. then use FloatNode.
+    double		angleMinimum {E57_FLOAT_MIN};				//!< Indicates that the PointRecord angle fields should be configured with this minimum value -E57_FLOAT_MAX or -E57_DOUBLE_MAX. If using a ScaledIntegerNode then this needs to be a minimum angle value.
+    double		angleMaximum {E57_FLOAT_MAX};				//!< Indicates that the PointRecord angle fields should be configured with this maximum value E57_FLOAT_MAX or E57_DOUBLE_MAX. If using a ScaledIntegerNode then this needs to be a maximum angle value.
+    double		angleScaledInteger {E57_NOT_SCALED_USE_FLOAT};			//!< Indicates that the PointRecord angle fields should be configured as a ScaledIntegerNode with this scale setting. If 0. then use FloatNode.
 
-	bool		rowIndexField;				//!< Indicates that the PointRecord rowIndex field is active
-	uint32_t	rowIndexMaximum;			//!< Indicates that the PointRecord index fields should be configured with this maximum value where the minimum will be set to 0.
-	bool		columnIndexField;			//!< Indicates that the PointRecord columnIndex field is active
-	uint32_t	columnIndexMaximum;			//!< Indicates that the PointRecord index fields should be configured with this maximum value where the minimum will be set to 0.
+    bool		rowIndexField {false};				//!< Indicates that the PointRecord rowIndex field is active
+    uint32_t	rowIndexMaximum {E57_UINT32_MAX};			//!< Indicates that the PointRecord index fields should be configured with this maximum value where the minimum will be set to 0.
+    bool		columnIndexField {false};			//!< Indicates that the PointRecord columnIndex field is active
+    uint32_t	columnIndexMaximum {E57_UINT32_MAX};			//!< Indicates that the PointRecord index fields should be configured with this maximum value where the minimum will be set to 0.
 
-	bool		returnIndexField;			//!< Indicates that the PointRecord returnIndex field is active
-	bool		returnCountField;			//!< Indicates that the PointRecord returnCount field is active
-	uint8_t		returnMaximum;				//!< Indicates that the PointRecord return fields should be configured with this maximum value where the minimum will be set to 0.
+    bool		returnIndexField {false};			//!< Indicates that the PointRecord returnIndex field is active
+    bool		returnCountField {false};			//!< Indicates that the PointRecord returnCount field is active
+    uint8_t		returnMaximum {E57_UINT8_MAX};				//!< Indicates that the PointRecord return fields should be configured with this maximum value where the minimum will be set to 0.
 
-	bool		timeStampField;				//!< Indicates that the PointRecord timeStamp field is active
-	bool		isTimeStampInvalidField;	//!< Indicates that the PointRecord isTimeStampInvalid field is active
-	double		timeMaximum;				//!< Indicates that the PointRecord timeStamp fields should be configured with this maximum value. like E57_UINT32_MAX, E57_FLOAT_MAX or E57_DOUBLE_MAX
-	double		timeMinimum;				//!< Indicates that the PointRecord timeStamp fields should be configured with this minimum value -E57_FLOAT_MAX or -E57_DOUBLE_MAX. If using a ScaledIntegerNode then this needs to be a minimum time value.
-	double		timeScaledInteger;			//!< Indicates that the PointRecord timeStamp fields should be configured as a ScaledIntegerNode with this scale setting. If 0. then use FloatNode, if -1. use IntegerNode.
+    bool		timeStampField {false};				//!< Indicates that the PointRecord timeStamp field is active
+    bool		isTimeStampInvalidField {false};	//!< Indicates that the PointRecord isTimeStampInvalid field is active
+    double		timeMaximum {E57_DOUBLE_MAX};				//!< Indicates that the PointRecord timeStamp fields should be configured with this maximum value. like E57_UINT32_MAX, E57_FLOAT_MAX or E57_DOUBLE_MAX
+    double		timeMinimum {E57_DOUBLE_MIN};				//!< Indicates that the PointRecord timeStamp fields should be configured with this minimum value -E57_FLOAT_MAX or -E57_DOUBLE_MAX. If using a ScaledIntegerNode then this needs to be a minimum time value.
+    double		timeScaledInteger {E57_NOT_SCALED_USE_FLOAT};			//!< Indicates that the PointRecord timeStamp fields should be configured as a ScaledIntegerNode with this scale setting. If 0. then use FloatNode, if -1. use IntegerNode.
 
-	bool		intensityField;				//!< Indicates that the PointRecord intensity field is active
-	bool		isIntensityInvalidField;	//!< Indicates that the PointRecord isIntensityInvalid field is active
-	double		intensityScaledInteger;		//!< Indicates that the PointRecord intensity fields should be configured as a ScaledIntegerNode with this setting. If 0. then use FloatNode, if -1. use IntegerNode
+    bool		intensityField {false};				//!< Indicates that the PointRecord intensity field is active
+    bool		isIntensityInvalidField {false};	//!< Indicates that the PointRecord isIntensityInvalid field is active
+    double		intensityScaledInteger {E57_NOT_SCALED_USE_INTEGER};		//!< Indicates that the PointRecord intensity fields should be configured as a ScaledIntegerNode with this setting. If 0. then use FloatNode, if -1. use IntegerNode
 
-	bool		colorRedField;				//!< indicates that the PointRecord colorRed field is active
-	bool		colorGreenField;			//!< indicates that the PointRecord colorGreen field is active
-	bool		colorBlueField;				//!< indicates that the PointRecord colorBlue field is active
-	bool		isColorInvalidField;		//!< Indicates that the PointRecord isColorInvalid field is active
+    bool		colorRedField {false};				//!< indicates that the PointRecord colorRed field is active
+    bool		colorGreenField {false};			//!< indicates that the PointRecord colorGreen field is active
+    bool		colorBlueField {false};				//!< indicates that the PointRecord colorBlue field is active
+    bool		isColorInvalidField {false};		//!< Indicates that the PointRecord isColorInvalid field is active
 };
-
-#define E57_NOT_SCALED_USE_FLOAT		0.
-#define E57_NOT_SCALED_USE_INTEGER  -1.
 
 ////////////////////////////////////////////////////////////////////
 //
@@ -340,34 +293,33 @@ public:
 /*! @details This structure is not actually used but is here for completeness.  The size and type of each element of the PointRecord can be configure in E57.  This is the configuration used by the SimpleAPI.
 */
 
-class PointRecord {
-public:
-	double		cartesianX;		//!< The X coordinate (in meters) of the point in Cartesian coordinates
-	double		cartesianY;		//!< The Y coordinate (in meters) of the point in Cartesian coordinates
-	double		cartesianZ;		//!< The Z coordinate (in meters) of the point in Cartesian coordinates
-	bool		cartesianInvalidState;	//!< Indicates whether the Cartesian coordinate vector or its magnitude is meaningful. Value = 0 if the point is considered valid, 1 otherwise.  Shall be in the interval [0, 1].
+struct PointRecord {
+    double		cartesianX {};		//!< The X coordinate (in meters) of the point in Cartesian coordinates
+    double		cartesianY {};		//!< The Y coordinate (in meters) of the point in Cartesian coordinates
+    double		cartesianZ {};		//!< The Z coordinate (in meters) of the point in Cartesian coordinates
+    bool		cartesianInvalidState {};	//!< Indicates whether the Cartesian coordinate vector or its magnitude is meaningful. Value = 0 if the point is considered valid, 1 otherwise.  Shall be in the interval [0, 1].
 
-	double		sphericalRange;	//!< The range (in meters) of points in spherical coordinates. Shall be non-negative
-	double		sphericalAzimuth; //!< Azimuth angle (in radians) of point in spherical coordinates
-	double		sphericalElevation;	//!< Elevation angle (in radians) of point in spherical coordinates
-	bool		sphericalInvalidState;  //!< Indicates whether the spherical coordinate vector or its range value are meaningful. Value = 0 if the point is considered valid, 1 otherwise. Shall be in the interval [0, 1].
+    double		sphericalRange {};	//!< The range (in meters) of points in spherical coordinates. Shall be non-negative
+    double		sphericalAzimuth {}; //!< Azimuth angle (in radians) of point in spherical coordinates
+    double		sphericalElevation {};	//!< Elevation angle (in radians) of point in spherical coordinates
+    bool		sphericalInvalidState {};  //!< Indicates whether the spherical coordinate vector or its range value are meaningful. Value = 0 if the point is considered valid, 1 otherwise. Shall be in the interval [0, 1].
 
-	uint32_t	rowIndex;		//!< The row number of point (zero based). This is useful for data that is stored in a regular grid.Shall be in the interval [0, 2^31).
-	uint32_t	columnIndex;	//!< The column number of point (zero based). This is useful for data that is stored in a regular grid. Shall be in the interval [0, 2^31)
+    uint32_t	rowIndex {};		//!< The row number of point (zero based). This is useful for data that is stored in a regular grid.Shall be in the interval [0, 2^31).
+    uint32_t	columnIndex {};	//!< The column number of point (zero based). This is useful for data that is stored in a regular grid. Shall be in the interval [0, 2^31)
 
-	uint8_t		returnIndex;	//!< Only for multi-return sensors. The number of this return (zero based). That is, 0 is the first return, 1 is the second, and so on. Shall be in the interval [0, returnCount).
-	uint8_t		returnCount;	//!< Only for multi-return sensors. The total number of returns for the pulse that this corresponds to. Shall be in the interval (0, 2^7).
+    uint8_t		returnIndex {};	//!< Only for multi-return sensors. The number of this return (zero based). That is, 0 is the first return, 1 is the second, and so on. Shall be in the interval [0, returnCount).
+    uint8_t		returnCount {};	//!< Only for multi-return sensors. The total number of returns for the pulse that this corresponds to. Shall be in the interval (0, 2^7).
 
-	double		timeStamp;		//!< The time (in seconds) since the start time for the data, which is given by acquisitionStart in the parent Data3D Structure. Shall be non-negative
-	bool		isTimeStampInvalid;	//!< Indicates whether the timeStamp element is meaningful. Value = 0 if the timestamp is considered valid, 1 otherwise. Shall be in the interval [0, 1].
+    double		timeStamp {};		//!< The time (in seconds) since the start time for the data, which is given by acquisitionStart in the parent Data3D Structure. Shall be non-negative
+    bool		isTimeStampInvalid {};	//!< Indicates whether the timeStamp element is meaningful. Value = 0 if the timestamp is considered valid, 1 otherwise. Shall be in the interval [0, 1].
 
-	double		intensity;		//!< Point response intensity. Unit is unspecified
-	bool		isIntensityInvalid;	//!< Indicates whether the intensity element is meaningful. Value = 0 if the intensity is considered valid, 1 otherwise. Shall be in the interval [0, 1].
+    double		intensity {};		//!< Point response intensity. Unit is unspecified
+    bool		isIntensityInvalid {};	//!< Indicates whether the intensity element is meaningful. Value = 0 if the intensity is considered valid, 1 otherwise. Shall be in the interval [0, 1].
 
-	uint16_t	colorRed;		//!< Red color coefficient. Unit is unspecified.
-	uint16_t	colorGreen;		//!< Green color coefficient. Unit is unspecified
-	uint16_t	colorBlue;		//!< Blue color coefficient. Unit is unspecified
-	bool		isColorInvalid;		//!< Indicates whether the colorRed, colorBlue, and colorGreen elements are meaningful. Value = 0 if the color is considered valid, 1 otherwise. Shall be in the interval [0, 1].
+    uint16_t	colorRed {};		//!< Red color coefficient. Unit is unspecified.
+    uint16_t	colorGreen {};		//!< Green color coefficient. Unit is unspecified
+    uint16_t	colorBlue {};		//!< Blue color coefficient. Unit is unspecified
+    bool		isColorInvalid {};		//!< Indicates whether the colorRed, colorBlue, and colorGreen elements are meaningful. Value = 0 if the color is considered valid, 1 otherwise. Shall be in the interval [0, 1].
 };
 
 ////////////////////////////////////////////////////////////////////
@@ -376,15 +328,7 @@ public:
 //
 
 //! @brief The e57::Data3D is a structure that stores the top-level information for a single lidar scan
-class Data3D {
-public:
-//! @brief This function is the constructor for the Data3D class
-					Data3D();
-//! @brief This function is the destructor for the Data3D class
-					~Data3D();
-//! @brief This function clears all the data members of the Data3D class
-	void			Reset();
-
+struct Data3D {
 	ustring			name;					//!< A user-defined name for the Data3D.
 	ustring			guid;					//!< A globally unique identification string for the current version of the Data3D object
 	std::vector<ustring>	originalGuids;			//!< A vector of globally unique identification Strings from which the points in this Data3D originated.
@@ -397,9 +341,9 @@ public:
 	ustring			sensorSoftwareVersion;	//!< The version number for the software used for the data collection.
 	ustring			sensorFirmwareVersion;	//!< The version number for the firmware installed in the sensor at the time of data collection.
 
-	float			temperature;			//!< The ambient temperature, measured at the sensor, at the time of data collection (in degrees Celsius). Shall be ? ?273.15° (absolute zero).
-	float			relativeHumidity;		//!< The percentage relative humidity, measured at the sensor, at the time of data collection. Shall be in the interval [0, 100].
-	float			atmosphericPressure;	//!< The atmospheric pressure, measured at the sensor, at the time of data collection (in Pascals). Shall be positive.
+    float			temperature {E57_FLOAT_MAX};			//!< The ambient temperature, measured at the sensor, at the time of data collection (in degrees Celsius). Shall be ? ?273.15° (absolute zero).
+    float			relativeHumidity {E57_FLOAT_MAX};		//!< The percentage relative humidity, measured at the sensor, at the time of data collection. Shall be in the interval [0, 100].
+    float			atmosphericPressure {E57_FLOAT_MAX};	//!< The atmospheric pressure, measured at the sensor, at the time of data collection (in Pascals). Shall be positive.
 
 	e57::DateTime	acquisitionStart;		//!< The start date and time that the data was acquired.
 	e57::DateTime	acquisitionEnd;			//!< The end date and time that the data was acquired.
@@ -414,7 +358,7 @@ public:
 	e57::PointGroupingSchemes	pointGroupingSchemes;	//!< The defined schemes that group points in different ways
 	e57::PointStandardizedFieldsAvailable pointFields;	//!< This defines the active fields used in the WritePoints function.
 
-	int64_t			pointsSize;				//!< Total size of the compressed vector of PointRecord structures referring to the binary data that actually stores the point data
+    int64_t			pointsSize {0};				//!< Total size of the compressed vector of PointRecord structures referring to the binary data that actually stores the point data
 };
 
 ////////////////////////////////////////////////////////////////////
@@ -424,14 +368,13 @@ public:
 
 //! @brief The e57::VisualReferenceRepresentation is a structure that stores an image that is to be used only as a visual reference.
 
-class VisualReferenceRepresentation
+struct VisualReferenceRepresentation
 {
-public:
-	int64_t			jpegImageSize;	//!< Size of JPEG format image data in BlobNode.
-	int64_t			pngImageSize;	//!< Size of PNG format image data in BlobNode.
-	int64_t			imageMaskSize;	//!< Size of PNG format image mask in BlobNode.
-	int32_t			imageWidth;		//!< The image width (in pixels). Shall be positive
-	int32_t			imageHeight;	//!< The image height (in pixels). Shall be positive
+    int64_t			jpegImageSize {0};	//!< Size of JPEG format image data in BlobNode.
+    int64_t			pngImageSize {0};	//!< Size of PNG format image data in BlobNode.
+    int64_t			imageMaskSize {0};	//!< Size of PNG format image mask in BlobNode.
+    int32_t			imageWidth {0};		//!< The image width (in pixels). Shall be positive
+    int32_t			imageHeight {0};	//!< The image height (in pixels). Shall be positive
 };
 
 ////////////////////////////////////////////////////////////////////
@@ -441,19 +384,18 @@ public:
 
 //! @brief The e57::PinholeRepresentation is a structure that stores an image that is mapped from 3D using the pinhole camera projection model.
 
-class PinholeRepresentation
+struct PinholeRepresentation
 {
-public:
-	int64_t			jpegImageSize;	//!< Size of JPEG format image data in BlobNode.
-	int64_t			pngImageSize;	//!< Size of PNG format image data in BlobNode.
-	int64_t			imageMaskSize;	//!< Size of PNG format image mask in BlobNode.
-	int32_t			imageWidth;		//!< The image width (in pixels). Shall be positive
-	int32_t			imageHeight;	//!< The image height (in pixels). Shall be positive
-	double			focalLength;	//!< The camera's focal length (in meters). Shall be positive
-	double			pixelWidth;		//!< The width of the pixels in the camera (in meters). Shall be positive
-	double			pixelHeight;	//!< The height of the pixels in the camera (in meters). Shall be positive
-	double			principalPointX;//!< The X coordinate in the image of the principal point, (in pixels). The principal point is the intersection of the z axis of the camera coordinate frame with the image plane.
-	double			principalPointY;//!< The Y coordinate in the image of the principal point (in pixels).
+    int64_t			jpegImageSize {0};	//!< Size of JPEG format image data in BlobNode.
+    int64_t			pngImageSize {0};	//!< Size of PNG format image data in BlobNode.
+    int64_t			imageMaskSize {0};	//!< Size of PNG format image mask in BlobNode.
+    int32_t			imageWidth {0};		//!< The image width (in pixels). Shall be positive
+    int32_t			imageHeight {0};	//!< The image height (in pixels). Shall be positive
+    double			focalLength {0.};	//!< The camera's focal length (in meters). Shall be positive
+    double			pixelWidth {0.};		//!< The width of the pixels in the camera (in meters). Shall be positive
+    double			pixelHeight {0.};	//!< The height of the pixels in the camera (in meters). Shall be positive
+    double			principalPointX {0.};//!< The X coordinate in the image of the principal point, (in pixels). The principal point is the intersection of the z axis of the camera coordinate frame with the image plane.
+    double			principalPointY {0.};//!< The Y coordinate in the image of the principal point (in pixels).
 };
 ////////////////////////////////////////////////////////////////////
 //
@@ -462,16 +404,15 @@ public:
 
 //! @brief The e57::SphericalRepresentation is a structure that stores an image that is mapped from 3D using a spherical projection model
 
-class SphericalRepresentation
+struct SphericalRepresentation
 {
-public:
-	int64_t			jpegImageSize;	//!< Size of JPEG format image data in BlobNode.
-	int64_t			pngImageSize;	//!< Size of PNG format image data in BlobNode.
-	int64_t			imageMaskSize;	//!< Size of PNG format image mask in BlobNode.
-	int32_t			imageWidth;		//!< The image width (in pixels). Shall be positive
-	int32_t			imageHeight;	//!< The image height (in pixels). Shall be positive
-	double			pixelWidth;		//!< The width of a pixel in the image (in radians). Shall be positive
-	double			pixelHeight;	//!< The height of a pixel in the image (in radians). Shall be positive.
+    int64_t			jpegImageSize {0};	//!< Size of JPEG format image data in BlobNode.
+    int64_t			pngImageSize {0};	//!< Size of PNG format image data in BlobNode.
+    int64_t			imageMaskSize {0};	//!< Size of PNG format image mask in BlobNode.
+    int32_t			imageWidth {0};		//!< The image width (in pixels). Shall be positive
+    int32_t			imageHeight {0};	//!< The image height (in pixels). Shall be positive
+    double			pixelWidth {0.};		//!< The width of a pixel in the image (in radians). Shall be positive
+    double			pixelHeight {0.};	//!< The height of a pixel in the image (in radians). Shall be positive.
 };
 
 ////////////////////////////////////////////////////////////////////
@@ -481,18 +422,17 @@ public:
 
 //! @brief The e57::CylindricalRepresentation is a structure that stores an image that is mapped from 3D using a cylindrical projection model.
 
-class CylindricalRepresentation
+struct CylindricalRepresentation
 {
-public:
-	int64_t			jpegImageSize;	//!< Size of JPEG format image data in Blob.
-	int64_t			pngImageSize;	//!< Size of PNG format image data in Blob.
-	int64_t			imageMaskSize;	//!< Size of PNG format image mask in Blob.
-	int32_t			imageWidth;		//!< The image width (in pixels). Shall be positive
-	int32_t			imageHeight;	//!< The image height (in pixels). Shall be positive
-	double			pixelWidth;		//!< The width of a pixel in the image (in radians). Shall be positive
-	double			pixelHeight;	//!< The height of a pixel in the image (in meters). Shall be positive
-	double			radius;			//!< The closest distance from the cylindrical image surface to the center of projection (that is, the radius of the cylinder) (in meters). Shall be non-negative
-	double			principalPointY;//!< The Y coordinate in the image of the principal point (in pixels). This is the intersection of the z = 0 plane with the image
+    int64_t			jpegImageSize {0};	//!< Size of JPEG format image data in Blob.
+    int64_t			pngImageSize {0};	//!< Size of PNG format image data in Blob.
+    int64_t			imageMaskSize {0};	//!< Size of PNG format image mask in Blob.
+    int32_t			imageWidth {0};		//!< The image width (in pixels). Shall be positive
+    int32_t			imageHeight {0};	//!< The image height (in pixels). Shall be positive
+    double			pixelWidth {0.};		//!< The width of a pixel in the image (in radians). Shall be positive
+    double			pixelHeight {0.};	//!< The height of a pixel in the image (in meters). Shall be positive
+    double			radius {0.};			//!< The closest distance from the cylindrical image surface to the center of projection (that is, the radius of the cylinder) (in meters). Shall be non-negative
+    double			principalPointY {0.};//!< The Y coordinate in the image of the principal point (in pixels). This is the intersection of the z = 0 plane with the image
 };
 
 ////////////////////////////////////////////////////////////////////
@@ -501,15 +441,7 @@ public:
 //
 
 //! @brief The e57::Image2D is a structure that stores an image from a camera
-class Image2D {
-public:
-//! @brief This function is the constructor for the Image2D class
-					Image2D();
-//! @brief This function is the destructor for the Image2D class
-					~Image2D();
-//! @brief This function clears all the data members of the Image2D class
-	void			Reset();
-
+struct Image2D {
 	ustring			name;					//!< A user-defined name for the Image2D.
 	ustring			guid;					//!< A globally unique identification string for the current version of the Image2D object
 	ustring			description;			//!< A user-defined description of the Image2D

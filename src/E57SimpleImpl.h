@@ -63,26 +63,6 @@
 namespace e57 {
 
 std::string	GetNewGuid();
-double	GetGPSTime();
-
-double	GetGPSDateTimeFromUTC(
-	int utc_year,		//!< The year 1900-9999
-	int utc_month,		//!< The month 1-12
-	int utc_day,		//!< The day 1-31
-	int utc_hour,		//!< The hour 0-23
-	int utc_minute,		//!< The minute 0-59
-	float utc_seconds	//!< The seconds 0.0 - 59.999
-	);
-
-void	GetUTCFromGPSDateTime(
-    double gpsTime,		//!< GPS Date Time
-	int &utc_year,		//!< The year 1900-9999
-	int &utc_month,		//!< The month 1-12
-	int &utc_day,		//!< The day 1-31
-	int &utc_hour,		//!< The hour 0-23
-	int &utc_minute,		//!< The minute 0-59
-	float &utc_seconds	//!< The seconds 0.0 - 59.999
-	);
 
 ////////////////////////////////////////////////////////////////////
 //

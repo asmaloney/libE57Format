@@ -744,7 +744,7 @@ public:
 //! @brief This function is the constructor for the writer class
 				Writer(
 					const ustring & filePath,		//!< file path string
-					const ustring & coordinateMetaData	//!< Information describing the Coordinate Reference System to be used for the file
+                       const ustring & coordinateMetaData = {}	//!< Information describing the Coordinate Reference System to be used for the file
 					);
 
 //! @brief This function returns true if the file is open

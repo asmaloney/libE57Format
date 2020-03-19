@@ -1514,7 +1514,10 @@ CompressedVectorReader	ReaderImpl :: SetUpData3DPointsData(
 
 // Save a dummy string for coordinate system.
 /// Really should be a valid WKT string identifying the coordinate reference system (CRS).
-    root_.set("coordinateMetadata", StringNode(imf_, coordinateMetadata));
+    if (!coordinateMetadata.empty())
+    {
+        root_.set("coordinateMetadata", StringNode(imf_, coordinateMetadata));
+    }
 
 // Create creationDateTime structure
 /// Path name: "/creationDateTime
@@ -1873,7 +1876,9 @@ int32_t	WriterImpl :: NewData3D(
 	int32_t pos = -1;
 
 	if(data3DHeader.guid.empty())
-		return -1;
+    {
+        data3DHeader.guid = GetNewGuid();
+    }
 
 	StructureNode scan = StructureNode(imf_);
 	data3D_.append(scan);

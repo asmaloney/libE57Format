@@ -1481,6 +1481,11 @@ int32_t	WriterImpl :: NewImage2D(
 	images2D_.append(image);
 	pos = (int32_t) images2D_.childCount() - 1;
 
+    if (image2DHeader.guid.empty())
+    {
+        image2DHeader.guid = GetNewGuid();
+    }
+
 	image.set("guid", StringNode(imf_, image2DHeader.guid));	//required
 
 	if(!image2DHeader.name.empty())

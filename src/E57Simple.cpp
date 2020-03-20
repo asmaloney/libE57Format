@@ -924,23 +924,23 @@ bool		Reader :: ReadData3DGroupsData(
 
 CompressedVectorReader	Reader :: SetUpData3DPointsData(
 	int32_t		dataIndex,			// data block index given by the NewData3D
-	int64_t		pointCount,			// size of each element buffer.
-	double*		cartesianX,			//!< pointer to a buffer with the X coordinate (in meters) of the point in Cartesian coordinates
-	double*		cartesianY,			//!< pointer to a buffer with the Y coordinate (in meters) of the point in Cartesian coordinates
-	double*		cartesianZ,			//!< pointer to a buffer with the Z coordinate (in meters) of the point in Cartesian coordinates
+	size_t		pointCount,			// size of each element buffer.
+	float*		cartesianX,			//!< pointer to a buffer with the X coordinate (in meters) of the point in Cartesian coordinates
+	float*		cartesianY,			//!< pointer to a buffer with the Y coordinate (in meters) of the point in Cartesian coordinates
+	float*		cartesianZ,			//!< pointer to a buffer with the Z coordinate (in meters) of the point in Cartesian coordinates
 	int8_t*		cartesianInvalidState,	//!< Value = 0 if the point is considered valid, 1 otherwise
 
-	double*		intensity,			//!< pointer to a buffer with the Point response intensity. Unit is unspecified
+	float*		intensity,			//!< pointer to a buffer with the Point response intensity. Unit is unspecified
 	int8_t*		isIntensityInvalid,	//!< Value = 0 if the intensity is considered valid, 1 otherwise
 
-	uint16_t*	colorRed,			//!< pointer to a buffer with the Red color coefficient. Unit is unspecified
-	uint16_t*	colorGreen,			//!< pointer to a buffer with the Green color coefficient. Unit is unspecified
-	uint16_t*	colorBlue,			//!< pointer to a buffer with the Blue color coefficient. Unit is unspecified
+	uint8_t*	colorRed,			//!< pointer to a buffer with the Red color coefficient. Unit is unspecified
+	uint8_t*	colorGreen,			//!< pointer to a buffer with the Green color coefficient. Unit is unspecified
+	uint8_t*	colorBlue,			//!< pointer to a buffer with the Blue color coefficient. Unit is unspecified
 	int8_t*		isColorInvalid,		//!< Value = 0 if the color is considered valid, 1 otherwise
 
-	double*		sphericalRange,		//!< pointer to a buffer with the range (in meters) of points in spherical coordinates. Shall be non-negative
-	double*		sphericalAzimuth,	//!< pointer to a buffer with the Azimuth angle (in radians) of point in spherical coordinates
-	double*		sphericalElevation,	//!< pointer to a buffer with the Elevation angle (in radians) of point in spherical coordinates
+	float*		sphericalRange,		//!< pointer to a buffer with the range (in meters) of points in spherical coordinates. Shall be non-negative
+	float*		sphericalAzimuth,	//!< pointer to a buffer with the Azimuth angle (in radians) of point in spherical coordinates
+	float*		sphericalElevation,	//!< pointer to a buffer with the Elevation angle (in radians) of point in spherical coordinates
 	int8_t*		sphericalInvalidState, //!< Value = 0 if the range is considered valid, 1 otherwise
 
 	int32_t*	rowIndex,			//!< pointer to a buffer with the row number of point (zero based). This is useful for data that is stored in a regular grid.Shall be in the interval (0, 2^63).
@@ -1039,23 +1039,23 @@ int32_t		Writer :: NewData3D(
 // This function writes out blocks of point data
 CompressedVectorWriter	Writer :: SetUpData3DPointsData(
 	int32_t		dataIndex,			// data block index given by the NewData3D
-	int64_t		pointCount,			// size of each of the buffers given
-	double*		cartesianX,			//!< pointer to a buffer with the X coordinate (in meters) of the point in Cartesian coordinates
-	double*		cartesianY,			//!< pointer to a buffer with the Y coordinate (in meters) of the point in Cartesian coordinates
-	double*		cartesianZ,			//!< pointer to a buffer with the Z coordinate (in meters) of the point in Cartesian coordinates
+	size_t		pointCount,			// size of each of the buffers given
+	float*		cartesianX,			//!< pointer to a buffer with the X coordinate (in meters) of the point in Cartesian coordinates
+	float*		cartesianY,			//!< pointer to a buffer with the Y coordinate (in meters) of the point in Cartesian coordinates
+	float*		cartesianZ,			//!< pointer to a buffer with the Z coordinate (in meters) of the point in Cartesian coordinates
 	int8_t*		cartesianInvalidState,	//!< Value = 0 if the point is considered valid, 1 otherwise
 
-	double*		intensity,			//!< pointer to a buffer with the Point response intensity. Unit is unspecified
+	float*		intensity,			//!< pointer to a buffer with the Point response intensity. Unit is unspecified
 	int8_t*		isIntensityInvalid,	//!< Value = 0 if the intensity is considered valid, 1 otherwise
 
-	uint16_t*	colorRed,			//!< pointer to a buffer with the Red color coefficient. Unit is unspecified
-	uint16_t*	colorGreen,			//!< pointer to a buffer with the Green color coefficient. Unit is unspecified
-	uint16_t*	colorBlue,			//!< pointer to a buffer with the Blue color coefficient. Unit is unspecified
+	uint8_t*	colorRed,			//!< pointer to a buffer with the Red color coefficient. Unit is unspecified
+	uint8_t*	colorGreen,			//!< pointer to a buffer with the Green color coefficient. Unit is unspecified
+	uint8_t*	colorBlue,			//!< pointer to a buffer with the Blue color coefficient. Unit is unspecified
 	int8_t*		isColorInvalid,		//!< Value = 0 if the color is considered valid, 1 otherwise
 
-	double*		sphericalRange,		//!< pointer to a buffer with the range (in meters) of points in spherical coordinates. Shall be non-negative
-	double*		sphericalAzimuth,	//!< pointer to a buffer with the Azimuth angle (in radians) of point in spherical coordinates
-	double*		sphericalElevation,	//!< pointer to a buffer with the Elevation angle (in radians) of point in spherical coordinates
+	float*		sphericalRange,		//!< pointer to a buffer with the range (in meters) of points in spherical coordinates. Shall be non-negative
+	float*		sphericalAzimuth,	//!< pointer to a buffer with the Azimuth angle (in radians) of point in spherical coordinates
+	float*		sphericalElevation,	//!< pointer to a buffer with the Elevation angle (in radians) of point in spherical coordinates
 	int8_t*		sphericalInvalidState, //!< Value = 0 if the range is considered valid, 1 otherwise
 
 	int32_t*	rowIndex,			//!< pointer to a buffer with the row number of point (zero based). This is useful for data that is stored in a regular grid.Shall be in the interval (0, 2^63).

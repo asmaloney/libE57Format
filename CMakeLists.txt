@@ -29,7 +29,7 @@
 
 cmake_minimum_required( VERSION 3.1.0 )
 
-# Override flags to enable prepare for linking to static runtime
+# Override flags to enable linking to static runtime
 set( CMAKE_USER_MAKE_RULES_OVERRIDE ${CMAKE_CURRENT_SOURCE_DIR}/cmake/c_flag_overrides.cmake )
 set( CMAKE_USER_MAKE_RULES_OVERRIDE_CXX ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cxx_flag_overrides.cmake )
 
@@ -37,7 +37,7 @@ set( CMAKE_USER_MAKE_RULES_OVERRIDE_CXX ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cxx_fl
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/" )
 
 project( E57Format
-    VERSION 2.0.2
+    VERSION 2.1.0
 )
 
 include( Tags )

@@ -1,9 +1,19 @@
 libE57Format
 ==
+- v2.1.0 (01 Apr 2020)
+  - handle UTF8 file names on Windows (based on [#26](https://github.com/asmaloney/libE57Format/issues/26))
+  - now supports _char*_ input ([#22](https://github.com/asmaloney/libE57Format/pull/22))
+  - internal code cleanups
+  - {cmake} remove unused ICU requirement for Linux
+  - {cmake} mark xerces-c as required
+  - {cmake} added fallback configuration for RelWithDebInfo and MinSizeRel [#29](https://github.com/asmaloney/libE57Format/pull/29)
+  - {cmake} added proper install configuration [#28](https://github.com/asmaloney/libE57Format/pull/28)
+  - {cmake} various cleanups
+
 - v2.0.1 (15 Jan 2019)
   - writing files was broken and would produce the following error:
     Error: bad API function argument provided by user (E57_ERROR_BAD_API_ARGUMENT) (ImageFileImpl.cpp line 109)
-    
+
 - v2.0 (06 Jan 2019)
   - forked from E57RefImpl
   - removed all but the main sources for reading and writing E57 files

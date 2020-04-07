@@ -119,7 +119,7 @@ target_compile_definitions( E57Format
 if ( WIN32 )
     option( USING_STATIC_XERCES "Turn on if you are linking with Xerces as a static lib" OFF )
     if ( USING_STATIC_XERCES )
-        add_compile_definitions( -DXERCES_STATIC_LIBRARY )
+        add_compile_definitions( XERCES_STATIC_LIBRARY )
     endif()
 endif()
 

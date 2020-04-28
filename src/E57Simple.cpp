@@ -777,11 +777,13 @@ DEALINGS IN THE SOFTWARE.
 
 //! @file E57Simple.cpp
 
+// for M_PI. This needs to be first, otherwise we might already include math header
+// without M_PI and we would get nothing because of the header guards.
+#define _USE_MATH_DEFINES
+#include <cmath>
+
 #include "E57Simple.h"
 #include "E57SimpleImpl.h"
-
-#define _USE_MATH_DEFINES // for M_PI
-#include <cmath>
 
 using namespace e57;
 using namespace std;

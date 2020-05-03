@@ -1,5 +1,6 @@
 # This is a rewrite over time of the CMake file from the libe57 reference implementation
 #   https://en.wikipedia.org/wiki/Ship_of_Theseus
+#
 # Use git blame to see all the changes and who has contributed.
 #
 # The original cmake file is:
@@ -27,7 +28,7 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-cmake_minimum_required( VERSION 3.1.0 )
+cmake_minimum_required( VERSION 3.10.0 )
 
 # Override flags to enable linking to static runtime
 set( CMAKE_USER_MAKE_RULES_OVERRIDE ${CMAKE_CURRENT_SOURCE_DIR}/cmake/c_flag_overrides.cmake )
@@ -70,34 +71,12 @@ find_package( XercesC REQUIRED )
 
 # Target
 add_library( E57Format STATIC
-    src/CheckedFile.h
-    src/CheckedFile.cpp
-    src/Common.h
-    src/Decoder.h
-    src/Decoder.cpp
-    src/Encoder.h
-    src/Encoder.cpp
-    src/NodeImpl.h
-    src/NodeImpl.cpp
-    src/Packet.h
-    src/Packet.cpp
-    src/ImageFileImpl.cpp
-    src/ImageFileImpl.h
-    src/SourceDestBufferImpl.h
-    src/SourceDestBufferImpl.cpp
-    src/StructureNodeImpl.h
-    src/StructureNodeImpl.cpp
-    src/E57Exception.cpp
-    src/E57Format.cpp
-    src/E57FormatImpl.cpp
-    src/E57FormatImpl.h
-    src/E57Version.h
-    src/E57XmlParser.h
-    src/E57XmlParser.cpp
     include/E57Exception.h
     include/E57Format.h
-    contrib/CRCpp/inc/CRC.h
+    extern/CRCpp/inc/CRC.h
 )
+
+add_subdirectory( src )
 
 # Target properties
 set_target_properties( E57Format PROPERTIES
@@ -119,7 +98,10 @@ target_compile_definitions( E57Format
 if ( WIN32 )
     option( USING_STATIC_XERCES "Turn on if you are linking with Xerces as a static lib" OFF )
     if ( USING_STATIC_XERCES )
-        add_compile_definitions( XERCES_STATIC_LIBRARY )
+        target_compile_definitions( E57Format
+            PUBLIC
+                XERCES_STATIC_LIBRARY
+        )
     endif()
 endif()
 
@@ -127,11 +109,9 @@ endif()
 target_include_directories( E57Format
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-        $<INSTALL_INTERFACE:include>
         $<INSTALL_INTERFACE:include/E57Format>
     PRIVATE
-        src/
-        contrib/CRCpp/inc   # CRCpp from here: https://github.com/d-bahr/CRCpp
+        extern/CRCpp/inc   # CRCpp from here: https://github.com/d-bahr/CRCpp
 )
 
 # Target Libraries

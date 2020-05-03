@@ -1,5 +1,4 @@
-#ifndef E57VERSION_H
-#define E57VERSION_H
+#pragma once
 
 #include <cstdint>
 
@@ -9,5 +8,3 @@ namespace e57
    constexpr uint32_t E57_FORMAT_MAJOR = 1;
    constexpr uint32_t E57_FORMAT_MINOR = 0;
 }
-
-#endif

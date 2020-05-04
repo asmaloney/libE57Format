@@ -1082,6 +1082,16 @@ bool	ReaderImpl :: ReadData3D(
 						maximum * scale + offset;
 			}
 		}
+
+        // E57_EXT_surface_normals
+        ustring norExtUri;
+        if (imf_.extensionsLookupPrefix("nor", norExtUri))
+        {
+            data3DHeader.pointFields.normalX = proto.isDefined("nor:normalX");
+            data3DHeader.pointFields.normalY = proto.isDefined("nor:normalY");
+            data3DHeader.pointFields.normalZ = proto.isDefined("nor:normalZ");
+        }
+
 		return true;
 	}
 	return false;
@@ -1241,32 +1251,7 @@ bool	ReaderImpl :: ReadData3DGroupsData(
 CompressedVectorReader	ReaderImpl :: SetUpData3DPointsData(
 	int32_t		dataIndex,
 	size_t		count,
-	float*		cartesianX,			//!< pointer to a buffer with the X coordinate (in meters) of the point in Cartesian coordinates
-	float*		cartesianY,			//!< pointer to a buffer with the Y coordinate (in meters) of the point in Cartesian coordinates
-	float*		cartesianZ,			//!< pointer to a buffer with the Z coordinate (in meters) of the point in Cartesian coordinates
-	int8_t*		cartesianInvalidState,	//!< Value = 0 if the point is considered valid, 1 otherwise
-
-	float*		intensity,			//!< pointer to a buffer with the Point response intensity. Unit is unspecified
-	int8_t*		isIntensityInvalid,	//!< Value = 0 if the intensity is considered valid, 1 otherwise
-
-	uint8_t*	colorRed,			//!< pointer to a buffer with the Red color coefficient. Unit is unspecified
-	uint8_t*	colorGreen,			//!< pointer to a buffer with the Green color coefficient. Unit is unspecified
-	uint8_t*	colorBlue,			//!< pointer to a buffer with the Blue color coefficient. Unit is unspecified
-	int8_t*		isColorInvalid,		//!< Value = 0 if the color is considered valid, 1 otherwise
-
-	float*		sphericalRange,		//!< pointer to a buffer with the range (in meters) of points in spherical coordinates. Shall be non-negative
-	float*		sphericalAzimuth,	//!< pointer to a buffer with the Azimuth angle (in radians) of point in spherical coordinates
-	float*		sphericalElevation,	//!< pointer to a buffer with the Elevation angle (in radians) of point in spherical coordinates
-	int8_t*		sphericalInvalidState, //!< Value = 0 if the range is considered valid, 1 otherwise
-
-	int32_t*	rowIndex,			//!< pointer to a buffer with the row number of point (zero based). This is useful for data that is stored in a regular grid.Shall be in the interval (0, 2^63).
-	int32_t*	columnIndex,		//!< pointer to a buffer with the column number of point (zero based). This is useful for data that is stored in a regular grid. Shall be in the interval (0, 2^63).
-	int8_t*		returnIndex,		//!< pointer to a buffer with the number of this return (zero based). That is, 0 is the first return, 1 is the second, and so on. Shall be in the interval (0, returnCount). Only for multi-return sensors. 
-	int8_t*		returnCount,		//!< pointer to a buffer with the total number of returns for the pulse that this corresponds to. Shall be in the interval (0, 2^63). Only for multi-return sensors. 
-
-	double*		timeStamp,			//!< pointer to a buffer with the time (in seconds) since the start time for the data, which is given by acquisitionStart in the parent Data3D Structure. Shall be non-negative
-	int8_t*		isTimeStampInvalid,	//!< Value = 0 if the timeStamp is considered valid, 1 otherwise
-	bool		(*pointDataExtension)(ImageFile	imf, StructureNode proto, int protoIndex, vector<SourceDestBuffer> & destBuffers)
+	const Data3DPointsData& buffers
 	)
 {
 	StructureNode scan(data3D_.get(dataIndex));
@@ -1283,74 +1268,83 @@ CompressedVectorReader	ReaderImpl :: SetUpData3DPointsData(
 		ustring		name = proto.get(protoIndex).elementName();
 		NodeType	type = proto.get(protoIndex).type();
 		bool		scaled = type == E57_SCALED_INTEGER ? true : false;
+        // E57_EXT_surface_normals
+        ustring norExtUri;
+        bool haveNormalsExt = imf_.extensionsLookupPrefix("nor", norExtUri);
 
-		if((name.compare("cartesianX") == 0) && proto.isDefined("cartesianX") && (cartesianX != nullptr))
+        if((name.compare("cartesianX") == 0) && proto.isDefined("cartesianX") && (buffers.cartesianX != nullptr))
 			destBuffers.push_back(SourceDestBuffer(imf_, "cartesianX",
-				cartesianX,  count, true, scaled));
-		else if((name.compare("cartesianY") == 0) && proto.isDefined("cartesianY") && (cartesianY != nullptr))
+				buffers.cartesianX,  count, true, scaled));
+		else if((name.compare("cartesianY") == 0) && proto.isDefined("cartesianY") && (buffers.cartesianY != nullptr))
 			destBuffers.push_back(SourceDestBuffer(imf_, "cartesianY",
-				cartesianY,  count, true,scaled));
-		else if((name.compare("cartesianZ") == 0) && proto.isDefined("cartesianZ") && (cartesianZ != nullptr))
+				buffers.cartesianY,  count, true,scaled));
+		else if((name.compare("cartesianZ") == 0) && proto.isDefined("cartesianZ") && (buffers.cartesianZ != nullptr))
 			destBuffers.push_back(SourceDestBuffer(imf_, "cartesianZ",
-				cartesianZ,  count, true, scaled));
-		else if((name.compare("cartesianInvalidState") == 0) && proto.isDefined("cartesianInvalidState") && (cartesianInvalidState != nullptr))
+				buffers.cartesianZ,  count, true, scaled));
+		else if((name.compare("cartesianInvalidState") == 0) && proto.isDefined("cartesianInvalidState") && (buffers.cartesianInvalidState != nullptr))
 			destBuffers.push_back(SourceDestBuffer(imf_, "cartesianInvalidState",
-				cartesianInvalidState,       count, true));
+				buffers.cartesianInvalidState,       count, true));
 
-		else if((name.compare("sphericalRange") == 0) && proto.isDefined("sphericalRange") && (sphericalRange != nullptr))
+		else if((name.compare("sphericalRange") == 0) && proto.isDefined("sphericalRange") && (buffers.sphericalRange != nullptr))
 			destBuffers.push_back(SourceDestBuffer(imf_, "sphericalRange",
-				sphericalRange,  count, true, scaled));
-		else if((name.compare("sphericalAzimuth") == 0) && proto.isDefined("sphericalAzimuth") && (sphericalAzimuth != nullptr))
+				buffers.sphericalRange,  count, true, scaled));
+		else if((name.compare("sphericalAzimuth") == 0) && proto.isDefined("sphericalAzimuth") && (buffers.sphericalAzimuth != nullptr))
 			destBuffers.push_back(SourceDestBuffer(imf_, "sphericalAzimuth",
-				sphericalAzimuth,  count, true, scaled));
-		else if((name.compare("sphericalElevation") == 0) && proto.isDefined("sphericalElevation") && (sphericalElevation != nullptr))
+				buffers.sphericalAzimuth,  count, true, scaled));
+		else if((name.compare("sphericalElevation") == 0) && proto.isDefined("sphericalElevation") && (buffers.sphericalElevation != nullptr))
 			destBuffers.push_back(SourceDestBuffer(imf_, "sphericalElevation",
-				sphericalElevation,  count, true, scaled));
-		else if((name.compare("sphericalInvalidState") == 0) && proto.isDefined("sphericalInvalidState") && (sphericalInvalidState != nullptr))
+				buffers.sphericalElevation,  count, true, scaled));
+		else if((name.compare("sphericalInvalidState") == 0) && proto.isDefined("sphericalInvalidState") && (buffers.sphericalInvalidState != nullptr))
 			destBuffers.push_back(SourceDestBuffer(imf_, "sphericalInvalidState",
-				sphericalInvalidState,        count, true));
+				buffers.sphericalInvalidState,        count, true));
 
-		else if((name.compare("rowIndex") == 0) && proto.isDefined("rowIndex") && (rowIndex != nullptr))
+		else if((name.compare("rowIndex") == 0) && proto.isDefined("rowIndex") && (buffers.rowIndex != nullptr))
 			destBuffers.push_back(SourceDestBuffer(imf_, "rowIndex",
-				rowIndex,     count, true));
-		else if((name.compare("columnIndex") == 0) && proto.isDefined("columnIndex") && (columnIndex != nullptr))
+				buffers.rowIndex,     count, true));
+		else if((name.compare("columnIndex") == 0) && proto.isDefined("columnIndex") && (buffers.columnIndex != nullptr))
 			destBuffers.push_back(SourceDestBuffer(imf_, "columnIndex",
-				columnIndex, count, true));
-		else if((name.compare("returnIndex") == 0) && proto.isDefined("returnIndex") && (returnIndex != nullptr))
+				buffers.columnIndex, count, true));
+		else if((name.compare("returnIndex") == 0) && proto.isDefined("returnIndex") && (buffers.returnIndex != nullptr))
 			destBuffers.push_back(SourceDestBuffer(imf_, "returnIndex",
-				returnIndex,  count, true));
-		else if((name.compare("returnCount") == 0) && proto.isDefined("returnCount") && (returnCount != nullptr))
+				buffers.returnIndex,  count, true));
+		else if((name.compare("returnCount") == 0) && proto.isDefined("returnCount") && (buffers.returnCount != nullptr))
 			destBuffers.push_back(SourceDestBuffer(imf_, "returnCount",
-				returnCount,  count, true));
+				buffers.returnCount,  count, true));
 
-		else if((name.compare("timeStamp") == 0) && proto.isDefined("timeStamp") && (timeStamp != nullptr))
+		else if((name.compare("timeStamp") == 0) && proto.isDefined("timeStamp") && (buffers.timeStamp != nullptr))
 			destBuffers.push_back(SourceDestBuffer(imf_, "timeStamp",
-				timeStamp,    count, true, scaled));
-		else if((name.compare("isTimeStampInvalid") == 0) && proto.isDefined("isTimeStampInvalid") && (isTimeStampInvalid != nullptr))
+				buffers.timeStamp,    count, true, scaled));
+		else if((name.compare("isTimeStampInvalid") == 0) && proto.isDefined("isTimeStampInvalid") && (buffers.isTimeStampInvalid != nullptr))
 			destBuffers.push_back(SourceDestBuffer(imf_, "isTimeStampInvalid",
-				isTimeStampInvalid, count, true));
+				buffers.isTimeStampInvalid, count, true));
 
-		else if((name.compare("intensity") == 0) && proto.isDefined("intensity") && (intensity != nullptr))
-			destBuffers.push_back(SourceDestBuffer(imf_, "intensity",   intensity,
+		else if((name.compare("intensity") == 0) && proto.isDefined("intensity") && (buffers.intensity != nullptr))
+			destBuffers.push_back(SourceDestBuffer(imf_, "intensity",   buffers.intensity,
 				count, true, scaled));
-		else if((name.compare("isIntensityInvalid") == 0) && proto.isDefined("isIntensityInvalid") && (isIntensityInvalid != nullptr))
+		else if((name.compare("isIntensityInvalid") == 0) && proto.isDefined("isIntensityInvalid") && (buffers.isIntensityInvalid != nullptr))
 			destBuffers.push_back(SourceDestBuffer(imf_, "isIntensityInvalid",
-				isIntensityInvalid,count, true));
+				buffers.isIntensityInvalid,count, true));
 
-		else if((name.compare("colorRed") == 0) && proto.isDefined("colorRed") && (colorRed != nullptr))
+		else if((name.compare("colorRed") == 0) && proto.isDefined("colorRed") && (buffers.colorRed != nullptr))
 			destBuffers.push_back(SourceDestBuffer(imf_, "colorRed",
-				colorRed,     count, true, scaled));
-		else if((name.compare("colorGreen") == 0) && proto.isDefined("colorGreen") && (colorGreen != nullptr))
+				buffers.colorRed,     count, true, scaled));
+		else if((name.compare("colorGreen") == 0) && proto.isDefined("colorGreen") && (buffers.colorGreen != nullptr))
 			destBuffers.push_back(SourceDestBuffer(imf_, "colorGreen",
-				colorGreen,   count, true, scaled));
-		else if((name.compare("colorBlue") == 0) && proto.isDefined("colorBlue") && (colorBlue != nullptr))
+				buffers.colorGreen,   count, true, scaled));
+		else if((name.compare("colorBlue") == 0) && proto.isDefined("colorBlue") && (buffers.colorBlue != nullptr))
 			destBuffers.push_back(SourceDestBuffer(imf_, "colorBlue",
-				colorBlue,    count, true, scaled));
-		else if((name.compare("isColorInvalid") == 0) && proto.isDefined("isColorInvalid") && (isColorInvalid != nullptr))
+				buffers.colorBlue,    count, true, scaled));
+		else if((name.compare("isColorInvalid") == 0) && proto.isDefined("isColorInvalid") && (buffers.isColorInvalid != nullptr))
 			destBuffers.push_back(SourceDestBuffer(imf_, "isColorInvalid",
-				isColorInvalid, count, true));
-		else if(pointDataExtension != nullptr)
-			(*pointDataExtension)(imf_,proto,(int) protoIndex,destBuffers);
+				buffers.isColorInvalid, count, true));
+        else if(haveNormalsExt && (name.compare("nor:normalX") == 0) && proto.isDefined("nor:normalX") && (buffers.normalX != nullptr))
+            destBuffers.push_back(SourceDestBuffer(imf_, "nor:normalX", buffers.normalX, count, true, scaled));
+        else if(haveNormalsExt && (name.compare("nor:normalY") == 0) && proto.isDefined("nor:normalY") && (buffers.normalY != nullptr))
+            destBuffers.push_back(SourceDestBuffer(imf_, "nor:normalY", buffers.normalY, count, true, scaled));
+        else if(haveNormalsExt && (name.compare("nor:normalZ") == 0) && proto.isDefined("nor:normalZ") && (buffers.normalZ != nullptr))
+            destBuffers.push_back(SourceDestBuffer(imf_, "nor:normalZ", buffers.normalZ, count, true, scaled));
+		else if(buffers.pointDataExtension != nullptr)
+			(*buffers.pointDataExtension)(imf_, proto, destBuffers);
 	}
 
 	CompressedVectorReader reader = points.reader(destBuffers);
@@ -2274,6 +2268,25 @@ int32_t	WriterImpl :: NewData3D(
 	if(data3DHeader.pointFields.isTimeStampInvalidField)
 		proto.set("isTimeStampInvalid", IntegerNode(imf_, 0, 0, 1));
 
+    // E57_EXT_surface_normals
+    if (data3DHeader.pointFields.normalX || data3DHeader.pointFields.normalY ||
+        data3DHeader.pointFields.normalZ)
+    {
+        // make sure we declare the extesion before using the fields with prefix
+        ustring norExtUri;
+        if (!imf_.extensionsLookupPrefix("nor", norExtUri))
+        {
+            imf_.extensionsAdd("nor","http://www.libe57.org/E57_NOR_surface_normals.txt");
+        }
+    }
+    // currently we support writing normals only as float32
+    if(data3DHeader.pointFields.normalX)
+        proto.set("nor:normalX", FloatNode(imf_, 0., E57_SINGLE, -1., 1.));
+    if(data3DHeader.pointFields.normalY)
+        proto.set("nor:normalY", FloatNode(imf_, 0., E57_SINGLE, -1., 1.));
+    if(data3DHeader.pointFields.normalZ)
+        proto.set("nor:normalZ", FloatNode(imf_, 0., E57_SINGLE, -1., 1.));
+
 //   proto.set("demo:extra2", StringNode(imf_));	//Extension here
 
 // do call back to setup any point data extension before the CompressedVectorNode is created.
@@ -2295,32 +2308,7 @@ int32_t	WriterImpl :: NewData3D(
 CompressedVectorWriter	WriterImpl :: SetUpData3DPointsData(
 	int32_t		dataIndex,
 	size_t		count,
-	float*		cartesianX,			//!< pointer to a buffer with the X coordinate (in meters) of the point in Cartesian coordinates
-	float*		cartesianY,			//!< pointer to a buffer with the Y coordinate (in meters) of the point in Cartesian coordinates
-	float*		cartesianZ,			//!< pointer to a buffer with the Z coordinate (in meters) of the point in Cartesian coordinates
-	int8_t*		cartesianInvalidState,	//!< Value = 0 if the point is considered valid, 1 otherwise
-
-	float*		intensity,			//!< pointer to a buffer with the Point response intensity. Unit is unspecified
-	int8_t*		isIntensityInvalid,	//!< Value = 0 if the intensity is considered valid, 1 otherwise
-
-	uint8_t*	colorRed,			//!< pointer to a buffer with the Red color coefficient. Unit is unspecified
-	uint8_t*	colorGreen,			//!< pointer to a buffer with the Green color coefficient. Unit is unspecified
-	uint8_t*	colorBlue,			//!< pointer to a buffer with the Blue color coefficient. Unit is unspecified
-	int8_t*		isColorInvalid,		//!< Value = 0 if the color is considered valid, 1 otherwise
-
-	float*		sphericalRange,		//!< pointer to a buffer with the range (in meters) of points in spherical coordinates. Shall be non-negative
-	float*		sphericalAzimuth,	//!< pointer to a buffer with the Azimuth angle (in radians) of point in spherical coordinates
-	float*		sphericalElevation,	//!< pointer to a buffer with the Elevation angle (in radians) of point in spherical coordinates
-	int8_t*		sphericalInvalidState, //!< Value = 0 if the range is considered valid, 1 otherwise
-
-	int32_t*	rowIndex,			//!< pointer to a buffer with the row number of point (zero based). This is useful for data that is stored in a regular grid.Shall be in the interval (0, 2^63).
-	int32_t*	columnIndex,		//!< pointer to a buffer with the column number of point (zero based). This is useful for data that is stored in a regular grid. Shall be in the interval (0, 2^63).
-	int8_t*		returnIndex,		//!< pointer to a buffer with the number of this return (zero based). That is, 0 is the first return, 1 is the second, and so on. Shall be in the interval (0, returnCount). Only for multi-return sensors. 
-	int8_t*		returnCount,		//!< pointer to a buffer with the total number of returns for the pulse that this corresponds to. Shall be in the interval (0, 2^63). Only for multi-return sensors. 
-
-	double*		timeStamp,			//!< pointer to a buffer with the time (in seconds) since the start time for the data, which is given by acquisitionStart in the parent Data3D Structure. Shall be non-negative
-	int8_t*		isTimeStampInvalid,	//!< Value = 0 if the timeStamp is considered valid, 1 otherwise
-	bool		(*pointDataExtension)(ImageFile	imf, StructureNode proto, vector<SourceDestBuffer> & sourceBuffers)
+	const Data3DPointsData& buffers
 	)
 {
 #ifdef TEST_EXTENSIONS
@@ -2339,69 +2327,81 @@ CompressedVectorWriter	WriterImpl :: SetUpData3DPointsData(
 	StructureNode proto(points.prototype());
 
 	vector<SourceDestBuffer> sourceBuffers;
-	if(proto.isDefined("cartesianX") && (cartesianX != nullptr))
-		sourceBuffers.push_back(SourceDestBuffer(imf_, "cartesianX",  cartesianX, count, true, true));
-	if(proto.isDefined("cartesianY") && (cartesianY != nullptr))
-		sourceBuffers.push_back(SourceDestBuffer(imf_, "cartesianY",  cartesianY, count, true, true));
+	if(proto.isDefined("cartesianX") && (buffers.cartesianX != nullptr))
+		sourceBuffers.push_back(SourceDestBuffer(imf_, "cartesianX",  buffers.cartesianX, count, true, true));
+	if(proto.isDefined("cartesianY") && (buffers.cartesianY != nullptr))
+		sourceBuffers.push_back(SourceDestBuffer(imf_, "cartesianY",  buffers.cartesianY, count, true, true));
 #ifdef TEST_EXTENSIONS
 	if(proto.isDefined("ext:extraField1"))
 		sourceBuffers.push_back(SourceDestBuffer(imf_,"ext:extraField1", extraField1, count, true));
 #endif
-	if(proto.isDefined("cartesianZ") && (cartesianZ != nullptr))
-		sourceBuffers.push_back(SourceDestBuffer(imf_, "cartesianZ",  cartesianZ, count, true, true));
+	if(proto.isDefined("cartesianZ") && (buffers.cartesianZ != nullptr))
+		sourceBuffers.push_back(SourceDestBuffer(imf_, "cartesianZ",  buffers.cartesianZ, count, true, true));
 
-	if(proto.isDefined("sphericalRange") && (sphericalRange != nullptr))
-		sourceBuffers.push_back(SourceDestBuffer(imf_, "sphericalRange",  sphericalRange, count, true, true));
-	if(proto.isDefined("sphericalAzimuth") && (sphericalAzimuth != nullptr))
-		sourceBuffers.push_back(SourceDestBuffer(imf_, "sphericalAzimuth",  sphericalAzimuth, count, true, true));
-	if(proto.isDefined("sphericalElevation") && (sphericalElevation != nullptr))
-		sourceBuffers.push_back(SourceDestBuffer(imf_, "sphericalElevation",  sphericalElevation, count, true, true));
+	if(proto.isDefined("sphericalRange") && (buffers.sphericalRange != nullptr))
+		sourceBuffers.push_back(SourceDestBuffer(imf_, "sphericalRange",  buffers.sphericalRange, count, true, true));
+	if(proto.isDefined("sphericalAzimuth") && (buffers.sphericalAzimuth != nullptr))
+		sourceBuffers.push_back(SourceDestBuffer(imf_, "sphericalAzimuth",  buffers.sphericalAzimuth, count, true, true));
+	if(proto.isDefined("sphericalElevation") && (buffers.sphericalElevation != nullptr))
+		sourceBuffers.push_back(SourceDestBuffer(imf_, "sphericalElevation",  buffers.sphericalElevation, count, true, true));
 
 #ifdef TEST_EXTENSIONS
 	if(proto.isDefined("ext:extraField2"))
 		sourceBuffers.push_back(SourceDestBuffer(imf_,"ext:extraField2", extraField2, count, true));
 #endif
 
-	if(proto.isDefined("intensity") && (intensity != nullptr))
-		sourceBuffers.push_back(SourceDestBuffer(imf_, "intensity",   intensity, count, true, true));
+	if(proto.isDefined("intensity") && (buffers.intensity != nullptr))
+		sourceBuffers.push_back(SourceDestBuffer(imf_, "intensity",   buffers.intensity, count, true, true));
 
-	if(proto.isDefined("colorRed") && (colorRed != nullptr))
-		sourceBuffers.push_back(SourceDestBuffer(imf_, "colorRed",    colorRed, count, true));
-	if(proto.isDefined("colorGreen") && (colorGreen != nullptr))
-		sourceBuffers.push_back(SourceDestBuffer(imf_, "colorGreen",  colorGreen, count, true));
-	if(proto.isDefined("colorBlue") && (colorBlue != nullptr))
-		sourceBuffers.push_back(SourceDestBuffer(imf_, "colorBlue",   colorBlue, count, true));
+	if(proto.isDefined("colorRed") && (buffers.colorRed != nullptr))
+		sourceBuffers.push_back(SourceDestBuffer(imf_, "colorRed",    buffers.colorRed, count, true));
+	if(proto.isDefined("colorGreen") && (buffers.colorGreen != nullptr))
+		sourceBuffers.push_back(SourceDestBuffer(imf_, "colorGreen",  buffers.colorGreen, count, true));
+	if(proto.isDefined("colorBlue") && (buffers.colorBlue != nullptr))
+		sourceBuffers.push_back(SourceDestBuffer(imf_, "colorBlue",   buffers.colorBlue, count, true));
 
-	if(proto.isDefined("returnIndex") && (returnIndex != nullptr))
-		sourceBuffers.push_back(SourceDestBuffer(imf_, "returnIndex", returnIndex, count, true));
-	if(proto.isDefined("returnCount") && (returnCount != nullptr))
-		sourceBuffers.push_back(SourceDestBuffer(imf_, "returnCount", returnCount, count, true));
+	if(proto.isDefined("returnIndex") && (buffers.returnIndex != nullptr))
+		sourceBuffers.push_back(SourceDestBuffer(imf_, "returnIndex", buffers.returnIndex, count, true));
+	if(proto.isDefined("returnCount") && (buffers.returnCount != nullptr))
+		sourceBuffers.push_back(SourceDestBuffer(imf_, "returnCount", buffers.returnCount, count, true));
 
-	if(proto.isDefined("rowIndex") && (rowIndex != nullptr))
-		sourceBuffers.push_back(SourceDestBuffer(imf_, "rowIndex",    rowIndex, count, true));
-	if(proto.isDefined("columnIndex") && (columnIndex != nullptr))
-		sourceBuffers.push_back(SourceDestBuffer(imf_, "columnIndex", columnIndex, count, true));
+	if(proto.isDefined("rowIndex") && (buffers.rowIndex != nullptr))
+		sourceBuffers.push_back(SourceDestBuffer(imf_, "rowIndex",    buffers.rowIndex, count, true));
+	if(proto.isDefined("columnIndex") && (buffers.columnIndex != nullptr))
+		sourceBuffers.push_back(SourceDestBuffer(imf_, "columnIndex", buffers.columnIndex, count, true));
 
-	if(proto.isDefined("timeStamp") && (timeStamp != nullptr))
-		sourceBuffers.push_back(SourceDestBuffer(imf_, "timeStamp",   timeStamp, count, true, true));
+	if(proto.isDefined("timeStamp") && (buffers.timeStamp != nullptr))
+		sourceBuffers.push_back(SourceDestBuffer(imf_, "timeStamp",   buffers.timeStamp, count, true, true));
 
 #ifdef TEST_EXTENSIONS
 	if(proto.isDefined("ext:extraField3"))
 		sourceBuffers.push_back(SourceDestBuffer(imf_,"ext:extraField3", extraField3, count, true));
 #endif
-	if(proto.isDefined("cartesianInvalidState") && (cartesianInvalidState != nullptr))
-		sourceBuffers.push_back(SourceDestBuffer(imf_, "cartesianInvalidState", cartesianInvalidState, count, true));
-	if(proto.isDefined("sphericalInvalidState") && (sphericalInvalidState != nullptr))
-		sourceBuffers.push_back(SourceDestBuffer(imf_, "sphericalInvalidState", sphericalInvalidState, count, true));
-	if(proto.isDefined("isIntensityInvalid") && (isIntensityInvalid != nullptr))
-		sourceBuffers.push_back(SourceDestBuffer(imf_, "isIntensityInvalid", isIntensityInvalid, count, true));
-	if(proto.isDefined("isColorInvalid") && (isColorInvalid != nullptr))
-		sourceBuffers.push_back(SourceDestBuffer(imf_, "isColorInvalid", isColorInvalid, count, true));
-	if(proto.isDefined("isTimeStampInvalid") && (isTimeStampInvalid != nullptr))
-		sourceBuffers.push_back(SourceDestBuffer(imf_, "isTimeStampInvalid", isTimeStampInvalid, count, true));
+	if(proto.isDefined("cartesianInvalidState") && (buffers.cartesianInvalidState != nullptr))
+		sourceBuffers.push_back(SourceDestBuffer(imf_, "cartesianInvalidState", buffers.cartesianInvalidState, count, true));
+	if(proto.isDefined("sphericalInvalidState") && (buffers.sphericalInvalidState != nullptr))
+		sourceBuffers.push_back(SourceDestBuffer(imf_, "sphericalInvalidState", buffers.sphericalInvalidState, count, true));
+	if(proto.isDefined("isIntensityInvalid") && (buffers.isIntensityInvalid != nullptr))
+		sourceBuffers.push_back(SourceDestBuffer(imf_, "isIntensityInvalid", buffers.isIntensityInvalid, count, true));
+	if(proto.isDefined("isColorInvalid") && (buffers.isColorInvalid != nullptr))
+		sourceBuffers.push_back(SourceDestBuffer(imf_, "isColorInvalid", buffers.isColorInvalid, count, true));
+	if(proto.isDefined("isTimeStampInvalid") && (buffers.isTimeStampInvalid != nullptr))
+		sourceBuffers.push_back(SourceDestBuffer(imf_, "isTimeStampInvalid", buffers.isTimeStampInvalid, count, true));
 
-	if(pointDataExtension != nullptr)
-		(*pointDataExtension)(imf_,proto, sourceBuffers);
+    // E57_EXT_surface_normals
+    ustring norExtUri;
+    if (imf_.extensionsLookupPrefix("nor", norExtUri))
+    {
+        if(proto.isDefined("nor:normalX") && (buffers.normalX != nullptr))
+            sourceBuffers.push_back(SourceDestBuffer(imf_, "nor:normalX",  buffers.normalX, count, true, true));
+        if(proto.isDefined("nor:normalY") && (buffers.normalY != nullptr))
+            sourceBuffers.push_back(SourceDestBuffer(imf_, "nor:normalY",  buffers.normalY, count, true, true));
+        if(proto.isDefined("nor:normalZ") && (buffers.normalZ != nullptr))
+            sourceBuffers.push_back(SourceDestBuffer(imf_, "nor:normalZ",  buffers.normalZ, count, true, true));
+    }
+
+	if(buffers.pointDataExtension != nullptr)
+		(*buffers.pointDataExtension)(imf_,proto, sourceBuffers);
 
 // create the writer, all buffers must be setup before this call
 	CompressedVectorWriter writer = points.writer(sourceBuffers);

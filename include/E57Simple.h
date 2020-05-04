@@ -283,6 +283,10 @@ struct PointStandardizedFieldsAvailable {
     bool		colorGreenField {false};			//!< indicates that the PointRecord colorGreen field is active
     bool		colorBlueField {false};				//!< indicates that the PointRecord colorBlue field is active
     bool		isColorInvalidField {false};		//!< Indicates that the PointRecord isColorInvalid field is active
+
+    bool        normalX {false};                    //!< Indicates that the PointRecord nor:normalX field is active
+    bool        normalY {false};                    //!< Indicates that the PointRecord nor:normalY field is active
+    bool        normalZ {false};                    //!< Indicates that the PointRecord nor:normalZ field is active
 };
 
 ////////////////////////////////////////////////////////////////////
@@ -359,6 +363,42 @@ struct Data3D {
 	e57::PointStandardizedFieldsAvailable pointFields;	//!< This defines the active fields used in the WritePoints function.
 
     int64_t			pointsSize {0};				//!< Total size of the compressed vector of PointRecord structures referring to the binary data that actually stores the point data
+};
+
+struct Data3DPointsData
+{
+    float* cartesianX {nullptr}; //!< pointer to a buffer with the X coordinate (in meters) of the point in Cartesian coordinates
+    float* cartesianY {nullptr}; //!< pointer to a buffer with the Y coordinate (in meters) of the point in Cartesian coordinates
+    float* cartesianZ {nullptr}; //!< pointer to a buffer with the Z coordinate (in meters) of the point in Cartesian coordinates
+    int8_t* cartesianInvalidState {nullptr}; //!< Value = 0 if the point is considered valid, 1 otherwise
+
+    float* intensity {nullptr}; //!< pointer to a buffer with the Point response intensity. Unit is unspecified
+    int8_t* isIntensityInvalid {nullptr}; //!< Value = 0 if the intensity is considered valid, 1 otherwise
+
+    uint8_t* colorRed {nullptr}; //!< pointer to a buffer with the Red color coefficient. Unit is unspecified
+    uint8_t* colorGreen {nullptr}; //!< pointer to a buffer with the Green color coefficient. Unit is unspecified
+    uint8_t* colorBlue {nullptr}; //!< pointer to a buffer with the Blue color coefficient. Unit is unspecified
+    int8_t* isColorInvalid {nullptr}; //!< Value = 0 if the color is considered valid, 1 otherwise
+
+    float* sphericalRange {nullptr}; //!< pointer to a buffer with the range (in meters) of points in spherical coordinates. Shall be non-negative
+    float* sphericalAzimuth {nullptr}; //!< pointer to a buffer with the Azimuth angle (in radians) of point in spherical coordinates
+    float* sphericalElevation {nullptr}; //!< pointer to a buffer with the Elevation angle (in radians) of point in spherical coordinates
+    int8_t* sphericalInvalidState {nullptr}; //!< Value = 0 if the range is considered valid, 1 otherwise
+
+    int32_t* rowIndex {nullptr}; //!< pointer to a buffer with the row number of point (zero based). This is useful for data that is stored in a regular grid.  Shall be in the interval (0, 2^31).
+    int32_t* columnIndex {nullptr}; //!< pointer to a buffer with the column number of point (zero based). This is useful for data that is stored in a regular grid. Shall be in the interval (0, 2^31).
+    int8_t* returnIndex {nullptr}; //!< pointer to a buffer with the number of this return (zero based). That is, 0 is the first return, 1 is the second, and so on. Shall be in the interval (0, returnCount). Only for multi-return sensors.
+    int8_t* returnCount {nullptr}; //!< pointer to a buffer with the total number of returns for the pulse that this corresponds to. Shall be in the interval (0, 2^7). Only for multi-return sensors.
+
+    double* timeStamp {nullptr}; //!< pointer to a buffer with the time (in seconds) since the start time for the data, which is given by acquisitionStart in the parent Data3D Structure. Shall be non-negative
+    int8_t* isTimeStampInvalid {nullptr}; //!< Value = 0 if the timeStamp is considered valid, 1 otherwise
+
+    // E57_EXT_surface_normals
+    float* normalX {nullptr}; //!< The X component of a surface normal vector (E57_EXT_surface_normals).
+    float* normalY {nullptr}; //!< The Y component of a surface normal vector (E57_EXT_surface_normals).
+    float* normalZ {nullptr}; //!< The Z component of a surface normal vector (E57_EXT_surface_normals).
+
+    bool (*pointDataExtension)(ImageFile imf, StructureNode proto, std::vector<SourceDestBuffer>& destBuffers) {nullptr}; //!< callback for adding custom fields
 };
 
 ////////////////////////////////////////////////////////////////////
@@ -611,34 +651,7 @@ Call the CompressedVectorReader::read() until all data is read.
 	CompressedVectorReader	SetUpData3DPointsData(
 						int32_t		dataIndex,			//!< data block index given by the NewData3D
 						size_t		pointCount,			//!< size of each element buffer.
-
-						float*		cartesianX,			//!< pointer to a buffer with the X coordinate (in meters) of the point in Cartesian coordinates
-						float*		cartesianY,			//!< pointer to a buffer with the Y coordinate (in meters) of the point in Cartesian coordinates
-						float*		cartesianZ,			//!< pointer to a buffer with the Z coordinate (in meters) of the point in Cartesian coordinates
-						int8_t*		cartesianInvalidState = nullptr,	//!< Value = 0 if the point is considered valid, 1 otherwise
-
-						float*		intensity = nullptr,	//!< pointer to a buffer with the Point response intensity. Unit is unspecified
-						int8_t*		isIntensityInvalid = nullptr,	//!< Value = 0 if the intensity is considered valid, 1 otherwise
-
-						uint8_t*	colorRed = nullptr,	//!< pointer to a buffer with the Red color coefficient. Unit is unspecified
-						uint8_t*	colorGreen = nullptr,	//!< pointer to a buffer with the Green color coefficient. Unit is unspecified
-						uint8_t*	colorBlue = nullptr,	//!< pointer to a buffer with the Blue color coefficient. Unit is unspecified
-						int8_t*		isColorInvalid = nullptr,	//!< Value = 0 if the color is considered valid, 1 otherwise
-
-						float*		sphericalRange = nullptr,		//!< pointer to a buffer with the range (in meters) of points in spherical coordinates. Shall be non-negative
-						float*		sphericalAzimuth = nullptr,	//!< pointer to a buffer with the Azimuth angle (in radians) of point in spherical coordinates
-						float*		sphericalElevation = nullptr,	//!< pointer to a buffer with the Elevation angle (in radians) of point in spherical coordinates
-						int8_t*		sphericalInvalidState = nullptr, //!< Value = 0 if the range is considered valid, 1 otherwise
-
-						int32_t*	rowIndex = nullptr,	//!< pointer to a buffer with the row number of point (zero based). This is useful for data that is stored in a regular grid.  Shall be in the interval (0, 2^31).
-						int32_t*	columnIndex = nullptr,	//!< pointer to a buffer with the column number of point (zero based). This is useful for data that is stored in a regular grid. Shall be in the interval (0, 2^31).
-						int8_t*		returnIndex = nullptr,	//!< pointer to a buffer with the number of this return (zero based). That is, 0 is the first return, 1 is the second, and so on. Shall be in the interval (0, returnCount). Only for multi-return sensors. 
-						int8_t*		returnCount = nullptr,	//!< pointer to a buffer with the total number of returns for the pulse that this corresponds to. Shall be in the interval (0, 2^7). Only for multi-return sensors. 
-
-						double*		timeStamp = nullptr,	//!< pointer to a buffer with the time (in seconds) since the start time for the data, which is given by acquisitionStart in the parent Data3D Structure. Shall be non-negative
-						int8_t*		isTimeStampInvalid = nullptr,	//!< Value = 0 if the timeStamp is considered valid, 1 otherwise
-                                                  bool		(*pointDataExtension)(ImageFile	imf, StructureNode proto, int protvector, std::vector<SourceDestBuffer> & destBuffers) = nullptr
-
+                        const Data3DPointsData& buffers //!< pointers to user-provided buffers
 						) const;					//!< @return Return true if sucessful, false otherwise
 
 ////////////////////////////////////////////////////////////////////
@@ -718,32 +731,7 @@ public:
 	CompressedVectorWriter	SetUpData3DPointsData(
 						int32_t		dataIndex,			//!< data block index given by the NewData3D
 						size_t		pointCount,			//!< size of each of the buffers given
-						float*		cartesianX,			//!< pointer to a buffer with the X coordinate (in meters) of the point in Cartesian coordinates
-						float*		cartesianY,			//!< pointer to a buffer with the Y coordinate (in meters) of the point in Cartesian coordinates
-						float*		cartesianZ,			//!< pointer to a buffer with the Z coordinate (in meters) of the point in Cartesian coordinates
-						int8_t*		cartesianInvalidState = nullptr,	//!< Value = 0 if the point is considered valid, 1 otherwise
-
-						float*		intensity = nullptr,	//!< pointer to a buffer with the Point response intensity. Unit is unspecified
-						int8_t*		isIntensityInvalid = nullptr,	//!< Value = 0 if the intensity is considered valid, 1 otherwise
-
-						uint8_t*	colorRed = nullptr,	//!< pointer to a buffer with the Red color coefficient. Unit is unspecified
-						uint8_t*	colorGreen = nullptr,	//!< pointer to a buffer with the Green color coefficient. Unit is unspecified
-						uint8_t*	colorBlue = nullptr,	//!< pointer to a buffer with the Blue color coefficient. Unit is unspecified
-						int8_t*		isColorInvalid = nullptr,	//!< Value = 0 if the color is considered valid, 1 otherwise
-
-						float*		sphericalRange = nullptr,		//!< pointer to a buffer with the range (in meters) of points in spherical coordinates. Shall be non-negative
-						float*		sphericalAzimuth = nullptr,	//!< pointer to a buffer with the Azimuth angle (in radians) of point in spherical coordinates
-						float*		sphericalElevation = nullptr,	//!< pointer to a buffer with the Elevation angle (in radians) of point in spherical coordinates
-						int8_t*		sphericalInvalidState = nullptr, //!< Value = 0 if the range is considered valid, 1 otherwise
-
-						int32_t*	rowIndex = nullptr,	//!< pointer to a buffer with the row number of point (zero based). This is useful for data that is stored in a regular grid.Shall be in the interval (0, 2^31).
-						int32_t*	columnIndex = nullptr,	//!< pointer to a buffer with the column number of point (zero based). This is useful for data that is stored in a regular grid. Shall be in the interval (0, 2^31).
-						int8_t*		returnIndex = nullptr,	//!< pointer to a buffer with the number of this return (zero based). That is, 0 is the first return, 1 is the second, and so on. Shall be in the interval (0, returnCount). Only for multi-return sensors. 
-						int8_t*		returnCount = nullptr,	//!< pointer to a buffer with the total number of returns for the pulse that this corresponds to. Shall be in the interval (0, 2^7). Only for multi-return sensors. 
-
-						double*		timeStamp = nullptr,	//!< pointer to a buffer with the time (in seconds) since the start time for the data, which is given by acquisitionStart in the parent Data3D Structure. Shall be non-negative
-						int8_t*		isTimeStampInvalid = nullptr,	//!< Value = 0 if the timeStamp is considered valid, 1 otherwise
-                        bool        (*pointDataExtension)(ImageFile    imf, StructureNode proto, std::vector<SourceDestBuffer> & sourceBuffers) = nullptr
+						const Data3DPointsData& buffers //!< pointers to user-provided buffers
 						) const ;		//!< @return Return true if sucessful, false otherwise
 
 

@@ -388,10 +388,15 @@ void StructureNodeImpl::writeXml( ImageFileImplSharedPtr imf, CheckedFile &cf, i
             xmlnsExtension = "xmlns";
          }
          else
+         {
             xmlnsExtension = "xmlns:";
+         }
+
+         int index = static_cast<int>( i );
+
          cf << "\n"
-            << space( indent + fieldName.length() + 2 ) << xmlnsExtension << imf->extensionsPrefix( i ) << "=\""
-            << imf->extensionsUri( i ) << "\"";
+            << space( indent + fieldName.length() + 2 ) << xmlnsExtension << imf->extensionsPrefix( index ) << "=\""
+            << imf->extensionsUri( index ) << "\"";
       }
 
       /// If user didn't explicitly declare a default namespace, use the current

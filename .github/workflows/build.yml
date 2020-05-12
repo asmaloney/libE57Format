@@ -4,7 +4,7 @@ on: push
 
 jobs:
   build:
-    name: ${{ matrix.config.name }}
+    name: ${{ matrix.config.name }} (${{ matrix.build_type }})
     runs-on: ${{ matrix.config.os }}
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
 
@@ -14,17 +14,17 @@ jobs:
         build_type: ["Debug", "Release"]
         config:
           - {
-              name: "macOS Clang (${{ matrix.build_type }})",
+              name: "macOS Clang",
               os: macos-latest,
               generator: "Ninja",
             }
           - {
-              name: "Ubuntu GCC (${{ matrix.build_type }})",
+              name: "Ubuntu GCC",
               os: ubuntu-latest,
               generator: "Ninja",
             }
           - {
-              name: "Windows MSVC (${{ matrix.build_type }})",
+              name: "Windows MSVC",
               os: windows-latest,
               generator: "Ninja",
            }

@@ -27,7 +27,7 @@
 #if defined( _WIN32 )
 #if defined( _MSC_VER )
 #include <codecvt>
-#include <io.h>
+#include <stdio.h>
 #elif defined( __GNUC__ )
 #define _LARGEFILE64_SOURCE
 #define __LARGE64_FILES

@@ -51,6 +51,7 @@
 #endif
 
 #include <cmath>
+#include <cstdio>
 #include <cstring>
 #include <fcntl.h>
 
@@ -65,10 +66,6 @@
 
 #ifndef O_BINARY
 #define O_BINARY ( 0 )
-#endif
-
-#ifndef _unlink
-#define _unlink unlink
 #endif
 
 using namespace e57;
@@ -669,12 +666,12 @@ void CheckedFile::unlink()
 {
    close();
 
-   /// Try to unlink the file, don't report a failure
-   int result = ::_unlink( fileName_.c_str() ); //??? unicode support here
+   /// Try to remove the file, don't report a failure
+   int result = std::remove( fileName_.c_str() ); //??? unicode support here
 #ifdef E57_MAX_VERBOSE
    if ( result < 0 )
    {
-      cout << "::unlink() failed, result=" << result << endl;
+      cout << "std::remove() failed, result=" << result << endl;
    }
 #endif
 }

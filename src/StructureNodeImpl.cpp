@@ -373,6 +373,8 @@ void StructureNodeImpl::writeXml( ImageFileImplSharedPtr imf, CheckedFile &cf, i
 
    cf << space( indent ) << "<" << fieldName << " type=\"Structure\"";
 
+   const int numSpaces = indent + static_cast<int>( fieldName.length() ) + 2;
+
    /// If this struct is the root for the E57 file, add name space declarations
    /// Note the prototype of a CompressedVector is a separate tree, so don't
    /// want to write out namespaces if not the ImageFile root
@@ -392,17 +394,19 @@ void StructureNodeImpl::writeXml( ImageFileImplSharedPtr imf, CheckedFile &cf, i
             xmlnsExtension = "xmlns:";
          }
 
-         int index = static_cast<int>( i );
+         const int index = static_cast<int>( i );
 
          cf << "\n"
-            << space( indent + fieldName.length() + 2 ) << xmlnsExtension << imf->extensionsPrefix( index ) << "=\""
+            << space( numSpaces ) << xmlnsExtension << imf->extensionsPrefix( index ) << "=\""
             << imf->extensionsUri( index ) << "\"";
       }
 
       /// If user didn't explicitly declare a default namespace, use the current
       /// E57 standard one.
       if ( !gotDefaultNamespace )
-         cf << "\n" << space( indent + fieldName.length() + 2 ) << "xmlns=\"" << E57_V1_0_URI << "\"";
+      {
+         cf << "\n" << space( numSpaces ) << "xmlns=\"" << E57_V1_0_URI << "\"";
+      }
    }
    if ( !children_.empty() )
    {

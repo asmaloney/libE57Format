@@ -221,9 +221,9 @@ template <typename T> void SourceDestBufferImpl::_setNextReal( T inValue )
          {
 #ifdef _MSC_VER
             // MSVC is not smart enough to realize 'inValue' cannot be a double here, so disable warning
-#pragma warning( disable : C4244 )
+#pragma warning( disable : 4244 )
             *reinterpret_cast<float *>( p ) = inValue;
-#pragma warning( default : C4244 )
+#pragma warning( default : 4244 )
 #else
             *reinterpret_cast<float *>( p ) = inValue;
 #endif

@@ -45,10 +45,18 @@ jobs:
 
           sudo apt-get install -y libxerces-c-dev ninja-build
 
+      - name: Install miniconda (Windows)
+        if: matrix.config.os == 'windows-latest'
+        uses: goanpeca/setup-miniconda@v1
+        with:
+          auto-update-conda: true
+          channels: conda-forge
+          miniconda-version: 'latest'
+
       - name: Install Dependencies (Windows)
         if: matrix.config.os == 'windows-latest'
         run: |
-          conda install -y -c conda-forge ninja xerces-c
+          conda install -y ninja xerces-c
 
       - name: Configure MSVC console (Windows)
         if:  matrix.config.os == 'windows-latest'

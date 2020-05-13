@@ -134,8 +134,8 @@ bool	ReaderImpl :: GetE57Root(
         fileHeader = {};
 
 		fileHeader.formatName = StringNode(root_.get("formatName")).value();
-		fileHeader.versionMajor = (int32_t) IntegerNode(root_.get("versionMajor")).value();
-		fileHeader.versionMinor = (int32_t) IntegerNode(root_.get("versionMinor")).value();
+		fileHeader.versionMajor = (uint32_t) IntegerNode(root_.get("versionMajor")).value();
+		fileHeader.versionMinor = (uint32_t) IntegerNode(root_.get("versionMinor")).value();
 		fileHeader.guid = StringNode(root_.get("guid")).value();
 		if(root_.isDefined("e57LibraryVersion"))
 			fileHeader.e57LibraryVersion = StringNode(root_.get("e57LibraryVersion")).value();
@@ -152,8 +152,8 @@ bool	ReaderImpl :: GetE57Root(
 				(int32_t) IntegerNode(creationDateTime.get("isAtomicClockReferenced")).value();
 		}
 
-		fileHeader.data3DSize = (int32_t) data3D_.childCount();
-		fileHeader.images2DSize = (int32_t) images2D_.childCount();
+		fileHeader.data3DSize = data3D_.childCount();
+		fileHeader.images2DSize = images2D_.childCount();
 
 		return true;
 	}
@@ -165,14 +165,14 @@ bool	ReaderImpl :: GetE57Root(
 //	Camera Image picture data
 //
 //! This function returns the total number of Picture Blocks
-int32_t	ReaderImpl :: GetImage2DCount()
+int64_t	ReaderImpl :: GetImage2DCount()
 {
-	return (int32_t) images2D_.childCount();
+	return images2D_.childCount();
 };
 
 //! This function returns the Image2Ds header and positions the cursor
 bool	ReaderImpl :: ReadImage2D( 
-	int32_t		imageIndex,		//!< This in the index into the Image2Ds vector
+	int64_t		imageIndex,		//!< This in the index into the Image2Ds vector
 	Image2D &	image2DHeader	//!< pointer to the Image2D structure to receive the picture information
 	)							//!< /return Returns true if sucessful
 {
@@ -434,7 +434,7 @@ bool ReaderImpl :: GetImage2DNodeSizes(
 
 // This function returns the image sizes
 bool		ReaderImpl :: GetImage2DSizes(
-	int32_t					imageIndex,		//!< This in the index into the image2D vector
+	int64_t					imageIndex,		//!< This in the index into the image2D vector
 	e57::Image2DProjection &imageProjection,//!< identifies the projection desired.
 	e57::Image2DType &		imageType,		//!< identifies the image format desired.
 	int64_t &				imageWidth,		//!< The image width (in pixels).
@@ -485,7 +485,7 @@ bool		ReaderImpl :: GetImage2DSizes(
 };
 //! This function reads the block
 int64_t	ReaderImpl :: ReadImage2DData(
-	int32_t					imageIndex,		//!< picture block index
+	int64_t					imageIndex,		//!< picture block index
 	e57::Image2DProjection	imageProjection,//!< identifies the projection desired.
 	e57::Image2DType		imageType,		//!< identifies the image format desired.
 	void *					pBuffer,		//!< pointer the buffer
@@ -543,9 +543,9 @@ int64_t	ReaderImpl :: ReadImage2DData(
 //	Scanner Image 3d data
 //
 //! This function returns the total number of Image Blocks
-int32_t	ReaderImpl :: GetData3DCount()
+int64_t	ReaderImpl :: GetData3DCount()
 {
-	return (int32_t) data3D_.childCount();
+	return data3D_.childCount();
 };
 
 //! This function returns the file raw E57Root Structure Node
@@ -572,7 +572,7 @@ ImageFile		ReaderImpl :: GetRawIMF()
 };  //!< /return Returns the raw ImageFile
 //! This function returns the Data3D header and positions the cursor
 bool	ReaderImpl :: ReadData3D( 
-	int32_t		dataIndex,	//!< This in the index into the images3D vector
+	int64_t		dataIndex,	//!< This in the index into the images3D vector
 	Data3D &	data3DHeader //!< pointer to the Data3D structure to receive the image information
 	)	//!< /return Returns true if sucessful
 {
@@ -1099,7 +1099,7 @@ bool	ReaderImpl :: ReadData3D(
 
 //! This function returns the size of the point data
 bool	ReaderImpl :: GetData3DSizes(
-	int32_t		dataIndex,	//!< image block index
+	int64_t		dataIndex,	//!< image block index
 	int64_t &	row,		//!< image row size
 	int64_t &	column,		//!< image column size
 	int64_t &	pointsSize,	//!< image total point count
@@ -1192,8 +1192,8 @@ bool	ReaderImpl :: GetData3DSizes(
 
 //! This funtion writes out the group data
 bool	ReaderImpl :: ReadData3DGroupsData(
-						int32_t		dataIndex,			//!< data block index given by the NewData3D
-						int32_t		groupCount,			//!< size of each of the buffers given
+						int64_t		dataIndex,			//!< data block index given by the NewData3D
+						int64_t		groupCount,			//!< size of each of the buffers given
 						int64_t*	idElementValue,		//!< index for this group
 						int64_t*	startPointIndex,	//!< Starting index in to the "points" data vector for the groups
 						int64_t*	pointCount			//!< size of the groups given
@@ -1224,15 +1224,15 @@ bool	ReaderImpl :: ReadData3DGroupsData(
 	
 				if((name.compare("idElementValue") == 0) && lineGroupRecord.isDefined("idElementValue") && (idElementValue != nullptr))
 					groupSDBuffers.push_back(SourceDestBuffer(imf_, "idElementValue",
-						idElementValue,   (unsigned) groupCount, true));
+						idElementValue, groupCount, true));
 
 				if((name.compare("startPointIndex") == 0) && lineGroupRecord.isDefined("startPointIndex") && (startPointIndex != nullptr))
 					groupSDBuffers.push_back(SourceDestBuffer(imf_, "startPointIndex",
-						startPointIndex,  (unsigned) groupCount, true));
+						startPointIndex, groupCount, true));
 
 				if((name.compare("pointCount") == 0) && lineGroupRecord.isDefined("pointCount") && (pointCount != nullptr))
 					groupSDBuffers.push_back(SourceDestBuffer(imf_, "pointCount",
-						pointCount,       (unsigned) groupCount, true));
+						pointCount, groupCount, true));
 			}
 
 			CompressedVectorReader reader = groups.reader(groupSDBuffers);
@@ -1249,7 +1249,7 @@ bool	ReaderImpl :: ReadData3DGroupsData(
 //* All the non-NULL buffers in the call below have number of elements = count */
 
 CompressedVectorReader	ReaderImpl :: SetUpData3DPointsData(
-	int32_t		dataIndex,
+	int64_t		dataIndex,
 	size_t		count,
 	const Data3DPointsData& buffers
 	)
@@ -1465,15 +1465,15 @@ ImageFile		WriterImpl :: GetRawIMF()
 
 //! This function sets up the image2D header and positions the cursor
 //* The user needs to config a Image2D structure with all the camera information before making this call. */
-int32_t	WriterImpl :: NewImage2D( 
+int64_t	WriterImpl :: NewImage2D(
 	Image2D &	image2DHeader	//!< pointer to the Image2D structure to receive the picture information
 	)						//!< /return Returns the image2D index
 {
-	int32_t pos = -1;
+	int64_t pos = -1;
 
 	StructureNode image = StructureNode(imf_);
 	images2D_.append(image);
-	pos = (int32_t) images2D_.childCount() - 1;
+	pos = images2D_.childCount() - 1;
 
     if (image2DHeader.guid.empty())
     {
@@ -1511,13 +1511,7 @@ int32_t	WriterImpl :: NewImage2D(
 
 // Create pose structure for image.
 
-	if( (image2DHeader.pose.rotation.w != 1.) ||
-		(image2DHeader.pose.rotation.x != 0.) ||
-		(image2DHeader.pose.rotation.y != 0.) ||
-		(image2DHeader.pose.rotation.z != 0.) ||
-		(image2DHeader.pose.translation.x != 0.) ||
-		(image2DHeader.pose.translation.y != 0.) ||
-		(image2DHeader.pose.translation.z != 0.) )
+    if(image2DHeader.pose != RigidBodyTransform{})
 	{
 		StructureNode pose = StructureNode(imf_);
 		image.set("pose", pose);
@@ -1703,7 +1697,7 @@ int64_t WriterImpl :: WriteImage2DNode(
 };
 //! This function writes the block
 int64_t	WriterImpl :: WriteImage2DData(
-	int32_t					imageIndex,		//!< picture block index
+	int64_t					imageIndex,		//!< picture block index
 	e57::Image2DType		imageType,		//!< identifies the image format desired.
 	e57::Image2DProjection	imageProjection,//!< identifies the projection desired.
 	void *					pBuffer,		//!< pointer the buffer
@@ -1756,12 +1750,12 @@ int64_t	WriterImpl :: WriteImage2DData(
 //! This function sets up the Data3D header and positions the cursor for the binary data
 //* The user needs to config a Data3D structure with all the scanning information before making this call. */
 
-int32_t	WriterImpl :: NewData3D( 
+int64_t	WriterImpl :: NewData3D(
 	Data3D &	data3DHeader,		//!< pointer to the Data3D structure to receive the image information
 	bool		(*pointExtension)(ImageFile	imf, StructureNode proto)	//!< function pointer to add point data extension
 	)	//!< /return Returns the index of the new scan.
 {
-	int32_t pos = -1;
+	int64_t pos = -1;
 
 	if(data3DHeader.guid.empty())
     {
@@ -1770,7 +1764,7 @@ int32_t	WriterImpl :: NewData3D(
 
 	StructureNode scan = StructureNode(imf_);
 	data3D_.append(scan);
-	pos = (int32_t) data3D_.childCount() - 1;
+	pos = data3D_.childCount() - 1;
 
 	scan.set("guid", StringNode(imf_, data3DHeader.guid));	//required
 
@@ -1971,13 +1965,7 @@ int32_t	WriterImpl :: NewData3D(
 	/// Path names: "/data3D/0/pose/rotation/w", etc...
 	///             "/data3D/0/pose/translation/x", etc...
 
-	if( (data3DHeader.pose.rotation.w != 1.) ||
-		(data3DHeader.pose.rotation.x != 0.) ||
-		(data3DHeader.pose.rotation.y != 0.) ||
-		(data3DHeader.pose.rotation.z != 0.) ||
-		(data3DHeader.pose.translation.x != 0.) ||
-		(data3DHeader.pose.translation.y != 0.) ||
-		(data3DHeader.pose.translation.z != 0.) )
+	if(data3DHeader.pose != RigidBodyTransform{})
 	{
 		StructureNode pose = StructureNode(imf_);
 		scan.set("pose", pose);
@@ -2306,7 +2294,7 @@ int32_t	WriterImpl :: NewData3D(
 };
 
 CompressedVectorWriter	WriterImpl :: SetUpData3DPointsData(
-	int32_t		dataIndex,
+	int64_t		dataIndex,
 	size_t		count,
 	const Data3DPointsData& buffers
 	)
@@ -2410,8 +2398,8 @@ CompressedVectorWriter	WriterImpl :: SetUpData3DPointsData(
 };
 //! This funtion writes out the group data
 bool	WriterImpl :: WriteData3DGroupsData(
-						int32_t		dataIndex,			//!< data block index given by the NewData3D
-						int32_t		groupCount,			//!< size of each of the buffers given
+						int64_t		dataIndex,			//!< data block index given by the NewData3D
+						int64_t		groupCount,			//!< size of each of the buffers given
 						int64_t*	idElementValue,		//!< index for this group
 						int64_t*	startPointIndex,	//!< Starting index in to the "points" data vector for the groups
 						int64_t*	pointCount			//!< size of each of the groups given

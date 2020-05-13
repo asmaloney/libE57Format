@@ -194,8 +194,8 @@ struct E57Root {
     uint32_t		versionMinor {0};		//!< Minor version number, should be 0
 	ustring			e57LibraryVersion;	//!< The version identifier for the E57 file format library that wrote the file.
 	e57::DateTime	creationDateTime;	//!< Date/time that the file was created
-    int32_t			data3DSize {0};			//!< Size of the Data3D vector for storing 3D imaging data
-    int32_t			images2DSize {0};		//!< Size of the A heterogeneous Vector of Images2D Structures for storing 2D images from a camera or similar device.
+    int64_t			data3DSize {0};			//!< Size of the Data3D vector for storing 3D imaging data
+    int64_t			images2DSize {0};		//!< Size of the A heterogeneous Vector of Images2D Structures for storing 2D images from a camera or similar device.
 	ustring			coordinateMetadata;	//!< Information describing the Coordinate Reference System to be used for the file
 };
 
@@ -560,11 +560,11 @@ public:
 //	Camera Image 2D picture data
 //
 //! @brief This function returns the total number of Picture Blocks
-	int32_t		GetImage2DCount() const;	//!< @return Returns the number of Image2D blocks
+	int64_t		GetImage2DCount() const;	//!< @return Returns the number of Image2D blocks
 
 //! @brief This function returns the image2D header and positions the cursor
 	bool		ReadImage2D( 
-						int32_t		imageIndex,		//!< This in the index into the image2D vector
+						int64_t		imageIndex,		//!< This in the index into the image2D vector
 						Image2D &	image2DHeader	//!< pointer to the Image2D structure to receive the picture information
 						) const;					//!< @return Returns true if sucessful
 
@@ -591,7 +591,7 @@ enum Image2DProjection {
 </PRE></tt>
 */
 	bool		GetImage2DSizes(
-						int32_t					imageIndex,		//!< This in the index into the image2D vector
+						int64_t					imageIndex,		//!< This in the index into the image2D vector
 						e57::Image2DProjection&	imageProjection,//!< identifies the projection in the image2D.
 						e57::Image2DType &		imageType,		//!< identifies the image format of the projection.
 						int64_t &				imageWidth,		//!< The image width (in pixels).
@@ -603,7 +603,7 @@ enum Image2DProjection {
 
 //! @brief This function reads the block
 	int64_t		ReadImage2DData(
-						int32_t					imageIndex,		//!< picture block index
+						int64_t					imageIndex,		//!< picture block index
 						e57::Image2DProjection	imageProjection,//!< identifies the projection desired.
 						e57::Image2DType		imageType,		//!< identifies the image format desired.
 						void *					pBuffer,		//!< pointer the raw image buffer
@@ -616,17 +616,17 @@ enum Image2DProjection {
 //	Scanner 3d data
 //
 //! @brief This function returns the total number of Data3D Blocks
-	int32_t		GetData3DCount() const; //!< @return Returns number of Data3D blocks.
+	int64_t		GetData3DCount() const; //!< @return Returns number of Data3D blocks.
 
 //! @brief This function returns the Data3D header and positions the cursor
 	bool		ReadData3D( 
-						int32_t		dataIndex,	//!< This in the index into the images3D vector
+						int64_t		dataIndex,	//!< This in the index into the images3D vector
 						Data3D &	data3DHeader //!< pointer to the Data3D structure to receive the image information
 						) const;	//!< @return Returns true if sucessful
 
 //! @brief This function returns the size of the point data
 	bool		GetData3DSizes(
-						int32_t		dataIndex,	//!< This in the index into the images3D vector
+						int64_t		dataIndex,	//!< This in the index into the images3D vector
 						int64_t &	rowMax,		//!< This is the maximum row size
 						int64_t &	columnMax,	//!< This is the maximum column size
 						int64_t &	pointsSize,	//!< This is the total number of point records
@@ -637,8 +637,8 @@ enum Image2DProjection {
 
 //! @brief This funtion writes out the group data.
 	bool		ReadData3DGroupsData(
-						int32_t		dataIndex,			//!< data block index given by the NewData3D
-						int32_t		groupCount,			//!< size of each of the buffers given
+						int64_t		dataIndex,			//!< data block index given by the NewData3D
+						int64_t		groupCount,			//!< size of each of the buffers given
 						int64_t*	idElementValue,		//!< index for this group
 						int64_t*	startPointIndex,	//!< Starting index in to the "points" data vector for the groups
 						int64_t*	pointCount			//!< size of the groups given
@@ -649,7 +649,7 @@ enum Image2DProjection {
 Call the CompressedVectorReader::read() until all data is read.
 */
 	CompressedVectorReader	SetUpData3DPointsData(
-						int32_t		dataIndex,			//!< data block index given by the NewData3D
+						int64_t		dataIndex,			//!< data block index given by the NewData3D
 						size_t		pointCount,			//!< size of each element buffer.
                         const Data3DPointsData& buffers //!< pointers to user-provided buffers
 						) const;					//!< @return Return true if sucessful, false otherwise
@@ -705,13 +705,13 @@ public:
 
 //! @brief This function sets up the image2D header and positions the cursor
 //* @details The user needs to config a Image2D structure with all the camera information before making this call. */
-	int32_t		NewImage2D( 
+	int64_t		NewImage2D(
 						Image2D &	image2DHeader	//!< pointer to the Image2D structure to receive the picture information
 						) const;						//!< @return Returns the image2D index
 
 //! @brief This function writes the image block of data
 	int64_t		WriteImage2DData(
-						int32_t					imageIndex,	//!< picture block index given by the NewImage2D
+						int64_t					imageIndex,	//!< picture block index given by the NewImage2D
 						e57::Image2DType		imageType,		//!< identifies the image format desired.
 						e57::Image2DProjection	imageProjection,//!< identifies the projection desired.
 						void *					pBuffer,	//!< pointer the buffer
@@ -722,14 +722,14 @@ public:
 //! @brief This function sets up the Data3D header and positions the cursor for the binary data
 //* @details The user needs to config a Data3D structure with all the scanning information before making this call. */
 
-	int32_t		NewData3D( 
+	int64_t		NewData3D(
 						Data3D &	data3DHeader,	//!< pointer to the Data3D structure to receive the image information
 						bool		(*pointExtension)(ImageFile	imf, StructureNode proto) = nullptr
 						) const;							//!< @return Returns the index of the new scan's data3D block.
 
 //! @brief This function writes out blocks of point data
 	CompressedVectorWriter	SetUpData3DPointsData(
-						int32_t		dataIndex,			//!< data block index given by the NewData3D
+						int64_t		dataIndex,			//!< data block index given by the NewData3D
 						size_t		pointCount,			//!< size of each of the buffers given
 						const Data3DPointsData& buffers //!< pointers to user-provided buffers
 						) const ;		//!< @return Return true if sucessful, false otherwise
@@ -737,8 +737,8 @@ public:
 
 //! @brief This funtion writes out the group data
 	bool		WriteData3DGroupsData(
-						int32_t		dataIndex,			//!< data block index given by the NewData3D
-						int32_t		groupCount,			//!< size of each of the buffers given
+						int64_t		dataIndex,			//!< data block index given by the NewData3D
+						int64_t		groupCount,			//!< size of each of the buffers given
 						int64_t*	idElementValue,		//!< index for this group
 						int64_t*	startPointIndex,	//!< Starting index in to the "points" data vector for the groups
 						int64_t*	pointCount			//!< size of the groups given

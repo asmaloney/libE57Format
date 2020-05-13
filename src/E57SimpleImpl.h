@@ -112,17 +112,17 @@ virtual bool		GetE57Root(
 //	Camera Image picture data
 //
 //! This function returns the total number of Picture Blocks
-virtual	int32_t		GetImage2DCount( void);
+virtual	int64_t		GetImage2DCount( void);
 
 //! This function returns the Image2Ds header and positions the cursor
 virtual bool		ReadImage2D( 
-						int32_t				imageIndex,		//!< This in the index into the Image2Ds vector
+						int64_t				imageIndex,		//!< This in the index into the Image2Ds vector
 						Image2D &			Image2DHeader	//!< pointer to the Image2D structure to receive the picture information
 						);						//!< /return Returns true if sucessful
 
 //! This function returns the size of the image data
 virtual bool		GetImage2DSizes(
-						int32_t					imageIndex,		//!< This in the index into the image2D vector
+						int64_t					imageIndex,		//!< This in the index into the image2D vector
 						e57::Image2DProjection&	imageProjection,//!< identifies the projection desired.
 						e57::Image2DType &		imageType,		//!< identifies the image format desired.
 						int64_t &				imageWidth,		//!< The image width (in pixels).
@@ -134,7 +134,7 @@ virtual bool		GetImage2DSizes(
 
 //! This function reads the block
 virtual	int64_t		ReadImage2DData(
-						int32_t					imageIndex,		//!< picture block index
+						int64_t					imageIndex,		//!< picture block index
 						e57::Image2DProjection	imageProjection,//!< identifies the projection desired.
 						e57::Image2DType		imageType,		//!< identifies the image format desired.
 						void *					pBuffer,		//!< pointer the buffer
@@ -165,17 +165,17 @@ virtual int64_t		ReadImage2DNode(
 //	Scanner Image 3d data
 //
 //! This function returns the total number of Image Blocks
-virtual	int32_t		GetData3DCount( void);
+virtual	int64_t		GetData3DCount( void);
 
 //! This function returns the Data3D header and positions the cursor
 virtual bool		ReadData3D( 
-						int32_t		dataIndex,	//!< This in the index into the images3D vector
+						int64_t		dataIndex,	//!< This in the index into the images3D vector
 						Data3D &	data3DHeader //!< pointer to the Data3D structure to receive the image information
 						);	//!< /return Returns true if sucessful
 
 //! This function returns the size of the point data
 virtual	bool		GetData3DSizes(
-						int32_t		dataIndex,	//!< This in the index into the images3D vector
+						int64_t		dataIndex,	//!< This in the index into the images3D vector
 						int64_t &	rowMax,		//!< This is the maximum row size
 						int64_t &	columnMax,	//!< This is the maximum column size
 						int64_t &	pointsSize,	//!< This is the total number of point records
@@ -186,8 +186,8 @@ virtual	bool		GetData3DSizes(
 
 //! This funtion writes out the group data
 virtual bool		ReadData3DGroupsData(
-						int32_t		dataIndex,			//!< data block index given by the NewData3D
-						int32_t		groupCount,			//!< size of each of the buffers given
+						int64_t		dataIndex,			//!< data block index given by the NewData3D
+						int64_t		groupCount,			//!< size of each of the buffers given
 						int64_t*	idElementValue,		//!< index for this group
 						int64_t*	startPointIndex,	//!< Starting index in to the "points" data vector for the groups
 						int64_t*	pointCount			//!< size of the groups given
@@ -199,7 +199,7 @@ Call the CompressedVectorReader::read() until all data is read.
 */
 
 virtual CompressedVectorReader	SetUpData3DPointsData(
-						int32_t		dataIndex,			//!< data block index given by the NewData3D
+						int64_t		dataIndex,			//!< data block index given by the NewData3D
 						size_t		pointCount,			//!< size of each element buffer.
 						const Data3DPointsData& buffers //!< pointers to user-provided buffers
 						);
@@ -256,13 +256,13 @@ virtual	bool		Close();
 
 //! This function sets up the Image2Ds header and positions the cursor
 //* The user needs to config a Image2D structure with all the camera information before making this call. */
-virtual int32_t		NewImage2D( 
+virtual int64_t		NewImage2D(
 						Image2D &	image2DHeader	//!< pointer to the Image2D structure to receive the picture information
 						);						//!< /return Returns the Image2D index
 
 //! This function writes the block
 virtual	int64_t		WriteImage2DData(
-						int32_t					imageIndex,		//!< picture block index given by the NewImage2D
+						int64_t					imageIndex,		//!< picture block index given by the NewImage2D
 						e57::Image2DType		imageType,		//!< identifies the image format desired.
 						e57::Image2DProjection	imageProjection,//!< identifies the projection desired.
 						void *					pBuffer,		//!< pointer the buffer
@@ -282,14 +282,14 @@ virtual int64_t		WriteImage2DNode(
 //! This function sets up the Data3D header and positions the cursor for the binary data
 //* The user needs to config a Data3D structure with all the scanning information before making this call. */
 
-virtual int32_t		NewData3D( 
+virtual int64_t		NewData3D(
 						Data3D &	data3DHeader,	//!< pointer to the Data3D structure to receive the image information
 						bool		(*pointExtension)(ImageFile	imf,StructureNode proto)	//!< function pointer to add point data extension
 						);							//!< /return Returns the index of the new scan's data3D block.
 
 //! This function writes out blocks of point data
 virtual CompressedVectorWriter	SetUpData3DPointsData(
-						int32_t		dataIndex,			//!< data block index given by the NewData3D
+						int64_t		dataIndex,			//!< data block index given by the NewData3D
 						size_t		pointCount,			//!< size of each of the buffers given
 						const Data3DPointsData& buffers //!< pointers to user-provided buffers
 						);
@@ -297,8 +297,8 @@ virtual CompressedVectorWriter	SetUpData3DPointsData(
 
 //! This funtion writes out the group data
 virtual bool		WriteData3DGroupsData(
-						int32_t		dataIndex,			//!< data block index given by the NewData3D
-						int32_t		groupCount,			//!< size of each of the buffers given
+						int64_t		dataIndex,			//!< data block index given by the NewData3D
+						int64_t		groupCount,			//!< size of each of the buffers given
 						int64_t*	idElementValue,		//!< index for this group
 						int64_t*	startPointIndex,	//!< Starting index in to the "points" data vector for the groups
 						int64_t*	pointCount			//!< size of the groups given

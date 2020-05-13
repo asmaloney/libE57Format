@@ -72,6 +72,15 @@ struct Translation {
     double		x {0.};	//!< The X coordinate of the translation (in meters)
     double		y {0.};	//!< The Y coordinate of the translation (in meters)
     double		z {0.};	//!< The Z coordinate of the translation (in meters)
+
+    bool operator==(const Translation& rhs) const
+    {
+        return (x == rhs.x) && (y == rhs.y) && (z == rhs.z);
+    }
+    bool operator!=(const Translation& rhs) const
+    {
+      return !operator==(rhs);
+    }
 };
 ////////////////////////////////////////////////////////////////////
 //
@@ -80,10 +89,19 @@ struct Translation {
 //! @brief The e57::Quaternion is a quaternion which represents a rigid body rotation.
 
 struct Quaternion {
-    double		w {1.};	//!< The real part of the quaternion. Shall be nonnegative
+    double		w {0.};	//!< The real part of the quaternion. Shall be nonnegative
     double		x {0.};	//!< The i coefficient of the quaternion
     double		y {0.};	//!< The j coefficient of the quaternion
     double		z {0.};	//!< The k coefficient of the quaternion
+
+    bool operator==(const Quaternion& rhs) const
+    {
+        return (w == rhs.w) && (x == rhs.x) && (y == rhs.y) && (z == rhs.z);
+    }
+    bool operator!=(const Quaternion& rhs) const
+    {
+      return !operator==(rhs);
+    }
 };
 
 ////////////////////////////////////////////////////////////////////
@@ -95,6 +113,15 @@ struct Quaternion {
 struct RigidBodyTransform {
 	e57::Quaternion		rotation;		//!< A unit quaternion representing the rotation, R, of the transform
 	e57::Translation	translation;	//!< The translation point vector, t, of the transform
+
+    bool operator==(const RigidBodyTransform& rhs) const
+    {
+        return (rotation == rhs.rotation) && (translation == rhs.translation);
+    }
+    bool operator!=(const RigidBodyTransform& rhs) const
+    {
+      return !operator==(rhs);
+    }
 };
 
 ////////////////////////////////////////////////////////////////////
@@ -110,6 +137,16 @@ struct CartesianBounds {
     double		yMaximum {E57_DOUBLE_MAX};	//!< The maximum extent of the bounding box in the Y direction
     double		zMinimum {-E57_DOUBLE_MAX};	//!< The minimum extent of the bounding box in the Z direction
     double		zMaximum {E57_DOUBLE_MAX};	//!< The maximum extent of the bounding box in the Z direction
+
+    bool operator==(const CartesianBounds& rhs) const
+    {
+       return (xMinimum == rhs.xMinimum) && (xMaximum == rhs.xMaximum) && (yMinimum == rhs.yMinimum)
+            && (yMaximum == rhs.yMaximum) && (zMinimum == rhs.zMinimum) && (zMaximum == rhs.zMaximum);
+    }
+    bool operator!=(const CartesianBounds& rhs) const
+    {
+      return !operator==(rhs);
+    }
 };
 
 ////////////////////////////////////////////////////////////////////
@@ -165,6 +202,17 @@ struct ColorLimits {
     double		colorGreenMaximum {0.};		//!< The maximum producible green color value. Unit is unspecified.
     double		colorBlueMinimum {0.};		//!< The minimum producible blue color value. Unit is unspecified.
     double		colorBlueMaximum {0.};		//!< The maximum producible blue color value. Unit is unspecified.
+
+    bool operator==(const ColorLimits& rhs) const
+    {
+       return (colorRedMinimum == rhs.colorRedMinimum) && (colorRedMaximum == rhs.colorRedMaximum)
+        && (colorGreenMinimum == rhs.colorGreenMinimum) && (colorGreenMaximum == rhs.colorGreenMaximum)
+        && (colorBlueMinimum == rhs.colorBlueMinimum) && (colorBlueMaximum == rhs.colorBlueMaximum);
+    }
+    bool operator!=(const ColorLimits& rhs) const
+    {
+      return !operator==(rhs);
+    }
 };
 ////////////////////////////////////////////////////////////////////
 //
@@ -178,6 +226,15 @@ struct ColorLimits {
 struct DateTime {
     double		dateTimeValue {0.};		//!< The time, in seconds, since GPS time was zero. This time specification may include fractions of a second.
     int32_t		isAtomicClockReferenced {0};	//!< This element should be present, and its value set to 1 if, and only if, the time stored in the dateTimeValue element is obtained from an atomic clock time source. Shall be either 0 or 1.
+
+    bool operator==(const DateTime& rhs) const
+    {
+        return (dateTimeValue == rhs.dateTimeValue) && (isAtomicClockReferenced == rhs.isAtomicClockReferenced);
+    }
+    bool operator!=(const DateTime& rhs) const
+    {
+      return !operator==(rhs);
+    }
 };
 
 ////////////////////////////////////////////////////////////////////
@@ -453,6 +510,18 @@ struct SphericalRepresentation
     int32_t			imageHeight {0};	//!< The image height (in pixels). Shall be positive
     double			pixelWidth {0.};		//!< The width of a pixel in the image (in radians). Shall be positive
     double			pixelHeight {0.};	//!< The height of a pixel in the image (in radians). Shall be positive.
+
+    bool operator==(const SphericalRepresentation& rhs) const
+    {
+        return (jpegImageSize == rhs.jpegImageSize) && (pngImageSize == rhs.pngImageSize) &&
+            (imageMaskSize == rhs.imageMaskSize) && (imageWidth == rhs.imageWidth) &&
+            (imageHeight == rhs.imageHeight) && (pixelWidth == rhs.pixelWidth) &&
+            (pixelHeight == rhs.pixelHeight);
+    }
+    bool operator!=(const SphericalRepresentation& rhs) const
+    {
+      return !operator==(rhs);
+    }
 };
 
 ////////////////////////////////////////////////////////////////////

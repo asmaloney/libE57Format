@@ -81,6 +81,8 @@ struct Translation {
     {
       return !operator==(rhs);
     }
+
+    static Translation identity() { return {}; }
 };
 ////////////////////////////////////////////////////////////////////
 //
@@ -102,6 +104,8 @@ struct Quaternion {
     {
       return !operator==(rhs);
     }
+
+    static Quaternion identity() { return {1., 0., 0., 0.}; }
 };
 
 ////////////////////////////////////////////////////////////////////
@@ -122,6 +126,8 @@ struct RigidBodyTransform {
     {
       return !operator==(rhs);
     }
+
+    static RigidBodyTransform identity() { return {e57::Quaternion::identity(),  e57::Translation::identity()}; }
 };
 
 ////////////////////////////////////////////////////////////////////

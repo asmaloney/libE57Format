@@ -697,7 +697,7 @@ void E57XmlParser::endElement( const XMLCh *const uri, const XMLCh *const localN
                                   " uri=" + toUString( uri ) + " localName=" + toUString( localName ) +
                                   " qName=" + toUString( qName ) );
       }
-      imf_->root_ = dynamic_pointer_cast<StructureNodeImpl>( current_ni );
+      imf_->root_ = static_pointer_cast<StructureNodeImpl>( current_ni );
       return;
    }
 
@@ -717,7 +717,7 @@ void E57XmlParser::endElement( const XMLCh *const uri, const XMLCh *const localN
    {
       case E57_STRUCTURE:
       {
-         shared_ptr<StructureNodeImpl> struct_ni = dynamic_pointer_cast<StructureNodeImpl>( parent_ni );
+         shared_ptr<StructureNodeImpl> struct_ni = static_pointer_cast<StructureNodeImpl>( parent_ni );
 
          /// Add named child to structure
          struct_ni->set( toUString( qName ), current_ni );
@@ -725,7 +725,7 @@ void E57XmlParser::endElement( const XMLCh *const uri, const XMLCh *const localN
       break;
       case E57_VECTOR:
       {
-         shared_ptr<VectorNodeImpl> vector_ni = dynamic_pointer_cast<VectorNodeImpl>( parent_ni );
+         shared_ptr<VectorNodeImpl> vector_ni = static_pointer_cast<VectorNodeImpl>( parent_ni );
 
          /// Add unnamed child to vector
          vector_ni->append( current_ni );
@@ -733,7 +733,7 @@ void E57XmlParser::endElement( const XMLCh *const uri, const XMLCh *const localN
       break;
       case E57_COMPRESSED_VECTOR:
       {
-         shared_ptr<CompressedVectorNodeImpl> cv_ni = dynamic_pointer_cast<CompressedVectorNodeImpl>( parent_ni );
+         shared_ptr<CompressedVectorNodeImpl> cv_ni = static_pointer_cast<CompressedVectorNodeImpl>( parent_ni );
          ustring uQName = toUString( qName );
 
          /// n can be either prototype or codecs
@@ -748,7 +748,7 @@ void E57XmlParser::endElement( const XMLCh *const uri, const XMLCh *const localN
                                         " uri=" + toUString( uri ) + " localName=" + toUString( localName ) +
                                         " qName=" + toUString( qName ) );
             }
-            shared_ptr<VectorNodeImpl> vi = dynamic_pointer_cast<VectorNodeImpl>( current_ni );
+            shared_ptr<VectorNodeImpl> vi = static_pointer_cast<VectorNodeImpl>( current_ni );
 
             /// Check VectorNode is hetero
             if ( !vi->allowHeteroChildren() )

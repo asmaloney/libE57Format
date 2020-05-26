@@ -2472,13 +2472,11 @@ StructureNode::operator Node()
 */
 StructureNode::StructureNode( const Node &n )
 {
-   /// Downcast from SharedNodeImplPtr to shared_ptr<StructureNodeImpl>
-   shared_ptr<StructureNodeImpl> ni( dynamic_pointer_cast<StructureNodeImpl>( n.impl() ) );
-   if ( !ni )
+   if ( n.type() != E57_STRUCTURE )
       throw E57_EXCEPTION2( E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString( n.type() ) );
 
    /// Set our shared_ptr to the downcast shared_ptr
-   impl_ = ni;
+   impl_ = static_pointer_cast<StructureNodeImpl>( n.impl() );
 }
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't
@@ -2793,13 +2791,11 @@ VectorNode::operator Node()
 */
 VectorNode::VectorNode( const Node &n )
 {
-   /// Downcast from SharedNodeImplPtr to shared_ptr<VectorNodeImpl>
-   shared_ptr<VectorNodeImpl> ni( dynamic_pointer_cast<VectorNodeImpl>( n.impl() ) );
-   if ( !ni )
+   if ( n.type() != E57_VECTOR )
       throw E57_EXCEPTION2( E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString( n.type() ) );
 
    /// Set our shared_ptr to the downcast shared_ptr
-   impl_ = ni;
+   impl_ = static_pointer_cast<VectorNodeImpl>( n.impl() );
 }
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't
@@ -4040,13 +4036,11 @@ Node()
 */
 CompressedVectorNode::CompressedVectorNode( const Node &n )
 {
-   /// Downcast from SharedNodeImplPtr to shared_ptr<CompressedVectorNodeImpl>
-   shared_ptr<CompressedVectorNodeImpl> ni( dynamic_pointer_cast<CompressedVectorNodeImpl>( n.impl() ) );
-   if ( !ni )
+   if ( n.type() != E57_COMPRESSED_VECTOR )
       throw E57_EXCEPTION2( E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString( n.type() ) );
 
    /// Set our shared_ptr to the downcast shared_ptr
-   impl_ = ni;
+   impl_ = static_pointer_cast<CompressedVectorNodeImpl>( n.impl() );
 }
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't
@@ -4348,13 +4342,11 @@ automatically).
 */
 IntegerNode::IntegerNode( const Node &n )
 {
-   /// Downcast from SharedNodeImplPtr to shared_ptr<IntegerNodeImpl>
-   shared_ptr<IntegerNodeImpl> ni( dynamic_pointer_cast<IntegerNodeImpl>( n.impl() ) );
-   if ( !ni )
+   if ( n.type() != E57_INTEGER )
       throw E57_EXCEPTION2( E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString( n.type() ) );
 
    /// Set our shared_ptr to the downcast shared_ptr
-   impl_ = ni;
+   impl_ = static_pointer_cast<IntegerNodeImpl>( n.impl() );
 }
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't
@@ -4707,13 +4699,11 @@ Node()
 */
 ScaledIntegerNode::ScaledIntegerNode( const Node &n )
 {
-   /// Downcast from SharedNodeImplPtr to shared_ptr<ScaledIntegerNodeImpl>
-   shared_ptr<ScaledIntegerNodeImpl> ni( dynamic_pointer_cast<ScaledIntegerNodeImpl>( n.impl() ) );
-   if ( !ni )
+   if ( n.type() != E57_SCALED_INTEGER )
       throw E57_EXCEPTION2( E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString( n.type() ) );
 
    /// Set our shared_ptr to the downcast shared_ptr
-   impl_ = ni;
+   impl_ = static_pointer_cast<ScaledIntegerNodeImpl>( n.impl() );
 }
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't
@@ -4974,13 +4964,11 @@ automatically).
 */
 FloatNode::FloatNode( const Node &n )
 {
-   /// Downcast from SharedNodeImplPtr to shared_ptr<FloatNodeImpl>
-   shared_ptr<FloatNodeImpl> ni( dynamic_pointer_cast<FloatNodeImpl>( n.impl() ) );
-   if ( !ni )
+   if ( n.type() != E57_FLOAT )
       throw E57_EXCEPTION2( E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString( n.type() ) );
 
    /// Set our shared_ptr to the downcast shared_ptr
-   impl_ = ni;
+   impl_ = static_pointer_cast<FloatNodeImpl>( n.impl() );
 }
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't
@@ -5154,13 +5142,11 @@ automatically).
 */
 StringNode::StringNode( const Node &n )
 {
-   /// Downcast from SharedNodeImplPtr to shared_ptr<StringNodeImpl>
-   shared_ptr<StringNodeImpl> ni( dynamic_pointer_cast<StringNodeImpl>( n.impl() ) );
-   if ( !ni )
+   if ( n.type() != E57_STRING )
       throw E57_EXCEPTION2( E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString( n.type() ) );
 
    /// Set our shared_ptr to the downcast shared_ptr
-   impl_ = ni;
+   impl_ = static_pointer_cast<StringNodeImpl>( n.impl() );
 }
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't
@@ -5436,13 +5422,11 @@ automatically).
 */
 BlobNode::BlobNode( const Node &n )
 {
-   /// Downcast from SharedNodeImplPtr to shared_ptr<BlobNodeImpl>
-   shared_ptr<BlobNodeImpl> ni( dynamic_pointer_cast<BlobNodeImpl>( n.impl() ) );
-   if ( !ni )
+   if ( n.type() != E57_BLOB )
       throw E57_EXCEPTION2( E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString( n.type() ) );
 
    /// Set our shared_ptr to the downcast shared_ptr
-   impl_ = ni;
+   impl_ = static_pointer_cast<BlobNodeImpl>( n.impl() );
 }
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't

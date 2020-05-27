@@ -38,7 +38,12 @@ set( CMAKE_USER_MAKE_RULES_OVERRIDE_CXX ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cxx_fl
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/" )
 
 project( E57Format
-    VERSION 2.1.0
+	DESCRIPTION
+	    "E57Format provides the cpability to read and write E57 files"
+	LANGUAGES
+	    CXX
+	VERSION
+	    2.1.0
 )
 
 include( Tags )
@@ -53,8 +58,7 @@ if ( E57_BUILDING_SELF )
     if( CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT )
         string( REGEX REPLACE "/${PROJECT_NAME}" "" CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX} )
         set( T_ ${PROJECT_NAME} )
-        set( T_ ${T_}-${PROJECT_VERSION_MAJOR} )
-        set( T_ ${T_}.${PROJECT_VERSION_MINOR} )
+        set( T_ ${T_}-${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR} )
         set( T_ ${T_}-${${PROJECT_NAME}_BUILD_TAG} )
         set( CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}/${T_}
                 CACHE PATH
@@ -65,8 +69,6 @@ if ( E57_BUILDING_SELF )
 endif()
 
 find_package( Threads REQUIRED )
-
-# Xerces-c
 find_package( XercesC REQUIRED )
 
 # Target
@@ -76,23 +78,27 @@ add_library( E57Format STATIC
     extern/CRCpp/inc/CRC.h
 )
 
+set( revision_id "${PROJECT_NAME}-${PROJECT_VERSION}-${${PROJECT_NAME}_BUILD_TAG}" )
+message( STATUS "[E57] Revison ID: ${revision_id}" )
+
 add_subdirectory( src )
 
 # Target properties
-set_target_properties( E57Format PROPERTIES
-	CXX_STANDARD 11
-	CXX_STANDARD_REQUIRED YES
-	CXX_EXTENSIONS NO
-	DEBUG_POSTFIX "-d"
-	POSITION_INDEPENDENT_CODE ON
+set_target_properties( E57Format
+	PROPERTIES
+	    CXX_STANDARD 11
+		CXX_STANDARD_REQUIRED YES
+		CXX_EXTENSIONS NO
+		DEBUG_POSTFIX "-d"
+		POSITION_INDEPENDENT_CODE ON
 )
 
 # Target definitions
 target_compile_definitions( E57Format
     PRIVATE
-        -DCRCPP_USE_CPP11
-        -DCRCPP_BRANCHLESS
-        -DREVISION_ID="${PROJECT_NAME}-${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}-${${PROJECT_NAME}_BUILD_TAG}"
+        CRCPP_USE_CPP11
+        CRCPP_BRANCHLESS
+        REVISION_ID="${revision_id}"
 )
 
 if ( WIN32 )

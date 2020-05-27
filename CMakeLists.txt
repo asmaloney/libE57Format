@@ -43,6 +43,9 @@ project( E57Format
 
 include( Tags )
 
+# Expose option to choose between static and shared
+option(BUILD_SHARED_LIBS "Build shared library" OFF)
+
 # Check if we are building ourself or being included and use this to set some defaults
 if ( ${PROJECT_NAME} STREQUAL ${CMAKE_PROJECT_NAME} )
     set( E57_BUILDING_SELF ON )
@@ -70,11 +73,12 @@ find_package( Threads REQUIRED )
 find_package( XercesC REQUIRED )
 
 # Target
-add_library( E57Format STATIC
+add_library( E57Format
     include/E57Exception.h
     include/E57Format.h
+    include/E57Config.h
     extern/CRCpp/inc/CRC.h
-)
+ "include/E57Config.h")
 
 add_subdirectory( src )
 
@@ -89,7 +93,10 @@ set_target_properties( E57Format PROPERTIES
 
 # Target definitions
 target_compile_definitions( E57Format
+    INTERFACE
+        $<$<BOOL:BUILD_SHARED_LIBS>:E57_USE_DLL>
     PRIVATE
+        $<$<BOOL:BUILD_SHARED_LIBS>:E57_BUILD_DLL>
         -DCRCPP_USE_CPP11
         -DCRCPP_BRANCHLESS
         -DREVISION_ID="${PROJECT_NAME}-${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}-${${PROJECT_NAME}_BUILD_TAG}"
@@ -124,12 +131,14 @@ install(
     EXPORT
         E57Format-export
     ARCHIVE DESTINATION lib
+    RUNTIME DESTINATION bin
 )
 
 install(
     FILES
         include/E57Exception.h
         include/E57Format.h
+        include/E57Config.h
     DESTINATION include/E57Format
 )
 

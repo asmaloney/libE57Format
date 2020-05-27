@@ -67,16 +67,15 @@ endif()
 find_package( Threads REQUIRED )
 find_package( XercesC REQUIRED )
 
-# Target
-add_library( E57Format STATIC
-    include/E57Exception.h
-    include/E57Format.h
-    extern/CRCpp/inc/CRC.h
 )
 
 set( revision_id "${PROJECT_NAME}-${PROJECT_VERSION}-${${PROJECT_NAME}_BUILD_TAG}" )
 message( STATUS "[E57] Revison ID: ${revision_id}" )
 
+add_library( E57Format STATIC )
+
+add_subdirectory( extern/CRCpp )
+add_subdirectory( include )
 add_subdirectory( src )
 
 # Target properties
@@ -107,15 +106,6 @@ if ( WIN32 )
     endif()
 endif()
 
-# Target includes
-target_include_directories( E57Format
-    PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-        $<INSTALL_INTERFACE:include/E57Format>
-    PRIVATE
-        extern/CRCpp/inc   # CRCpp from here: https://github.com/d-bahr/CRCpp
-)
-
 # Target Libraries
 target_link_libraries( E57Format PRIVATE XercesC::XercesC )
 
@@ -126,13 +116,6 @@ install(
     EXPORT
         E57Format-export
     ARCHIVE DESTINATION lib
-)
-
-install(
-    FILES
-        include/E57Exception.h
-        include/E57Format.h
-    DESTINATION include/E57Format
 )
 
 # CMake package files

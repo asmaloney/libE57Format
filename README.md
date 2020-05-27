@@ -1,5 +1,5 @@
-libE57Format
-==
+# libE57Format
+
 [![Build Status](https://travis-ci.org/asmaloney/libE57Format.svg?branch=master)](https://travis-ci.org/asmaloney/libE57Format)
 
 A library to provide read & write support for the E57 file format.
@@ -12,9 +12,7 @@ This version also removes the dependency on [Boost](http://www.boost.org/) and r
 
 Many, many other changes were made prior to the first release of this fork. See the [CHANGELOG](CHANGELOG.md) and git history for details.
 
-
-Why Fork?
---
+## Why Fork?
 
 The E57RefImpl code hasn't been touched in years and I wanted to make changes to compile this library with macOS. Forking it gives me a bit more freedom to update the code and make changes as required.
 
@@ -24,11 +22,22 @@ I have also changed the main include file's name from `E57Foundation.h` to `E57F
 
 Versions of **libE57Format** start at 2.0.
 
-Tools
---
+## Tools
 
 Ryan Baumann has updated the `e57unpack` and `e57validate` tools to work with **libE57Format**. You can find them in the [e57tools](https://github.com/ryanfb/e57tools) repo.
 
-License
---
-[Boost Software License (BSL1.0)](https://opensource.org/licenses/BSL-1.0).
+## License
+
+This project as a whole is licensed under the [**BSL-1.0**](https://opensource.org/licenses/BSL-1.0) license - see the [LICENSE](LICENSE.md) file for details.
+
+Individual source files may contain the following tag instead of the full license text:
+
+	SPDX-License-Identifier: BSL-1.0
+
+Some CMake files are licensed under the **MIT** license - see the [LICENSE-MIT](LICENSE-MIT.txt) file for details.
+
+These files contain the following tag instead of the full license text:
+
+	SPDX-License-Identifier: MIT
+
+Using SPDX enables machine processing of license information based on the [SPDX License Identifiers](https://spdx.org/ids) and makes it easier for developers to see at a glance which license they are dealing with.

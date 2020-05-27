@@ -617,7 +617,7 @@ BitpackIntegerDecoder<RegisterT>::BitpackIntegerDecoder( bool isScaledInteger, u
                                                                // imf->parentFile()  --> ImageFile?
 
    bitsPerRecord_ = imf->bitsNeeded( minimum_, maximum_ );
-   destBitMask_ = ( bitsPerRecord_ == 64 ) ? ~0 : ( 1ULL << bitsPerRecord_ ) - 1;
+   destBitMask_ = ( bitsPerRecord_ == 64 ) ? ~0 : static_cast<RegisterT>( 1ULL << bitsPerRecord_ ) - 1;
 }
 
 template <typename RegisterT>

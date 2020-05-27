@@ -668,6 +668,7 @@ void CheckedFile::unlink()
 
    /// Try to remove the file, don't report a failure
    int result = std::remove( fileName_.c_str() ); //??? unicode support here
+   (void)result;                                  // this maybe unused
 #ifdef E57_MAX_VERBOSE
    if ( result < 0 )
    {

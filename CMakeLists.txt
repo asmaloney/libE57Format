@@ -67,8 +67,6 @@ endif()
 find_package( Threads REQUIRED )
 find_package( XercesC REQUIRED )
 
-)
-
 set( revision_id "${PROJECT_NAME}-${PROJECT_VERSION}-${${PROJECT_NAME}_BUILD_TAG}" )
 message( STATUS "[E57] Revison ID: ${revision_id}" )
 

@@ -100,11 +100,7 @@ bool VectorNodeImpl::isTypeEquivalent( NodeImplSharedPtr ni )
    if ( ni->type() != E57_VECTOR )
       return ( false );
 
-   /// Downcast to shared_ptr<VectorNodeImpl>
-   shared_ptr<VectorNodeImpl> ai( dynamic_pointer_cast<VectorNodeImpl>( ni ) );
-   if ( !ai ) // check if failed
-      throw E57_EXCEPTION2( E57_ERROR_INTERNAL,
-                            "this->elementName=" + this->elementName() + " elementName=" + ni->elementName() );
+   shared_ptr<VectorNodeImpl> ai( static_pointer_cast<VectorNodeImpl>( ni ) );
 
    /// allowHeteroChildren must match
    if ( allowHeteroChildren_ != ai->allowHeteroChildren_ )
@@ -282,11 +278,7 @@ bool CompressedVectorNodeImpl::isTypeEquivalent( NodeImplSharedPtr ni )
    if ( ni->type() != E57_COMPRESSED_VECTOR )
       return ( false );
 
-   /// Downcast to shared_ptr<CompressedVectorNodeImpl>
-   shared_ptr<CompressedVectorNodeImpl> cvi( dynamic_pointer_cast<CompressedVectorNodeImpl>( ni ) );
-   if ( !cvi ) // check if failed
-      throw E57_EXCEPTION2( E57_ERROR_INTERNAL,
-                            "this->elementName=" + this->elementName() + " elementName=" + ni->elementName() );
+   shared_ptr<CompressedVectorNodeImpl> cvi( static_pointer_cast<CompressedVectorNodeImpl>( ni ) );
 
    /// recordCount must match
    if ( recordCount_ != cvi->recordCount_ )
@@ -418,10 +410,7 @@ shared_ptr<CompressedVectorWriterImpl> CompressedVectorNodeImpl::writer( vector<
    NodeImplSharedPtr ni( shared_from_this() );
 
    /// Downcast pointer to right type
-   shared_ptr<CompressedVectorNodeImpl> cai( dynamic_pointer_cast<CompressedVectorNodeImpl>( ni ) );
-   if ( !cai ) // check if failed
-      throw E57_EXCEPTION2( E57_ERROR_INTERNAL,
-                            "this->elementName=" + this->elementName() + " elementName=" + ni->elementName() );
+   shared_ptr<CompressedVectorNodeImpl> cai( static_pointer_cast<CompressedVectorNodeImpl>( ni ) );
 
    /// Return a shared_ptr to new object
    shared_ptr<CompressedVectorWriterImpl> cvwi( new CompressedVectorWriterImpl( cai, sbufs ) );
@@ -464,10 +453,7 @@ shared_ptr<CompressedVectorReaderImpl> CompressedVectorNodeImpl::reader( vector<
 #endif
 
    /// Downcast pointer to right type
-   shared_ptr<CompressedVectorNodeImpl> cai( dynamic_pointer_cast<CompressedVectorNodeImpl>( ni ) );
-   if ( !cai ) // check if failed
-      throw E57_EXCEPTION2( E57_ERROR_INTERNAL,
-                            "this->elementName=" + this->elementName() + " elementName=" + ni->elementName() );
+   shared_ptr<CompressedVectorNodeImpl> cai( static_pointer_cast<CompressedVectorNodeImpl>( ni ) );
 #ifdef E57_MAX_VERBOSE
       // cout<<"constructing CAReader, cai:"<<endl;
       // cai->dump(4);
@@ -503,10 +489,7 @@ bool IntegerNodeImpl::isTypeEquivalent( NodeImplSharedPtr ni )
       return ( false );
 
    /// Downcast to shared_ptr<IntegerNodeImpl>
-   shared_ptr<IntegerNodeImpl> ii( dynamic_pointer_cast<IntegerNodeImpl>( ni ) );
-   if ( !ii ) // check if failed
-      throw E57_EXCEPTION2( E57_ERROR_INTERNAL,
-                            "this->elementName=" + this->elementName() + " elementName=" + ni->elementName() );
+   shared_ptr<IntegerNodeImpl> ii( static_pointer_cast<IntegerNodeImpl>( ni ) );
 
    /// minimum must match
    if ( minimum_ != ii->minimum_ )
@@ -643,10 +626,7 @@ bool ScaledIntegerNodeImpl::isTypeEquivalent( NodeImplSharedPtr ni )
       return ( false );
 
    /// Downcast to shared_ptr<ScaledIntegerNodeImpl>
-   shared_ptr<ScaledIntegerNodeImpl> ii( dynamic_pointer_cast<ScaledIntegerNodeImpl>( ni ) );
-   if ( !ii ) // check if failed
-      throw E57_EXCEPTION2( E57_ERROR_INTERNAL,
-                            "this->elementName=" + this->elementName() + " elementName=" + ni->elementName() );
+   shared_ptr<ScaledIntegerNodeImpl> ii( static_pointer_cast<ScaledIntegerNodeImpl>( ni ) );
 
    /// minimum must match
    if ( minimum_ != ii->minimum_ )
@@ -816,10 +796,7 @@ bool FloatNodeImpl::isTypeEquivalent( NodeImplSharedPtr ni )
       return ( false );
 
    /// Downcast to shared_ptr<FloatNodeImpl>
-   shared_ptr<FloatNodeImpl> fi( dynamic_pointer_cast<FloatNodeImpl>( ni ) );
-   if ( !fi ) // check if failed
-      throw E57_EXCEPTION2( E57_ERROR_INTERNAL,
-                            "this->elementName=" + this->elementName() + " elementName=" + ni->elementName() );
+   shared_ptr<FloatNodeImpl> fi( static_pointer_cast<FloatNodeImpl>( ni ) );
 
    /// precision must match
    if ( precision_ != fi->precision_ )
@@ -1118,10 +1095,7 @@ bool BlobNodeImpl::isTypeEquivalent( NodeImplSharedPtr ni )
       return ( false );
 
    /// Downcast to shared_ptr<BlobNodeImpl>
-   shared_ptr<BlobNodeImpl> bi( dynamic_pointer_cast<BlobNodeImpl>( ni ) );
-   if ( !bi ) // check if failed
-      throw E57_EXCEPTION2( E57_ERROR_INTERNAL,
-                            "this->elementName=" + this->elementName() + " elementName=" + ni->elementName() );
+   shared_ptr<BlobNodeImpl> bi( static_pointer_cast<BlobNodeImpl>( ni ) );
 
    /// blob lengths must match
    if ( blobLogicalLength_ != bi->blobLogicalLength_ )

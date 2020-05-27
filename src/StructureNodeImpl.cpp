@@ -53,11 +53,8 @@ bool StructureNodeImpl::isTypeEquivalent( NodeImplSharedPtr ni )
    if ( ni->type() != E57_STRUCTURE )
       return ( false );
 
-   /// Downcast to shared_ptr<StructureNodeImpl>, should succeed
-   shared_ptr<StructureNodeImpl> si( dynamic_pointer_cast<StructureNodeImpl>( ni ) );
-   if ( !si ) // check if failed
-      throw E57_EXCEPTION2( E57_ERROR_INTERNAL,
-                            "this->pathName=" + this->pathName() + " elementName=" + ni->elementName() );
+   /// Downcast to shared_ptr<StructureNodeImpl>
+   shared_ptr<StructureNodeImpl> si( static_pointer_cast<StructureNodeImpl>( ni ) );
 
    /// Same number of children?
    if ( childCount() != si->childCount() )

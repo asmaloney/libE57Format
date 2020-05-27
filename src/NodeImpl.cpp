@@ -209,10 +209,7 @@ bool NodeImpl::isTypeConstrained()
          case E57_VECTOR:
          {
             /// Downcast to shared_ptr<VectorNodeImpl>
-            shared_ptr<VectorNodeImpl> ai( dynamic_pointer_cast<VectorNodeImpl>( p ) );
-            if ( !ai ) // check if failed
-               throw E57_EXCEPTION2( E57_ERROR_INTERNAL,
-                                     "this->elementName=" + this->elementName() + " elementName=" + p->elementName() );
+            shared_ptr<VectorNodeImpl> ai( static_pointer_cast<VectorNodeImpl>( p ) );
 
             /// If homogenous vector and have more than one child, then can't
             /// change them
@@ -326,18 +323,15 @@ bool NodeImpl::findTerminalPosition( const NodeImplSharedPtr &target, uint64_t &
    {
       case E57_STRUCTURE:
       {
-         auto sni = dynamic_cast<StructureNodeImpl *>( this );
+         auto sni = static_cast<StructureNodeImpl *>( this );
 
          /// Recursively visit child nodes
-         if ( sni != nullptr )
+         int64_t childCount = sni->childCount();
+         for ( int64_t i = 0; i < childCount; ++i )
          {
-            int64_t childCount = sni->childCount();
-            for ( int64_t i = 0; i < childCount; ++i )
+            if ( sni->get( i )->findTerminalPosition( target, countFromLeft ) )
             {
-               if ( sni->get( i )->findTerminalPosition( target, countFromLeft ) )
-               {
-                  return true;
-               }
+               return true;
             }
          }
       }
@@ -345,18 +339,15 @@ bool NodeImpl::findTerminalPosition( const NodeImplSharedPtr &target, uint64_t &
 
       case E57_VECTOR:
       {
-         auto vni = dynamic_cast<VectorNodeImpl *>( this );
+         auto vni = static_cast<VectorNodeImpl *>( this );
 
          /// Recursively visit child nodes
-         if ( vni != nullptr )
+         int64_t childCount = vni->childCount();
+         for ( int64_t i = 0; i < childCount; ++i )
          {
-            int64_t childCount = vni->childCount();
-            for ( int64_t i = 0; i < childCount; ++i )
+            if ( vni->get( i )->findTerminalPosition( target, countFromLeft ) )
             {
-               if ( vni->get( i )->findTerminalPosition( target, countFromLeft ) )
-               {
-                  return true;
-               }
+               return true;
             }
          }
       }

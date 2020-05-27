@@ -77,9 +77,9 @@ namespace e57
 
    /// Create whitespace of given length, for indenting printouts in dump()
    /// functions
-   inline std::string space( int n )
+   inline std::string space( size_t n )
    {
-      return ( std::string( static_cast<size_t>( n ), ' ' ) );
+      return ( std::string( n, ' ' ) );
    }
 
    /// Convert number to decimal, hexadecimal, and binary strings  (Note hex

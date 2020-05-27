@@ -60,11 +60,7 @@ shared_ptr<Encoder> Encoder::EncoderFactory( unsigned bytestreamNumber, shared_p
       case E57_INTEGER:
       {
          shared_ptr<IntegerNodeImpl> ini =
-            dynamic_pointer_cast<IntegerNodeImpl>( encodeNode ); // downcast to correct type
-         if ( !ini )                                             // check if failed
-         {
-            throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "elementName=" + encodeNode->elementName() );
-         }
+            static_pointer_cast<IntegerNodeImpl>( encodeNode ); // downcast to correct type
 
          /// Get pointer to parent ImageFileImpl, to call bitsNeeded()
          ImageFileImplSharedPtr imf( encodeNode->destImageFile_ ); //??? should be function for this,
@@ -112,9 +108,7 @@ shared_ptr<Encoder> Encoder::EncoderFactory( unsigned bytestreamNumber, shared_p
       case E57_SCALED_INTEGER:
       {
          shared_ptr<ScaledIntegerNodeImpl> sini =
-            dynamic_pointer_cast<ScaledIntegerNodeImpl>( encodeNode ); // downcast to correct type
-         if ( !sini )                                                  // check if failed
-            throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "elementName=" + encodeNode->elementName() );
+            static_pointer_cast<ScaledIntegerNodeImpl>( encodeNode ); // downcast to correct type
 
          /// Get pointer to parent ImageFileImpl, to call bitsNeeded()
          ImageFileImplSharedPtr imf( encodeNode->destImageFile_ ); //??? should be function for this,
@@ -165,11 +159,7 @@ shared_ptr<Encoder> Encoder::EncoderFactory( unsigned bytestreamNumber, shared_p
 
       case E57_FLOAT:
       {
-         shared_ptr<FloatNodeImpl> fni = dynamic_pointer_cast<FloatNodeImpl>( encodeNode ); // downcast to correct type
-         if ( !fni )                                                                        // check if failed
-         {
-            throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "elementName=" + encodeNode->elementName() );
-         }
+         shared_ptr<FloatNodeImpl> fni = static_pointer_cast<FloatNodeImpl>( encodeNode ); // downcast to correct type
 
          //!!! need to pick smarter channel buffer sizes, here and elsewhere
          shared_ptr<Encoder> encoder(

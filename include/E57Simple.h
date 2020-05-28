@@ -29,7 +29,7 @@
 
 #pragma once
 
-//! @file E57Simple.h
+//! @file E57Simple.h Main header file for E57 Simple API
 
 #include "E57Format.h"
 
@@ -41,12 +41,7 @@ namespace e57 {
 class ReaderImpl;
 class WriterImpl;
 
-////////////////////////////////////////////////////////////////////
-//
-//	e57::Point
-//
-
-//! @brief The e57::Translation defines a rigid body translation in Cartesian coordinates.
+//! @brief Defines a rigid body translation in Cartesian coordinates.
 struct Translation {
     double		x {0.};	//!< The X coordinate of the translation (in meters)
     double		y {0.};	//!< The Y coordinate of the translation (in meters)
@@ -63,12 +58,8 @@ struct Translation {
 
     static Translation identity() { return {}; }
 };
-////////////////////////////////////////////////////////////////////
-//
-//	e57::Quaternion
-//
-//! @brief The e57::Quaternion is a quaternion which represents a rigid body rotation.
 
+//! @brief Represents a rigid body rotation.
 struct Quaternion {
     double		w {0.};	//!< The real part of the quaternion. Shall be nonnegative
     double		x {0.};	//!< The i coefficient of the quaternion
@@ -92,12 +83,8 @@ struct Quaternion {
     }
 };
 
-////////////////////////////////////////////////////////////////////
-//
-//	e57::RigidBodyTransform
-//
-//! @brief The e57::RigidBodyTransform is a structure that defines a rigid body transform in cartesian coordinates.
 
+//! @brief Defines a rigid body transform in cartesian coordinates.
 struct RigidBodyTransform {
 	e57::Quaternion		rotation;		//!< A unit quaternion representing the rotation, R, of the transform
 	e57::Translation	translation;	//!< The translation point vector, t, of the transform
@@ -114,12 +101,7 @@ struct RigidBodyTransform {
     static RigidBodyTransform identity() { return {e57::Quaternion::identity(),  e57::Translation::identity()}; }
 };
 
-////////////////////////////////////////////////////////////////////
-//
-//	e57::CartesianBounds
-//
-//! @brief The e57::CartesianBounds structure specifies an axis-aligned box in local cartesian coordinates.
-
+//! @brief Specifies an axis-aligned box in local cartesian coordinates.
 struct CartesianBounds {
     double		xMinimum {-E57_DOUBLE_MAX};	//!< The minimum extent of the bounding box in the X direction
     double		xMaximum {E57_DOUBLE_MAX};	//!< The maximum extent of the bounding box in the X direction
@@ -139,12 +121,7 @@ struct CartesianBounds {
     }
 };
 
-////////////////////////////////////////////////////////////////////
-//
-//	e57::SphericalBounds
-//
-//! @brief The e57::SphericalBounds structure stores the bounds of some data in spherical coordinates.
-
+//! @brief Stores the bounds of some data in spherical coordinates.
 struct SphericalBounds {
     SphericalBounds(); // constructor in the cpp to avoid exposing M_PI
 	double		rangeMinimum;		//!< The minimum extent of the bounding region in the r direction
@@ -155,12 +132,7 @@ struct SphericalBounds {
 	double		azimuthEnd;			//!< The ending azimuth angle defining the extent of the bounding region around the z axix
 };
 
-////////////////////////////////////////////////////////////////////
-//
-//	e57::IndexBounds
-//
-//! @brief The e57::IndexBounds structure stores the minimum and maximum of rowIndex, columnIndex, and returnIndex fields for a set of points.
-
+//! @brief Stores the minimum and maximum of rowIndex, columnIndex, and returnIndex fields for a set of points.
 struct IndexBounds {
     int64_t		rowMinimum {0};		//!< The minimum rowIndex value of any point represented by this IndexBounds object.
     int64_t		rowMaximum {0};		//!< The maximum rowIndex value of any point represented by this IndexBounds object.
@@ -169,22 +141,14 @@ struct IndexBounds {
     int64_t		returnMinimum {0};	//!< The minimum returnIndex value of any point represented by this IndexBounds object.
     int64_t		returnMaximum {0};	//!< The maximum returnIndex value of any point represented by this IndexBounds object.
 };
-////////////////////////////////////////////////////////////////////
-//
-//	e57::IntensityLimits
-//
-//! @brief The e57::IntensityLimits Structure specifies the limits for the value of signal intensity that a sensor is capable of producing
 
+//! @brief Specifies the limits for the value of signal intensity that a sensor is capable of producing
 struct IntensityLimits {
     double		intensityMinimum {0.};		//!< The minimum producible intensity value. Unit is unspecified.
     double		intensityMaximum {0.};		//!< The maximum producible intensity value. Unit is unspecified.
 };
-////////////////////////////////////////////////////////////////////
-//
-//	e57::ColorLimits
-//
-//! @brief The e57::ColorLimits Structure specifies the limits for the value of red, green, and blue color that a sensor is capable of producing.
 
+//! @brief Specifies the limits for the value of red, green, and blue color that a sensor is capable of producing.
 struct ColorLimits {
     double		colorRedMinimum {0.};		//!< The minimum producible red color value. Unit is unspecified.
     double		colorRedMaximum {0.};		//!< The maximum producible red color value. Unit is unspecified.
@@ -204,15 +168,10 @@ struct ColorLimits {
       return !operator==(rhs);
     }
 };
-////////////////////////////////////////////////////////////////////
-//
-//	e57::DateTime
-//
-//! @brief The e57::DateTime is a structure for encoding date and time. 
-/*! @details The date and time is encoded using a single
-	562 floating point number, stored as an E57 Float element which is based on the Global Positioning
-	563 System (GPS) time scale. */
 
+//! @brief Encodes date and time. 
+//! @details The date and time is encoded using a single floating point number, stored as an E57 Float element which is based on the Global Positioning
+//!	System (GPS) time scale.
 struct DateTime {
     double		dateTimeValue {0.};		//!< The time, in seconds, since GPS time was zero. This time specification may include fractions of a second.
     int32_t		isAtomicClockReferenced {0};	//!< This element should be present, and its value set to 1 if, and only if, the time stored in the dateTimeValue element is obtained from an atomic clock time source. Shall be either 0 or 1.
@@ -227,15 +186,9 @@ struct DateTime {
     }
 };
 
-////////////////////////////////////////////////////////////////////
-//
-//	e57::E57Root
-//
-
-//! @brief The e57::E57Root is a structure that stores the top-level information for the XML section of the file.
-
+//! @brief Stores the top-level information for the XML section of the file.
 struct E57Root {
-	ustring			formatName;			//!< Contains the string “ASTM E57 3D Image File”
+	ustring			formatName;			//!< Contains the string "ASTM E57 3D Image File"
 	ustring			guid;				//!< A globally unique identification string for the current version of the file
     uint32_t		versionMajor {1};		//!< Major version number, should be 1
     uint32_t		versionMinor {0};		//!< Minor version number, should be 0
@@ -246,12 +199,7 @@ struct E57Root {
 	ustring			coordinateMetadata;	//!< Information describing the Coordinate Reference System to be used for the file
 };
 
-////////////////////////////////////////////////////////////////////
-//
-//	e57::LineGroupRecord
-//
-//! @brief The e57::LineGroupRecord is a structure that stores information about a single group of points in a row or column
-
+//! @brief Stores information about a single group of points in a row or column
 struct LineGroupRecord {
     int64_t					idElementValue {0};		//!< The value of the identifying element of all members in this group. Shall be in the interval [0, 2^63).
     int64_t					startPointIndex {0};	//!< The record number of the first point in the continuous interval. Shall be in the interval [0, 2^63).
@@ -260,34 +208,20 @@ struct LineGroupRecord {
 	e57::SphericalBounds	sphericalBounds;	//!< The bounding region (in spherical coordinates) of all the points in the group (in the local coordinate system of the points).
 };
 
-////////////////////////////////////////////////////////////////////
-//
-//	e57::GroupingByLine
-//
-//! @brief The e57::GroupingByLine is a structure that stores a set of point groups organized by the rowIndex or columnIndex attribute of the PointRecord
-
+//! @brief Stores a set of point groups organized by the rowIndex or columnIndex attribute of the PointRecord
 struct GroupingByLine {
-	ustring		idElementName;		//!< The name of the PointRecord element that identifies which group the point is in. The value of this string must be “rowIndex” or “columnIndex”
+	ustring		idElementName;		//!< The name of the PointRecord element that identifies which group the point is in. The value of this string must be "rowIndex" or "columnIndex"
     int64_t		groupsSize {0};			//!< Size of the groups compressedVector of LineGroupRecord structures
     int64_t		pointCountSize {0};		//!< This is the size value for the e57::LineGroupRecord::pointCount.
 };
 
-////////////////////////////////////////////////////////////////////
-//
-//	e57::PointGroupingSchemes
-//
-//! @brief The e57::PointGroupingSchemes structure structure supports the division of points within an Data3D into logical groupings
-
+//! @brief Supports the division of points within an Data3D into logical groupings
 struct PointGroupingSchemes {
 	e57::GroupingByLine	groupingByLine;	//!< Grouping information by row or column index
 };
 
-////////////////////////////////////////////////////////////////////
-//
-//	e57::PointStandardizedFieldsAvailable
-//
-//! @brief The e57::PointStandardizedFieldsAvailable is a structure use to interrogate if standardized fields are available
 
+//! @brief Used to interrogate if standardized fields are available
 struct PointStandardizedFieldsAvailable {
     bool		cartesianXField {false};			//!< Indicates that the PointRecord cartesianX field is active
     bool		cartesianYField {false};			//!< Indicates that the PointRecord cartesianY field is active
@@ -336,49 +270,7 @@ struct PointStandardizedFieldsAvailable {
     bool        normalZ {false};                    //!< Indicates that the PointRecord nor:normalZ field is active
 };
 
-////////////////////////////////////////////////////////////////////
-//
-//	e57::PointRecord
-//
-//! @brief The e57::PointRecord is a pseudo structure that shows the possible information for an individual 3D imaging system point measurement.
-/*! @details This structure is not actually used but is here for completeness.  The size and type of each element of the PointRecord can be configure in E57.  This is the configuration used by the SimpleAPI.
-*/
-
-struct PointRecord {
-    double		cartesianX {};		//!< The X coordinate (in meters) of the point in Cartesian coordinates
-    double		cartesianY {};		//!< The Y coordinate (in meters) of the point in Cartesian coordinates
-    double		cartesianZ {};		//!< The Z coordinate (in meters) of the point in Cartesian coordinates
-    bool		cartesianInvalidState {};	//!< Indicates whether the Cartesian coordinate vector or its magnitude is meaningful. Value = 0 if the point is considered valid, 1 otherwise.  Shall be in the interval [0, 1].
-
-    double		sphericalRange {};	//!< The range (in meters) of points in spherical coordinates. Shall be non-negative
-    double		sphericalAzimuth {}; //!< Azimuth angle (in radians) of point in spherical coordinates
-    double		sphericalElevation {};	//!< Elevation angle (in radians) of point in spherical coordinates
-    bool		sphericalInvalidState {};  //!< Indicates whether the spherical coordinate vector or its range value are meaningful. Value = 0 if the point is considered valid, 1 otherwise. Shall be in the interval [0, 1].
-
-    uint32_t	rowIndex {};		//!< The row number of point (zero based). This is useful for data that is stored in a regular grid.Shall be in the interval [0, 2^31).
-    uint32_t	columnIndex {};	//!< The column number of point (zero based). This is useful for data that is stored in a regular grid. Shall be in the interval [0, 2^31)
-
-    uint8_t		returnIndex {};	//!< Only for multi-return sensors. The number of this return (zero based). That is, 0 is the first return, 1 is the second, and so on. Shall be in the interval [0, returnCount).
-    uint8_t		returnCount {};	//!< Only for multi-return sensors. The total number of returns for the pulse that this corresponds to. Shall be in the interval (0, 2^7).
-
-    double		timeStamp {};		//!< The time (in seconds) since the start time for the data, which is given by acquisitionStart in the parent Data3D Structure. Shall be non-negative
-    bool		isTimeStampInvalid {};	//!< Indicates whether the timeStamp element is meaningful. Value = 0 if the timestamp is considered valid, 1 otherwise. Shall be in the interval [0, 1].
-
-    double		intensity {};		//!< Point response intensity. Unit is unspecified
-    bool		isIntensityInvalid {};	//!< Indicates whether the intensity element is meaningful. Value = 0 if the intensity is considered valid, 1 otherwise. Shall be in the interval [0, 1].
-
-    uint16_t	colorRed {};		//!< Red color coefficient. Unit is unspecified.
-    uint16_t	colorGreen {};		//!< Green color coefficient. Unit is unspecified
-    uint16_t	colorBlue {};		//!< Blue color coefficient. Unit is unspecified
-    bool		isColorInvalid {};		//!< Indicates whether the colorRed, colorBlue, and colorGreen elements are meaningful. Value = 0 if the color is considered valid, 1 otherwise. Shall be in the interval [0, 1].
-};
-
-////////////////////////////////////////////////////////////////////
-//
-//	e57::Data3D
-//
-
-//! @brief The e57::Data3D is a structure that stores the top-level information for a single lidar scan
+//! @brief Stores the top-level information for a single lidar scan
 struct Data3D {
 	ustring			name;					//!< A user-defined name for the Data3D.
 	ustring			guid;					//!< A globally unique identification string for the current version of the Data3D object
@@ -412,6 +304,7 @@ struct Data3D {
     int64_t			pointsSize {0};				//!< Total size of the compressed vector of PointRecord structures referring to the binary data that actually stores the point data
 };
 
+//! @brief Stores pointers to user-provided buffers
 struct Data3DPointsData
 {
     float* cartesianX {nullptr}; //!< pointer to a buffer with the X coordinate (in meters) of the point in Cartesian coordinates
@@ -448,13 +341,7 @@ struct Data3DPointsData
     bool (*pointDataExtension)(ImageFile imf, StructureNode proto, std::vector<SourceDestBuffer>& destBuffers) {nullptr}; //!< callback for adding custom fields
 };
 
-////////////////////////////////////////////////////////////////////
-//
-//	e57::VisualReferenceRepresentation
-//
-
-//! @brief The e57::VisualReferenceRepresentation is a structure that stores an image that is to be used only as a visual reference.
-
+//! @brief Stores an image that is to be used only as a visual reference.
 struct VisualReferenceRepresentation
 {
     int64_t			jpegImageSize {0};	//!< Size of JPEG format image data in BlobNode.
@@ -464,13 +351,7 @@ struct VisualReferenceRepresentation
     int32_t			imageHeight {0};	//!< The image height (in pixels). Shall be positive
 };
 
-////////////////////////////////////////////////////////////////////
-//
-//	e57::PinholeRepresentation
-//
-
-//! @brief The e57::PinholeRepresentation is a structure that stores an image that is mapped from 3D using the pinhole camera projection model.
-
+//! @brief Stores an image that is mapped from 3D using the pinhole camera projection model.
 struct PinholeRepresentation
 {
     int64_t			jpegImageSize {0};	//!< Size of JPEG format image data in BlobNode.
@@ -484,13 +365,8 @@ struct PinholeRepresentation
     double			principalPointX {0.};//!< The X coordinate in the image of the principal point, (in pixels). The principal point is the intersection of the z axis of the camera coordinate frame with the image plane.
     double			principalPointY {0.};//!< The Y coordinate in the image of the principal point (in pixels).
 };
-////////////////////////////////////////////////////////////////////
-//
-//	e57::SphericalRepresentation
-//
 
-//! @brief The e57::SphericalRepresentation is a structure that stores an image that is mapped from 3D using a spherical projection model
-
+//! @brief Stores an image that is mapped from 3D using a spherical projection model
 struct SphericalRepresentation
 {
     int64_t			jpegImageSize {0};	//!< Size of JPEG format image data in BlobNode.
@@ -514,13 +390,7 @@ struct SphericalRepresentation
     }
 };
 
-////////////////////////////////////////////////////////////////////
-//
-//	e57::CylindricalRepresentation
-//
-
-//! @brief The e57::CylindricalRepresentation is a structure that stores an image that is mapped from 3D using a cylindrical projection model.
-
+//! @brief Stores an image that is mapped from 3D using a cylindrical projection model.
 struct CylindricalRepresentation
 {
     int64_t			jpegImageSize {0};	//!< Size of JPEG format image data in Blob.
@@ -534,12 +404,7 @@ struct CylindricalRepresentation
     double			principalPointY {0.};//!< The Y coordinate in the image of the principal point (in pixels). This is the intersection of the z = 0 plane with the image
 };
 
-////////////////////////////////////////////////////////////////////
-//
-//	e57::Image2D
-//
-
-//! @brief The e57::Image2D is a structure that stores an image from a camera
+//! @brief Stores an image from a camera
 struct Image2D {
 	ustring			name;					//!< A user-defined name for the Image2D.
 	ustring			guid;					//!< A globally unique identification string for the current version of the Image2D object
@@ -560,11 +425,7 @@ struct Image2D {
 	e57::CylindricalRepresentation		cylindricalRepresentation;		//!< Representation for an image using the cylindrical camera projection model
 };
 
-////////////////////////////////////////////////////////////////////
-//
-//	e57::Image2DType
-//
-//! @brief The e57::Image2DType identifies the format representation for the image data
+//! @brief Identifies the format representation for the image data
 enum Image2DType {
 	E57_NO_IMAGE = 0,		//!< No image data
     E57_JPEG_IMAGE = 1,		//!< JPEG format image data.
@@ -572,11 +433,7 @@ enum Image2DType {
 	E57_PNG_IMAGE_MASK = 3	//!< PNG format image mask.
 };
 
-////////////////////////////////////////////////////////////////////
-//
-//	e57::Image2DProjection
-//
-//! @brief The e57::Image2DProjection identifies the representation for the image data
+//! @brief Identifies the representation for the image data
 enum Image2DProjection {
 	E57_NO_PROJECTION = 0,	//!< No representation for the image data is present
     E57_VISUAL = 1,			//!< VisualReferenceRepresentation for the image data
@@ -586,18 +443,15 @@ enum Image2DProjection {
 };
 
 ////////////////////////////////////////////////////////////////////
-//
-//	e57::Reader
-//
 
-//! @brief This is the E57 Reader class
-
+//! @brief Used for reading of the E57 file with E57 Simple API
 class	Reader {
 public:
 
 //! @brief This function is the constructor for the reader class
+//! @param [in] filePath file path to E57 file
 				Reader(
-					const ustring & filePath		//!< file path string
+					const ustring & filePath
 					);
 //! @brief This function returns true if the file is open
 	bool		IsOpen() const;
@@ -605,224 +459,286 @@ public:
 //! @brief This function closes the file
 	bool		Close() const;
 
-////////////////////////////////////////////////////////////////////
-//
-//	File information
-//
-//! @brief This function returns the file header information
-	bool		GetE57Root(
-						E57Root & fileHeader	//!< This is the main header information
-					    ) const;	//!< @return Returns true if sucessful
 
-////////////////////////////////////////////////////////////////////
-//
-//	Camera Image 2D picture data
-//
+//! @name File information
+//!@{
+
+//! @brief This function returns the file header information
+//! @param [out] fileHeader is the main header information
+//! @return Returns true if sucessful
+	bool		GetE57Root(
+						E57Root & fileHeader
+					    ) const;	
+
+//!@}
+
+
+//! @name Image2D
+//!@{
+
 //! @brief This function returns the total number of Picture Blocks
-	int64_t		GetImage2DCount() const;	//!< @return Returns the number of Image2D blocks
+//! @return Returns the number of Image2D blocks
+	int64_t		GetImage2DCount() const;	
 
 //! @brief This function returns the image2D header and positions the cursor
+//! @param [in] imageIndex This in the index into the image2D vector
+//! @param [out] image2DHeader pointer to the Image2D structure to receive the picture information
+//! @return Returns true if sucessful
 	bool		ReadImage2D( 
-						int64_t		imageIndex,		//!< This in the index into the image2D vector
-						Image2D &	image2DHeader	//!< pointer to the Image2D structure to receive the picture information
-						) const;					//!< @return Returns true if sucessful
+						int64_t		imageIndex,		
+						Image2D &	image2DHeader
+						) const;					
 
 //! @brief This function returns the size of the image data
-/*! @details The e57::Image2DType identifies the format representation for the image data
-<tt><PRE>
-enum Image2DType {
-	E57_NO_IMAGE = 0,	//!< No image data
-	E57_JPEG_IMAGE = 1,	//!< JPEG format image data.
-	E57_PNG_IMAGE = 2,	//!< PNG format image data.
-	E57_PNG_IMAGE_MASK = 3	//!< PNG format image mask.
-};
-</PRE></tt>
-*/
-/*! The e57::Image2DProjection identifies the representation for the image data
-<tt><PRE>
-enum Image2DProjection {
-	E57_NO_PROJECTION = 0,	//!< No representation for the image data is present
-    E57_VISUAL = 1,		//!< VisualReferenceRepresentation for the image data
-    E57_PINHOLE = 2,	//!< PinholeRepresentation for the image data
-	E57_SPHERICAL = 3,	//!< SphericalRepresentation for the image data
-	E57_CYLINDRICAL = 4	//!< CylindricalRepresentation for the image data
-};
-</PRE></tt>
-*/
+//! @param [in] imageIndex This in the index into the image2D vector
+//! @param [out] imageProjection identifies the projection in the image2D.
+//! @param [out] imageType identifies the image format of the projection.
+//! @param [out] imageWidth The image width (in pixels).
+//! @param [out] imageHeight The image height (in pixels).
+//! @param [out] imageSize This is the total number of bytes for the image blob.
+//! @param [out] imageMaskType This is E57_PNG_IMAGE_MASK if "imageMask" is defined in the projection
+//! @param [out] imageVisualType This is image type of the VisualReferenceRepresentation if given.
+//! @return Returns true if sucessful
 	bool		GetImage2DSizes(
-						int64_t					imageIndex,		//!< This in the index into the image2D vector
-						e57::Image2DProjection&	imageProjection,//!< identifies the projection in the image2D.
-						e57::Image2DType &		imageType,		//!< identifies the image format of the projection.
-						int64_t &				imageWidth,		//!< The image width (in pixels).
-						int64_t &				imageHeight,	//!< The image height (in pixels).
-						int64_t &				imageSize,		//!< This is the total number of bytes for the image blob.
-						e57::Image2DType &		imageMaskType,	//!< This is E57_PNG_IMAGE_MASK if "imageMask" is defined in the projection
-						e57::Image2DType &		imageVisualType	//!< This is image type of the VisualReferenceRepresentation if given.
-						) const;								//!< @return Returns true if sucessful
+						int64_t					imageIndex,		
+						e57::Image2DProjection&	imageProjection,
+						e57::Image2DType &		imageType,		
+						int64_t &				imageWidth,		
+						int64_t &				imageHeight,	
+						int64_t &				imageSize,		
+						e57::Image2DType &		imageMaskType,	
+						e57::Image2DType &		imageVisualType	
+						) const;
 
-//! @brief This function reads the block
+//! @brief This function reads an image
+//! @param [in] imageIndex index of the image. Must be less than GetImage2DCount()
+//! @param [in] imageProjection identifies the projection desired.
+//! @param [in] imageType identifies the image format desired.
+//! @param [out] buffer pointer the raw image buffer
+//! @param [in] start position in the block to start reading
+//! @param [in] count size of desired chuck or buffer size
+//! @return Returns the number of bytes transferred.
 	int64_t		ReadImage2DData(
-						int64_t					imageIndex,		//!< picture block index
-						e57::Image2DProjection	imageProjection,//!< identifies the projection desired.
-						e57::Image2DType		imageType,		//!< identifies the image format desired.
-						void *					pBuffer,		//!< pointer the raw image buffer
-						int64_t					start,			//!< position in the block to start reading
-						int64_t					count			//!< size of desired chuck or buffer size
-						) const;								//!< @return Returns the number of bytes transferred.
+						int64_t					imageIndex,		
+						e57::Image2DProjection	imageProjection,
+						e57::Image2DType		imageType,		
+						void *					buffer,		
+						int64_t					start,			
+						int64_t					count			
+						) const;								
 
-////////////////////////////////////////////////////////////////////
-//
-//	Scanner 3d data
-//
+//!@}
+
+
+//! @name Data3D
+//!@{
+
 //! @brief This function returns the total number of Data3D Blocks
-	int64_t		GetData3DCount() const; //!< @return Returns number of Data3D blocks.
+//! @return Returns number of Data3D blocks.
+	int64_t		GetData3DCount() const; 
 
-//! @brief This function returns the Data3D header and positions the cursor
+//! @brief This function returns the Data3D header
+//! @param [in] dataIndex This in the index into the images3D vector. Must be less than GetData3DCount().
+//! @param [out] data3DHeader Data3D header
+//! @return Returns true if sucessful
 	bool		ReadData3D( 
-						int64_t		dataIndex,	//!< This in the index into the images3D vector
-						Data3D &	data3DHeader //!< pointer to the Data3D structure to receive the image information
-						) const;	//!< @return Returns true if sucessful
+						int64_t		dataIndex,
+						Data3D &	data3DHeader
+						) const;	
 
 //! @brief This function returns the size of the point data
+//! @param [in] dataIndex This in the index into the images3D vector. Must be less than GetData3DCount().
+//! @param [out] rowMax This is the maximum row size
+//! @param [out] columnMax This is the maximum column size
+//! @param [out] pointsSize This is the total number of point records
+//! @param [out] groupsSize This is the total number of group reocrds
+//! @param [out] countSize This is the maximum point count per group
+//! @param [out] columnIndex This indicates that the idElementName is "columnIndex"
+//! @return Return true if sucessful, false otherwise
 	bool		GetData3DSizes(
-						int64_t		dataIndex,	//!< This in the index into the images3D vector
-						int64_t &	rowMax,		//!< This is the maximum row size
-						int64_t &	columnMax,	//!< This is the maximum column size
-						int64_t &	pointsSize,	//!< This is the total number of point records
-						int64_t &	groupsSize,	//!< This is the total number of group reocrds
-						int64_t &	countSize,	//!< This is the maximum point count per group
-						bool &		bColumnIndex	//!< This indicates that the idElementName is "columnIndex"
-						) const;					//!< @return Return true if sucessful, false otherwise
+						int64_t		dataIndex,
+						int64_t &	rowMax,	
+						int64_t &	columnMax,
+						int64_t &	pointsSize,
+						int64_t &	groupsSize,
+						int64_t &	countSize,
+						bool &		columnIndex
+						) const;					
 
-//! @brief This funtion writes out the group data.
+//! @brief This funtion reads the group data into the provided buffers.
+//! @param [in] dataIndex This in the index into the images3D vector. Must be less than GetData3DCount().
+//! @param [in] groupCount size of each of the buffers given
+//! @param [out] idElementValue pointer to the buffer holding indices index for this group
+//! @param [out] startPointIndex pointer to the buffer holding Starting index in to the "points" data vector for the groups
+//! @param [out] pointCount pointer to the buffer holding size of the groups given
+//! @return Return true if sucessful, false otherwise
 	bool		ReadData3DGroupsData(
-						int64_t		dataIndex,			//!< data block index given by the NewData3D
-						int64_t		groupCount,			//!< size of each of the buffers given
-						int64_t*	idElementValue,		//!< index for this group
-						int64_t*	startPointIndex,	//!< Starting index in to the "points" data vector for the groups
-						int64_t*	pointCount			//!< size of the groups given
-						) const;						//!< @return Return true if sucessful, false otherwise
+						int64_t		dataIndex,		
+						int64_t		groupCount,		
+						int64_t*	idElementValue,	
+						int64_t*	startPointIndex,
+						int64_t*	pointCount		
+						) const;						
 
-//! @brief This function sets up the point data fields 
-/*! @details All the non-NULL buffers in the call below have number of elements = pointCount.
-Call the CompressedVectorReader::read() until all data is read.
-*/
+//! @brief Use this function to read the actual 3D data
+//! @details All the non-NULL buffers in buffers have number of elements = pointCount.
+//!          Call the CompressedVectorReader::read() until all data is read.
+//! @param [in] dataIndex data block index given by the NewData3D
+//! @param [in] pointCount size of each element buffer.
+//! @param [in] buffers pointers to user-provided buffers
+//! @return vector reader setup to read the selected data into the provided buffers
 	CompressedVectorReader	SetUpData3DPointsData(
-						int64_t		dataIndex,			//!< data block index given by the NewData3D
-						size_t		pointCount,			//!< size of each element buffer.
-                        const Data3DPointsData& buffers //!< pointers to user-provided buffers
-						) const;					//!< @return Return true if sucessful, false otherwise
+						int64_t		dataIndex,		
+						size_t		pointCount,		
+                        const Data3DPointsData& buffers
+						) const;					
 
-////////////////////////////////////////////////////////////////////
-//
-//	Raw File information
-//
-//! @brief This function returns the file raw E57Root Structure Node
-	StructureNode		GetRawE57Root();	//!< @return Returns the E57Root StructureNode
-//! @brief This function returns the raw Data3D Vector Node
-	VectorNode			GetRawData3D();		//!< @return Returns the raw Data3D VectorNode
-//! @brief This function returns the raw Image2D Vector Node
-	VectorNode			GetRawImages2D();	//!< @return Returns the raw Image2D VectorNode
-//! @brief This function returns the ram ImageFile Node which is need to add enhancements
-	ImageFile			GetRawIMF();		//!< /return Returns the raw ImageFile
-private:   //=================
-					Reader();                 // No default constructor is defined for Node
-protected: //=================
+//!@}
+
+
+//! @name Foundation API file information
+//!@{
+
+//! @brief Returns the file raw E57Root Structure Node
+	StructureNode		GetRawE57Root();
+
+//! @brief Returns the raw Data3D Vector Node
+	VectorNode			GetRawData3D();
+
+//! @brief Returns the raw Image2D Vector Node
+	VectorNode			GetRawImages2D();
+
+//! @brief Returns the ram ImageFile Node which is need to add enhancements
+	ImageFile			GetRawIMF();
+
+//!@}
+
+//! @cond documentNonPublic   The following isn't part of the API, and isn't
+//! documented.
+protected:
     friend class	ReaderImpl;
 
     E57_OBJECT_IMPLEMENTATION(Reader)  // Internal implementation details, not part of API, must be last in object
+//! @endcond
 
 }; //end Reader class
 
-
 ////////////////////////////////////////////////////////////////////
-//
-//	e57::Writer
-//
 
-//! @brief This is the E57 Writer class
-
+//! @brief Used for writing of the E57 file with E57 Simple API
 class	Writer {
 public:
 
 //! @brief This function is the constructor for the writer class
+//! @param [in] filePath file path to E57 file
+//! @param [in] coordinateMetaData Information describing the Coordinate Reference System to be used for the file
 				Writer(
-					const ustring & filePath,		//!< file path string
-                       const ustring & coordinateMetaData = {}	//!< Information describing the Coordinate Reference System to be used for the file
+					const ustring & filePath,
+                       const ustring & coordinateMetaData = {}
 					);
 
 //! @brief This function returns true if the file is open
-	bool		IsOpen() const;	//!< @return Returns true if the file is open and ready.
+	bool		IsOpen() const;
 
 //! @brief This function closes the file
 	bool		Close() const;
 
-////////////////////////////////////////////////////////////////////
-//
-//	Camera Image picture data
-//
+//! @name Image2D
+//!@{
 
-//! @brief This function sets up the image2D header and positions the cursor
-//* @details The user needs to config a Image2D structure with all the camera information before making this call. */
+//! @brief This function writes a new Image2D header
+//! @details The user needs to config a Image2D structure with all the camera information before making this call.
+//! @param [in] image2DHeader header metadata
+//! @return Returns the image2D index
 	int64_t		NewImage2D(
-						Image2D &	image2DHeader	//!< pointer to the Image2D structure to receive the picture information
-						) const;						//!< @return Returns the image2D index
+						Image2D &	image2DHeader
+						) const;						
 
-//! @brief This function writes the image block of data
+//! @brief This function writes the actual image data
+//! @param [in] imageIndex picture block index given by the NewImage2D
+//! @param [in] imageType identifies the image format desired.
+//! @param [in] imageProjection identifies the projection desired.
+//! @param [in] buffer pointer the buffer
+//! @param [in] start position in the block to start writing
+//! @param [in] count size of desired chuck or buffer size
+//! @return Returns the number of bytes written
 	int64_t		WriteImage2DData(
-						int64_t					imageIndex,	//!< picture block index given by the NewImage2D
-						e57::Image2DType		imageType,		//!< identifies the image format desired.
-						e57::Image2DProjection	imageProjection,//!< identifies the projection desired.
-						void *					pBuffer,	//!< pointer the buffer
-						int64_t					start,		//!< position in the block to start writing
-						int64_t					count		//!< size of desired chuck or buffer size
-						) const;						//!< @return Returns the number of bytes written
+						int64_t					imageIndex,	
+						e57::Image2DType		imageType,		
+						e57::Image2DProjection	imageProjection,
+						void *					buffer,	
+						int64_t					start,		
+						int64_t					count		
+						) const;						
 
-//! @brief This function sets up the Data3D header and positions the cursor for the binary data
-//* @details The user needs to config a Data3D structure with all the scanning information before making this call. */
+//!@}
 
+
+//! @name Data3D
+//!@{
+
+//! @brief This function writes new Data3D header
+//! @details The user needs to config a Data3D structure with all the scanning information before making this call.
+//! @param [in] data3DHeader scan metadata
+//! @param [in] pointExtension optional extension function to write custom fields
+//! @return Returns the index of the new scan's data3D block.
 	int64_t		NewData3D(
-						Data3D &	data3DHeader,	//!< pointer to the Data3D structure to receive the image information
+						Data3D &	data3DHeader,
 						bool		(*pointExtension)(ImageFile	imf, StructureNode proto) = nullptr
-						) const;							//!< @return Returns the index of the new scan's data3D block.
+						) const;							
 
-//! @brief This function writes out blocks of point data
+//! @brief This function setups a writer to write the actual scan data
+//! @param [in] dataIndex index returned by NewData3D
+//! @param [in] pointCount Number of points to write (number of elements in each of the buffers)
+//! @param [in] buffers pointers to user-provided buffers
+//! @return returns a vector writer setup to write the selected scan data
 	CompressedVectorWriter	SetUpData3DPointsData(
 						int64_t		dataIndex,			//!< data block index given by the NewData3D
 						size_t		pointCount,			//!< size of each of the buffers given
 						const Data3DPointsData& buffers //!< pointers to user-provided buffers
-						) const ;		//!< @return Return true if sucessful, false otherwise
+						) const ;		
 
 
 //! @brief This funtion writes out the group data
+//! @param [in] dataIndex data block index given by the NewData3D
+//! @param [in] groupCount size of each of the buffers given
+//! @param [out] idElementValue index for this group
+//! @param [out] startPointIndex Starting index in to the "points" data vector for the groups
+//! @param [out] pointCount size of the groups given
+//! @return Return true if sucessful, false otherwise
 	bool		WriteData3DGroupsData(
-						int64_t		dataIndex,			//!< data block index given by the NewData3D
-						int64_t		groupCount,			//!< size of each of the buffers given
-						int64_t*	idElementValue,		//!< index for this group
-						int64_t*	startPointIndex,	//!< Starting index in to the "points" data vector for the groups
-						int64_t*	pointCount			//!< size of the groups given
-						) const;						//!< @return Return true if sucessful, false otherwise
+						int64_t		dataIndex,		
+						int64_t		groupCount,		
+						int64_t*	idElementValue,	
+						int64_t*	startPointIndex,
+						int64_t*	pointCount		
+						) const;						
 
-////////////////////////////////////////////////////////////////////
-//
-//	Raw File information
-//
+//!@}
+
+
+//! @name Foundation API file information
+//!@{
+
 //! @brief This function returns the file raw E57Root Structure Node
-	StructureNode		GetRawE57Root();	//!< @return Returns the E57Root StructureNode
+	StructureNode		GetRawE57Root();
 //! @brief This function returns the raw Data3D Vector Node
-	VectorNode			GetRawData3D();		//!< @return Returns the raw Data3D VectorNode
+	VectorNode			GetRawData3D();
 //! @brief This function returns the raw Image2D Vector Node
-	VectorNode			GetRawImages2D();	//!< @return Returns the raw Image2D VectorNode
+	VectorNode			GetRawImages2D();
 //! @brief This function returns the ram ImageFile Node which is need to add enhancements
-	ImageFile			GetRawIMF();		//!< /return Returns the raw ImageFile
-private:   //=================
-					Writer();                 // No default constructor is defined for Node
-protected: //=================
+	ImageFile			GetRawIMF();
+
+//!@}
+
+//! @cond documentNonPublic   The following isn't part of the API, and isn't
+//! documented.
+protected:
     friend class	WriterImpl;
 
     E57_OBJECT_IMPLEMENTATION(Writer)  // Internal implementation details, not part of API, must be last in object
+//! @endcond
 
 }; //end Writer class
-
 
 } //end namespace e57

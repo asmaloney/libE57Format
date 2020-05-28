@@ -105,7 +105,12 @@ struct Quaternion {
       return !operator==(rhs);
     }
 
-    static Quaternion identity() { return {1., 0., 0., 0.}; }
+    static Quaternion identity()
+    {
+        Quaternion identity;
+        identity.w = 1.;
+        return identity;
+    }
 };
 
 ////////////////////////////////////////////////////////////////////

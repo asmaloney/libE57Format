@@ -1448,15 +1448,6 @@ int64_t WriterImpl::NewImage2D( Image2D &image2DHeader )
       translation.set( "z", FloatNode( imf_, image2DHeader.pose.translation.z ) );
    }
 
-#ifdef TEST_EXTENSIONS
-   StructureNode extbox = StructureNode( imf_ );
-   extbox.set( "ext:imageHeight", IntegerNode( imf_, image2DHeader.visualReferenceRepresentation.imageHeight ) );
-   extbox.set( "ext:imageWidth", IntegerNode( imf_, image2DHeader.visualReferenceRepresentation.imageWidth ) );
-   image.set( "ext:imageSize", extbox );
-   image.set( "ext:extraStr", StringNode( imf_, "This is another extra string" ) );
-   image.set( "ext:extraFloat", FloatNode( imf_, 3.14159 ) );
-#endif
-
    if ( image2DHeader.visualReferenceRepresentation.jpegImageSize > 0 ||
         image2DHeader.visualReferenceRepresentation.pngImageSize > 0 )
    {
@@ -1730,15 +1721,6 @@ int64_t WriterImpl::NewData3D( Data3D &data3DHeader, bool ( *pointExtension )( I
       scan.set( "indexBounds", ibox );
    }
 
-#ifdef TEST_EXTENSIONS
-   StructureNode extbox = StructureNode( imf_ );
-   extbox.set( "ext:rows", IntegerNode( imf_, data3DHeader.indexBounds.rowMaximum + 1 ) );
-   extbox.set( "ext:columns", IntegerNode( imf_, data3DHeader.indexBounds.columnMaximum + 1 ) );
-   scan.set( "ext:indexSize", extbox );
-   scan.set( "ext:extraStr", StringNode( imf_, "This is another extra string" ) );
-   scan.set( "ext:extraFloat", FloatNode( imf_, 3.14159 ) );
-#endif
-
    if ( ( data3DHeader.intensityLimits.intensityMaximum != 0. ) ||
         ( data3DHeader.intensityLimits.intensityMinimum != 0. ) )
    {
@@ -1975,9 +1957,7 @@ int64_t WriterImpl::NewData3D( Data3D &data3DHeader, bool ( *pointExtension )( I
             FloatNode( imf_, 0., ( data3DHeader.pointFields.pointRangeScaledInteger < 0. ) ? E57_DOUBLE : E57_SINGLE,
                        data3DHeader.pointFields.pointRangeMinimum, data3DHeader.pointFields.pointRangeMaximum ) );
    }
-#ifdef TEST_EXTENSIONS
-   proto.set( "ext:extraField1", IntegerNode( imf_, 0, 0, 255 ) );
-#endif
+
    if ( data3DHeader.pointFields.cartesianZField )
    {
       if ( data3DHeader.pointFields.pointRangeScaledInteger > 0. )
@@ -2030,10 +2010,6 @@ int64_t WriterImpl::NewData3D( Data3D &data3DHeader, bool ( *pointExtension )( I
                     FloatNode( imf_, 0., ( data3DHeader.pointFields.angleScaledInteger < 0. ) ? E57_DOUBLE : E57_SINGLE,
                                data3DHeader.pointFields.angleMinimum, data3DHeader.pointFields.angleMaximum ) );
    }
-
-#ifdef TEST_EXTENSIONS
-   proto.set( "ext:extraField2", IntegerNode( imf_, 0, 0, 255 ) );
-#endif
 
    if ( data3DHeader.pointFields.intensityField )
    {
@@ -2096,9 +2072,7 @@ int64_t WriterImpl::NewData3D( Data3D &data3DHeader, bool ( *pointExtension )( I
          proto.set( "timeStamp", IntegerNode( imf_, 0, (int64_t)data3DHeader.pointFields.timeMinimum,
                                               (int64_t)data3DHeader.pointFields.timeMaximum ) );
    }
-#ifdef TEST_EXTENSIONS
-   proto.set( "ext:extraField3", IntegerNode( imf_, 0, 0, 255 ) );
-#endif
+
    if ( data3DHeader.pointFields.cartesianInvalidStateField )
       proto.set( "cartesianInvalidState", IntegerNode( imf_, 0, 0, 2 ) );
    if ( data3DHeader.pointFields.sphericalInvalidStateField )
@@ -2148,18 +2122,6 @@ int64_t WriterImpl::NewData3D( Data3D &data3DHeader, bool ( *pointExtension )( I
 CompressedVectorWriter WriterImpl::SetUpData3DPointsData( int64_t dataIndex, size_t count,
                                                           const Data3DPointsData &buffers )
 {
-#ifdef TEST_EXTENSIONS
-   uint8_t *extraField1 = new uint8_t[(unsigned)count];
-   uint8_t *extraField2 = new uint8_t[(unsigned)count];
-   uint8_t *extraField3 = new uint8_t[(unsigned)count];
-
-   for ( int i = 0; i < count; i++ )
-   {
-      extraField1[i] = i % 256;
-      extraField2[i] = i % 256;
-      extraField3[i] = i % 256;
-   }
-#endif
    StructureNode scan( data3D_.get( dataIndex ) );
    CompressedVectorNode points( scan.get( "points" ) );
    StructureNode proto( points.prototype() );
@@ -2169,10 +2131,6 @@ CompressedVectorWriter WriterImpl::SetUpData3DPointsData( int64_t dataIndex, siz
       sourceBuffers.push_back( SourceDestBuffer( imf_, "cartesianX", buffers.cartesianX, count, true, true ) );
    if ( proto.isDefined( "cartesianY" ) && ( buffers.cartesianY != nullptr ) )
       sourceBuffers.push_back( SourceDestBuffer( imf_, "cartesianY", buffers.cartesianY, count, true, true ) );
-#ifdef TEST_EXTENSIONS
-   if ( proto.isDefined( "ext:extraField1" ) )
-      sourceBuffers.push_back( SourceDestBuffer( imf_, "ext:extraField1", extraField1, count, true ) );
-#endif
    if ( proto.isDefined( "cartesianZ" ) && ( buffers.cartesianZ != nullptr ) )
       sourceBuffers.push_back( SourceDestBuffer( imf_, "cartesianZ", buffers.cartesianZ, count, true, true ) );
 
@@ -2184,11 +2142,6 @@ CompressedVectorWriter WriterImpl::SetUpData3DPointsData( int64_t dataIndex, siz
    if ( proto.isDefined( "sphericalElevation" ) && ( buffers.sphericalElevation != nullptr ) )
       sourceBuffers.push_back(
          SourceDestBuffer( imf_, "sphericalElevation", buffers.sphericalElevation, count, true, true ) );
-
-#ifdef TEST_EXTENSIONS
-   if ( proto.isDefined( "ext:extraField2" ) )
-      sourceBuffers.push_back( SourceDestBuffer( imf_, "ext:extraField2", extraField2, count, true ) );
-#endif
 
    if ( proto.isDefined( "intensity" ) && ( buffers.intensity != nullptr ) )
       sourceBuffers.push_back( SourceDestBuffer( imf_, "intensity", buffers.intensity, count, true, true ) );
@@ -2213,10 +2166,6 @@ CompressedVectorWriter WriterImpl::SetUpData3DPointsData( int64_t dataIndex, siz
    if ( proto.isDefined( "timeStamp" ) && ( buffers.timeStamp != nullptr ) )
       sourceBuffers.push_back( SourceDestBuffer( imf_, "timeStamp", buffers.timeStamp, count, true, true ) );
 
-#ifdef TEST_EXTENSIONS
-   if ( proto.isDefined( "ext:extraField3" ) )
-      sourceBuffers.push_back( SourceDestBuffer( imf_, "ext:extraField3", extraField3, count, true ) );
-#endif
    if ( proto.isDefined( "cartesianInvalidState" ) && ( buffers.cartesianInvalidState != nullptr ) )
       sourceBuffers.push_back(
          SourceDestBuffer( imf_, "cartesianInvalidState", buffers.cartesianInvalidState, count, true ) );

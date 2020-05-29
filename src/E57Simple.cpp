@@ -41,240 +41,173 @@ using namespace std;
 // to avoid exposing M_PI constructor is here
 SphericalBounds::SphericalBounds()
 {
- rangeMinimum = 0.;
- rangeMaximum = E57_DOUBLE_MAX;
- azimuthStart = -M_PI;
- azimuthEnd = M_PI;
- elevationMinimum = -M_PI/2.;
- elevationMaximum = M_PI/2.;
+   rangeMinimum = 0.;
+   rangeMaximum = E57_DOUBLE_MAX;
+   azimuthStart = -M_PI;
+   azimuthEnd = M_PI;
+   elevationMinimum = -M_PI / 2.;
+   elevationMaximum = M_PI / 2.;
 }
 
 ////////////////////////////////////////////////////////////////////
 //
 //	e57::Reader
 //
-			Reader :: Reader(const ustring & filePath)
-: impl_(new ReaderImpl(filePath))
+Reader::Reader( const ustring &filePath ) : impl_( new ReaderImpl( filePath ) )
 {
 }
 
-bool		Reader :: IsOpen() const
+bool Reader::IsOpen() const
 {
-	return impl_->IsOpen();
+   return impl_->IsOpen();
 };
 
-bool		Reader :: Close() const
+bool Reader::Close() const
 {
-	return impl_->Close();
+   return impl_->Close();
 };
 
-bool		Reader :: GetE57Root(
-	E57Root & fileHeader) const
+bool Reader::GetE57Root( E57Root &fileHeader ) const
 {
-	return impl_->GetE57Root(fileHeader);
+   return impl_->GetE57Root( fileHeader );
 };
 
-int64_t		Reader :: GetImage2DCount() const
+int64_t Reader::GetImage2DCount() const
 {
-	return impl_->GetImage2DCount();
+   return impl_->GetImage2DCount();
 };
 
-bool		Reader :: ReadImage2D( 
-	int64_t			imageIndex,
-	Image2D &	image2DHeader) const
+bool Reader::ReadImage2D( int64_t imageIndex, Image2D &image2DHeader ) const
 {
-	return impl_->ReadImage2D(imageIndex,image2DHeader);
+   return impl_->ReadImage2D( imageIndex, image2DHeader );
 };
 
-bool		Reader :: GetImage2DSizes(
-	int64_t					imageIndex,		// This in the index into the image2D vector
-	e57::Image2DProjection &imageProjection,// identifies the projection desired.
-	e57::Image2DType &		imageType,		// identifies the image format desired.
-	int64_t &				imageWidth,		// The image width (in pixels).
-	int64_t &				imageHeight,	// The image height (in pixels).
-	int64_t &				imageSize,		// This is the total number of bytes for the image blob.
-	e57::Image2DType &		imageMaskType,	// This is E57_PNG_IMAGE_MASK if "imageMask" is defined in the projection
-	e57::Image2DType &		imageVisualType	// This is image type of the VisualReferenceRepresentation if given.
-	) const
+bool Reader::GetImage2DSizes( int64_t imageIndex, e57::Image2DProjection &imageProjection, e57::Image2DType &imageType,
+                              int64_t &imageWidth, int64_t &imageHeight, int64_t &imageSize,
+                              e57::Image2DType &imageMaskType, e57::Image2DType &imageVisualType ) const
 {
-	return impl_->GetImage2DSizes(imageIndex, imageProjection, imageType,
-		imageWidth, imageHeight, imageSize, imageMaskType, imageVisualType);
+   return impl_->GetImage2DSizes( imageIndex, imageProjection, imageType, imageWidth, imageHeight, imageSize,
+                                  imageMaskType, imageVisualType );
 };
 
-int64_t		Reader :: ReadImage2DData(
-	int64_t					imageIndex,		// picture block index
-	e57::Image2DProjection	imageProjection,// identifies the projection desired.
-	e57::Image2DType		imageType,		// identifies the image format desired.
-	void *					pBuffer,	// pointer the buffer
-	int64_t					start,		// position in the block to start reading
-	int64_t					count		// size of desired chuck or buffer size
-	) const
+int64_t Reader::ReadImage2DData( int64_t imageIndex, e57::Image2DProjection imageProjection, e57::Image2DType imageType,
+                                 void *pBuffer, int64_t start, int64_t count ) const
 {
-	return impl_->ReadImage2DData(imageIndex, imageProjection, imageType, pBuffer, start, count);
+   return impl_->ReadImage2DData( imageIndex, imageProjection, imageType, pBuffer, start, count );
 };
 
-int64_t		Reader :: GetData3DCount() const
+int64_t Reader::GetData3DCount() const
 {
-	return impl_->GetData3DCount();
+   return impl_->GetData3DCount();
 };
 
-// This function returns the ram ImageFile Node which is need to add enhancements
-ImageFile		Reader :: GetRawIMF()
+ImageFile Reader::GetRawIMF()
 {
-	return impl_->GetRawIMF();
-}
-// This function returns the file raw E57Root Structure Node
-StructureNode	Reader :: GetRawE57Root()
-{
-	return impl_->GetRawE57Root();
-};	// /return Returns the E57Root StructureNode
-
-// This function returns the raw Data3D Vector Node
-VectorNode		Reader :: GetRawData3D()
-{
-	return impl_->GetRawData3D();
-};// /return Returns the raw Data3D VectorNode
-
-// This function returns the raw Images2D Vector Node
-VectorNode		Reader :: GetRawImages2D()
-{
-	return impl_->GetRawImages2D();
-};	// /return Returns the raw Image2D VectorNode
-
-bool		Reader :: ReadData3D( 
-	int64_t		dataIndex,	// This in the index into the images3D vector
-	Data3D &	data3DHeader // pointer to the Data3D structure to receive the image information
-	) const	// /return Returns true if sucessful
-{
-	return impl_->ReadData3D(dataIndex, data3DHeader);
+   return impl_->GetRawIMF();
 }
 
-bool		Reader :: GetData3DSizes(
-	int64_t		dataIndex,	// This in the index into the images3D vector
-	int64_t &	rowMax,		// This is the maximum row size
-	int64_t &	columnMax,	// This is the maximum column size
-	int64_t &	pointsSize,	// This is the total number of point records
-	int64_t &	groupsSize,	// This is the total number of group reocrds
-	int64_t &	countSize,	//!< This is the maximum point count per group
-	bool &		bColumnIndex	//!< This indicates that the idElementName is "columnIndex"
-	) const
+StructureNode Reader::GetRawE57Root()
 {
-	return impl_->GetData3DSizes( dataIndex, rowMax, columnMax, pointsSize,
-		groupsSize, countSize, bColumnIndex);
+   return impl_->GetRawE57Root();
+};
+
+VectorNode Reader::GetRawData3D()
+{
+   return impl_->GetRawData3D();
+};
+
+VectorNode Reader::GetRawImages2D()
+{
+   return impl_->GetRawImages2D();
+};
+
+bool Reader::ReadData3D( int64_t dataIndex, Data3D &data3DHeader ) const
+{
+   return impl_->ReadData3D( dataIndex, data3DHeader );
 }
 
-bool		Reader :: ReadData3DGroupsData(
-	int64_t		dataIndex,			// data block index given by the NewData3D
-	int64_t		groupCount,			// size of each of the buffers given
-	int64_t*	idElementValue,		// index for this group
-	int64_t*	startPointIndex,	// Starting index in to the "points" data vector for the groups
-	int64_t*	pointCount			// size of the groups given
-	) const							// \return Return true if sucessful, false otherwise
+bool Reader::GetData3DSizes( int64_t dataIndex, int64_t &rowMax, int64_t &columnMax, int64_t &pointsSize,
+                             int64_t &groupsSize, int64_t &countSize, bool &bColumnIndex ) const
 {
-	return impl_->ReadData3DGroupsData(dataIndex, groupCount, idElementValue, startPointIndex, pointCount);
+   return impl_->GetData3DSizes( dataIndex, rowMax, columnMax, pointsSize, groupsSize, countSize, bColumnIndex );
 }
 
-CompressedVectorReader	Reader :: SetUpData3DPointsData(
-	int64_t		dataIndex,			// data block index given by the NewData3D
-	size_t		pointCount,			// size of each element buffer.
-	const Data3DPointsData& buffers //!< pointers to user-provided buffers
-	) const
+bool Reader::ReadData3DGroupsData( int64_t dataIndex, int64_t groupCount, int64_t *idElementValue,
+                                   int64_t *startPointIndex, int64_t *pointCount ) const
 {
-	return impl_->SetUpData3DPointsData( dataIndex, pointCount, buffers);
+   return impl_->ReadData3DGroupsData( dataIndex, groupCount, idElementValue, startPointIndex, pointCount );
+}
+
+CompressedVectorReader Reader::SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
+                                                      const Data3DPointsData &buffers ) const
+{
+   return impl_->SetUpData3DPointsData( dataIndex, pointCount, buffers );
 }
 
 ////////////////////////////////////////////////////////////////////
 //
 //	e57::Writer
 //
-			Writer :: Writer(
-	const ustring & filePath,		// file path string
-	const ustring & coordinateMetaData	// Information describing the Coordinate Reference System to be used for the file
-): impl_(new WriterImpl(filePath, coordinateMetaData))
+Writer::Writer( const ustring &filePath, const ustring &coordinateMetaData ) :
+   impl_( new WriterImpl( filePath, coordinateMetaData ) )
 {
 }
 
-bool		Writer :: IsOpen() const
+bool Writer::IsOpen() const
 {
-	return impl_->IsOpen();
+   return impl_->IsOpen();
 };
 
-bool		Writer :: Close() const
+bool Writer::Close() const
 {
-	return impl_->Close();
+   return impl_->Close();
 };
 
-// This function returns the ram ImageFile Node which is need to add enhancements
-ImageFile		Writer :: GetRawIMF()
+ImageFile Writer::GetRawIMF()
 {
-	return impl_->GetRawIMF();
+   return impl_->GetRawIMF();
 }
 
-// This function returns the file raw E57Root Structure Node
-StructureNode	Writer :: GetRawE57Root()
+StructureNode Writer::GetRawE57Root()
 {
-	return impl_->GetRawE57Root();
-};	// /return Returns the E57Root StructureNode
-
-// This function returns the raw Data3D Vector Node
-VectorNode		Writer :: GetRawData3D()
-{
-	return impl_->GetRawData3D();
-};// /return Returns the raw Data3D VectorNode
-
-// This function returns the raw Images2D Vector Node
-VectorNode		Writer :: GetRawImages2D()
-{
-	return impl_->GetRawImages2D();
-};	// /return Returns the raw Image2D VectorNode
-
-int64_t		Writer :: NewImage2D(
-	Image2D &	image2DHeader	// pointer to the Image2D structure to receive the picture information
-	) const						// /return Returns the image2D index
-{
-	return impl_->NewImage2D( image2DHeader);
+   return impl_->GetRawE57Root();
 };
 
-
-int64_t		Writer :: WriteImage2DData(
-	int64_t					imageIndex,		// picture block index given by the NewImage2D
-	e57::Image2DType		imageType,		// identifies the image format desired.
-	e57::Image2DProjection	imageProjection,// identifies the projection desired.
-	void *					pBuffer,		// pointer the buffer
-	int64_t					start,			// position in the block to start writing
-	int64_t					count			// size of desired chuck or buffer size
-	) const									// /return Returns the number of bytes written
+VectorNode Writer::GetRawData3D()
 {
-	return impl_->WriteImage2DData( imageIndex, imageType, imageProjection, pBuffer, start, count);
+   return impl_->GetRawData3D();
 };
 
-int64_t		Writer :: NewData3D(
-	Data3D &	data3DHeader,	// pointer to the Data3D structure to receive the image information
-	bool		(*pointExtension)(ImageFile	imf, StructureNode proto)	//!< function pointer to add point data extension
-	) const							// /return Returns the index of the new scan's data3D block.
+VectorNode Writer::GetRawImages2D()
 {
-	return impl_->NewData3D( data3DHeader, pointExtension);
+   return impl_->GetRawImages2D();
 };
 
-// This function writes out blocks of point data
-CompressedVectorWriter	Writer :: SetUpData3DPointsData(
-	int64_t		dataIndex,			// data block index given by the NewData3D
-	size_t		pointCount,			// size of each of the buffers given
-	const Data3DPointsData& buffers //!< pointers to user-provided buffers
-	) const
+int64_t Writer::NewImage2D( Image2D &image2DHeader ) const
 {
-		return impl_->SetUpData3DPointsData( dataIndex, pointCount, buffers);
+   return impl_->NewImage2D( image2DHeader );
+};
+
+int64_t Writer::WriteImage2DData( int64_t imageIndex, e57::Image2DType imageType,
+                                  e57::Image2DProjection imageProjection, void *pBuffer, int64_t start,
+                                  int64_t count ) const
+{
+   return impl_->WriteImage2DData( imageIndex, imageType, imageProjection, pBuffer, start, count );
+};
+
+int64_t Writer::NewData3D( Data3D &data3DHeader, bool ( *pointExtension )( ImageFile imf, StructureNode proto ) ) const
+{
+   return impl_->NewData3D( data3DHeader, pointExtension );
+};
+
+CompressedVectorWriter Writer::SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
+                                                      const Data3DPointsData &buffers ) const
+{
+   return impl_->SetUpData3DPointsData( dataIndex, pointCount, buffers );
 }
 
-bool		Writer :: WriteData3DGroupsData(
-	int64_t		dataIndex,			// data block index given by the NewData3D
-	int64_t		groupCount,			//!< size of each of the buffers given
-	int64_t*	idElementValue,		// index for this group
-	int64_t*	startPointIndex,	// Starting index in to the "points" data vector for the groups
-	int64_t*	pointCount			// size of the groups given
-	) const								// \return Return true if sucessful, false otherwise
+bool Writer::WriteData3DGroupsData( int64_t dataIndex, int64_t groupCount, int64_t *idElementValue,
+                                    int64_t *startPointIndex, int64_t *pointCount ) const
 {
-	return impl_->WriteData3DGroupsData(
-		dataIndex, groupCount, idElementValue, startPointIndex, pointCount);
+   return impl_->WriteData3DGroupsData( dataIndex, groupCount, idElementValue, startPointIndex, pointCount );
 }
-

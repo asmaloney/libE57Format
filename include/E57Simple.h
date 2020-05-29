@@ -143,6 +143,17 @@ namespace e57
       double elevationMaximum; //!< The maximum extent of the bounding region from the horizontal plane
       double azimuthStart; //!< The starting azimuth angle defining the extent of the bounding region around the z axis
       double azimuthEnd;   //!< The ending azimuth angle defining the extent of the bounding region around the z axix
+
+      bool operator==( const SphericalBounds &rhs ) const
+      {
+         return ( rangeMinimum == rhs.rangeMinimum ) && ( rangeMaximum == rhs.rangeMaximum ) &&
+                ( elevationMinimum == rhs.elevationMinimum ) && ( elevationMaximum == rhs.elevationMaximum ) &&
+                ( azimuthStart == rhs.azimuthStart ) && ( azimuthEnd == rhs.azimuthEnd );
+      }
+      bool operator!=( const SphericalBounds &rhs ) const
+      {
+         return !operator==( rhs );
+      }
    };
 
    //! @brief Stores the minimum and maximum of rowIndex, columnIndex, and returnIndex fields for a set of points.
@@ -162,6 +173,17 @@ namespace e57
       int64_t returnMaximum{
          0
       }; //!< The maximum returnIndex value of any point represented by this IndexBounds object.
+
+      bool operator==( const IndexBounds &rhs ) const
+      {
+         return ( rowMinimum == rhs.rowMinimum ) && ( rowMaximum == rhs.rowMaximum ) &&
+                ( columnMinimum == rhs.columnMinimum ) && ( columnMaximum == rhs.columnMaximum ) &&
+                ( returnMinimum == rhs.returnMinimum ) && ( returnMaximum == rhs.returnMaximum );
+      }
+      bool operator!=( const IndexBounds &rhs ) const
+      {
+         return !operator==( rhs );
+      }
    };
 
    //! @brief Specifies the limits for the value of signal intensity that a sensor is capable of producing
@@ -169,6 +191,15 @@ namespace e57
    {
       double intensityMinimum{ 0. }; //!< The minimum producible intensity value. Unit is unspecified.
       double intensityMaximum{ 0. }; //!< The maximum producible intensity value. Unit is unspecified.
+
+      bool operator==( const IntensityLimits &rhs ) const
+      {
+         return ( intensityMinimum == rhs.intensityMinimum ) && ( intensityMaximum == rhs.intensityMaximum );
+      }
+      bool operator!=( const IntensityLimits &rhs ) const
+      {
+         return !operator==( rhs );
+      }
    };
 
    //! @brief Specifies the limits for the value of red, green, and blue color that a sensor is capable of producing.
@@ -474,6 +505,17 @@ namespace e57
       int64_t imageMaskSize{ 0 }; //!< Size of PNG format image mask in BlobNode.
       int32_t imageWidth{ 0 };    //!< The image width (in pixels). Shall be positive
       int32_t imageHeight{ 0 };   //!< The image height (in pixels). Shall be positive
+
+      bool operator==( const VisualReferenceRepresentation &rhs ) const
+      {
+         return ( jpegImageSize == rhs.jpegImageSize ) && ( pngImageSize == rhs.pngImageSize ) &&
+                ( imageMaskSize == rhs.imageMaskSize ) && ( imageWidth == rhs.imageWidth ) &&
+                ( imageHeight == rhs.imageHeight );
+      }
+      bool operator!=( const VisualReferenceRepresentation &rhs ) const
+      {
+         return !operator==( rhs );
+      }
    };
 
    //! @brief Stores an image that is mapped from 3D using the pinhole camera projection model.
@@ -492,6 +534,19 @@ namespace e57
       }; //!< The X coordinate in the image of the principal point, (in pixels). The principal point is the intersection
          //!< of the z axis of the camera coordinate frame with the image plane.
       double principalPointY{ 0. }; //!< The Y coordinate in the image of the principal point (in pixels).
+
+      bool operator==( const PinholeRepresentation &rhs ) const
+      {
+         return ( jpegImageSize == rhs.jpegImageSize ) && ( pngImageSize == rhs.pngImageSize ) &&
+                ( imageMaskSize == rhs.imageMaskSize ) && ( imageWidth == rhs.imageWidth ) &&
+                ( imageHeight == rhs.imageHeight ) && ( focalLength == rhs.focalLength ) &&
+                ( pixelWidth == rhs.pixelWidth ) && ( pixelHeight == rhs.pixelHeight ) &&
+                ( principalPointX == rhs.principalPointX ) && ( principalPointY == rhs.principalPointY );
+      }
+      bool operator!=( const PinholeRepresentation &rhs ) const
+      {
+         return !operator==( rhs );
+      }
    };
 
    //! @brief Stores an image that is mapped from 3D using a spherical projection model
@@ -532,6 +587,19 @@ namespace e57
                            //!< (that is, the radius of the cylinder) (in meters). Shall be non-negative
       double principalPointY{ 0. }; //!< The Y coordinate in the image of the principal point (in pixels). This is the
                                     //!< intersection of the z = 0 plane with the image
+
+      bool operator==( const CylindricalRepresentation &rhs ) const
+      {
+         return ( jpegImageSize == rhs.jpegImageSize ) && ( pngImageSize == rhs.pngImageSize ) &&
+                ( imageMaskSize == rhs.imageMaskSize ) && ( imageWidth == rhs.imageWidth ) &&
+                ( imageHeight == rhs.imageHeight ) && ( pixelWidth == rhs.pixelWidth ) &&
+                ( pixelHeight == rhs.pixelHeight ) && ( radius == rhs.radius ) &&
+                ( principalPointY == rhs.principalPointY );
+      }
+      bool operator!=( const CylindricalRepresentation &rhs ) const
+      {
+         return !operator==( rhs );
+      }
    };
 
    //! @brief Stores an image from a camera
@@ -784,9 +852,9 @@ namespace e57
       //! @brief This funtion writes out the group data
       //! @param [in] dataIndex data block index given by the NewData3D
       //! @param [in] groupCount size of each of the buffers given
-      //! @param [out] idElementValue index for this group
-      //! @param [out] startPointIndex Starting index in to the "points" data vector for the groups
-      //! @param [out] pointCount size of the groups given
+      //! @param [in] buffer of idElementValue index for this group
+      //! @param [in] startPointIndex buffer with starting indices in to the "points" data vector for the groups
+      //! @param [in] pointCount buffer with sizes of the groups given
       //! @return Return true if sucessful, false otherwise
       bool WriteData3DGroupsData( int64_t dataIndex, int64_t groupCount, int64_t *idElementValue,
                                   int64_t *startPointIndex, int64_t *pointCount ) const;

@@ -27,1360 +27,1311 @@
 
 #include "E57SimpleImpl.h"
 
-#include <sstream>
 #include <cmath>
 #include <random>
+#include <sstream>
 
 using namespace e57;
 using namespace std;
 
-////////////////////////////////////////////////////////////////////
-//
-//	e57::GetNewGuid
-//
 std::string e57::GetNewGuid()
 {
-    static constexpr const char UUID_CHARS[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-    static std::random_device              rd;
-    static std::mt19937                    gen(rd());
-    static std::uniform_int_distribution<> dis(0, 61 /* number of chars in UUID_CHARS */);
+   static constexpr const char UUID_CHARS[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+   static std::random_device rd;
+   static std::mt19937 gen( rd() );
+   static std::uniform_int_distribution<> dis( 0, 61 /* number of chars in UUID_CHARS */ );
 
-    std::string uuid (36,' ');
+   std::string uuid( 36, ' ' );
 
-    uuid[8] = '-';
-    uuid[13] = '-';
-    uuid[18] = '-';
-    uuid[23] = '-';
+   uuid[8] = '-';
+   uuid[13] = '-';
+   uuid[18] = '-';
+   uuid[23] = '-';
 
-    uuid[14] = '4';
+   uuid[14] = '4';
 
-    for(int i=0; i < 36; ++i)
-    {
-      if (i != 8 && i != 13 && i != 18 && i != 14 && i != 23)
+   for ( int i = 0; i < 36; ++i )
+   {
+      if ( i != 8 && i != 13 && i != 18 && i != 14 && i != 23 )
       {
-        uuid[i] = UUID_CHARS[dis(gen)];
+         uuid[i] = UUID_CHARS[dis( gen )];
       }
-    }
-    return uuid;
-};
-////////////////////////////////////////////////////////////////////
+   }
+   return uuid;
+}
+
+///////////////////////////////////////////////////////////////////
 //
 //	e57::ReaderImpl
 //
-	ReaderImpl::ReaderImpl(
-		const ustring & filePath)
-	: imf_(filePath,"r")
-	, root_(imf_.root())
-	, data3D_(root_.get("/data3D"))
-	, images2D_(root_.get("/images2D"))
+
+ReaderImpl::ReaderImpl( const ustring &filePath ) :
+   imf_( filePath, "r" ), root_( imf_.root() ), data3D_( root_.get( "/data3D" ) ), images2D_( root_.get( "/images2D" ) )
 {
-};
+}
 
-	ReaderImpl::~ReaderImpl()
+ReaderImpl::~ReaderImpl()
 {
-	if(IsOpen())
-		Close();
-};
+   if ( IsOpen() )
+      Close();
+}
 
-
-//! This function returns true if the file is open
-bool	ReaderImpl :: IsOpen()
+// This function returns true if the file is open
+bool ReaderImpl::IsOpen()
 {
-	if( imf_.isOpen())
-		return true;
-	return false;
-};
+   if ( imf_.isOpen() )
+      return true;
+   return false;
+}
 
-//! This function closes the file
-bool	ReaderImpl :: Close()
+// This function closes the file
+bool ReaderImpl::Close()
 {
-	if(IsOpen())
-	{
-		imf_.close();
-		return true;
-	}
-	return false;
-};
+   if ( IsOpen() )
+   {
+      imf_.close();
+      return true;
+   }
+   return false;
+}
 
-////////////////////////////////////////////////////////////////////
-//
-//	File information
-//
-//! This function returns the file header information
-bool	ReaderImpl :: GetE57Root(
-	E57Root & fileHeader)	//!< This is the main header information
+// This function returns the file header information
+bool ReaderImpl::GetE57Root( E57Root &fileHeader )
 {
-	if(IsOpen())
-	{
-        fileHeader = {};
+   if ( IsOpen() )
+   {
+      fileHeader = {};
 
-		fileHeader.formatName = StringNode(root_.get("formatName")).value();
-		fileHeader.versionMajor = (uint32_t) IntegerNode(root_.get("versionMajor")).value();
-		fileHeader.versionMinor = (uint32_t) IntegerNode(root_.get("versionMinor")).value();
-		fileHeader.guid = StringNode(root_.get("guid")).value();
-		if(root_.isDefined("e57LibraryVersion"))
-			fileHeader.e57LibraryVersion = StringNode(root_.get("e57LibraryVersion")).value();
+      fileHeader.formatName = StringNode( root_.get( "formatName" ) ).value();
+      fileHeader.versionMajor = (uint32_t)IntegerNode( root_.get( "versionMajor" ) ).value();
+      fileHeader.versionMinor = (uint32_t)IntegerNode( root_.get( "versionMinor" ) ).value();
+      fileHeader.guid = StringNode( root_.get( "guid" ) ).value();
+      if ( root_.isDefined( "e57LibraryVersion" ) )
+         fileHeader.e57LibraryVersion = StringNode( root_.get( "e57LibraryVersion" ) ).value();
 
-		if(root_.isDefined("coordinateMetadata"))
-			fileHeader.coordinateMetadata = StringNode(root_.get("coordinateMetadata")).value();
+      if ( root_.isDefined( "coordinateMetadata" ) )
+         fileHeader.coordinateMetadata = StringNode( root_.get( "coordinateMetadata" ) ).value();
 
-		if(root_.isDefined("creationDateTime"))
-		{
-			StructureNode creationDateTime(root_.get("creationDateTime"));
-			fileHeader.creationDateTime.dateTimeValue =
-				FloatNode(creationDateTime.get("dateTimeValue")).value();
-			fileHeader.creationDateTime.isAtomicClockReferenced =
-				(int32_t) IntegerNode(creationDateTime.get("isAtomicClockReferenced")).value();
-		}
+      if ( root_.isDefined( "creationDateTime" ) )
+      {
+         StructureNode creationDateTime( root_.get( "creationDateTime" ) );
+         fileHeader.creationDateTime.dateTimeValue = FloatNode( creationDateTime.get( "dateTimeValue" ) ).value();
+         fileHeader.creationDateTime.isAtomicClockReferenced =
+            (int32_t)IntegerNode( creationDateTime.get( "isAtomicClockReferenced" ) ).value();
+      }
 
-		fileHeader.data3DSize = data3D_.childCount();
-		fileHeader.images2DSize = images2D_.childCount();
+      fileHeader.data3DSize = data3D_.childCount();
+      fileHeader.images2DSize = images2D_.childCount();
 
-		return true;
-	}
-	return false;
-};
+      return true;
+   }
+   return false;
+}
 
-////////////////////////////////////////////////////////////////////
-//
-//	Camera Image picture data
-//
-//! This function returns the total number of Picture Blocks
-int64_t	ReaderImpl :: GetImage2DCount()
+int64_t ReaderImpl::GetImage2DCount()
 {
-	return images2D_.childCount();
-};
+   return images2D_.childCount();
+}
 
-//! This function returns the Image2Ds header and positions the cursor
-bool	ReaderImpl :: ReadImage2D( 
-	int64_t		imageIndex,		//!< This in the index into the Image2Ds vector
-	Image2D &	image2DHeader	//!< pointer to the Image2D structure to receive the picture information
-	)							//!< /return Returns true if sucessful
+// This function returns the Image2Ds header and positions the cursor
+bool ReaderImpl::ReadImage2D( int64_t imageIndex, Image2D &image2DHeader )
 {
-	if(IsOpen())
-	{
-		if( (imageIndex < 0) || (imageIndex >= images2D_.childCount()))
-			return false;
+   if ( IsOpen() )
+   {
+      if ( ( imageIndex < 0 ) || ( imageIndex >= images2D_.childCount() ) )
+         return false;
 
-        image2DHeader = {};
+      image2DHeader = {};
 
-		StructureNode image(images2D_.get(imageIndex));
+      StructureNode image( images2D_.get( imageIndex ) );
 
-		image2DHeader.guid = StringNode(image.get("guid")).value();
+      image2DHeader.guid = StringNode( image.get( "guid" ) ).value();
 
-		if(image.isDefined("name"))
-			image2DHeader.name = StringNode(image.get("name")).value();
+      if ( image.isDefined( "name" ) )
+         image2DHeader.name = StringNode( image.get( "name" ) ).value();
 
-		if(image.isDefined("description"))
-			image2DHeader.description = StringNode(image.get("description")).value();
+      if ( image.isDefined( "description" ) )
+         image2DHeader.description = StringNode( image.get( "description" ) ).value();
 
-		if(image.isDefined("sensorVendor"))
-			image2DHeader.sensorVendor = StringNode(image.get("sensorVendor")).value();
-		if(image.isDefined("sensorModel"))
-			image2DHeader.sensorModel = StringNode(image.get("sensorModel")).value();
-		if(image.isDefined("sensorSerialNumber"))
-			image2DHeader.sensorSerialNumber = StringNode(image.get("sensorSerialNumber")).value();
+      if ( image.isDefined( "sensorVendor" ) )
+         image2DHeader.sensorVendor = StringNode( image.get( "sensorVendor" ) ).value();
+      if ( image.isDefined( "sensorModel" ) )
+         image2DHeader.sensorModel = StringNode( image.get( "sensorModel" ) ).value();
+      if ( image.isDefined( "sensorSerialNumber" ) )
+         image2DHeader.sensorSerialNumber = StringNode( image.get( "sensorSerialNumber" ) ).value();
 
-		if(image.isDefined("associatedData3DGuid"))
-			image2DHeader.associatedData3DGuid = StringNode(image.get("associatedData3DGuid")).value();
+      if ( image.isDefined( "associatedData3DGuid" ) )
+         image2DHeader.associatedData3DGuid = StringNode( image.get( "associatedData3DGuid" ) ).value();
 
-		if(image.isDefined("acquisitionDateTime"))
-		{
-			StructureNode acquisitionDateTime(image.get("acquisitionDateTime"));
-			image2DHeader.acquisitionDateTime.dateTimeValue = 
-				FloatNode(acquisitionDateTime.get("dateTimeValue")).value();
-			image2DHeader.acquisitionDateTime.isAtomicClockReferenced = (int32_t) 
-				IntegerNode(acquisitionDateTime.get("isAtomicClockReferenced")).value();
-		}
-// Get pose structure for scan.
+      if ( image.isDefined( "acquisitionDateTime" ) )
+      {
+         StructureNode acquisitionDateTime( image.get( "acquisitionDateTime" ) );
+         image2DHeader.acquisitionDateTime.dateTimeValue =
+            FloatNode( acquisitionDateTime.get( "dateTimeValue" ) ).value();
+         image2DHeader.acquisitionDateTime.isAtomicClockReferenced =
+            (int32_t)IntegerNode( acquisitionDateTime.get( "isAtomicClockReferenced" ) ).value();
+      }
 
-		if(image.isDefined("pose"))
-		{
-			StructureNode pose(image.get("pose"));
-			if(pose.isDefined("rotation")){
-				StructureNode rotation(pose.get("rotation"));
-				image2DHeader.pose.rotation.w = FloatNode(rotation.get("w")).value();
-				image2DHeader.pose.rotation.x = FloatNode(rotation.get("x")).value();
-				image2DHeader.pose.rotation.y = FloatNode(rotation.get("y")).value();
-				image2DHeader.pose.rotation.z = FloatNode(rotation.get("z")).value();
-			}
-			if(pose.isDefined("translation")){
- 				StructureNode translation(pose.get("translation")); 
-				image2DHeader.pose.translation.x = FloatNode(translation.get("x")).value();
-				image2DHeader.pose.translation.y = FloatNode(translation.get("y")).value();
-				image2DHeader.pose.translation.z = FloatNode(translation.get("z")).value();
-			}
-		}
+      // Get pose structure for scan.
+      if ( image.isDefined( "pose" ) )
+      {
+         StructureNode pose( image.get( "pose" ) );
+         if ( pose.isDefined( "rotation" ) )
+         {
+            StructureNode rotation( pose.get( "rotation" ) );
+            image2DHeader.pose.rotation.w = FloatNode( rotation.get( "w" ) ).value();
+            image2DHeader.pose.rotation.x = FloatNode( rotation.get( "x" ) ).value();
+            image2DHeader.pose.rotation.y = FloatNode( rotation.get( "y" ) ).value();
+            image2DHeader.pose.rotation.z = FloatNode( rotation.get( "z" ) ).value();
+         }
+         if ( pose.isDefined( "translation" ) )
+         {
+            StructureNode translation( pose.get( "translation" ) );
+            image2DHeader.pose.translation.x = FloatNode( translation.get( "x" ) ).value();
+            image2DHeader.pose.translation.y = FloatNode( translation.get( "y" ) ).value();
+            image2DHeader.pose.translation.z = FloatNode( translation.get( "z" ) ).value();
+         }
+      }
 
-		if(image.isDefined("visualReferenceRepresentation"))
-		{
-			StructureNode visualReferenceRepresentation(image.get("visualReferenceRepresentation"));
+      if ( image.isDefined( "visualReferenceRepresentation" ) )
+      {
+         StructureNode visualReferenceRepresentation( image.get( "visualReferenceRepresentation" ) );
 
-			if(visualReferenceRepresentation.isDefined("jpegImage"))
-				image2DHeader.visualReferenceRepresentation.jpegImageSize = 
-					BlobNode(visualReferenceRepresentation.get("jpegImage")).byteCount();
-			if(visualReferenceRepresentation.isDefined("pngImage"))
-				image2DHeader.visualReferenceRepresentation.pngImageSize = 
-					BlobNode(visualReferenceRepresentation.get("pngImage")).byteCount();
-			if(visualReferenceRepresentation.isDefined("imageMask"))
-				image2DHeader.visualReferenceRepresentation.imageMaskSize = 
-					BlobNode(visualReferenceRepresentation.get("imageMask")).byteCount();
+         if ( visualReferenceRepresentation.isDefined( "jpegImage" ) )
+            image2DHeader.visualReferenceRepresentation.jpegImageSize =
+               BlobNode( visualReferenceRepresentation.get( "jpegImage" ) ).byteCount();
+         if ( visualReferenceRepresentation.isDefined( "pngImage" ) )
+            image2DHeader.visualReferenceRepresentation.pngImageSize =
+               BlobNode( visualReferenceRepresentation.get( "pngImage" ) ).byteCount();
+         if ( visualReferenceRepresentation.isDefined( "imageMask" ) )
+            image2DHeader.visualReferenceRepresentation.imageMaskSize =
+               BlobNode( visualReferenceRepresentation.get( "imageMask" ) ).byteCount();
 
-			image2DHeader.visualReferenceRepresentation.imageHeight = (int32_t)
-				IntegerNode(visualReferenceRepresentation.get("imageHeight")).value();
-			image2DHeader.visualReferenceRepresentation.imageWidth = (int32_t)
-				IntegerNode(visualReferenceRepresentation.get("imageWidth")).value();
-		}
+         image2DHeader.visualReferenceRepresentation.imageHeight =
+            (int32_t)IntegerNode( visualReferenceRepresentation.get( "imageHeight" ) ).value();
+         image2DHeader.visualReferenceRepresentation.imageWidth =
+            (int32_t)IntegerNode( visualReferenceRepresentation.get( "imageWidth" ) ).value();
+      }
 
-		if(image.isDefined("pinholeRepresentation"))
-		{
-			StructureNode pinholeRepresentation(image.get("pinholeRepresentation"));
+      if ( image.isDefined( "pinholeRepresentation" ) )
+      {
+         StructureNode pinholeRepresentation( image.get( "pinholeRepresentation" ) );
 
-			if(pinholeRepresentation.isDefined("jpegImage"))
-				image2DHeader.pinholeRepresentation.jpegImageSize = 
-					BlobNode(pinholeRepresentation.get("jpegImage")).byteCount();
-			if(pinholeRepresentation.isDefined("pngImage"))
-				image2DHeader.pinholeRepresentation.pngImageSize = 
-					BlobNode(pinholeRepresentation.get("pngImage")).byteCount();
-			if(pinholeRepresentation.isDefined("imageMask"))
-				image2DHeader.pinholeRepresentation.imageMaskSize = 
-					BlobNode(pinholeRepresentation.get("imageMask")).byteCount();
+         if ( pinholeRepresentation.isDefined( "jpegImage" ) )
+            image2DHeader.pinholeRepresentation.jpegImageSize =
+               BlobNode( pinholeRepresentation.get( "jpegImage" ) ).byteCount();
+         if ( pinholeRepresentation.isDefined( "pngImage" ) )
+            image2DHeader.pinholeRepresentation.pngImageSize =
+               BlobNode( pinholeRepresentation.get( "pngImage" ) ).byteCount();
+         if ( pinholeRepresentation.isDefined( "imageMask" ) )
+            image2DHeader.pinholeRepresentation.imageMaskSize =
+               BlobNode( pinholeRepresentation.get( "imageMask" ) ).byteCount();
 
-			image2DHeader.pinholeRepresentation.focalLength = 
-				FloatNode(pinholeRepresentation.get("focalLength")).value();
-			image2DHeader.pinholeRepresentation.imageHeight = (int32_t)
-				IntegerNode(pinholeRepresentation.get("imageHeight")).value();
-			image2DHeader.pinholeRepresentation.imageWidth = (int32_t)
-				IntegerNode(pinholeRepresentation.get("imageWidth")).value();
+         image2DHeader.pinholeRepresentation.focalLength =
+            FloatNode( pinholeRepresentation.get( "focalLength" ) ).value();
+         image2DHeader.pinholeRepresentation.imageHeight =
+            (int32_t)IntegerNode( pinholeRepresentation.get( "imageHeight" ) ).value();
+         image2DHeader.pinholeRepresentation.imageWidth =
+            (int32_t)IntegerNode( pinholeRepresentation.get( "imageWidth" ) ).value();
 
-			image2DHeader.pinholeRepresentation.pixelHeight = 
-				FloatNode(pinholeRepresentation.get("pixelHeight")).value();
-			image2DHeader.pinholeRepresentation.pixelWidth = 
-				FloatNode(pinholeRepresentation.get("pixelWidth")).value();
-			image2DHeader.pinholeRepresentation.principalPointX = 
-				FloatNode(pinholeRepresentation.get("principalPointX")).value();
-			image2DHeader.pinholeRepresentation.principalPointY = 
-				FloatNode(pinholeRepresentation.get("principalPointY")).value();
-		}
-		else if(image.isDefined("sphericalRepresentation"))
-		{
-			StructureNode sphericalRepresentation(image.get("sphericalRepresentation"));
+         image2DHeader.pinholeRepresentation.pixelHeight =
+            FloatNode( pinholeRepresentation.get( "pixelHeight" ) ).value();
+         image2DHeader.pinholeRepresentation.pixelWidth =
+            FloatNode( pinholeRepresentation.get( "pixelWidth" ) ).value();
+         image2DHeader.pinholeRepresentation.principalPointX =
+            FloatNode( pinholeRepresentation.get( "principalPointX" ) ).value();
+         image2DHeader.pinholeRepresentation.principalPointY =
+            FloatNode( pinholeRepresentation.get( "principalPointY" ) ).value();
+      }
+      else if ( image.isDefined( "sphericalRepresentation" ) )
+      {
+         StructureNode sphericalRepresentation( image.get( "sphericalRepresentation" ) );
 
-			if(sphericalRepresentation.isDefined("jpegImage"))
-				image2DHeader.sphericalRepresentation.jpegImageSize = 
-					BlobNode(sphericalRepresentation.get("jpegImage")).byteCount();
-			if(sphericalRepresentation.isDefined("pngImage"))
-				image2DHeader.sphericalRepresentation.pngImageSize = 
-					BlobNode(sphericalRepresentation.get("pngImage")).byteCount();
-			if(sphericalRepresentation.isDefined("imageMask"))
-				image2DHeader.sphericalRepresentation.imageMaskSize = 
-					BlobNode(sphericalRepresentation.get("imageMask")).byteCount();
+         if ( sphericalRepresentation.isDefined( "jpegImage" ) )
+            image2DHeader.sphericalRepresentation.jpegImageSize =
+               BlobNode( sphericalRepresentation.get( "jpegImage" ) ).byteCount();
+         if ( sphericalRepresentation.isDefined( "pngImage" ) )
+            image2DHeader.sphericalRepresentation.pngImageSize =
+               BlobNode( sphericalRepresentation.get( "pngImage" ) ).byteCount();
+         if ( sphericalRepresentation.isDefined( "imageMask" ) )
+            image2DHeader.sphericalRepresentation.imageMaskSize =
+               BlobNode( sphericalRepresentation.get( "imageMask" ) ).byteCount();
 
-			image2DHeader.sphericalRepresentation.imageHeight = (int32_t)
-				IntegerNode(sphericalRepresentation.get("imageHeight")).value();
-			image2DHeader.sphericalRepresentation.imageWidth = (int32_t)
-				IntegerNode(sphericalRepresentation.get("imageWidth")).value();
+         image2DHeader.sphericalRepresentation.imageHeight =
+            (int32_t)IntegerNode( sphericalRepresentation.get( "imageHeight" ) ).value();
+         image2DHeader.sphericalRepresentation.imageWidth =
+            (int32_t)IntegerNode( sphericalRepresentation.get( "imageWidth" ) ).value();
 
-			image2DHeader.sphericalRepresentation.pixelHeight = 
-				FloatNode(sphericalRepresentation.get("pixelHeight")).value();
-			image2DHeader.sphericalRepresentation.pixelWidth = 
-				FloatNode(sphericalRepresentation.get("pixelWidth")).value();
-		}
-		else if(image.isDefined("cylindricalRepresentation"))
-		{
-			StructureNode cylindricalRepresentation(image.get("cylindricalRepresentation"));
+         image2DHeader.sphericalRepresentation.pixelHeight =
+            FloatNode( sphericalRepresentation.get( "pixelHeight" ) ).value();
+         image2DHeader.sphericalRepresentation.pixelWidth =
+            FloatNode( sphericalRepresentation.get( "pixelWidth" ) ).value();
+      }
+      else if ( image.isDefined( "cylindricalRepresentation" ) )
+      {
+         StructureNode cylindricalRepresentation( image.get( "cylindricalRepresentation" ) );
 
-			if(cylindricalRepresentation.isDefined("jpegImage"))
-				image2DHeader.cylindricalRepresentation.jpegImageSize = 
-					BlobNode(cylindricalRepresentation.get("jpegImage")).byteCount();
-			if(cylindricalRepresentation.isDefined("pngImage"))
-				image2DHeader.cylindricalRepresentation.pngImageSize = 
-					BlobNode(cylindricalRepresentation.get("pngImage")).byteCount();
-			if(cylindricalRepresentation.isDefined("imageMask"))
-				image2DHeader.cylindricalRepresentation.imageMaskSize = 
-					BlobNode(cylindricalRepresentation.get("imageMask")).byteCount();
+         if ( cylindricalRepresentation.isDefined( "jpegImage" ) )
+            image2DHeader.cylindricalRepresentation.jpegImageSize =
+               BlobNode( cylindricalRepresentation.get( "jpegImage" ) ).byteCount();
+         if ( cylindricalRepresentation.isDefined( "pngImage" ) )
+            image2DHeader.cylindricalRepresentation.pngImageSize =
+               BlobNode( cylindricalRepresentation.get( "pngImage" ) ).byteCount();
+         if ( cylindricalRepresentation.isDefined( "imageMask" ) )
+            image2DHeader.cylindricalRepresentation.imageMaskSize =
+               BlobNode( cylindricalRepresentation.get( "imageMask" ) ).byteCount();
 
-			image2DHeader.cylindricalRepresentation.imageHeight = (int32_t)
-				IntegerNode(cylindricalRepresentation.get("imageHeight")).value();
-			image2DHeader.cylindricalRepresentation.imageWidth = (int32_t)
-				IntegerNode(cylindricalRepresentation.get("imageWidth")).value();
+         image2DHeader.cylindricalRepresentation.imageHeight =
+            (int32_t)IntegerNode( cylindricalRepresentation.get( "imageHeight" ) ).value();
+         image2DHeader.cylindricalRepresentation.imageWidth =
+            (int32_t)IntegerNode( cylindricalRepresentation.get( "imageWidth" ) ).value();
 
-			image2DHeader.cylindricalRepresentation.pixelHeight = 
-				FloatNode(cylindricalRepresentation.get("pixelHeight")).value();
-			image2DHeader.cylindricalRepresentation.pixelWidth = 
-				FloatNode(cylindricalRepresentation.get("pixelWidth")).value();
-			image2DHeader.cylindricalRepresentation.principalPointY = 
-				FloatNode(cylindricalRepresentation.get("principalPointY")).value();
-			image2DHeader.cylindricalRepresentation.radius = 
-				FloatNode(cylindricalRepresentation.get("radius")).value();
-		}
-		return true;
-	}
-	return false;
-};
-//! This function reads one of the image blobs
-int64_t ReaderImpl :: ReadImage2DNode(
-	e57::StructureNode		image,			//!< 1 of 3 projects or the visual
-	e57::Image2DType		imageType,		//!< identifies the image format desired.
-	void *					pBuffer,		//!< pointer the buffer
-	int64_t					start,			//!< position in the block to start reading
-	int64_t					count			//!< size of desired chuck or buffer size
-	)										//!< /return Returns the number of bytes transferred.
+         image2DHeader.cylindricalRepresentation.pixelHeight =
+            FloatNode( cylindricalRepresentation.get( "pixelHeight" ) ).value();
+         image2DHeader.cylindricalRepresentation.pixelWidth =
+            FloatNode( cylindricalRepresentation.get( "pixelWidth" ) ).value();
+         image2DHeader.cylindricalRepresentation.principalPointY =
+            FloatNode( cylindricalRepresentation.get( "principalPointY" ) ).value();
+         image2DHeader.cylindricalRepresentation.radius =
+            FloatNode( cylindricalRepresentation.get( "radius" ) ).value();
+      }
+      return true;
+   }
+   return false;
+}
+
+// This function reads one of the image blobs
+int64_t ReaderImpl::ReadImage2DNode( e57::StructureNode image, e57::Image2DType imageType, void *pBuffer, int64_t start,
+                                     int64_t count )
 {
-	int64_t transferred = 0;
-	switch(imageType)
-	{
-        case E57_NO_IMAGE: {
-            return 0;
-        }
-        case	E57_JPEG_IMAGE:
-		{
-			if(image.isDefined("jpegImage"))
-			{
-				BlobNode jpegImage(image.get("jpegImage"));
-				jpegImage.read((uint8_t*) pBuffer, start, (size_t) count);
-				transferred = count;
-			}
-			break;
-		}
-	case	E57_PNG_IMAGE:
-		{
-			if(	image.isDefined("pngImage"))
-			{
-				BlobNode pngImage(image.get("pngImage"));
-				pngImage.read((uint8_t*) pBuffer, start, (size_t) count);
-				transferred = count;
-			}
-			break;
-		}
-	case	E57_PNG_IMAGE_MASK:
-		{
-			if(	image.isDefined("imageMask"))
-			{
-				BlobNode imageMask(image.get("imageMask"));
-				imageMask.read((uint8_t*) pBuffer, start, (size_t) count);
-				transferred = count;
-			}
-			break;
-		}
-	};
-	return transferred;
-};
-//! This function reads one of the image blobs
-bool ReaderImpl :: GetImage2DNodeSizes(
-	e57::StructureNode		image,			//!< 1 of 3 projects or the visual
-	e57::Image2DType &		imageType,		//!< identifies the image format desired.
-	int64_t &				imageWidth,		//!< The image width (in pixels).
-	int64_t &				imageHeight,	//!< The image height (in pixels).
-	int64_t &				imageSize,		//!< This is the total number of bytes for the image blob.
-	e57::Image2DType &		imageMaskType	//!< This is E57_PNG_IMAGE_MASK if "imageMask" is defined in the projection
-	)										//!< /return Returns the number of bytes transferred.
+   int64_t transferred = 0;
+   switch ( imageType )
+   {
+      case E57_NO_IMAGE:
+      {
+         return 0;
+      }
+      case E57_JPEG_IMAGE:
+      {
+         if ( image.isDefined( "jpegImage" ) )
+         {
+            BlobNode jpegImage( image.get( "jpegImage" ) );
+            jpegImage.read( (uint8_t *)pBuffer, start, (size_t)count );
+            transferred = count;
+         }
+         break;
+      }
+      case E57_PNG_IMAGE:
+      {
+         if ( image.isDefined( "pngImage" ) )
+         {
+            BlobNode pngImage( image.get( "pngImage" ) );
+            pngImage.read( (uint8_t *)pBuffer, start, (size_t)count );
+            transferred = count;
+         }
+         break;
+      }
+      case E57_PNG_IMAGE_MASK:
+      {
+         if ( image.isDefined( "imageMask" ) )
+         {
+            BlobNode imageMask( image.get( "imageMask" ) );
+            imageMask.read( (uint8_t *)pBuffer, start, (size_t)count );
+            transferred = count;
+         }
+         break;
+      }
+   }
+   return transferred;
+}
+
+// This function reads one of the image blobs
+bool ReaderImpl::GetImage2DNodeSizes( e57::StructureNode image, e57::Image2DType &imageType, int64_t &imageWidth,
+                                      int64_t &imageHeight, int64_t &imageSize, e57::Image2DType &imageMaskType )
 {
-	imageWidth = 0;
-	imageHeight = 0;
-	imageSize = 0;
-	imageType = E57_NO_IMAGE;
-	imageMaskType = E57_NO_IMAGE;
+   imageWidth = 0;
+   imageHeight = 0;
+   imageSize = 0;
+   imageType = E57_NO_IMAGE;
+   imageMaskType = E57_NO_IMAGE;
 
-	if(image.isDefined("imageWidth"))
-		imageWidth = IntegerNode(image.get("imageWidth")).value();
-	else return false;
-	
-	if(image.isDefined("imageHeight"))
-		imageHeight = IntegerNode(image.get("imageHeight")).value();
-	else return false;
+   if ( image.isDefined( "imageWidth" ) )
+      imageWidth = IntegerNode( image.get( "imageWidth" ) ).value();
+   else
+      return false;
 
-	if(image.isDefined("jpegImage"))
-	{
-		imageSize = BlobNode(image.get("jpegImage")).byteCount();
-		imageType = E57_JPEG_IMAGE;
-	}
-	else if( image.isDefined("pngImage"))
-	{
-		imageSize = BlobNode(image.get("pngImage")).byteCount();
-		imageType = E57_PNG_IMAGE;
-	}
+   if ( image.isDefined( "imageHeight" ) )
+      imageHeight = IntegerNode( image.get( "imageHeight" ) ).value();
+   else
+      return false;
 
-	if(	image.isDefined("imageMask"))
-	{
-		if(imageType == E57_NO_IMAGE)
-		{
-			imageSize = BlobNode(image.get("imageMask")).byteCount();
-			imageType = E57_PNG_IMAGE_MASK;
-		}
-		imageMaskType = E57_PNG_IMAGE_MASK;
-	}
-	return true;
-};
+   if ( image.isDefined( "jpegImage" ) )
+   {
+      imageSize = BlobNode( image.get( "jpegImage" ) ).byteCount();
+      imageType = E57_JPEG_IMAGE;
+   }
+   else if ( image.isDefined( "pngImage" ) )
+   {
+      imageSize = BlobNode( image.get( "pngImage" ) ).byteCount();
+      imageType = E57_PNG_IMAGE;
+   }
+
+   if ( image.isDefined( "imageMask" ) )
+   {
+      if ( imageType == E57_NO_IMAGE )
+      {
+         imageSize = BlobNode( image.get( "imageMask" ) ).byteCount();
+         imageType = E57_PNG_IMAGE_MASK;
+      }
+      imageMaskType = E57_PNG_IMAGE_MASK;
+   }
+   return true;
+}
 
 // This function returns the image sizes
-bool		ReaderImpl :: GetImage2DSizes(
-	int64_t					imageIndex,		//!< This in the index into the image2D vector
-	e57::Image2DProjection &imageProjection,//!< identifies the projection desired.
-	e57::Image2DType &		imageType,		//!< identifies the image format desired.
-	int64_t &				imageWidth,		//!< The image width (in pixels).
-	int64_t &				imageHeight,	//!< The image height (in pixels).
-	int64_t &				imageSize,		//!< This is the total number of bytes for the image blob.
-	e57::Image2DType &		imageMaskType,	//!< This is E57_PNG_IMAGE_MASK if "imageMask" is defined in the projection
-	e57::Image2DType &		imageVisualType	//!< This is image type of the VisualReferenceRepresentation if given.
-	)
+bool ReaderImpl::GetImage2DSizes( int64_t imageIndex, e57::Image2DProjection &imageProjection,
+                                  e57::Image2DType &imageType, int64_t &imageWidth, int64_t &imageHeight,
+                                  int64_t &imageSize, e57::Image2DType &imageMaskType,
+                                  e57::Image2DType &imageVisualType )
 {
-	if( (imageIndex < 0) || (imageIndex >= images2D_.childCount()))
-		return 0;
+   if ( ( imageIndex < 0 ) || ( imageIndex >= images2D_.childCount() ) )
+      return 0;
 
-	imageProjection = E57_NO_PROJECTION;
-	imageType = E57_NO_IMAGE;
-	imageMaskType = E57_NO_IMAGE;
-	imageVisualType = E57_NO_IMAGE;
+   imageProjection = E57_NO_PROJECTION;
+   imageType = E57_NO_IMAGE;
+   imageMaskType = E57_NO_IMAGE;
+   imageVisualType = E57_NO_IMAGE;
 
-	bool ret = false;
-	StructureNode image(images2D_.get(imageIndex));
+   bool ret = false;
+   StructureNode image( images2D_.get( imageIndex ) );
 
-	if(image.isDefined("visualReferenceRepresentation"))
-	{
-		imageProjection = E57_VISUAL;
-		StructureNode visualReferenceRepresentation(image.get("visualReferenceRepresentation"));
-		ret = GetImage2DNodeSizes(visualReferenceRepresentation, imageType, imageWidth, imageHeight, imageSize, imageMaskType);
-		imageVisualType = imageType;
-	}
+   if ( image.isDefined( "visualReferenceRepresentation" ) )
+   {
+      imageProjection = E57_VISUAL;
+      StructureNode visualReferenceRepresentation( image.get( "visualReferenceRepresentation" ) );
+      ret = GetImage2DNodeSizes( visualReferenceRepresentation, imageType, imageWidth, imageHeight, imageSize,
+                                 imageMaskType );
+      imageVisualType = imageType;
+   }
 
-	if(image.isDefined("pinholeRepresentation"))
-	{
-		imageProjection = E57_PINHOLE;
-		StructureNode pinholeRepresentation(image.get("pinholeRepresentation"));
-		ret = GetImage2DNodeSizes(pinholeRepresentation, imageType, imageWidth, imageHeight, imageSize, imageMaskType);
-	}
-	else if(image.isDefined("sphericalRepresentation"))
-	{
-		imageProjection = E57_SPHERICAL;
-		StructureNode sphericalRepresentation(image.get("sphericalRepresentation"));
-		ret = GetImage2DNodeSizes(sphericalRepresentation, imageType, imageWidth, imageHeight, imageSize, imageMaskType);
-	}
-	else if(image.isDefined("cylindricalRepresentation"))
-	{
-		imageProjection = E57_CYLINDRICAL;
-		StructureNode cylindricalRepresentation(image.get("cylindricalRepresentation"));
-		ret = GetImage2DNodeSizes(cylindricalRepresentation, imageType, imageWidth, imageHeight, imageSize, imageMaskType);
-	};
-	return ret;
-};
-//! This function reads the block
-int64_t	ReaderImpl :: ReadImage2DData(
-	int64_t					imageIndex,		//!< picture block index
-	e57::Image2DProjection	imageProjection,//!< identifies the projection desired.
-	e57::Image2DType		imageType,		//!< identifies the image format desired.
-	void *					pBuffer,		//!< pointer the buffer
-	int64_t					start,			//!< position in the block to start reading
-	int64_t					count			//!< size of desired chuck or buffer size
-	)										//!< /return Returns the number of bytes transferred.
+   if ( image.isDefined( "pinholeRepresentation" ) )
+   {
+      imageProjection = E57_PINHOLE;
+      StructureNode pinholeRepresentation( image.get( "pinholeRepresentation" ) );
+      ret = GetImage2DNodeSizes( pinholeRepresentation, imageType, imageWidth, imageHeight, imageSize, imageMaskType );
+   }
+   else if ( image.isDefined( "sphericalRepresentation" ) )
+   {
+      imageProjection = E57_SPHERICAL;
+      StructureNode sphericalRepresentation( image.get( "sphericalRepresentation" ) );
+      ret =
+         GetImage2DNodeSizes( sphericalRepresentation, imageType, imageWidth, imageHeight, imageSize, imageMaskType );
+   }
+   else if ( image.isDefined( "cylindricalRepresentation" ) )
+   {
+      imageProjection = E57_CYLINDRICAL;
+      StructureNode cylindricalRepresentation( image.get( "cylindricalRepresentation" ) );
+      ret =
+         GetImage2DNodeSizes( cylindricalRepresentation, imageType, imageWidth, imageHeight, imageSize, imageMaskType );
+   }
+   return ret;
+}
+
+// This function reads the block
+int64_t ReaderImpl::ReadImage2DData( int64_t imageIndex, e57::Image2DProjection imageProjection,
+                                     e57::Image2DType imageType, void *pBuffer, int64_t start, int64_t count )
 {
-	if( (imageIndex < 0) || (imageIndex >= images2D_.childCount()))
-		return 0;
+   if ( ( imageIndex < 0 ) || ( imageIndex >= images2D_.childCount() ) )
+      return 0;
 
-	int64_t transferred = 0;
-	StructureNode image(images2D_.get(imageIndex));
+   int64_t transferred = 0;
+   StructureNode image( images2D_.get( imageIndex ) );
 
-	switch(imageProjection)
-	{
-        case E57_NO_PROJECTION:
-            return 0;
-        case	E57_VISUAL:
-		if(image.isDefined("visualReferenceRepresentation"))
-		{
-			StructureNode visualReferenceRepresentation(image.get("visualReferenceRepresentation"));
-			transferred = ReadImage2DNode(visualReferenceRepresentation, imageType, pBuffer, start, count);
-		}
-		break;
+   switch ( imageProjection )
+   {
+      case E57_NO_PROJECTION:
+         return 0;
+      case E57_VISUAL:
+         if ( image.isDefined( "visualReferenceRepresentation" ) )
+         {
+            StructureNode visualReferenceRepresentation( image.get( "visualReferenceRepresentation" ) );
+            transferred = ReadImage2DNode( visualReferenceRepresentation, imageType, pBuffer, start, count );
+         }
+         break;
 
-	case	E57_PINHOLE:
-		if(image.isDefined("pinholeRepresentation"))
-		{
-			StructureNode pinholeRepresentation(image.get("pinholeRepresentation"));
-			transferred = ReadImage2DNode(pinholeRepresentation, imageType, pBuffer, start, count);
-		}
-		break;
+      case E57_PINHOLE:
+         if ( image.isDefined( "pinholeRepresentation" ) )
+         {
+            StructureNode pinholeRepresentation( image.get( "pinholeRepresentation" ) );
+            transferred = ReadImage2DNode( pinholeRepresentation, imageType, pBuffer, start, count );
+         }
+         break;
 
-	case	E57_SPHERICAL:
-		if(image.isDefined("sphericalRepresentation"))
-		{
-			StructureNode sphericalRepresentation(image.get("sphericalRepresentation"));
-			transferred = ReadImage2DNode(sphericalRepresentation, imageType, pBuffer, start, count);
-		}
-		break;
+      case E57_SPHERICAL:
+         if ( image.isDefined( "sphericalRepresentation" ) )
+         {
+            StructureNode sphericalRepresentation( image.get( "sphericalRepresentation" ) );
+            transferred = ReadImage2DNode( sphericalRepresentation, imageType, pBuffer, start, count );
+         }
+         break;
 
-	case	E57_CYLINDRICAL:
-		if(image.isDefined("cylindricalRepresentation"))
-		{
-			StructureNode cylindricalRepresentation(image.get("cylindricalRepresentation"));
-			transferred = ReadImage2DNode(cylindricalRepresentation, imageType, pBuffer, start, count);
-		}
-		break;
-	};
-	return transferred;
-};
+      case E57_CYLINDRICAL:
+         if ( image.isDefined( "cylindricalRepresentation" ) )
+         {
+            StructureNode cylindricalRepresentation( image.get( "cylindricalRepresentation" ) );
+            transferred = ReadImage2DNode( cylindricalRepresentation, imageType, pBuffer, start, count );
+         }
+         break;
+   }
+   return transferred;
+}
 
-////////////////////////////////////////////////////////////////////
-//
-//	Scanner Image 3d data
-//
-//! This function returns the total number of Image Blocks
-int64_t	ReaderImpl :: GetData3DCount()
+int64_t ReaderImpl::GetData3DCount()
 {
-	return data3D_.childCount();
-};
+   return data3D_.childCount();
+}
 
-//! This function returns the file raw E57Root Structure Node
-StructureNode	ReaderImpl :: GetRawE57Root()
+StructureNode ReaderImpl::GetRawE57Root()
 {
-	return root_;
-};	//!< /return Returns the E57Root StructureNode
+   return root_;
+}
 
-//! This function returns the raw Data3D Vector Node
-VectorNode		ReaderImpl :: GetRawData3D()
+VectorNode ReaderImpl::GetRawData3D()
 {
-	return data3D_;
-};//!< /return Returns the raw Data3D VectorNode
+   return data3D_;
+}
 
-//! This function returns the raw Images2D Vector Node
-VectorNode		ReaderImpl :: GetRawImages2D()
+VectorNode ReaderImpl::GetRawImages2D()
 {
-	return images2D_;
-};	//!< /return Returns the raw Image2D VectorNode
-//! This function returns the ram ImageFile Node which is need to add enhancements
-ImageFile		ReaderImpl :: GetRawIMF()
+   return images2D_;
+}
+
+ImageFile ReaderImpl::GetRawIMF()
 {
-	return imf_;
-};  //!< /return Returns the raw ImageFile
-//! This function returns the Data3D header and positions the cursor
-bool	ReaderImpl :: ReadData3D( 
-	int64_t		dataIndex,	//!< This in the index into the images3D vector
-	Data3D &	data3DHeader //!< pointer to the Data3D structure to receive the image information
-	)	//!< /return Returns true if sucessful
+   return imf_;
+}
+
+bool ReaderImpl::ReadData3D( int64_t dataIndex, Data3D &data3DHeader )
 {
-	if(IsOpen())
-	{
-		if( (dataIndex < 0) || (dataIndex >= data3D_.childCount()))
-			return false;
+   if ( IsOpen() )
+   {
+      if ( ( dataIndex < 0 ) || ( dataIndex >= data3D_.childCount() ) )
+         return false;
 
-        data3DHeader = {};
+      data3DHeader = {};
 
-		StructureNode scan(data3D_.get(dataIndex));
-		CompressedVectorNode points(scan.get("points"));
+      StructureNode scan( data3D_.get( dataIndex ) );
+      CompressedVectorNode points( scan.get( "points" ) );
 
-		data3DHeader.pointsSize = points.childCount();
-		StructureNode proto(points.prototype());
+      data3DHeader.pointsSize = points.childCount();
+      StructureNode proto( points.prototype() );
 
-		data3DHeader.guid = StringNode(scan.get("guid")).value();
+      data3DHeader.guid = StringNode( scan.get( "guid" ) ).value();
 
-		if(scan.isDefined("name"))
-			data3DHeader.name = StringNode(scan.get("name")).value();
-		if(scan.isDefined("description"))
-			data3DHeader.description = StringNode(scan.get("description")).value();
+      if ( scan.isDefined( "name" ) )
+         data3DHeader.name = StringNode( scan.get( "name" ) ).value();
+      if ( scan.isDefined( "description" ) )
+         data3DHeader.description = StringNode( scan.get( "description" ) ).value();
 
-		if(scan.isDefined("originalGuids"))
-		{
-			VectorNode originalGuids(scan.get("originalGuids"));
-			if(originalGuids.childCount() > 0)
-			{
-				data3DHeader.originalGuids.clear();
-				int i;
-				for( i = 0; i < originalGuids.childCount(); i++)
-				{
-					e57::ustring str = StringNode(originalGuids.get(i)).value();
-					data3DHeader.originalGuids.push_back(str);
-				}
-			}
-		}
+      if ( scan.isDefined( "originalGuids" ) )
+      {
+         VectorNode originalGuids( scan.get( "originalGuids" ) );
+         if ( originalGuids.childCount() > 0 )
+         {
+            data3DHeader.originalGuids.clear();
+            int i;
+            for ( i = 0; i < originalGuids.childCount(); i++ )
+            {
+               e57::ustring str = StringNode( originalGuids.get( i ) ).value();
+               data3DHeader.originalGuids.push_back( str );
+            }
+         }
+      }
 
-// Get various sensor and version strings to scan.
+      // Get various sensor and version strings to scan.
+      if ( scan.isDefined( "sensorVendor" ) )
+         data3DHeader.sensorVendor = StringNode( scan.get( "sensorVendor" ) ).value();
+      if ( scan.isDefined( "sensorModel" ) )
+         data3DHeader.sensorModel = StringNode( scan.get( "sensorModel" ) ).value();
+      if ( scan.isDefined( "sensorSerialNumber" ) )
+         data3DHeader.sensorSerialNumber = StringNode( scan.get( "sensorSerialNumber" ) ).value();
+      if ( scan.isDefined( "sensorHardwareVersion" ) )
+         data3DHeader.sensorHardwareVersion = StringNode( scan.get( "sensorHardwareVersion" ) ).value();
+      if ( scan.isDefined( "sensorSoftwareVersion" ) )
+         data3DHeader.sensorSoftwareVersion = StringNode( scan.get( "sensorSoftwareVersion" ) ).value();
+      if ( scan.isDefined( "sensorFirmwareVersion" ) )
+         data3DHeader.sensorFirmwareVersion = StringNode( scan.get( "sensorFirmwareVersion" ) ).value();
 
-		if(scan.isDefined("sensorVendor"))
-			data3DHeader.sensorVendor = StringNode(scan.get("sensorVendor")).value();
-		if(scan.isDefined("sensorModel"))
-			data3DHeader.sensorModel = StringNode(scan.get("sensorModel")).value();
-		if(scan.isDefined("sensorSerialNumber"))
-			data3DHeader.sensorSerialNumber = StringNode(scan.get("sensorSerialNumber")).value();
-		if(scan.isDefined("sensorHardwareVersion"))
-			data3DHeader.sensorHardwareVersion = StringNode(scan.get("sensorHardwareVersion")).value();
-		if(scan.isDefined("sensorSoftwareVersion"))
-			data3DHeader.sensorSoftwareVersion = StringNode(scan.get("sensorSoftwareVersion")).value();
-		if(scan.isDefined("sensorFirmwareVersion"))
-			data3DHeader.sensorFirmwareVersion = StringNode(scan.get("sensorFirmwareVersion")).value();
+      // Get temp/humidity to scan.
+      if ( scan.isDefined( "temperature" ) )
+         data3DHeader.temperature = (float)FloatNode( scan.get( "temperature" ) ).value();
+      if ( scan.isDefined( "relativeHumidity" ) )
+         data3DHeader.relativeHumidity = (float)FloatNode( scan.get( "relativeHumidity" ) ).value();
+      if ( scan.isDefined( "atmosphericPressure" ) )
+         data3DHeader.atmosphericPressure = (float)FloatNode( scan.get( "atmosphericPressure" ) ).value();
 
-// Get temp/humidity to scan.
+      if ( scan.isDefined( "indexBounds" ) )
+      {
+         StructureNode ibox( scan.get( "indexBounds" ) );
+         if ( ibox.isDefined( "rowMaximum" ) )
+         {
+            data3DHeader.indexBounds.rowMinimum = IntegerNode( ibox.get( "rowMinimum" ) ).value();
+            data3DHeader.indexBounds.rowMaximum = IntegerNode( ibox.get( "rowMaximum" ) ).value();
+         }
+         if ( ibox.isDefined( "columnMaximum" ) )
+         {
+            data3DHeader.indexBounds.columnMinimum = IntegerNode( ibox.get( "columnMinimum" ) ).value();
+            data3DHeader.indexBounds.columnMaximum = IntegerNode( ibox.get( "columnMaximum" ) ).value();
+         }
+         if ( ibox.isDefined( "returnMaximum" ) )
+         {
+            data3DHeader.indexBounds.returnMinimum = IntegerNode( ibox.get( "returnMinimum" ) ).value();
+            data3DHeader.indexBounds.returnMaximum = IntegerNode( ibox.get( "returnMaximum" ) ).value();
+         }
+      }
 
-		if(scan.isDefined("temperature"))
-			data3DHeader.temperature = (float) FloatNode(scan.get("temperature")).value();
-		if(scan.isDefined("relativeHumidity"))
-			data3DHeader.relativeHumidity = (float) FloatNode(scan.get("relativeHumidity")).value();
-		if(scan.isDefined("atmosphericPressure"))
-			data3DHeader.atmosphericPressure = (float) FloatNode(scan.get("atmosphericPressure")).value();
+      if ( scan.isDefined( "pointGroupingSchemes" ) )
+      {
+         StructureNode pointGroupingSchemes( scan.get( "pointGroupingSchemes" ) );
+         if ( pointGroupingSchemes.isDefined( "groupingByLine" ) )
+         {
+            StructureNode groupingByLine( pointGroupingSchemes.get( "groupingByLine" ) );
 
-		if(scan.isDefined("indexBounds"))
-		{
-			StructureNode ibox(scan.get("indexBounds"));
-			if(ibox.isDefined("rowMaximum"))
-			{
-				data3DHeader.indexBounds.rowMinimum = IntegerNode(ibox.get("rowMinimum")).value();
-				data3DHeader.indexBounds.rowMaximum = IntegerNode(ibox.get("rowMaximum")).value();
-			}
-			if(ibox.isDefined("columnMaximum"))
-			{
-				data3DHeader.indexBounds.columnMinimum = IntegerNode(ibox.get("columnMinimum")).value();
-				data3DHeader.indexBounds.columnMaximum = IntegerNode(ibox.get("columnMaximum")).value();
-			}
-			if(ibox.isDefined("returnMaximum"))
-			{
-				data3DHeader.indexBounds.returnMinimum = IntegerNode(ibox.get("returnMinimum")).value();
-				data3DHeader.indexBounds.returnMaximum = IntegerNode(ibox.get("returnMaximum")).value();
-			}
-		}
+            data3DHeader.pointGroupingSchemes.groupingByLine.idElementName =
+               StringNode( groupingByLine.get( "idElementName" ) ).value();
 
-		if(scan.isDefined("pointGroupingSchemes"))
-		{
-			StructureNode pointGroupingSchemes(scan.get("pointGroupingSchemes"));
-			if(pointGroupingSchemes.isDefined("groupingByLine"))
-			{
-				StructureNode groupingByLine(pointGroupingSchemes.get("groupingByLine"));
+            CompressedVectorNode groups( groupingByLine.get( "groups" ) );
+            data3DHeader.pointGroupingSchemes.groupingByLine.groupsSize = groups.childCount();
 
-				data3DHeader.pointGroupingSchemes.groupingByLine.idElementName =
-					StringNode(groupingByLine.get("idElementName")).value();
+            StructureNode lineGroupRecord( groups.prototype() );
+            if ( lineGroupRecord.isDefined( "pointCount" ) )
+               data3DHeader.pointGroupingSchemes.groupingByLine.pointCountSize =
+                  IntegerNode( lineGroupRecord.get( "pointCount" ) ).maximum();
+         }
+      }
 
-				CompressedVectorNode groups(groupingByLine.get("groups"));
-				data3DHeader.pointGroupingSchemes.groupingByLine.groupsSize = groups.childCount();
+      // Get Cartesian bounding box to scan.
+      if ( scan.isDefined( "cartesianBounds" ) )
+      {
+         StructureNode bbox( scan.get( "cartesianBounds" ) );
+         if ( bbox.get( "xMinimum" ).type() == E57_SCALED_INTEGER )
+         {
+            data3DHeader.cartesianBounds.xMinimum = (double)ScaledIntegerNode( bbox.get( "xMinimum" ) ).scaledValue();
+            data3DHeader.cartesianBounds.xMaximum = (double)ScaledIntegerNode( bbox.get( "xMaximum" ) ).scaledValue();
+            data3DHeader.cartesianBounds.yMinimum = (double)ScaledIntegerNode( bbox.get( "yMinimum" ) ).scaledValue();
+            data3DHeader.cartesianBounds.yMaximum = (double)ScaledIntegerNode( bbox.get( "yMaximum" ) ).scaledValue();
+            data3DHeader.cartesianBounds.zMinimum = (double)ScaledIntegerNode( bbox.get( "zMinimum" ) ).scaledValue();
+            data3DHeader.cartesianBounds.zMaximum = (double)ScaledIntegerNode( bbox.get( "zMaximum" ) ).scaledValue();
+         }
+         else if ( bbox.get( "xMinimum" ).type() == E57_FLOAT )
+         {
+            data3DHeader.cartesianBounds.xMinimum = FloatNode( bbox.get( "xMinimum" ) ).value();
+            data3DHeader.cartesianBounds.xMaximum = FloatNode( bbox.get( "xMaximum" ) ).value();
+            data3DHeader.cartesianBounds.yMinimum = FloatNode( bbox.get( "yMinimum" ) ).value();
+            data3DHeader.cartesianBounds.yMaximum = FloatNode( bbox.get( "yMaximum" ) ).value();
+            data3DHeader.cartesianBounds.zMinimum = FloatNode( bbox.get( "zMinimum" ) ).value();
+            data3DHeader.cartesianBounds.zMaximum = FloatNode( bbox.get( "zMaximum" ) ).value();
+         }
+      }
 
-				StructureNode lineGroupRecord(groups.prototype());
-				if(lineGroupRecord.isDefined("pointCount"))
-					data3DHeader.pointGroupingSchemes.groupingByLine.pointCountSize =
-						IntegerNode(lineGroupRecord.get("pointCount")).maximum();
-			}
-		}
+      if ( scan.isDefined( "sphericalBounds" ) )
+      {
+         StructureNode sbox( scan.get( "sphericalBounds" ) );
+         if ( sbox.get( "rangeMinimum" ).type() == E57_SCALED_INTEGER )
+         {
+            data3DHeader.sphericalBounds.rangeMinimum =
+               (double)ScaledIntegerNode( sbox.get( "rangeMinimum" ) ).scaledValue();
+            data3DHeader.sphericalBounds.rangeMaximum =
+               (double)ScaledIntegerNode( sbox.get( "rangeMaximum" ) ).scaledValue();
+         }
+         else if ( sbox.get( "rangeMinimum" ).type() == E57_FLOAT )
+         {
+            data3DHeader.sphericalBounds.rangeMinimum = FloatNode( sbox.get( "rangeMinimum" ) ).value();
+            data3DHeader.sphericalBounds.rangeMaximum = FloatNode( sbox.get( "rangeMaximum" ) ).value();
+         }
 
-// Get Cartesian bounding box to scan.
- 
-		if(scan.isDefined("cartesianBounds"))
-		{
-			StructureNode bbox(scan.get("cartesianBounds"));
-			if( bbox.get("xMinimum").type() == E57_SCALED_INTEGER ) {
-				data3DHeader.cartesianBounds.xMinimum = (double) ScaledIntegerNode(bbox.get("xMinimum")).scaledValue();
-				data3DHeader.cartesianBounds.xMaximum = (double) ScaledIntegerNode(bbox.get("xMaximum")).scaledValue();
-				data3DHeader.cartesianBounds.yMinimum = (double) ScaledIntegerNode(bbox.get("yMinimum")).scaledValue();
-				data3DHeader.cartesianBounds.yMaximum = (double) ScaledIntegerNode(bbox.get("yMaximum")).scaledValue();
-				data3DHeader.cartesianBounds.zMinimum = (double) ScaledIntegerNode(bbox.get("zMinimum")).scaledValue();
-				data3DHeader.cartesianBounds.zMaximum = (double) ScaledIntegerNode(bbox.get("zMaximum")).scaledValue();
-			}
-			else if( bbox.get("xMinimum").type() == E57_FLOAT ){
-				data3DHeader.cartesianBounds.xMinimum = FloatNode(bbox.get("xMinimum")).value();
-				data3DHeader.cartesianBounds.xMaximum = FloatNode(bbox.get("xMaximum")).value();
-				data3DHeader.cartesianBounds.yMinimum = FloatNode(bbox.get("yMinimum")).value();
-				data3DHeader.cartesianBounds.yMaximum = FloatNode(bbox.get("yMaximum")).value();
-				data3DHeader.cartesianBounds.zMinimum = FloatNode(bbox.get("zMinimum")).value();
-				data3DHeader.cartesianBounds.zMaximum = FloatNode(bbox.get("zMaximum")).value();
-			}
-		}
+         if ( sbox.get( "elevationMinimum" ).type() == E57_SCALED_INTEGER )
+         {
+            data3DHeader.sphericalBounds.elevationMinimum =
+               (double)ScaledIntegerNode( sbox.get( "elevationMinimum" ) ).scaledValue();
+            data3DHeader.sphericalBounds.elevationMaximum =
+               (double)ScaledIntegerNode( sbox.get( "elevationMaximum" ) ).scaledValue();
+         }
+         else if ( sbox.get( "elevationMinimum" ).type() == E57_FLOAT )
+         {
+            data3DHeader.sphericalBounds.elevationMinimum = FloatNode( sbox.get( "elevationMinimum" ) ).value();
+            data3DHeader.sphericalBounds.elevationMaximum = FloatNode( sbox.get( "elevationMaximum" ) ).value();
+         }
 
-		if(scan.isDefined("sphericalBounds"))
-		{
-			StructureNode sbox(scan.get("sphericalBounds"));
-			if( sbox.get("rangeMinimum").type() == E57_SCALED_INTEGER ) {
-				data3DHeader.sphericalBounds.rangeMinimum = (double) ScaledIntegerNode(sbox.get("rangeMinimum")).scaledValue();
-				data3DHeader.sphericalBounds.rangeMaximum = (double) ScaledIntegerNode(sbox.get("rangeMaximum")).scaledValue();
-			}
-			else if( sbox.get("rangeMinimum").type() == E57_FLOAT ){
-				data3DHeader.sphericalBounds.rangeMinimum = FloatNode(sbox.get("rangeMinimum")).value();
-				data3DHeader.sphericalBounds.rangeMaximum = FloatNode(sbox.get("rangeMaximum")).value();
-			}
+         if ( sbox.get( "azimuthStart" ).type() == E57_SCALED_INTEGER )
+         {
+            data3DHeader.sphericalBounds.azimuthStart =
+               (double)ScaledIntegerNode( sbox.get( "azimuthStart" ) ).scaledValue();
+            data3DHeader.sphericalBounds.azimuthEnd =
+               (double)ScaledIntegerNode( sbox.get( "azimuthEnd" ) ).scaledValue();
+         }
+         else if ( sbox.get( "azimuthStart" ).type() == E57_FLOAT )
+         {
+            data3DHeader.sphericalBounds.azimuthStart = FloatNode( sbox.get( "azimuthStart" ) ).value();
+            data3DHeader.sphericalBounds.azimuthEnd = FloatNode( sbox.get( "azimuthEnd" ) ).value();
+         }
+      }
 
-			if( sbox.get("elevationMinimum").type() == E57_SCALED_INTEGER ) {
-				data3DHeader.sphericalBounds.elevationMinimum = (double) ScaledIntegerNode(sbox.get("elevationMinimum")).scaledValue();
-				data3DHeader.sphericalBounds.elevationMaximum = (double) ScaledIntegerNode(sbox.get("elevationMaximum")).scaledValue();
-			}
-			else if( sbox.get("elevationMinimum").type() == E57_FLOAT ){
-				data3DHeader.sphericalBounds.elevationMinimum = FloatNode(sbox.get("elevationMinimum")).value();
-				data3DHeader.sphericalBounds.elevationMaximum = FloatNode(sbox.get("elevationMaximum")).value();
-			}
+      // Get pose structure for scan.
+      if ( scan.isDefined( "pose" ) )
+      {
+         StructureNode pose( scan.get( "pose" ) );
+         if ( pose.isDefined( "rotation" ) )
+         {
+            StructureNode rotation( pose.get( "rotation" ) );
+            data3DHeader.pose.rotation.w = FloatNode( rotation.get( "w" ) ).value();
+            data3DHeader.pose.rotation.x = FloatNode( rotation.get( "x" ) ).value();
+            data3DHeader.pose.rotation.y = FloatNode( rotation.get( "y" ) ).value();
+            data3DHeader.pose.rotation.z = FloatNode( rotation.get( "z" ) ).value();
+         }
+         if ( pose.isDefined( "translation" ) )
+         {
+            StructureNode translation( pose.get( "translation" ) );
+            data3DHeader.pose.translation.x = FloatNode( translation.get( "x" ) ).value();
+            data3DHeader.pose.translation.y = FloatNode( translation.get( "y" ) ).value();
+            data3DHeader.pose.translation.z = FloatNode( translation.get( "z" ) ).value();
+         }
+      }
 
-			if( sbox.get("azimuthStart").type() == E57_SCALED_INTEGER ) {
-				data3DHeader.sphericalBounds.azimuthStart = (double) ScaledIntegerNode(sbox.get("azimuthStart")).scaledValue();
-				data3DHeader.sphericalBounds.azimuthEnd = (double) ScaledIntegerNode(sbox.get("azimuthEnd")).scaledValue();
-			}
-			else if( sbox.get("azimuthStart").type() == E57_FLOAT ){
-				data3DHeader.sphericalBounds.azimuthStart = FloatNode(sbox.get("azimuthStart")).value();
-				data3DHeader.sphericalBounds.azimuthEnd = FloatNode(sbox.get("azimuthEnd")).value();
-			}
-		}
+      // Get start/stop acquisition times to scan.
+      if ( scan.isDefined( "acquisitionStart" ) )
+      {
+         StructureNode acquisitionStart( scan.get( "acquisitionStart" ) );
+         data3DHeader.acquisitionStart.dateTimeValue = FloatNode( acquisitionStart.get( "dateTimeValue" ) ).value();
+         data3DHeader.acquisitionStart.isAtomicClockReferenced =
+            (int32_t)IntegerNode( acquisitionStart.get( "isAtomicClockReferenced" ) ).value();
+      }
 
-// Get pose structure for scan.
+      if ( scan.isDefined( "acquisitionEnd" ) )
+      {
+         StructureNode acquisitionEnd( scan.get( "acquisitionEnd" ) );
+         data3DHeader.acquisitionEnd.dateTimeValue = FloatNode( acquisitionEnd.get( "dateTimeValue" ) ).value();
+         data3DHeader.acquisitionEnd.isAtomicClockReferenced =
+            (int32_t)IntegerNode( acquisitionEnd.get( "isAtomicClockReferenced" ) ).value();
+      }
 
-		if(scan.isDefined("pose"))
-		{
-			StructureNode pose(scan.get("pose"));
-			if(pose.isDefined("rotation"))
-			{
-				StructureNode rotation(pose.get("rotation"));
-				data3DHeader.pose.rotation.w = FloatNode(rotation.get("w")).value();
-				data3DHeader.pose.rotation.x = FloatNode(rotation.get("x")).value();
-				data3DHeader.pose.rotation.y = FloatNode(rotation.get("y")).value();
-				data3DHeader.pose.rotation.z = FloatNode(rotation.get("z")).value();
-			}
-			if(pose.isDefined("translation"))
-			{
-				StructureNode translation(pose.get("translation"));  
-				data3DHeader.pose.translation.x = FloatNode(translation.get("x")).value();
-				data3DHeader.pose.translation.y = FloatNode(translation.get("y")).value();
-				data3DHeader.pose.translation.z = FloatNode(translation.get("z")).value();
-			}
-		}
- 
-// Get start/stop acquisition times to scan.
+      // Get a prototype of datatypes that will be stored in points record.
+      data3DHeader.pointFields.cartesianXField = proto.isDefined( "cartesianX" );
+      data3DHeader.pointFields.cartesianYField = proto.isDefined( "cartesianY" );
+      data3DHeader.pointFields.cartesianZField = proto.isDefined( "cartesianZ" );
+      data3DHeader.pointFields.cartesianInvalidStateField = proto.isDefined( "cartesianInvalidState" );
 
-		if(scan.isDefined("acquisitionStart"))
-		{
-			StructureNode acquisitionStart(scan.get("acquisitionStart"));
-			data3DHeader.acquisitionStart.dateTimeValue = 
-				FloatNode(acquisitionStart.get("dateTimeValue")).value();
-			data3DHeader.acquisitionStart.isAtomicClockReferenced = (int32_t)
-				IntegerNode(acquisitionStart.get("isAtomicClockReferenced")).value();
-		}
+      data3DHeader.pointFields.pointRangeScaledInteger = E57_NOT_SCALED_USE_FLOAT; // FloatNode
+      data3DHeader.pointFields.pointRangeMinimum = 0.;
+      data3DHeader.pointFields.pointRangeMaximum = 0.;
 
-		if(scan.isDefined("acquisitionEnd"))
-		{
-			StructureNode acquisitionEnd(scan.get("acquisitionEnd"));
-			data3DHeader.acquisitionEnd.dateTimeValue = 
-				FloatNode(acquisitionEnd.get("dateTimeValue")).value();
-			data3DHeader.acquisitionEnd.isAtomicClockReferenced = (int32_t)
-				IntegerNode(acquisitionEnd.get("isAtomicClockReferenced")).value();
-		}
+      if ( proto.isDefined( "cartesianX" ) )
+      {
+         if ( proto.get( "cartesianX" ).type() == E57_SCALED_INTEGER )
+         {
+            double scale = ScaledIntegerNode( proto.get( "cartesianX" ) ).scale();
+            double offset = ScaledIntegerNode( proto.get( "cartesianX" ) ).offset();
+            int64_t minimum = ScaledIntegerNode( proto.get( "cartesianX" ) ).minimum();
+            int64_t maximum = ScaledIntegerNode( proto.get( "cartesianX" ) ).maximum();
+            data3DHeader.pointFields.pointRangeMinimum = (double)minimum * scale + offset;
+            data3DHeader.pointFields.pointRangeMaximum = (double)maximum * scale + offset;
+            data3DHeader.pointFields.pointRangeScaledInteger = scale;
+         }
+         else if ( proto.get( "cartesianX" ).type() == E57_FLOAT )
+         {
+            data3DHeader.pointFields.pointRangeMinimum = FloatNode( proto.get( "cartesianX" ) ).minimum();
+            data3DHeader.pointFields.pointRangeMaximum = FloatNode( proto.get( "cartesianX" ) ).maximum();
+            data3DHeader.pointFields.pointRangeScaledInteger = E57_NOT_SCALED_USE_FLOAT;
+         }
+      }
+      else if ( proto.isDefined( "sphericalRange" ) )
+      {
+         if ( proto.get( "sphericalRange" ).type() == E57_SCALED_INTEGER )
+         {
+            double scale = ScaledIntegerNode( proto.get( "sphericalRange" ) ).scale();
+            double offset = ScaledIntegerNode( proto.get( "sphericalRange" ) ).offset();
+            int64_t minimum = ScaledIntegerNode( proto.get( "sphericalRange" ) ).minimum();
+            int64_t maximum = ScaledIntegerNode( proto.get( "sphericalRange" ) ).maximum();
+            data3DHeader.pointFields.pointRangeMinimum = (double)minimum * scale + offset;
+            data3DHeader.pointFields.pointRangeMaximum = (double)maximum * scale + offset;
+            data3DHeader.pointFields.pointRangeScaledInteger = scale;
+         }
+         else if ( proto.get( "sphericalRange" ).type() == E57_FLOAT )
+         {
+            data3DHeader.pointFields.pointRangeMinimum = FloatNode( proto.get( "sphericalRange" ) ).minimum();
+            data3DHeader.pointFields.pointRangeMaximum = FloatNode( proto.get( "sphericalRange" ) ).maximum();
+            data3DHeader.pointFields.pointRangeScaledInteger = E57_NOT_SCALED_USE_FLOAT;
+         }
+      }
 
-// Get a prototype of datatypes that will be stored in points record.
+      data3DHeader.pointFields.sphericalRangeField = proto.isDefined( "sphericalRange" );
+      data3DHeader.pointFields.sphericalAzimuthField = proto.isDefined( "sphericalAzimuth" );
+      data3DHeader.pointFields.sphericalElevationField = proto.isDefined( "sphericalElevation" );
+      data3DHeader.pointFields.sphericalInvalidStateField = proto.isDefined( "sphericalInvalidState" );
 
-		data3DHeader.pointFields.cartesianXField = proto.isDefined("cartesianX");
-		data3DHeader.pointFields.cartesianYField = proto.isDefined("cartesianY");
-		data3DHeader.pointFields.cartesianZField = proto.isDefined("cartesianZ");
-		data3DHeader.pointFields.cartesianInvalidStateField = proto.isDefined("cartesianInvalidState");
+      data3DHeader.pointFields.angleScaledInteger = E57_NOT_SCALED_USE_FLOAT; // FloatNode
+      data3DHeader.pointFields.angleMinimum = 0.;
+      data3DHeader.pointFields.angleMaximum = 0.;
 
-		data3DHeader.pointFields.pointRangeScaledInteger = E57_NOT_SCALED_USE_FLOAT; //FloatNode
-		data3DHeader.pointFields.pointRangeMinimum = 0.;
-		data3DHeader.pointFields.pointRangeMaximum = 0.; 
+      if ( proto.isDefined( "sphericalAzimuth" ) )
+      {
+         if ( proto.get( "sphericalAzimuth" ).type() == E57_SCALED_INTEGER )
+         {
+            double scale = ScaledIntegerNode( proto.get( "sphericalAzimuth" ) ).scale();
+            double offset = ScaledIntegerNode( proto.get( "sphericalAzimuth" ) ).offset();
+            int64_t minimum = ScaledIntegerNode( proto.get( "sphericalAzimuth" ) ).minimum();
+            int64_t maximum = ScaledIntegerNode( proto.get( "sphericalAzimuth" ) ).maximum();
+            data3DHeader.pointFields.angleMinimum = (double)minimum * scale + offset;
+            data3DHeader.pointFields.angleMaximum = (double)maximum * scale + offset;
+            data3DHeader.pointFields.angleScaledInteger = scale;
+         }
+         else if ( proto.get( "sphericalAzimuth" ).type() == E57_FLOAT )
+         {
+            data3DHeader.pointFields.angleMinimum = FloatNode( proto.get( "sphericalAzimuth" ) ).minimum();
+            data3DHeader.pointFields.angleMaximum = FloatNode( proto.get( "sphericalAzimuth" ) ).maximum();
+            data3DHeader.pointFields.angleScaledInteger = E57_NOT_SCALED_USE_FLOAT;
+         }
+      }
 
-		if( proto.isDefined("cartesianX")) {
-			if( proto.get("cartesianX").type() == E57_SCALED_INTEGER ) {
-				double scale = ScaledIntegerNode(proto.get("cartesianX")).scale();
-				double offset = ScaledIntegerNode(proto.get("cartesianX")).offset();
-				int64_t minimum = ScaledIntegerNode(proto.get("cartesianX")).minimum();
-				int64_t maximum = ScaledIntegerNode(proto.get("cartesianX")).maximum();
-				data3DHeader.pointFields.pointRangeMinimum = (double)
-					minimum * scale + offset;	
-				data3DHeader.pointFields.pointRangeMaximum = (double)
-					maximum * scale + offset;
-				data3DHeader.pointFields.pointRangeScaledInteger = scale;
+      data3DHeader.pointFields.rowIndexField = proto.isDefined( "rowIndex" );
+      data3DHeader.pointFields.columnIndexField = proto.isDefined( "columnIndex" );
+      data3DHeader.pointFields.rowIndexMaximum = 0;
+      data3DHeader.pointFields.columnIndexMaximum = 0;
 
-			} else if( proto.get("cartesianX").type() == E57_FLOAT ){
-				data3DHeader.pointFields.pointRangeMinimum =
-					FloatNode(proto.get("cartesianX")).minimum();
-				data3DHeader.pointFields.pointRangeMaximum =
-					FloatNode(proto.get("cartesianX")).maximum();
-				data3DHeader.pointFields.pointRangeScaledInteger = E57_NOT_SCALED_USE_FLOAT;
-			}
-		} 
-		else if( proto.isDefined("sphericalRange")) {
-			if( proto.get("sphericalRange").type() == E57_SCALED_INTEGER ) {
-				double scale = ScaledIntegerNode(proto.get("sphericalRange")).scale();
-				double offset = ScaledIntegerNode(proto.get("sphericalRange")).offset();
-				int64_t minimum = ScaledIntegerNode(proto.get("sphericalRange")).minimum();
-				int64_t maximum = ScaledIntegerNode(proto.get("sphericalRange")).maximum();
-				data3DHeader.pointFields.pointRangeMinimum = (double)
-					minimum * scale + offset;	
-				data3DHeader.pointFields.pointRangeMaximum = (double)
-					maximum * scale + offset;
-				data3DHeader.pointFields.pointRangeScaledInteger = scale;
+      if ( proto.isDefined( "rowIndex" ) )
+         data3DHeader.pointFields.rowIndexMaximum = (uint32_t)IntegerNode( proto.get( "rowIndex" ) ).maximum();
 
-			} else if( proto.get("sphericalRange").type() == E57_FLOAT ){
-				data3DHeader.pointFields.pointRangeMinimum =
-					FloatNode(proto.get("sphericalRange")).minimum();
-				data3DHeader.pointFields.pointRangeMaximum =
-					FloatNode(proto.get("sphericalRange")).maximum();
-				data3DHeader.pointFields.pointRangeScaledInteger = E57_NOT_SCALED_USE_FLOAT;
-			}
-		}
+      if ( proto.isDefined( "columnIndex" ) )
+         data3DHeader.pointFields.columnIndexMaximum = (uint32_t)IntegerNode( proto.get( "columnIndex" ) ).maximum();
 
-		data3DHeader.pointFields.sphericalRangeField = proto.isDefined("sphericalRange");
-		data3DHeader.pointFields.sphericalAzimuthField = proto.isDefined("sphericalAzimuth");
-		data3DHeader.pointFields.sphericalElevationField = proto.isDefined("sphericalElevation");
-		data3DHeader.pointFields.sphericalInvalidStateField = proto.isDefined("sphericalInvalidState");
+      data3DHeader.pointFields.returnIndexField = proto.isDefined( "returnIndex" );
+      data3DHeader.pointFields.returnCountField = proto.isDefined( "returnCount" );
+      data3DHeader.pointFields.returnMaximum = 0;
 
-		data3DHeader.pointFields.angleScaledInteger = E57_NOT_SCALED_USE_FLOAT; //FloatNode
-		data3DHeader.pointFields.angleMinimum = 0.;
-		data3DHeader.pointFields.angleMaximum = 0.;
+      if ( proto.isDefined( "returnIndex" ) )
+         data3DHeader.pointFields.returnMaximum = (uint8_t)IntegerNode( proto.get( "returnIndex" ) ).maximum();
 
-		if(proto.isDefined("sphericalAzimuth")) {
-			if( proto.get("sphericalAzimuth").type() == E57_SCALED_INTEGER) {
-				double scale = ScaledIntegerNode(proto.get("sphericalAzimuth")).scale();
-				double offset = ScaledIntegerNode(proto.get("sphericalAzimuth")).offset();
-				int64_t minimum = ScaledIntegerNode(proto.get("sphericalAzimuth")).minimum();
-				int64_t maximum = ScaledIntegerNode(proto.get("sphericalAzimuth")).maximum();
-				data3DHeader.pointFields.angleMinimum = (double)
-					minimum * scale + offset;	
-				data3DHeader.pointFields.angleMaximum = (double)
-					maximum * scale + offset;
-				data3DHeader.pointFields.angleScaledInteger = scale;
+      data3DHeader.pointFields.timeStampField = proto.isDefined( "timeStamp" );
+      data3DHeader.pointFields.isTimeStampInvalidField = proto.isDefined( "isTimeStampInvalid" );
+      data3DHeader.pointFields.timeMaximum = 0.;
+      data3DHeader.pointFields.timeMinimum = 0.;
+      data3DHeader.pointFields.timeScaledInteger = E57_NOT_SCALED_USE_FLOAT;
 
-			} else if( proto.get("sphericalAzimuth").type() == E57_FLOAT ){
-				data3DHeader.pointFields.angleMinimum =
-					FloatNode(proto.get("sphericalAzimuth")).minimum();
-				data3DHeader.pointFields.angleMaximum =
-					FloatNode(proto.get("sphericalAzimuth")).maximum();
-				data3DHeader.pointFields.angleScaledInteger = E57_NOT_SCALED_USE_FLOAT;
-			}
-		}
+      if ( proto.isDefined( "timeStamp" ) )
+      {
+         if ( proto.get( "timeStamp" ).type() == E57_INTEGER )
+         {
+            data3DHeader.pointFields.timeMaximum = (double)IntegerNode( proto.get( "timeStamp" ) ).maximum();
+            data3DHeader.pointFields.timeMinimum = (double)IntegerNode( proto.get( "timeStamp" ) ).minimum();
+            data3DHeader.pointFields.timeScaledInteger = E57_NOT_SCALED_USE_FLOAT;
+         }
+         else if ( proto.get( "timeStamp" ).type() == E57_SCALED_INTEGER )
+         {
+            double scale = ScaledIntegerNode( proto.get( "timeStamp" ) ).scale();
+            double offset = ScaledIntegerNode( proto.get( "timeStamp" ) ).offset();
+            int64_t minimum = ScaledIntegerNode( proto.get( "timeStamp" ) ).minimum();
+            int64_t maximum = ScaledIntegerNode( proto.get( "timeStamp" ) ).maximum();
+            data3DHeader.pointFields.timeMinimum = (double)minimum * scale + offset;
+            data3DHeader.pointFields.timeMaximum = (double)maximum * scale + offset;
+            data3DHeader.pointFields.timeScaledInteger = scale;
+         }
+         else if ( proto.get( "timeStamp" ).type() == E57_FLOAT )
+         {
+            data3DHeader.pointFields.timeMinimum = FloatNode( proto.get( "timeStamp" ) ).minimum();
+            data3DHeader.pointFields.timeMaximum = FloatNode( proto.get( "timeStamp" ) ).maximum();
+            data3DHeader.pointFields.timeScaledInteger = E57_NOT_SCALED_USE_FLOAT;
+         }
+      }
 
-		data3DHeader.pointFields.rowIndexField = proto.isDefined("rowIndex");
-		data3DHeader.pointFields.columnIndexField = proto.isDefined("columnIndex");
-		data3DHeader.pointFields.rowIndexMaximum = 0;
-		data3DHeader.pointFields.columnIndexMaximum = 0;
+      data3DHeader.pointFields.intensityField = proto.isDefined( "intensity" );
+      data3DHeader.pointFields.isIntensityInvalidField = proto.isDefined( "isIntensityInvalid" );
+      data3DHeader.intensityLimits.intensityMinimum = 0.;
+      data3DHeader.intensityLimits.intensityMaximum = 0.;
+      data3DHeader.pointFields.intensityScaledInteger = E57_NOT_SCALED_USE_FLOAT;
 
-		if( proto.isDefined("rowIndex"))
-			data3DHeader.pointFields.rowIndexMaximum = (uint32_t)
-				IntegerNode(proto.get("rowIndex")).maximum();
+      if ( scan.isDefined( "intensityLimits" ) )
+      {
+         StructureNode intbox( scan.get( "intensityLimits" ) );
+         if ( intbox.get( "intensityMaximum" ).type() == E57_SCALED_INTEGER )
+         {
+            data3DHeader.intensityLimits.intensityMaximum =
+               (double)ScaledIntegerNode( intbox.get( "intensityMaximum" ) ).scaledValue();
+            data3DHeader.intensityLimits.intensityMinimum =
+               (double)ScaledIntegerNode( intbox.get( "intensityMinimum" ) ).scaledValue();
+         }
+         else if ( intbox.get( "intensityMaximum" ).type() == E57_FLOAT )
+         {
+            data3DHeader.intensityLimits.intensityMaximum = FloatNode( intbox.get( "intensityMaximum" ) ).value();
+            data3DHeader.intensityLimits.intensityMinimum = FloatNode( intbox.get( "intensityMinimum" ) ).value();
+         }
+         else if ( intbox.get( "intensityMaximum" ).type() == E57_INTEGER )
+         {
+            data3DHeader.intensityLimits.intensityMaximum =
+               (double)IntegerNode( intbox.get( "intensityMaximum" ) ).value();
+            data3DHeader.intensityLimits.intensityMinimum =
+               (double)IntegerNode( intbox.get( "intensityMinimum" ) ).value();
+         }
+      }
+      if ( proto.isDefined( "intensity" ) )
+      {
+         if ( proto.get( "intensity" ).type() == E57_INTEGER )
+         {
+            if ( data3DHeader.intensityLimits.intensityMaximum == 0. )
+            {
+               data3DHeader.intensityLimits.intensityMinimum =
+                  (double)IntegerNode( proto.get( "intensity" ) ).minimum();
+               data3DHeader.intensityLimits.intensityMaximum =
+                  (double)IntegerNode( proto.get( "intensity" ) ).maximum();
+            }
+            data3DHeader.pointFields.intensityScaledInteger = E57_NOT_SCALED_USE_INTEGER;
+         }
+         else if ( proto.get( "intensity" ).type() == E57_SCALED_INTEGER )
+         {
+            double scale = ScaledIntegerNode( proto.get( "intensity" ) ).scale();
+            double offset = ScaledIntegerNode( proto.get( "intensity" ) ).offset();
 
-		if( proto.isDefined("columnIndex"))
-			data3DHeader.pointFields.columnIndexMaximum = (uint32_t)
-				IntegerNode(proto.get("columnIndex")).maximum();
+            if ( data3DHeader.intensityLimits.intensityMaximum == 0. )
+            {
+               int64_t minimum = ScaledIntegerNode( proto.get( "intensity" ) ).minimum();
+               int64_t maximum = ScaledIntegerNode( proto.get( "intensity" ) ).maximum();
+               data3DHeader.intensityLimits.intensityMinimum = (double)minimum * scale + offset;
+               data3DHeader.intensityLimits.intensityMaximum = (double)maximum * scale + offset;
+            }
+            data3DHeader.pointFields.intensityScaledInteger = scale;
+         }
+         else if ( proto.get( "intensity" ).type() == E57_FLOAT )
+         {
+            if ( data3DHeader.intensityLimits.intensityMaximum == 0. )
+            {
+               data3DHeader.intensityLimits.intensityMinimum = FloatNode( proto.get( "intensity" ) ).minimum();
+               data3DHeader.intensityLimits.intensityMaximum = FloatNode( proto.get( "intensity" ) ).maximum();
+            }
+            data3DHeader.pointFields.intensityScaledInteger = E57_NOT_SCALED_USE_FLOAT;
+         }
+      }
 
-		data3DHeader.pointFields.returnIndexField = proto.isDefined("returnIndex");
-		data3DHeader.pointFields.returnCountField = proto.isDefined("returnCount");
-		data3DHeader.pointFields.returnMaximum = 0;
+      data3DHeader.pointFields.colorRedField = proto.isDefined( "colorRed" );
+      data3DHeader.pointFields.colorGreenField = proto.isDefined( "colorGreen" );
+      data3DHeader.pointFields.colorBlueField = proto.isDefined( "colorBlue" );
+      data3DHeader.pointFields.isColorInvalidField = proto.isDefined( "isColorInvalid" );
 
-		if( proto.isDefined("returnIndex"))
-			data3DHeader.pointFields.returnMaximum = (uint8_t)
-				IntegerNode(proto.get("returnIndex")).maximum();
+      data3DHeader.colorLimits.colorRedMinimum = 0.;
+      data3DHeader.colorLimits.colorRedMaximum = 0.;
+      data3DHeader.colorLimits.colorGreenMinimum = 0.;
+      data3DHeader.colorLimits.colorGreenMaximum = 0.;
+      data3DHeader.colorLimits.colorBlueMinimum = 0.;
+      data3DHeader.colorLimits.colorBlueMaximum = 0.;
 
-		data3DHeader.pointFields.timeStampField = proto.isDefined("timeStamp");
-		data3DHeader.pointFields.isTimeStampInvalidField = proto.isDefined("isTimeStampInvalid");
-		data3DHeader.pointFields.timeMaximum = 0.;
-		data3DHeader.pointFields.timeMinimum = 0.;
-		data3DHeader.pointFields.timeScaledInteger = E57_NOT_SCALED_USE_FLOAT;
+      if ( scan.isDefined( "colorLimits" ) )
+      {
+         StructureNode colorbox( scan.get( "colorLimits" ) );
+         if ( colorbox.get( "colorRedMaximum" ).type() == E57_SCALED_INTEGER )
+         {
+            data3DHeader.colorLimits.colorRedMaximum =
+               (double)ScaledIntegerNode( colorbox.get( "colorRedMaximum" ) ).scaledValue();
+            data3DHeader.colorLimits.colorRedMinimum =
+               (double)ScaledIntegerNode( colorbox.get( "colorRedMinimum" ) ).scaledValue();
+            data3DHeader.colorLimits.colorGreenMaximum =
+               (double)ScaledIntegerNode( colorbox.get( "colorGreenMaximum" ) ).scaledValue();
+            data3DHeader.colorLimits.colorGreenMinimum =
+               (double)ScaledIntegerNode( colorbox.get( "colorGreenMinimum" ) ).scaledValue();
+            data3DHeader.colorLimits.colorBlueMaximum =
+               (double)ScaledIntegerNode( colorbox.get( "colorBlueMaximum" ) ).scaledValue();
+            data3DHeader.colorLimits.colorBlueMinimum =
+               (double)ScaledIntegerNode( colorbox.get( "colorBlueMinimum" ) ).scaledValue();
+         }
+         else if ( colorbox.get( "colorRedMaximum" ).type() == E57_FLOAT )
+         {
+            data3DHeader.colorLimits.colorRedMaximum = FloatNode( colorbox.get( "colorRedMaximum" ) ).value();
+            data3DHeader.colorLimits.colorRedMinimum = FloatNode( colorbox.get( "colorRedMinimum" ) ).value();
+            data3DHeader.colorLimits.colorGreenMaximum = FloatNode( colorbox.get( "colorGreenMaximum" ) ).value();
+            data3DHeader.colorLimits.colorGreenMinimum = FloatNode( colorbox.get( "colorGreenMinimum" ) ).value();
+            data3DHeader.colorLimits.colorBlueMaximum = FloatNode( colorbox.get( "colorBlueMaximum" ) ).value();
+            data3DHeader.colorLimits.colorBlueMinimum = FloatNode( colorbox.get( "colorBlueMinimum" ) ).value();
+         }
+         else if ( colorbox.get( "colorRedMaximum" ).type() == E57_INTEGER )
+         {
+            data3DHeader.colorLimits.colorRedMaximum = (double)IntegerNode( colorbox.get( "colorRedMaximum" ) ).value();
+            data3DHeader.colorLimits.colorRedMinimum = (double)IntegerNode( colorbox.get( "colorRedMinimum" ) ).value();
+            data3DHeader.colorLimits.colorGreenMaximum =
+               (double)IntegerNode( colorbox.get( "colorGreenMaximum" ) ).value();
+            data3DHeader.colorLimits.colorGreenMinimum =
+               (double)IntegerNode( colorbox.get( "colorGreenMinimum" ) ).value();
+            data3DHeader.colorLimits.colorBlueMaximum =
+               (double)IntegerNode( colorbox.get( "colorBlueMaximum" ) ).value();
+            data3DHeader.colorLimits.colorBlueMinimum =
+               (double)IntegerNode( colorbox.get( "colorBlueMinimum" ) ).value();
+         }
+      }
 
-		if(proto.isDefined("timeStamp")) {
-			if(proto.get("timeStamp").type() == E57_INTEGER) {
-				data3DHeader.pointFields.timeMaximum = (double) IntegerNode(proto.get("timeStamp")).maximum();
-				data3DHeader.pointFields.timeMinimum = (double) IntegerNode(proto.get("timeStamp")).minimum();
-				data3DHeader.pointFields.timeScaledInteger = E57_NOT_SCALED_USE_FLOAT;
+      if ( ( data3DHeader.colorLimits.colorRedMaximum == 0. ) && proto.isDefined( "colorRed" ) )
+      {
+         if ( proto.get( "colorRed" ).type() == E57_INTEGER )
+         {
+            data3DHeader.colorLimits.colorRedMinimum = (uint16_t)IntegerNode( proto.get( "colorRed" ) ).minimum();
+            data3DHeader.colorLimits.colorRedMaximum = (uint16_t)IntegerNode( proto.get( "colorRed" ) ).maximum();
+         }
+         else if ( proto.get( "colorRed" ).type() == E57_FLOAT )
+         {
+            data3DHeader.colorLimits.colorRedMinimum = (uint16_t)FloatNode( proto.get( "colorRed" ) ).minimum();
+            data3DHeader.colorLimits.colorRedMaximum = (uint16_t)FloatNode( proto.get( "colorRed" ) ).maximum();
+         }
+         else if ( proto.get( "colorRed" ).type() == E57_SCALED_INTEGER )
+         {
+            double scale = ScaledIntegerNode( proto.get( "colorRed" ) ).scale();
+            double offset = ScaledIntegerNode( proto.get( "colorRed" ) ).offset();
+            int64_t minimum = ScaledIntegerNode( proto.get( "colorRed" ) ).minimum();
+            int64_t maximum = ScaledIntegerNode( proto.get( "colorRed" ) ).maximum();
+            data3DHeader.colorLimits.colorRedMinimum = (uint16_t)minimum * scale + offset;
+            data3DHeader.colorLimits.colorRedMaximum = (uint16_t)maximum * scale + offset;
+         }
+      }
+      if ( ( data3DHeader.colorLimits.colorGreenMaximum == 0. ) && proto.isDefined( "colorGreen" ) )
+      {
+         if ( proto.get( "colorGreen" ).type() == E57_INTEGER )
+         {
+            data3DHeader.colorLimits.colorGreenMinimum = (uint16_t)IntegerNode( proto.get( "colorGreen" ) ).minimum();
+            data3DHeader.colorLimits.colorGreenMaximum = (uint16_t)IntegerNode( proto.get( "colorGreen" ) ).maximum();
+         }
+         else if ( proto.get( "colorGreen" ).type() == E57_FLOAT )
+         {
+            data3DHeader.colorLimits.colorGreenMinimum = (uint16_t)FloatNode( proto.get( "colorGreen" ) ).minimum();
+            data3DHeader.colorLimits.colorGreenMaximum = (uint16_t)FloatNode( proto.get( "colorGreen" ) ).maximum();
+         }
+         else if ( proto.get( "colorGreen" ).type() == E57_SCALED_INTEGER )
+         {
+            double scale = ScaledIntegerNode( proto.get( "colorGreen" ) ).scale();
+            double offset = ScaledIntegerNode( proto.get( "colorGreen" ) ).offset();
+            int64_t minimum = ScaledIntegerNode( proto.get( "colorGreen" ) ).minimum();
+            int64_t maximum = ScaledIntegerNode( proto.get( "colorGreen" ) ).maximum();
+            data3DHeader.colorLimits.colorGreenMinimum = (uint16_t)minimum * scale + offset;
+            data3DHeader.colorLimits.colorGreenMaximum = (uint16_t)maximum * scale + offset;
+         }
+      }
+      if ( ( data3DHeader.colorLimits.colorBlueMaximum == 0. ) && proto.isDefined( "colorBlue" ) )
+      {
+         if ( proto.get( "colorBlue" ).type() == E57_INTEGER )
+         {
+            data3DHeader.colorLimits.colorBlueMinimum = (uint16_t)IntegerNode( proto.get( "colorBlue" ) ).minimum();
+            data3DHeader.colorLimits.colorBlueMaximum = (uint16_t)IntegerNode( proto.get( "colorBlue" ) ).maximum();
+         }
+         else if ( proto.get( "colorBlue" ).type() == E57_FLOAT )
+         {
+            data3DHeader.colorLimits.colorBlueMinimum = (uint16_t)FloatNode( proto.get( "colorBlue" ) ).minimum();
+            data3DHeader.colorLimits.colorBlueMaximum = (uint16_t)FloatNode( proto.get( "colorBlue" ) ).maximum();
+         }
+         else if ( proto.get( "colorBlue" ).type() == E57_SCALED_INTEGER )
+         {
+            double scale = ScaledIntegerNode( proto.get( "colorBlue" ) ).scale();
+            double offset = ScaledIntegerNode( proto.get( "colorBlue" ) ).offset();
+            int64_t minimum = ScaledIntegerNode( proto.get( "colorBlue" ) ).minimum();
+            int64_t maximum = ScaledIntegerNode( proto.get( "colorBlue" ) ).maximum();
+            data3DHeader.colorLimits.colorRedMinimum = (uint16_t)minimum * scale + offset;
+            data3DHeader.colorLimits.colorRedMaximum = (uint16_t)maximum * scale + offset;
+         }
+      }
 
-			} else if(proto.get("timeStamp").type() == E57_SCALED_INTEGER) {
-				double scale = ScaledIntegerNode(proto.get("timeStamp")).scale();
-				double offset = ScaledIntegerNode(proto.get("timeStamp")).offset();
-				int64_t minimum = ScaledIntegerNode(proto.get("timeStamp")).minimum();
-				int64_t maximum = ScaledIntegerNode(proto.get("timeStamp")).maximum();
-				data3DHeader.pointFields.timeMinimum = (double)	minimum * scale + offset;	
-				data3DHeader.pointFields.timeMaximum = (double)	maximum * scale + offset;
-				data3DHeader.pointFields.timeScaledInteger = scale;
+      // E57_EXT_surface_normals
+      ustring norExtUri;
+      if ( imf_.extensionsLookupPrefix( "nor", norExtUri ) )
+      {
+         data3DHeader.pointFields.normalX = proto.isDefined( "nor:normalX" );
+         data3DHeader.pointFields.normalY = proto.isDefined( "nor:normalY" );
+         data3DHeader.pointFields.normalZ = proto.isDefined( "nor:normalZ" );
+      }
 
-			} else if(proto.get("timeStamp").type() == E57_FLOAT) {			
-				data3DHeader.pointFields.timeMinimum = FloatNode(proto.get("timeStamp")).minimum();
-				data3DHeader.pointFields.timeMaximum = FloatNode(proto.get("timeStamp")).maximum();
-				data3DHeader.pointFields.timeScaledInteger = E57_NOT_SCALED_USE_FLOAT;
-			}
-		}
-	
-		data3DHeader.pointFields.intensityField = proto.isDefined("intensity");
-		data3DHeader.pointFields.isIntensityInvalidField = proto.isDefined("isIntensityInvalid");
-		data3DHeader.intensityLimits.intensityMinimum = 0.;
-		data3DHeader.intensityLimits.intensityMaximum = 0.;
-		data3DHeader.pointFields.intensityScaledInteger = E57_NOT_SCALED_USE_FLOAT;
+      return true;
+   }
+   return false;
+}
 
-		if(scan.isDefined("intensityLimits"))
-		{
-			StructureNode intbox(scan.get("intensityLimits"));
-			if( intbox.get("intensityMaximum").type() == E57_SCALED_INTEGER ) {
-				data3DHeader.intensityLimits.intensityMaximum = (double)
-					ScaledIntegerNode(intbox.get("intensityMaximum")).scaledValue();
-				data3DHeader.intensityLimits.intensityMinimum = (double)
-					ScaledIntegerNode(intbox.get("intensityMinimum")).scaledValue();
-			}
-			else if( intbox.get("intensityMaximum").type() == E57_FLOAT ){
-				data3DHeader.intensityLimits.intensityMaximum =
-					FloatNode(intbox.get("intensityMaximum")).value();
-				data3DHeader.intensityLimits.intensityMinimum =
-					FloatNode(intbox.get("intensityMinimum")).value();
-			}
-			else if( intbox.get("intensityMaximum").type() == E57_INTEGER) {
-				data3DHeader.intensityLimits.intensityMaximum = (double)
-					IntegerNode(intbox.get("intensityMaximum")).value();
-				data3DHeader.intensityLimits.intensityMinimum = (double)
-					IntegerNode(intbox.get("intensityMinimum")).value();
-			}
-		}
-		if(proto.isDefined("intensity"))
-		{
-			if(proto.get("intensity").type() == E57_INTEGER) {
-				if(data3DHeader.intensityLimits.intensityMaximum == 0.){
-					data3DHeader.intensityLimits.intensityMinimum = (double)
-						IntegerNode(proto.get("intensity")).minimum();
-					data3DHeader.intensityLimits.intensityMaximum = (double)
-						IntegerNode(proto.get("intensity")).maximum();
-				}
-				data3DHeader.pointFields.intensityScaledInteger = E57_NOT_SCALED_USE_INTEGER;
-
-			} else if(proto.get("intensity").type() == E57_SCALED_INTEGER) {
-				double scale = ScaledIntegerNode(proto.get("intensity")).scale();
-				double offset = ScaledIntegerNode(proto.get("intensity")).offset();
-
-				if(data3DHeader.intensityLimits.intensityMaximum == 0.){
-					int64_t minimum = ScaledIntegerNode(proto.get("intensity")).minimum();
-					int64_t maximum = ScaledIntegerNode(proto.get("intensity")).maximum();
-					data3DHeader.intensityLimits.intensityMinimum = (double)
-						minimum * scale + offset;	
-					data3DHeader.intensityLimits.intensityMaximum = (double)
-						maximum * scale + offset;
-				}
-				data3DHeader.pointFields.intensityScaledInteger = scale;
-		
-			} else if(proto.get("intensity").type() == E57_FLOAT) {
-				if(data3DHeader.intensityLimits.intensityMaximum == 0.){
-					data3DHeader.intensityLimits.intensityMinimum = 
-						FloatNode(proto.get("intensity")).minimum();
-					data3DHeader.intensityLimits.intensityMaximum = 
-						FloatNode(proto.get("intensity")).maximum();
-				}
-				data3DHeader.pointFields.intensityScaledInteger = E57_NOT_SCALED_USE_FLOAT;
-			}
-		}
-
-		data3DHeader.pointFields.colorRedField = proto.isDefined("colorRed");
-		data3DHeader.pointFields.colorGreenField = proto.isDefined("colorGreen");
-		data3DHeader.pointFields.colorBlueField = proto.isDefined("colorBlue");
-		data3DHeader.pointFields.isColorInvalidField = proto.isDefined("isColorInvalid");
-
-		data3DHeader.colorLimits.colorRedMinimum = 0.;
-		data3DHeader.colorLimits.colorRedMaximum = 0.;
-		data3DHeader.colorLimits.colorGreenMinimum = 0.;
-		data3DHeader.colorLimits.colorGreenMaximum = 0.;
-		data3DHeader.colorLimits.colorBlueMinimum = 0.;
-		data3DHeader.colorLimits.colorBlueMaximum = 0.;
-
-		if(scan.isDefined("colorLimits"))
-		{
-			StructureNode colorbox(scan.get("colorLimits"));
-			if( colorbox.get("colorRedMaximum").type() == E57_SCALED_INTEGER ) {
-				data3DHeader.colorLimits.colorRedMaximum = (double) ScaledIntegerNode(colorbox.get("colorRedMaximum")).scaledValue();
-				data3DHeader.colorLimits.colorRedMinimum = (double) ScaledIntegerNode(colorbox.get("colorRedMinimum")).scaledValue();
-				data3DHeader.colorLimits.colorGreenMaximum = (double) ScaledIntegerNode(colorbox.get("colorGreenMaximum")).scaledValue();
-				data3DHeader.colorLimits.colorGreenMinimum = (double) ScaledIntegerNode(colorbox.get("colorGreenMinimum")).scaledValue();
-				data3DHeader.colorLimits.colorBlueMaximum = (double) ScaledIntegerNode(colorbox.get("colorBlueMaximum")).scaledValue();
-				data3DHeader.colorLimits.colorBlueMinimum = (double) ScaledIntegerNode(colorbox.get("colorBlueMinimum")).scaledValue();
-			}
-			else if( colorbox.get("colorRedMaximum").type() == E57_FLOAT ){
-				data3DHeader.colorLimits.colorRedMaximum = FloatNode(colorbox.get("colorRedMaximum")).value();
-				data3DHeader.colorLimits.colorRedMinimum = FloatNode(colorbox.get("colorRedMinimum")).value();
-				data3DHeader.colorLimits.colorGreenMaximum = FloatNode(colorbox.get("colorGreenMaximum")).value();
-				data3DHeader.colorLimits.colorGreenMinimum = FloatNode(colorbox.get("colorGreenMinimum")).value();
-				data3DHeader.colorLimits.colorBlueMaximum = FloatNode(colorbox.get("colorBlueMaximum")).value();
-				data3DHeader.colorLimits.colorBlueMinimum = FloatNode(colorbox.get("colorBlueMinimum")).value();
-			}
-			else if( colorbox.get("colorRedMaximum").type() == E57_INTEGER) {
-				data3DHeader.colorLimits.colorRedMaximum = (double) IntegerNode(colorbox.get("colorRedMaximum")).value();
-				data3DHeader.colorLimits.colorRedMinimum = (double) IntegerNode(colorbox.get("colorRedMinimum")).value();
-				data3DHeader.colorLimits.colorGreenMaximum = (double) IntegerNode(colorbox.get("colorGreenMaximum")).value();
-				data3DHeader.colorLimits.colorGreenMinimum = (double) IntegerNode(colorbox.get("colorGreenMinimum")).value();
-				data3DHeader.colorLimits.colorBlueMaximum = (double) IntegerNode(colorbox.get("colorBlueMaximum")).value();
-				data3DHeader.colorLimits.colorBlueMinimum = (double) IntegerNode(colorbox.get("colorBlueMinimum")).value();
-			}
-		}
-
-		if((data3DHeader.colorLimits.colorRedMaximum == 0.) && proto.isDefined("colorRed"))
-		{
-			if(proto.get("colorRed").type() == E57_INTEGER) {
-				data3DHeader.colorLimits.colorRedMinimum = (uint16_t)
-					IntegerNode(proto.get("colorRed")).minimum();
-				data3DHeader.colorLimits.colorRedMaximum = (uint16_t)
-					IntegerNode(proto.get("colorRed")).maximum();
-			}
-			else if(proto.get("colorRed").type() == E57_FLOAT) {
-				data3DHeader.colorLimits.colorRedMinimum = (uint16_t)
-					FloatNode(proto.get("colorRed")).minimum();
-				data3DHeader.colorLimits.colorRedMaximum = (uint16_t)
-					FloatNode(proto.get("colorRed")).maximum();
-			}
-			else if(proto.get("colorRed").type() == E57_SCALED_INTEGER) {
-				double scale = ScaledIntegerNode(proto.get("colorRed")).scale();
-				double offset = ScaledIntegerNode(proto.get("colorRed")).offset();
-				int64_t minimum = ScaledIntegerNode(proto.get("colorRed")).minimum();
-				int64_t maximum = ScaledIntegerNode(proto.get("colorRed")).maximum();
-				data3DHeader.colorLimits.colorRedMinimum = (uint16_t)
-						minimum * scale + offset;	
-				data3DHeader.colorLimits.colorRedMaximum = (uint16_t)
-						maximum * scale + offset;
-			}
-		}
-		if((data3DHeader.colorLimits.colorGreenMaximum == 0.) && proto.isDefined("colorGreen"))
-		{
-			if(proto.get("colorGreen").type() == E57_INTEGER) {
-				data3DHeader.colorLimits.colorGreenMinimum = (uint16_t)
-					IntegerNode(proto.get("colorGreen")).minimum();
-				data3DHeader.colorLimits.colorGreenMaximum = (uint16_t)
-					IntegerNode(proto.get("colorGreen")).maximum();
-			}
-			else if(proto.get("colorGreen").type() == E57_FLOAT) {
-				data3DHeader.colorLimits.colorGreenMinimum = (uint16_t)
-					FloatNode(proto.get("colorGreen")).minimum();
-				data3DHeader.colorLimits.colorGreenMaximum = (uint16_t)
-					FloatNode(proto.get("colorGreen")).maximum();
-			}
-			else if(proto.get("colorGreen").type() == E57_SCALED_INTEGER) {
-				double scale = ScaledIntegerNode(proto.get("colorGreen")).scale();
-				double offset = ScaledIntegerNode(proto.get("colorGreen")).offset();
-				int64_t minimum = ScaledIntegerNode(proto.get("colorGreen")).minimum();
-				int64_t maximum = ScaledIntegerNode(proto.get("colorGreen")).maximum();
-				data3DHeader.colorLimits.colorGreenMinimum = (uint16_t)
-						minimum * scale + offset;	
-				data3DHeader.colorLimits.colorGreenMaximum = (uint16_t)
-						maximum * scale + offset;
-			}
-		}
-		if((data3DHeader.colorLimits.colorBlueMaximum == 0.) && proto.isDefined("colorBlue"))
-		{
-			if( proto.get("colorBlue").type() == E57_INTEGER) {
-				data3DHeader.colorLimits.colorBlueMinimum = (uint16_t)
-					IntegerNode(proto.get("colorBlue")).minimum();
-				data3DHeader.colorLimits.colorBlueMaximum = (uint16_t)
-					IntegerNode(proto.get("colorBlue")).maximum();
-			}
-			else if( proto.get("colorBlue").type() ==E57_FLOAT) {
-				data3DHeader.colorLimits.colorBlueMinimum = (uint16_t)
-					FloatNode(proto.get("colorBlue")).minimum();
-				data3DHeader.colorLimits.colorBlueMaximum = (uint16_t)
-					FloatNode(proto.get("colorBlue")).maximum();
-			}
-			else if(proto.get("colorBlue").type() == E57_SCALED_INTEGER) {
-				double scale = ScaledIntegerNode(proto.get("colorBlue")).scale();
-				double offset = ScaledIntegerNode(proto.get("colorBlue")).offset();
-				int64_t minimum = ScaledIntegerNode(proto.get("colorBlue")).minimum();
-				int64_t maximum = ScaledIntegerNode(proto.get("colorBlue")).maximum();
-				data3DHeader.colorLimits.colorRedMinimum = (uint16_t)
-						minimum * scale + offset;	
-				data3DHeader.colorLimits.colorRedMaximum = (uint16_t)
-						maximum * scale + offset;
-			}
-		}
-
-        // E57_EXT_surface_normals
-        ustring norExtUri;
-        if (imf_.extensionsLookupPrefix("nor", norExtUri))
-        {
-            data3DHeader.pointFields.normalX = proto.isDefined("nor:normalX");
-            data3DHeader.pointFields.normalY = proto.isDefined("nor:normalY");
-            data3DHeader.pointFields.normalZ = proto.isDefined("nor:normalZ");
-        }
-
-		return true;
-	}
-	return false;
-};
-
-//! This function returns the size of the point data
-bool	ReaderImpl :: GetData3DSizes(
-	int64_t		dataIndex,	//!< image block index
-	int64_t &	row,		//!< image row size
-	int64_t &	column,		//!< image column size
-	int64_t &	pointsSize,	//!< image total point count
-	int64_t &	groupsSize,	//!< image total number of groups
-	int64_t &	countSize,	//!< This is the maximum point count per group
-	bool &		bColumnIndex	//!< This indicates that the idElementName is "columnIndex"
-	)
+// This function returns the size of the point data
+bool ReaderImpl::GetData3DSizes( int64_t dataIndex, int64_t &row, int64_t &column, int64_t &pointsSize,
+                                 int64_t &groupsSize, int64_t &countSize, bool &bColumnIndex )
 {
-	if(IsOpen())
-	{
-		row = 0;
-		column = 0;
-		pointsSize = 0;
-		groupsSize = 0;
-		int64_t elementSize = 0;
-		countSize = 0;
-		bColumnIndex = false;
+   if ( IsOpen() )
+   {
+      row = 0;
+      column = 0;
+      pointsSize = 0;
+      groupsSize = 0;
+      int64_t elementSize = 0;
+      countSize = 0;
+      bColumnIndex = false;
 
-		if( (dataIndex < 0) || (dataIndex >= data3D_.childCount()))
-			return false;
+      if ( ( dataIndex < 0 ) || ( dataIndex >= data3D_.childCount() ) )
+         return false;
 
-		StructureNode scan(data3D_.get(dataIndex));
+      StructureNode scan( data3D_.get( dataIndex ) );
 
-		CompressedVectorNode points(scan.get("points"));
-		pointsSize = points.childCount();
+      CompressedVectorNode points( scan.get( "points" ) );
+      pointsSize = points.childCount();
 
-		if(scan.isDefined("indexBounds"))
-		{
-			StructureNode indexBounds(scan.get("indexBounds"));
-			if(indexBounds.isDefined("columnMaximum"))
-				column = IntegerNode(indexBounds.get("columnMaximum")).value() -
-						 IntegerNode(indexBounds.get("columnMinimum")).value() + 1;
+      if ( scan.isDefined( "indexBounds" ) )
+      {
+         StructureNode indexBounds( scan.get( "indexBounds" ) );
+         if ( indexBounds.isDefined( "columnMaximum" ) )
+            column = IntegerNode( indexBounds.get( "columnMaximum" ) ).value() -
+                     IntegerNode( indexBounds.get( "columnMinimum" ) ).value() + 1;
 
-			if(indexBounds.isDefined("rowMaximum"))
-				row = IntegerNode(indexBounds.get("rowMaximum")).value() -
-					  IntegerNode(indexBounds.get("rowMinimum")).value() + 1;
-		}
+         if ( indexBounds.isDefined( "rowMaximum" ) )
+            row = IntegerNode( indexBounds.get( "rowMaximum" ) ).value() -
+                  IntegerNode( indexBounds.get( "rowMinimum" ) ).value() + 1;
+      }
 
-		if(scan.isDefined("pointGroupingSchemes"))
-		{
-			StructureNode pointGroupingSchemes(scan.get("pointGroupingSchemes"));
-			if(pointGroupingSchemes.isDefined("groupingByLine"))
-			{
-				StructureNode groupingByLine(pointGroupingSchemes.get("groupingByLine"));
+      if ( scan.isDefined( "pointGroupingSchemes" ) )
+      {
+         StructureNode pointGroupingSchemes( scan.get( "pointGroupingSchemes" ) );
+         if ( pointGroupingSchemes.isDefined( "groupingByLine" ) )
+         {
+            StructureNode groupingByLine( pointGroupingSchemes.get( "groupingByLine" ) );
 
-				StringNode idElementName(groupingByLine.get("idElementName"));
-				if(idElementName.value().compare("columnIndex") == 0)
-					bColumnIndex = true;
+            StringNode idElementName( groupingByLine.get( "idElementName" ) );
+            if ( idElementName.value().compare( "columnIndex" ) == 0 )
+               bColumnIndex = true;
 
-				CompressedVectorNode	groups(groupingByLine.get("groups"));
-				groupsSize = groups.childCount();
+            CompressedVectorNode groups( groupingByLine.get( "groups" ) );
+            groupsSize = groups.childCount();
 
-				StructureNode lineGroupRecord(groups.prototype());
+            StructureNode lineGroupRecord( groups.prototype() );
 
-				if(lineGroupRecord.isDefined("idElementValue"))
-					elementSize = IntegerNode(lineGroupRecord.get("idElementValue")).maximum() - 
-								  IntegerNode(lineGroupRecord.get("idElementValue")).minimum() + 1;
-				else if(bColumnIndex)
-					elementSize = column;
-				else
-					elementSize = row;
+            if ( lineGroupRecord.isDefined( "idElementValue" ) )
+               elementSize = IntegerNode( lineGroupRecord.get( "idElementValue" ) ).maximum() -
+                             IntegerNode( lineGroupRecord.get( "idElementValue" ) ).minimum() + 1;
+            else if ( bColumnIndex )
+               elementSize = column;
+            else
+               elementSize = row;
 
-				if(lineGroupRecord.isDefined("pointCount"))
-					countSize = IntegerNode(lineGroupRecord.get("pointCount")).maximum();
-				else if(bColumnIndex)
-					countSize = row;
-				else
-					countSize = column;
-			}
-		}
-// if indexBounds is not given
-		if( row == 0)
-		{
-			if(bColumnIndex)
-				row = countSize;
-			else
-				row = elementSize;
-		}
-		if( column == 0)
-		{
-			if(bColumnIndex)
-				column = elementSize;
-			else
-				column = countSize;
-		}
-		return true;
-	}
-	return false;
-};
+            if ( lineGroupRecord.isDefined( "pointCount" ) )
+               countSize = IntegerNode( lineGroupRecord.get( "pointCount" ) ).maximum();
+            else if ( bColumnIndex )
+               countSize = row;
+            else
+               countSize = column;
+         }
+      }
 
-//! This funtion writes out the group data
-bool	ReaderImpl :: ReadData3DGroupsData(
-						int64_t		dataIndex,			//!< data block index given by the NewData3D
-						int64_t		groupCount,			//!< size of each of the buffers given
-						int64_t*	idElementValue,		//!< index for this group
-						int64_t*	startPointIndex,	//!< Starting index in to the "points" data vector for the groups
-						int64_t*	pointCount			//!< size of the groups given
-						)								//!< \return Return true if sucessful, false otherwise
+      // if indexBounds is not given
+      if ( row == 0 )
+      {
+         if ( bColumnIndex )
+            row = countSize;
+         else
+            row = elementSize;
+      }
+      if ( column == 0 )
+      {
+         if ( bColumnIndex )
+            column = elementSize;
+         else
+            column = countSize;
+      }
+      return true;
+   }
+   return false;
+}
+
+// This funtion writes out the group data
+bool ReaderImpl::ReadData3DGroupsData( int64_t dataIndex, int64_t groupCount, int64_t *idElementValue,
+                                       int64_t *startPointIndex, int64_t *pointCount )
 {
-	if( (dataIndex < 0) || (dataIndex >= data3D_.childCount()))
-		return false;
+   if ( ( dataIndex < 0 ) || ( dataIndex >= data3D_.childCount() ) )
+      return false;
 
-	StructureNode scan(data3D_.get(dataIndex));
-	if(scan.isDefined("pointGroupingSchemes"))
-	{
-		StructureNode pointGroupingSchemes(scan.get("pointGroupingSchemes"));
-		if(pointGroupingSchemes.isDefined("groupingByLine"))
-		{
-			StructureNode groupingByLine(pointGroupingSchemes.get("groupingByLine"));
+   StructureNode scan( data3D_.get( dataIndex ) );
+   if ( scan.isDefined( "pointGroupingSchemes" ) )
+   {
+      StructureNode pointGroupingSchemes( scan.get( "pointGroupingSchemes" ) );
+      if ( pointGroupingSchemes.isDefined( "groupingByLine" ) )
+      {
+         StructureNode groupingByLine( pointGroupingSchemes.get( "groupingByLine" ) );
 
-			StringNode	idElementName(groupingByLine.get("idElementName"));
-			CompressedVectorNode groups(groupingByLine.get("groups"));
-			StructureNode lineGroupRecord(groups.prototype()); //not used here
+         StringNode idElementName( groupingByLine.get( "idElementName" ) );
+         CompressedVectorNode groups( groupingByLine.get( "groups" ) );
+         StructureNode lineGroupRecord( groups.prototype() ); // not used here
 
-			int64_t protoCount = lineGroupRecord.childCount();
-			int64_t protoIndex;
-			vector<SourceDestBuffer> groupSDBuffers;
+         int64_t protoCount = lineGroupRecord.childCount();
+         int64_t protoIndex;
+         vector<SourceDestBuffer> groupSDBuffers;
 
-			for( protoIndex = 0; protoIndex < protoCount; protoIndex++)
-			{
-				ustring		name = lineGroupRecord.get(protoIndex).elementName();
-	
-				if((name.compare("idElementValue") == 0) && lineGroupRecord.isDefined("idElementValue") && (idElementValue != nullptr))
-					groupSDBuffers.push_back(SourceDestBuffer(imf_, "idElementValue",
-						idElementValue, groupCount, true));
+         for ( protoIndex = 0; protoIndex < protoCount; protoIndex++ )
+         {
+            ustring name = lineGroupRecord.get( protoIndex ).elementName();
 
-				if((name.compare("startPointIndex") == 0) && lineGroupRecord.isDefined("startPointIndex") && (startPointIndex != nullptr))
-					groupSDBuffers.push_back(SourceDestBuffer(imf_, "startPointIndex",
-						startPointIndex, groupCount, true));
+            if ( ( name.compare( "idElementValue" ) == 0 ) && lineGroupRecord.isDefined( "idElementValue" ) &&
+                 ( idElementValue != nullptr ) )
+               groupSDBuffers.push_back( SourceDestBuffer( imf_, "idElementValue", idElementValue, groupCount, true ) );
 
-				if((name.compare("pointCount") == 0) && lineGroupRecord.isDefined("pointCount") && (pointCount != nullptr))
-					groupSDBuffers.push_back(SourceDestBuffer(imf_, "pointCount",
-						pointCount, groupCount, true));
-			}
+            if ( ( name.compare( "startPointIndex" ) == 0 ) && lineGroupRecord.isDefined( "startPointIndex" ) &&
+                 ( startPointIndex != nullptr ) )
+               groupSDBuffers.push_back(
+                  SourceDestBuffer( imf_, "startPointIndex", startPointIndex, groupCount, true ) );
 
-			CompressedVectorReader reader = groups.reader(groupSDBuffers);
+            if ( ( name.compare( "pointCount" ) == 0 ) && lineGroupRecord.isDefined( "pointCount" ) &&
+                 ( pointCount != nullptr ) )
+               groupSDBuffers.push_back( SourceDestBuffer( imf_, "pointCount", pointCount, groupCount, true ) );
+         }
 
-			reader.read();
-			reader.close();
-			return true;
-		}
-	}
-	return false;
-};
+         CompressedVectorReader reader = groups.reader( groupSDBuffers );
 
-//! This function returns the point data fields fetched in single call
-//* All the non-NULL buffers in the call below have number of elements = count */
+         reader.read();
+         reader.close();
+         return true;
+      }
+   }
+   return false;
+}
 
-CompressedVectorReader	ReaderImpl :: SetUpData3DPointsData(
-	int64_t		dataIndex,
-	size_t		count,
-	const Data3DPointsData& buffers
-	)
+CompressedVectorReader ReaderImpl::SetUpData3DPointsData( int64_t dataIndex, size_t count,
+                                                          const Data3DPointsData &buffers )
 {
-	StructureNode scan(data3D_.get(dataIndex));
-	CompressedVectorNode points(scan.get("points"));
-	StructureNode proto(points.prototype());
+   StructureNode scan( data3D_.get( dataIndex ) );
+   CompressedVectorNode points( scan.get( "points" ) );
+   StructureNode proto( points.prototype() );
 
-	int64_t protoCount = proto.childCount();
-	int64_t protoIndex;
+   int64_t protoCount = proto.childCount();
+   int64_t protoIndex;
 
-	vector<SourceDestBuffer> destBuffers;
+   vector<SourceDestBuffer> destBuffers;
 
-	for( protoIndex = 0; protoIndex < protoCount; protoIndex++)
-	{
-		ustring		name = proto.get(protoIndex).elementName();
-		NodeType	type = proto.get(protoIndex).type();
-		bool		scaled = type == E57_SCALED_INTEGER ? true : false;
-        // E57_EXT_surface_normals
-        ustring norExtUri;
-        bool haveNormalsExt = imf_.extensionsLookupPrefix("nor", norExtUri);
+   for ( protoIndex = 0; protoIndex < protoCount; protoIndex++ )
+   {
+      ustring name = proto.get( protoIndex ).elementName();
+      NodeType type = proto.get( protoIndex ).type();
+      bool scaled = type == E57_SCALED_INTEGER ? true : false;
+      // E57_EXT_surface_normals
+      ustring norExtUri;
+      bool haveNormalsExt = imf_.extensionsLookupPrefix( "nor", norExtUri );
 
-        if((name.compare("cartesianX") == 0) && proto.isDefined("cartesianX") && (buffers.cartesianX != nullptr))
-			destBuffers.push_back(SourceDestBuffer(imf_, "cartesianX",
-				buffers.cartesianX,  count, true, scaled));
-		else if((name.compare("cartesianY") == 0) && proto.isDefined("cartesianY") && (buffers.cartesianY != nullptr))
-			destBuffers.push_back(SourceDestBuffer(imf_, "cartesianY",
-				buffers.cartesianY,  count, true,scaled));
-		else if((name.compare("cartesianZ") == 0) && proto.isDefined("cartesianZ") && (buffers.cartesianZ != nullptr))
-			destBuffers.push_back(SourceDestBuffer(imf_, "cartesianZ",
-				buffers.cartesianZ,  count, true, scaled));
-		else if((name.compare("cartesianInvalidState") == 0) && proto.isDefined("cartesianInvalidState") && (buffers.cartesianInvalidState != nullptr))
-			destBuffers.push_back(SourceDestBuffer(imf_, "cartesianInvalidState",
-				buffers.cartesianInvalidState,       count, true));
+      if ( ( name.compare( "cartesianX" ) == 0 ) && proto.isDefined( "cartesianX" ) &&
+           ( buffers.cartesianX != nullptr ) )
+         destBuffers.push_back( SourceDestBuffer( imf_, "cartesianX", buffers.cartesianX, count, true, scaled ) );
+      else if ( ( name.compare( "cartesianY" ) == 0 ) && proto.isDefined( "cartesianY" ) &&
+                ( buffers.cartesianY != nullptr ) )
+         destBuffers.push_back( SourceDestBuffer( imf_, "cartesianY", buffers.cartesianY, count, true, scaled ) );
+      else if ( ( name.compare( "cartesianZ" ) == 0 ) && proto.isDefined( "cartesianZ" ) &&
+                ( buffers.cartesianZ != nullptr ) )
+         destBuffers.push_back( SourceDestBuffer( imf_, "cartesianZ", buffers.cartesianZ, count, true, scaled ) );
+      else if ( ( name.compare( "cartesianInvalidState" ) == 0 ) && proto.isDefined( "cartesianInvalidState" ) &&
+                ( buffers.cartesianInvalidState != nullptr ) )
+         destBuffers.push_back(
+            SourceDestBuffer( imf_, "cartesianInvalidState", buffers.cartesianInvalidState, count, true ) );
 
-		else if((name.compare("sphericalRange") == 0) && proto.isDefined("sphericalRange") && (buffers.sphericalRange != nullptr))
-			destBuffers.push_back(SourceDestBuffer(imf_, "sphericalRange",
-				buffers.sphericalRange,  count, true, scaled));
-		else if((name.compare("sphericalAzimuth") == 0) && proto.isDefined("sphericalAzimuth") && (buffers.sphericalAzimuth != nullptr))
-			destBuffers.push_back(SourceDestBuffer(imf_, "sphericalAzimuth",
-				buffers.sphericalAzimuth,  count, true, scaled));
-		else if((name.compare("sphericalElevation") == 0) && proto.isDefined("sphericalElevation") && (buffers.sphericalElevation != nullptr))
-			destBuffers.push_back(SourceDestBuffer(imf_, "sphericalElevation",
-				buffers.sphericalElevation,  count, true, scaled));
-		else if((name.compare("sphericalInvalidState") == 0) && proto.isDefined("sphericalInvalidState") && (buffers.sphericalInvalidState != nullptr))
-			destBuffers.push_back(SourceDestBuffer(imf_, "sphericalInvalidState",
-				buffers.sphericalInvalidState,        count, true));
+      else if ( ( name.compare( "sphericalRange" ) == 0 ) && proto.isDefined( "sphericalRange" ) &&
+                ( buffers.sphericalRange != nullptr ) )
+         destBuffers.push_back(
+            SourceDestBuffer( imf_, "sphericalRange", buffers.sphericalRange, count, true, scaled ) );
+      else if ( ( name.compare( "sphericalAzimuth" ) == 0 ) && proto.isDefined( "sphericalAzimuth" ) &&
+                ( buffers.sphericalAzimuth != nullptr ) )
+         destBuffers.push_back(
+            SourceDestBuffer( imf_, "sphericalAzimuth", buffers.sphericalAzimuth, count, true, scaled ) );
+      else if ( ( name.compare( "sphericalElevation" ) == 0 ) && proto.isDefined( "sphericalElevation" ) &&
+                ( buffers.sphericalElevation != nullptr ) )
+         destBuffers.push_back(
+            SourceDestBuffer( imf_, "sphericalElevation", buffers.sphericalElevation, count, true, scaled ) );
+      else if ( ( name.compare( "sphericalInvalidState" ) == 0 ) && proto.isDefined( "sphericalInvalidState" ) &&
+                ( buffers.sphericalInvalidState != nullptr ) )
+         destBuffers.push_back(
+            SourceDestBuffer( imf_, "sphericalInvalidState", buffers.sphericalInvalidState, count, true ) );
 
-		else if((name.compare("rowIndex") == 0) && proto.isDefined("rowIndex") && (buffers.rowIndex != nullptr))
-			destBuffers.push_back(SourceDestBuffer(imf_, "rowIndex",
-				buffers.rowIndex,     count, true));
-		else if((name.compare("columnIndex") == 0) && proto.isDefined("columnIndex") && (buffers.columnIndex != nullptr))
-			destBuffers.push_back(SourceDestBuffer(imf_, "columnIndex",
-				buffers.columnIndex, count, true));
-		else if((name.compare("returnIndex") == 0) && proto.isDefined("returnIndex") && (buffers.returnIndex != nullptr))
-			destBuffers.push_back(SourceDestBuffer(imf_, "returnIndex",
-				buffers.returnIndex,  count, true));
-		else if((name.compare("returnCount") == 0) && proto.isDefined("returnCount") && (buffers.returnCount != nullptr))
-			destBuffers.push_back(SourceDestBuffer(imf_, "returnCount",
-				buffers.returnCount,  count, true));
+      else if ( ( name.compare( "rowIndex" ) == 0 ) && proto.isDefined( "rowIndex" ) &&
+                ( buffers.rowIndex != nullptr ) )
+         destBuffers.push_back( SourceDestBuffer( imf_, "rowIndex", buffers.rowIndex, count, true ) );
+      else if ( ( name.compare( "columnIndex" ) == 0 ) && proto.isDefined( "columnIndex" ) &&
+                ( buffers.columnIndex != nullptr ) )
+         destBuffers.push_back( SourceDestBuffer( imf_, "columnIndex", buffers.columnIndex, count, true ) );
+      else if ( ( name.compare( "returnIndex" ) == 0 ) && proto.isDefined( "returnIndex" ) &&
+                ( buffers.returnIndex != nullptr ) )
+         destBuffers.push_back( SourceDestBuffer( imf_, "returnIndex", buffers.returnIndex, count, true ) );
+      else if ( ( name.compare( "returnCount" ) == 0 ) && proto.isDefined( "returnCount" ) &&
+                ( buffers.returnCount != nullptr ) )
+         destBuffers.push_back( SourceDestBuffer( imf_, "returnCount", buffers.returnCount, count, true ) );
 
-		else if((name.compare("timeStamp") == 0) && proto.isDefined("timeStamp") && (buffers.timeStamp != nullptr))
-			destBuffers.push_back(SourceDestBuffer(imf_, "timeStamp",
-				buffers.timeStamp,    count, true, scaled));
-		else if((name.compare("isTimeStampInvalid") == 0) && proto.isDefined("isTimeStampInvalid") && (buffers.isTimeStampInvalid != nullptr))
-			destBuffers.push_back(SourceDestBuffer(imf_, "isTimeStampInvalid",
-				buffers.isTimeStampInvalid, count, true));
+      else if ( ( name.compare( "timeStamp" ) == 0 ) && proto.isDefined( "timeStamp" ) &&
+                ( buffers.timeStamp != nullptr ) )
+         destBuffers.push_back( SourceDestBuffer( imf_, "timeStamp", buffers.timeStamp, count, true, scaled ) );
+      else if ( ( name.compare( "isTimeStampInvalid" ) == 0 ) && proto.isDefined( "isTimeStampInvalid" ) &&
+                ( buffers.isTimeStampInvalid != nullptr ) )
+         destBuffers.push_back(
+            SourceDestBuffer( imf_, "isTimeStampInvalid", buffers.isTimeStampInvalid, count, true ) );
 
-		else if((name.compare("intensity") == 0) && proto.isDefined("intensity") && (buffers.intensity != nullptr))
-			destBuffers.push_back(SourceDestBuffer(imf_, "intensity",   buffers.intensity,
-				count, true, scaled));
-		else if((name.compare("isIntensityInvalid") == 0) && proto.isDefined("isIntensityInvalid") && (buffers.isIntensityInvalid != nullptr))
-			destBuffers.push_back(SourceDestBuffer(imf_, "isIntensityInvalid",
-				buffers.isIntensityInvalid,count, true));
+      else if ( ( name.compare( "intensity" ) == 0 ) && proto.isDefined( "intensity" ) &&
+                ( buffers.intensity != nullptr ) )
+         destBuffers.push_back( SourceDestBuffer( imf_, "intensity", buffers.intensity, count, true, scaled ) );
+      else if ( ( name.compare( "isIntensityInvalid" ) == 0 ) && proto.isDefined( "isIntensityInvalid" ) &&
+                ( buffers.isIntensityInvalid != nullptr ) )
+         destBuffers.push_back(
+            SourceDestBuffer( imf_, "isIntensityInvalid", buffers.isIntensityInvalid, count, true ) );
 
-		else if((name.compare("colorRed") == 0) && proto.isDefined("colorRed") && (buffers.colorRed != nullptr))
-			destBuffers.push_back(SourceDestBuffer(imf_, "colorRed",
-				buffers.colorRed,     count, true, scaled));
-		else if((name.compare("colorGreen") == 0) && proto.isDefined("colorGreen") && (buffers.colorGreen != nullptr))
-			destBuffers.push_back(SourceDestBuffer(imf_, "colorGreen",
-				buffers.colorGreen,   count, true, scaled));
-		else if((name.compare("colorBlue") == 0) && proto.isDefined("colorBlue") && (buffers.colorBlue != nullptr))
-			destBuffers.push_back(SourceDestBuffer(imf_, "colorBlue",
-				buffers.colorBlue,    count, true, scaled));
-		else if((name.compare("isColorInvalid") == 0) && proto.isDefined("isColorInvalid") && (buffers.isColorInvalid != nullptr))
-			destBuffers.push_back(SourceDestBuffer(imf_, "isColorInvalid",
-				buffers.isColorInvalid, count, true));
-        else if(haveNormalsExt && (name.compare("nor:normalX") == 0) && proto.isDefined("nor:normalX") && (buffers.normalX != nullptr))
-            destBuffers.push_back(SourceDestBuffer(imf_, "nor:normalX", buffers.normalX, count, true, scaled));
-        else if(haveNormalsExt && (name.compare("nor:normalY") == 0) && proto.isDefined("nor:normalY") && (buffers.normalY != nullptr))
-            destBuffers.push_back(SourceDestBuffer(imf_, "nor:normalY", buffers.normalY, count, true, scaled));
-        else if(haveNormalsExt && (name.compare("nor:normalZ") == 0) && proto.isDefined("nor:normalZ") && (buffers.normalZ != nullptr))
-            destBuffers.push_back(SourceDestBuffer(imf_, "nor:normalZ", buffers.normalZ, count, true, scaled));
-		else if(buffers.pointDataExtension != nullptr)
-			(*buffers.pointDataExtension)(imf_, proto, destBuffers);
-	}
+      else if ( ( name.compare( "colorRed" ) == 0 ) && proto.isDefined( "colorRed" ) &&
+                ( buffers.colorRed != nullptr ) )
+         destBuffers.push_back( SourceDestBuffer( imf_, "colorRed", buffers.colorRed, count, true, scaled ) );
+      else if ( ( name.compare( "colorGreen" ) == 0 ) && proto.isDefined( "colorGreen" ) &&
+                ( buffers.colorGreen != nullptr ) )
+         destBuffers.push_back( SourceDestBuffer( imf_, "colorGreen", buffers.colorGreen, count, true, scaled ) );
+      else if ( ( name.compare( "colorBlue" ) == 0 ) && proto.isDefined( "colorBlue" ) &&
+                ( buffers.colorBlue != nullptr ) )
+         destBuffers.push_back( SourceDestBuffer( imf_, "colorBlue", buffers.colorBlue, count, true, scaled ) );
+      else if ( ( name.compare( "isColorInvalid" ) == 0 ) && proto.isDefined( "isColorInvalid" ) &&
+                ( buffers.isColorInvalid != nullptr ) )
+         destBuffers.push_back( SourceDestBuffer( imf_, "isColorInvalid", buffers.isColorInvalid, count, true ) );
+      else if ( haveNormalsExt && ( name.compare( "nor:normalX" ) == 0 ) && proto.isDefined( "nor:normalX" ) &&
+                ( buffers.normalX != nullptr ) )
+         destBuffers.push_back( SourceDestBuffer( imf_, "nor:normalX", buffers.normalX, count, true, scaled ) );
+      else if ( haveNormalsExt && ( name.compare( "nor:normalY" ) == 0 ) && proto.isDefined( "nor:normalY" ) &&
+                ( buffers.normalY != nullptr ) )
+         destBuffers.push_back( SourceDestBuffer( imf_, "nor:normalY", buffers.normalY, count, true, scaled ) );
+      else if ( haveNormalsExt && ( name.compare( "nor:normalZ" ) == 0 ) && proto.isDefined( "nor:normalZ" ) &&
+                ( buffers.normalZ != nullptr ) )
+         destBuffers.push_back( SourceDestBuffer( imf_, "nor:normalZ", buffers.normalZ, count, true, scaled ) );
+      else if ( buffers.pointDataExtension != nullptr )
+         ( *buffers.pointDataExtension )( imf_, proto, destBuffers );
+   }
 
-	CompressedVectorReader reader = points.reader(destBuffers);
+   CompressedVectorReader reader = points.reader( destBuffers );
 
-	return reader;
-};
+   return reader;
+}
 
-//#define TEST_EXTENSIONS
 ////////////////////////////////////////////////////////////////////
 //
 //	e57::Writer
 //
-//! This function is the constructor for the writer class
-	WriterImpl::WriterImpl(
-		const ustring & filePath,
-		const ustring & coordinateMetadata)
-	: imf_(filePath,"w")
-	, root_(imf_.root())
-	, data3D_(imf_,true)
-	, images2D_(imf_,true)
+
+WriterImpl::WriterImpl( const ustring &filePath, const ustring &coordinateMetadata ) :
+   imf_( filePath, "w" ), root_( imf_.root() ), data3D_( imf_, true ), images2D_( imf_, true )
 {
-/// We are using the E57 v1.0 data format standard fieldnames.
-/// The standard fieldnames are used without an extension prefix (in the default namespace).
-/// We explicitly register it for completeness (the reference implementaion would do it for us, if we didn't).
-    imf_.extensionsAdd("", E57_V1_0_URI);
 
-#ifdef TEST_EXTENSIONS
-	imf_.extensionsAdd("ext","http://www.libe57.org/extensions.html");
+   // We are using the E57 v1.0 data format standard fieldnames.
+   // The standard fieldnames are used without an extension prefix (in the default namespace).
+   // We explicitly register it for completeness (the reference implementaion would do it for us, if we didn't).
+   imf_.extensionsAdd( "", E57_V1_0_URI );
 
-	root_.set("ext:extDesc", StringNode(imf_, "This is a test string"));
-#endif
-// Set per-file properties.
-/// Path names: "/formatName", "/majorVersion", "/minorVersion", "/coordinateMetadata"
-	root_.set("formatName", StringNode(imf_, "ASTM E57 3D Imaging Data File"));
-	root_.set("guid", StringNode(imf_, GetNewGuid()));
+   // Set per-file properties.
+   // Path names: "/formatName", "/majorVersion", "/minorVersion", "/coordinateMetadata"
+   root_.set( "formatName", StringNode( imf_, "ASTM E57 3D Imaging Data File" ) );
+   root_.set( "guid", StringNode( imf_, GetNewGuid() ) );
 
-// Get ASTM version number supported by library, so can write it into file
-	int astmMajor;
-	int astmMinor;
-	ustring libraryId;
-	Utilities::getVersions(astmMajor, astmMinor, libraryId);
+   // Get ASTM version number supported by library, so can write it into file
+   int astmMajor;
+   int astmMinor;
+   ustring libraryId;
+   Utilities::getVersions( astmMajor, astmMinor, libraryId );
 
-	root_.set("versionMajor", IntegerNode(imf_, astmMajor));
-	root_.set("versionMinor", IntegerNode(imf_, astmMinor));
-	root_.set("e57LibraryVersion", StringNode(imf_,libraryId));
+   root_.set( "versionMajor", IntegerNode( imf_, astmMajor ) );
+   root_.set( "versionMinor", IntegerNode( imf_, astmMinor ) );
+   root_.set( "e57LibraryVersion", StringNode( imf_, libraryId ) );
 
-// Save a dummy string for coordinate system.
-/// Really should be a valid WKT string identifying the coordinate reference system (CRS).
-    if (!coordinateMetadata.empty())
-    {
-        root_.set("coordinateMetadata", StringNode(imf_, coordinateMetadata));
-    }
+   // Save a dummy string for coordinate system.
+   // Really should be a valid WKT string identifying the coordinate reference system (CRS).
+   if ( !coordinateMetadata.empty() )
+   {
+      root_.set( "coordinateMetadata", StringNode( imf_, coordinateMetadata ) );
+   }
 
 // Create creationDateTime structure
-/// Path name: "/creationDateTime
+// Path name: "/creationDateTime
 // TODO currently no support for handling UTC <-> GPS time conversions
 // note that "creationDateTime" is optional in the standard
 #if 0
@@ -1390,1032 +1341,948 @@ CompressedVectorReader	ReaderImpl :: SetUpData3DPointsData(
     root_.set("creationDateTime", creationDateTime);
 #endif
 
-	root_.set("data3D", data3D_);
-	root_.set("images2D", images2D_);
-};
-//! This function is the destructor for the writer class
-	WriterImpl::~WriterImpl()
+   root_.set( "data3D", data3D_ );
+   root_.set( "images2D", images2D_ );
+}
+
+WriterImpl::~WriterImpl()
 {
-	if(IsOpen())
-		Close();
-};
-//! This function returns true if the file is open
-bool	WriterImpl :: IsOpen()
+   if ( IsOpen() )
+      Close();
+}
+
+bool WriterImpl::IsOpen()
 {
-	if(imf_.isOpen())
-		return true;
-	return false;
-};
+   if ( imf_.isOpen() )
+      return true;
+   return false;
+}
 
-//! This function closes the file
-bool	WriterImpl :: Close()
+bool WriterImpl::Close()
 {
-	if(IsOpen())
-	{
-		imf_.close();
-		return true;
-	}
-	return false;
-};
-//! This function returns the file raw E57Root Structure Node
-StructureNode	WriterImpl :: GetRawE57Root()
+   if ( IsOpen() )
+   {
+      imf_.close();
+      return true;
+   }
+   return false;
+}
+
+StructureNode WriterImpl::GetRawE57Root()
 {
-	return root_;
-};	//!< /return Returns the E57Root StructureNode
+   return root_;
+}
 
-//! This function returns the raw Data3D Vector Node
-VectorNode		WriterImpl :: GetRawData3D()
+VectorNode WriterImpl::GetRawData3D()
 {
-	return data3D_;
-};//!< /return Returns the raw Data3D VectorNode
+   return data3D_;
+}
 
-//! This function returns the raw Images2D Vector Node
-VectorNode		WriterImpl :: GetRawImages2D()
+VectorNode WriterImpl::GetRawImages2D()
 {
-	return images2D_;
-};	//!< /return Returns the raw Image2D VectorNode
-//! This function returns the ram ImageFile Node which is need to add enhancements
-ImageFile		WriterImpl :: GetRawIMF()
+   return images2D_;
+}
+
+ImageFile WriterImpl::GetRawIMF()
 {
-	return imf_;
-};  //!< /return Returns the raw ImageFile
-////////////////////////////////////////////////////////////////////
-//
-//	Camera Image picture data
-//
+   return imf_;
+}
 
-//! This function sets up the image2D header and positions the cursor
-//* The user needs to config a Image2D structure with all the camera information before making this call. */
-int64_t	WriterImpl :: NewImage2D(
-	Image2D &	image2DHeader	//!< pointer to the Image2D structure to receive the picture information
-	)						//!< /return Returns the image2D index
+int64_t WriterImpl::NewImage2D( Image2D &image2DHeader )
 {
-	int64_t pos = -1;
+   int64_t pos = -1;
 
-	StructureNode image = StructureNode(imf_);
-	images2D_.append(image);
-	pos = images2D_.childCount() - 1;
+   StructureNode image = StructureNode( imf_ );
+   images2D_.append( image );
+   pos = images2D_.childCount() - 1;
 
-    if (image2DHeader.guid.empty())
-    {
-        image2DHeader.guid = GetNewGuid();
-    }
+   if ( image2DHeader.guid.empty() )
+   {
+      image2DHeader.guid = GetNewGuid();
+   }
 
-	image.set("guid", StringNode(imf_, image2DHeader.guid));	//required
+   image.set( "guid", StringNode( imf_, image2DHeader.guid ) ); // required
 
-	if(!image2DHeader.name.empty())
-		image.set("name", StringNode(imf_, image2DHeader.name));
-	if(!image2DHeader.description.empty())
-		image.set("description", StringNode(imf_, image2DHeader.description));
+   if ( !image2DHeader.name.empty() )
+      image.set( "name", StringNode( imf_, image2DHeader.name ) );
+   if ( !image2DHeader.description.empty() )
+      image.set( "description", StringNode( imf_, image2DHeader.description ) );
 
-// Add various sensor and version strings to image.
+   // Add various sensor and version strings to image.
+   if ( !image2DHeader.sensorVendor.empty() )
+      image.set( "sensorVendor", StringNode( imf_, image2DHeader.sensorVendor ) );
+   if ( !image2DHeader.sensorModel.empty() )
+      image.set( "sensorModel", StringNode( imf_, image2DHeader.sensorModel ) );
+   if ( !image2DHeader.sensorSerialNumber.empty() )
+      image.set( "sensorSerialNumber", StringNode( imf_, image2DHeader.sensorSerialNumber ) );
 
-	if(!image2DHeader.sensorVendor.empty())
-		image.set("sensorVendor",           StringNode(imf_, image2DHeader.sensorVendor));
-	if(!image2DHeader.sensorModel.empty())
-		image.set("sensorModel",            StringNode(imf_, image2DHeader.sensorModel));
-	if(!image2DHeader.sensorSerialNumber.empty())
-		image.set("sensorSerialNumber",     StringNode(imf_, image2DHeader.sensorSerialNumber));
+   if ( !image2DHeader.associatedData3DGuid.empty() )
+      image.set( "associatedData3DGuid", StringNode( imf_, image2DHeader.associatedData3DGuid ) );
 
-	if(!image2DHeader.associatedData3DGuid.empty())
-		image.set("associatedData3DGuid", StringNode(imf_, image2DHeader.associatedData3DGuid));
+   if ( image2DHeader.acquisitionDateTime.dateTimeValue > 0. )
+   {
+      StructureNode acquisitionDateTime = StructureNode( imf_ );
+      image.set( "acquisitionDateTime", acquisitionDateTime );
+      acquisitionDateTime.set( "dateTimeValue", FloatNode( imf_, image2DHeader.acquisitionDateTime.dateTimeValue ) );
+      acquisitionDateTime.set( "isAtomicClockReferenced",
+                               IntegerNode( imf_, image2DHeader.acquisitionDateTime.isAtomicClockReferenced ) );
+   }
 
-	if(image2DHeader.acquisitionDateTime.dateTimeValue > 0.)
-	{
-		StructureNode acquisitionDateTime = StructureNode(imf_);
-		image.set("acquisitionDateTime", acquisitionDateTime);
-		acquisitionDateTime.set("dateTimeValue",
-			FloatNode(imf_, image2DHeader.acquisitionDateTime.dateTimeValue));
-		acquisitionDateTime.set("isAtomicClockReferenced",
-			IntegerNode(imf_, image2DHeader.acquisitionDateTime.isAtomicClockReferenced));
-	}
+   // Create pose structure for image.
+   if ( image2DHeader.pose != RigidBodyTransform{} )
+   {
+      StructureNode pose = StructureNode( imf_ );
+      image.set( "pose", pose );
 
-// Create pose structure for image.
+      StructureNode rotation = StructureNode( imf_ );
+      pose.set( "rotation", rotation );
+      rotation.set( "w", FloatNode( imf_, image2DHeader.pose.rotation.w ) );
+      rotation.set( "x", FloatNode( imf_, image2DHeader.pose.rotation.x ) );
+      rotation.set( "y", FloatNode( imf_, image2DHeader.pose.rotation.y ) );
+      rotation.set( "z", FloatNode( imf_, image2DHeader.pose.rotation.z ) );
 
-    if(image2DHeader.pose != RigidBodyTransform{})
-	{
-		StructureNode pose = StructureNode(imf_);
-		image.set("pose", pose);
-
-		StructureNode rotation = StructureNode(imf_);
-		pose.set("rotation", rotation);
-		rotation.set("w", FloatNode(imf_, image2DHeader.pose.rotation.w));
-		rotation.set("x", FloatNode(imf_, image2DHeader.pose.rotation.x));
-		rotation.set("y", FloatNode(imf_, image2DHeader.pose.rotation.y));
-		rotation.set("z", FloatNode(imf_, image2DHeader.pose.rotation.z));
-
-		StructureNode translation = StructureNode(imf_);
-		pose.set("translation", translation);
-		translation.set("x", FloatNode(imf_, image2DHeader.pose.translation.x));
-		translation.set("y", FloatNode(imf_, image2DHeader.pose.translation.y));
-		translation.set("z", FloatNode(imf_, image2DHeader.pose.translation.z));
-	}
+      StructureNode translation = StructureNode( imf_ );
+      pose.set( "translation", translation );
+      translation.set( "x", FloatNode( imf_, image2DHeader.pose.translation.x ) );
+      translation.set( "y", FloatNode( imf_, image2DHeader.pose.translation.y ) );
+      translation.set( "z", FloatNode( imf_, image2DHeader.pose.translation.z ) );
+   }
 
 #ifdef TEST_EXTENSIONS
-	StructureNode extbox = StructureNode(imf_);
-	extbox.set("ext:imageHeight", IntegerNode(imf_, image2DHeader.visualReferenceRepresentation.imageHeight));
-	extbox.set("ext:imageWidth", IntegerNode(imf_,	image2DHeader.visualReferenceRepresentation.imageWidth));
-	image.set("ext:imageSize", extbox);
-	image.set("ext:extraStr", StringNode(imf_, "This is another extra string"));
-	image.set("ext:extraFloat", FloatNode(imf_, 3.14159));
+   StructureNode extbox = StructureNode( imf_ );
+   extbox.set( "ext:imageHeight", IntegerNode( imf_, image2DHeader.visualReferenceRepresentation.imageHeight ) );
+   extbox.set( "ext:imageWidth", IntegerNode( imf_, image2DHeader.visualReferenceRepresentation.imageWidth ) );
+   image.set( "ext:imageSize", extbox );
+   image.set( "ext:extraStr", StringNode( imf_, "This is another extra string" ) );
+   image.set( "ext:extraFloat", FloatNode( imf_, 3.14159 ) );
 #endif
 
-	if( image2DHeader.visualReferenceRepresentation.jpegImageSize > 0 ||
-		image2DHeader.visualReferenceRepresentation.pngImageSize > 0)
-	{
-		StructureNode visualReferenceRepresentation = StructureNode(imf_);
-		image.set("visualReferenceRepresentation", visualReferenceRepresentation);
+   if ( image2DHeader.visualReferenceRepresentation.jpegImageSize > 0 ||
+        image2DHeader.visualReferenceRepresentation.pngImageSize > 0 )
+   {
+      StructureNode visualReferenceRepresentation = StructureNode( imf_ );
+      image.set( "visualReferenceRepresentation", visualReferenceRepresentation );
 
-		if( image2DHeader.visualReferenceRepresentation.jpegImageSize > 0)
-			visualReferenceRepresentation.set("jpegImage",
-				BlobNode(imf_,image2DHeader.visualReferenceRepresentation.jpegImageSize));
-		else if( image2DHeader.visualReferenceRepresentation.pngImageSize > 0)
-			visualReferenceRepresentation.set("pngImage",
-				BlobNode(imf_,image2DHeader.visualReferenceRepresentation.pngImageSize));
-		if( image2DHeader.visualReferenceRepresentation.imageMaskSize > 0)
-			visualReferenceRepresentation.set("imageMask",
-				BlobNode(imf_,image2DHeader.visualReferenceRepresentation.imageMaskSize));
+      if ( image2DHeader.visualReferenceRepresentation.jpegImageSize > 0 )
+         visualReferenceRepresentation.set(
+            "jpegImage", BlobNode( imf_, image2DHeader.visualReferenceRepresentation.jpegImageSize ) );
+      else if ( image2DHeader.visualReferenceRepresentation.pngImageSize > 0 )
+         visualReferenceRepresentation.set(
+            "pngImage", BlobNode( imf_, image2DHeader.visualReferenceRepresentation.pngImageSize ) );
+      if ( image2DHeader.visualReferenceRepresentation.imageMaskSize > 0 )
+         visualReferenceRepresentation.set(
+            "imageMask", BlobNode( imf_, image2DHeader.visualReferenceRepresentation.imageMaskSize ) );
 
-		visualReferenceRepresentation.set("imageHeight", 
-			IntegerNode(imf_, image2DHeader.visualReferenceRepresentation.imageHeight));
-		visualReferenceRepresentation.set("imageWidth", 
-			IntegerNode(imf_, image2DHeader.visualReferenceRepresentation.imageWidth));
-	}
-	else if( image2DHeader.pinholeRepresentation.jpegImageSize > 0 ||
-		image2DHeader.pinholeRepresentation.pngImageSize > 0)
-	{
-		StructureNode pinholeRepresentation = StructureNode(imf_);
-		image.set("pinholeRepresentation", pinholeRepresentation);
+      visualReferenceRepresentation.set( "imageHeight",
+                                         IntegerNode( imf_, image2DHeader.visualReferenceRepresentation.imageHeight ) );
+      visualReferenceRepresentation.set( "imageWidth",
+                                         IntegerNode( imf_, image2DHeader.visualReferenceRepresentation.imageWidth ) );
+   }
+   else if ( image2DHeader.pinholeRepresentation.jpegImageSize > 0 ||
+             image2DHeader.pinholeRepresentation.pngImageSize > 0 )
+   {
+      StructureNode pinholeRepresentation = StructureNode( imf_ );
+      image.set( "pinholeRepresentation", pinholeRepresentation );
 
-		if( image2DHeader.pinholeRepresentation.jpegImageSize > 0)
-			pinholeRepresentation.set("jpegImage",
-				BlobNode(imf_,image2DHeader.pinholeRepresentation.jpegImageSize));
-		else if( image2DHeader.pinholeRepresentation.pngImageSize > 0)
-			pinholeRepresentation.set("pngImage",
-				BlobNode(imf_,image2DHeader.pinholeRepresentation.pngImageSize));
-		if( image2DHeader.pinholeRepresentation.imageMaskSize > 0)
-			pinholeRepresentation.set("imageMask",
-				BlobNode(imf_,image2DHeader.pinholeRepresentation.imageMaskSize));
+      if ( image2DHeader.pinholeRepresentation.jpegImageSize > 0 )
+         pinholeRepresentation.set( "jpegImage", BlobNode( imf_, image2DHeader.pinholeRepresentation.jpegImageSize ) );
+      else if ( image2DHeader.pinholeRepresentation.pngImageSize > 0 )
+         pinholeRepresentation.set( "pngImage", BlobNode( imf_, image2DHeader.pinholeRepresentation.pngImageSize ) );
+      if ( image2DHeader.pinholeRepresentation.imageMaskSize > 0 )
+         pinholeRepresentation.set( "imageMask", BlobNode( imf_, image2DHeader.pinholeRepresentation.imageMaskSize ) );
 
-		pinholeRepresentation.set("focalLength", 
-			FloatNode(imf_, image2DHeader.pinholeRepresentation.focalLength));
-		pinholeRepresentation.set("imageHeight", 
-			IntegerNode(imf_, image2DHeader.pinholeRepresentation.imageHeight));
-		pinholeRepresentation.set("imageWidth", 
-			IntegerNode(imf_, image2DHeader.pinholeRepresentation.imageWidth));
-		pinholeRepresentation.set("pixelHeight", 
-			FloatNode(imf_, image2DHeader.pinholeRepresentation.pixelHeight));
-		pinholeRepresentation.set("pixelWidth", 
-			FloatNode(imf_, image2DHeader.pinholeRepresentation.pixelWidth));
-		pinholeRepresentation.set("principalPointX", 
-			FloatNode(imf_, image2DHeader.pinholeRepresentation.principalPointX));
-		pinholeRepresentation.set("principalPointY", 
-			FloatNode(imf_, image2DHeader.pinholeRepresentation.principalPointY));
-	}
-	else if( image2DHeader.sphericalRepresentation.jpegImageSize > 0 ||
-		image2DHeader.sphericalRepresentation.pngImageSize > 0)
-	{
-		StructureNode sphericalRepresentation = StructureNode(imf_);
-		image.set("sphericalRepresentation", sphericalRepresentation);
+      pinholeRepresentation.set( "focalLength", FloatNode( imf_, image2DHeader.pinholeRepresentation.focalLength ) );
+      pinholeRepresentation.set( "imageHeight", IntegerNode( imf_, image2DHeader.pinholeRepresentation.imageHeight ) );
+      pinholeRepresentation.set( "imageWidth", IntegerNode( imf_, image2DHeader.pinholeRepresentation.imageWidth ) );
+      pinholeRepresentation.set( "pixelHeight", FloatNode( imf_, image2DHeader.pinholeRepresentation.pixelHeight ) );
+      pinholeRepresentation.set( "pixelWidth", FloatNode( imf_, image2DHeader.pinholeRepresentation.pixelWidth ) );
+      pinholeRepresentation.set( "principalPointX",
+                                 FloatNode( imf_, image2DHeader.pinholeRepresentation.principalPointX ) );
+      pinholeRepresentation.set( "principalPointY",
+                                 FloatNode( imf_, image2DHeader.pinholeRepresentation.principalPointY ) );
+   }
+   else if ( image2DHeader.sphericalRepresentation.jpegImageSize > 0 ||
+             image2DHeader.sphericalRepresentation.pngImageSize > 0 )
+   {
+      StructureNode sphericalRepresentation = StructureNode( imf_ );
+      image.set( "sphericalRepresentation", sphericalRepresentation );
 
-		if( image2DHeader.sphericalRepresentation.jpegImageSize > 0)
-			sphericalRepresentation.set("jpegImage",
-				BlobNode(imf_,image2DHeader.sphericalRepresentation.jpegImageSize));
-		else if( image2DHeader.sphericalRepresentation.pngImageSize > 0)
-			sphericalRepresentation.set("pngImage",
-				BlobNode(imf_,image2DHeader.sphericalRepresentation.pngImageSize));
-		if( image2DHeader.sphericalRepresentation.imageMaskSize > 0)
-			sphericalRepresentation.set("imageMask",
-				BlobNode(imf_,image2DHeader.sphericalRepresentation.imageMaskSize));
+      if ( image2DHeader.sphericalRepresentation.jpegImageSize > 0 )
+         sphericalRepresentation.set( "jpegImage",
+                                      BlobNode( imf_, image2DHeader.sphericalRepresentation.jpegImageSize ) );
+      else if ( image2DHeader.sphericalRepresentation.pngImageSize > 0 )
+         sphericalRepresentation.set( "pngImage",
+                                      BlobNode( imf_, image2DHeader.sphericalRepresentation.pngImageSize ) );
+      if ( image2DHeader.sphericalRepresentation.imageMaskSize > 0 )
+         sphericalRepresentation.set( "imageMask",
+                                      BlobNode( imf_, image2DHeader.sphericalRepresentation.imageMaskSize ) );
 
-		sphericalRepresentation.set("imageHeight", 
-			IntegerNode(imf_, image2DHeader.sphericalRepresentation.imageHeight));
-		sphericalRepresentation.set("imageWidth", 
-			IntegerNode(imf_, image2DHeader.sphericalRepresentation.imageWidth));
-		sphericalRepresentation.set("pixelHeight", 
-			FloatNode(imf_, image2DHeader.sphericalRepresentation.pixelHeight));
-		sphericalRepresentation.set("pixelWidth", 
-			FloatNode(imf_, image2DHeader.sphericalRepresentation.pixelWidth));
-	}
-	else if( image2DHeader.cylindricalRepresentation.jpegImageSize > 0 ||
-		image2DHeader.cylindricalRepresentation.pngImageSize > 0)
-	{
-		StructureNode cylindricalRepresentation = StructureNode(imf_);
-		image.set("cylindricalRepresentation", cylindricalRepresentation);
+      sphericalRepresentation.set( "imageHeight",
+                                   IntegerNode( imf_, image2DHeader.sphericalRepresentation.imageHeight ) );
+      sphericalRepresentation.set( "imageWidth",
+                                   IntegerNode( imf_, image2DHeader.sphericalRepresentation.imageWidth ) );
+      sphericalRepresentation.set( "pixelHeight",
+                                   FloatNode( imf_, image2DHeader.sphericalRepresentation.pixelHeight ) );
+      sphericalRepresentation.set( "pixelWidth", FloatNode( imf_, image2DHeader.sphericalRepresentation.pixelWidth ) );
+   }
+   else if ( image2DHeader.cylindricalRepresentation.jpegImageSize > 0 ||
+             image2DHeader.cylindricalRepresentation.pngImageSize > 0 )
+   {
+      StructureNode cylindricalRepresentation = StructureNode( imf_ );
+      image.set( "cylindricalRepresentation", cylindricalRepresentation );
 
-		if( image2DHeader.cylindricalRepresentation.jpegImageSize > 0)
-			cylindricalRepresentation.set("jpegImage",
-				BlobNode(imf_,image2DHeader.cylindricalRepresentation.jpegImageSize));
-		else if( image2DHeader.cylindricalRepresentation.pngImageSize > 0)
-			cylindricalRepresentation.set("pngImage",
-				BlobNode(imf_,image2DHeader.cylindricalRepresentation.pngImageSize));
-		if( image2DHeader.cylindricalRepresentation.imageMaskSize > 0)
-			cylindricalRepresentation.set("imageMask",
-				BlobNode(imf_,image2DHeader.cylindricalRepresentation.imageMaskSize));
+      if ( image2DHeader.cylindricalRepresentation.jpegImageSize > 0 )
+         cylindricalRepresentation.set( "jpegImage",
+                                        BlobNode( imf_, image2DHeader.cylindricalRepresentation.jpegImageSize ) );
+      else if ( image2DHeader.cylindricalRepresentation.pngImageSize > 0 )
+         cylindricalRepresentation.set( "pngImage",
+                                        BlobNode( imf_, image2DHeader.cylindricalRepresentation.pngImageSize ) );
+      if ( image2DHeader.cylindricalRepresentation.imageMaskSize > 0 )
+         cylindricalRepresentation.set( "imageMask",
+                                        BlobNode( imf_, image2DHeader.cylindricalRepresentation.imageMaskSize ) );
 
-		cylindricalRepresentation.set("imageHeight", 
-			IntegerNode(imf_, image2DHeader.cylindricalRepresentation.imageHeight));
-		cylindricalRepresentation.set("imageWidth", 
-			IntegerNode(imf_, image2DHeader.cylindricalRepresentation.imageWidth));
-		cylindricalRepresentation.set("pixelHeight", 
-			FloatNode(imf_, image2DHeader.cylindricalRepresentation.pixelHeight));
-		cylindricalRepresentation.set("pixelWidth", 
-			FloatNode(imf_, image2DHeader.cylindricalRepresentation.pixelWidth));
-		cylindricalRepresentation.set("principalPointY", 
-			FloatNode(imf_, image2DHeader.cylindricalRepresentation.principalPointY));
-		cylindricalRepresentation.set("radius", 
-			FloatNode(imf_, image2DHeader.cylindricalRepresentation.radius));
-	}
-	return pos;
-};
-//! This function reads one of the image blobs
-int64_t WriterImpl :: WriteImage2DNode(
-	e57::StructureNode		image,			//!< 1 of 3 projects or the visual
-	e57::Image2DType		imageType,		//!< identifies the image format desired.
-	void *					pBuffer,		//!< pointer the buffer
-	int64_t					start,			//!< position in the block to start reading
-	int64_t					count			//!< size of desired chuck or buffer size
-	)										//!< /return Returns the number of bytes transferred.
+      cylindricalRepresentation.set( "imageHeight",
+                                     IntegerNode( imf_, image2DHeader.cylindricalRepresentation.imageHeight ) );
+      cylindricalRepresentation.set( "imageWidth",
+                                     IntegerNode( imf_, image2DHeader.cylindricalRepresentation.imageWidth ) );
+      cylindricalRepresentation.set( "pixelHeight",
+                                     FloatNode( imf_, image2DHeader.cylindricalRepresentation.pixelHeight ) );
+      cylindricalRepresentation.set( "pixelWidth",
+                                     FloatNode( imf_, image2DHeader.cylindricalRepresentation.pixelWidth ) );
+      cylindricalRepresentation.set( "principalPointY",
+                                     FloatNode( imf_, image2DHeader.cylindricalRepresentation.principalPointY ) );
+      cylindricalRepresentation.set( "radius", FloatNode( imf_, image2DHeader.cylindricalRepresentation.radius ) );
+   }
+   return pos;
+}
+
+// This function reads one of the image blobs
+int64_t WriterImpl::WriteImage2DNode( e57::StructureNode image, e57::Image2DType imageType, void *pBuffer,
+                                      int64_t start, int64_t count )
 {
-	int64_t transferred = 0;
-	switch(imageType)
-	{
-        case E57_NO_IMAGE: {
-            return 0;
-        }
-        case	E57_JPEG_IMAGE:
-		{
-			if(image.isDefined("jpegImage"))
-			{
-				BlobNode jpegImage(image.get("jpegImage"));
-				jpegImage.write((uint8_t*) pBuffer, start, (size_t) count);
-				transferred = count;
-			}
-			break;
-		}
-	case	E57_PNG_IMAGE:
-		{
-			if(	image.isDefined("pngImage"))
-			{
-				BlobNode pngImage(image.get("pngImage"));
-				pngImage.write((uint8_t*) pBuffer, start, (size_t) count);
-				transferred = count;
-			}
-			break;
-		}
-	case	E57_PNG_IMAGE_MASK:
-		{
-			if(	image.isDefined("imageMask"))
-			{
-				BlobNode imageMask(image.get("imageMask"));
-				imageMask.write((uint8_t*) pBuffer, start, (size_t) count);
-				transferred = count;
-			}
-			break;
-		}
-	};
-	return transferred;
-};
-//! This function writes the block
-int64_t	WriterImpl :: WriteImage2DData(
-	int64_t					imageIndex,		//!< picture block index
-	e57::Image2DType		imageType,		//!< identifies the image format desired.
-	e57::Image2DProjection	imageProjection,//!< identifies the projection desired.
-	void *					pBuffer,		//!< pointer the buffer
-	int64_t					start,			//!< position in the block to start writing
-	int64_t					count			//!< size of desired chuck or buffer size
-	)										//!< /return Returns the number of bytes written
+   int64_t transferred = 0;
+   switch ( imageType )
+   {
+      case E57_NO_IMAGE:
+      {
+         return 0;
+      }
+      case E57_JPEG_IMAGE:
+      {
+         if ( image.isDefined( "jpegImage" ) )
+         {
+            BlobNode jpegImage( image.get( "jpegImage" ) );
+            jpegImage.write( (uint8_t *)pBuffer, start, (size_t)count );
+            transferred = count;
+         }
+         break;
+      }
+      case E57_PNG_IMAGE:
+      {
+         if ( image.isDefined( "pngImage" ) )
+         {
+            BlobNode pngImage( image.get( "pngImage" ) );
+            pngImage.write( (uint8_t *)pBuffer, start, (size_t)count );
+            transferred = count;
+         }
+         break;
+      }
+      case E57_PNG_IMAGE_MASK:
+      {
+         if ( image.isDefined( "imageMask" ) )
+         {
+            BlobNode imageMask( image.get( "imageMask" ) );
+            imageMask.write( (uint8_t *)pBuffer, start, (size_t)count );
+            transferred = count;
+         }
+         break;
+      }
+   }
+   return transferred;
+}
+
+int64_t WriterImpl::WriteImage2DData( int64_t imageIndex, e57::Image2DType imageType,
+                                      e57::Image2DProjection imageProjection, void *pBuffer, int64_t start,
+                                      int64_t count )
 {
-	if( (imageIndex < 0) || (imageIndex >= images2D_.childCount()))
-		return 0;
+   if ( ( imageIndex < 0 ) || ( imageIndex >= images2D_.childCount() ) )
+      return 0;
 
-	int64_t transferred = 0;
-	StructureNode image(images2D_.get(imageIndex));
+   int64_t transferred = 0;
+   StructureNode image( images2D_.get( imageIndex ) );
 
-	switch(imageProjection)
-	{
-        case E57_NO_PROJECTION:
-            return 0;
-        case	E57_VISUAL:
-		if(image.isDefined("visualReferenceRepresentation"))
-		{
-			StructureNode visualReferenceRepresentation(image.get("visualReferenceRepresentation"));
-			transferred = WriteImage2DNode(visualReferenceRepresentation, imageType, pBuffer, start, count);
-		}
-		break;
-	case	E57_PINHOLE:
-		if(image.isDefined("pinholeRepresentation"))
-		{
-			StructureNode pinholeRepresentation(image.get("pinholeRepresentation"));
-			transferred = WriteImage2DNode(pinholeRepresentation, imageType, pBuffer, start, count);
-		}
-		break;
-	case	E57_SPHERICAL:
-		if(image.isDefined("sphericalRepresentation"))
-		{
-			StructureNode sphericalRepresentation(image.get("sphericalRepresentation"));
-			transferred = WriteImage2DNode(sphericalRepresentation, imageType, pBuffer, start, count);
-		}
-		break;
-	case	E57_CYLINDRICAL:
-		if(image.isDefined("cylindricalRepresentation"))
-		{
-			StructureNode cylindricalRepresentation(image.get("cylindricalRepresentation"));
-			transferred = WriteImage2DNode(cylindricalRepresentation, imageType, pBuffer, start, count);
-		}
-		break;
-	};
-	return transferred;
-};
+   switch ( imageProjection )
+   {
+      case E57_NO_PROJECTION:
+         return 0;
+      case E57_VISUAL:
+         if ( image.isDefined( "visualReferenceRepresentation" ) )
+         {
+            StructureNode visualReferenceRepresentation( image.get( "visualReferenceRepresentation" ) );
+            transferred = WriteImage2DNode( visualReferenceRepresentation, imageType, pBuffer, start, count );
+         }
+         break;
+      case E57_PINHOLE:
+         if ( image.isDefined( "pinholeRepresentation" ) )
+         {
+            StructureNode pinholeRepresentation( image.get( "pinholeRepresentation" ) );
+            transferred = WriteImage2DNode( pinholeRepresentation, imageType, pBuffer, start, count );
+         }
+         break;
+      case E57_SPHERICAL:
+         if ( image.isDefined( "sphericalRepresentation" ) )
+         {
+            StructureNode sphericalRepresentation( image.get( "sphericalRepresentation" ) );
+            transferred = WriteImage2DNode( sphericalRepresentation, imageType, pBuffer, start, count );
+         }
+         break;
+      case E57_CYLINDRICAL:
+         if ( image.isDefined( "cylindricalRepresentation" ) )
+         {
+            StructureNode cylindricalRepresentation( image.get( "cylindricalRepresentation" ) );
+            transferred = WriteImage2DNode( cylindricalRepresentation, imageType, pBuffer, start, count );
+         }
+         break;
+   }
+   return transferred;
+}
 
-//! This function sets up the Data3D header and positions the cursor for the binary data
-//* The user needs to config a Data3D structure with all the scanning information before making this call. */
-
-int64_t	WriterImpl :: NewData3D(
-	Data3D &	data3DHeader,		//!< pointer to the Data3D structure to receive the image information
-	bool		(*pointExtension)(ImageFile	imf, StructureNode proto)	//!< function pointer to add point data extension
-	)	//!< /return Returns the index of the new scan.
+int64_t WriterImpl::NewData3D( Data3D &data3DHeader, bool ( *pointExtension )( ImageFile imf, StructureNode proto ) )
 {
-	int64_t pos = -1;
+   int64_t pos = -1;
 
-	if(data3DHeader.guid.empty())
-    {
-        data3DHeader.guid = GetNewGuid();
-    }
+   if ( data3DHeader.guid.empty() )
+   {
+      data3DHeader.guid = GetNewGuid();
+   }
 
-	StructureNode scan = StructureNode(imf_);
-	data3D_.append(scan);
-	pos = data3D_.childCount() - 1;
+   StructureNode scan = StructureNode( imf_ );
+   data3D_.append( scan );
+   pos = data3D_.childCount() - 1;
 
-	scan.set("guid", StringNode(imf_, data3DHeader.guid));	//required
+   scan.set( "guid", StringNode( imf_, data3DHeader.guid ) ); // required
 
-	if(!data3DHeader.name.empty())
-		scan.set("name", StringNode(imf_, data3DHeader.name));
+   if ( !data3DHeader.name.empty() )
+      scan.set( "name", StringNode( imf_, data3DHeader.name ) );
 
-	if(!data3DHeader.description.empty())
-		scan.set("description", StringNode(imf_,
-			data3DHeader.description));
+   if ( !data3DHeader.description.empty() )
+      scan.set( "description", StringNode( imf_, data3DHeader.description ) );
 
-	if(data3DHeader.originalGuids.size() > 0 )
-	{
-		scan.set("originalGuids", VectorNode(imf_));
-		VectorNode originalGuids(scan.get("originalGuids"));
-		int i;
-		for(i = 0; i < (int)data3DHeader.originalGuids.size(); i++)
-			originalGuids.append(StringNode(imf_,
-				data3DHeader.originalGuids[i]));
-	}
+   if ( data3DHeader.originalGuids.size() > 0 )
+   {
+      scan.set( "originalGuids", VectorNode( imf_ ) );
+      VectorNode originalGuids( scan.get( "originalGuids" ) );
+      int i;
+      for ( i = 0; i < (int)data3DHeader.originalGuids.size(); i++ )
+         originalGuids.append( StringNode( imf_, data3DHeader.originalGuids[i] ) );
+   }
 
-// Add various sensor and version strings to scan.
-	/// Path names: "/data3D/0/sensorVendor", etc...
-	if(!data3DHeader.sensorVendor.empty())
-		scan.set("sensorVendor",           StringNode(imf_,
-			data3DHeader.sensorVendor));
-	if(!data3DHeader.sensorModel.empty())
-		scan.set("sensorModel",            StringNode(imf_,
-			data3DHeader.sensorModel));
-	if(!data3DHeader.sensorSerialNumber.empty())
-		scan.set("sensorSerialNumber",     StringNode(imf_,
-			data3DHeader.sensorSerialNumber));
-	if(!data3DHeader.sensorHardwareVersion.empty())
-		scan.set("sensorHardwareVersion",  StringNode(imf_,
-			data3DHeader.sensorHardwareVersion));
-	if(!data3DHeader.sensorSoftwareVersion.empty())
-		scan.set("sensorSoftwareVersion",  StringNode(imf_,
-			data3DHeader.sensorSoftwareVersion));
-	if(!data3DHeader.sensorFirmwareVersion.empty())
-		scan.set("sensorFirmwareVersion",  StringNode(imf_,
-			data3DHeader.sensorFirmwareVersion));
+   // Add various sensor and version strings to scan.
+   // Path names: "/data3D/0/sensorVendor", etc...
+   if ( !data3DHeader.sensorVendor.empty() )
+      scan.set( "sensorVendor", StringNode( imf_, data3DHeader.sensorVendor ) );
+   if ( !data3DHeader.sensorModel.empty() )
+      scan.set( "sensorModel", StringNode( imf_, data3DHeader.sensorModel ) );
+   if ( !data3DHeader.sensorSerialNumber.empty() )
+      scan.set( "sensorSerialNumber", StringNode( imf_, data3DHeader.sensorSerialNumber ) );
+   if ( !data3DHeader.sensorHardwareVersion.empty() )
+      scan.set( "sensorHardwareVersion", StringNode( imf_, data3DHeader.sensorHardwareVersion ) );
+   if ( !data3DHeader.sensorSoftwareVersion.empty() )
+      scan.set( "sensorSoftwareVersion", StringNode( imf_, data3DHeader.sensorSoftwareVersion ) );
+   if ( !data3DHeader.sensorFirmwareVersion.empty() )
+      scan.set( "sensorFirmwareVersion", StringNode( imf_, data3DHeader.sensorFirmwareVersion ) );
 
-// Add temp/humidity to scan.
-	/// Path names: "/data3D/0/temperature", etc...
-	if(data3DHeader.temperature != E57_FLOAT_MAX)
-		scan.set("temperature",      FloatNode(imf_,
-			data3DHeader.temperature));
+   // Add temp/humidity to scan.
+   // Path names: "/data3D/0/temperature", etc...
+   if ( data3DHeader.temperature != E57_FLOAT_MAX )
+      scan.set( "temperature", FloatNode( imf_, data3DHeader.temperature ) );
 
-	if(data3DHeader.relativeHumidity != E57_FLOAT_MAX)
-		scan.set("relativeHumidity", FloatNode(imf_,
-			data3DHeader.relativeHumidity));
+   if ( data3DHeader.relativeHumidity != E57_FLOAT_MAX )
+      scan.set( "relativeHumidity", FloatNode( imf_, data3DHeader.relativeHumidity ) );
 
-	if(data3DHeader.atmosphericPressure != E57_FLOAT_MAX)
-		scan.set("atmosphericPressure", FloatNode(imf_,
-			data3DHeader.atmosphericPressure));
+   if ( data3DHeader.atmosphericPressure != E57_FLOAT_MAX )
+      scan.set( "atmosphericPressure", FloatNode( imf_, data3DHeader.atmosphericPressure ) );
 
-	if( (data3DHeader.indexBounds.rowMinimum != 0) ||
-		(data3DHeader.indexBounds.rowMaximum != 0) ||
-		(data3DHeader.indexBounds.columnMinimum != 0) ||
-		(data3DHeader.indexBounds.columnMaximum != 0) ||
-		(data3DHeader.indexBounds.returnMinimum != 0) ||
-		(data3DHeader.indexBounds.returnMaximum != 0) )
-		{
-		StructureNode ibox = StructureNode(imf_);
+   if ( ( data3DHeader.indexBounds.rowMinimum != 0 ) || ( data3DHeader.indexBounds.rowMaximum != 0 ) ||
+        ( data3DHeader.indexBounds.columnMinimum != 0 ) || ( data3DHeader.indexBounds.columnMaximum != 0 ) ||
+        ( data3DHeader.indexBounds.returnMinimum != 0 ) || ( data3DHeader.indexBounds.returnMaximum != 0 ) )
+   {
+      StructureNode ibox = StructureNode( imf_ );
 
-//		if( (data3DHeader.indexBounds.rowMinimum != 0) ||
-//			(data3DHeader.indexBounds.rowMaximum != 0) )
-//		{
-			ibox.set("rowMinimum", IntegerNode(imf_,
-				data3DHeader.indexBounds.rowMinimum));
-			ibox.set("rowMaximum", IntegerNode(imf_,
-				data3DHeader.indexBounds.rowMaximum));
-//		}
-//		if( (data3DHeader.indexBounds.columnMinimum != 0) ||
-//			(data3DHeader.indexBounds.columnMaximum != 0) )
-//		{
-			ibox.set("columnMinimum", IntegerNode(imf_
-				, data3DHeader.indexBounds.columnMinimum));
-			ibox.set("columnMaximum", IntegerNode(imf_,
-				data3DHeader.indexBounds.columnMaximum));
-//		}
-//		if( (data3DHeader.indexBounds.returnMinimum != 0) ||
-//			(data3DHeader.indexBounds.returnMaximum != 0) )
-//		{
-			ibox.set("returnMinimum", IntegerNode(imf_
-				, data3DHeader.indexBounds.returnMinimum));
-			ibox.set("returnMaximum", IntegerNode(imf_,
-				data3DHeader.indexBounds.returnMaximum));
-//		}
-		scan.set("indexBounds", ibox);
-	}
+      //		if( (data3DHeader.indexBounds.rowMinimum != 0) ||
+      //			(data3DHeader.indexBounds.rowMaximum != 0) )
+      //		{
+      ibox.set( "rowMinimum", IntegerNode( imf_, data3DHeader.indexBounds.rowMinimum ) );
+      ibox.set( "rowMaximum", IntegerNode( imf_, data3DHeader.indexBounds.rowMaximum ) );
+      //		}
+      //		if( (data3DHeader.indexBounds.columnMinimum != 0) ||
+      //			(data3DHeader.indexBounds.columnMaximum != 0) )
+      //		{
+      ibox.set( "columnMinimum", IntegerNode( imf_, data3DHeader.indexBounds.columnMinimum ) );
+      ibox.set( "columnMaximum", IntegerNode( imf_, data3DHeader.indexBounds.columnMaximum ) );
+      //		}
+      //		if( (data3DHeader.indexBounds.returnMinimum != 0) ||
+      //			(data3DHeader.indexBounds.returnMaximum != 0) )
+      //		{
+      ibox.set( "returnMinimum", IntegerNode( imf_, data3DHeader.indexBounds.returnMinimum ) );
+      ibox.set( "returnMaximum", IntegerNode( imf_, data3DHeader.indexBounds.returnMaximum ) );
+      //		}
+      scan.set( "indexBounds", ibox );
+   }
 
 #ifdef TEST_EXTENSIONS
-	StructureNode extbox = StructureNode(imf_);
-	extbox.set("ext:rows", IntegerNode(imf_, data3DHeader.indexBounds.rowMaximum + 1));
-	extbox.set("ext:columns", IntegerNode(imf_,	data3DHeader.indexBounds.columnMaximum + 1));
-	scan.set("ext:indexSize", extbox);
-	scan.set("ext:extraStr", StringNode(imf_, "This is another extra string"));
-	scan.set("ext:extraFloat", FloatNode(imf_, 3.14159));
+   StructureNode extbox = StructureNode( imf_ );
+   extbox.set( "ext:rows", IntegerNode( imf_, data3DHeader.indexBounds.rowMaximum + 1 ) );
+   extbox.set( "ext:columns", IntegerNode( imf_, data3DHeader.indexBounds.columnMaximum + 1 ) );
+   scan.set( "ext:indexSize", extbox );
+   scan.set( "ext:extraStr", StringNode( imf_, "This is another extra string" ) );
+   scan.set( "ext:extraFloat", FloatNode( imf_, 3.14159 ) );
 #endif
 
-	if( (data3DHeader.intensityLimits.intensityMaximum != 0.) ||
-		(data3DHeader.intensityLimits.intensityMinimum != 0.) ){
+   if ( ( data3DHeader.intensityLimits.intensityMaximum != 0. ) ||
+        ( data3DHeader.intensityLimits.intensityMinimum != 0. ) )
+   {
 
-		StructureNode intbox = StructureNode(imf_);
-		if(data3DHeader.pointFields.intensityScaledInteger > 0.)
-		{
-			double offset = 0.;
-			double scale = data3DHeader.pointFields.intensityScaledInteger;
+      StructureNode intbox = StructureNode( imf_ );
+      if ( data3DHeader.pointFields.intensityScaledInteger > 0. )
+      {
+         double offset = 0.;
+         double scale = data3DHeader.pointFields.intensityScaledInteger;
 
-			int64_t rawIntegerMinimum = (int64_t) floor(
-				(data3DHeader.intensityLimits.intensityMinimum - offset)/scale +.5);
-			int64_t rawIntegerMaximum = (int64_t) floor(
-				(data3DHeader.intensityLimits.intensityMaximum - offset)/scale +.5);
+         int64_t rawIntegerMinimum =
+            (int64_t)floor( ( data3DHeader.intensityLimits.intensityMinimum - offset ) / scale + .5 );
+         int64_t rawIntegerMaximum =
+            (int64_t)floor( ( data3DHeader.intensityLimits.intensityMaximum - offset ) / scale + .5 );
 
-			intbox.set("intensityMaximum", ScaledIntegerNode(imf_,
-				rawIntegerMaximum, rawIntegerMinimum, rawIntegerMaximum, scale, offset));
+         intbox.set( "intensityMaximum", ScaledIntegerNode( imf_, rawIntegerMaximum, rawIntegerMinimum,
+                                                            rawIntegerMaximum, scale, offset ) );
 
-			intbox.set("intensityMinimum", ScaledIntegerNode(imf_,
-				rawIntegerMinimum, rawIntegerMinimum, rawIntegerMaximum, scale, offset));
-		}
-		else if(data3DHeader.pointFields.intensityScaledInteger == 0.)
-		{
-			intbox.set("intensityMaximum", FloatNode(imf_,
-				data3DHeader.intensityLimits.intensityMaximum));
-			intbox.set("intensityMinimum", FloatNode(imf_,
-				data3DHeader.intensityLimits.intensityMinimum));
-		}
-		else
-		{
-			intbox.set("intensityMaximum", IntegerNode(imf_,
-				(int64_t) data3DHeader.intensityLimits.intensityMaximum));
-			intbox.set("intensityMinimum", IntegerNode(imf_,
-				(int64_t) data3DHeader.intensityLimits.intensityMinimum));
-		}
-		scan.set("intensityLimits", intbox);
-	}
+         intbox.set( "intensityMinimum", ScaledIntegerNode( imf_, rawIntegerMinimum, rawIntegerMinimum,
+                                                            rawIntegerMaximum, scale, offset ) );
+      }
+      else if ( data3DHeader.pointFields.intensityScaledInteger == 0. )
+      {
+         intbox.set( "intensityMaximum", FloatNode( imf_, data3DHeader.intensityLimits.intensityMaximum ) );
+         intbox.set( "intensityMinimum", FloatNode( imf_, data3DHeader.intensityLimits.intensityMinimum ) );
+      }
+      else
+      {
+         intbox.set( "intensityMaximum", IntegerNode( imf_, (int64_t)data3DHeader.intensityLimits.intensityMaximum ) );
+         intbox.set( "intensityMinimum", IntegerNode( imf_, (int64_t)data3DHeader.intensityLimits.intensityMinimum ) );
+      }
+      scan.set( "intensityLimits", intbox );
+   }
 
-	if( (data3DHeader.colorLimits.colorRedMaximum != 0.) ||
-		(data3DHeader.colorLimits.colorRedMinimum != 0.) ){
+   if ( ( data3DHeader.colorLimits.colorRedMaximum != 0. ) || ( data3DHeader.colorLimits.colorRedMinimum != 0. ) )
+   {
 
-		StructureNode colorbox = StructureNode(imf_);
-		colorbox.set("colorRedMaximum", IntegerNode(imf_,
-			(int64_t) data3DHeader.colorLimits.colorRedMaximum));
-		colorbox.set("colorRedMinimum", IntegerNode(imf_,
-			(int64_t) data3DHeader.colorLimits.colorRedMinimum));
-		colorbox.set("colorGreenMaximum", IntegerNode(imf_,
-			(int64_t) data3DHeader.colorLimits.colorGreenMaximum));
-		colorbox.set("colorGreenMinimum", IntegerNode(imf_,
-			(int64_t) data3DHeader.colorLimits.colorGreenMinimum));
-		colorbox.set("colorBlueMaximum", IntegerNode(imf_,
-			(int64_t) data3DHeader.colorLimits.colorBlueMaximum));
-		colorbox.set("colorBlueMinimum", IntegerNode(imf_,
-			(int64_t) data3DHeader.colorLimits.colorBlueMinimum));
-		scan.set("colorLimits", colorbox);
-	}
+      StructureNode colorbox = StructureNode( imf_ );
+      colorbox.set( "colorRedMaximum", IntegerNode( imf_, (int64_t)data3DHeader.colorLimits.colorRedMaximum ) );
+      colorbox.set( "colorRedMinimum", IntegerNode( imf_, (int64_t)data3DHeader.colorLimits.colorRedMinimum ) );
+      colorbox.set( "colorGreenMaximum", IntegerNode( imf_, (int64_t)data3DHeader.colorLimits.colorGreenMaximum ) );
+      colorbox.set( "colorGreenMinimum", IntegerNode( imf_, (int64_t)data3DHeader.colorLimits.colorGreenMinimum ) );
+      colorbox.set( "colorBlueMaximum", IntegerNode( imf_, (int64_t)data3DHeader.colorLimits.colorBlueMaximum ) );
+      colorbox.set( "colorBlueMinimum", IntegerNode( imf_, (int64_t)data3DHeader.colorLimits.colorBlueMinimum ) );
+      scan.set( "colorLimits", colorbox );
+   }
 
-// Add Cartesian bounding box to scan.
-	/// Path names: "/data3D/0/cartesianBounds/xMinimum", etc...
-	if( (data3DHeader.cartesianBounds.xMinimum != -E57_DOUBLE_MAX) ||
-		(data3DHeader.cartesianBounds.xMaximum != E57_DOUBLE_MAX) ){
+   // Add Cartesian bounding box to scan.
+   // Path names: "/data3D/0/cartesianBounds/xMinimum", etc...
+   if ( ( data3DHeader.cartesianBounds.xMinimum != -E57_DOUBLE_MAX ) ||
+        ( data3DHeader.cartesianBounds.xMaximum != E57_DOUBLE_MAX ) )
+   {
 
-		StructureNode bbox = StructureNode(imf_);
-		bbox.set("xMinimum", FloatNode(imf_,
-			data3DHeader.cartesianBounds.xMinimum));
-		bbox.set("xMaximum", FloatNode(imf_,
-			data3DHeader.cartesianBounds.xMaximum));
-		bbox.set("yMinimum", FloatNode(imf_,
-			data3DHeader.cartesianBounds.yMinimum));
-		bbox.set("yMaximum", FloatNode(imf_,
-			data3DHeader.cartesianBounds.yMaximum));
-		bbox.set("zMinimum", FloatNode(imf_,
-			data3DHeader.cartesianBounds.zMinimum));
-		bbox.set("zMaximum", FloatNode(imf_,
-			data3DHeader.cartesianBounds.zMaximum));
-		scan.set("cartesianBounds", bbox);
-	}
+      StructureNode bbox = StructureNode( imf_ );
+      bbox.set( "xMinimum", FloatNode( imf_, data3DHeader.cartesianBounds.xMinimum ) );
+      bbox.set( "xMaximum", FloatNode( imf_, data3DHeader.cartesianBounds.xMaximum ) );
+      bbox.set( "yMinimum", FloatNode( imf_, data3DHeader.cartesianBounds.yMinimum ) );
+      bbox.set( "yMaximum", FloatNode( imf_, data3DHeader.cartesianBounds.yMaximum ) );
+      bbox.set( "zMinimum", FloatNode( imf_, data3DHeader.cartesianBounds.zMinimum ) );
+      bbox.set( "zMaximum", FloatNode( imf_, data3DHeader.cartesianBounds.zMaximum ) );
+      scan.set( "cartesianBounds", bbox );
+   }
 
-	if( (data3DHeader.sphericalBounds.rangeMinimum != 0.) ||
-		(data3DHeader.sphericalBounds.rangeMaximum != E57_DOUBLE_MAX) ){
+   if ( ( data3DHeader.sphericalBounds.rangeMinimum != 0. ) ||
+        ( data3DHeader.sphericalBounds.rangeMaximum != E57_DOUBLE_MAX ) )
+   {
 
-		StructureNode sbox = StructureNode(imf_);
-		sbox.set("rangeMinimum", FloatNode(imf_,
-			data3DHeader.sphericalBounds.rangeMinimum));
-		sbox.set("rangeMaximum", FloatNode(imf_,
-			data3DHeader.sphericalBounds.rangeMaximum));
-		sbox.set("elevationMinimum", FloatNode(imf_,
-			data3DHeader.sphericalBounds.elevationMinimum));
-		sbox.set("elevationMaximum", FloatNode(imf_,
-			data3DHeader.sphericalBounds.elevationMaximum));
-		sbox.set("azimuthStart", FloatNode(imf_,
-			data3DHeader.sphericalBounds.azimuthStart));
-		sbox.set("azimuthEnd", FloatNode(imf_,
-			data3DHeader.sphericalBounds.azimuthEnd));
-		scan.set("sphericalBounds", sbox);
-	}
+      StructureNode sbox = StructureNode( imf_ );
+      sbox.set( "rangeMinimum", FloatNode( imf_, data3DHeader.sphericalBounds.rangeMinimum ) );
+      sbox.set( "rangeMaximum", FloatNode( imf_, data3DHeader.sphericalBounds.rangeMaximum ) );
+      sbox.set( "elevationMinimum", FloatNode( imf_, data3DHeader.sphericalBounds.elevationMinimum ) );
+      sbox.set( "elevationMaximum", FloatNode( imf_, data3DHeader.sphericalBounds.elevationMaximum ) );
+      sbox.set( "azimuthStart", FloatNode( imf_, data3DHeader.sphericalBounds.azimuthStart ) );
+      sbox.set( "azimuthEnd", FloatNode( imf_, data3DHeader.sphericalBounds.azimuthEnd ) );
+      scan.set( "sphericalBounds", sbox );
+   }
 
-// Create pose structure for scan.
-	/// Path names: "/data3D/0/pose/rotation/w", etc...
-	///             "/data3D/0/pose/translation/x", etc...
+   // Create pose structure for scan.
+   // Path names: "/data3D/0/pose/rotation/w", etc...
+   //             "/data3D/0/pose/translation/x", etc...
+   if ( data3DHeader.pose != RigidBodyTransform{} )
+   {
+      StructureNode pose = StructureNode( imf_ );
+      scan.set( "pose", pose );
 
-	if(data3DHeader.pose != RigidBodyTransform{})
-	{
-		StructureNode pose = StructureNode(imf_);
-		scan.set("pose", pose);
+      StructureNode rotation = StructureNode( imf_ );
+      rotation.set( "w", FloatNode( imf_, data3DHeader.pose.rotation.w ) );
+      rotation.set( "x", FloatNode( imf_, data3DHeader.pose.rotation.x ) );
+      rotation.set( "y", FloatNode( imf_, data3DHeader.pose.rotation.y ) );
+      rotation.set( "z", FloatNode( imf_, data3DHeader.pose.rotation.z ) );
+      pose.set( "rotation", rotation );
 
-		StructureNode rotation = StructureNode(imf_);
-		rotation.set("w", FloatNode(imf_, data3DHeader.pose.rotation.w));
-		rotation.set("x", FloatNode(imf_, data3DHeader.pose.rotation.x));
-		rotation.set("y", FloatNode(imf_, data3DHeader.pose.rotation.y));
-		rotation.set("z", FloatNode(imf_, data3DHeader.pose.rotation.z));
-		pose.set("rotation", rotation);
+      StructureNode translation = StructureNode( imf_ );
+      translation.set( "x", FloatNode( imf_, data3DHeader.pose.translation.x ) );
+      translation.set( "y", FloatNode( imf_, data3DHeader.pose.translation.y ) );
+      translation.set( "z", FloatNode( imf_, data3DHeader.pose.translation.z ) );
+      pose.set( "translation", translation );
+   }
 
-		StructureNode translation = StructureNode(imf_);
-		translation.set("x", FloatNode(imf_, data3DHeader.pose.translation.x));
-		translation.set("y", FloatNode(imf_, data3DHeader.pose.translation.y));
-		translation.set("z", FloatNode(imf_, data3DHeader.pose.translation.z));
-		pose.set("translation", translation);
-	}
-// Add start/stop acquisition times to scan.
-	/// Path names: "/data3D/0/acquisitionStart/dateTimeValue",
-	///             "/data3D/0/acquisitionEnd/dateTimeValue"
-	if(data3DHeader.acquisitionStart.dateTimeValue > 0.) {
-		StructureNode acquisitionStart = StructureNode(imf_);
-		scan.set("acquisitionStart", acquisitionStart);
-		acquisitionStart.set("dateTimeValue",
-			FloatNode(imf_, data3DHeader.acquisitionStart.dateTimeValue));
-		acquisitionStart.set("isAtomicClockReferenced",
-			IntegerNode(imf_, data3DHeader.acquisitionStart.isAtomicClockReferenced));
-	}
-	if(data3DHeader.acquisitionEnd.dateTimeValue > 0.) {
-		StructureNode acquisitionEnd = StructureNode(imf_);
-		scan.set("acquisitionEnd", acquisitionEnd);
-		acquisitionEnd.set("dateTimeValue",
-			FloatNode(imf_, data3DHeader.acquisitionEnd.dateTimeValue));
-		acquisitionEnd.set("isAtomicClockReferenced",
-			IntegerNode(imf_, data3DHeader.acquisitionEnd.isAtomicClockReferenced));
-	}
+   // Add start/stop acquisition times to scan.
+   // Path names: "/data3D/0/acquisitionStart/dateTimeValue",
+   //             "/data3D/0/acquisitionEnd/dateTimeValue"
+   if ( data3DHeader.acquisitionStart.dateTimeValue > 0. )
+   {
+      StructureNode acquisitionStart = StructureNode( imf_ );
+      scan.set( "acquisitionStart", acquisitionStart );
+      acquisitionStart.set( "dateTimeValue", FloatNode( imf_, data3DHeader.acquisitionStart.dateTimeValue ) );
+      acquisitionStart.set( "isAtomicClockReferenced",
+                            IntegerNode( imf_, data3DHeader.acquisitionStart.isAtomicClockReferenced ) );
+   }
+   if ( data3DHeader.acquisitionEnd.dateTimeValue > 0. )
+   {
+      StructureNode acquisitionEnd = StructureNode( imf_ );
+      scan.set( "acquisitionEnd", acquisitionEnd );
+      acquisitionEnd.set( "dateTimeValue", FloatNode( imf_, data3DHeader.acquisitionEnd.dateTimeValue ) );
+      acquisitionEnd.set( "isAtomicClockReferenced",
+                          IntegerNode( imf_, data3DHeader.acquisitionEnd.isAtomicClockReferenced ) );
+   }
 
-// Add grouping scheme area
-    /// Path name: "/data3D/0/pointGroupingSchemes"
-	if(!data3DHeader.pointGroupingSchemes.groupingByLine.idElementName.empty())
-	{
-		StructureNode pointGroupingSchemes = StructureNode(imf_);
-		scan.set("pointGroupingSchemes", pointGroupingSchemes);
+   // Add grouping scheme area
+   // Path name: "/data3D/0/pointGroupingSchemes"
+   if ( !data3DHeader.pointGroupingSchemes.groupingByLine.idElementName.empty() )
+   {
+      StructureNode pointGroupingSchemes = StructureNode( imf_ );
+      scan.set( "pointGroupingSchemes", pointGroupingSchemes );
 
-    /// Add a line grouping scheme
-    /// Path name: "/data3D/0/pointGroupingSchemes/groupingByLine"
-		StructureNode groupingByLine = StructureNode(imf_);
-		pointGroupingSchemes.set("groupingByLine", groupingByLine);
+      // Add a line grouping scheme
+      // Path name: "/data3D/0/pointGroupingSchemes/groupingByLine"
+      StructureNode groupingByLine = StructureNode( imf_ );
+      pointGroupingSchemes.set( "groupingByLine", groupingByLine );
 
-   ///	data3DHeader.pointGroupingSchemes.groupingByLine.idElementName));
-		bool byColumn = true;	//default should be "columnIndex"
-		if(data3DHeader.pointGroupingSchemes.groupingByLine.idElementName.compare("rowIndex") == 0)
-			byColumn = false;
+      // data3DHeader.pointGroupingSchemes.groupingByLine.idElementName));
+      bool byColumn = true; // default should be "columnIndex"
+      if ( data3DHeader.pointGroupingSchemes.groupingByLine.idElementName.compare( "rowIndex" ) == 0 )
+         byColumn = false;
 
-    /// Add idElementName to groupingByLine, specify a line is column or row oriented
-    /// Path name: "/data3D/0/pointGroupingSchemes/groupingByLine/idElementName"
-		if(byColumn)
-			groupingByLine.set("idElementName", StringNode(imf_,"columnIndex"));
-		else
-			groupingByLine.set("idElementName", StringNode(imf_,"rowIndex"));
- 
-// Make a prototype of datatypes that will be stored in LineGroupRecord.
-    /// This prototype will be used in creating the groups CompressedVector.
-    /// Will define path names like:
-    ///     "/data3D/0/pointGroupingSchemes/groupingByLine/groups/0/idElementValue"
+      // Add idElementName to groupingByLine, specify a line is column or row oriented
+      // Path name: "/data3D/0/pointGroupingSchemes/groupingByLine/idElementName"
+      if ( byColumn )
+         groupingByLine.set( "idElementName", StringNode( imf_, "columnIndex" ) );
+      else
+         groupingByLine.set( "idElementName", StringNode( imf_, "rowIndex" ) );
 
-		int64_t groupsSize = data3DHeader.pointGroupingSchemes.groupingByLine.groupsSize;
-		int64_t countSize = data3DHeader.pointGroupingSchemes.groupingByLine.pointCountSize;
-		int64_t pointsSize = data3DHeader.pointsSize;
+      // Make a prototype of datatypes that will be stored in LineGroupRecord.
+      // This prototype will be used in creating the groups CompressedVector.
+      // Will define path names like:
+      //     "/data3D/0/pointGroupingSchemes/groupingByLine/groups/0/idElementValue"
+      int64_t groupsSize = data3DHeader.pointGroupingSchemes.groupingByLine.groupsSize;
+      int64_t countSize = data3DHeader.pointGroupingSchemes.groupingByLine.pointCountSize;
+      int64_t pointsSize = data3DHeader.pointsSize;
 
-		StructureNode lineGroupProto = StructureNode(imf_);
-		lineGroupProto.set("startPointIndex",   IntegerNode(imf_, 0, 0, pointsSize - 1));
-		lineGroupProto.set("idElementValue",    IntegerNode(imf_, 0, 0, groupsSize - 1));
-		lineGroupProto.set("pointCount",        IntegerNode(imf_, 0, 0, countSize));
+      StructureNode lineGroupProto = StructureNode( imf_ );
+      lineGroupProto.set( "startPointIndex", IntegerNode( imf_, 0, 0, pointsSize - 1 ) );
+      lineGroupProto.set( "idElementValue", IntegerNode( imf_, 0, 0, groupsSize - 1 ) );
+      lineGroupProto.set( "pointCount", IntegerNode( imf_, 0, 0, countSize ) );
 
-		//Not supported in this Simple API for now
-/*
-		StructureNode bbox = StructureNode(imf_);
-		bbox.set("xMinimum", FloatNode(imf_, 0., E57_SINGLE,
-				data3DHeader.pointFields.pointRangeMinimum,	data3DHeader.pointFields.pointRangeMaximum));
-		bbox.set("xMaximum", FloatNode(imf_, 0., E57_SINGLE,
-				data3DHeader.pointFields.pointRangeMinimum,	data3DHeader.pointFields.pointRangeMaximum));
-		bbox.set("yMinimum", FloatNode(imf_, 0., E57_SINGLE,
-				data3DHeader.pointFields.pointRangeMinimum,	data3DHeader.pointFields.pointRangeMaximum));
-		bbox.set("yMaximum", FloatNode(imf_, 0., E57_SINGLE,
-				data3DHeader.pointFields.pointRangeMinimum,	data3DHeader.pointFields.pointRangeMaximum));
-		bbox.set("zMinimum", FloatNode(imf_, 0., E57_SINGLE,
-				data3DHeader.pointFields.pointRangeMinimum,	data3DHeader.pointFields.pointRangeMaximum));
-		bbox.set("zMaximum", FloatNode(imf_, 0., E57_SINGLE,
-				data3DHeader.pointFields.pointRangeMinimum,	data3DHeader.pointFields.pointRangeMaximum));
-		lineGroupProto.set("cartesianBounds", bbox);
+      // Not supported in this Simple API for now
+      /*
+            StructureNode bbox = StructureNode(imf_);
+            bbox.set("xMinimum", FloatNode(imf_, 0., E57_SINGLE,
+                  data3DHeader.pointFields.pointRangeMinimum,	data3DHeader.pointFields.pointRangeMaximum));
+            bbox.set("xMaximum", FloatNode(imf_, 0., E57_SINGLE,
+                  data3DHeader.pointFields.pointRangeMinimum,	data3DHeader.pointFields.pointRangeMaximum));
+            bbox.set("yMinimum", FloatNode(imf_, 0., E57_SINGLE,
+                  data3DHeader.pointFields.pointRangeMinimum,	data3DHeader.pointFields.pointRangeMaximum));
+            bbox.set("yMaximum", FloatNode(imf_, 0., E57_SINGLE,
+                  data3DHeader.pointFields.pointRangeMinimum,	data3DHeader.pointFields.pointRangeMaximum));
+            bbox.set("zMinimum", FloatNode(imf_, 0., E57_SINGLE,
+                  data3DHeader.pointFields.pointRangeMinimum,	data3DHeader.pointFields.pointRangeMaximum));
+            bbox.set("zMaximum", FloatNode(imf_, 0., E57_SINGLE,
+                  data3DHeader.pointFields.pointRangeMinimum,	data3DHeader.pointFields.pointRangeMaximum));
+            lineGroupProto.set("cartesianBounds", bbox);
 
-		StructureNode sbox = StructureNode(imf_);
-		sbox.set("rangeMinimum", FloatNode(imf_, 0., E57_SINGLE,
-				data3DHeader.pointFields.pointRangeMinimum,	data3DHeader.pointFields.pointRangeMaximum));
-		sbox.set("rangeMaximum", FloatNode(imf_, 0., E57_SINGLE,
-				data3DHeader.pointFields.pointRangeMinimum,	data3DHeader.pointFields.pointRangeMaximum));
-		sbox.set("elevationMinimum", FloatNode(imf_, 0., E57_SINGLE,
-				data3DHeader.pointFields.angleMinimum, data3DHeader.pointFields.angleMaximum));
-		sbox.set("elevationMaximum", FloatNode(imf_, 0., E57_SINGLE,
-				data3DHeader.pointFields.angleMinimum, data3DHeader.pointFields.angleMaximum));
-		sbox.set("azimuthStart", FloatNode(imf_, 0., E57_SINGLE,
-				data3DHeader.pointFields.angleMinimum, data3DHeader.pointFields.angleMaximum));
-		sbox.set("azimuthEnd", FloatNode(imf_, 0., E57_SINGLE,
-				data3DHeader.pointFields.angleMinimum, data3DHeader.pointFields.angleMaximum));
-		lineGroupProto.set("sphericalBounds", sbox);
-*/
-    /// Make empty codecs vector for use in creating groups CompressedVector.
-    /// If this vector is empty, it is assumed that all fields will use the BitPack codec.
-		VectorNode lineGroupCodecs = VectorNode(imf_, true);
+            StructureNode sbox = StructureNode(imf_);
+            sbox.set("rangeMinimum", FloatNode(imf_, 0., E57_SINGLE,
+                  data3DHeader.pointFields.pointRangeMinimum,	data3DHeader.pointFields.pointRangeMaximum));
+            sbox.set("rangeMaximum", FloatNode(imf_, 0., E57_SINGLE,
+                  data3DHeader.pointFields.pointRangeMinimum,	data3DHeader.pointFields.pointRangeMaximum));
+            sbox.set("elevationMinimum", FloatNode(imf_, 0., E57_SINGLE,
+                  data3DHeader.pointFields.angleMinimum, data3DHeader.pointFields.angleMaximum));
+            sbox.set("elevationMaximum", FloatNode(imf_, 0., E57_SINGLE,
+                  data3DHeader.pointFields.angleMinimum, data3DHeader.pointFields.angleMaximum));
+            sbox.set("azimuthStart", FloatNode(imf_, 0., E57_SINGLE,
+                  data3DHeader.pointFields.angleMinimum, data3DHeader.pointFields.angleMaximum));
+            sbox.set("azimuthEnd", FloatNode(imf_, 0., E57_SINGLE,
+                  data3DHeader.pointFields.angleMinimum, data3DHeader.pointFields.angleMaximum));
+            lineGroupProto.set("sphericalBounds", sbox);
+      */
+      // Make empty codecs vector for use in creating groups CompressedVector.
+      // If this vector is empty, it is assumed that all fields will use the BitPack codec.
+      VectorNode lineGroupCodecs = VectorNode( imf_, true );
 
-    /// Create CompressedVector for storing groups.  
-    /// Path Name: "/data3D/0/pointGroupingSchemes/groupingByLine/groups".
-    /// We use the prototype and empty codecs tree from above.
-    /// The CompressedVector will be filled by code below.
-		CompressedVectorNode groups = CompressedVectorNode(imf_, lineGroupProto, lineGroupCodecs);
-		groupingByLine.set("groups", groups);
-	}
+      // Create CompressedVector for storing groups.
+      // Path Name: "/data3D/0/pointGroupingSchemes/groupingByLine/groups".
+      // We use the prototype and empty codecs tree from above.
+      // The CompressedVector will be filled by code below.
+      CompressedVectorNode groups = CompressedVectorNode( imf_, lineGroupProto, lineGroupCodecs );
+      groupingByLine.set( "groups", groups );
+   }
 
-// Make a prototype of datatypes that will be stored in points record.
-    /// This prototype will be used in creating the points CompressedVector.
-    /// Using this proto in a CompressedVector will define path names like:
-    ///      "/data3D/0/points/0/cartesianX"
-    StructureNode proto = StructureNode(imf_);
+   // Make a prototype of datatypes that will be stored in points record.
+   // This prototype will be used in creating the points CompressedVector.
+   // Using this proto in a CompressedVector will define path names like:
+   //      "/data3D/0/points/0/cartesianX"
+   StructureNode proto = StructureNode( imf_ );
 
-// Because ScaledInteger min/max are the raw integer min/max, we must calculate them from the data min/max
-	double pointRangeScale = data3DHeader.pointFields.pointRangeScaledInteger;
-	double pointRangeOffset = 0.;
-	int64_t pointRangeMinimum = (int64_t) floor((data3DHeader.pointFields.pointRangeMinimum - pointRangeOffset)/pointRangeScale +.5);
-	int64_t pointRangeMaximum = (int64_t) floor((data3DHeader.pointFields.pointRangeMaximum - pointRangeOffset)/pointRangeScale +.5);
+   // Because ScaledInteger min/max are the raw integer min/max, we must calculate them from the data min/max
+   double pointRangeScale = data3DHeader.pointFields.pointRangeScaledInteger;
+   double pointRangeOffset = 0.;
+   int64_t pointRangeMinimum =
+      (int64_t)floor( ( data3DHeader.pointFields.pointRangeMinimum - pointRangeOffset ) / pointRangeScale + .5 );
+   int64_t pointRangeMaximum =
+      (int64_t)floor( ( data3DHeader.pointFields.pointRangeMaximum - pointRangeOffset ) / pointRangeScale + .5 );
 
-	if(data3DHeader.pointFields.cartesianXField){
-		if(data3DHeader.pointFields.pointRangeScaledInteger > 0.)
-			proto.set("cartesianX",  ScaledIntegerNode(imf_, 0,
-				pointRangeMinimum, pointRangeMaximum, pointRangeScale, pointRangeOffset));
-		else
-			proto.set("cartesianX",  FloatNode(imf_, 0.,
-				(data3DHeader.pointFields.pointRangeScaledInteger < 0.) ? E57_DOUBLE : E57_SINGLE,
-				data3DHeader.pointFields.pointRangeMinimum,
-				data3DHeader.pointFields.pointRangeMaximum));
-	}
-	if(data3DHeader.pointFields.cartesianYField){
-		if(data3DHeader.pointFields.pointRangeScaledInteger > 0.)
-			proto.set("cartesianY",  ScaledIntegerNode(imf_, 0,
-				pointRangeMinimum, pointRangeMaximum, pointRangeScale, pointRangeOffset));
-		else
-			proto.set("cartesianY",  FloatNode(imf_, 0.,
-				(data3DHeader.pointFields.pointRangeScaledInteger < 0.) ? E57_DOUBLE : E57_SINGLE,
-				data3DHeader.pointFields.pointRangeMinimum,
-				data3DHeader.pointFields.pointRangeMaximum));
-	}
+   if ( data3DHeader.pointFields.cartesianXField )
+   {
+      if ( data3DHeader.pointFields.pointRangeScaledInteger > 0. )
+         proto.set( "cartesianX", ScaledIntegerNode( imf_, 0, pointRangeMinimum, pointRangeMaximum, pointRangeScale,
+                                                     pointRangeOffset ) );
+      else
+         proto.set(
+            "cartesianX",
+            FloatNode( imf_, 0., ( data3DHeader.pointFields.pointRangeScaledInteger < 0. ) ? E57_DOUBLE : E57_SINGLE,
+                       data3DHeader.pointFields.pointRangeMinimum, data3DHeader.pointFields.pointRangeMaximum ) );
+   }
+   if ( data3DHeader.pointFields.cartesianYField )
+   {
+      if ( data3DHeader.pointFields.pointRangeScaledInteger > 0. )
+         proto.set( "cartesianY", ScaledIntegerNode( imf_, 0, pointRangeMinimum, pointRangeMaximum, pointRangeScale,
+                                                     pointRangeOffset ) );
+      else
+         proto.set(
+            "cartesianY",
+            FloatNode( imf_, 0., ( data3DHeader.pointFields.pointRangeScaledInteger < 0. ) ? E57_DOUBLE : E57_SINGLE,
+                       data3DHeader.pointFields.pointRangeMinimum, data3DHeader.pointFields.pointRangeMaximum ) );
+   }
 #ifdef TEST_EXTENSIONS
-	proto.set("ext:extraField1", IntegerNode(imf_, 0, 0, 255));
+   proto.set( "ext:extraField1", IntegerNode( imf_, 0, 0, 255 ) );
 #endif
-	if(data3DHeader.pointFields.cartesianZField){
-		if(data3DHeader.pointFields.pointRangeScaledInteger > 0.)
-			proto.set("cartesianZ",  ScaledIntegerNode(imf_, 0,
-				pointRangeMinimum, pointRangeMaximum, pointRangeScale, pointRangeOffset));
-		else
-			proto.set("cartesianZ",  FloatNode(imf_, 0.,
-				(data3DHeader.pointFields.pointRangeScaledInteger < 0.) ? E57_DOUBLE : E57_SINGLE,
-				data3DHeader.pointFields.pointRangeMinimum,
-				data3DHeader.pointFields.pointRangeMaximum));
-	}
+   if ( data3DHeader.pointFields.cartesianZField )
+   {
+      if ( data3DHeader.pointFields.pointRangeScaledInteger > 0. )
+         proto.set( "cartesianZ", ScaledIntegerNode( imf_, 0, pointRangeMinimum, pointRangeMaximum, pointRangeScale,
+                                                     pointRangeOffset ) );
+      else
+         proto.set(
+            "cartesianZ",
+            FloatNode( imf_, 0., ( data3DHeader.pointFields.pointRangeScaledInteger < 0. ) ? E57_DOUBLE : E57_SINGLE,
+                       data3DHeader.pointFields.pointRangeMinimum, data3DHeader.pointFields.pointRangeMaximum ) );
+   }
 
-	if(data3DHeader.pointFields.sphericalRangeField){
-		if(data3DHeader.pointFields.pointRangeScaledInteger > 0.)
-			proto.set("sphericalRange",  ScaledIntegerNode(imf_, 0,
-				pointRangeMinimum, pointRangeMaximum, pointRangeScale, pointRangeOffset));
-		else
-			proto.set("sphericalRange",  FloatNode(imf_, 0.,
-				(data3DHeader.pointFields.pointRangeScaledInteger < 0.) ? E57_DOUBLE : E57_SINGLE,
-				data3DHeader.pointFields.pointRangeMinimum,
-				data3DHeader.pointFields.pointRangeMaximum));
-	    }
+   if ( data3DHeader.pointFields.sphericalRangeField )
+   {
+      if ( data3DHeader.pointFields.pointRangeScaledInteger > 0. )
+         proto.set( "sphericalRange", ScaledIntegerNode( imf_, 0, pointRangeMinimum, pointRangeMaximum, pointRangeScale,
+                                                         pointRangeOffset ) );
+      else
+         proto.set(
+            "sphericalRange",
+            FloatNode( imf_, 0., ( data3DHeader.pointFields.pointRangeScaledInteger < 0. ) ? E57_DOUBLE : E57_SINGLE,
+                       data3DHeader.pointFields.pointRangeMinimum, data3DHeader.pointFields.pointRangeMaximum ) );
+   }
 
-	double angleScale = data3DHeader.pointFields.angleScaledInteger;
-	double angleOffset = 0.;
-	int64_t angleMinimum = (int64_t) std::floor((data3DHeader.pointFields.angleMinimum - angleOffset)/angleScale +.5);
-	int64_t angleMaximum = (int64_t) std::floor((data3DHeader.pointFields.angleMaximum - angleOffset)/angleScale +.5);
+   double angleScale = data3DHeader.pointFields.angleScaledInteger;
+   double angleOffset = 0.;
+   int64_t angleMinimum =
+      (int64_t)std::floor( ( data3DHeader.pointFields.angleMinimum - angleOffset ) / angleScale + .5 );
+   int64_t angleMaximum =
+      (int64_t)std::floor( ( data3DHeader.pointFields.angleMaximum - angleOffset ) / angleScale + .5 );
 
-	if(data3DHeader.pointFields.sphericalAzimuthField){
-		if(data3DHeader.pointFields.angleScaledInteger > 0.)
-			proto.set("sphericalAzimuth",  ScaledIntegerNode(imf_, 0,
-				angleMinimum, angleMaximum, angleScale, angleOffset));
-		else
-			proto.set("sphericalAzimuth",  FloatNode(imf_, 0.,
-				(data3DHeader.pointFields.angleScaledInteger < 0.) ? E57_DOUBLE : E57_SINGLE,
-				data3DHeader.pointFields.angleMinimum,
-				data3DHeader.pointFields.angleMaximum));
-	}
+   if ( data3DHeader.pointFields.sphericalAzimuthField )
+   {
+      if ( data3DHeader.pointFields.angleScaledInteger > 0. )
+         proto.set( "sphericalAzimuth",
+                    ScaledIntegerNode( imf_, 0, angleMinimum, angleMaximum, angleScale, angleOffset ) );
+      else
+         proto.set( "sphericalAzimuth",
+                    FloatNode( imf_, 0., ( data3DHeader.pointFields.angleScaledInteger < 0. ) ? E57_DOUBLE : E57_SINGLE,
+                               data3DHeader.pointFields.angleMinimum, data3DHeader.pointFields.angleMaximum ) );
+   }
 
-	if(data3DHeader.pointFields.sphericalElevationField){
-		if(data3DHeader.pointFields.angleScaledInteger > 0.)
-			proto.set("sphericalElevation",  ScaledIntegerNode(imf_, 0,
-				angleMinimum, angleMaximum, angleScale, angleOffset));
-		else
-			proto.set("sphericalElevation",  FloatNode(imf_, 0.,
-				(data3DHeader.pointFields.angleScaledInteger < 0.) ? E57_DOUBLE : E57_SINGLE,
-				data3DHeader.pointFields.angleMinimum,
-				data3DHeader.pointFields.angleMaximum));
-	}
+   if ( data3DHeader.pointFields.sphericalElevationField )
+   {
+      if ( data3DHeader.pointFields.angleScaledInteger > 0. )
+         proto.set( "sphericalElevation",
+                    ScaledIntegerNode( imf_, 0, angleMinimum, angleMaximum, angleScale, angleOffset ) );
+      else
+         proto.set( "sphericalElevation",
+                    FloatNode( imf_, 0., ( data3DHeader.pointFields.angleScaledInteger < 0. ) ? E57_DOUBLE : E57_SINGLE,
+                               data3DHeader.pointFields.angleMinimum, data3DHeader.pointFields.angleMaximum ) );
+   }
 
 #ifdef TEST_EXTENSIONS
-	proto.set("ext:extraField2", IntegerNode(imf_, 0, 0, 255));
+   proto.set( "ext:extraField2", IntegerNode( imf_, 0, 0, 255 ) );
 #endif
 
-	if(data3DHeader.pointFields.intensityField){
-		if(data3DHeader.pointFields.intensityScaledInteger > 0.)
-		{
-			double offset = 0; //could be data3DHeader.intensityLimits.intensityMinimum;
-			double scale = data3DHeader.pointFields.intensityScaledInteger;
-			int64_t rawIntegerMinimum = (int64_t) floor((data3DHeader.intensityLimits.intensityMinimum - offset)/scale +.5);
-			int64_t rawIntegerMaximum = (int64_t) floor((data3DHeader.intensityLimits.intensityMaximum - offset)/scale +.5);
-			proto.set("intensity",  ScaledIntegerNode(imf_, 0,
-				rawIntegerMinimum, rawIntegerMaximum, scale, offset));
-		}
-		else if(data3DHeader.pointFields.intensityScaledInteger == E57_NOT_SCALED_USE_FLOAT)
-			proto.set("intensity",  FloatNode(imf_, 0.,	E57_SINGLE,
-				data3DHeader.intensityLimits.intensityMinimum,
-				data3DHeader.intensityLimits.intensityMaximum));
-		else
-			proto.set("intensity",  IntegerNode(imf_, 0,
-				(int64_t) data3DHeader.intensityLimits.intensityMinimum,
-				(int64_t) data3DHeader.intensityLimits.intensityMaximum));
-	}
+   if ( data3DHeader.pointFields.intensityField )
+   {
+      if ( data3DHeader.pointFields.intensityScaledInteger > 0. )
+      {
+         double offset = 0; // could be data3DHeader.intensityLimits.intensityMinimum;
+         double scale = data3DHeader.pointFields.intensityScaledInteger;
+         int64_t rawIntegerMinimum =
+            (int64_t)floor( ( data3DHeader.intensityLimits.intensityMinimum - offset ) / scale + .5 );
+         int64_t rawIntegerMaximum =
+            (int64_t)floor( ( data3DHeader.intensityLimits.intensityMaximum - offset ) / scale + .5 );
+         proto.set( "intensity", ScaledIntegerNode( imf_, 0, rawIntegerMinimum, rawIntegerMaximum, scale, offset ) );
+      }
+      else if ( data3DHeader.pointFields.intensityScaledInteger == E57_NOT_SCALED_USE_FLOAT )
+         proto.set( "intensity", FloatNode( imf_, 0., E57_SINGLE, data3DHeader.intensityLimits.intensityMinimum,
+                                            data3DHeader.intensityLimits.intensityMaximum ) );
+      else
+         proto.set( "intensity", IntegerNode( imf_, 0, (int64_t)data3DHeader.intensityLimits.intensityMinimum,
+                                              (int64_t)data3DHeader.intensityLimits.intensityMaximum ) );
+   }
 
-	if(data3DHeader.pointFields.colorRedField)
-		proto.set("colorRed",    IntegerNode(imf_, 0,
-			(int64_t) data3DHeader.colorLimits.colorRedMinimum,
-			(int64_t) data3DHeader.colorLimits.colorRedMaximum));
-	if(data3DHeader.pointFields.colorGreenField)
-		proto.set("colorGreen",  IntegerNode(imf_, 0,
-			(int64_t) data3DHeader.colorLimits.colorGreenMinimum,
-			(int64_t) data3DHeader.colorLimits.colorGreenMaximum));
-	if(data3DHeader.pointFields.colorBlueField)
-		proto.set("colorBlue",   IntegerNode(imf_, 0,
-			(int64_t) data3DHeader.colorLimits.colorBlueMinimum,
-			(int64_t) data3DHeader.colorLimits.colorBlueMaximum));
+   if ( data3DHeader.pointFields.colorRedField )
+      proto.set( "colorRed", IntegerNode( imf_, 0, (int64_t)data3DHeader.colorLimits.colorRedMinimum,
+                                          (int64_t)data3DHeader.colorLimits.colorRedMaximum ) );
+   if ( data3DHeader.pointFields.colorGreenField )
+      proto.set( "colorGreen", IntegerNode( imf_, 0, (int64_t)data3DHeader.colorLimits.colorGreenMinimum,
+                                            (int64_t)data3DHeader.colorLimits.colorGreenMaximum ) );
+   if ( data3DHeader.pointFields.colorBlueField )
+      proto.set( "colorBlue", IntegerNode( imf_, 0, (int64_t)data3DHeader.colorLimits.colorBlueMinimum,
+                                           (int64_t)data3DHeader.colorLimits.colorBlueMaximum ) );
 
-	if(data3DHeader.pointFields.returnIndexField)
-		proto.set("returnIndex", IntegerNode(imf_, 0, E57_UINT8_MIN,
-			data3DHeader.pointFields.returnMaximum));
-    if(data3DHeader.pointFields.returnCountField)
-		proto.set("returnCount", IntegerNode(imf_, 0, E57_UINT8_MIN,
-			data3DHeader.pointFields.returnMaximum));
+   if ( data3DHeader.pointFields.returnIndexField )
+      proto.set( "returnIndex", IntegerNode( imf_, 0, E57_UINT8_MIN, data3DHeader.pointFields.returnMaximum ) );
+   if ( data3DHeader.pointFields.returnCountField )
+      proto.set( "returnCount", IntegerNode( imf_, 0, E57_UINT8_MIN, data3DHeader.pointFields.returnMaximum ) );
 
-	if(data3DHeader.pointFields.rowIndexField)
-		proto.set("rowIndex",    IntegerNode(imf_, 0, E57_UINT32_MIN,
-			data3DHeader.pointFields.rowIndexMaximum));
-	if(data3DHeader.pointFields.columnIndexField)
-		proto.set("columnIndex", IntegerNode(imf_, 0, E57_UINT32_MIN,
-			data3DHeader.pointFields.columnIndexMaximum));
+   if ( data3DHeader.pointFields.rowIndexField )
+      proto.set( "rowIndex", IntegerNode( imf_, 0, E57_UINT32_MIN, data3DHeader.pointFields.rowIndexMaximum ) );
+   if ( data3DHeader.pointFields.columnIndexField )
+      proto.set( "columnIndex", IntegerNode( imf_, 0, E57_UINT32_MIN, data3DHeader.pointFields.columnIndexMaximum ) );
 
-	if(data3DHeader.pointFields.timeStampField){
-		if(data3DHeader.pointFields.timeScaledInteger > 0.)
-		{
-			double offset = 0;
-			double scale = data3DHeader.pointFields.timeScaledInteger;
-			int64_t rawIntegerMinimum = (int64_t) floor((data3DHeader.pointFields.timeMinimum - offset)/scale +.5);
-			int64_t rawIntegerMaximum = (int64_t) floor((data3DHeader.pointFields.timeMaximum - offset)/scale +.5);
-			proto.set("timeStamp",  ScaledIntegerNode(imf_, 0,
-				rawIntegerMinimum, rawIntegerMaximum, scale, offset));
-		}
-		else if(data3DHeader.pointFields.timeScaledInteger == E57_NOT_SCALED_USE_FLOAT)
-		{
-			if(data3DHeader.pointFields.timeMaximum == E57_FLOAT_MAX)
-				proto.set("timeStamp",  FloatNode(imf_, 0., E57_SINGLE, E57_FLOAT_MIN, E57_FLOAT_MAX));
-			else if(data3DHeader.pointFields.timeMaximum == E57_DOUBLE_MAX)
-				proto.set("timeStamp",  FloatNode(imf_, 0., E57_DOUBLE, E57_DOUBLE_MIN, E57_DOUBLE_MAX));
-		}
-		else
-			proto.set("timeStamp",  IntegerNode(imf_, 0,
-				(int64_t) data3DHeader.pointFields.timeMinimum,
-				(int64_t) data3DHeader.pointFields.timeMaximum));
-	}
+   if ( data3DHeader.pointFields.timeStampField )
+   {
+      if ( data3DHeader.pointFields.timeScaledInteger > 0. )
+      {
+         double offset = 0;
+         double scale = data3DHeader.pointFields.timeScaledInteger;
+         int64_t rawIntegerMinimum = (int64_t)floor( ( data3DHeader.pointFields.timeMinimum - offset ) / scale + .5 );
+         int64_t rawIntegerMaximum = (int64_t)floor( ( data3DHeader.pointFields.timeMaximum - offset ) / scale + .5 );
+         proto.set( "timeStamp", ScaledIntegerNode( imf_, 0, rawIntegerMinimum, rawIntegerMaximum, scale, offset ) );
+      }
+      else if ( data3DHeader.pointFields.timeScaledInteger == E57_NOT_SCALED_USE_FLOAT )
+      {
+         if ( data3DHeader.pointFields.timeMaximum == E57_FLOAT_MAX )
+            proto.set( "timeStamp", FloatNode( imf_, 0., E57_SINGLE, E57_FLOAT_MIN, E57_FLOAT_MAX ) );
+         else if ( data3DHeader.pointFields.timeMaximum == E57_DOUBLE_MAX )
+            proto.set( "timeStamp", FloatNode( imf_, 0., E57_DOUBLE, E57_DOUBLE_MIN, E57_DOUBLE_MAX ) );
+      }
+      else
+         proto.set( "timeStamp", IntegerNode( imf_, 0, (int64_t)data3DHeader.pointFields.timeMinimum,
+                                              (int64_t)data3DHeader.pointFields.timeMaximum ) );
+   }
 #ifdef TEST_EXTENSIONS
-	proto.set("ext:extraField3", IntegerNode(imf_, 0, 0, 255));
+   proto.set( "ext:extraField3", IntegerNode( imf_, 0, 0, 255 ) );
 #endif
-	if(data3DHeader.pointFields.cartesianInvalidStateField)
-		proto.set("cartesianInvalidState",  IntegerNode(imf_, 0, 0, 2));
-	if(data3DHeader.pointFields.sphericalInvalidStateField)
-		proto.set("sphericalInvalidState", IntegerNode(imf_, 0, 0, 2));
-	if(data3DHeader.pointFields.isIntensityInvalidField)
-		proto.set("isIntensityInvalid", IntegerNode(imf_, 0, 0, 1));
-	if(data3DHeader.pointFields.isColorInvalidField)
-		proto.set("isColorInvalid", IntegerNode(imf_, 0, 0, 1));
-	if(data3DHeader.pointFields.isTimeStampInvalidField)
-		proto.set("isTimeStampInvalid", IntegerNode(imf_, 0, 0, 1));
+   if ( data3DHeader.pointFields.cartesianInvalidStateField )
+      proto.set( "cartesianInvalidState", IntegerNode( imf_, 0, 0, 2 ) );
+   if ( data3DHeader.pointFields.sphericalInvalidStateField )
+      proto.set( "sphericalInvalidState", IntegerNode( imf_, 0, 0, 2 ) );
+   if ( data3DHeader.pointFields.isIntensityInvalidField )
+      proto.set( "isIntensityInvalid", IntegerNode( imf_, 0, 0, 1 ) );
+   if ( data3DHeader.pointFields.isColorInvalidField )
+      proto.set( "isColorInvalid", IntegerNode( imf_, 0, 0, 1 ) );
+   if ( data3DHeader.pointFields.isTimeStampInvalidField )
+      proto.set( "isTimeStampInvalid", IntegerNode( imf_, 0, 0, 1 ) );
 
-    // E57_EXT_surface_normals
-    if (data3DHeader.pointFields.normalX || data3DHeader.pointFields.normalY ||
-        data3DHeader.pointFields.normalZ)
-    {
-        // make sure we declare the extesion before using the fields with prefix
-        ustring norExtUri;
-        if (!imf_.extensionsLookupPrefix("nor", norExtUri))
-        {
-            imf_.extensionsAdd("nor","http://www.libe57.org/E57_NOR_surface_normals.txt");
-        }
-    }
-    // currently we support writing normals only as float32
-    if(data3DHeader.pointFields.normalX)
-        proto.set("nor:normalX", FloatNode(imf_, 0., E57_SINGLE, -1., 1.));
-    if(data3DHeader.pointFields.normalY)
-        proto.set("nor:normalY", FloatNode(imf_, 0., E57_SINGLE, -1., 1.));
-    if(data3DHeader.pointFields.normalZ)
-        proto.set("nor:normalZ", FloatNode(imf_, 0., E57_SINGLE, -1., 1.));
+   // E57_EXT_surface_normals
+   if ( data3DHeader.pointFields.normalX || data3DHeader.pointFields.normalY || data3DHeader.pointFields.normalZ )
+   {
+      // make sure we declare the extesion before using the fields with prefix
+      ustring norExtUri;
+      if ( !imf_.extensionsLookupPrefix( "nor", norExtUri ) )
+      {
+         imf_.extensionsAdd( "nor", "http://www.libe57.org/E57_NOR_surface_normals.txt" );
+      }
+   }
 
-//   proto.set("demo:extra2", StringNode(imf_));	//Extension here
+   // currently we support writing normals only as float32
+   if ( data3DHeader.pointFields.normalX )
+      proto.set( "nor:normalX", FloatNode( imf_, 0., E57_SINGLE, -1., 1. ) );
+   if ( data3DHeader.pointFields.normalY )
+      proto.set( "nor:normalY", FloatNode( imf_, 0., E57_SINGLE, -1., 1. ) );
+   if ( data3DHeader.pointFields.normalZ )
+      proto.set( "nor:normalZ", FloatNode( imf_, 0., E57_SINGLE, -1., 1. ) );
 
-// do call back to setup any point data extension before the CompressedVectorNode is created.
-	if(pointExtension != nullptr)
-		(*pointExtension)(imf_, proto);
+   // do call back to setup any point data extension before the CompressedVectorNode is created.
+   if ( pointExtension != nullptr )
+      ( *pointExtension )( imf_, proto );
 
-// Make empty codecs vector for use in creating points CompressedVector.
-    /// If this vector is empty, it is assumed that all fields will use the BitPack codec.
-    VectorNode codecs = VectorNode(imf_, true);
+   // Make empty codecs vector for use in creating points CompressedVector.
+   // If this vector is empty, it is assumed that all fields will use the BitPack codec.
+   VectorNode codecs = VectorNode( imf_, true );
 
-// Create CompressedVector for storing points.  Path Name: "/data3D/0/points".
-    /// We use the prototype and empty codecs tree from above.
-    /// The CompressedVector will be filled by code below.
-    CompressedVectorNode points = CompressedVectorNode(imf_, proto, codecs);
-    scan.set("points", points);
-	return pos;
-};
+   // Create CompressedVector for storing points.  Path Name: "/data3D/0/points".
+   // We use the prototype and empty codecs tree from above.
+   // The CompressedVector will be filled by code below.
+   CompressedVectorNode points = CompressedVectorNode( imf_, proto, codecs );
+   scan.set( "points", points );
+   return pos;
+}
 
-CompressedVectorWriter	WriterImpl :: SetUpData3DPointsData(
-	int64_t		dataIndex,
-	size_t		count,
-	const Data3DPointsData& buffers
-	)
+CompressedVectorWriter WriterImpl::SetUpData3DPointsData( int64_t dataIndex, size_t count,
+                                                          const Data3DPointsData &buffers )
 {
 #ifdef TEST_EXTENSIONS
-	uint8_t*		extraField1 = new uint8_t[(unsigned) count];
-	uint8_t*		extraField2 = new uint8_t[(unsigned) count];
-	uint8_t*		extraField3 = new uint8_t[(unsigned) count];
+   uint8_t *extraField1 = new uint8_t[(unsigned)count];
+   uint8_t *extraField2 = new uint8_t[(unsigned)count];
+   uint8_t *extraField3 = new uint8_t[(unsigned)count];
 
-	for( int i = 0; i < count; i++) {
-		extraField1[i] = i % 256;
-		extraField2[i] = i % 256;
-		extraField3[i] = i % 256;
-	}
+   for ( int i = 0; i < count; i++ )
+   {
+      extraField1[i] = i % 256;
+      extraField2[i] = i % 256;
+      extraField3[i] = i % 256;
+   }
 #endif
-	StructureNode scan(data3D_.get(dataIndex));
-	CompressedVectorNode points(scan.get("points"));
-	StructureNode proto(points.prototype());
+   StructureNode scan( data3D_.get( dataIndex ) );
+   CompressedVectorNode points( scan.get( "points" ) );
+   StructureNode proto( points.prototype() );
 
-	vector<SourceDestBuffer> sourceBuffers;
-	if(proto.isDefined("cartesianX") && (buffers.cartesianX != nullptr))
-		sourceBuffers.push_back(SourceDestBuffer(imf_, "cartesianX",  buffers.cartesianX, count, true, true));
-	if(proto.isDefined("cartesianY") && (buffers.cartesianY != nullptr))
-		sourceBuffers.push_back(SourceDestBuffer(imf_, "cartesianY",  buffers.cartesianY, count, true, true));
+   vector<SourceDestBuffer> sourceBuffers;
+   if ( proto.isDefined( "cartesianX" ) && ( buffers.cartesianX != nullptr ) )
+      sourceBuffers.push_back( SourceDestBuffer( imf_, "cartesianX", buffers.cartesianX, count, true, true ) );
+   if ( proto.isDefined( "cartesianY" ) && ( buffers.cartesianY != nullptr ) )
+      sourceBuffers.push_back( SourceDestBuffer( imf_, "cartesianY", buffers.cartesianY, count, true, true ) );
 #ifdef TEST_EXTENSIONS
-	if(proto.isDefined("ext:extraField1"))
-		sourceBuffers.push_back(SourceDestBuffer(imf_,"ext:extraField1", extraField1, count, true));
+   if ( proto.isDefined( "ext:extraField1" ) )
+      sourceBuffers.push_back( SourceDestBuffer( imf_, "ext:extraField1", extraField1, count, true ) );
 #endif
-	if(proto.isDefined("cartesianZ") && (buffers.cartesianZ != nullptr))
-		sourceBuffers.push_back(SourceDestBuffer(imf_, "cartesianZ",  buffers.cartesianZ, count, true, true));
+   if ( proto.isDefined( "cartesianZ" ) && ( buffers.cartesianZ != nullptr ) )
+      sourceBuffers.push_back( SourceDestBuffer( imf_, "cartesianZ", buffers.cartesianZ, count, true, true ) );
 
-	if(proto.isDefined("sphericalRange") && (buffers.sphericalRange != nullptr))
-		sourceBuffers.push_back(SourceDestBuffer(imf_, "sphericalRange",  buffers.sphericalRange, count, true, true));
-	if(proto.isDefined("sphericalAzimuth") && (buffers.sphericalAzimuth != nullptr))
-		sourceBuffers.push_back(SourceDestBuffer(imf_, "sphericalAzimuth",  buffers.sphericalAzimuth, count, true, true));
-	if(proto.isDefined("sphericalElevation") && (buffers.sphericalElevation != nullptr))
-		sourceBuffers.push_back(SourceDestBuffer(imf_, "sphericalElevation",  buffers.sphericalElevation, count, true, true));
-
-#ifdef TEST_EXTENSIONS
-	if(proto.isDefined("ext:extraField2"))
-		sourceBuffers.push_back(SourceDestBuffer(imf_,"ext:extraField2", extraField2, count, true));
-#endif
-
-	if(proto.isDefined("intensity") && (buffers.intensity != nullptr))
-		sourceBuffers.push_back(SourceDestBuffer(imf_, "intensity",   buffers.intensity, count, true, true));
-
-	if(proto.isDefined("colorRed") && (buffers.colorRed != nullptr))
-		sourceBuffers.push_back(SourceDestBuffer(imf_, "colorRed",    buffers.colorRed, count, true));
-	if(proto.isDefined("colorGreen") && (buffers.colorGreen != nullptr))
-		sourceBuffers.push_back(SourceDestBuffer(imf_, "colorGreen",  buffers.colorGreen, count, true));
-	if(proto.isDefined("colorBlue") && (buffers.colorBlue != nullptr))
-		sourceBuffers.push_back(SourceDestBuffer(imf_, "colorBlue",   buffers.colorBlue, count, true));
-
-	if(proto.isDefined("returnIndex") && (buffers.returnIndex != nullptr))
-		sourceBuffers.push_back(SourceDestBuffer(imf_, "returnIndex", buffers.returnIndex, count, true));
-	if(proto.isDefined("returnCount") && (buffers.returnCount != nullptr))
-		sourceBuffers.push_back(SourceDestBuffer(imf_, "returnCount", buffers.returnCount, count, true));
-
-	if(proto.isDefined("rowIndex") && (buffers.rowIndex != nullptr))
-		sourceBuffers.push_back(SourceDestBuffer(imf_, "rowIndex",    buffers.rowIndex, count, true));
-	if(proto.isDefined("columnIndex") && (buffers.columnIndex != nullptr))
-		sourceBuffers.push_back(SourceDestBuffer(imf_, "columnIndex", buffers.columnIndex, count, true));
-
-	if(proto.isDefined("timeStamp") && (buffers.timeStamp != nullptr))
-		sourceBuffers.push_back(SourceDestBuffer(imf_, "timeStamp",   buffers.timeStamp, count, true, true));
+   if ( proto.isDefined( "sphericalRange" ) && ( buffers.sphericalRange != nullptr ) )
+      sourceBuffers.push_back( SourceDestBuffer( imf_, "sphericalRange", buffers.sphericalRange, count, true, true ) );
+   if ( proto.isDefined( "sphericalAzimuth" ) && ( buffers.sphericalAzimuth != nullptr ) )
+      sourceBuffers.push_back(
+         SourceDestBuffer( imf_, "sphericalAzimuth", buffers.sphericalAzimuth, count, true, true ) );
+   if ( proto.isDefined( "sphericalElevation" ) && ( buffers.sphericalElevation != nullptr ) )
+      sourceBuffers.push_back(
+         SourceDestBuffer( imf_, "sphericalElevation", buffers.sphericalElevation, count, true, true ) );
 
 #ifdef TEST_EXTENSIONS
-	if(proto.isDefined("ext:extraField3"))
-		sourceBuffers.push_back(SourceDestBuffer(imf_,"ext:extraField3", extraField3, count, true));
+   if ( proto.isDefined( "ext:extraField2" ) )
+      sourceBuffers.push_back( SourceDestBuffer( imf_, "ext:extraField2", extraField2, count, true ) );
 #endif
-	if(proto.isDefined("cartesianInvalidState") && (buffers.cartesianInvalidState != nullptr))
-		sourceBuffers.push_back(SourceDestBuffer(imf_, "cartesianInvalidState", buffers.cartesianInvalidState, count, true));
-	if(proto.isDefined("sphericalInvalidState") && (buffers.sphericalInvalidState != nullptr))
-		sourceBuffers.push_back(SourceDestBuffer(imf_, "sphericalInvalidState", buffers.sphericalInvalidState, count, true));
-	if(proto.isDefined("isIntensityInvalid") && (buffers.isIntensityInvalid != nullptr))
-		sourceBuffers.push_back(SourceDestBuffer(imf_, "isIntensityInvalid", buffers.isIntensityInvalid, count, true));
-	if(proto.isDefined("isColorInvalid") && (buffers.isColorInvalid != nullptr))
-		sourceBuffers.push_back(SourceDestBuffer(imf_, "isColorInvalid", buffers.isColorInvalid, count, true));
-	if(proto.isDefined("isTimeStampInvalid") && (buffers.isTimeStampInvalid != nullptr))
-		sourceBuffers.push_back(SourceDestBuffer(imf_, "isTimeStampInvalid", buffers.isTimeStampInvalid, count, true));
 
-    // E57_EXT_surface_normals
-    ustring norExtUri;
-    if (imf_.extensionsLookupPrefix("nor", norExtUri))
-    {
-        if(proto.isDefined("nor:normalX") && (buffers.normalX != nullptr))
-            sourceBuffers.push_back(SourceDestBuffer(imf_, "nor:normalX",  buffers.normalX, count, true, true));
-        if(proto.isDefined("nor:normalY") && (buffers.normalY != nullptr))
-            sourceBuffers.push_back(SourceDestBuffer(imf_, "nor:normalY",  buffers.normalY, count, true, true));
-        if(proto.isDefined("nor:normalZ") && (buffers.normalZ != nullptr))
-            sourceBuffers.push_back(SourceDestBuffer(imf_, "nor:normalZ",  buffers.normalZ, count, true, true));
-    }
+   if ( proto.isDefined( "intensity" ) && ( buffers.intensity != nullptr ) )
+      sourceBuffers.push_back( SourceDestBuffer( imf_, "intensity", buffers.intensity, count, true, true ) );
 
-	if(buffers.pointDataExtension != nullptr)
-		(*buffers.pointDataExtension)(imf_,proto, sourceBuffers);
+   if ( proto.isDefined( "colorRed" ) && ( buffers.colorRed != nullptr ) )
+      sourceBuffers.push_back( SourceDestBuffer( imf_, "colorRed", buffers.colorRed, count, true ) );
+   if ( proto.isDefined( "colorGreen" ) && ( buffers.colorGreen != nullptr ) )
+      sourceBuffers.push_back( SourceDestBuffer( imf_, "colorGreen", buffers.colorGreen, count, true ) );
+   if ( proto.isDefined( "colorBlue" ) && ( buffers.colorBlue != nullptr ) )
+      sourceBuffers.push_back( SourceDestBuffer( imf_, "colorBlue", buffers.colorBlue, count, true ) );
 
-// create the writer, all buffers must be setup before this call
-	CompressedVectorWriter writer = points.writer(sourceBuffers);
+   if ( proto.isDefined( "returnIndex" ) && ( buffers.returnIndex != nullptr ) )
+      sourceBuffers.push_back( SourceDestBuffer( imf_, "returnIndex", buffers.returnIndex, count, true ) );
+   if ( proto.isDefined( "returnCount" ) && ( buffers.returnCount != nullptr ) )
+      sourceBuffers.push_back( SourceDestBuffer( imf_, "returnCount", buffers.returnCount, count, true ) );
 
-	return writer;
-};
-//! This funtion writes out the group data
-bool	WriterImpl :: WriteData3DGroupsData(
-						int64_t		dataIndex,			//!< data block index given by the NewData3D
-						int64_t		groupCount,			//!< size of each of the buffers given
-						int64_t*	idElementValue,		//!< index for this group
-						int64_t*	startPointIndex,	//!< Starting index in to the "points" data vector for the groups
-						int64_t*	pointCount			//!< size of each of the groups given
-						)								//!< \return Return true if sucessful, false otherwise
+   if ( proto.isDefined( "rowIndex" ) && ( buffers.rowIndex != nullptr ) )
+      sourceBuffers.push_back( SourceDestBuffer( imf_, "rowIndex", buffers.rowIndex, count, true ) );
+   if ( proto.isDefined( "columnIndex" ) && ( buffers.columnIndex != nullptr ) )
+      sourceBuffers.push_back( SourceDestBuffer( imf_, "columnIndex", buffers.columnIndex, count, true ) );
+
+   if ( proto.isDefined( "timeStamp" ) && ( buffers.timeStamp != nullptr ) )
+      sourceBuffers.push_back( SourceDestBuffer( imf_, "timeStamp", buffers.timeStamp, count, true, true ) );
+
+#ifdef TEST_EXTENSIONS
+   if ( proto.isDefined( "ext:extraField3" ) )
+      sourceBuffers.push_back( SourceDestBuffer( imf_, "ext:extraField3", extraField3, count, true ) );
+#endif
+   if ( proto.isDefined( "cartesianInvalidState" ) && ( buffers.cartesianInvalidState != nullptr ) )
+      sourceBuffers.push_back(
+         SourceDestBuffer( imf_, "cartesianInvalidState", buffers.cartesianInvalidState, count, true ) );
+   if ( proto.isDefined( "sphericalInvalidState" ) && ( buffers.sphericalInvalidState != nullptr ) )
+      sourceBuffers.push_back(
+         SourceDestBuffer( imf_, "sphericalInvalidState", buffers.sphericalInvalidState, count, true ) );
+   if ( proto.isDefined( "isIntensityInvalid" ) && ( buffers.isIntensityInvalid != nullptr ) )
+      sourceBuffers.push_back(
+         SourceDestBuffer( imf_, "isIntensityInvalid", buffers.isIntensityInvalid, count, true ) );
+   if ( proto.isDefined( "isColorInvalid" ) && ( buffers.isColorInvalid != nullptr ) )
+      sourceBuffers.push_back( SourceDestBuffer( imf_, "isColorInvalid", buffers.isColorInvalid, count, true ) );
+   if ( proto.isDefined( "isTimeStampInvalid" ) && ( buffers.isTimeStampInvalid != nullptr ) )
+      sourceBuffers.push_back(
+         SourceDestBuffer( imf_, "isTimeStampInvalid", buffers.isTimeStampInvalid, count, true ) );
+
+   // E57_EXT_surface_normals
+   ustring norExtUri;
+   if ( imf_.extensionsLookupPrefix( "nor", norExtUri ) )
+   {
+      if ( proto.isDefined( "nor:normalX" ) && ( buffers.normalX != nullptr ) )
+         sourceBuffers.push_back( SourceDestBuffer( imf_, "nor:normalX", buffers.normalX, count, true, true ) );
+      if ( proto.isDefined( "nor:normalY" ) && ( buffers.normalY != nullptr ) )
+         sourceBuffers.push_back( SourceDestBuffer( imf_, "nor:normalY", buffers.normalY, count, true, true ) );
+      if ( proto.isDefined( "nor:normalZ" ) && ( buffers.normalZ != nullptr ) )
+         sourceBuffers.push_back( SourceDestBuffer( imf_, "nor:normalZ", buffers.normalZ, count, true, true ) );
+   }
+
+   if ( buffers.pointDataExtension != nullptr )
+      ( *buffers.pointDataExtension )( imf_, proto, sourceBuffers );
+
+   // create the writer, all buffers must be setup before this call
+   CompressedVectorWriter writer = points.writer( sourceBuffers );
+
+   return writer;
+}
+
+// This funtion writes out the group data
+bool WriterImpl::WriteData3DGroupsData( int64_t dataIndex, int64_t groupCount, int64_t *idElementValue,
+                                        int64_t *startPointIndex, int64_t *pointCount )
 {
 
-	if( (dataIndex < 0) || (dataIndex >= data3D_.childCount()))
-		return false;
+   if ( ( dataIndex < 0 ) || ( dataIndex >= data3D_.childCount() ) )
+      return false;
 
-	StructureNode scan(data3D_.get(dataIndex));
+   StructureNode scan( data3D_.get( dataIndex ) );
 
-	if(!scan.isDefined("pointGroupingSchemes"))
-		return false;
-	StructureNode pointGroupingSchemes(scan.get("pointGroupingSchemes"));
+   if ( !scan.isDefined( "pointGroupingSchemes" ) )
+      return false;
+   StructureNode pointGroupingSchemes( scan.get( "pointGroupingSchemes" ) );
 
-	if(!pointGroupingSchemes.isDefined("groupingByLine"))
-		return false;
-	StructureNode groupingByLine(pointGroupingSchemes.get("groupingByLine"));
+   if ( !pointGroupingSchemes.isDefined( "groupingByLine" ) )
+      return false;
+   StructureNode groupingByLine( pointGroupingSchemes.get( "groupingByLine" ) );
 
-	if(!groupingByLine.isDefined("groups"))
-		return false;
-	CompressedVectorNode groups(groupingByLine.get("groups"));
+   if ( !groupingByLine.isDefined( "groups" ) )
+      return false;
+   CompressedVectorNode groups( groupingByLine.get( "groups" ) );
 
-	vector<SourceDestBuffer> groupSDBuffers;
-    groupSDBuffers.push_back(SourceDestBuffer(imf_, "idElementValue",  idElementValue,   (unsigned) groupCount, true));
-    groupSDBuffers.push_back(SourceDestBuffer(imf_, "startPointIndex", startPointIndex,  (unsigned) groupCount, true));
-    groupSDBuffers.push_back(SourceDestBuffer(imf_, "pointCount",      pointCount,       (unsigned) groupCount, true));
+   vector<SourceDestBuffer> groupSDBuffers;
+   groupSDBuffers.push_back( SourceDestBuffer( imf_, "idElementValue", idElementValue, (unsigned)groupCount, true ) );
+   groupSDBuffers.push_back( SourceDestBuffer( imf_, "startPointIndex", startPointIndex, (unsigned)groupCount, true ) );
+   groupSDBuffers.push_back( SourceDestBuffer( imf_, "pointCount", pointCount, (unsigned)groupCount, true ) );
 
-	CompressedVectorWriter writer = groups.writer(groupSDBuffers);
-    writer.write(groupCount);
-    writer.close();
+   CompressedVectorWriter writer = groups.writer( groupSDBuffers );
+   writer.write( groupCount );
+   writer.close();
 
-	return true;
-};
-
-
-
-
+   return true;
+}

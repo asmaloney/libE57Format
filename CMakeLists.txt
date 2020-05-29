@@ -133,6 +133,7 @@ install(
     EXPORT
         E57Format-export
     ARCHIVE DESTINATION lib
+    ARCHIVE DESTINATION bin
 )
 
 # CMake package files

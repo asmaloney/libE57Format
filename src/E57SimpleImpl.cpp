@@ -2225,9 +2225,9 @@ bool WriterImpl::WriteData3DGroupsData( int64_t dataIndex, int64_t groupCount, i
    CompressedVectorNode groups( groupingByLine.get( "groups" ) );
 
    vector<SourceDestBuffer> groupSDBuffers;
-   groupSDBuffers.push_back( SourceDestBuffer( imf_, "idElementValue", idElementValue, (unsigned)groupCount, true ) );
-   groupSDBuffers.push_back( SourceDestBuffer( imf_, "startPointIndex", startPointIndex, (unsigned)groupCount, true ) );
-   groupSDBuffers.push_back( SourceDestBuffer( imf_, "pointCount", pointCount, (unsigned)groupCount, true ) );
+   groupSDBuffers.push_back( SourceDestBuffer( imf_, "idElementValue", idElementValue, groupCount, true ) );
+   groupSDBuffers.push_back( SourceDestBuffer( imf_, "startPointIndex", startPointIndex, groupCount, true ) );
+   groupSDBuffers.push_back( SourceDestBuffer( imf_, "pointCount", pointCount, groupCount, true ) );
 
    CompressedVectorWriter writer = groups.writer( groupSDBuffers );
    writer.write( groupCount );

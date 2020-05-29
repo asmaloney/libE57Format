@@ -71,8 +71,8 @@ namespace e57
       //! @param [out] imageSize This is the total number of bytes for the image blob.
       //! @param [out] imageMaskType This is E57_PNG_IMAGE_MASK if "imageMask" is defined in the projection
       //! @return Returns true if sucessful
-      virtual bool GetImage2DNodeSizes( e57::StructureNode image, e57::Image2DType &imageType, int64_t &imageWidth,
-                                        int64_t &imageHeight, int64_t &imageSize, e57::Image2DType &imageMaskType );
+      bool GetImage2DNodeSizes( e57::StructureNode image, e57::Image2DType &imageType, int64_t &imageWidth,
+                                int64_t &imageHeight, int64_t &imageSize, e57::Image2DType &imageMaskType );
 
       //! @brief Reads the data out of a given image node
       //! @param [in] image 1 of 3 projects or the visual
@@ -81,52 +81,51 @@ namespace e57
       //! @param [out] start position in the block to start reading
       //! @param [out] count size of desired chuck or buffer size
       //! @return number of bytes read
-      virtual int64_t ReadImage2DNode( e57::StructureNode image, e57::Image2DType imageType, void *pBuffer,
-                                       int64_t start, int64_t count );
+      int64_t ReadImage2DNode( e57::StructureNode image, e57::Image2DType imageType, void *pBuffer, int64_t start,
+                               int64_t count );
 
    public:
       ReaderImpl( const ustring &filePath );
 
-      virtual ~ReaderImpl();
+      ~ReaderImpl();
 
-      virtual bool IsOpen();
+      bool IsOpen();
 
-      virtual bool Close();
+      bool Close();
 
-      virtual bool GetE57Root( E57Root &fileHeader );
+      bool GetE57Root( E57Root &fileHeader );
 
-      virtual int64_t GetImage2DCount();
+      int64_t GetImage2DCount();
 
-      virtual bool ReadImage2D( int64_t imageIndex, Image2D &Image2DHeader );
+      bool ReadImage2D( int64_t imageIndex, Image2D &Image2DHeader );
 
-      virtual bool GetImage2DSizes( int64_t imageIndex, e57::Image2DProjection &imageProjection,
-                                    e57::Image2DType &imageType, int64_t &imageWidth, int64_t &imageHeight,
-                                    int64_t &imageSize, e57::Image2DType &imageMaskType,
-                                    e57::Image2DType &imageVisualType );
+      bool GetImage2DSizes( int64_t imageIndex, e57::Image2DProjection &imageProjection, e57::Image2DType &imageType,
+                            int64_t &imageWidth, int64_t &imageHeight, int64_t &imageSize,
+                            e57::Image2DType &imageMaskType, e57::Image2DType &imageVisualType );
 
-      virtual int64_t ReadImage2DData( int64_t imageIndex, e57::Image2DProjection imageProjection,
-                                       e57::Image2DType imageType, void *pBuffer, int64_t start, int64_t count );
+      int64_t ReadImage2DData( int64_t imageIndex, e57::Image2DProjection imageProjection, e57::Image2DType imageType,
+                               void *pBuffer, int64_t start, int64_t count );
 
-      virtual int64_t GetData3DCount();
+      int64_t GetData3DCount();
 
-      virtual bool ReadData3D( int64_t dataIndex, Data3D &data3DHeader );
+      bool ReadData3D( int64_t dataIndex, Data3D &data3DHeader );
 
-      virtual bool GetData3DSizes( int64_t dataIndex, int64_t &rowMax, int64_t &columnMax, int64_t &pointsSize,
-                                   int64_t &groupsSize, int64_t &countSize, bool &bColumnIndex );
+      bool GetData3DSizes( int64_t dataIndex, int64_t &rowMax, int64_t &columnMax, int64_t &pointsSize,
+                           int64_t &groupsSize, int64_t &countSize, bool &bColumnIndex );
 
-      virtual bool ReadData3DGroupsData( int64_t dataIndex, int64_t groupCount, int64_t *idElementValue,
-                                         int64_t *startPointIndex, int64_t *pointCount );
+      bool ReadData3DGroupsData( int64_t dataIndex, int64_t groupCount, int64_t *idElementValue,
+                                 int64_t *startPointIndex, int64_t *pointCount );
 
-      virtual CompressedVectorReader SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
-                                                            const Data3DPointsData &buffers );
+      CompressedVectorReader SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
+                                                    const Data3DPointsData &buffers );
 
-      virtual StructureNode GetRawE57Root();
+      StructureNode GetRawE57Root();
 
-      virtual VectorNode GetRawData3D();
+      VectorNode GetRawData3D();
 
-      virtual VectorNode GetRawImages2D();
+      VectorNode GetRawImages2D();
 
-      virtual ImageFile GetRawIMF();
+      ImageFile GetRawIMF();
 
    }; // end Reader class
 
@@ -152,39 +151,38 @@ namespace e57
       //! @param pBuffer pointer the buffer
       //! @param start position in the block to start reading
       //! @param count size of desired chuck or buffer size
-      virtual int64_t WriteImage2DNode( e57::StructureNode image, e57::Image2DType imageType, void *pBuffer,
-                                        int64_t start, int64_t count );
+      int64_t WriteImage2DNode( e57::StructureNode image, e57::Image2DType imageType, void *pBuffer, int64_t start,
+                                int64_t count );
 
    public:
       WriterImpl( const ustring &filePath, const ustring &coordinateMetaData );
 
-      virtual ~WriterImpl();
+      ~WriterImpl();
 
-      virtual bool IsOpen();
+      bool IsOpen();
 
-      virtual bool Close();
+      bool Close();
 
-      virtual int64_t NewImage2D( Image2D &image2DHeader );
+      int64_t NewImage2D( Image2D &image2DHeader );
 
-      virtual int64_t WriteImage2DData( int64_t imageIndex, e57::Image2DType imageType,
-                                        e57::Image2DProjection imageProjection, void *pBuffer, int64_t start,
-                                        int64_t count );
+      int64_t WriteImage2DData( int64_t imageIndex, e57::Image2DType imageType, e57::Image2DProjection imageProjection,
+                                void *pBuffer, int64_t start, int64_t count );
 
-      virtual int64_t NewData3D( Data3D &data3DHeader, bool ( *pointExtension )( ImageFile imf, StructureNode proto ) );
+      int64_t NewData3D( Data3D &data3DHeader, bool ( *pointExtension )( ImageFile imf, StructureNode proto ) );
 
-      virtual CompressedVectorWriter SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
-                                                            const Data3DPointsData &buffers );
+      CompressedVectorWriter SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
+                                                    const Data3DPointsData &buffers );
 
-      virtual bool WriteData3DGroupsData( int64_t dataIndex, int64_t groupCount, int64_t *idElementValue,
-                                          int64_t *startPointIndex, int64_t *pointCount );
+      bool WriteData3DGroupsData( int64_t dataIndex, int64_t groupCount, int64_t *idElementValue,
+                                  int64_t *startPointIndex, int64_t *pointCount );
 
-      virtual StructureNode GetRawE57Root();
+      StructureNode GetRawE57Root();
 
-      virtual VectorNode GetRawData3D();
+      VectorNode GetRawData3D();
 
-      virtual VectorNode GetRawImages2D();
+      VectorNode GetRawImages2D();
 
-      virtual ImageFile GetRawIMF();
+      ImageFile GetRawIMF();
 
    }; // end Writer class
 

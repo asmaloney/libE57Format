@@ -30,6 +30,8 @@
 #include <iostream>
 #include <string>
 
+#include "E57Export.h"
+
 namespace e57
 {
    //! @brief Numeric error identifiers used in E57Exception
@@ -93,7 +95,7 @@ namespace e57
       E57_ERROR_INVARIANCE_VIOLATION = 50        //!< class invariance constraint violation in debug mode
    };
 
-   class E57Exception : public std::exception
+   class E57_DLL E57Exception : public std::exception
    {
    public:
       void report( const char *reportingFileName = nullptr, int reportingLineNumber = 0,
@@ -126,8 +128,8 @@ namespace e57
    namespace Utilities
    {
       // Get latest version of ASTM standard supported, and library id string
-      void getVersions( int &astmMajor, int &astmMinor, std::string &libraryId );
+      E57_DLL void getVersions( int &astmMajor, int &astmMinor, std::string &libraryId );
 
-      std::string errorCodeToString( ErrorCode ecode );
+      E57_DLL std::string errorCodeToString( ErrorCode ecode );
    }
 }

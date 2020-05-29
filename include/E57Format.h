@@ -185,7 +185,7 @@ protected:                                                                      
    class VectorNode;
    class VectorNodeImpl;
 
-   class Node
+   class E57_DLL Node
    {
    public:
       Node() = delete;
@@ -216,7 +216,7 @@ protected:                                                                      
       //! \endcond
    };
 
-   class StructureNode
+   class E57_DLL StructureNode
    {
    public:
       StructureNode() = delete;
@@ -257,7 +257,7 @@ protected:                                                                      
       //! \endcond
    };
 
-   class VectorNode
+   class E57_DLL VectorNode
    {
    public:
       VectorNode() = delete;
@@ -299,7 +299,7 @@ protected:                                                                      
       //! \endcond
    };
 
-   class SourceDestBuffer
+   class E57_DLL SourceDestBuffer
    {
    public:
       SourceDestBuffer() = delete;
@@ -344,7 +344,7 @@ protected:                                                                      
       //! \endcond
    };
 
-   class CompressedVectorReader
+   class E57_DLL CompressedVectorReader
    {
    public:
       CompressedVectorReader() = delete;
@@ -371,7 +371,7 @@ protected:                                                                      
       //! \endcond
    };
 
-   class CompressedVectorWriter
+   class E57_DLL CompressedVectorWriter
    {
    public:
       CompressedVectorWriter() = delete;
@@ -397,7 +397,7 @@ protected:                                                                      
       //! \endcond
    };
 
-   class CompressedVectorNode
+   class E57_DLL CompressedVectorNode
    {
    public:
       CompressedVectorNode() = delete;
@@ -441,7 +441,7 @@ protected:                                                                      
       //! \endcond
    };
 
-   class IntegerNode
+   class E57_DLL IntegerNode
    {
    public:
       IntegerNode() = delete;
@@ -478,7 +478,7 @@ protected:                                                                      
       //! \endcond
    };
 
-   class ScaledIntegerNode
+   class E57_DLL ScaledIntegerNode
    {
    public:
       ScaledIntegerNode() = delete;
@@ -526,7 +526,7 @@ protected:                                                                      
       //! \endcond
    };
 
-   class FloatNode
+   class E57_DLL FloatNode
    {
    public:
       FloatNode() = delete;
@@ -564,7 +564,7 @@ protected:                                                                      
       //! \endcond
    };
 
-   class StringNode
+   class E57_DLL StringNode
    {
    public:
       StringNode() = delete;
@@ -599,7 +599,7 @@ protected:                                                                      
       //! \endcond
    };
 
-   class BlobNode
+   class E57_DLL BlobNode
    {
    public:
       BlobNode() = delete;
@@ -640,7 +640,7 @@ protected:                                                                      
       //! \endcond
    };
 
-   class ImageFile
+   class E57_DLL ImageFile
    {
    public:
       ImageFile() = delete;

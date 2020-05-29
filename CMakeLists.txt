@@ -67,11 +67,30 @@ endif()
 find_package( Threads REQUIRED )
 find_package( XercesC REQUIRED )
 
+option( E57_BUILD_SHARED
+	"Compile E57Format as a shared library"
+	OFF
+)
+
+if( BUILD_SHARED_LIBS )
+	set( E57_BUILD_SHARED ON )
+endif()
+
 set( revision_id "${PROJECT_NAME}-${PROJECT_VERSION}-${${PROJECT_NAME}_BUILD_TAG}" )
 message( STATUS "[E57] Revison ID: ${revision_id}" )
 
-add_library( E57Format STATIC )
+# Target
+if ( E57_BUILD_SHARED )
+	message( STATUS "[E57] Building shared library" )
+	add_library( E57Format SHARED )
+else()
+	message( STATUS "[E57] Building static library" )
+	add_library( E57Format STATIC )
+endif()
 
+include( E57ExportHeader )
+
+# Main sources and includes
 add_subdirectory( extern/CRCpp )
 add_subdirectory( include )
 add_subdirectory( src )
@@ -114,6 +133,7 @@ install(
     EXPORT
         E57Format-export
     ARCHIVE DESTINATION lib
+    RUNTIME DESTINATION bin
 )
 
 # CMake package files

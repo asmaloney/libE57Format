@@ -1,5 +1,14 @@
-libE57Format
-==
+# libE57Format
+
+- v2.2.0 (in development)
+  - Enable building E57Format as a shared library ([#40](https://github.com/asmaloney/libE57Format/pull/40)) (Thanks	Amodio!)
+  - Remove all usage of dynamic_cast<> ([#39](https://github.com/asmaloney/libE57Format/pull/39))	(Thanks	Jiri!)
+  - Added [clang-format](https://clang.llvm.org/docs/ClangFormat.html) file and reformatted code
+  - {win} Fix MSVC warnings  ([#34](https://github.com/asmaloney/libE57Format/pull/34))) ([#36](https://github.com/asmaloney/libE57Format/pull/36))
+  - {cmake} Review and update cmake files
+  - {doc} Add info about using [SPDX License Identifiers](https://spdx.org/ids)
+  - {ci} Add GitHub Actions to build macOS, Linux, and Windows ([#35](https://github.com/asmaloney/libE57Format/pull/35))
+
 - v2.1.0 (01 Apr 2020)
   - handle UTF8 file names on Windows (based on [#26](https://github.com/asmaloney/libE57Format/issues/26))
   - now supports _char*_ input ([#22](https://github.com/asmaloney/libE57Format/pull/22))
@@ -34,8 +43,7 @@ libE57Format
     - modernize using c++11
   - [Windows] add cmake option ()`USING_STATIC_XERCES`) to tell the build if you are using a static Xerces lib
 
-E57RefImpl
-==
+# E57RefImpl
 
 - 2013-04-03 roland_schwarz
   - e57unpack now also can handle 2d images

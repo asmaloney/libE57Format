@@ -35,11 +35,11 @@ set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/M
 
 project( E57Format
 	DESCRIPTION
-	    "E57Format provides the cpability to read and write E57 files"
+	    "E57Format is a library to read and write E57 files"
 	LANGUAGES
 	    CXX
 	VERSION
-	    2.1.0
+	    2.2.0
 )
 
 include( Tags )

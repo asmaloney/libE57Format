@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: MIT
+# Copyright 2020 Andy Maloney <asmaloney@gmail.com>
+
 # Generate the export header file for E57Format
 
 include( GenerateExportHeader )

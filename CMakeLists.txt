@@ -3,8 +3,8 @@
 #
 # Use git blame to see all the changes and who has contributed.
 #
-# The original cmake file is:
-# Copyright 2010-2012 Roland Schwarz, Riegl LMS GmbH
+# Original work Copyright 2010-2012 Roland Schwarz, Riegl LMS GmbH
+# Modified work Copyright 2018-2020 Andy Maloney <asmaloney@gmail.com>
 #
 # Permission is hereby granted, free of charge, to any person or organization
 # obtaining a copy of the software and accompanying documentation covered by

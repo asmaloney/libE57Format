@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT
+# Copyright 2020 Andy Maloney <asmaloney@gmail.com>
 
 target_sources( E57Format
     PRIVATE

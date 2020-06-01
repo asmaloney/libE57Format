@@ -2,7 +2,8 @@
  * E57Format.cpp - implementation of public functions of the E57 format
  *   Reference Implementation.
  *
- * Copyright 2009 - 2010 Kevin Ackley (kackley@gwi.net)
+ * Original work Copyright 2009 - 2010 Kevin Ackley (kackley@gwi.net)
+ * Modified work Copyright 2018 - 2020 Andy Maloney <asmaloney@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person or organization
  * obtaining a copy of the software and accompanying documentation covered by

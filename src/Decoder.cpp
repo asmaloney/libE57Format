@@ -812,12 +812,12 @@ size_t ConstantIntegerDecoder::inputProcess( const char *source, const size_t av
 
    if ( isScaledInteger_ )
    {
-      for ( unsigned i = 0; i < count; i++ )
+      for ( size_t i = 0; i < count; i++ )
          destBuffer_->setNextInt64( minimum_, scale_, offset_ );
    }
    else
    {
-      for ( unsigned i = 0; i < count; i++ )
+      for ( size_t i = 0; i < count; i++ )
          destBuffer_->setNextInt64( minimum_ );
    }
    currentRecordIndex_ += count;

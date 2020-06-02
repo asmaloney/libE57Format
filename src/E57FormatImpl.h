@@ -84,11 +84,11 @@ namespace e57
       void setAttachedRecursive() override;
 
       void setPrototype( const NodeImplSharedPtr &prototype );
-      NodeImplSharedPtr getPrototype();
+      NodeImplSharedPtr getPrototype() const;
       void setCodecs( const std::shared_ptr<VectorNodeImpl> &codecs );
-      std::shared_ptr<VectorNodeImpl> getCodecs();
+      std::shared_ptr<VectorNodeImpl> getCodecs() const;
 
-      virtual int64_t childCount();
+      int64_t childCount() const;
 
       void checkLeavesInSet( const StringSet &pathNames, NodeImplSharedPtr origin ) override;
 
@@ -99,11 +99,11 @@ namespace e57
       std::shared_ptr<CompressedVectorWriterImpl> writer( std::vector<SourceDestBuffer> sbufs );
       std::shared_ptr<CompressedVectorReaderImpl> reader( std::vector<SourceDestBuffer> dbufs );
 
-      int64_t getRecordCount()
+      int64_t getRecordCount() const
       {
          return ( recordCount_ );
       }
-      uint64_t getBinarySectionLogicalStart()
+      uint64_t getBinarySectionLogicalStart() const
       {
          return ( binarySectionLogicalStart_ );
       }

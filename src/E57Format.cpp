@@ -2740,7 +2740,7 @@ destImageFile().isWritable()).
 @see     VectorFunctions.cpp example, VectorNode::childCount,
 VectorNode::get(int64_t), StructureNode::set
 */
-void VectorNode::append( Node n )
+void VectorNode::append( const Node &n )
 {
    impl_->append( n.impl() );
 }

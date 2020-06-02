@@ -32,7 +32,6 @@
 #include "StructureNodeImpl.h"
 
 using namespace e57;
-using namespace std;
 
 StructureNodeImpl::StructureNodeImpl( ImageFileImplWeakPtr destImageFile ) : NodeImpl( destImageFile )
 {
@@ -55,7 +54,7 @@ bool StructureNodeImpl::isTypeEquivalent( NodeImplSharedPtr ni )
       return ( false );
 
    /// Downcast to shared_ptr<StructureNodeImpl>
-   shared_ptr<StructureNodeImpl> si( static_pointer_cast<StructureNodeImpl>( ni ) );
+   std::shared_ptr<StructureNodeImpl> si( std::static_pointer_cast<StructureNodeImpl>( ni ) );
 
    /// Same number of children?
    if ( childCount() != si->childCount() )
@@ -138,7 +137,7 @@ NodeImplSharedPtr StructureNodeImpl::lookup( const ustring &pathName )
    /// don't checkImageFileOpen
    //??? use lookup(fields, level) instead, for speed.
    bool isRelative;
-   vector<ustring> fields;
+   std::vector<ustring> fields;
    ImageFileImplSharedPtr imf( destImageFile_ );
    imf->pathNameParse( pathName, isRelative, fields ); // throws if bad pathName
 
@@ -222,7 +221,7 @@ void StructureNodeImpl::set( int64_t index64, NodeImplSharedPtr ni )
    }
 
    /// Field name is string version of index value, e.g. "14"
-   stringstream elementName;
+   std::stringstream elementName;
    elementName << index;
 
    /// If this struct is type constrained, can't add new child
@@ -244,11 +243,11 @@ void StructureNodeImpl::set( const ustring &pathName, NodeImplSharedPtr ni, bool
    // COMPRESSED_VECTOR
 
 #ifdef E57_MAX_VERBOSE
-   cout << "StructureNodeImpl::set(pathName=" << pathName << ", ni, autoPathCreate=" << autoPathCreate << endl;
+   cout << "StructureNodeImpl::set(pathName=" << pathName << ", ni, autoPathCreate=" << autoPathCreate << std::endl;
 #endif
 
    bool isRelative;
-   vector<ustring> fields;
+   std::vector<ustring> fields;
 
    /// Path may be absolute or relative with several levels.  Break string into
    /// individual levels.
@@ -266,12 +265,13 @@ void StructureNodeImpl::set( const ustring &pathName, NodeImplSharedPtr ni, bool
    }
 }
 
-void StructureNodeImpl::set( const vector<ustring> &fields, unsigned level, NodeImplSharedPtr ni, bool autoPathCreate )
+void StructureNodeImpl::set( const std::vector<ustring> &fields, unsigned level, NodeImplSharedPtr ni,
+                             bool autoPathCreate )
 {
 #ifdef E57_MAX_VERBOSE
-   cout << "StructureNodeImpl::set: level=" << level << endl;
+   cout << "StructureNodeImpl::set: level=" << level << std::endl;
    for ( unsigned i = 0; i < fields.size(); i++ )
-      cout << "  field[" << i << "]: " << fields.at( i ) << endl;
+      cout << "  field[" << i << "]: " << fields.at( i ) << std::endl;
 #endif
 
    checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
@@ -330,7 +330,7 @@ void StructureNodeImpl::set( const vector<ustring> &fields, unsigned level, Node
       NodeImplSharedPtr parent( shared_from_this() );
       for ( ; level != fields.size() - 1; level++ )
       {
-         shared_ptr<StructureNodeImpl> child( new StructureNodeImpl( destImageFile_ ) );
+         std::shared_ptr<StructureNodeImpl> child( new StructureNodeImpl( destImageFile_ ) );
          parent->set( fields.at( level ), child );
          parent = child;
       }
@@ -428,15 +428,15 @@ void StructureNodeImpl::writeXml( ImageFileImplSharedPtr imf, CheckedFile &cf, i
 
 //??? use visitor?
 #ifdef E57_DEBUG
-void StructureNodeImpl::dump( int indent, ostream &os ) const
+void StructureNodeImpl::dump( int indent, std::ostream &os ) const
 {
    /// don't checkImageFileOpen
    os << space( indent ) << "type:        Structure"
-      << " (" << type() << ")" << endl;
+      << " (" << type() << ")" << std::endl;
    NodeImpl::dump( indent, os );
    for ( unsigned i = 0; i < children_.size(); i++ )
    {
-      os << space( indent ) << "child[" << i << "]:" << endl;
+      os << space( indent ) << "child[" << i << "]:" << std::endl;
       children_.at( i )->dump( indent + 2, os );
    }
 }

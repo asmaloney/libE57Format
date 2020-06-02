@@ -37,7 +37,6 @@
 #include "ImageFileImpl.h"
 
 using namespace e57;
-using namespace std;
 using namespace XERCES_CPP_NAMESPACE;
 
 // define convenient constants for the attribute names
@@ -141,7 +140,7 @@ XMLSize_t E57FileInputStream::readBytes( XMLByte *const toFill, const XMLSize_t 
          available_size = static_cast<size_t>( available );
    }
 
-   size_t readCount = min( maxToRead_size, available_size );
+   size_t readCount = std::min( maxToRead_size, available_size );
 
    cf_->seek( logicalPosition_ );
    cf_->read( reinterpret_cast<char *>( toFill ), readCount ); //??? cast ok?
@@ -176,25 +175,25 @@ E57XmlParser::ParseInfo::ParseInfo() :
 {
 }
 
-void E57XmlParser::ParseInfo::dump( int indent, ostream &os ) const
+void E57XmlParser::ParseInfo::dump( int indent, std::ostream &os ) const
 {
-   os << space( indent ) << "nodeType:       " << nodeType << endl;
-   os << space( indent ) << "minimum:        " << minimum << endl;
-   os << space( indent ) << "maximum:        " << maximum << endl;
-   os << space( indent ) << "scale:          " << scale << endl;
-   os << space( indent ) << "offset:         " << offset << endl;
-   os << space( indent ) << "precision:      " << precision << endl;
-   os << space( indent ) << "floatMinimum:   " << floatMinimum << endl;
-   os << space( indent ) << "floatMaximum:   " << floatMaximum << endl;
-   os << space( indent ) << "fileOffset:     " << fileOffset << endl;
-   os << space( indent ) << "length:         " << length << endl;
-   os << space( indent ) << "allowHeterogeneousChildren: " << allowHeterogeneousChildren << endl;
-   os << space( indent ) << "recordCount:    " << recordCount << endl;
+   os << space( indent ) << "nodeType:       " << nodeType << std::endl;
+   os << space( indent ) << "minimum:        " << minimum << std::endl;
+   os << space( indent ) << "maximum:        " << maximum << std::endl;
+   os << space( indent ) << "scale:          " << scale << std::endl;
+   os << space( indent ) << "offset:         " << offset << std::endl;
+   os << space( indent ) << "precision:      " << precision << std::endl;
+   os << space( indent ) << "floatMinimum:   " << floatMinimum << std::endl;
+   os << space( indent ) << "floatMaximum:   " << floatMaximum << std::endl;
+   os << space( indent ) << "fileOffset:     " << fileOffset << std::endl;
+   os << space( indent ) << "length:         " << length << std::endl;
+   os << space( indent ) << "allowHeterogeneousChildren: " << allowHeterogeneousChildren << std::endl;
+   os << space( indent ) << "recordCount:    " << recordCount << std::endl;
    if ( container_ni )
-      os << space( indent ) << "container_ni:   <defined>" << endl;
+      os << space( indent ) << "container_ni:   <defined>" << std::endl;
    else
-      os << space( indent ) << "container_ni:   <null>" << endl;
-   os << space( indent ) << "childText:      \"" << childText << "\"" << endl;
+      os << space( indent ) << "container_ni:   <null>" << std::endl;
+   os << space( indent ) << "childText:      \"" << childText << "\"" << std::endl;
 }
 
 //=============================================================================
@@ -255,18 +254,18 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
                                  const Attributes &attributes )
 {
 #ifdef E57_MAX_VERBOSE
-   cout << "startElement" << endl;
-   cout << space( 2 ) << "URI:       " << toUString( uri ) << endl;
-   cout << space( 2 ) << "localName: " << toUString( localName ) << endl;
-   cout << space( 2 ) << "qName:     " << toUString( qName ) << endl;
+   cout << "startElement" << std::endl;
+   cout << space( 2 ) << "URI:       " << toUString( uri ) << std::endl;
+   cout << space( 2 ) << "localName: " << toUString( localName ) << std::endl;
+   cout << space( 2 ) << "qName:     " << toUString( qName ) << std::endl;
 
    for ( size_t i = 0; i < attributes.getLength(); i++ )
    {
-      cout << space( 2 ) << "Attribute[" << i << "]" << endl;
-      cout << space( 4 ) << "URI:       " << toUString( attributes.getURI( i ) ) << endl;
-      cout << space( 4 ) << "localName: " << toUString( attributes.getLocalName( i ) ) << endl;
-      cout << space( 4 ) << "qName:     " << toUString( attributes.getQName( i ) ) << endl;
-      cout << space( 4 ) << "value:     " << toUString( attributes.getValue( i ) ) << endl;
+      cout << space( 2 ) << "Attribute[" << i << "]" << std::endl;
+      cout << space( 4 ) << "URI:       " << toUString( attributes.getURI( i ) ) << std::endl;
+      cout << space( 4 ) << "localName: " << toUString( attributes.getLocalName( i ) ) << std::endl;
+      cout << space( 4 ) << "qName:     " << toUString( attributes.getQName( i ) ) << std::endl;
+      cout << space( 4 ) << "value:     " << toUString( attributes.getValue( i ) ) << std::endl;
    }
 #endif
    /// Get Type attribute
@@ -280,7 +279,7 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
    if ( node_type == "Integer" )
    {
 #ifdef E57_MAX_VERBOSE
-      cout << "got a Integer" << endl;
+      cout << "got a Integer" << std::endl;
 #endif
       //??? check validity of numeric strings
       pi.nodeType = E57_INTEGER;
@@ -315,7 +314,7 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
    else if ( node_type == "ScaledInteger" )
    {
 #ifdef E57_MAX_VERBOSE
-      cout << "got a ScaledInteger" << endl;
+      cout << "got a ScaledInteger" << std::endl;
 #endif
       pi.nodeType = E57_SCALED_INTEGER;
 
@@ -372,7 +371,7 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
    else if ( node_type == "Float" )
    {
 #ifdef E57_MAX_VERBOSE
-      cout << "got a Float" << endl;
+      cout << "got a Float" << std::endl;
 #endif
       pi.nodeType = E57_FLOAT;
 
@@ -432,7 +431,7 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
    else if ( node_type == "String" )
    {
 #ifdef E57_MAX_VERBOSE
-      cout << "got a String" << endl;
+      cout << "got a String" << std::endl;
 #endif
       pi.nodeType = E57_STRING;
 
@@ -442,7 +441,7 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
    else if ( node_type == "Blob" )
    {
 #ifdef E57_MAX_VERBOSE
-      cout << "got a Blob" << endl;
+      cout << "got a Blob" << std::endl;
 #endif
       pi.nodeType = E57_BLOB;
 
@@ -464,7 +463,7 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
    else if ( node_type == "Structure" )
    {
 #ifdef E57_MAX_VERBOSE
-      cout << "got a Structure" << endl;
+      cout << "got a Structure" << std::endl;
 #endif
       pi.nodeType = E57_STRUCTURE;
 
@@ -480,7 +479,7 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
             if ( toUString( attributes.getQName( i ) ) == "xmlns" )
             {
 #ifdef E57_VERBOSE
-               cout << "declared default namespace, URI=" << toUString( attributes.getValue( i ) ) << endl;
+               cout << "declared default namespace, URI=" << toUString( attributes.getValue( i ) ) << std::endl;
 #endif
                imf_->extensionsAdd( "", toUString( attributes.getValue( i ) ) );
                gotDefault = true;
@@ -491,7 +490,7 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
             {
 #ifdef E57_VERBOSE
                cout << "declared extension, prefix=" << toUString( attributes.getLocalName( i ) )
-                    << " URI=" << toUString( attributes.getValue( i ) ) << endl;
+                    << " URI=" << toUString( attributes.getValue( i ) ) << std::endl;
 #endif
                imf_->extensionsAdd( toUString( attributes.getLocalName( i ) ), toUString( attributes.getValue( i ) ) );
             }
@@ -507,7 +506,7 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
       }
 
       /// Create container now, so can hold children
-      shared_ptr<StructureNodeImpl> s_ni( new StructureNodeImpl( imf_ ) );
+      std::shared_ptr<StructureNodeImpl> s_ni( new StructureNodeImpl( imf_ ) );
       pi.container_ni = s_ni;
 
       /// After have Structure, check again if E57Root, if so mark attached so
@@ -521,7 +520,7 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
    else if ( node_type == "Vector" )
    {
 #ifdef E57_MAX_VERBOSE
-      cout << "got a Vector" << endl;
+      cout << "got a Vector" << std::endl;
 #endif
       pi.nodeType = E57_VECTOR;
 
@@ -550,7 +549,7 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
       }
 
       /// Create container now, so can hold children
-      shared_ptr<VectorNodeImpl> v_ni( new VectorNodeImpl( imf_, pi.allowHeterogeneousChildren ) );
+      std::shared_ptr<VectorNodeImpl> v_ni( new VectorNodeImpl( imf_, pi.allowHeterogeneousChildren ) );
       pi.container_ni = v_ni;
 
       /// Push info so far onto stack
@@ -559,7 +558,7 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
    else if ( node_type == "CompressedVector" )
    {
 #ifdef E57_MAX_VERBOSE
-      cout << "got a CompressedVector" << endl;
+      cout << "got a CompressedVector" << std::endl;
 #endif
       pi.nodeType = E57_COMPRESSED_VECTOR;
 
@@ -574,7 +573,7 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
       pi.recordCount = convertStrToLL( recordCount_str );
 
       /// Create container now, so can hold children
-      shared_ptr<CompressedVectorNodeImpl> cv_ni( new CompressedVectorNodeImpl( imf_ ) );
+      std::shared_ptr<CompressedVectorNodeImpl> cv_ni( new CompressedVectorNodeImpl( imf_ ) );
       cv_ni->setRecordCount( pi.recordCount );
       cv_ni->setBinarySectionLogicalStart(
          imf_->file_->physicalToLogical( pi.fileOffset ) ); //??? what if file_ is NULL?
@@ -597,7 +596,7 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
 void E57XmlParser::endElement( const XMLCh *const uri, const XMLCh *const localName, const XMLCh *const qName )
 {
 #ifdef E57_MAX_VERBOSE
-   cout << "endElement" << endl;
+   cout << "endElement" << std::endl;
 #endif
 
    /// Pop the node that just ended
@@ -633,7 +632,7 @@ void E57XmlParser::endElement( const XMLCh *const uri, const XMLCh *const localN
          }
          else
             intValue = 0;
-         shared_ptr<IntegerNodeImpl> i_ni( new IntegerNodeImpl( imf_, intValue, pi.minimum, pi.maximum ) );
+         std::shared_ptr<IntegerNodeImpl> i_ni( new IntegerNodeImpl( imf_, intValue, pi.minimum, pi.maximum ) );
          current_ni = i_ni;
       }
       break;
@@ -647,7 +646,7 @@ void E57XmlParser::endElement( const XMLCh *const uri, const XMLCh *const localN
          }
          else
             intValue = 0;
-         shared_ptr<ScaledIntegerNodeImpl> si_ni(
+         std::shared_ptr<ScaledIntegerNodeImpl> si_ni(
             new ScaledIntegerNodeImpl( imf_, intValue, pi.minimum, pi.maximum, pi.scale, pi.offset ) );
          current_ni = si_ni;
       }
@@ -660,20 +659,20 @@ void E57XmlParser::endElement( const XMLCh *const uri, const XMLCh *const localN
             floatValue = atof( pi.childText.c_str() );
          else
             floatValue = 0.0;
-         shared_ptr<FloatNodeImpl> f_ni(
+         std::shared_ptr<FloatNodeImpl> f_ni(
             new FloatNodeImpl( imf_, floatValue, pi.precision, pi.floatMinimum, pi.floatMaximum ) );
          current_ni = f_ni;
       }
       break;
       case E57_STRING:
       {
-         shared_ptr<StringNodeImpl> s_ni( new StringNodeImpl( imf_, pi.childText ) );
+         std::shared_ptr<StringNodeImpl> s_ni( new StringNodeImpl( imf_, pi.childText ) );
          current_ni = s_ni;
       }
       break;
       case E57_BLOB:
       {
-         shared_ptr<BlobNodeImpl> b_ni( new BlobNodeImpl( imf_, pi.fileOffset, pi.length ) );
+         std::shared_ptr<BlobNodeImpl> b_ni( new BlobNodeImpl( imf_, pi.fileOffset, pi.length ) );
          current_ni = b_ni;
       }
       break;
@@ -698,7 +697,7 @@ void E57XmlParser::endElement( const XMLCh *const uri, const XMLCh *const localN
                                   " uri=" + toUString( uri ) + " localName=" + toUString( localName ) +
                                   " qName=" + toUString( qName ) );
       }
-      imf_->root_ = static_pointer_cast<StructureNodeImpl>( current_ni );
+      imf_->root_ = std::static_pointer_cast<StructureNodeImpl>( current_ni );
       return;
    }
 
@@ -718,7 +717,7 @@ void E57XmlParser::endElement( const XMLCh *const uri, const XMLCh *const localN
    {
       case E57_STRUCTURE:
       {
-         shared_ptr<StructureNodeImpl> struct_ni = static_pointer_cast<StructureNodeImpl>( parent_ni );
+         std::shared_ptr<StructureNodeImpl> struct_ni = std::static_pointer_cast<StructureNodeImpl>( parent_ni );
 
          /// Add named child to structure
          struct_ni->set( toUString( qName ), current_ni );
@@ -726,7 +725,7 @@ void E57XmlParser::endElement( const XMLCh *const uri, const XMLCh *const localN
       break;
       case E57_VECTOR:
       {
-         shared_ptr<VectorNodeImpl> vector_ni = static_pointer_cast<VectorNodeImpl>( parent_ni );
+         std::shared_ptr<VectorNodeImpl> vector_ni = std::static_pointer_cast<VectorNodeImpl>( parent_ni );
 
          /// Add unnamed child to vector
          vector_ni->append( current_ni );
@@ -734,7 +733,8 @@ void E57XmlParser::endElement( const XMLCh *const uri, const XMLCh *const localN
       break;
       case E57_COMPRESSED_VECTOR:
       {
-         shared_ptr<CompressedVectorNodeImpl> cv_ni = static_pointer_cast<CompressedVectorNodeImpl>( parent_ni );
+         std::shared_ptr<CompressedVectorNodeImpl> cv_ni =
+            std::static_pointer_cast<CompressedVectorNodeImpl>( parent_ni );
          ustring uQName = toUString( qName );
 
          /// n can be either prototype or codecs
@@ -749,7 +749,7 @@ void E57XmlParser::endElement( const XMLCh *const uri, const XMLCh *const localN
                                         " uri=" + toUString( uri ) + " localName=" + toUString( localName ) +
                                         " qName=" + toUString( qName ) );
             }
-            shared_ptr<VectorNodeImpl> vi = static_pointer_cast<VectorNodeImpl>( current_ni );
+            std::shared_ptr<VectorNodeImpl> vi = std::static_pointer_cast<VectorNodeImpl>( current_ni );
 
             /// Check VectorNode is hetero
             if ( !vi->allowHeteroChildren() )
@@ -785,7 +785,7 @@ void E57XmlParser::characters( const XMLCh *const chars, const XMLSize_t length 
 {
 //??? use length to make ustring
 #ifdef E57_MAX_VERBOSE
-   cout << "characters, chars=\"" << toUString( chars ) << "\" length=" << length << endl;
+   cout << "characters, chars=\"" << toUString( chars ) << "\" length=" << length << std::endl;
 #endif
    /// Get active element
    ParseInfo &pi = stack_.top();
@@ -800,7 +800,7 @@ void E57XmlParser::characters( const XMLCh *const chars, const XMLSize_t length 
       {
          /// If characters aren't whitespace, have an error, else ignore
          ustring s = toUString( chars );
-         if ( s.find_first_not_of( " \t\n\r" ) != string::npos )
+         if ( s.find_first_not_of( " \t\n\r" ) != std::string::npos )
             throw E57_EXCEPTION2( E57_ERROR_BAD_XML_FORMAT, "chars=" + toUString( chars ) );
       }
       break;
@@ -829,11 +829,11 @@ void E57XmlParser::fatalError( const SAXParseException &ex )
 void E57XmlParser::warning( const SAXParseException &ex )
 {
    /// Don't take any action on warning from parser, just report
-   cerr << "**** XML parser warning: " << ustring( XMLString::transcode( ex.getMessage() ) ) << endl;
-   cerr << "  Debug info:" << endl;
-   cerr << "    systemId=" << XMLString::transcode( ex.getSystemId() ) << endl;
-   cerr << ",   xmlLine=" << ex.getLineNumber() << endl;
-   cerr << ",   xmlColumn=" << ex.getColumnNumber() << endl;
+   std::cerr << "**** XML parser warning: " << ustring( XMLString::transcode( ex.getMessage() ) ) << std::endl;
+   std::cerr << "  Debug info:" << std::endl;
+   std::cerr << "    systemId=" << XMLString::transcode( ex.getSystemId() ) << std::endl;
+   std::cerr << ",   xmlLine=" << ex.getLineNumber() << std::endl;
+   std::cerr << ",   xmlColumn=" << ex.getColumnNumber() << std::endl;
 }
 
 ustring E57XmlParser::toUString( const XMLCh *const xml_str )

@@ -517,8 +517,8 @@ void DataPacket::dump( int indent, std::ostream &os ) const
            unsigned j;
            for (j=0; j < bsbLength[i] && j < 10; j++)
                os << space(indent+4) << "byte[" << j << "]=" << (unsigned)p[j]
-   << endl; if (j < bsbLength[i]) os << space(indent+4) << bsbLength[i]-j << "
-   more unprinted..." << endl;
+   << std::endl; if (j < bsbLength[i]) os << space(indent+4) << bsbLength[i]-j << "
+   more unprinted..." << std::endl;
    ====*/
       p += bsbLength[i];
       if ( p - reinterpret_cast<const uint8_t *>( this ) > DATA_PACKET_MAX )

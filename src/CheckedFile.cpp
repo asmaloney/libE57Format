@@ -70,7 +70,6 @@
 #endif
 
 using namespace e57;
-using namespace std;
 
 // These extra definitions are required in C++11.
 // In C++17, "static constexpr" is implicitly inline, so these are not required.
@@ -239,10 +238,10 @@ void CheckedFile::read( char *buf, size_t nRead, size_t /*bufSize*/ )
 
    getCurrentPageAndOffset( page, pageOffset );
 
-   size_t n = min( nRead, logicalPageSize - pageOffset );
+   size_t n = std::min( nRead, logicalPageSize - pageOffset );
 
    /// Allocate temp page buffer
-   vector<char> page_buffer_v( physicalPageSize );
+   std::vector<char> page_buffer_v( physicalPageSize );
    char *page_buffer = &page_buffer_v[0];
 
    auto checksumMod = static_cast<const unsigned int>( std::nearbyint( 100.0 / checkSumPolicy_ ) );
@@ -275,7 +274,7 @@ void CheckedFile::read( char *buf, size_t nRead, size_t /*bufSize*/ )
       pageOffset = 0;
       ++page;
 
-      n = min( nRead, logicalPageSize );
+      n = std::min( nRead, logicalPageSize );
    }
 
    /// When done, leave cursor just past end of last byte read
@@ -285,7 +284,7 @@ void CheckedFile::read( char *buf, size_t nRead, size_t /*bufSize*/ )
 void CheckedFile::write( const char *buf, size_t nWrite )
 {
 #ifdef E57_MAX_VERBOSE
-   // cout << "write nWrite=" << nWrite << " position()="<< position() << endl;
+   // cout << "write nWrite=" << nWrite << " position()="<< position() << std::endl;
    // //???
 #endif
    if ( readOnly_ )
@@ -300,10 +299,10 @@ void CheckedFile::write( const char *buf, size_t nWrite )
 
    getCurrentPageAndOffset( page, pageOffset );
 
-   size_t n = min( nWrite, logicalPageSize - pageOffset );
+   size_t n = std::min( nWrite, logicalPageSize - pageOffset );
 
    /// Allocate temp page buffer
-   vector<char> page_buffer_v( physicalPageSize );
+   std::vector<char> page_buffer_v( physicalPageSize );
    char *page_buffer = &page_buffer_v[0];
 
    while ( nWrite > 0 )
@@ -316,22 +315,22 @@ void CheckedFile::write( const char *buf, size_t nWrite )
       }
 
 #ifdef E57_MAX_VERBOSE
-      // cout << "  page_buffer[0] read: '" << page_buffer[0] << "'" << endl;
+      // cout << "  page_buffer[0] read: '" << page_buffer[0] << "'" << std::endl;
       // cout << "copy " << n << "bytes to page=" << page << " pageOffset=" <<
       // pageOffset << " buf='"; //??? for (size_t i=0; i < n; i++) cout <<
-      // buf[i]; cout << "'" << endl;
+      // buf[i]; cout << "'" << std::endl;
 #endif
       memcpy( page_buffer + pageOffset, buf, n );
       writePhysicalPage( page_buffer, page );
 #ifdef E57_MAX_VERBOSE
       // cout << "  page_buffer[0] after write: '" << page_buffer[0] << "'" <<
-      // endl; //???
+      // std::endl; //???
 #endif
       buf += n;
       nWrite -= n;
       pageOffset = 0;
       page++;
-      n = min( nWrite, logicalPageSize );
+      n = std::min( nWrite, logicalPageSize );
    }
 
    if ( end > logicalLength_ )
@@ -351,14 +350,14 @@ CheckedFile &CheckedFile::operator<<( const ustring &s )
 
 CheckedFile &CheckedFile::operator<<( int64_t i )
 {
-   stringstream ss;
+   std::stringstream ss;
    ss << i;
    return ( *this << ss.str() );
 }
 
 CheckedFile &CheckedFile::operator<<( uint64_t i )
 {
-   stringstream ss;
+   std::stringstream ss;
    ss << i;
    return ( *this << ss.str() );
 }
@@ -378,11 +377,11 @@ CheckedFile &CheckedFile::operator<<( double d )
 template <class FTYPE> CheckedFile &CheckedFile::writeFloatingPoint( FTYPE value, int precision )
 {
 #ifdef E57_MAX_VERBOSE
-   cout << "CheckedFile::writeFloatingPoint, value=" << value << " precision=" << precision << endl;
+   cout << "CheckedFile::writeFloatingPoint, value=" << value << " precision=" << precision << std::endl;
 #endif
 
-   stringstream ss;
-   ss << scientific << setprecision( precision ) << value;
+   std::stringstream ss;
+   ss << std::scientific << std::setprecision( precision ) << value;
 
    /// Try to remove trailing zeroes and decimal point
    /// E.g. 1.23456000000000000e+005  ==> 1.23456e+005
@@ -449,7 +448,7 @@ void CheckedFile::seek( uint64_t offset, OffsetMode omode )
 
 #ifdef E57_MAX_VERBOSE
    // cout << "seek offset=" << offset << " omode=" << omode << " pos=" << pos
-   // << endl; //???
+   // << std::endl; //???
 #endif
    lseek64( pos, SEEK_SET );
 }
@@ -540,7 +539,7 @@ uint64_t CheckedFile::length( OffsetMode omode )
 void CheckedFile::extend( uint64_t newLength, OffsetMode omode )
 {
 #ifdef E57_MAX_VERBOSE
-   // cout << "extend newLength=" << newLength << " omode="<< omode << endl;
+   // cout << "extend newLength=" << newLength << " omode="<< omode << std::endl;
    // //???
 #endif
    if ( readOnly_ )
@@ -593,7 +592,7 @@ void CheckedFile::extend( uint64_t newLength, OffsetMode omode )
    }
 
    /// Allocate temp page buffer
-   vector<char> page_buffer_v( physicalPageSize );
+   std::vector<char> page_buffer_v( physicalPageSize );
    char *page_buffer = &page_buffer_v[0];
 
    while ( nWrite > 0 )
@@ -607,7 +606,7 @@ void CheckedFile::extend( uint64_t newLength, OffsetMode omode )
 
 #ifdef E57_MAX_VERBOSE
       // cout << "extend " << n << "bytes on page=" << page << " pageOffset=" <<
-      // pageOffset << endl;
+      // pageOffset << std::endl;
       // //???
 #endif
       memset( page_buffer + pageOffset, 0, n );
@@ -673,7 +672,7 @@ void CheckedFile::unlink()
 #ifdef E57_MAX_VERBOSE
    if ( result < 0 )
    {
-      cout << "std::remove() failed, result=" << result << endl;
+      cout << "std::remove() failed, result=" << result << std::endl;
    }
 #endif
 }
@@ -735,7 +734,7 @@ void CheckedFile::getCurrentPageAndOffset( uint64_t &page, size_t &pageOffset, O
 void CheckedFile::readPhysicalPage( char *page_buffer, uint64_t page )
 {
 #ifdef E57_MAX_VERBOSE
-   // cout << "readPhysicalPage, page:" << page << endl;
+   // cout << "readPhysicalPage, page:" << page << std::endl;
 #endif
 
 #ifdef E57_CHECK_FILE_DEBUG
@@ -770,7 +769,7 @@ void CheckedFile::readPhysicalPage( char *page_buffer, uint64_t page )
 void CheckedFile::writePhysicalPage( char *page_buffer, uint64_t page )
 {
 #ifdef E57_MAX_VERBOSE
-   // cout << "writePhysicalPage, page:" << page << endl;
+   // cout << "writePhysicalPage, page:" << page << std::endl;
 #endif
 
    /// Append checksum

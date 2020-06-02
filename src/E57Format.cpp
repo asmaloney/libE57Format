@@ -249,7 +249,6 @@ DEALINGS IN THE SOFTWARE.
 #include "SourceDestBufferImpl.h"
 
 using namespace e57;
-using namespace std;
 
 /*!
 @file HelloWorld.cpp
@@ -2477,7 +2476,7 @@ StructureNode::StructureNode( const Node &n )
       throw E57_EXCEPTION2( E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString( n.type() ) );
 
    /// Set our shared_ptr to the downcast shared_ptr
-   impl_ = static_pointer_cast<StructureNodeImpl>( n.impl() );
+   impl_ = std::static_pointer_cast<StructureNodeImpl>( n.impl() );
 }
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't
@@ -2486,7 +2485,7 @@ StructureNode::StructureNode( std::weak_ptr<ImageFileImpl> fileParent ) : impl_(
 {
 }
 
-StructureNode::StructureNode( shared_ptr<StructureNodeImpl> ni ) : impl_( ni )
+StructureNode::StructureNode( std::shared_ptr<StructureNodeImpl> ni ) : impl_( ni )
 {
 }
 //! @endcond
@@ -2796,12 +2795,12 @@ VectorNode::VectorNode( const Node &n )
       throw E57_EXCEPTION2( E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString( n.type() ) );
 
    /// Set our shared_ptr to the downcast shared_ptr
-   impl_ = static_pointer_cast<VectorNodeImpl>( n.impl() );
+   impl_ = std::static_pointer_cast<VectorNodeImpl>( n.impl() );
 }
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't
 //! documented.
-VectorNode::VectorNode( shared_ptr<VectorNodeImpl> ni ) : impl_( ni )
+VectorNode::VectorNode( std::shared_ptr<VectorNodeImpl> ni ) : impl_( ni )
 {
 }
 //! @endcond
@@ -3273,7 +3272,7 @@ invariant is violated:
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't
 //! documented.
-CompressedVectorReader::CompressedVectorReader( shared_ptr<CompressedVectorReaderImpl> ni ) : impl_( ni )
+CompressedVectorReader::CompressedVectorReader( std::shared_ptr<CompressedVectorReaderImpl> ni ) : impl_( ni )
 {
 }
 //! @endcond
@@ -3549,7 +3548,7 @@ invariant is violated:
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't
 //! documented.
-CompressedVectorWriter::CompressedVectorWriter( shared_ptr<CompressedVectorWriterImpl> ni ) : impl_( ni )
+CompressedVectorWriter::CompressedVectorWriter( std::shared_ptr<CompressedVectorWriterImpl> ni ) : impl_( ni )
 {
 }
 //! @endcond
@@ -4041,12 +4040,12 @@ CompressedVectorNode::CompressedVectorNode( const Node &n )
       throw E57_EXCEPTION2( E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString( n.type() ) );
 
    /// Set our shared_ptr to the downcast shared_ptr
-   impl_ = static_pointer_cast<CompressedVectorNodeImpl>( n.impl() );
+   impl_ = std::static_pointer_cast<CompressedVectorNodeImpl>( n.impl() );
 }
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't
 //! documented.
-CompressedVectorNode::CompressedVectorNode( shared_ptr<CompressedVectorNodeImpl> ni ) : impl_( ni )
+CompressedVectorNode::CompressedVectorNode( std::shared_ptr<CompressedVectorNodeImpl> ni ) : impl_( ni )
 {
 }
 //! @endcond
@@ -4347,12 +4346,12 @@ IntegerNode::IntegerNode( const Node &n )
       throw E57_EXCEPTION2( E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString( n.type() ) );
 
    /// Set our shared_ptr to the downcast shared_ptr
-   impl_ = static_pointer_cast<IntegerNodeImpl>( n.impl() );
+   impl_ = std::static_pointer_cast<IntegerNodeImpl>( n.impl() );
 }
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't
 //! documented.
-IntegerNode::IntegerNode( shared_ptr<IntegerNodeImpl> ni ) : impl_( ni )
+IntegerNode::IntegerNode( std::shared_ptr<IntegerNodeImpl> ni ) : impl_( ni )
 {
 }
 //! @endcond
@@ -4704,12 +4703,12 @@ ScaledIntegerNode::ScaledIntegerNode( const Node &n )
       throw E57_EXCEPTION2( E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString( n.type() ) );
 
    /// Set our shared_ptr to the downcast shared_ptr
-   impl_ = static_pointer_cast<ScaledIntegerNodeImpl>( n.impl() );
+   impl_ = std::static_pointer_cast<ScaledIntegerNodeImpl>( n.impl() );
 }
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't
 //! documented.
-ScaledIntegerNode::ScaledIntegerNode( shared_ptr<ScaledIntegerNodeImpl> ni ) : impl_( ni )
+ScaledIntegerNode::ScaledIntegerNode( std::shared_ptr<ScaledIntegerNodeImpl> ni ) : impl_( ni )
 {
 }
 //! @endcond
@@ -4969,12 +4968,12 @@ FloatNode::FloatNode( const Node &n )
       throw E57_EXCEPTION2( E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString( n.type() ) );
 
    /// Set our shared_ptr to the downcast shared_ptr
-   impl_ = static_pointer_cast<FloatNodeImpl>( n.impl() );
+   impl_ = std::static_pointer_cast<FloatNodeImpl>( n.impl() );
 }
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't
 //! documented.
-FloatNode::FloatNode( shared_ptr<FloatNodeImpl> ni ) : impl_( ni )
+FloatNode::FloatNode( std::shared_ptr<FloatNodeImpl> ni ) : impl_( ni )
 {
 }
 //! @endcond
@@ -5147,12 +5146,12 @@ StringNode::StringNode( const Node &n )
       throw E57_EXCEPTION2( E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString( n.type() ) );
 
    /// Set our shared_ptr to the downcast shared_ptr
-   impl_ = static_pointer_cast<StringNodeImpl>( n.impl() );
+   impl_ = std::static_pointer_cast<StringNodeImpl>( n.impl() );
 }
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't
 //! documented.
-StringNode::StringNode( shared_ptr<StringNodeImpl> ni ) : impl_( ni )
+StringNode::StringNode( std::shared_ptr<StringNodeImpl> ni ) : impl_( ni )
 {
 }
 //! @endcond
@@ -5427,7 +5426,7 @@ BlobNode::BlobNode( const Node &n )
       throw E57_EXCEPTION2( E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString( n.type() ) );
 
    /// Set our shared_ptr to the downcast shared_ptr
-   impl_ = static_pointer_cast<BlobNodeImpl>( n.impl() );
+   impl_ = std::static_pointer_cast<BlobNodeImpl>( n.impl() );
 }
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't
@@ -5437,7 +5436,7 @@ BlobNode::BlobNode( ImageFile destImageFile, int64_t fileOffset, int64_t length 
 {
 }
 
-BlobNode::BlobNode( shared_ptr<BlobNodeImpl> ni ) : impl_( ni )
+BlobNode::BlobNode( std::shared_ptr<BlobNodeImpl> ni ) : impl_( ni )
 {
 }
 //! @endcond

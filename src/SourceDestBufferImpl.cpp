@@ -31,7 +31,6 @@
 #include "SourceDestBufferImpl.h"
 
 using namespace e57;
-using namespace std;
 
 SourceDestBufferImpl::SourceDestBufferImpl( ImageFileImplWeakPtr destImageFile, const ustring &pathName,
                                             const size_t capacity, bool doConversion, bool doScaling ) :
@@ -50,43 +49,43 @@ template <typename T> void SourceDestBufferImpl::setTypeInfo( T *base, size_t st
 
    // this is a little ugly, but it saves us having to pass around the memory
    // representation
-   if ( is_same<T, int8_t>::value )
+   if ( std::is_same<T, int8_t>::value )
    {
       memoryRepresentation_ = E57_INT8;
    }
-   else if ( is_same<T, uint8_t>::value )
+   else if ( std::is_same<T, uint8_t>::value )
    {
       memoryRepresentation_ = E57_UINT8;
    }
-   else if ( is_same<T, int16_t>::value )
+   else if ( std::is_same<T, int16_t>::value )
    {
       memoryRepresentation_ = E57_INT16;
    }
-   else if ( is_same<T, uint16_t>::value )
+   else if ( std::is_same<T, uint16_t>::value )
    {
       memoryRepresentation_ = E57_UINT16;
    }
-   else if ( is_same<T, int32_t>::value )
+   else if ( std::is_same<T, int32_t>::value )
    {
       memoryRepresentation_ = E57_INT32;
    }
-   else if ( is_same<T, uint32_t>::value )
+   else if ( std::is_same<T, uint32_t>::value )
    {
       memoryRepresentation_ = E57_UINT32;
    }
-   else if ( is_same<T, int64_t>::value )
+   else if ( std::is_same<T, int64_t>::value )
    {
       memoryRepresentation_ = E57_INT64;
    }
-   else if ( is_same<T, bool>::value )
+   else if ( std::is_same<T, bool>::value )
    {
       memoryRepresentation_ = E57_BOOL;
    }
-   else if ( is_same<T, float>::value )
+   else if ( std::is_same<T, float>::value )
    {
       memoryRepresentation_ = E57_REAL32;
    }
-   else if ( is_same<T, double>::value )
+   else if ( std::is_same<T, double>::value )
    {
       memoryRepresentation_ = E57_REAL64;
    }
@@ -106,7 +105,7 @@ template void SourceDestBufferImpl::setTypeInfo<float>( float *base, size_t stri
 template void SourceDestBufferImpl::setTypeInfo<double>( double *base, size_t stride );
 
 SourceDestBufferImpl::SourceDestBufferImpl( ImageFileImplWeakPtr destImageFile, const ustring &pathName,
-                                            vector<ustring> *b ) :
+                                            std::vector<ustring> *b ) :
    destImageFile_( destImageFile ),
    pathName_( pathName ), memoryRepresentation_( E57_USTRING ), ustrings_( b )
 {
@@ -812,7 +811,7 @@ void SourceDestBufferImpl::setNextString( const ustring &value )
    nextIndex_++;
 }
 
-void SourceDestBufferImpl::checkCompatible( const shared_ptr<SourceDestBufferImpl> &newBuf ) const
+void SourceDestBufferImpl::checkCompatible( const std::shared_ptr<SourceDestBufferImpl> &newBuf ) const
 {
    if ( pathName_ != newBuf->pathName() )
    {
@@ -850,57 +849,57 @@ void SourceDestBufferImpl::checkCompatible( const shared_ptr<SourceDestBufferImp
 }
 
 #ifdef E57_DEBUG
-void SourceDestBufferImpl::dump( int indent, ostream &os )
+void SourceDestBufferImpl::dump( int indent, std::ostream &os )
 {
    /// don't checkImageFileOpen
 
-   os << space( indent ) << "pathName:             " << pathName_ << endl;
+   os << space( indent ) << "pathName:             " << pathName_ << std::endl;
    os << space( indent ) << "memoryRepresentation: ";
    switch ( memoryRepresentation_ )
    {
       case E57_INT8:
-         os << "int8_t" << endl;
+         os << "int8_t" << std::endl;
          break;
       case E57_UINT8:
-         os << "uint8_t" << endl;
+         os << "uint8_t" << std::endl;
          break;
       case E57_INT16:
-         os << "int16_t" << endl;
+         os << "int16_t" << std::endl;
          break;
       case E57_UINT16:
-         os << "uint16_t" << endl;
+         os << "uint16_t" << std::endl;
          break;
       case E57_INT32:
-         os << "int32_t" << endl;
+         os << "int32_t" << std::endl;
          break;
       case E57_UINT32:
-         os << "uint32_t" << endl;
+         os << "uint32_t" << std::endl;
          break;
       case E57_INT64:
-         os << "int64_t" << endl;
+         os << "int64_t" << std::endl;
          break;
       case E57_BOOL:
-         os << "bool" << endl;
+         os << "bool" << std::endl;
          break;
       case E57_REAL32:
-         os << "float" << endl;
+         os << "float" << std::endl;
          break;
       case E57_REAL64:
-         os << "double" << endl;
+         os << "double" << std::endl;
          break;
       case E57_USTRING:
-         os << "ustring" << endl;
+         os << "ustring" << std::endl;
          break;
       default:
-         os << "<unknown>" << endl;
+         os << "<unknown>" << std::endl;
          break;
    }
-   os << space( indent ) << "base:                 " << static_cast<const void *>( base_ ) << endl;
-   os << space( indent ) << "ustrings:             " << static_cast<const void *>( ustrings_ ) << endl;
-   os << space( indent ) << "capacity:             " << capacity_ << endl;
-   os << space( indent ) << "doConversion:         " << doConversion_ << endl;
-   os << space( indent ) << "doScaling:            " << doScaling_ << endl;
-   os << space( indent ) << "stride:               " << stride_ << endl;
-   os << space( indent ) << "nextIndex:            " << nextIndex_ << endl;
+   os << space( indent ) << "base:                 " << static_cast<const void *>( base_ ) << std::endl;
+   os << space( indent ) << "ustrings:             " << static_cast<const void *>( ustrings_ ) << std::endl;
+   os << space( indent ) << "capacity:             " << capacity_ << std::endl;
+   os << space( indent ) << "doConversion:         " << doConversion_ << std::endl;
+   os << space( indent ) << "doScaling:            " << doScaling_ << std::endl;
+   os << space( indent ) << "stride:               " << stride_ << std::endl;
+   os << space( indent ) << "nextIndex:            " << nextIndex_ << std::endl;
 }
 #endif

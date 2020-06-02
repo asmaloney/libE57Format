@@ -39,7 +39,6 @@
 #include "SourceDestBufferImpl.h"
 
 using namespace e57;
-using namespace std;
 
 /// Section types
 enum
@@ -63,8 +62,8 @@ struct BlobSectionHeader
 #ifdef E57_DEBUG
 void BlobSectionHeader::dump( int indent, std::ostream &os )
 {
-   os << space( indent ) << "sectionId:            " << sectionId << endl;
-   os << space( indent ) << "sectionLogicalLength: " << sectionLogicalLength << endl;
+   os << space( indent ) << "sectionId:            " << sectionId << std::endl;
+   os << space( indent ) << "sectionLogicalLength: " << sectionLogicalLength << std::endl;
 }
 #endif
 
@@ -101,7 +100,7 @@ bool VectorNodeImpl::isTypeEquivalent( NodeImplSharedPtr ni )
    if ( ni->type() != E57_VECTOR )
       return ( false );
 
-   shared_ptr<VectorNodeImpl> ai( static_pointer_cast<VectorNodeImpl>( ni ) );
+   std::shared_ptr<VectorNodeImpl> ai( std::static_pointer_cast<VectorNodeImpl>( ni ) );
 
    /// allowHeteroChildren must match
    if ( allowHeteroChildren_ != ai->allowHeteroChildren_ )
@@ -167,16 +166,16 @@ void VectorNodeImpl::writeXml( ImageFileImplSharedPtr imf, CheckedFile &cf, int 
 }
 
 #ifdef E57_DEBUG
-void VectorNodeImpl::dump( int indent, ostream &os ) const
+void VectorNodeImpl::dump( int indent, std::ostream &os ) const
 {
    /// don't checkImageFileOpen
    os << space( indent ) << "type:        Vector"
-      << " (" << type() << ")" << endl;
+      << " (" << type() << ")" << std::endl;
    NodeImpl::dump( indent, os );
-   os << space( indent ) << "allowHeteroChildren: " << allowHeteroChildren() << endl;
+   os << space( indent ) << "allowHeteroChildren: " << allowHeteroChildren() << std::endl;
    for ( unsigned i = 0; i < children_.size(); i++ )
    {
-      os << space( indent ) << "child[" << i << "]:" << endl;
+      os << space( indent ) << "child[" << i << "]:" << std::endl;
       children_.at( i )->dump( indent + 2, os );
    }
 }
@@ -229,7 +228,7 @@ NodeImplSharedPtr CompressedVectorNodeImpl::getPrototype()
    return ( prototype_ ); //??? check defined
 }
 
-void CompressedVectorNodeImpl::setCodecs( const shared_ptr<VectorNodeImpl> &codecs )
+void CompressedVectorNodeImpl::setCodecs( const std::shared_ptr<VectorNodeImpl> &codecs )
 {
    // don't checkImageFileOpen, ctor did it
 
@@ -263,7 +262,7 @@ void CompressedVectorNodeImpl::setCodecs( const shared_ptr<VectorNodeImpl> &code
    /// relationship. This means that codecs is a root node (has no parent).
 }
 
-shared_ptr<VectorNodeImpl> CompressedVectorNodeImpl::getCodecs()
+std::shared_ptr<VectorNodeImpl> CompressedVectorNodeImpl::getCodecs()
 {
    checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
    return ( codecs_ ); //??? check defined
@@ -279,7 +278,7 @@ bool CompressedVectorNodeImpl::isTypeEquivalent( NodeImplSharedPtr ni )
    if ( ni->type() != E57_COMPRESSED_VECTOR )
       return ( false );
 
-   shared_ptr<CompressedVectorNodeImpl> cvi( static_pointer_cast<CompressedVectorNodeImpl>( ni ) );
+   std::shared_ptr<CompressedVectorNodeImpl> cvi( std::static_pointer_cast<CompressedVectorNodeImpl>( ni ) );
 
    /// recordCount must match
    if ( recordCount_ != cvi->recordCount_ )
@@ -353,31 +352,31 @@ void CompressedVectorNodeImpl::writeXml( ImageFileImplSharedPtr imf, CheckedFile
 }
 
 #ifdef E57_DEBUG
-void CompressedVectorNodeImpl::dump( int indent, ostream &os ) const
+void CompressedVectorNodeImpl::dump( int indent, std::ostream &os ) const
 {
    os << space( indent ) << "type:        CompressedVector"
-      << " (" << type() << ")" << endl;
+      << " (" << type() << ")" << std::endl;
    NodeImpl::dump( indent, os );
    if ( prototype_ )
    {
-      os << space( indent ) << "prototype:" << endl;
+      os << space( indent ) << "prototype:" << std::endl;
       prototype_->dump( indent + 2, os );
    }
    else
-      os << space( indent ) << "prototype: <empty>" << endl;
+      os << space( indent ) << "prototype: <empty>" << std::endl;
    if ( codecs_ )
    {
-      os << space( indent ) << "codecs:" << endl;
+      os << space( indent ) << "codecs:" << std::endl;
       codecs_->dump( indent + 2, os );
    }
    else
-      os << space( indent ) << "codecs: <empty>" << endl;
-   os << space( indent ) << "recordCount:                " << recordCount_ << endl;
-   os << space( indent ) << "binarySectionLogicalStart:  " << binarySectionLogicalStart_ << endl;
+      os << space( indent ) << "codecs: <empty>" << std::endl;
+   os << space( indent ) << "recordCount:                " << recordCount_ << std::endl;
+   os << space( indent ) << "binarySectionLogicalStart:  " << binarySectionLogicalStart_ << std::endl;
 }
 #endif
 
-shared_ptr<CompressedVectorWriterImpl> CompressedVectorNodeImpl::writer( vector<SourceDestBuffer> sbufs )
+std::shared_ptr<CompressedVectorWriterImpl> CompressedVectorNodeImpl::writer( std::vector<SourceDestBuffer> sbufs )
 {
    checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
 
@@ -411,14 +410,14 @@ shared_ptr<CompressedVectorWriterImpl> CompressedVectorNodeImpl::writer( vector<
    NodeImplSharedPtr ni( shared_from_this() );
 
    /// Downcast pointer to right type
-   shared_ptr<CompressedVectorNodeImpl> cai( static_pointer_cast<CompressedVectorNodeImpl>( ni ) );
+   std::shared_ptr<CompressedVectorNodeImpl> cai( std::static_pointer_cast<CompressedVectorNodeImpl>( ni ) );
 
    /// Return a shared_ptr to new object
-   shared_ptr<CompressedVectorWriterImpl> cvwi( new CompressedVectorWriterImpl( cai, sbufs ) );
+   std::shared_ptr<CompressedVectorWriterImpl> cvwi( new CompressedVectorWriterImpl( cai, sbufs ) );
    return ( cvwi );
 }
 
-shared_ptr<CompressedVectorReaderImpl> CompressedVectorNodeImpl::reader( vector<SourceDestBuffer> dbufs )
+std::shared_ptr<CompressedVectorReaderImpl> CompressedVectorNodeImpl::reader( std::vector<SourceDestBuffer> dbufs )
 {
    checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
 
@@ -449,18 +448,18 @@ shared_ptr<CompressedVectorReaderImpl> CompressedVectorNodeImpl::reader( vector<
    /// Get pointer to me (really shared_ptr<CompressedVectorNodeImpl>)
    NodeImplSharedPtr ni( shared_from_this() );
 #ifdef E57_MAX_VERBOSE
-   // cout << "constructing CAReader, ni:" << endl;
+   // cout << "constructing CAReader, ni:" << std::endl;
    // ni->dump(4);
 #endif
 
    /// Downcast pointer to right type
-   shared_ptr<CompressedVectorNodeImpl> cai( static_pointer_cast<CompressedVectorNodeImpl>( ni ) );
+   std::shared_ptr<CompressedVectorNodeImpl> cai( std::static_pointer_cast<CompressedVectorNodeImpl>( ni ) );
 #ifdef E57_MAX_VERBOSE
-      // cout<<"constructing CAReader, cai:"<<endl;
-      // cai->dump(4);
+   // cout<<"constructing CAReader, cai:"<<endl;
+   // cai->dump(4);
 #endif
    /// Return a shared_ptr to new object
-   shared_ptr<CompressedVectorReaderImpl> cvri( new CompressedVectorReaderImpl( cai, dbufs ) );
+   std::shared_ptr<CompressedVectorReaderImpl> cvri( new CompressedVectorReaderImpl( cai, dbufs ) );
    return ( cvri );
 }
 
@@ -490,7 +489,7 @@ bool IntegerNodeImpl::isTypeEquivalent( NodeImplSharedPtr ni )
       return ( false );
 
    /// Downcast to shared_ptr<IntegerNodeImpl>
-   shared_ptr<IntegerNodeImpl> ii( static_pointer_cast<IntegerNodeImpl>( ni ) );
+   std::shared_ptr<IntegerNodeImpl> ii( std::static_pointer_cast<IntegerNodeImpl>( ni ) );
 
    /// minimum must match
    if ( minimum_ != ii->minimum_ )
@@ -568,15 +567,15 @@ void IntegerNodeImpl::writeXml( ImageFileImplSharedPtr /*imf???*/, CheckedFile &
 }
 
 #ifdef E57_DEBUG
-void IntegerNodeImpl::dump( int indent, ostream &os ) const
+void IntegerNodeImpl::dump( int indent, std::ostream &os ) const
 {
    // don't checkImageFileOpen
    os << space( indent ) << "type:        Integer"
-      << " (" << type() << ")" << endl;
+      << " (" << type() << ")" << std::endl;
    NodeImpl::dump( indent, os );
-   os << space( indent ) << "value:       " << value_ << endl;
-   os << space( indent ) << "minimum:     " << minimum_ << endl;
-   os << space( indent ) << "maximum:     " << maximum_ << endl;
+   os << space( indent ) << "value:       " << value_ << std::endl;
+   os << space( indent ) << "minimum:     " << minimum_ << std::endl;
+   os << space( indent ) << "maximum:     " << maximum_ << std::endl;
 }
 #endif
 
@@ -627,7 +626,7 @@ bool ScaledIntegerNodeImpl::isTypeEquivalent( NodeImplSharedPtr ni )
       return ( false );
 
    /// Downcast to shared_ptr<ScaledIntegerNodeImpl>
-   shared_ptr<ScaledIntegerNodeImpl> ii( static_pointer_cast<ScaledIntegerNodeImpl>( ni ) );
+   std::shared_ptr<ScaledIntegerNodeImpl> ii( std::static_pointer_cast<ScaledIntegerNodeImpl>( ni ) );
 
    /// minimum must match
    if ( minimum_ != ii->minimum_ )
@@ -745,17 +744,17 @@ void ScaledIntegerNodeImpl::writeXml( ImageFileImplSharedPtr /*imf*/, CheckedFil
 }
 
 #ifdef E57_DEBUG
-void ScaledIntegerNodeImpl::dump( int indent, ostream &os ) const
+void ScaledIntegerNodeImpl::dump( int indent, std::ostream &os ) const
 {
    // don't checkImageFileOpen
    os << space( indent ) << "type:        ScaledInteger"
-      << " (" << type() << ")" << endl;
+      << " (" << type() << ")" << std::endl;
    NodeImpl::dump( indent, os );
-   os << space( indent ) << "rawValue:    " << value_ << endl;
-   os << space( indent ) << "minimum:     " << minimum_ << endl;
-   os << space( indent ) << "maximum:     " << maximum_ << endl;
-   os << space( indent ) << "scale:       " << scale_ << endl;
-   os << space( indent ) << "offset:      " << offset_ << endl;
+   os << space( indent ) << "rawValue:    " << value_ << std::endl;
+   os << space( indent ) << "minimum:     " << minimum_ << std::endl;
+   os << space( indent ) << "maximum:     " << maximum_ << std::endl;
+   os << space( indent ) << "scale:       " << scale_ << std::endl;
+   os << space( indent ) << "offset:      " << offset_ << std::endl;
 }
 #endif
 
@@ -797,7 +796,7 @@ bool FloatNodeImpl::isTypeEquivalent( NodeImplSharedPtr ni )
       return ( false );
 
    /// Downcast to shared_ptr<FloatNodeImpl>
-   shared_ptr<FloatNodeImpl> fi( static_pointer_cast<FloatNodeImpl>( ni ) );
+   std::shared_ptr<FloatNodeImpl> fi( std::static_pointer_cast<FloatNodeImpl>( ni ) );
 
    /// precision must match
    if ( precision_ != fi->precision_ )
@@ -906,25 +905,25 @@ void FloatNodeImpl::writeXml( ImageFileImplSharedPtr /*imf*/, CheckedFile &cf, i
 }
 
 #ifdef E57_DEBUG
-void FloatNodeImpl::dump( int indent, ostream &os ) const
+void FloatNodeImpl::dump( int indent, std::ostream &os ) const
 {
    // don't checkImageFileOpen
    os << space( indent ) << "type:        Float"
-      << " (" << type() << ")" << endl;
+      << " (" << type() << ")" << std::endl;
    NodeImpl::dump( indent, os );
    os << space( indent ) << "precision:   ";
    if ( precision() == E57_SINGLE )
-      os << "single" << endl;
+      os << "single" << std::endl;
    else
-      os << "double" << endl;
+      os << "double" << std::endl;
 
    /// Save old stream config
-   const streamsize oldPrecision = os.precision();
-   const ios_base::fmtflags oldFlags = os.flags();
+   const std::streamsize oldPrecision = os.precision();
+   const std::ios_base::fmtflags oldFlags = os.flags();
 
-   os << space( indent ) << scientific << setprecision( 17 ) << "value:       " << value_ << endl;
-   os << space( indent ) << "minimum:     " << minimum_ << endl;
-   os << space( indent ) << "maximum:     " << maximum_ << endl;
+   os << space( indent ) << std::scientific << std::setprecision( 17 ) << "value:       " << value_ << std::endl;
+   os << space( indent ) << "minimum:     " << minimum_ << std::endl;
+   os << space( indent ) << "maximum:     " << maximum_ << std::endl;
 
    /// Restore old stream config
    os.precision( oldPrecision );
@@ -1008,7 +1007,7 @@ void StringNodeImpl::writeXml( ImageFileImplSharedPtr /*imf*/, CheckedFile &cf, 
       {
          size_t found = value_.find( "]]>", currentPosition );
 
-         if ( found == string::npos )
+         if ( found == std::string::npos )
          {
             /// Didn't find any more "]]>", so can send the rest.
             cf << value_.substr( currentPosition );
@@ -1030,12 +1029,12 @@ void StringNodeImpl::writeXml( ImageFileImplSharedPtr /*imf*/, CheckedFile &cf, 
 }
 
 #ifdef E57_DEBUG
-void StringNodeImpl::dump( int indent, ostream &os ) const
+void StringNodeImpl::dump( int indent, std::ostream &os ) const
 {
    os << space( indent ) << "type:        String"
-      << " (" << type() << ")" << endl;
+      << " (" << type() << ")" << std::endl;
    NodeImpl::dump( indent, os );
-   os << space( indent ) << "value:       '" << value_ << "'" << endl;
+   os << space( indent ) << "value:       '" << value_ << "'" << std::endl;
 }
 #endif
 
@@ -1096,7 +1095,7 @@ bool BlobNodeImpl::isTypeEquivalent( NodeImplSharedPtr ni )
       return ( false );
 
    /// Downcast to shared_ptr<BlobNodeImpl>
-   shared_ptr<BlobNodeImpl> bi( static_pointer_cast<BlobNodeImpl>( ni ) );
+   std::shared_ptr<BlobNodeImpl> bi( std::static_pointer_cast<BlobNodeImpl>( ni ) );
 
    /// blob lengths must match
    if ( blobLogicalLength_ != bi->blobLogicalLength_ )
@@ -1194,24 +1193,24 @@ void BlobNodeImpl::writeXml( ImageFileImplSharedPtr /*imf*/, CheckedFile &cf, in
 }
 
 #ifdef E57_DEBUG
-void BlobNodeImpl::dump( int indent, ostream &os ) const
+void BlobNodeImpl::dump( int indent, std::ostream &os ) const
 {
    // don't checkImageFileOpen
    os << space( indent ) << "type:        Blob"
-      << " (" << type() << ")" << endl;
+      << " (" << type() << ")" << std::endl;
    NodeImpl::dump( indent, os );
-   os << space( indent ) << "blobLogicalLength_:           " << blobLogicalLength_ << endl;
-   os << space( indent ) << "binarySectionLogicalStart:    " << binarySectionLogicalStart_ << endl;
-   os << space( indent ) << "binarySectionLogicalLength:   " << binarySectionLogicalLength_ << endl;
+   os << space( indent ) << "blobLogicalLength_:           " << blobLogicalLength_ << std::endl;
+   os << space( indent ) << "binarySectionLogicalStart:    " << binarySectionLogicalStart_ << std::endl;
+   os << space( indent ) << "binarySectionLogicalLength:   " << binarySectionLogicalLength_ << std::endl;
    //    size_t i;
    //    for (i = 0; i < blobLogicalLength_ && i < 10; i++) {
    //        uint8_t b;
    //        read(&b, i, 1);
    //        os << space(indent) << "data[" << i << "]: "<< static_cast<int>(b)
-   //        << endl;
+   //        << std::endl;
    //    }
    //    if (i < blobLogicalLength_)
-   //        os << space(indent) << "more data unprinted..." << endl;
+   //        os << space(indent) << "more data unprinted..." << std::endl;
 }
 #endif
 
@@ -1269,10 +1268,10 @@ void CompressedVectorSectionHeader::verify( uint64_t filePhysicalSize )
 #ifdef E57_DEBUG
 void CompressedVectorSectionHeader::dump( int indent, std::ostream &os ) const
 {
-   os << space( indent ) << "sectionId:            " << static_cast<unsigned>( sectionId ) << endl;
-   os << space( indent ) << "sectionLogicalLength: " << sectionLogicalLength << endl;
-   os << space( indent ) << "dataPhysicalOffset:   " << dataPhysicalOffset << endl;
-   os << space( indent ) << "indexPhysicalOffset:  " << indexPhysicalOffset << endl;
+   os << space( indent ) << "sectionId:            " << static_cast<unsigned>( sectionId ) << std::endl;
+   os << space( indent ) << "sectionLogicalLength: " << sectionLogicalLength << std::endl;
+   os << space( indent ) << "dataPhysicalOffset:   " << dataPhysicalOffset << std::endl;
+   os << space( indent ) << "indexPhysicalOffset:  " << indexPhysicalOffset << std::endl;
 }
 #endif
 
@@ -1280,14 +1279,14 @@ void CompressedVectorSectionHeader::dump( int indent, std::ostream &os ) const
 
 struct SortByBytestreamNumber
 {
-   bool operator()( const shared_ptr<Encoder> &lhs, const shared_ptr<Encoder> &rhs ) const
+   bool operator()( const std::shared_ptr<Encoder> &lhs, const std::shared_ptr<Encoder> &rhs ) const
    {
       return ( lhs->bytestreamNumber() < rhs->bytestreamNumber() );
    }
 };
 
-CompressedVectorWriterImpl::CompressedVectorWriterImpl( shared_ptr<CompressedVectorNodeImpl> ni,
-                                                        vector<SourceDestBuffer> &sbufs ) :
+CompressedVectorWriterImpl::CompressedVectorWriterImpl( std::shared_ptr<CompressedVectorNodeImpl> ni,
+                                                        std::vector<SourceDestBuffer> &sbufs ) :
    cVector_( ni ),
    isOpen_( false ) // set to true when succeed below
 {
@@ -1312,7 +1311,7 @@ CompressedVectorWriterImpl::CompressedVectorWriterImpl( shared_ptr<CompressedVec
    for ( unsigned i = 0; i < sbufs_.size(); i++ )
    {
       /// Create vector of single sbuf  ??? for now, may have groups later
-      vector<SourceDestBuffer> vTemp;
+      std::vector<SourceDestBuffer> vTemp;
       vTemp.push_back( sbufs_.at( i ) );
 
       ustring codecPath = sbufs_.at( i ).pathName();
@@ -1370,7 +1369,7 @@ CompressedVectorWriterImpl::CompressedVectorWriterImpl( shared_ptr<CompressedVec
 CompressedVectorWriterImpl::~CompressedVectorWriterImpl()
 {
 #ifdef E57_MAX_VERBOSE
-   cout << "~CompressedVectorWriterImpl() called" << endl; //???
+   cout << "~CompressedVectorWriterImpl() called" << std::endl; //???
 #endif
 
    try
@@ -1387,7 +1386,7 @@ CompressedVectorWriterImpl::~CompressedVectorWriterImpl()
 void CompressedVectorWriterImpl::close()
 {
 #ifdef E57_MAX_VERBOSE
-   cout << "CompressedVectorWriterImpl::close() called" << endl; //???
+   cout << "CompressedVectorWriterImpl::close() called" << std::endl; //???
 #endif
    ImageFileImplSharedPtr imf( cVector_->destImageFile_ );
 
@@ -1419,7 +1418,7 @@ void CompressedVectorWriterImpl::close()
    /// current start of free space).
    sectionLogicalLength_ = imf->unusedLogicalStart_ - sectionHeaderLogicalStart_;
 #ifdef E57_MAX_VERBOSE
-   cout << "  sectionLogicalLength_=" << sectionLogicalLength_ << endl; //???
+   cout << "  sectionLogicalLength_=" << sectionLogicalLength_ << std::endl; //???
 #endif
 
    /// Prepare CompressedVectorSectionHeader
@@ -1429,7 +1428,7 @@ void CompressedVectorWriterImpl::close()
    header.indexPhysicalOffset = topIndexPhysicalOffset_; ///??? can be zero, if no data written ???not set
                                                          /// yet
 #ifdef E57_MAX_VERBOSE
-   cout << "  CompressedVectorSectionHeader:" << endl;
+   cout << "  CompressedVectorSectionHeader:" << std::endl;
    header.dump( 4 ); //???
 #endif
 #ifdef E57_DEBUG
@@ -1449,7 +1448,7 @@ void CompressedVectorWriterImpl::close()
    bytestreams_.clear();
 
 #ifdef E57_MAX_VERBOSE
-   cout << "  CompressedVectorWriter:" << endl;
+   cout << "  CompressedVectorWriter:" << std::endl;
    dump( 4 );
 #endif
 }
@@ -1466,7 +1465,7 @@ std::shared_ptr<CompressedVectorNodeImpl> CompressedVectorWriterImpl::compressed
    return cVector_;
 }
 
-void CompressedVectorWriterImpl::setBuffers( vector<SourceDestBuffer> &sbufs )
+void CompressedVectorWriterImpl::setBuffers( std::vector<SourceDestBuffer> &sbufs )
 {
    /// don't checkImageFileOpen
 
@@ -1482,8 +1481,8 @@ void CompressedVectorWriterImpl::setBuffers( vector<SourceDestBuffer> &sbufs )
 
       for ( size_t i = 0; i < sbufs_.size(); ++i )
       {
-         shared_ptr<SourceDestBufferImpl> oldbuf = sbufs_[i].impl();
-         shared_ptr<SourceDestBufferImpl> newBuf = sbufs[i].impl();
+         std::shared_ptr<SourceDestBufferImpl> oldbuf = sbufs_[i].impl();
+         std::shared_ptr<SourceDestBufferImpl> newBuf = sbufs[i].impl();
 
          /// Throw exception if old and new not compatible
          oldbuf->checkCompatible( newBuf );
@@ -1498,7 +1497,7 @@ void CompressedVectorWriterImpl::setBuffers( vector<SourceDestBuffer> &sbufs )
    sbufs_ = sbufs;
 }
 
-void CompressedVectorWriterImpl::write( vector<SourceDestBuffer> &sbufs, const size_t requestedRecordCount )
+void CompressedVectorWriterImpl::write( std::vector<SourceDestBuffer> &sbufs, const size_t requestedRecordCount )
 {
    /// don't checkImageFileOpen, write(unsigned) will do it
    /// don't checkWriterOpen(), write(unsigned) will do it
@@ -1510,7 +1509,7 @@ void CompressedVectorWriterImpl::write( vector<SourceDestBuffer> &sbufs, const s
 void CompressedVectorWriterImpl::write( const size_t requestedRecordCount )
 {
 #ifdef E57_MAX_VERBOSE
-   cout << "CompressedVectorWriterImpl::write() called" << endl; //???
+   cout << "CompressedVectorWriterImpl::write() called" << std::endl; //???
 #endif
    checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
    checkWriterOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
@@ -1541,7 +1540,7 @@ void CompressedVectorWriterImpl::write( const size_t requestedRecordCount )
          totalRecordCount += endRecordIndex - bytestream->currentRecordIndex();
       }
 #ifdef E57_MAX_VERBOSE
-      cout << "  totalRecordCount=" << totalRecordCount << endl; //???
+      cout << "  totalRecordCount=" << totalRecordCount << std::endl; //???
 #endif
 
       /// We are done if have no more work, break out of loop
@@ -1558,7 +1557,7 @@ void CompressedVectorWriterImpl::write( const size_t requestedRecordCount )
          /// packets is efficient).
 
 #ifdef E57_MAX_VERBOSE
-      cout << "  currentPacketSize()=" << currentPacketSize() << endl; //???
+      cout << "  currentPacketSize()=" << currentPacketSize() << std::endl; //???
 #endif
 
 #ifdef E57_WRITE_CRAZY_PACKET_MODE
@@ -1587,7 +1586,7 @@ void CompressedVectorWriterImpl::write( const size_t requestedRecordCount )
 #ifdef E57_MAX_VERBOSE
       float totalBytesPerRecord = max( totalBitsPerRecord / 8, 0.1F ); //??? trust
 
-      cout << "  totalBytesPerRecord=" << totalBytesPerRecord << endl; //???
+      cout << "  totalBytesPerRecord=" << totalBytesPerRecord << std::endl; //???
 #endif
 
       /// Don't allow straggler to get too far behind. ???
@@ -1636,7 +1635,7 @@ size_t CompressedVectorWriterImpl::currentPacketSize() const
 uint64_t CompressedVectorWriterImpl::packetWrite()
 {
 #ifdef E57_MAX_VERBOSE
-   cout << "CompressedVectorWriterImpl::packetWrite() called" << endl; //???
+   cout << "CompressedVectorWriterImpl::packetWrite() called" << std::endl; //???
 #endif
 
    /// Double check that we have work to do
@@ -1644,19 +1643,19 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
    if ( totalOutput == 0 )
       return ( 0 );
 #ifdef E57_MAX_VERBOSE
-   cout << "  totalOutput=" << totalOutput << endl; //???
+   cout << "  totalOutput=" << totalOutput << std::endl; //???
 #endif
 
    /// Calc maximum number of bytestream values can put in data packet.
    size_t packetMaxPayloadBytes =
       DATA_PACKET_MAX - sizeof( DataPacketHeader ) - bytestreams_.size() * sizeof( uint16_t );
 #ifdef E57_MAX_VERBOSE
-   cout << "  packetMaxPayloadBytes=" << packetMaxPayloadBytes << endl; //???
+   cout << "  packetMaxPayloadBytes=" << packetMaxPayloadBytes << std::endl; //???
 #endif
 
    /// Allocate vector for number of bytes that each bytestream will write to
    /// file.
-   vector<size_t> count( bytestreams_.size() );
+   std::vector<size_t> count( bytestreams_.size() );
 
    /// See if we can fit into a single data packet
    if ( totalOutput < packetMaxPayloadBytes )
@@ -1679,7 +1678,7 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
    }
 #ifdef E57_MAX_VERBOSE
    for ( unsigned i = 0; i < bytestreams_.size(); i++ )
-      cout << "  count[" << i << "]=" << count.at( i ) << endl; //???
+      cout << "  count[" << i << "]=" << count.at( i ) << std::endl; //???
 #endif
 
 #ifdef E57_DEBUG
@@ -1701,7 +1700,7 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
    /// here
    char *packet = reinterpret_cast<char *>( &dataPacket_ );
 #ifdef E57_MAX_VERBOSE
-   cout << "  packet=" << packet << endl; //???
+   cout << "  packet=" << packet << std::endl; //???
 #endif
 
    /// To be safe, clear header part of packet
@@ -1711,20 +1710,20 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
    /// dataPacket_
    auto bsbLength = reinterpret_cast<uint16_t *>( &packet[sizeof( DataPacketHeader )] );
 #ifdef E57_MAX_VERBOSE
-   cout << "  bsbLength=" << bsbLength << endl; //???
+   cout << "  bsbLength=" << bsbLength << std::endl; //???
 #endif
    for ( unsigned i = 0; i < bytestreams_.size(); i++ )
    {
       bsbLength[i] = static_cast<uint16_t>( count.at( i ) ); // %%% Truncation
 #ifdef E57_MAX_VERBOSE
-      cout << "  Writing " << bsbLength[i] << " bytes into bytestream " << i << endl; //???
+      cout << "  Writing " << bsbLength[i] << " bytes into bytestream " << i << std::endl; //???
 #endif
    }
 
    /// Get pointer to end of data so far
    char *p = reinterpret_cast<char *>( &bsbLength[bytestreams_.size()] );
 #ifdef E57_MAX_VERBOSE
-   cout << "  after bsbLength, p=" << p << endl; //???
+   cout << "  after bsbLength, p=" << p << std::endl; //???
 #endif
 
    /// Write contents of each bytestream in dataPacket_
@@ -1749,7 +1748,7 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
    /// Length of packet is difference in beginning pointer and ending pointer
    auto packetLength = static_cast<unsigned>( p - packet ); ///??? pointer diff portable?
 #ifdef E57_MAX_VERBOSE
-   cout << "  packetLength=" << packetLength << endl; //???
+   cout << "  packetLength=" << packetLength << std::endl; //???
 #endif
 
 #ifdef E57_DEBUG
@@ -1772,7 +1771,7 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
       *p++ = 0;
       packetLength++;
 #ifdef E57_MAX_VERBOSE
-      cout << "  padding with zero byte, new packetLength=" << packetLength << endl; //???
+      cout << "  padding with zero byte, new packetLength=" << packetLength << std::endl; //???
 #endif
    }
 
@@ -1791,7 +1790,7 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
    imf->file_->write( packet, packetLength );
 
 #ifdef E57_MAX_VERBOSE
-//  cout << "data packet:" << endl;
+//  cout << "data packet:" << std::endl;
 //  dataPacket_.dump(4);
 #endif
 
@@ -1838,57 +1837,57 @@ void CompressedVectorWriterImpl::checkWriterOpen( const char *srcFileName, int s
 
 void CompressedVectorWriterImpl::dump( int indent, std::ostream &os )
 {
-   os << space( indent ) << "isOpen:" << isOpen_ << endl;
+   os << space( indent ) << "isOpen:" << isOpen_ << std::endl;
 
    for ( unsigned i = 0; i < sbufs_.size(); i++ )
    {
-      os << space( indent ) << "sbufs[" << i << "]:" << endl;
+      os << space( indent ) << "sbufs[" << i << "]:" << std::endl;
       sbufs_.at( i ).dump( indent + 4, os );
    }
 
-   os << space( indent ) << "cVector:" << endl;
+   os << space( indent ) << "cVector:" << std::endl;
    cVector_->dump( indent + 4, os );
 
-   os << space( indent ) << "proto:" << endl;
+   os << space( indent ) << "proto:" << std::endl;
    proto_->dump( indent + 4, os );
 
    for ( unsigned i = 0; i < bytestreams_.size(); i++ )
    {
-      os << space( indent ) << "bytestreams[" << i << "]:" << endl;
+      os << space( indent ) << "bytestreams[" << i << "]:" << std::endl;
       bytestreams_.at( i )->dump( indent + 4, os );
    }
 
    /// Don't call dump() for DataPacket, since it may contain junk when
    /// debugging.  Just print a few byte values.
-   os << space( indent ) << "dataPacket:" << endl;
+   os << space( indent ) << "dataPacket:" << std::endl;
    auto p = reinterpret_cast<uint8_t *>( &dataPacket_ );
 
    for ( unsigned i = 0; i < 40; ++i )
    {
-      os << space( indent + 4 ) << "dataPacket[" << i << "]: " << static_cast<unsigned>( p[i] ) << endl;
+      os << space( indent + 4 ) << "dataPacket[" << i << "]: " << static_cast<unsigned>( p[i] ) << std::endl;
    }
-   os << space( indent + 4 ) << "more unprinted..." << endl;
+   os << space( indent + 4 ) << "more unprinted..." << std::endl;
 
-   os << space( indent ) << "sectionHeaderLogicalStart: " << sectionHeaderLogicalStart_ << endl;
-   os << space( indent ) << "sectionLogicalLength:      " << sectionLogicalLength_ << endl;
-   os << space( indent ) << "dataPhysicalOffset:        " << dataPhysicalOffset_ << endl;
-   os << space( indent ) << "topIndexPhysicalOffset:    " << topIndexPhysicalOffset_ << endl;
-   os << space( indent ) << "recordCount:               " << recordCount_ << endl;
-   os << space( indent ) << "dataPacketsCount:          " << dataPacketsCount_ << endl;
-   os << space( indent ) << "indexPacketsCount:         " << indexPacketsCount_ << endl;
+   os << space( indent ) << "sectionHeaderLogicalStart: " << sectionHeaderLogicalStart_ << std::endl;
+   os << space( indent ) << "sectionLogicalLength:      " << sectionLogicalLength_ << std::endl;
+   os << space( indent ) << "dataPhysicalOffset:        " << dataPhysicalOffset_ << std::endl;
+   os << space( indent ) << "topIndexPhysicalOffset:    " << topIndexPhysicalOffset_ << std::endl;
+   os << space( indent ) << "recordCount:               " << recordCount_ << std::endl;
+   os << space( indent ) << "dataPacketsCount:          " << dataPacketsCount_ << std::endl;
+   os << space( indent ) << "indexPacketsCount:         " << indexPacketsCount_ << std::endl;
 }
 
 ///================================================================
 ///================================================================
 ///================================================================
 
-CompressedVectorReaderImpl::CompressedVectorReaderImpl( shared_ptr<CompressedVectorNodeImpl> cvi,
-                                                        vector<SourceDestBuffer> &dbufs ) :
+CompressedVectorReaderImpl::CompressedVectorReaderImpl( std::shared_ptr<CompressedVectorNodeImpl> cvi,
+                                                        std::vector<SourceDestBuffer> &dbufs ) :
    isOpen_( false ), // set to true when succeed below
    cVector_( cvi )
 {
 #ifdef E57_MAX_VERBOSE
-   cout << "CompressedVectorReaderImpl() called" << endl; //???
+   cout << "CompressedVectorReaderImpl() called" << std::endl; //???
 #endif
    checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
 
@@ -1916,10 +1915,10 @@ CompressedVectorReaderImpl::CompressedVectorReaderImpl( shared_ptr<CompressedVec
    /// attributes
    for ( unsigned i = 0; i < dbufs_.size(); i++ )
    {
-      vector<SourceDestBuffer> theDbuf;
+      std::vector<SourceDestBuffer> theDbuf;
       theDbuf.push_back( dbufs.at( i ) );
 
-      shared_ptr<Decoder> decoder = Decoder::DecoderFactory( i, cVector_, theDbuf, ustring() );
+      std::shared_ptr<Decoder> decoder = Decoder::DecoderFactory( i, cVector_, theDbuf, ustring() );
 
       /// Calc which stream the given path belongs to.  This depends on position
       /// of the node in the proto tree.
@@ -1970,7 +1969,7 @@ CompressedVectorReaderImpl::CompressedVectorReaderImpl( shared_ptr<CompressedVec
    /// init channels
    {
       char *anyPacket = nullptr;
-      unique_ptr<PacketLock> packetLock = cache_->lock( dataLogicalOffset, anyPacket );
+      std::unique_ptr<PacketLock> packetLock = cache_->lock( dataLogicalOffset, anyPacket );
 
       auto dpkt = reinterpret_cast<DataPacket *>( anyPacket );
 
@@ -2000,8 +1999,8 @@ CompressedVectorReaderImpl::CompressedVectorReaderImpl( shared_ptr<CompressedVec
 CompressedVectorReaderImpl::~CompressedVectorReaderImpl()
 {
 #ifdef E57_MAX_VERBOSE
-   cout << "~CompressedVectorReaderImpl() called" << endl; //???
-                                                           // dump(4);
+   cout << "~CompressedVectorReaderImpl() called" << std::endl; //???
+                                                                // dump(4);
 #endif
 
    if ( isOpen_ )
@@ -2017,7 +2016,7 @@ CompressedVectorReaderImpl::~CompressedVectorReaderImpl()
    }
 }
 
-void CompressedVectorReaderImpl::setBuffers( vector<SourceDestBuffer> &dbufs )
+void CompressedVectorReaderImpl::setBuffers( std::vector<SourceDestBuffer> &dbufs )
 {
    /// don't checkImageFileOpen
    /// don't checkReaderOpen
@@ -2036,8 +2035,8 @@ void CompressedVectorReaderImpl::setBuffers( vector<SourceDestBuffer> &dbufs )
       }
       for ( size_t i = 0; i < dbufs_.size(); i++ )
       {
-         shared_ptr<SourceDestBufferImpl> oldBuf = dbufs_[i].impl();
-         shared_ptr<SourceDestBufferImpl> newBuf = dbufs[i].impl();
+         std::shared_ptr<SourceDestBufferImpl> oldBuf = dbufs_[i].impl();
+         std::shared_ptr<SourceDestBufferImpl> newBuf = dbufs[i].impl();
 
          /// Throw exception if old and new not compatible
          oldBuf->checkCompatible( newBuf );
@@ -2047,7 +2046,7 @@ void CompressedVectorReaderImpl::setBuffers( vector<SourceDestBuffer> &dbufs )
    dbufs_ = dbufs;
 }
 
-unsigned CompressedVectorReaderImpl::read( vector<SourceDestBuffer> &dbufs )
+unsigned CompressedVectorReaderImpl::read( std::vector<SourceDestBuffer> &dbufs )
 {
    /// don't checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__), read() will
    /// do it
@@ -2063,7 +2062,7 @@ unsigned CompressedVectorReaderImpl::read( vector<SourceDestBuffer> &dbufs )
 unsigned CompressedVectorReaderImpl::read()
 {
 #ifdef E57_MAX_VERBOSE
-   cout << "CompressedVectorReaderImpl::read() called" << endl; //???
+   cout << "CompressedVectorReaderImpl::read() called" << std::endl; //???
 #endif
    checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
    checkReaderOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
@@ -2149,10 +2148,10 @@ uint64_t CompressedVectorReaderImpl::earliestPacketNeededForInput() const
    }
 #ifdef E57_MAX_VERBOSE
    if ( earliestPacketLogicalOffset == E57_UINT64_MAX )
-      cout << "earliestPacketNeededForInput returning none found" << endl;
+      cout << "earliestPacketNeededForInput returning none found" << std::endl;
    else
       cout << "earliestPacketNeededForInput returning " << earliestPacketLogicalOffset << " for channel["
-           << earliestChannel << "]" << endl;
+           << earliestChannel << "]" << std::endl;
 #endif
    return earliestPacketLogicalOffset;
 }
@@ -2161,7 +2160,7 @@ DataPacket *CompressedVectorReaderImpl::dataPacket( uint64_t inLogicalOffset ) c
 {
    char *packet = nullptr;
 
-   unique_ptr<PacketLock> packetLock = cache_->lock( inLogicalOffset, packet );
+   std::unique_ptr<PacketLock> packetLock = cache_->lock( inLogicalOffset, packet );
 
    return reinterpret_cast<DataPacket *>( packet );
 }
@@ -2219,13 +2218,14 @@ void CompressedVectorReaderImpl::feedPacketToDecoders( uint64_t currentPacketLog
       size_t bytesProcessed = channel.decoder->inputProcess( uneatenStart, uneatenLength );
 
 #ifdef E57_MAX_VERBOSE
-      cout << "  stream[" << channel.bytestreamNumber << "]: feeding decoder " << uneatenLength << " bytes" << endl;
+      cout << "  stream[" << channel.bytestreamNumber << "]: feeding decoder " << uneatenLength << " bytes"
+           << std::endl;
       if ( uneatenLength == 0 )
       {
          channel.dump( 8 );
       }
 
-      cout << "  stream[" << channel.bytestreamNumber << "]: bytesProcessed=" << bytesProcessed << endl;
+      cout << "  stream[" << channel.bytestreamNumber << "]: bytesProcessed=" << bytesProcessed << std::endl;
 #endif
 
       /// Adjust counts of bytestream location
@@ -2236,7 +2236,7 @@ void CompressedVectorReaderImpl::feedPacketToDecoders( uint64_t currentPacketLog
       if ( channel.isInputBlocked() )
       {
 #ifdef E57_MAX_VERBOSE
-         cout << "  stream[" << channel.bytestreamNumber << "] has exhausted its input in current packet" << endl;
+         cout << "  stream[" << channel.bytestreamNumber << "] has exhausted its input in current packet" << std::endl;
 #endif
          channelHasExhaustedPacket = true;
          nextPacketLogicalOffset = currentPacketLogicalOffset + dpkt->header.packetLogicalLengthMinus1 + 1;
@@ -2269,7 +2269,7 @@ void CompressedVectorReaderImpl::feedPacketToDecoders( uint64_t currentPacketLog
 
 #ifdef E57_MAX_VERBOSE
                cout << "  set new stream buffer for channel[" << channel.bytestreamNumber
-                    << "], length=" << channel.currentBytestreamBufferLength << endl;
+                    << "], length=" << channel.currentBytestreamBufferLength << std::endl;
 #endif
                /// ??? perform flush if new packet flag set?
             }
@@ -2280,7 +2280,7 @@ void CompressedVectorReaderImpl::feedPacketToDecoders( uint64_t currentPacketLog
          /// Reached end without finding data packet, mark exhausted channels as
          /// finished
 #ifdef E57_MAX_VERBOSE
-         cout << "  at end of data packets" << endl;
+         cout << "  at end of data packets" << std::endl;
 #endif
          if ( nextPacketLogicalOffset >= sectionEndLogicalOffset_ )
          {
@@ -2289,7 +2289,7 @@ void CompressedVectorReaderImpl::feedPacketToDecoders( uint64_t currentPacketLog
                if ( ( channel.currentPacketLogicalOffset == currentPacketLogicalOffset ) && channel.isInputBlocked() )
                {
 #ifdef E57_MAX_VERBOSE
-                  cout << "  Marking channel[" << channel.bytestreamNumber << "] as finished" << endl;
+                  cout << "  Marking channel[" << channel.bytestreamNumber << "] as finished" << std::endl;
 #endif
                   channel.inputFinished = true;
                }
@@ -2303,7 +2303,7 @@ uint64_t CompressedVectorReaderImpl::findNextDataPacket( uint64_t nextPacketLogi
 {
 #ifdef E57_MAX_VERBOSE
    cout << "  searching for next data packet, nextPacketLogicalOffset=" << nextPacketLogicalOffset
-        << " sectionEndLogicalOffset=" << sectionEndLogicalOffset_ << endl;
+        << " sectionEndLogicalOffset=" << sectionEndLogicalOffset_ << std::endl;
 #endif
 
    /// Starting at nextPacketLogicalOffset, search for next data packet until
@@ -2312,7 +2312,7 @@ uint64_t CompressedVectorReaderImpl::findNextDataPacket( uint64_t nextPacketLogi
    {
       char *anyPacket = nullptr;
 
-      unique_ptr<PacketLock> packetLock = cache_->lock( nextPacketLogicalOffset, anyPacket );
+      std::unique_ptr<PacketLock> packetLock = cache_->lock( nextPacketLogicalOffset, anyPacket );
 
       /// Guess it's a data packet, if not continue to next packet
       auto dpkt = reinterpret_cast<const DataPacket *>( anyPacket );
@@ -2320,7 +2320,7 @@ uint64_t CompressedVectorReaderImpl::findNextDataPacket( uint64_t nextPacketLogi
       if ( dpkt->header.packetType == DATA_PACKET )
       {
 #ifdef E57_MAX_VERBOSE
-         cout << "  Found next data packet at nextPacketLogicalOffset=" << nextPacketLogicalOffset << endl;
+         cout << "  Found next data packet at nextPacketLogicalOffset=" << nextPacketLogicalOffset << std::endl;
 #endif
          return nextPacketLogicalOffset;
       }
@@ -2394,35 +2394,35 @@ void CompressedVectorReaderImpl::checkReaderOpen( const char *srcFileName, int s
 
 void CompressedVectorReaderImpl::dump( int indent, std::ostream &os )
 {
-   os << space( indent ) << "isOpen:" << isOpen_ << endl;
+   os << space( indent ) << "isOpen:" << isOpen_ << std::endl;
 
    for ( unsigned i = 0; i < dbufs_.size(); i++ )
    {
-      os << space( indent ) << "dbufs[" << i << "]:" << endl;
+      os << space( indent ) << "dbufs[" << i << "]:" << std::endl;
       dbufs_[i].dump( indent + 4, os );
    }
 
-   os << space( indent ) << "cVector:" << endl;
+   os << space( indent ) << "cVector:" << std::endl;
    cVector_->dump( indent + 4, os );
 
-   os << space( indent ) << "proto:" << endl;
+   os << space( indent ) << "proto:" << std::endl;
    proto_->dump( indent + 4, os );
 
    for ( unsigned i = 0; i < channels_.size(); i++ )
    {
-      os << space( indent ) << "channels[" << i << "]:" << endl;
+      os << space( indent ) << "channels[" << i << "]:" << std::endl;
       channels_[i].dump( indent + 4, os );
    }
 
-   os << space( indent ) << "recordCount:             " << recordCount_ << endl;
-   os << space( indent ) << "maxRecordCount:          " << maxRecordCount_ << endl;
-   os << space( indent ) << "sectionEndLogicalOffset: " << sectionEndLogicalOffset_ << endl;
+   os << space( indent ) << "recordCount:             " << recordCount_ << std::endl;
+   os << space( indent ) << "maxRecordCount:          " << maxRecordCount_ << std::endl;
+   os << space( indent ) << "sectionEndLogicalOffset: " << sectionEndLogicalOffset_ << std::endl;
 }
 
 //================================================================
 
-DecodeChannel::DecodeChannel( SourceDestBuffer dbuf_arg, shared_ptr<Decoder> decoder_arg, unsigned bytestreamNumber_arg,
-                              uint64_t maxRecordCount_arg ) :
+DecodeChannel::DecodeChannel( SourceDestBuffer dbuf_arg, std::shared_ptr<Decoder> decoder_arg,
+                              unsigned bytestreamNumber_arg, uint64_t maxRecordCount_arg ) :
    dbuf( dbuf_arg ),
    decoder( decoder_arg ), bytestreamNumber( bytestreamNumber_arg )
 {
@@ -2455,18 +2455,18 @@ bool DecodeChannel::isInputBlocked() const
 
 void DecodeChannel::dump( int indent, std::ostream &os )
 {
-   os << space( indent ) << "dbuf" << endl;
+   os << space( indent ) << "dbuf" << std::endl;
    dbuf.dump( indent + 4, os );
 
-   os << space( indent ) << "decoder:" << endl;
+   os << space( indent ) << "decoder:" << std::endl;
    decoder->dump( indent + 4, os );
 
-   os << space( indent ) << "bytestreamNumber:              " << bytestreamNumber << endl;
-   os << space( indent ) << "maxRecordCount:                " << maxRecordCount << endl;
-   os << space( indent ) << "currentPacketLogicalOffset:    " << currentPacketLogicalOffset << endl;
-   os << space( indent ) << "currentBytestreamBufferIndex:  " << currentBytestreamBufferIndex << endl;
-   os << space( indent ) << "currentBytestreamBufferLength: " << currentBytestreamBufferLength << endl;
-   os << space( indent ) << "inputFinished:                 " << inputFinished << endl;
-   os << space( indent ) << "isInputBlocked():              " << isInputBlocked() << endl;
-   os << space( indent ) << "isOutputBlocked():             " << isOutputBlocked() << endl;
+   os << space( indent ) << "bytestreamNumber:              " << bytestreamNumber << std::endl;
+   os << space( indent ) << "maxRecordCount:                " << maxRecordCount << std::endl;
+   os << space( indent ) << "currentPacketLogicalOffset:    " << currentPacketLogicalOffset << std::endl;
+   os << space( indent ) << "currentBytestreamBufferIndex:  " << currentBytestreamBufferIndex << std::endl;
+   os << space( indent ) << "currentBytestreamBufferLength: " << currentBytestreamBufferLength << std::endl;
+   os << space( indent ) << "inputFinished:                 " << inputFinished << std::endl;
+   os << space( indent ) << "isInputBlocked():              " << isInputBlocked() << std::endl;
+   os << space( indent ) << "isOutputBlocked():             " << isOutputBlocked() << std::endl;
 }

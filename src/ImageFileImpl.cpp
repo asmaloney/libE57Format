@@ -550,7 +550,7 @@ namespace e57
    {
 #ifdef E57_MAX_VERBOSE
       // cout << "isElementNameLegal elementName=""" << elementName << """" <<
-      // endl;
+      // std::endl;
 #endif
       try
       {
@@ -571,7 +571,7 @@ namespace e57
    bool ImageFileImpl::isPathNameLegal( const ustring &pathName )
    {
 #ifdef E57_MAX_VERBOSE
-      // cout << "isPathNameLegal elementName=""" << pathName << """" << endl;
+      // cout << "isPathNameLegal elementName=""" << pathName << """" << std::endl;
 #endif
       try
       {

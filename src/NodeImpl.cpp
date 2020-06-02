@@ -31,7 +31,6 @@
 #include "SourceDestBufferImpl.h"
 
 using namespace e57;
-using namespace std;
 
 NodeImpl::NodeImpl( ImageFileImplWeakPtr destImageFile ) : destImageFile_( destImageFile ), isAttached_( false )
 {
@@ -210,7 +209,7 @@ bool NodeImpl::isTypeConstrained()
          case E57_VECTOR:
          {
             /// Downcast to shared_ptr<VectorNodeImpl>
-            shared_ptr<VectorNodeImpl> ai( static_pointer_cast<VectorNodeImpl>( p ) );
+            std::shared_ptr<VectorNodeImpl> ai( std::static_pointer_cast<VectorNodeImpl>( p ) );
 
             /// If homogenous vector and have more than one child, then can't
             /// change them
@@ -269,7 +268,7 @@ void NodeImpl::set( const StringList & /*fields*/, unsigned /*level*/, NodeImplS
    throw E57_EXCEPTION1( E57_ERROR_BAD_PATH_NAME ); //???
 }
 
-void NodeImpl::checkBuffers( const vector<SourceDestBuffer> &sdbufs,
+void NodeImpl::checkBuffers( const std::vector<SourceDestBuffer> &sdbufs,
                              bool allowMissing ) //??? convert sdbufs to vector of shared_ptr
 {
    /// this node is prototype of CompressedVector
@@ -370,12 +369,12 @@ bool NodeImpl::findTerminalPosition( const NodeImplSharedPtr &target, uint64_t &
 }
 
 #ifdef E57_DEBUG
-void NodeImpl::dump( int indent, ostream &os ) const
+void NodeImpl::dump( int indent, std::ostream &os ) const
 {
    /// don't checkImageFileOpen
-   os << space( indent ) << "elementName: " << elementName_ << endl;
-   os << space( indent ) << "isAttached:  " << isAttached_ << endl;
-   os << space( indent ) << "path:        " << pathName() << endl;
+   os << space( indent ) << "elementName: " << elementName_ << std::endl;
+   os << space( indent ) << "isAttached:  " << isAttached_ << std::endl;
+   os << space( indent ) << "path:        " << pathName() << std::endl;
 }
 
 bool NodeImpl::_verifyPathNameAbsolute( const ustring &inPathName )
@@ -384,7 +383,7 @@ bool NodeImpl::_verifyPathNameAbsolute( const ustring &inPathName )
 
    /// Parse to determine if pathName is absolute
    bool isRelative = false;
-   vector<ustring> fields;
+   std::vector<ustring> fields;
    ImageFileImplSharedPtr imf( destImageFile_ );
 
    imf->pathNameParse( inPathName, isRelative,

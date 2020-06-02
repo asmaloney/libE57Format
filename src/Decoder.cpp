@@ -34,11 +34,10 @@
 #include "SourceDestBufferImpl.h"
 
 using namespace e57;
-using namespace std;
 
-shared_ptr<Decoder> Decoder::DecoderFactory( unsigned bytestreamNumber, //!!! name ok?
-                                             shared_ptr<CompressedVectorNodeImpl> cVector,
-                                             vector<SourceDestBuffer> &dbufs, const ustring & /*codecPath*/ )
+std::shared_ptr<Decoder> Decoder::DecoderFactory( unsigned bytestreamNumber, //!!! name ok?
+                                                  std::shared_ptr<CompressedVectorNodeImpl> cVector,
+                                                  std::vector<SourceDestBuffer> &dbufs, const ustring & /*codecPath*/ )
 {
    //!!! verify single dbuf
 
@@ -48,7 +47,7 @@ shared_ptr<Decoder> Decoder::DecoderFactory( unsigned bytestreamNumber, //!!! na
    NodeImplSharedPtr decodeNode = prototype->get( path );
 
 #ifdef E57_MAX_VERBOSE
-   cout << "Node to decode:" << endl; //???
+   cout << "Node to decode:" << std::endl; //???
    decodeNode->dump( 2 );
 #endif
 
@@ -58,8 +57,8 @@ shared_ptr<Decoder> Decoder::DecoderFactory( unsigned bytestreamNumber, //!!! na
    {
       case E57_INTEGER:
       {
-         shared_ptr<IntegerNodeImpl> ini =
-            static_pointer_cast<IntegerNodeImpl>( decodeNode ); // downcast to correct type
+         std::shared_ptr<IntegerNodeImpl> ini =
+            std::static_pointer_cast<IntegerNodeImpl>( decodeNode ); // downcast to correct type
 
          /// Get pointer to parent ImageFileImpl, to call bitsNeeded()
          ImageFileImplSharedPtr imf( decodeNode->destImageFile_ ); //??? should be function for this,
@@ -73,41 +72,41 @@ shared_ptr<Decoder> Decoder::DecoderFactory( unsigned bytestreamNumber, //!!! na
          /// number of bits stored.
          if ( bitsPerRecord == 0 )
          {
-            shared_ptr<Decoder> decoder( new ConstantIntegerDecoder( false, bytestreamNumber, dbufs.at( 0 ),
-                                                                     ini->minimum(), 1.0, 0.0, maxRecordCount ) );
+            std::shared_ptr<Decoder> decoder( new ConstantIntegerDecoder( false, bytestreamNumber, dbufs.at( 0 ),
+                                                                          ini->minimum(), 1.0, 0.0, maxRecordCount ) );
             return decoder;
          }
 
          if ( bitsPerRecord <= 8 )
          {
-            shared_ptr<Decoder> decoder( new BitpackIntegerDecoder<uint8_t>(
+            std::shared_ptr<Decoder> decoder( new BitpackIntegerDecoder<uint8_t>(
                false, bytestreamNumber, dbufs.at( 0 ), ini->minimum(), ini->maximum(), 1.0, 0.0, maxRecordCount ) );
             return decoder;
          }
 
          if ( bitsPerRecord <= 16 )
          {
-            shared_ptr<Decoder> decoder( new BitpackIntegerDecoder<uint16_t>(
+            std::shared_ptr<Decoder> decoder( new BitpackIntegerDecoder<uint16_t>(
                false, bytestreamNumber, dbufs.at( 0 ), ini->minimum(), ini->maximum(), 1.0, 0.0, maxRecordCount ) );
             return decoder;
          }
 
          if ( bitsPerRecord <= 32 )
          {
-            shared_ptr<Decoder> decoder( new BitpackIntegerDecoder<uint32_t>(
+            std::shared_ptr<Decoder> decoder( new BitpackIntegerDecoder<uint32_t>(
                false, bytestreamNumber, dbufs.at( 0 ), ini->minimum(), ini->maximum(), 1.0, 0.0, maxRecordCount ) );
             return decoder;
          }
 
-         shared_ptr<Decoder> decoder( new BitpackIntegerDecoder<uint64_t>(
+         std::shared_ptr<Decoder> decoder( new BitpackIntegerDecoder<uint64_t>(
             false, bytestreamNumber, dbufs.at( 0 ), ini->minimum(), ini->maximum(), 1.0, 0.0, maxRecordCount ) );
          return decoder;
       }
 
       case E57_SCALED_INTEGER:
       {
-         shared_ptr<ScaledIntegerNodeImpl> sini =
-            static_pointer_cast<ScaledIntegerNodeImpl>( decodeNode ); // downcast to correct type
+         std::shared_ptr<ScaledIntegerNodeImpl> sini =
+            std::static_pointer_cast<ScaledIntegerNodeImpl>( decodeNode ); // downcast to correct type
 
          /// Get pointer to parent ImageFileImpl, to call bitsNeeded()
          ImageFileImplSharedPtr imf( decodeNode->destImageFile_ ); //??? should be function for this,
@@ -121,15 +120,15 @@ shared_ptr<Decoder> Decoder::DecoderFactory( unsigned bytestreamNumber, //!!! na
          /// based on number of bits stored.
          if ( bitsPerRecord == 0 )
          {
-            shared_ptr<Decoder> decoder( new ConstantIntegerDecoder( true, bytestreamNumber, dbufs.at( 0 ),
-                                                                     sini->minimum(), sini->scale(), sini->offset(),
-                                                                     maxRecordCount ) );
+            std::shared_ptr<Decoder> decoder( new ConstantIntegerDecoder( true, bytestreamNumber, dbufs.at( 0 ),
+                                                                          sini->minimum(), sini->scale(),
+                                                                          sini->offset(), maxRecordCount ) );
             return decoder;
          }
 
          if ( bitsPerRecord <= 8 )
          {
-            shared_ptr<Decoder> decoder(
+            std::shared_ptr<Decoder> decoder(
                new BitpackIntegerDecoder<uint8_t>( true, bytestreamNumber, dbufs.at( 0 ), sini->minimum(),
                                                    sini->maximum(), sini->scale(), sini->offset(), maxRecordCount ) );
             return decoder;
@@ -137,7 +136,7 @@ shared_ptr<Decoder> Decoder::DecoderFactory( unsigned bytestreamNumber, //!!! na
 
          if ( bitsPerRecord <= 16 )
          {
-            shared_ptr<Decoder> decoder(
+            std::shared_ptr<Decoder> decoder(
                new BitpackIntegerDecoder<uint16_t>( true, bytestreamNumber, dbufs.at( 0 ), sini->minimum(),
                                                     sini->maximum(), sini->scale(), sini->offset(), maxRecordCount ) );
             return decoder;
@@ -145,13 +144,13 @@ shared_ptr<Decoder> Decoder::DecoderFactory( unsigned bytestreamNumber, //!!! na
 
          if ( bitsPerRecord <= 32 )
          {
-            shared_ptr<Decoder> decoder(
+            std::shared_ptr<Decoder> decoder(
                new BitpackIntegerDecoder<uint32_t>( true, bytestreamNumber, dbufs.at( 0 ), sini->minimum(),
                                                     sini->maximum(), sini->scale(), sini->offset(), maxRecordCount ) );
             return decoder;
          }
 
-         shared_ptr<Decoder> decoder(
+         std::shared_ptr<Decoder> decoder(
             new BitpackIntegerDecoder<uint64_t>( true, bytestreamNumber, dbufs.at( 0 ), sini->minimum(),
                                                  sini->maximum(), sini->scale(), sini->offset(), maxRecordCount ) );
          return decoder;
@@ -159,16 +158,18 @@ shared_ptr<Decoder> Decoder::DecoderFactory( unsigned bytestreamNumber, //!!! na
 
       case E57_FLOAT:
       {
-         shared_ptr<FloatNodeImpl> fni = static_pointer_cast<FloatNodeImpl>( decodeNode ); // downcast to correct type
+         std::shared_ptr<FloatNodeImpl> fni =
+            std::static_pointer_cast<FloatNodeImpl>( decodeNode ); // downcast to correct type
 
-         shared_ptr<Decoder> decoder(
+         std::shared_ptr<Decoder> decoder(
             new BitpackFloatDecoder( bytestreamNumber, dbufs.at( 0 ), fni->precision(), maxRecordCount ) );
          return decoder;
       }
 
       case E57_STRING:
       {
-         shared_ptr<Decoder> decoder( new BitpackStringDecoder( bytestreamNumber, dbufs.at( 0 ), maxRecordCount ) );
+         std::shared_ptr<Decoder> decoder(
+            new BitpackStringDecoder( bytestreamNumber, dbufs.at( 0 ), maxRecordCount ) );
 
          return decoder;
       }
@@ -193,7 +194,7 @@ BitpackDecoder::BitpackDecoder( unsigned bytestreamNumber, SourceDestBuffer &dbu
 {
 }
 
-void BitpackDecoder::destBufferSetNew( vector<SourceDestBuffer> &dbufs )
+void BitpackDecoder::destBufferSetNew( std::vector<SourceDestBuffer> &dbufs )
 {
    if ( dbufs.size() != 1 )
    {
@@ -207,13 +208,13 @@ size_t BitpackDecoder::inputProcess( const char *source, const size_t availableB
 {
 #ifdef E57_MAX_VERBOSE
    cout << "BitpackDecoder::inputprocess() called, source=" << ( source ? source : "none" )
-        << " availableByteCount=" << availableByteCount << endl;
+        << " availableByteCount=" << availableByteCount << std::endl;
 #endif
    size_t bytesUnsaved = availableByteCount;
    size_t bitsEaten = 0;
    do
    {
-      size_t byteCount = min( bytesUnsaved, inBuffer_.size() - static_cast<size_t>( inBufferEndByte_ ) );
+      size_t byteCount = std::min( bytesUnsaved, inBuffer_.size() - static_cast<size_t>( inBufferEndByte_ ) );
 
       /// Copy input bytes from caller, if any
       if ( byteCount > 0 )
@@ -233,9 +234,9 @@ size_t BitpackDecoder::inputProcess( const char *source, const size_t availableB
          unsigned firstByte = inBufferFirstBit_ / 8;
          for ( i = 0; i < byteCount && i < 20; i++ )
             cout << "  inBuffer[" << firstByte + i << "]=" << (unsigned)(unsigned char)( inBuffer_[firstByte + i] )
-                 << endl;
+                 << std::endl;
          if ( i < byteCount )
-            cout << "  " << byteCount - i << "source bytes unprinted..." << endl;
+            cout << "  " << byteCount - i << "source bytes unprinted..." << std::endl;
       }
 #endif
 
@@ -251,13 +252,13 @@ size_t BitpackDecoder::inputProcess( const char *source, const size_t availableB
       size_t firstNaturalBit = firstWord * bitsPerWord_;
       size_t endBit = inBufferEndByte_ * 8;
 #ifdef E57_MAX_VERBOSE
-      cout << "  feeding aligned decoder " << endBit - inBufferFirstBit_ << " bits." << endl;
+      cout << "  feeding aligned decoder " << endBit - inBufferFirstBit_ << " bits." << std::endl;
 #endif
       bitsEaten = inputProcessAligned( &inBuffer_[firstWord * bytesPerWord_], inBufferFirstBit_ - firstNaturalBit,
                                        endBit - firstNaturalBit );
 #ifdef E57_MAX_VERBOSE
       cout << "  bitsEaten=" << bitsEaten << " firstWord=" << firstWord << " firstNaturalBit=" << firstNaturalBit
-           << " endBit=" << endBit << endl;
+           << " endBit=" << endBit << std::endl;
 #endif
 #ifdef E57_DEBUG
       if ( bitsEaten > endBit - inBufferFirstBit_ )
@@ -314,23 +315,23 @@ void BitpackDecoder::inBufferShiftDown()
 #ifdef E57_DEBUG
 void BitpackDecoder::dump( int indent, std::ostream &os )
 {
-   os << space( indent ) << "bytestreamNumber:         " << bytestreamNumber_ << endl;
-   os << space( indent ) << "currentRecordIndex:       " << currentRecordIndex_ << endl;
-   os << space( indent ) << "maxRecordCount:           " << maxRecordCount_ << endl;
-   os << space( indent ) << "destBuffer:" << endl;
+   os << space( indent ) << "bytestreamNumber:         " << bytestreamNumber_ << std::endl;
+   os << space( indent ) << "currentRecordIndex:       " << currentRecordIndex_ << std::endl;
+   os << space( indent ) << "maxRecordCount:           " << maxRecordCount_ << std::endl;
+   os << space( indent ) << "destBuffer:" << std::endl;
    destBuffer_->dump( indent + 4, os );
-   os << space( indent ) << "inBufferFirstBit:        " << inBufferFirstBit_ << endl;
-   os << space( indent ) << "inBufferEndByte:         " << inBufferEndByte_ << endl;
-   os << space( indent ) << "inBufferAlignmentSize:   " << inBufferAlignmentSize_ << endl;
-   os << space( indent ) << "bitsPerWord:             " << bitsPerWord_ << endl;
-   os << space( indent ) << "bytesPerWord:            " << bytesPerWord_ << endl;
-   os << space( indent ) << "inBuffer:" << endl;
+   os << space( indent ) << "inBufferFirstBit:        " << inBufferFirstBit_ << std::endl;
+   os << space( indent ) << "inBufferEndByte:         " << inBufferEndByte_ << std::endl;
+   os << space( indent ) << "inBufferAlignmentSize:   " << inBufferAlignmentSize_ << std::endl;
+   os << space( indent ) << "bitsPerWord:             " << bitsPerWord_ << std::endl;
+   os << space( indent ) << "bytesPerWord:            " << bytesPerWord_ << std::endl;
+   os << space( indent ) << "inBuffer:" << std::endl;
    unsigned i;
    for ( i = 0; i < inBuffer_.size() && i < 20; i++ )
       os << space( indent + 4 ) << "inBuffer[" << i
-         << "]: " << static_cast<unsigned>( static_cast<unsigned char>( inBuffer_.at( i ) ) ) << endl;
+         << "]: " << static_cast<unsigned>( static_cast<unsigned char>( inBuffer_.at( i ) ) ) << std::endl;
    if ( i < inBuffer_.size() )
-      os << space( indent + 4 ) << inBuffer_.size() - i << " more unprinted..." << endl;
+      os << space( indent + 4 ) << inBuffer_.size() - i << " more unprinted..." << std::endl;
 }
 #endif
 
@@ -348,7 +349,7 @@ size_t BitpackFloatDecoder::inputProcessAligned( const char *inbuf, const size_t
 {
 #ifdef E57_MAX_VERBOSE
    cout << "BitpackFloatDecoder::inputProcessAligned() called, inbuf=" << inbuf << " firstBit=" << firstBit
-        << " endBit=" << endBit << endl;
+        << " endBit=" << endBit << std::endl;
 #endif
    /// Read from inbuf, decode, store in destBuffer
    /// Repeat until have filled destBuffer, or completed all records
@@ -384,7 +385,7 @@ size_t BitpackFloatDecoder::inputProcessAligned( const char *inbuf, const size_t
       n = static_cast<unsigned>( maxRecordCount_ - currentRecordIndex_ );
 
 #ifdef E57_MAX_VERBOSE
-   cout << "  n:" << n << endl; //???
+   cout << "  n:" << n << std::endl; //???
 #endif
 
    if ( precision_ == E57_SINGLE )
@@ -398,7 +399,7 @@ size_t BitpackFloatDecoder::inputProcessAligned( const char *inbuf, const size_t
          float value = *inp;
 
 #ifdef E57_MAX_VERBOSE
-         cout << "  got float value=" << value << endl;
+         cout << "  got float value=" << value << std::endl;
 #endif
          destBuffer_->setNextFloat( value );
          inp++;
@@ -415,7 +416,7 @@ size_t BitpackFloatDecoder::inputProcessAligned( const char *inbuf, const size_t
          double value = *inp;
 
 #ifdef E57_MAX_VERBOSE
-         cout << "  got double value=" << value << endl;
+         cout << "  got double value=" << value << std::endl;
 #endif
          destBuffer_->setNextDouble( value );
          inp++;
@@ -434,9 +435,9 @@ void BitpackFloatDecoder::dump( int indent, std::ostream &os )
 {
    BitpackDecoder::dump( indent, os );
    if ( precision_ == E57_SINGLE )
-      os << space( indent ) << "precision:                E57_SINGLE" << endl;
+      os << space( indent ) << "precision:                E57_SINGLE" << std::endl;
    else
-      os << space( indent ) << "precision:                E57_DOUBLE" << endl;
+      os << space( indent ) << "precision:                E57_DOUBLE" << std::endl;
 }
 #endif
 
@@ -452,7 +453,7 @@ size_t BitpackStringDecoder::inputProcessAligned( const char *inbuf, const size_
 {
 #ifdef E57_MAX_VERBOSE
    cout << "BitpackStringDecoder::inputProcessAligned() called, inbuf=" << inbuf << " firstBit=" << firstBit
-        << " endBit=" << endBit << endl;
+        << " endBit=" << endBit << std::endl;
 #endif
    /// Read from inbuf, decode, store in destBuffer
    /// Repeat until have filled destBuffer, or completed all records
@@ -473,7 +474,7 @@ size_t BitpackStringDecoder::inputProcessAligned( const char *inbuf, const size_
    {
 #ifdef E57_MAX_VERBOSE
       cout << "read string loop1: readingPrefix=" << readingPrefix_ << " prefixLength=" << prefixLength_
-           << " nBytesPrefixRead=" << nBytesPrefixRead_ << " nBytesStringRead=" << nBytesStringRead_ << endl;
+           << " nBytesPrefixRead=" << nBytesPrefixRead_ << " nBytesStringRead=" << nBytesStringRead_ << std::endl;
 #endif
       if ( readingPrefix_ )
       {
@@ -498,7 +499,7 @@ size_t BitpackStringDecoder::inputProcessAligned( const char *inbuf, const size_
 
 #ifdef E57_MAX_VERBOSE
          cout << "read string loop2: readingPrefix=" << readingPrefix_ << " prefixLength=" << prefixLength_
-              << " nBytesPrefixRead=" << nBytesPrefixRead_ << " nBytesStringRead=" << nBytesStringRead_ << endl;
+              << " nBytesPrefixRead=" << nBytesPrefixRead_ << " nBytesStringRead=" << nBytesStringRead_ << std::endl;
 #endif
          /// If got all of prefix, convert to length and get ready to read
          /// string
@@ -535,7 +536,7 @@ size_t BitpackStringDecoder::inputProcessAligned( const char *inbuf, const size_
          }
 #ifdef E57_MAX_VERBOSE
          cout << "read string loop3: readingPrefix=" << readingPrefix_ << " prefixLength=" << prefixLength_
-              << " nBytesPrefixRead=" << nBytesPrefixRead_ << " nBytesStringRead=" << nBytesStringRead_ << endl;
+              << " nBytesPrefixRead=" << nBytesPrefixRead_ << " nBytesStringRead=" << nBytesStringRead_ << std::endl;
 #endif
       }
 
@@ -584,23 +585,23 @@ size_t BitpackStringDecoder::inputProcessAligned( const char *inbuf, const size_
 void BitpackStringDecoder::dump( int indent, std::ostream &os )
 {
    BitpackDecoder::dump( indent, os );
-   os << space( indent ) << "readingPrefix:      " << readingPrefix_ << endl;
-   os << space( indent ) << "prefixLength:       " << prefixLength_ << endl;
+   os << space( indent ) << "readingPrefix:      " << readingPrefix_ << std::endl;
+   os << space( indent ) << "prefixLength:       " << prefixLength_ << std::endl;
    os << space( indent ) << "prefixBytes[8]:     " << static_cast<unsigned>( prefixBytes_[0] ) << " "
       << static_cast<unsigned>( prefixBytes_[1] ) << " " << static_cast<unsigned>( prefixBytes_[2] ) << " "
       << static_cast<unsigned>( prefixBytes_[3] ) << " " << static_cast<unsigned>( prefixBytes_[4] ) << " "
       << static_cast<unsigned>( prefixBytes_[5] ) << " " << static_cast<unsigned>( prefixBytes_[6] ) << " "
-      << static_cast<unsigned>( prefixBytes_[7] ) << endl;
-   os << space( indent ) << "nBytesPrefixRead:   " << nBytesPrefixRead_ << endl;
-   os << space( indent ) << "stringLength:       " << stringLength_ << endl;
+      << static_cast<unsigned>( prefixBytes_[7] ) << std::endl;
+   os << space( indent ) << "nBytesPrefixRead:   " << nBytesPrefixRead_ << std::endl;
+   os << space( indent ) << "stringLength:       " << stringLength_ << std::endl;
    os << space( indent )
       << "currentString:      "
          ""
       << currentString_
       << ""
          ""
-      << endl;
-   os << space( indent ) << "nBytesStringRead:   " << nBytesStringRead_ << endl;
+      << std::endl;
+   os << space( indent ) << "nBytesStringRead:   " << nBytesStringRead_ << std::endl;
 }
 #endif
 
@@ -627,7 +628,7 @@ size_t BitpackIntegerDecoder<RegisterT>::inputProcessAligned( const char *inbuf,
 {
 #ifdef E57_MAX_VERBOSE
    cout << "BitpackIntegerDecoder::inputProcessAligned() called, inbuf=" << (void *)( inbuf )
-        << " firstBit=" << firstBit << " endBit=" << endBit << endl;
+        << " firstBit=" << firstBit << " endBit=" << endBit << std::endl;
 #endif
 
    /// Read from inbuf, decode, store in destBuffer
@@ -655,14 +656,14 @@ size_t BitpackIntegerDecoder<RegisterT>::inputProcessAligned( const char *inbuf,
 
    /// Number of transfers is the smaller of what was requested and what is
    /// available in input.
-   size_t recordCount = min( destRecords, maxInputRecords );
+   size_t recordCount = std::min( destRecords, maxInputRecords );
 
    // Can't process more than defined in input file
    if ( static_cast<uint64_t>( recordCount ) > maxRecordCount_ - currentRecordIndex_ )
       recordCount = static_cast<unsigned>( maxRecordCount_ - currentRecordIndex_ );
 
 #ifdef E57_MAX_VERBOSE
-   cout << "  recordCount=" << recordCount << endl;
+   cout << "  recordCount=" << recordCount << std::endl;
 #endif
 
    auto inp = reinterpret_cast<const RegisterT *>( inbuf );
@@ -688,8 +689,8 @@ size_t BitpackIntegerDecoder<RegisterT>::inputProcessAligned( const char *inbuf,
       RegisterT low = inp[wordPosition];
 
 #ifdef E57_MAX_VERBOSE
-      cout << "  bitOffset: " << bitOffset << endl;
-      cout << "  low: " << binaryString( low ) << endl;
+      cout << "  bitOffset: " << bitOffset << std::endl;
+      cout << "  low: " << binaryString( low ) << std::endl;
 #endif
 
       RegisterT w;
@@ -699,7 +700,7 @@ size_t BitpackIntegerDecoder<RegisterT>::inputProcessAligned( const char *inbuf,
          RegisterT high = inp[wordPosition + 1];
 
 #ifdef E57_MAX_VERBOSE
-         cout << "  high:" << binaryString( high ) << endl;
+         cout << "  high:" << binaryString( high ) << std::endl;
 #endif
 
          /// Shift high to just above the lower bits, shift low LSBit to bit0,
@@ -715,7 +716,7 @@ size_t BitpackIntegerDecoder<RegisterT>::inputProcessAligned( const char *inbuf,
       }
 
 #ifdef E57_MAX_VERBOSE
-      cout << "  w:   " << binaryString( w ) << endl;
+      cout << "  w:   " << binaryString( w ) << std::endl;
 #endif
 
       /// Mask off uninteresting bits
@@ -725,7 +726,7 @@ size_t BitpackIntegerDecoder<RegisterT>::inputProcessAligned( const char *inbuf,
       int64_t value = minimum_ + static_cast<uint64_t>( w );
 
 #ifdef E57_MAX_VERBOSE
-      cout << "  Storing value=" << value << endl;
+      cout << "  Storing value=" << value << std::endl;
 #endif
 
       /// The parameter isScaledInteger_ determines which version of
@@ -745,7 +746,7 @@ size_t BitpackIntegerDecoder<RegisterT>::inputProcessAligned( const char *inbuf,
          wordPosition++;
       }
 #ifdef E57_MAX_VERBOSE
-      cout << "  Processed " << i + 1 << " records, wordPosition=" << wordPosition << " decoder:" << endl;
+      cout << "  Processed " << i + 1 << " records, wordPosition=" << wordPosition << " decoder:" << std::endl;
       dump( 4 );
 #endif
    }
@@ -761,14 +762,14 @@ size_t BitpackIntegerDecoder<RegisterT>::inputProcessAligned( const char *inbuf,
 template <typename RegisterT> void BitpackIntegerDecoder<RegisterT>::dump( int indent, std::ostream &os )
 {
    BitpackDecoder::dump( indent, os );
-   os << space( indent ) << "isScaledInteger:  " << isScaledInteger_ << endl;
-   os << space( indent ) << "minimum:          " << minimum_ << endl;
-   os << space( indent ) << "maximum:          " << maximum_ << endl;
-   os << space( indent ) << "scale:            " << scale_ << endl;
-   os << space( indent ) << "offset:           " << offset_ << endl;
-   os << space( indent ) << "bitsPerRecord:    " << bitsPerRecord_ << endl;
+   os << space( indent ) << "isScaledInteger:  " << isScaledInteger_ << std::endl;
+   os << space( indent ) << "minimum:          " << minimum_ << std::endl;
+   os << space( indent ) << "maximum:          " << maximum_ << std::endl;
+   os << space( indent ) << "scale:            " << scale_ << std::endl;
+   os << space( indent ) << "offset:           " << offset_ << std::endl;
+   os << space( indent ) << "bitsPerRecord:    " << bitsPerRecord_ << std::endl;
    os << space( indent ) << "destBitMask:      " << binaryString( destBitMask_ ) << " = " << hexString( destBitMask_ )
-      << endl;
+      << std::endl;
 }
 #endif
 
@@ -783,7 +784,7 @@ ConstantIntegerDecoder::ConstantIntegerDecoder( bool isScaledInteger, unsigned b
 {
 }
 
-void ConstantIntegerDecoder::destBufferSetNew( vector<SourceDestBuffer> &dbufs )
+void ConstantIntegerDecoder::destBufferSetNew( std::vector<SourceDestBuffer> &dbufs )
 {
    if ( dbufs.size() != 1 )
    {
@@ -797,7 +798,7 @@ size_t ConstantIntegerDecoder::inputProcess( const char *source, const size_t av
 {
 #ifdef E57_MAX_VERBOSE
    cout << "ConstantIntegerDecoder::inputprocess() called, source=" << (void *)( source )
-        << " availableByteCount=" << availableByteCount << endl;
+        << " availableByteCount=" << availableByteCount << std::endl;
 #endif
 
    /// We don't need any input bytes to produce output, so ignore source and
@@ -830,14 +831,14 @@ void ConstantIntegerDecoder::stateReset()
 #ifdef E57_DEBUG
 void ConstantIntegerDecoder::dump( int indent, std::ostream &os )
 {
-   os << space( indent ) << "bytestreamNumber:   " << bytestreamNumber_ << endl;
-   os << space( indent ) << "currentRecordIndex: " << currentRecordIndex_ << endl;
-   os << space( indent ) << "maxRecordCount:     " << maxRecordCount_ << endl;
-   os << space( indent ) << "isScaledInteger:    " << isScaledInteger_ << endl;
-   os << space( indent ) << "minimum:            " << minimum_ << endl;
-   os << space( indent ) << "scale:              " << scale_ << endl;
-   os << space( indent ) << "offset:             " << offset_ << endl;
-   os << space( indent ) << "destBuffer:" << endl;
+   os << space( indent ) << "bytestreamNumber:   " << bytestreamNumber_ << std::endl;
+   os << space( indent ) << "currentRecordIndex: " << currentRecordIndex_ << std::endl;
+   os << space( indent ) << "maxRecordCount:     " << maxRecordCount_ << std::endl;
+   os << space( indent ) << "isScaledInteger:    " << isScaledInteger_ << std::endl;
+   os << space( indent ) << "minimum:            " << minimum_ << std::endl;
+   os << space( indent ) << "scale:              " << scale_ << std::endl;
+   os << space( indent ) << "offset:             " << offset_ << std::endl;
+   os << space( indent ) << "destBuffer:" << std::endl;
    destBuffer_->dump( indent + 4, os );
 }
 #endif

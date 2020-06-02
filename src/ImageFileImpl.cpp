@@ -186,7 +186,7 @@ namespace e57
       /// Second phase of construction, now we have a well-formed ImageFile object.
 
 #ifdef E57_MAX_VERBOSE
-      std::cout << "ImageFileImpl() called, fileName=" << fileName << " mode=" << mode << std::endl;
+      std::cout << "ImageFileImpl() called, fileName=<StreamBuffer> mode=r" << std::endl;
 #endif
       unusedLogicalStart_ = sizeof( E57FileHeader );
       fileName_ = "<StreamBuffer>";
@@ -774,7 +774,7 @@ namespace e57
 #ifdef E57_MAX_VERBOSE
       std::cout << "pathNameParse returning: isRelative=" << isRelative << " fields.size()=" << fields.size()
                 << " fields=";
-      for ( int i = 0; i < fields.size(); i++ )
+      for ( size_t i = 0; i < fields.size(); i++ )
       {
          std::cout << fields[i] << ",";
       }

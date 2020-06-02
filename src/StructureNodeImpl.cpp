@@ -243,7 +243,8 @@ void StructureNodeImpl::set( const ustring &pathName, NodeImplSharedPtr ni, bool
    // COMPRESSED_VECTOR
 
 #ifdef E57_MAX_VERBOSE
-   cout << "StructureNodeImpl::set(pathName=" << pathName << ", ni, autoPathCreate=" << autoPathCreate << std::endl;
+   std::cout << "StructureNodeImpl::set(pathName=" << pathName << ", ni, autoPathCreate=" << autoPathCreate
+             << std::endl;
 #endif
 
    bool isRelative;
@@ -269,9 +270,11 @@ void StructureNodeImpl::set( const std::vector<ustring> &fields, unsigned level,
                              bool autoPathCreate )
 {
 #ifdef E57_MAX_VERBOSE
-   cout << "StructureNodeImpl::set: level=" << level << std::endl;
+   std::cout << "StructureNodeImpl::set: level=" << level << std::endl;
    for ( unsigned i = 0; i < fields.size(); i++ )
-      cout << "  field[" << i << "]: " << fields.at( i ) << std::endl;
+   {
+      std::cout << "  field[" << i << "]: " << fields.at( i ) << std::endl;
+   }
 #endif
 
    checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );

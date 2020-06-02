@@ -33,7 +33,7 @@ addons:
 before_script:
   - mkdir build-${BUILD_TYPE}
   - cd build-${BUILD_TYPE}
-  - cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} ..
+  - cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DCMAKE_CXX_FLAGS_DEBUG="-g -DE57_MAX_VERBOSE" ..
 
 script:
   - if [[ "${COVERITY_SCAN_BRANCH}" != 1 ]]; then

@@ -1369,7 +1369,7 @@ CompressedVectorWriterImpl::CompressedVectorWriterImpl( std::shared_ptr<Compress
 CompressedVectorWriterImpl::~CompressedVectorWriterImpl()
 {
 #ifdef E57_MAX_VERBOSE
-   cout << "~CompressedVectorWriterImpl() called" << std::endl; //???
+   std::cout << "~CompressedVectorWriterImpl() called" << std::endl; //???
 #endif
 
    try
@@ -1386,7 +1386,7 @@ CompressedVectorWriterImpl::~CompressedVectorWriterImpl()
 void CompressedVectorWriterImpl::close()
 {
 #ifdef E57_MAX_VERBOSE
-   cout << "CompressedVectorWriterImpl::close() called" << std::endl; //???
+   std::cout << "CompressedVectorWriterImpl::close() called" << std::endl; //???
 #endif
    ImageFileImplSharedPtr imf( cVector_->destImageFile_ );
 
@@ -1418,7 +1418,7 @@ void CompressedVectorWriterImpl::close()
    /// current start of free space).
    sectionLogicalLength_ = imf->unusedLogicalStart_ - sectionHeaderLogicalStart_;
 #ifdef E57_MAX_VERBOSE
-   cout << "  sectionLogicalLength_=" << sectionLogicalLength_ << std::endl; //???
+   std::cout << "  sectionLogicalLength_=" << sectionLogicalLength_ << std::endl; //???
 #endif
 
    /// Prepare CompressedVectorSectionHeader
@@ -1428,7 +1428,7 @@ void CompressedVectorWriterImpl::close()
    header.indexPhysicalOffset = topIndexPhysicalOffset_; ///??? can be zero, if no data written ???not set
                                                          /// yet
 #ifdef E57_MAX_VERBOSE
-   cout << "  CompressedVectorSectionHeader:" << std::endl;
+   std::cout << "  CompressedVectorSectionHeader:" << std::endl;
    header.dump( 4 ); //???
 #endif
 #ifdef E57_DEBUG
@@ -1448,7 +1448,7 @@ void CompressedVectorWriterImpl::close()
    bytestreams_.clear();
 
 #ifdef E57_MAX_VERBOSE
-   cout << "  CompressedVectorWriter:" << std::endl;
+   std::cout << "  CompressedVectorWriter:" << std::endl;
    dump( 4 );
 #endif
 }
@@ -1509,7 +1509,7 @@ void CompressedVectorWriterImpl::write( std::vector<SourceDestBuffer> &sbufs, co
 void CompressedVectorWriterImpl::write( const size_t requestedRecordCount )
 {
 #ifdef E57_MAX_VERBOSE
-   cout << "CompressedVectorWriterImpl::write() called" << std::endl; //???
+   std::cout << "CompressedVectorWriterImpl::write() called" << std::endl; //???
 #endif
    checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
    checkWriterOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
@@ -1540,7 +1540,7 @@ void CompressedVectorWriterImpl::write( const size_t requestedRecordCount )
          totalRecordCount += endRecordIndex - bytestream->currentRecordIndex();
       }
 #ifdef E57_MAX_VERBOSE
-      cout << "  totalRecordCount=" << totalRecordCount << std::endl; //???
+      std::cout << "  totalRecordCount=" << totalRecordCount << std::endl; //???
 #endif
 
       /// We are done if have no more work, break out of loop
@@ -1557,7 +1557,7 @@ void CompressedVectorWriterImpl::write( const size_t requestedRecordCount )
          /// packets is efficient).
 
 #ifdef E57_MAX_VERBOSE
-      cout << "  currentPacketSize()=" << currentPacketSize() << std::endl; //???
+      std::cout << "  currentPacketSize()=" << currentPacketSize() << std::endl; //???
 #endif
 
 #ifdef E57_WRITE_CRAZY_PACKET_MODE
@@ -1584,9 +1584,9 @@ void CompressedVectorWriterImpl::write( const size_t requestedRecordCount )
       }
 
 #ifdef E57_MAX_VERBOSE
-      float totalBytesPerRecord = max( totalBitsPerRecord / 8, 0.1F ); //??? trust
+      float totalBytesPerRecord = std::max( totalBitsPerRecord / 8, 0.1F ); //??? trust
 
-      cout << "  totalBytesPerRecord=" << totalBytesPerRecord << std::endl; //???
+      std::cout << "  totalBytesPerRecord=" << totalBytesPerRecord << std::endl; //???
 #endif
 
       /// Don't allow straggler to get too far behind. ???
@@ -1635,7 +1635,7 @@ size_t CompressedVectorWriterImpl::currentPacketSize() const
 uint64_t CompressedVectorWriterImpl::packetWrite()
 {
 #ifdef E57_MAX_VERBOSE
-   cout << "CompressedVectorWriterImpl::packetWrite() called" << std::endl; //???
+   std::cout << "CompressedVectorWriterImpl::packetWrite() called" << std::endl; //???
 #endif
 
    /// Double check that we have work to do
@@ -1643,14 +1643,14 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
    if ( totalOutput == 0 )
       return ( 0 );
 #ifdef E57_MAX_VERBOSE
-   cout << "  totalOutput=" << totalOutput << std::endl; //???
+   std::cout << "  totalOutput=" << totalOutput << std::endl; //???
 #endif
 
    /// Calc maximum number of bytestream values can put in data packet.
    size_t packetMaxPayloadBytes =
       DATA_PACKET_MAX - sizeof( DataPacketHeader ) - bytestreams_.size() * sizeof( uint16_t );
 #ifdef E57_MAX_VERBOSE
-   cout << "  packetMaxPayloadBytes=" << packetMaxPayloadBytes << std::endl; //???
+   std::cout << "  packetMaxPayloadBytes=" << packetMaxPayloadBytes << std::endl; //???
 #endif
 
    /// Allocate vector for number of bytes that each bytestream will write to
@@ -1678,7 +1678,9 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
    }
 #ifdef E57_MAX_VERBOSE
    for ( unsigned i = 0; i < bytestreams_.size(); i++ )
-      cout << "  count[" << i << "]=" << count.at( i ) << std::endl; //???
+   {
+      std::cout << "  count[" << i << "]=" << count.at( i ) << std::endl; //???
+   }
 #endif
 
 #ifdef E57_DEBUG
@@ -1700,7 +1702,7 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
    /// here
    char *packet = reinterpret_cast<char *>( &dataPacket_ );
 #ifdef E57_MAX_VERBOSE
-   cout << "  packet=" << packet << std::endl; //???
+   std::cout << "  packet=" << packet << std::endl; //???
 #endif
 
    /// To be safe, clear header part of packet
@@ -1710,20 +1712,20 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
    /// dataPacket_
    auto bsbLength = reinterpret_cast<uint16_t *>( &packet[sizeof( DataPacketHeader )] );
 #ifdef E57_MAX_VERBOSE
-   cout << "  bsbLength=" << bsbLength << std::endl; //???
+   std::cout << "  bsbLength=" << bsbLength << std::endl; //???
 #endif
    for ( unsigned i = 0; i < bytestreams_.size(); i++ )
    {
       bsbLength[i] = static_cast<uint16_t>( count.at( i ) ); // %%% Truncation
 #ifdef E57_MAX_VERBOSE
-      cout << "  Writing " << bsbLength[i] << " bytes into bytestream " << i << std::endl; //???
+      std::cout << "  Writing " << bsbLength[i] << " bytes into bytestream " << i << std::endl; //???
 #endif
    }
 
    /// Get pointer to end of data so far
    char *p = reinterpret_cast<char *>( &bsbLength[bytestreams_.size()] );
 #ifdef E57_MAX_VERBOSE
-   cout << "  after bsbLength, p=" << p << std::endl; //???
+   std::cout << "  after bsbLength, p=" << p << std::endl; //???
 #endif
 
    /// Write contents of each bytestream in dataPacket_
@@ -1748,7 +1750,7 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
    /// Length of packet is difference in beginning pointer and ending pointer
    auto packetLength = static_cast<unsigned>( p - packet ); ///??? pointer diff portable?
 #ifdef E57_MAX_VERBOSE
-   cout << "  packetLength=" << packetLength << std::endl; //???
+   std::cout << "  packetLength=" << packetLength << std::endl; //???
 #endif
 
 #ifdef E57_DEBUG
@@ -1771,7 +1773,7 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
       *p++ = 0;
       packetLength++;
 #ifdef E57_MAX_VERBOSE
-      cout << "  padding with zero byte, new packetLength=" << packetLength << std::endl; //???
+      std::cout << "  padding with zero byte, new packetLength=" << packetLength << std::endl; //???
 #endif
    }
 
@@ -1790,7 +1792,7 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
    imf->file_->write( packet, packetLength );
 
 #ifdef E57_MAX_VERBOSE
-//  cout << "data packet:" << std::endl;
+//  std::cout << "data packet:" << std::endl;
 //  dataPacket_.dump(4);
 #endif
 
@@ -1887,7 +1889,7 @@ CompressedVectorReaderImpl::CompressedVectorReaderImpl( std::shared_ptr<Compress
    cVector_( cvi )
 {
 #ifdef E57_MAX_VERBOSE
-   cout << "CompressedVectorReaderImpl() called" << std::endl; //???
+   std::cout << "CompressedVectorReaderImpl() called" << std::endl; //???
 #endif
    checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
 
@@ -1999,8 +2001,8 @@ CompressedVectorReaderImpl::CompressedVectorReaderImpl( std::shared_ptr<Compress
 CompressedVectorReaderImpl::~CompressedVectorReaderImpl()
 {
 #ifdef E57_MAX_VERBOSE
-   cout << "~CompressedVectorReaderImpl() called" << std::endl; //???
-                                                                // dump(4);
+   std::cout << "~CompressedVectorReaderImpl() called" << std::endl; //???
+                                                                     // dump(4);
 #endif
 
    if ( isOpen_ )
@@ -2062,7 +2064,7 @@ unsigned CompressedVectorReaderImpl::read( std::vector<SourceDestBuffer> &dbufs 
 unsigned CompressedVectorReaderImpl::read()
 {
 #ifdef E57_MAX_VERBOSE
-   cout << "CompressedVectorReaderImpl::read() called" << std::endl; //???
+   std::cout << "CompressedVectorReaderImpl::read() called" << std::endl; //???
 #endif
    checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
    checkReaderOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
@@ -2148,10 +2150,14 @@ uint64_t CompressedVectorReaderImpl::earliestPacketNeededForInput() const
    }
 #ifdef E57_MAX_VERBOSE
    if ( earliestPacketLogicalOffset == E57_UINT64_MAX )
-      cout << "earliestPacketNeededForInput returning none found" << std::endl;
+   {
+      std::cout << "earliestPacketNeededForInput returning none found" << std::endl;
+   }
    else
-      cout << "earliestPacketNeededForInput returning " << earliestPacketLogicalOffset << " for channel["
-           << earliestChannel << "]" << std::endl;
+   {
+      std::cout << "earliestPacketNeededForInput returning " << earliestPacketLogicalOffset << " for channel["
+                << earliestChannel << "]" << std::endl;
+   }
 #endif
    return earliestPacketLogicalOffset;
 }
@@ -2218,14 +2224,14 @@ void CompressedVectorReaderImpl::feedPacketToDecoders( uint64_t currentPacketLog
       size_t bytesProcessed = channel.decoder->inputProcess( uneatenStart, uneatenLength );
 
 #ifdef E57_MAX_VERBOSE
-      cout << "  stream[" << channel.bytestreamNumber << "]: feeding decoder " << uneatenLength << " bytes"
-           << std::endl;
+      std::cout << "  stream[" << channel.bytestreamNumber << "]: feeding decoder " << uneatenLength << " bytes"
+                << std::endl;
       if ( uneatenLength == 0 )
       {
          channel.dump( 8 );
       }
 
-      cout << "  stream[" << channel.bytestreamNumber << "]: bytesProcessed=" << bytesProcessed << std::endl;
+      std::cout << "  stream[" << channel.bytestreamNumber << "]: bytesProcessed=" << bytesProcessed << std::endl;
 #endif
 
       /// Adjust counts of bytestream location
@@ -2236,7 +2242,8 @@ void CompressedVectorReaderImpl::feedPacketToDecoders( uint64_t currentPacketLog
       if ( channel.isInputBlocked() )
       {
 #ifdef E57_MAX_VERBOSE
-         cout << "  stream[" << channel.bytestreamNumber << "] has exhausted its input in current packet" << std::endl;
+         std::cout << "  stream[" << channel.bytestreamNumber << "] has exhausted its input in current packet"
+                   << std::endl;
 #endif
          channelHasExhaustedPacket = true;
          nextPacketLogicalOffset = currentPacketLogicalOffset + dpkt->header.packetLogicalLengthMinus1 + 1;
@@ -2268,8 +2275,8 @@ void CompressedVectorReaderImpl::feedPacketToDecoders( uint64_t currentPacketLog
                channel.currentBytestreamBufferLength = dpkt->getBytestreamBufferLength( channel.bytestreamNumber );
 
 #ifdef E57_MAX_VERBOSE
-               cout << "  set new stream buffer for channel[" << channel.bytestreamNumber
-                    << "], length=" << channel.currentBytestreamBufferLength << std::endl;
+               std::cout << "  set new stream buffer for channel[" << channel.bytestreamNumber
+                         << "], length=" << channel.currentBytestreamBufferLength << std::endl;
 #endif
                /// ??? perform flush if new packet flag set?
             }
@@ -2280,7 +2287,7 @@ void CompressedVectorReaderImpl::feedPacketToDecoders( uint64_t currentPacketLog
          /// Reached end without finding data packet, mark exhausted channels as
          /// finished
 #ifdef E57_MAX_VERBOSE
-         cout << "  at end of data packets" << std::endl;
+         std::cout << "  at end of data packets" << std::endl;
 #endif
          if ( nextPacketLogicalOffset >= sectionEndLogicalOffset_ )
          {
@@ -2289,7 +2296,7 @@ void CompressedVectorReaderImpl::feedPacketToDecoders( uint64_t currentPacketLog
                if ( ( channel.currentPacketLogicalOffset == currentPacketLogicalOffset ) && channel.isInputBlocked() )
                {
 #ifdef E57_MAX_VERBOSE
-                  cout << "  Marking channel[" << channel.bytestreamNumber << "] as finished" << std::endl;
+                  std::cout << "  Marking channel[" << channel.bytestreamNumber << "] as finished" << std::endl;
 #endif
                   channel.inputFinished = true;
                }
@@ -2302,8 +2309,8 @@ void CompressedVectorReaderImpl::feedPacketToDecoders( uint64_t currentPacketLog
 uint64_t CompressedVectorReaderImpl::findNextDataPacket( uint64_t nextPacketLogicalOffset )
 {
 #ifdef E57_MAX_VERBOSE
-   cout << "  searching for next data packet, nextPacketLogicalOffset=" << nextPacketLogicalOffset
-        << " sectionEndLogicalOffset=" << sectionEndLogicalOffset_ << std::endl;
+   std::cout << "  searching for next data packet, nextPacketLogicalOffset=" << nextPacketLogicalOffset
+             << " sectionEndLogicalOffset=" << sectionEndLogicalOffset_ << std::endl;
 #endif
 
    /// Starting at nextPacketLogicalOffset, search for next data packet until
@@ -2320,7 +2327,7 @@ uint64_t CompressedVectorReaderImpl::findNextDataPacket( uint64_t nextPacketLogi
       if ( dpkt->header.packetType == DATA_PACKET )
       {
 #ifdef E57_MAX_VERBOSE
-         cout << "  Found next data packet at nextPacketLogicalOffset=" << nextPacketLogicalOffset << std::endl;
+         std::cout << "  Found next data packet at nextPacketLogicalOffset=" << nextPacketLogicalOffset << std::endl;
 #endif
          return nextPacketLogicalOffset;
       }

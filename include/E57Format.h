@@ -148,7 +148,7 @@ public:                                                                         
    std::shared_ptr<T##Impl> impl() const                                                                               \
    {                                                                                                                   \
       return ( impl_ );                                                                                                \
-   };                                                                                                                  \
+   }                                                                                                                   \
                                                                                                                        \
 protected:                                                                                                             \
    std::shared_ptr<T##Impl> impl_;
@@ -270,7 +270,7 @@ protected:                                                                      
       bool isDefined( const ustring &pathName ) const;
       Node get( int64_t index ) const;
       Node get( const ustring &pathName ) const;
-      void append( Node n );
+      void append( const Node &n );
 
       // Up/Down cast conversion
       operator Node() const;

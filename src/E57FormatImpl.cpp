@@ -222,7 +222,7 @@ void CompressedVectorNodeImpl::setPrototype( const NodeImplSharedPtr &prototype 
    /// relationship. This means that prototype is a root node (has no parent).
 }
 
-NodeImplSharedPtr CompressedVectorNodeImpl::getPrototype()
+NodeImplSharedPtr CompressedVectorNodeImpl::getPrototype() const
 {
    checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
    return ( prototype_ ); //??? check defined
@@ -262,7 +262,7 @@ void CompressedVectorNodeImpl::setCodecs( const std::shared_ptr<VectorNodeImpl> 
    /// relationship. This means that codecs is a root node (has no parent).
 }
 
-std::shared_ptr<VectorNodeImpl> CompressedVectorNodeImpl::getCodecs()
+std::shared_ptr<VectorNodeImpl> CompressedVectorNodeImpl::getCodecs() const
 {
    checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
    return ( codecs_ ); //??? check defined
@@ -312,7 +312,7 @@ void CompressedVectorNodeImpl::setAttachedRecursive()
       codecs_->setAttachedRecursive();
 }
 
-int64_t CompressedVectorNodeImpl::childCount()
+int64_t CompressedVectorNodeImpl::childCount() const
 {
    checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
    return ( recordCount_ );
@@ -1918,7 +1918,7 @@ CompressedVectorReaderImpl::CompressedVectorReaderImpl( std::shared_ptr<Compress
       std::vector<SourceDestBuffer> theDbuf;
       theDbuf.push_back( dbufs.at( i ) );
 
-      std::shared_ptr<Decoder> decoder = Decoder::DecoderFactory( i, cVector_, theDbuf, ustring() );
+      std::shared_ptr<Decoder> decoder = Decoder::DecoderFactory( i, cVector_.get(), theDbuf, ustring() );
 
       /// Calc which stream the given path belongs to.  This depends on position
       /// of the node in the proto tree.

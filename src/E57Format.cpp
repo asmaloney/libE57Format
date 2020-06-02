@@ -1705,7 +1705,7 @@ void FloatNode::checkInvariant( bool /*doRecurse*/, bool doUpcast )
 
    if ( precision() == E57_SINGLE )
    {
-      if ( minimum() < E57_FLOAT_MIN || maximum() > E57_FLOAT_MAX )
+      if ( static_cast<float>(minimum()) < E57_FLOAT_MIN || static_cast<float>(maximum()) > E57_FLOAT_MAX )
          throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
    }
 
@@ -1895,7 +1895,8 @@ void ImageFile::checkInvariant( bool doRecurse ) const
    {
       ustring goodPrefix = extensionsPrefix( i );
       ustring goodUri = extensionsUri( i );
-      ustring prefix, uri;
+      ustring prefix;
+      ustring uri;
       if ( !extensionsLookupPrefix( goodPrefix, uri ) )
          throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
       if ( uri != goodUri )
@@ -2740,7 +2741,7 @@ destImageFile().isWritable()).
 @see     VectorFunctions.cpp example, VectorNode::childCount,
 VectorNode::get(int64_t), StructureNode::set
 */
-void VectorNode::append( Node n )
+void VectorNode::append( const Node &n )
 {
    impl_->append( n.impl() );
 }

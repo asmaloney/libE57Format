@@ -125,7 +125,7 @@ namespace e57
       DataPacket();
 
       void verify( unsigned bufferLength = 0 ) const;
-      char *getBytestream( unsigned bytestreamNumber, unsigned &bufferLength );
+      char *getBytestream( unsigned bytestreamNumber, unsigned &byteCount );
       unsigned getBytestreamBufferLength( unsigned bytestreamNumber );
 
 #ifdef E57_DEBUG

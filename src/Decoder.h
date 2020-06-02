@@ -35,7 +35,7 @@ namespace e57
    {
    public:
       static std::shared_ptr<Decoder> DecoderFactory( unsigned bytestreamNumber,
-                                                      std::shared_ptr<CompressedVectorNodeImpl> cVector,
+                                                      const CompressedVectorNodeImpl *cVector,
                                                       std::vector<SourceDestBuffer> &dbufs, const ustring &codecPath );
       Decoder() = delete;
       virtual ~Decoder() = default;

@@ -36,7 +36,7 @@
 using namespace e57;
 
 std::shared_ptr<Decoder> Decoder::DecoderFactory( unsigned bytestreamNumber, //!!! name ok?
-                                                  std::shared_ptr<CompressedVectorNodeImpl> cVector,
+                                                  const CompressedVectorNodeImpl *cVector,
                                                   std::vector<SourceDestBuffer> &dbufs, const ustring & /*codecPath*/ )
 {
    //!!! verify single dbuf
@@ -812,12 +812,12 @@ size_t ConstantIntegerDecoder::inputProcess( const char *source, const size_t av
 
    if ( isScaledInteger_ )
    {
-      for ( unsigned i = 0; i < count; i++ )
+      for ( size_t i = 0; i < count; i++ )
          destBuffer_->setNextInt64( minimum_, scale_, offset_ );
    }
    else
    {
-      for ( unsigned i = 0; i < count; i++ )
+      for ( size_t i = 0; i < count; i++ )
          destBuffer_->setNextInt64( minimum_ );
    }
    currentRecordIndex_ += count;

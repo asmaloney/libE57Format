@@ -18,7 +18,6 @@ install(
 target_include_directories( ${PROJECT_NAME}
 	PUBLIC
 		$<INSTALL_INTERFACE:include/E57Format>
-	PRIVATE
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 )
 

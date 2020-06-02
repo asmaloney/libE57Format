@@ -21,7 +21,7 @@ target_sources( E57Format
 )
 
 target_include_directories( ${PROJECT_NAME}
-	PRIVATE
+	PUBLIC
 	    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
 )
 

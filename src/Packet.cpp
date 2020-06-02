@@ -161,11 +161,11 @@ std::unique_ptr<PacketLock> PacketReadCache::lock( uint64_t packetLogicalOffset,
    return plock;
 }
 
-void PacketReadCache::unlock( unsigned lockedEntry )
+void PacketReadCache::unlock( unsigned cacheIndex )
 {
    //??? why lockedEntry not used?
 #ifdef E57_MAX_VERBOSE
-   std::cout << "PacketReadCache::unlock() called, lockedEntry=" << lockedEntry << std::endl;
+   std::cout << "PacketReadCache::unlock() called, cacheIndex=" << cacheIndex << std::endl;
 #endif
 
    if ( lockCount_ != 1 )

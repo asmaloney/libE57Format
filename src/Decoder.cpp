@@ -387,7 +387,6 @@ size_t BitpackFloatDecoder::inputProcessAligned( const char *inbuf, const size_t
    // Can't process more than defined in input file
    if ( n > maxRecordCount_ - currentRecordIndex_ )
       n = static_cast<unsigned>( maxRecordCount_ - currentRecordIndex_ );
-   }
 
 #ifdef E57_MAX_VERBOSE
    std::cout << "  n:" << n << std::endl; //???

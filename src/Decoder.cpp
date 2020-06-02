@@ -36,7 +36,7 @@
 using namespace e57;
 
 std::shared_ptr<Decoder> Decoder::DecoderFactory( unsigned bytestreamNumber, //!!! name ok?
-                                                  std::shared_ptr<CompressedVectorNodeImpl> cVector,
+                                                  const CompressedVectorNodeImpl *cVector,
                                                   std::vector<SourceDestBuffer> &dbufs, const ustring & /*codecPath*/ )
 {
    //!!! verify single dbuf

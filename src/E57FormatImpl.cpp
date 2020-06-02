@@ -1918,7 +1918,7 @@ CompressedVectorReaderImpl::CompressedVectorReaderImpl( std::shared_ptr<Compress
       std::vector<SourceDestBuffer> theDbuf;
       theDbuf.push_back( dbufs.at( i ) );
 
-      std::shared_ptr<Decoder> decoder = Decoder::DecoderFactory( i, cVector_, theDbuf, ustring() );
+      std::shared_ptr<Decoder> decoder = Decoder::DecoderFactory( i, cVector_.get(), theDbuf, ustring() );
 
       /// Calc which stream the given path belongs to.  This depends on position
       /// of the node in the proto tree.

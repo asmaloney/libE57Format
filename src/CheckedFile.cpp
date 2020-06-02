@@ -377,7 +377,7 @@ CheckedFile &CheckedFile::operator<<( double d )
 template <class FTYPE> CheckedFile &CheckedFile::writeFloatingPoint( FTYPE value, int precision )
 {
 #ifdef E57_MAX_VERBOSE
-   cout << "CheckedFile::writeFloatingPoint, value=" << value << " precision=" << precision << std::endl;
+   std::cout << "CheckedFile::writeFloatingPoint, value=" << value << " precision=" << precision << std::endl;
 #endif
 
    std::stringstream ss;
@@ -672,7 +672,7 @@ void CheckedFile::unlink()
 #ifdef E57_MAX_VERBOSE
    if ( result < 0 )
    {
-      cout << "std::remove() failed, result=" << result << std::endl;
+      std::cout << "std::remove() failed, result=" << result << std::endl;
    }
 #endif
 }

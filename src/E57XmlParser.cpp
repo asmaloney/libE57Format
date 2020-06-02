@@ -254,18 +254,18 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
                                  const Attributes &attributes )
 {
 #ifdef E57_MAX_VERBOSE
-   cout << "startElement" << std::endl;
-   cout << space( 2 ) << "URI:       " << toUString( uri ) << std::endl;
-   cout << space( 2 ) << "localName: " << toUString( localName ) << std::endl;
-   cout << space( 2 ) << "qName:     " << toUString( qName ) << std::endl;
+   std::cout << "startElement" << std::endl;
+   std::cout << space( 2 ) << "URI:       " << toUString( uri ) << std::endl;
+   std::cout << space( 2 ) << "localName: " << toUString( localName ) << std::endl;
+   std::cout << space( 2 ) << "qName:     " << toUString( qName ) << std::endl;
 
    for ( size_t i = 0; i < attributes.getLength(); i++ )
    {
-      cout << space( 2 ) << "Attribute[" << i << "]" << std::endl;
-      cout << space( 4 ) << "URI:       " << toUString( attributes.getURI( i ) ) << std::endl;
-      cout << space( 4 ) << "localName: " << toUString( attributes.getLocalName( i ) ) << std::endl;
-      cout << space( 4 ) << "qName:     " << toUString( attributes.getQName( i ) ) << std::endl;
-      cout << space( 4 ) << "value:     " << toUString( attributes.getValue( i ) ) << std::endl;
+      std::cout << space( 2 ) << "Attribute[" << i << "]" << std::endl;
+      std::cout << space( 4 ) << "URI:       " << toUString( attributes.getURI( i ) ) << std::endl;
+      std::cout << space( 4 ) << "localName: " << toUString( attributes.getLocalName( i ) ) << std::endl;
+      std::cout << space( 4 ) << "qName:     " << toUString( attributes.getQName( i ) ) << std::endl;
+      std::cout << space( 4 ) << "value:     " << toUString( attributes.getValue( i ) ) << std::endl;
    }
 #endif
    /// Get Type attribute
@@ -279,7 +279,7 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
    if ( node_type == "Integer" )
    {
 #ifdef E57_MAX_VERBOSE
-      cout << "got a Integer" << std::endl;
+      std::cout << "got a Integer" << std::endl;
 #endif
       //??? check validity of numeric strings
       pi.nodeType = E57_INTEGER;
@@ -314,7 +314,7 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
    else if ( node_type == "ScaledInteger" )
    {
 #ifdef E57_MAX_VERBOSE
-      cout << "got a ScaledInteger" << std::endl;
+      std::cout << "got a ScaledInteger" << std::endl;
 #endif
       pi.nodeType = E57_SCALED_INTEGER;
 
@@ -371,7 +371,7 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
    else if ( node_type == "Float" )
    {
 #ifdef E57_MAX_VERBOSE
-      cout << "got a Float" << std::endl;
+      std::cout << "got a Float" << std::endl;
 #endif
       pi.nodeType = E57_FLOAT;
 
@@ -431,7 +431,7 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
    else if ( node_type == "String" )
    {
 #ifdef E57_MAX_VERBOSE
-      cout << "got a String" << std::endl;
+      std::cout << "got a String" << std::endl;
 #endif
       pi.nodeType = E57_STRING;
 
@@ -441,7 +441,7 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
    else if ( node_type == "Blob" )
    {
 #ifdef E57_MAX_VERBOSE
-      cout << "got a Blob" << std::endl;
+      std::cout << "got a Blob" << std::endl;
 #endif
       pi.nodeType = E57_BLOB;
 
@@ -463,7 +463,7 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
    else if ( node_type == "Structure" )
    {
 #ifdef E57_MAX_VERBOSE
-      cout << "got a Structure" << std::endl;
+      std::cout << "got a Structure" << std::endl;
 #endif
       pi.nodeType = E57_STRUCTURE;
 
@@ -479,7 +479,7 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
             if ( toUString( attributes.getQName( i ) ) == "xmlns" )
             {
 #ifdef E57_VERBOSE
-               cout << "declared default namespace, URI=" << toUString( attributes.getValue( i ) ) << std::endl;
+               std::cout << "declared default namespace, URI=" << toUString( attributes.getValue( i ) ) << std::endl;
 #endif
                imf_->extensionsAdd( "", toUString( attributes.getValue( i ) ) );
                gotDefault = true;
@@ -520,7 +520,7 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
    else if ( node_type == "Vector" )
    {
 #ifdef E57_MAX_VERBOSE
-      cout << "got a Vector" << std::endl;
+      std::cout << "got a Vector" << std::endl;
 #endif
       pi.nodeType = E57_VECTOR;
 
@@ -558,7 +558,7 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
    else if ( node_type == "CompressedVector" )
    {
 #ifdef E57_MAX_VERBOSE
-      cout << "got a CompressedVector" << std::endl;
+      std::cout << "got a CompressedVector" << std::endl;
 #endif
       pi.nodeType = E57_COMPRESSED_VECTOR;
 
@@ -596,7 +596,7 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
 void E57XmlParser::endElement( const XMLCh *const uri, const XMLCh *const localName, const XMLCh *const qName )
 {
 #ifdef E57_MAX_VERBOSE
-   cout << "endElement" << std::endl;
+   std::cout << "endElement" << std::endl;
 #endif
 
    /// Pop the node that just ended
@@ -785,7 +785,7 @@ void E57XmlParser::characters( const XMLCh *const chars, const XMLSize_t length 
 {
 //??? use length to make ustring
 #ifdef E57_MAX_VERBOSE
-   cout << "characters, chars=\"" << toUString( chars ) << "\" length=" << length << std::endl;
+   std::cout << "characters, chars=\"" << toUString( chars ) << "\" length=" << length << std::endl;
 #endif
    /// Get active element
    ParseInfo &pi = stack_.top();

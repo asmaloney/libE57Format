@@ -47,7 +47,7 @@ namespace e57
    //! @endcond
 
    //! @brief Defines a rigid body translation in Cartesian coordinates.
-   struct Translation
+   struct E57_DLL Translation
    {
       double x{ 0. }; //!< The X coordinate of the translation (in meters)
       double y{ 0. }; //!< The Y coordinate of the translation (in meters)
@@ -69,7 +69,7 @@ namespace e57
    };
 
    //! @brief Represents a rigid body rotation.
-   struct Quaternion
+   struct E57_DLL Quaternion
    {
       double w{ 0. }; //!< The real part of the quaternion. Shall be nonnegative
       double x{ 0. }; //!< The i coefficient of the quaternion
@@ -94,7 +94,7 @@ namespace e57
    };
 
    //! @brief Defines a rigid body transform in cartesian coordinates.
-   struct RigidBodyTransform
+   struct E57_DLL RigidBodyTransform
    {
       Quaternion rotation;     //!< A unit quaternion representing the rotation, R, of the transform
       Translation translation; //!< The translation point vector, t, of the transform
@@ -115,7 +115,7 @@ namespace e57
    };
 
    //! @brief Specifies an axis-aligned box in local cartesian coordinates.
-   struct CartesianBounds
+   struct E57_DLL CartesianBounds
    {
       double xMinimum{ -E57_DOUBLE_MAX }; //!< The minimum extent of the bounding box in the X direction
       double xMaximum{ E57_DOUBLE_MAX };  //!< The maximum extent of the bounding box in the X direction
@@ -136,7 +136,7 @@ namespace e57
    };
 
    //! @brief Stores the bounds of some data in spherical coordinates.
-   struct SphericalBounds
+   struct E57_DLL SphericalBounds
    {
       SphericalBounds();       // constructor in the cpp to avoid exposing M_PI
       double rangeMinimum;     //!< The minimum extent of the bounding region in the r direction
@@ -159,7 +159,7 @@ namespace e57
    };
 
    //! @brief Stores the minimum and maximum of rowIndex, columnIndex, and returnIndex fields for a set of points.
-   struct IndexBounds
+   struct E57_DLL IndexBounds
    {
       int64_t rowMinimum{ 0 }; //!< The minimum rowIndex value of any point represented by this IndexBounds object.
       int64_t rowMaximum{ 0 }; //!< The maximum rowIndex value of any point represented by this IndexBounds object.
@@ -189,7 +189,7 @@ namespace e57
    };
 
    //! @brief Specifies the limits for the value of signal intensity that a sensor is capable of producing
-   struct IntensityLimits
+   struct E57_DLL IntensityLimits
    {
       double intensityMinimum{ 0. }; //!< The minimum producible intensity value. Unit is unspecified.
       double intensityMaximum{ 0. }; //!< The maximum producible intensity value. Unit is unspecified.
@@ -205,7 +205,7 @@ namespace e57
    };
 
    //! @brief Specifies the limits for the value of red, green, and blue color that a sensor is capable of producing.
-   struct ColorLimits
+   struct E57_DLL ColorLimits
    {
       double colorRedMinimum{ 0. };   //!< The minimum producible red color value. Unit is unspecified.
       double colorRedMaximum{ 0. };   //!< The maximum producible red color value. Unit is unspecified.
@@ -230,7 +230,7 @@ namespace e57
    //! @details The date and time is encoded using a single floating point number, stored as an E57 Float element which
    //! is based on the Global Positioning
    //!	System (GPS) time scale.
-   struct DateTime
+   struct E57_DLL DateTime
    {
       double dateTimeValue{
          0.
@@ -251,7 +251,7 @@ namespace e57
    };
 
    //! @brief Stores the top-level information for the XML section of the file.
-   struct E57Root
+   struct E57_DLL E57Root
    {
       ustring formatName;         //!< Contains the string "ASTM E57 3D Image File"
       ustring guid;               //!< A globally unique identification string for the current version of the file
@@ -266,7 +266,7 @@ namespace e57
    };
 
    //! @brief Stores information about a single group of points in a row or column
-   struct LineGroupRecord
+   struct E57_DLL LineGroupRecord
    {
       int64_t idElementValue{
          0
@@ -284,7 +284,7 @@ namespace e57
    };
 
    //! @brief Stores a set of point groups organized by the rowIndex or columnIndex attribute of the PointRecord
-   struct GroupingByLine
+   struct E57_DLL GroupingByLine
    {
       ustring idElementName;   //!< The name of the PointRecord element that identifies which group the point is in. The
                                //!< value of this string must be "rowIndex" or "columnIndex"
@@ -293,13 +293,13 @@ namespace e57
    };
 
    //! @brief Supports the division of points within an Data3D into logical groupings
-   struct PointGroupingSchemes
+   struct E57_DLL PointGroupingSchemes
    {
       GroupingByLine groupingByLine; //!< Grouping information by row or column index
    };
 
    //! @brief Used to interrogate if standardized fields are available
-   struct PointStandardizedFieldsAvailable
+   struct E57_DLL PointStandardizedFieldsAvailable
    {
       bool cartesianXField{ false }; //!< Indicates that the PointRecord cartesianX field is active
       bool cartesianYField{ false }; //!< Indicates that the PointRecord cartesianY field is active
@@ -388,7 +388,7 @@ namespace e57
    };
 
    //! @brief Stores the top-level information for a single lidar scan
-   struct Data3D
+   struct E57_DLL Data3D
    {
       ustring name; //!< A user-defined name for the Data3D.
       ustring guid; //!< A globally unique identification string for the current version of the Data3D object
@@ -435,7 +435,7 @@ namespace e57
    };
 
    //! @brief Stores pointers to user-provided buffers
-   struct Data3DPointsData
+   struct E57_DLL Data3DPointsData
    {
       float *cartesianX{
          nullptr
@@ -495,7 +495,7 @@ namespace e57
    };
 
    //! @brief Stores an image that is to be used only as a visual reference.
-   struct VisualReferenceRepresentation
+   struct E57_DLL VisualReferenceRepresentation
    {
       int64_t jpegImageSize{ 0 }; //!< Size of JPEG format image data in BlobNode.
       int64_t pngImageSize{ 0 };  //!< Size of PNG format image data in BlobNode.
@@ -516,7 +516,7 @@ namespace e57
    };
 
    //! @brief Stores an image that is mapped from 3D using the pinhole camera projection model.
-   struct PinholeRepresentation
+   struct E57_DLL PinholeRepresentation
    {
       int64_t jpegImageSize{ 0 }; //!< Size of JPEG format image data in BlobNode.
       int64_t pngImageSize{ 0 };  //!< Size of PNG format image data in BlobNode.
@@ -547,7 +547,7 @@ namespace e57
    };
 
    //! @brief Stores an image that is mapped from 3D using a spherical projection model
-   struct SphericalRepresentation
+   struct E57_DLL SphericalRepresentation
    {
       int64_t jpegImageSize{ 0 }; //!< Size of JPEG format image data in BlobNode.
       int64_t pngImageSize{ 0 };  //!< Size of PNG format image data in BlobNode.
@@ -571,7 +571,7 @@ namespace e57
    };
 
    //! @brief Stores an image that is mapped from 3D using a cylindrical projection model.
-   struct CylindricalRepresentation
+   struct E57_DLL CylindricalRepresentation
    {
       int64_t jpegImageSize{ 0 }; //!< Size of JPEG format image data in Blob.
       int64_t pngImageSize{ 0 };  //!< Size of PNG format image data in Blob.
@@ -600,7 +600,7 @@ namespace e57
    };
 
    //! @brief Stores an image from a camera
-   struct Image2D
+   struct E57_DLL Image2D
    {
       ustring name;        //!< A user-defined name for the Image2D.
       ustring guid;        //!< A globally unique identification string for the current version of the Image2D object
@@ -650,7 +650,7 @@ namespace e57
    ////////////////////////////////////////////////////////////////////
 
    //! @brief Used for reading of the E57 file with E57 Simple API
-   class Reader
+   class E57_DLL Reader
    {
    public:
       //! @brief This function is the constructor for the reader class
@@ -789,7 +789,7 @@ namespace e57
    ////////////////////////////////////////////////////////////////////
 
    //! @brief Used for writing of the E57 file with E57 Simple API
-   class Writer
+   class E57_DLL Writer
    {
    public:
       //! @brief This function is the constructor for the writer class

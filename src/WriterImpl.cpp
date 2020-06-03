@@ -86,19 +86,18 @@ namespace e57
 
    bool WriterImpl::IsOpen()
    {
-      if ( imf_.isOpen() )
-         return true;
-      return false;
+      return imf_.isOpen();
    }
 
    bool WriterImpl::Close()
    {
-      if ( IsOpen() )
+      if ( !IsOpen() )
       {
-         imf_.close();
-         return true;
+         return false;
       }
-      return false;
+
+      imf_.close();
+      return true;
    }
 
    StructureNode WriterImpl::GetRawE57Root()

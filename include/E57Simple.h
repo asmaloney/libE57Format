@@ -787,7 +787,6 @@ namespace e57
 
       E57_OBJECT_IMPLEMENTATION( Reader ) // Internal implementation details, not part of API, must be last in object
       //! @endcond
-
    }; // end Reader class
 
    ////////////////////////////////////////////////////////////////////
@@ -882,7 +881,6 @@ namespace e57
 
       E57_OBJECT_IMPLEMENTATION( Writer ) // Internal implementation details, not part of API, must be last in object
       //! @endcond
-
    }; // end Writer class
 
 } // end namespace e57

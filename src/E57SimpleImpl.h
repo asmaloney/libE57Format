@@ -126,7 +126,6 @@ namespace e57
       VectorNode GetRawImages2D();
 
       ImageFile GetRawIMF();
-
    }; // end Reader class
 
    ////////////////////////////////////////////////////////////////////
@@ -183,7 +182,6 @@ namespace e57
       VectorNode GetRawImages2D();
 
       ImageFile GetRawIMF();
-
    }; // end Writer class
 
-}; // end namespace
+} // end namespace

@@ -1302,7 +1302,6 @@ CompressedVectorReader ReaderImpl::SetUpData3DPointsData( int64_t dataIndex, siz
 WriterImpl::WriterImpl( const ustring &filePath, const ustring &coordinateMetadata ) :
    imf_( filePath, "w" ), root_( imf_.root() ), data3D_( imf_, true ), images2D_( imf_, true )
 {
-
    // We are using the E57 v1.0 data format standard fieldnames.
    // The standard fieldnames are used without an extension prefix (in the default namespace).
    // We explicitly register it for completeness (the reference implementaion would do it for us, if we didn't).
@@ -1724,7 +1723,6 @@ int64_t WriterImpl::NewData3D( Data3D &data3DHeader, bool ( *pointExtension )( I
    if ( ( data3DHeader.intensityLimits.intensityMaximum != 0. ) ||
         ( data3DHeader.intensityLimits.intensityMinimum != 0. ) )
    {
-
       StructureNode intbox = StructureNode( imf_ );
       if ( data3DHeader.pointFields.intensityScaledInteger > 0. )
       {
@@ -1757,7 +1755,6 @@ int64_t WriterImpl::NewData3D( Data3D &data3DHeader, bool ( *pointExtension )( I
 
    if ( ( data3DHeader.colorLimits.colorRedMaximum != 0. ) || ( data3DHeader.colorLimits.colorRedMinimum != 0. ) )
    {
-
       StructureNode colorbox = StructureNode( imf_ );
       colorbox.set( "colorRedMaximum", IntegerNode( imf_, (int64_t)data3DHeader.colorLimits.colorRedMaximum ) );
       colorbox.set( "colorRedMinimum", IntegerNode( imf_, (int64_t)data3DHeader.colorLimits.colorRedMinimum ) );
@@ -1773,7 +1770,6 @@ int64_t WriterImpl::NewData3D( Data3D &data3DHeader, bool ( *pointExtension )( I
    if ( ( data3DHeader.cartesianBounds.xMinimum != -E57_DOUBLE_MAX ) ||
         ( data3DHeader.cartesianBounds.xMaximum != E57_DOUBLE_MAX ) )
    {
-
       StructureNode bbox = StructureNode( imf_ );
       bbox.set( "xMinimum", FloatNode( imf_, data3DHeader.cartesianBounds.xMinimum ) );
       bbox.set( "xMaximum", FloatNode( imf_, data3DHeader.cartesianBounds.xMaximum ) );
@@ -1787,7 +1783,6 @@ int64_t WriterImpl::NewData3D( Data3D &data3DHeader, bool ( *pointExtension )( I
    if ( ( data3DHeader.sphericalBounds.rangeMinimum != 0. ) ||
         ( data3DHeader.sphericalBounds.rangeMaximum != E57_DOUBLE_MAX ) )
    {
-
       StructureNode sbox = StructureNode( imf_ );
       sbox.set( "rangeMinimum", FloatNode( imf_, data3DHeader.sphericalBounds.rangeMinimum ) );
       sbox.set( "rangeMaximum", FloatNode( imf_, data3DHeader.sphericalBounds.rangeMaximum ) );
@@ -2206,7 +2201,6 @@ CompressedVectorWriter WriterImpl::SetUpData3DPointsData( int64_t dataIndex, siz
 bool WriterImpl::WriteData3DGroupsData( int64_t dataIndex, int64_t groupCount, int64_t *idElementValue,
                                         int64_t *startPointIndex, int64_t *pointCount )
 {
-
    if ( ( dataIndex < 0 ) || ( dataIndex >= data3D_.childCount() ) )
       return false;
 

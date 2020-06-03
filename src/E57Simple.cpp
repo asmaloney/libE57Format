@@ -33,7 +33,8 @@
 #include <cmath>
 
 #include "E57Simple.h"
-#include "E57SimpleImpl.h"
+#include "ReaderImpl.h"
+#include "WriterImpl.h"
 
 namespace e57
 {

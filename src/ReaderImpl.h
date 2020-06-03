@@ -29,20 +29,8 @@
 
 #include "E57Simple.h"
 
-// Define the following symbol adds some functions to the API for implementation purposes.
-// These functions are not available to a normal API user.
-#define E57_INTERNAL_IMPLEMENTATION_ENABLE 1
-
 namespace e57
 {
-
-   //! generates a new random GUID
-   std::string GetNewGuid();
-
-   ////////////////////////////////////////////////////////////////////
-   //
-   // Reader implementation
-   //
 
    //! most of the functions follows Reader
    class ReaderImpl
@@ -119,61 +107,5 @@ namespace e57
 
       ImageFile GetRawIMF();
    }; // end Reader class
-
-   ////////////////////////////////////////////////////////////////////
-   //
-   // Writer implementation
-   //
-
-   //! most of the functions follows Writer
-   class WriterImpl
-   {
-   private:
-      ImageFile imf_;
-      StructureNode root_;
-
-      VectorNode data3D_;
-
-      VectorNode images2D_;
-
-      //! @brief This function writes the projection image
-      //! @param image 1 of 3 projects or the visual
-      //! @param imageType identifies the image format desired.
-      //! @param pBuffer pointer the buffer
-      //! @param start position in the block to start reading
-      //! @param count size of desired chuck or buffer size
-      int64_t WriteImage2DNode( StructureNode image, Image2DType imageType, void *pBuffer, int64_t start,
-                                int64_t count );
-
-   public:
-      WriterImpl( const ustring &filePath, const ustring &coordinateMetaData );
-
-      ~WriterImpl();
-
-      bool IsOpen();
-
-      bool Close();
-
-      int64_t NewImage2D( Image2D &image2DHeader );
-
-      int64_t WriteImage2DData( int64_t imageIndex, Image2DType imageType, Image2DProjection imageProjection,
-                                void *pBuffer, int64_t start, int64_t count );
-
-      int64_t NewData3D( Data3D &data3DHeader );
-
-      CompressedVectorWriter SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
-                                                    const Data3DPointsData &buffers );
-
-      bool WriteData3DGroupsData( int64_t dataIndex, int64_t groupCount, int64_t *idElementValue,
-                                  int64_t *startPointIndex, int64_t *pointCount );
-
-      StructureNode GetRawE57Root();
-
-      VectorNode GetRawData3D();
-
-      VectorNode GetRawImages2D();
-
-      ImageFile GetRawIMF();
-   }; // end Writer class
 
 } // end namespace e57

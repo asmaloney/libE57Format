@@ -49,10 +49,10 @@ namespace e57
 
    ////////////////////////////////////////////////////////////////////
    //
-   // e57::Reader implementation
+   // Reader implementation
    //
 
-   //! most of the functions follows e57::Reader
+   //! most of the functions follows Reader
    class ReaderImpl
    {
    private:
@@ -71,8 +71,8 @@ namespace e57
       //! @param [out] imageSize This is the total number of bytes for the image blob.
       //! @param [out] imageMaskType This is E57_PNG_IMAGE_MASK if "imageMask" is defined in the projection
       //! @return Returns true if sucessful
-      bool GetImage2DNodeSizes( e57::StructureNode image, e57::Image2DType &imageType, int64_t &imageWidth,
-                                int64_t &imageHeight, int64_t &imageSize, e57::Image2DType &imageMaskType );
+      bool GetImage2DNodeSizes( StructureNode image, Image2DType &imageType, int64_t &imageWidth, int64_t &imageHeight,
+                                int64_t &imageSize, Image2DType &imageMaskType );
 
       //! @brief Reads the data out of a given image node
       //! @param [in] image 1 of 3 projects or the visual
@@ -81,7 +81,7 @@ namespace e57
       //! @param [out] start position in the block to start reading
       //! @param [out] count size of desired chuck or buffer size
       //! @return number of bytes read
-      int64_t ReadImage2DNode( e57::StructureNode image, e57::Image2DType imageType, void *pBuffer, int64_t start,
+      int64_t ReadImage2DNode( StructureNode image, Image2DType imageType, void *pBuffer, int64_t start,
                                int64_t count );
 
    public:
@@ -99,11 +99,11 @@ namespace e57
 
       bool ReadImage2D( int64_t imageIndex, Image2D &Image2DHeader );
 
-      bool GetImage2DSizes( int64_t imageIndex, e57::Image2DProjection &imageProjection, e57::Image2DType &imageType,
-                            int64_t &imageWidth, int64_t &imageHeight, int64_t &imageSize,
-                            e57::Image2DType &imageMaskType, e57::Image2DType &imageVisualType );
+      bool GetImage2DSizes( int64_t imageIndex, Image2DProjection &imageProjection, Image2DType &imageType,
+                            int64_t &imageWidth, int64_t &imageHeight, int64_t &imageSize, Image2DType &imageMaskType,
+                            Image2DType &imageVisualType );
 
-      int64_t ReadImage2DData( int64_t imageIndex, e57::Image2DProjection imageProjection, e57::Image2DType imageType,
+      int64_t ReadImage2DData( int64_t imageIndex, Image2DProjection imageProjection, Image2DType imageType,
                                void *pBuffer, int64_t start, int64_t count );
 
       int64_t GetData3DCount();
@@ -130,10 +130,10 @@ namespace e57
 
    ////////////////////////////////////////////////////////////////////
    //
-   // e57::Writer implementation
+   // Writer implementation
    //
 
-   //! most of the functions follows e57::Writer
+   //! most of the functions follows Writer
    class WriterImpl
    {
    private:
@@ -150,7 +150,7 @@ namespace e57
       //! @param pBuffer pointer the buffer
       //! @param start position in the block to start reading
       //! @param count size of desired chuck or buffer size
-      int64_t WriteImage2DNode( e57::StructureNode image, e57::Image2DType imageType, void *pBuffer, int64_t start,
+      int64_t WriteImage2DNode( StructureNode image, Image2DType imageType, void *pBuffer, int64_t start,
                                 int64_t count );
 
    public:
@@ -164,7 +164,7 @@ namespace e57
 
       int64_t NewImage2D( Image2D &image2DHeader );
 
-      int64_t WriteImage2DData( int64_t imageIndex, e57::Image2DType imageType, e57::Image2DProjection imageProjection,
+      int64_t WriteImage2DData( int64_t imageIndex, Image2DType imageType, Image2DProjection imageProjection,
                                 void *pBuffer, int64_t start, int64_t count );
 
       int64_t NewData3D( Data3D &data3DHeader );
@@ -184,4 +184,4 @@ namespace e57
       ImageFile GetRawIMF();
    }; // end Writer class
 
-} // end namespace
+} // end namespace e57

@@ -51,7 +51,7 @@ SphericalBounds::SphericalBounds()
 
 ////////////////////////////////////////////////////////////////////
 //
-//	e57::Reader
+//	Reader
 //
 Reader::Reader( const ustring &filePath ) : impl_( new ReaderImpl( filePath ) )
 {
@@ -82,15 +82,15 @@ bool Reader::ReadImage2D( int64_t imageIndex, Image2D &image2DHeader ) const
    return impl_->ReadImage2D( imageIndex, image2DHeader );
 };
 
-bool Reader::GetImage2DSizes( int64_t imageIndex, e57::Image2DProjection &imageProjection, e57::Image2DType &imageType,
-                              int64_t &imageWidth, int64_t &imageHeight, int64_t &imageSize,
-                              e57::Image2DType &imageMaskType, e57::Image2DType &imageVisualType ) const
+bool Reader::GetImage2DSizes( int64_t imageIndex, Image2DProjection &imageProjection, Image2DType &imageType,
+                              int64_t &imageWidth, int64_t &imageHeight, int64_t &imageSize, Image2DType &imageMaskType,
+                              Image2DType &imageVisualType ) const
 {
    return impl_->GetImage2DSizes( imageIndex, imageProjection, imageType, imageWidth, imageHeight, imageSize,
                                   imageMaskType, imageVisualType );
 };
 
-int64_t Reader::ReadImage2DData( int64_t imageIndex, e57::Image2DProjection imageProjection, e57::Image2DType imageType,
+int64_t Reader::ReadImage2DData( int64_t imageIndex, Image2DProjection imageProjection, Image2DType imageType,
                                  void *pBuffer, int64_t start, int64_t count ) const
 {
    return impl_->ReadImage2DData( imageIndex, imageProjection, imageType, pBuffer, start, count );
@@ -146,7 +146,7 @@ CompressedVectorReader Reader::SetUpData3DPointsData( int64_t dataIndex, size_t 
 
 ////////////////////////////////////////////////////////////////////
 //
-//	e57::Writer
+//	Writer
 //
 Writer::Writer( const ustring &filePath, const ustring &coordinateMetaData ) :
    impl_( new WriterImpl( filePath, coordinateMetaData ) )
@@ -188,9 +188,8 @@ int64_t Writer::NewImage2D( Image2D &image2DHeader ) const
    return impl_->NewImage2D( image2DHeader );
 };
 
-int64_t Writer::WriteImage2DData( int64_t imageIndex, e57::Image2DType imageType,
-                                  e57::Image2DProjection imageProjection, void *pBuffer, int64_t start,
-                                  int64_t count ) const
+int64_t Writer::WriteImage2DData( int64_t imageIndex, Image2DType imageType, Image2DProjection imageProjection,
+                                  void *pBuffer, int64_t start, int64_t count ) const
 {
    return impl_->WriteImage2DData( imageIndex, imageType, imageProjection, pBuffer, start, count );
 };

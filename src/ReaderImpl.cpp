@@ -45,27 +45,29 @@ namespace e57
    // This function returns true if the file is open
    bool ReaderImpl::IsOpen()
    {
-      if ( imf_.isOpen() )
-         return true;
-      return false;
+      return imf_.isOpen();
    }
 
    // This function closes the file
    bool ReaderImpl::Close()
    {
-      if ( IsOpen() )
+      if ( !IsOpen() )
       {
-         imf_.close();
-         return true;
+         return false;
       }
-      return false;
+
+      imf_.close();
+      return true;
    }
 
    // This function returns the file header information
    bool ReaderImpl::GetE57Root( E57Root &fileHeader )
    {
-      if ( IsOpen() )
+      if ( !IsOpen() )
       {
+         return false;
+      }
+
          fileHeader = {};
 
          fileHeader.formatName = StringNode( root_.get( "formatName" ) ).value();
@@ -90,8 +92,6 @@ namespace e57
          fileHeader.images2DSize = images2D_.childCount();
 
          return true;
-      }
-      return false;
    }
 
    int64_t ReaderImpl::GetImage2DCount()
@@ -102,10 +102,14 @@ namespace e57
    // This function returns the Image2Ds header and positions the cursor
    bool ReaderImpl::ReadImage2D( int64_t imageIndex, Image2D &image2DHeader )
    {
-      if ( IsOpen() )
+      if ( !IsOpen() )
       {
-         if ( ( imageIndex < 0 ) || ( imageIndex >= images2D_.childCount() ) )
-            return false;
+         return false;
+      }
+      if ( ( imageIndex < 0 ) || ( imageIndex >= images2D_.childCount() ) )
+      {
+         return false;
+      }
 
          image2DHeader = {};
 
@@ -261,9 +265,8 @@ namespace e57
             image2DHeader.cylindricalRepresentation.radius =
                FloatNode( cylindricalRepresentation.get( "radius" ) ).value();
          }
+
          return true;
-      }
-      return false;
    }
 
    // This function reads one of the image blobs
@@ -400,6 +403,7 @@ namespace e57
          ret = GetImage2DNodeSizes( cylindricalRepresentation, imageType, imageWidth, imageHeight, imageSize,
                                     imageMaskType );
       }
+
       return ret;
    }
 
@@ -449,6 +453,7 @@ namespace e57
             }
             break;
       }
+
       return transferred;
    }
 
@@ -479,10 +484,14 @@ namespace e57
 
    bool ReaderImpl::ReadData3D( int64_t dataIndex, Data3D &data3DHeader )
    {
-      if ( IsOpen() )
+      if ( !IsOpen() )
       {
-         if ( ( dataIndex < 0 ) || ( dataIndex >= data3D_.childCount() ) )
-            return false;
+         return false;
+      }
+      if ( ( dataIndex < 0 ) || ( dataIndex >= data3D_.childCount() ) )
+      {
+         return false;
+      }
 
          data3DHeader = {};
 
@@ -1017,26 +1026,28 @@ namespace e57
          }
 
          return true;
-      }
-      return false;
    }
 
    // This function returns the size of the point data
    bool ReaderImpl::GetData3DSizes( int64_t dataIndex, int64_t &row, int64_t &column, int64_t &pointsSize,
                                     int64_t &groupsSize, int64_t &countSize, bool &bColumnIndex )
    {
-      if ( IsOpen() )
-      {
-         row = 0;
-         column = 0;
-         pointsSize = 0;
-         groupsSize = 0;
-         int64_t elementSize = 0;
-         countSize = 0;
-         bColumnIndex = false;
+      row = 0;
+      column = 0;
+      pointsSize = 0;
+      groupsSize = 0;
+      int64_t elementSize = 0;
+      countSize = 0;
+      bColumnIndex = false;
 
-         if ( ( dataIndex < 0 ) || ( dataIndex >= data3D_.childCount() ) )
-            return false;
+      if ( !IsOpen() )
+      {
+         return false;
+      }
+      if ( ( dataIndex < 0 ) || ( dataIndex >= data3D_.childCount() ) )
+      {
+         return false;
+      }
 
          StructureNode scan( data3D_.get( dataIndex ) );
 
@@ -1103,9 +1114,8 @@ namespace e57
             else
                column = countSize;
          }
+
          return true;
-      }
-      return false;
    }
 
    // This funtion writes out the group data
@@ -1113,14 +1123,22 @@ namespace e57
                                           int64_t *startPointIndex, int64_t *pointCount )
    {
       if ( ( dataIndex < 0 ) || ( dataIndex >= data3D_.childCount() ) )
+      {
          return false;
+      }
 
       StructureNode scan( data3D_.get( dataIndex ) );
-      if ( scan.isDefined( "pointGroupingSchemes" ) )
+      if ( !scan.isDefined( "pointGroupingSchemes" ) )
       {
+         return false;
+      }
+
          StructureNode pointGroupingSchemes( scan.get( "pointGroupingSchemes" ) );
-         if ( pointGroupingSchemes.isDefined( "groupingByLine" ) )
+         if ( !pointGroupingSchemes.isDefined( "groupingByLine" ) )
          {
+            return false;
+         }
+
             StructureNode groupingByLine( pointGroupingSchemes.get( "groupingByLine" ) );
 
             StringNode idElementName( groupingByLine.get( "idElementName" ) );
@@ -1154,10 +1172,8 @@ namespace e57
 
             reader.read();
             reader.close();
+
             return true;
-         }
-      }
-      return false;
    }
 
    CompressedVectorReader ReaderImpl::SetUpData3DPointsData( int64_t dataIndex, size_t count,

@@ -195,9 +195,9 @@ int64_t Writer::WriteImage2DData( int64_t imageIndex, e57::Image2DType imageType
    return impl_->WriteImage2DData( imageIndex, imageType, imageProjection, pBuffer, start, count );
 };
 
-int64_t Writer::NewData3D( Data3D &data3DHeader, bool ( *pointExtension )( ImageFile imf, StructureNode proto ) ) const
+int64_t Writer::NewData3D( Data3D &data3DHeader ) const
 {
-   return impl_->NewData3D( data3DHeader, pointExtension );
+   return impl_->NewData3D( data3DHeader );
 };
 
 CompressedVectorWriter Writer::SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,

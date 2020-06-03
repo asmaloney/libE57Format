@@ -167,7 +167,7 @@ namespace e57
       int64_t WriteImage2DData( int64_t imageIndex, e57::Image2DType imageType, e57::Image2DProjection imageProjection,
                                 void *pBuffer, int64_t start, int64_t count );
 
-      int64_t NewData3D( Data3D &data3DHeader, bool ( *pointExtension )( ImageFile imf, StructureNode proto ) );
+      int64_t NewData3D( Data3D &data3DHeader );
 
       CompressedVectorWriter SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
                                                     const Data3DPointsData &buffers );

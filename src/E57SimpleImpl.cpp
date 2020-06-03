@@ -1285,8 +1285,6 @@ CompressedVectorReader ReaderImpl::SetUpData3DPointsData( int64_t dataIndex, siz
       else if ( haveNormalsExt && ( name.compare( "nor:normalZ" ) == 0 ) && proto.isDefined( "nor:normalZ" ) &&
                 ( buffers.normalZ != nullptr ) )
          destBuffers.push_back( SourceDestBuffer( imf_, "nor:normalZ", buffers.normalZ, count, true, scaled ) );
-      else if ( buffers.pointDataExtension != nullptr )
-         ( *buffers.pointDataExtension )( imf_, proto, destBuffers );
    }
 
    CompressedVectorReader reader = points.reader( destBuffers );
@@ -1637,7 +1635,7 @@ int64_t WriterImpl::WriteImage2DData( int64_t imageIndex, e57::Image2DType image
    return transferred;
 }
 
-int64_t WriterImpl::NewData3D( Data3D &data3DHeader, bool ( *pointExtension )( ImageFile imf, StructureNode proto ) )
+int64_t WriterImpl::NewData3D( Data3D &data3DHeader )
 {
    int64_t pos = -1;
 
@@ -2098,10 +2096,6 @@ int64_t WriterImpl::NewData3D( Data3D &data3DHeader, bool ( *pointExtension )( I
    if ( data3DHeader.pointFields.normalZ )
       proto.set( "nor:normalZ", FloatNode( imf_, 0., E57_SINGLE, -1., 1. ) );
 
-   // do call back to setup any point data extension before the CompressedVectorNode is created.
-   if ( pointExtension != nullptr )
-      ( *pointExtension )( imf_, proto );
-
    // Make empty codecs vector for use in creating points CompressedVector.
    // If this vector is empty, it is assumed that all fields will use the BitPack codec.
    VectorNode codecs = VectorNode( imf_, true );
@@ -2187,9 +2181,6 @@ CompressedVectorWriter WriterImpl::SetUpData3DPointsData( int64_t dataIndex, siz
       if ( proto.isDefined( "nor:normalZ" ) && ( buffers.normalZ != nullptr ) )
          sourceBuffers.push_back( SourceDestBuffer( imf_, "nor:normalZ", buffers.normalZ, count, true, true ) );
    }
-
-   if ( buffers.pointDataExtension != nullptr )
-      ( *buffers.pointDataExtension )( imf_, proto, sourceBuffers );
 
    // create the writer, all buffers must be setup before this call
    CompressedVectorWriter writer = points.writer( sourceBuffers );

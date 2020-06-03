@@ -491,10 +491,6 @@ namespace e57
       float *normalX{ nullptr }; //!< The X component of a surface normal vector (E57_EXT_surface_normals).
       float *normalY{ nullptr }; //!< The Y component of a surface normal vector (E57_EXT_surface_normals).
       float *normalZ{ nullptr }; //!< The Z component of a surface normal vector (E57_EXT_surface_normals).
-
-      bool ( *pointDataExtension )( ImageFile imf, StructureNode proto, std::vector<SourceDestBuffer> &destBuffers ){
-         nullptr
-      }; //!< callback for adding custom fields
    };
 
    //! @brief Stores an image that is to be used only as a visual reference.
@@ -835,10 +831,8 @@ namespace e57
       //! @details The user needs to config a Data3D structure with all the scanning information before making this
       //! call.
       //! @param [in] data3DHeader scan metadata
-      //! @param [in] pointExtension optional extension function to write custom fields
       //! @return Returns the index of the new scan's data3D block.
-      int64_t NewData3D( Data3D &data3DHeader,
-                         bool ( *pointExtension )( ImageFile imf, StructureNode proto ) = nullptr ) const;
+      int64_t NewData3D( Data3D &data3DHeader ) const;
 
       //! @brief This function setups a writer to write the actual scan data
       //! @param [in] dataIndex index returned by NewData3D

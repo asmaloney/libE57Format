@@ -253,13 +253,13 @@ namespace e57
    //! @brief Stores the top-level information for the XML section of the file.
    struct E57Root
    {
-      ustring formatName;             //!< Contains the string "ASTM E57 3D Image File"
-      ustring guid;                   //!< A globally unique identification string for the current version of the file
-      uint32_t versionMajor{ 1 };     //!< Major version number, should be 1
-      uint32_t versionMinor{ 0 };     //!< Minor version number, should be 0
-      ustring e57LibraryVersion;      //!< The version identifier for the E57 file format library that wrote the file.
-      DateTime creationDateTime;      //!< Date/time that the file was created
-      int64_t data3DSize{ 0 };        //!< Size of the Data3D vector for storing 3D imaging data
+      ustring formatName;         //!< Contains the string "ASTM E57 3D Image File"
+      ustring guid;               //!< A globally unique identification string for the current version of the file
+      uint32_t versionMajor{ 1 }; //!< Major version number, should be 1
+      uint32_t versionMinor{ 0 }; //!< Minor version number, should be 0
+      ustring e57LibraryVersion;  //!< The version identifier for the E57 file format library that wrote the file.
+      DateTime creationDateTime;  //!< Date/time that the file was created
+      int64_t data3DSize{ 0 };    //!< Size of the Data3D vector for storing 3D imaging data
       int64_t images2DSize{ 0 };  //!< Size of the A heterogeneous Vector of Images2D Structures for storing 2D images
                                   //!< from a camera or similar device.
       ustring coordinateMetadata; //!< Information describing the Coordinate Reference System to be used for the file

@@ -29,9 +29,6 @@
 
 #include <cmath>
 #include <random>
-#include <sstream>
-
-using namespace std;
 
 namespace e57
 {
@@ -1166,7 +1163,7 @@ namespace e57
 
             int64_t protoCount = lineGroupRecord.childCount();
             int64_t protoIndex;
-            vector<SourceDestBuffer> groupSDBuffers;
+            std::vector<SourceDestBuffer> groupSDBuffers;
 
             for ( protoIndex = 0; protoIndex < protoCount; protoIndex++ )
             {
@@ -1207,7 +1204,7 @@ namespace e57
       int64_t protoCount = proto.childCount();
       int64_t protoIndex;
 
-      vector<SourceDestBuffer> destBuffers;
+      std::vector<SourceDestBuffer> destBuffers;
 
       for ( protoIndex = 0; protoIndex < protoCount; protoIndex++ )
       {
@@ -2128,7 +2125,7 @@ CompressedVectorWriter WriterImpl::SetUpData3DPointsData( int64_t dataIndex, siz
    CompressedVectorNode points( scan.get( "points" ) );
    StructureNode proto( points.prototype() );
 
-   vector<SourceDestBuffer> sourceBuffers;
+   std::vector<SourceDestBuffer> sourceBuffers;
    if ( proto.isDefined( "cartesianX" ) && ( buffers.cartesianX != nullptr ) )
       sourceBuffers.push_back( SourceDestBuffer( imf_, "cartesianX", buffers.cartesianX, count, true, true ) );
    if ( proto.isDefined( "cartesianY" ) && ( buffers.cartesianY != nullptr ) )
@@ -2222,7 +2219,7 @@ bool WriterImpl::WriteData3DGroupsData( int64_t dataIndex, int64_t groupCount, i
       return false;
    CompressedVectorNode groups( groupingByLine.get( "groups" ) );
 
-   vector<SourceDestBuffer> groupSDBuffers;
+   std::vector<SourceDestBuffer> groupSDBuffers;
    groupSDBuffers.push_back( SourceDestBuffer( imf_, "idElementValue", idElementValue, groupCount, true ) );
    groupSDBuffers.push_back( SourceDestBuffer( imf_, "startPointIndex", startPointIndex, groupCount, true ) );
    groupSDBuffers.push_back( SourceDestBuffer( imf_, "pointCount", pointCount, groupCount, true ) );

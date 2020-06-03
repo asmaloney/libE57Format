@@ -35,178 +35,180 @@
 #include "E57Simple.h"
 #include "E57SimpleImpl.h"
 
-using namespace e57;
-using namespace std;
-
-// to avoid exposing M_PI constructor is here
-SphericalBounds::SphericalBounds()
+namespace e57
 {
-   rangeMinimum = 0.;
-   rangeMaximum = E57_DOUBLE_MAX;
-   azimuthStart = -M_PI;
-   azimuthEnd = M_PI;
-   elevationMinimum = -M_PI / 2.;
-   elevationMaximum = M_PI / 2.;
-}
 
-////////////////////////////////////////////////////////////////////
-//
-//	Reader
-//
-Reader::Reader( const ustring &filePath ) : impl_( new ReaderImpl( filePath ) )
-{
-}
+   // to avoid exposing M_PI constructor is here
+   SphericalBounds::SphericalBounds()
+   {
+      rangeMinimum = 0.;
+      rangeMaximum = E57_DOUBLE_MAX;
+      azimuthStart = -M_PI;
+      azimuthEnd = M_PI;
+      elevationMinimum = -M_PI / 2.;
+      elevationMaximum = M_PI / 2.;
+   }
 
-bool Reader::IsOpen() const
-{
-   return impl_->IsOpen();
-};
+   ////////////////////////////////////////////////////////////////////
+   //
+   //	Reader
+   //
+   Reader::Reader( const ustring &filePath ) : impl_( new ReaderImpl( filePath ) )
+   {
+   }
 
-bool Reader::Close() const
-{
-   return impl_->Close();
-};
+   bool Reader::IsOpen() const
+   {
+      return impl_->IsOpen();
+   };
 
-bool Reader::GetE57Root( E57Root &fileHeader ) const
-{
-   return impl_->GetE57Root( fileHeader );
-};
+   bool Reader::Close() const
+   {
+      return impl_->Close();
+   };
 
-int64_t Reader::GetImage2DCount() const
-{
-   return impl_->GetImage2DCount();
-};
+   bool Reader::GetE57Root( E57Root &fileHeader ) const
+   {
+      return impl_->GetE57Root( fileHeader );
+   };
 
-bool Reader::ReadImage2D( int64_t imageIndex, Image2D &image2DHeader ) const
-{
-   return impl_->ReadImage2D( imageIndex, image2DHeader );
-};
+   int64_t Reader::GetImage2DCount() const
+   {
+      return impl_->GetImage2DCount();
+   };
 
-bool Reader::GetImage2DSizes( int64_t imageIndex, Image2DProjection &imageProjection, Image2DType &imageType,
-                              int64_t &imageWidth, int64_t &imageHeight, int64_t &imageSize, Image2DType &imageMaskType,
-                              Image2DType &imageVisualType ) const
-{
-   return impl_->GetImage2DSizes( imageIndex, imageProjection, imageType, imageWidth, imageHeight, imageSize,
-                                  imageMaskType, imageVisualType );
-};
+   bool Reader::ReadImage2D( int64_t imageIndex, Image2D &image2DHeader ) const
+   {
+      return impl_->ReadImage2D( imageIndex, image2DHeader );
+   };
 
-int64_t Reader::ReadImage2DData( int64_t imageIndex, Image2DProjection imageProjection, Image2DType imageType,
-                                 void *pBuffer, int64_t start, int64_t count ) const
-{
-   return impl_->ReadImage2DData( imageIndex, imageProjection, imageType, pBuffer, start, count );
-};
+   bool Reader::GetImage2DSizes( int64_t imageIndex, Image2DProjection &imageProjection, Image2DType &imageType,
+                                 int64_t &imageWidth, int64_t &imageHeight, int64_t &imageSize,
+                                 Image2DType &imageMaskType, Image2DType &imageVisualType ) const
+   {
+      return impl_->GetImage2DSizes( imageIndex, imageProjection, imageType, imageWidth, imageHeight, imageSize,
+                                     imageMaskType, imageVisualType );
+   };
 
-int64_t Reader::GetData3DCount() const
-{
-   return impl_->GetData3DCount();
-};
+   int64_t Reader::ReadImage2DData( int64_t imageIndex, Image2DProjection imageProjection, Image2DType imageType,
+                                    void *pBuffer, int64_t start, int64_t count ) const
+   {
+      return impl_->ReadImage2DData( imageIndex, imageProjection, imageType, pBuffer, start, count );
+   };
 
-ImageFile Reader::GetRawIMF()
-{
-   return impl_->GetRawIMF();
-}
+   int64_t Reader::GetData3DCount() const
+   {
+      return impl_->GetData3DCount();
+   };
 
-StructureNode Reader::GetRawE57Root()
-{
-   return impl_->GetRawE57Root();
-};
+   ImageFile Reader::GetRawIMF()
+   {
+      return impl_->GetRawIMF();
+   }
 
-VectorNode Reader::GetRawData3D()
-{
-   return impl_->GetRawData3D();
-};
+   StructureNode Reader::GetRawE57Root()
+   {
+      return impl_->GetRawE57Root();
+   };
 
-VectorNode Reader::GetRawImages2D()
-{
-   return impl_->GetRawImages2D();
-};
+   VectorNode Reader::GetRawData3D()
+   {
+      return impl_->GetRawData3D();
+   };
 
-bool Reader::ReadData3D( int64_t dataIndex, Data3D &data3DHeader ) const
-{
-   return impl_->ReadData3D( dataIndex, data3DHeader );
-}
+   VectorNode Reader::GetRawImages2D()
+   {
+      return impl_->GetRawImages2D();
+   };
 
-bool Reader::GetData3DSizes( int64_t dataIndex, int64_t &rowMax, int64_t &columnMax, int64_t &pointsSize,
-                             int64_t &groupsSize, int64_t &countSize, bool &bColumnIndex ) const
-{
-   return impl_->GetData3DSizes( dataIndex, rowMax, columnMax, pointsSize, groupsSize, countSize, bColumnIndex );
-}
+   bool Reader::ReadData3D( int64_t dataIndex, Data3D &data3DHeader ) const
+   {
+      return impl_->ReadData3D( dataIndex, data3DHeader );
+   }
 
-bool Reader::ReadData3DGroupsData( int64_t dataIndex, int64_t groupCount, int64_t *idElementValue,
-                                   int64_t *startPointIndex, int64_t *pointCount ) const
-{
-   return impl_->ReadData3DGroupsData( dataIndex, groupCount, idElementValue, startPointIndex, pointCount );
-}
+   bool Reader::GetData3DSizes( int64_t dataIndex, int64_t &rowMax, int64_t &columnMax, int64_t &pointsSize,
+                                int64_t &groupsSize, int64_t &countSize, bool &bColumnIndex ) const
+   {
+      return impl_->GetData3DSizes( dataIndex, rowMax, columnMax, pointsSize, groupsSize, countSize, bColumnIndex );
+   }
 
-CompressedVectorReader Reader::SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
-                                                      const Data3DPointsData &buffers ) const
-{
-   return impl_->SetUpData3DPointsData( dataIndex, pointCount, buffers );
-}
+   bool Reader::ReadData3DGroupsData( int64_t dataIndex, int64_t groupCount, int64_t *idElementValue,
+                                      int64_t *startPointIndex, int64_t *pointCount ) const
+   {
+      return impl_->ReadData3DGroupsData( dataIndex, groupCount, idElementValue, startPointIndex, pointCount );
+   }
 
-////////////////////////////////////////////////////////////////////
-//
-//	Writer
-//
-Writer::Writer( const ustring &filePath, const ustring &coordinateMetaData ) :
-   impl_( new WriterImpl( filePath, coordinateMetaData ) )
-{
-}
+   CompressedVectorReader Reader::SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
+                                                         const Data3DPointsData &buffers ) const
+   {
+      return impl_->SetUpData3DPointsData( dataIndex, pointCount, buffers );
+   }
 
-bool Writer::IsOpen() const
-{
-   return impl_->IsOpen();
-};
+   ////////////////////////////////////////////////////////////////////
+   //
+   //	Writer
+   //
+   Writer::Writer( const ustring &filePath, const ustring &coordinateMetaData ) :
+      impl_( new WriterImpl( filePath, coordinateMetaData ) )
+   {
+   }
 
-bool Writer::Close() const
-{
-   return impl_->Close();
-};
+   bool Writer::IsOpen() const
+   {
+      return impl_->IsOpen();
+   };
 
-ImageFile Writer::GetRawIMF()
-{
-   return impl_->GetRawIMF();
-}
+   bool Writer::Close() const
+   {
+      return impl_->Close();
+   };
 
-StructureNode Writer::GetRawE57Root()
-{
-   return impl_->GetRawE57Root();
-};
+   ImageFile Writer::GetRawIMF()
+   {
+      return impl_->GetRawIMF();
+   }
 
-VectorNode Writer::GetRawData3D()
-{
-   return impl_->GetRawData3D();
-};
+   StructureNode Writer::GetRawE57Root()
+   {
+      return impl_->GetRawE57Root();
+   };
 
-VectorNode Writer::GetRawImages2D()
-{
-   return impl_->GetRawImages2D();
-};
+   VectorNode Writer::GetRawData3D()
+   {
+      return impl_->GetRawData3D();
+   };
 
-int64_t Writer::NewImage2D( Image2D &image2DHeader ) const
-{
-   return impl_->NewImage2D( image2DHeader );
-};
+   VectorNode Writer::GetRawImages2D()
+   {
+      return impl_->GetRawImages2D();
+   };
 
-int64_t Writer::WriteImage2DData( int64_t imageIndex, Image2DType imageType, Image2DProjection imageProjection,
-                                  void *pBuffer, int64_t start, int64_t count ) const
-{
-   return impl_->WriteImage2DData( imageIndex, imageType, imageProjection, pBuffer, start, count );
-};
+   int64_t Writer::NewImage2D( Image2D &image2DHeader ) const
+   {
+      return impl_->NewImage2D( image2DHeader );
+   };
 
-int64_t Writer::NewData3D( Data3D &data3DHeader ) const
-{
-   return impl_->NewData3D( data3DHeader );
-};
+   int64_t Writer::WriteImage2DData( int64_t imageIndex, Image2DType imageType, Image2DProjection imageProjection,
+                                     void *pBuffer, int64_t start, int64_t count ) const
+   {
+      return impl_->WriteImage2DData( imageIndex, imageType, imageProjection, pBuffer, start, count );
+   };
 
-CompressedVectorWriter Writer::SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
-                                                      const Data3DPointsData &buffers ) const
-{
-   return impl_->SetUpData3DPointsData( dataIndex, pointCount, buffers );
-}
+   int64_t Writer::NewData3D( Data3D &data3DHeader ) const
+   {
+      return impl_->NewData3D( data3DHeader );
+   };
 
-bool Writer::WriteData3DGroupsData( int64_t dataIndex, int64_t groupCount, int64_t *idElementValue,
-                                    int64_t *startPointIndex, int64_t *pointCount ) const
-{
-   return impl_->WriteData3DGroupsData( dataIndex, groupCount, idElementValue, startPointIndex, pointCount );
-}
+   CompressedVectorWriter Writer::SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
+                                                         const Data3DPointsData &buffers ) const
+   {
+      return impl_->SetUpData3DPointsData( dataIndex, pointCount, buffers );
+   }
+
+   bool Writer::WriteData3DGroupsData( int64_t dataIndex, int64_t groupCount, int64_t *idElementValue,
+                                       int64_t *startPointIndex, int64_t *pointCount ) const
+   {
+      return impl_->WriteData3DGroupsData( dataIndex, groupCount, idElementValue, startPointIndex, pointCount );
+   }
+
+} // end namespace e57

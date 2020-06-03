@@ -29,14 +29,6 @@
 
 #include "E57Simple.h"
 
-#include <iomanip>
-#include <iostream>
-#include <set>
-#include <sstream>
-#include <stdint.h>
-#include <string>
-#include <vector>
-
 // Define the following symbol adds some functions to the API for implementation purposes.
 // These functions are not available to a normal API user.
 #define E57_INTERNAL_IMPLEMENTATION_ENABLE 1

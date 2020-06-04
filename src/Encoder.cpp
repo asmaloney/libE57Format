@@ -228,8 +228,10 @@ void BitpackEncoder::outputRead( char *dest, const size_t byteCount )
 
    /// Check we have enough bytes in queue
    if ( byteCount > outputAvailable() )
+   {
       throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "byteCount=" + toString( byteCount ) +
                                                    " outputAvailable=" + toString( outputAvailable() ) );
+   }
 
    /// Copy output bytes to caller
    memcpy( dest, &outBuffer_[outBufferFirst_], byteCount );
@@ -268,7 +270,9 @@ void BitpackEncoder::sourceBufferSetNew( std::vector<SourceDestBuffer> &sbufs )
 {
    /// Verify that this encoder only has single input buffer
    if ( sbufs.size() != 1 )
+   {
       throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "sbufsSize=" + toString( sbufs.size() ) );
+   }
 
    sourceBuffer_ = sbufs.at( 0 ).impl();
 }
@@ -283,7 +287,9 @@ void BitpackEncoder::outputSetMaxSize( unsigned byteCount )
 {
    /// Ignore if trying to shrink buffer (queue might get messed up).
    if ( byteCount > outBuffer_.size() )
+   {
       outBuffer_.resize( byteCount );
+   }
 }
 
 void BitpackEncoder::outBufferShiftDown()
@@ -305,14 +311,18 @@ void BitpackEncoder::outBufferShiftDown()
    size_t newEnd = outputAvailable();
    size_t remainder = newEnd % outBufferAlignmentSize_;
    if ( remainder > 0 )
+   {
       newEnd += outBufferAlignmentSize_ - remainder;
+   }
    size_t newFirst = outBufferFirst_ - ( outBufferEnd_ - newEnd );
    size_t byteCount = outBufferEnd_ - outBufferFirst_;
 
    /// Double check round up worked
    if ( newEnd % outBufferAlignmentSize_ )
+   {
       throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "newEnd=" + toString( newEnd ) +
                                                    " outBufferAlignmentSize=" + toString( outBufferAlignmentSize_ ) );
+   }
 
    /// Be paranoid before memory copy
    if ( newFirst + byteCount > outBuffer_.size() )
@@ -345,10 +355,14 @@ void BitpackEncoder::dump( int indent, std::ostream &os ) const
    os << space( indent ) << "outBuffer:" << std::endl;
    unsigned i;
    for ( i = 0; i < outBuffer_.size() && i < 20; i++ )
+   {
       os << space( indent + 4 ) << "outBuffer[" << i
          << "]: " << static_cast<unsigned>( static_cast<unsigned char>( outBuffer_.at( i ) ) ) << std::endl;
+   }
    if ( i < outBuffer_.size() )
+   {
       os << space( indent + 4 ) << outBuffer_.size() - i << " more unprinted..." << std::endl;
+   }
 }
 #endif
 
@@ -387,7 +401,9 @@ uint64_t BitpackFloatEncoder::processRecords( size_t recordCount )
 
    /// Can't process more records than will safely fit in output stream
    if ( recordCount > maxOutputRecords )
+   {
       recordCount = maxOutputRecords;
+   }
 
    if ( precision_ == E57_SINGLE )
    {
@@ -443,9 +459,13 @@ void BitpackFloatEncoder::dump( int indent, std::ostream &os ) const
 {
    BitpackEncoder::dump( indent, os );
    if ( precision_ == E57_SINGLE )
+   {
       os << space( indent ) << "precision:                E57_SINGLE" << std::endl;
+   }
    else
+   {
       os << space( indent ) << "precision:                E57_DOUBLE" << std::endl;
+   }
 }
 #endif
 
@@ -504,7 +524,9 @@ uint64_t BitpackStringEncoder::processRecords( size_t recordCount )
 #ifdef E57_DEBUG
             /// Double check have space
             if ( bytesFree < 8 )
+            {
                throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "bytesFree=" + toString( bytesFree ) );
+            }
 #endif
 #ifdef E57_MAX_VERBOSE
             std::cout << "encoding long string: (len=" << len
@@ -538,7 +560,9 @@ uint64_t BitpackStringEncoder::processRecords( size_t recordCount )
          size_t bytesToProcess = std::min( currentString_.length() - currentCharPosition_, bytesFree );
 
          for ( size_t i = 0; i < bytesToProcess; i++ )
+         {
             *outp++ = currentString_[currentCharPosition_ + i];
+         }
 
          currentCharPosition_ += bytesToProcess;
          totalBytesProcessed_ += bytesToProcess;
@@ -650,7 +674,9 @@ template <typename RegisterT> uint64_t BitpackIntegerEncoder<RegisterT>::process
    /// Verify that outBufferEnd_ is multiple of sizeof(RegisterT) (so transfers
    /// of RegisterT are aligned naturally in memory).
    if ( outBufferEnd_ % sizeof( RegisterT ) )
+   {
       throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "outBufferEnd=" + toString( outBufferEnd_ ) );
+   }
    size_t transferMax = ( outBuffer_.size() - outBufferEnd_ ) / sizeof( RegisterT );
 #endif
 
@@ -681,7 +707,9 @@ template <typename RegisterT> uint64_t BitpackIntegerEncoder<RegisterT>::process
       /// The parameter isScaledInteger_ determines which version of
       /// getNextInt64 gets called
       if ( isScaledInteger_ )
+      {
          rawValue = sourceBuffer_->getNextInt64( scale_, offset_ );
+      }
       else
          rawValue = sourceBuffer_->getNextInt64();
 
@@ -703,7 +731,9 @@ template <typename RegisterT> uint64_t BitpackIntegerEncoder<RegisterT>::process
 #ifdef E57_DEBUG
       /// Double check that no bits outside of the mask are set
       if ( uValue & ~static_cast<uint64_t>( sourceBitMask_ ) )
+      {
          throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "uValue=" + toString( uValue ) );
+      }
 #endif
       /// Mask off upper bits (just in case)
       uValue &= static_cast<uint64_t>( sourceBitMask_ );
@@ -853,8 +883,10 @@ uint64_t ConstantIntegerEncoder::processRecords( size_t recordCount )
    {
       int64_t nextInt64 = sourceBuffer_->getNextInt64();
       if ( nextInt64 != minimum_ )
+      {
          throw E57_EXCEPTION2( E57_ERROR_VALUE_OUT_OF_BOUNDS,
                                "nextInt64=" + toString( nextInt64 ) + " minimum=" + toString( minimum_ ) );
+      }
    }
 
    /// Update counts of records processed
@@ -894,7 +926,9 @@ void ConstantIntegerEncoder::outputRead( char * /*dest*/, const size_t byteCount
 {
    /// Should never request any output data
    if ( byteCount > 0 )
+   {
       throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "byteCount=" + toString( byteCount ) );
+   }
 }
 
 void ConstantIntegerEncoder::outputClear()
@@ -905,7 +939,9 @@ void ConstantIntegerEncoder::sourceBufferSetNew( std::vector<SourceDestBuffer> &
 {
    /// Verify that this encoder only has single input buffer
    if ( sbufs.size() != 1 )
+   {
       throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "sbufsSize=" + toString( sbufs.size() ) );
+   }
 
    sourceBuffer_ = sbufs.at( 0 ).impl();
 }

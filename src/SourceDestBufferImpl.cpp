@@ -135,7 +135,9 @@ template <typename T> void SourceDestBufferImpl::_setNextReal( T inValue )
 
    /// Verify have room
    if ( nextIndex_ >= capacity_ )
+   {
       throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "pathName=" + pathName_ );
+   }
 
    /// Calc start of memory location, index into buffer using stride_ (the
    /// distance between elements).
@@ -145,65 +147,95 @@ template <typename T> void SourceDestBufferImpl::_setNextReal( T inValue )
    {
       case E57_INT8:
          if ( !doConversion_ )
+         {
             throw E57_EXCEPTION2( E57_ERROR_CONVERSION_REQUIRED, "pathName=" + pathName_ );
+         }
          //??? fault if get special value: NaN, NegInf...  (all other ints below
          // too)
          if ( inValue < E57_INT8_MIN || E57_INT8_MAX < inValue )
+         {
             throw E57_EXCEPTION2( E57_ERROR_VALUE_NOT_REPRESENTABLE,
                                   "pathName=" + pathName_ + " value=" + toString( inValue ) );
+         }
          *reinterpret_cast<int8_t *>( p ) = static_cast<int8_t>( inValue );
          break;
       case E57_UINT8:
          if ( !doConversion_ )
+         {
             throw E57_EXCEPTION2( E57_ERROR_CONVERSION_REQUIRED, "pathName=" + pathName_ );
+         }
          if ( inValue < E57_UINT8_MIN || E57_UINT8_MAX < inValue )
+         {
             throw E57_EXCEPTION2( E57_ERROR_VALUE_NOT_REPRESENTABLE,
                                   "pathName=" + pathName_ + " value=" + toString( inValue ) );
+         }
          *reinterpret_cast<uint8_t *>( p ) = static_cast<uint8_t>( inValue );
          break;
       case E57_INT16:
          if ( !doConversion_ )
+         {
             throw E57_EXCEPTION2( E57_ERROR_CONVERSION_REQUIRED, "pathName=" + pathName_ );
+         }
          if ( inValue < E57_INT16_MIN || E57_INT16_MAX < inValue )
+         {
             throw E57_EXCEPTION2( E57_ERROR_VALUE_NOT_REPRESENTABLE,
                                   "pathName=" + pathName_ + " value=" + toString( inValue ) );
+         }
          *reinterpret_cast<int16_t *>( p ) = static_cast<int16_t>( inValue );
          break;
       case E57_UINT16:
          if ( !doConversion_ )
+         {
             throw E57_EXCEPTION2( E57_ERROR_CONVERSION_REQUIRED, "pathName=" + pathName_ );
+         }
          if ( inValue < E57_UINT16_MIN || E57_UINT16_MAX < inValue )
+         {
             throw E57_EXCEPTION2( E57_ERROR_VALUE_NOT_REPRESENTABLE,
                                   "pathName=" + pathName_ + " value=" + toString( inValue ) );
+         }
          *reinterpret_cast<uint16_t *>( p ) = static_cast<uint16_t>( inValue );
          break;
       case E57_INT32:
          if ( !doConversion_ )
+         {
             throw E57_EXCEPTION2( E57_ERROR_CONVERSION_REQUIRED, "pathName=" + pathName_ );
+         }
          if ( inValue < E57_INT32_MIN || E57_INT32_MAX < inValue )
+         {
             throw E57_EXCEPTION2( E57_ERROR_VALUE_NOT_REPRESENTABLE,
                                   "pathName=" + pathName_ + " value=" + toString( inValue ) );
+         }
          *reinterpret_cast<int32_t *>( p ) = static_cast<int32_t>( inValue );
          break;
       case E57_UINT32:
          if ( !doConversion_ )
+         {
             throw E57_EXCEPTION2( E57_ERROR_CONVERSION_REQUIRED, "pathName=" + pathName_ );
+         }
          if ( inValue < E57_UINT32_MIN || E57_UINT32_MAX < inValue )
+         {
             throw E57_EXCEPTION2( E57_ERROR_VALUE_NOT_REPRESENTABLE,
                                   "pathName=" + pathName_ + " value=" + toString( inValue ) );
+         }
          *reinterpret_cast<uint32_t *>( p ) = static_cast<uint32_t>( inValue );
          break;
       case E57_INT64:
          if ( !doConversion_ )
+         {
             throw E57_EXCEPTION2( E57_ERROR_CONVERSION_REQUIRED, "pathName=" + pathName_ );
+         }
          if ( inValue < E57_INT64_MIN || E57_INT64_MAX < inValue )
+         {
             throw E57_EXCEPTION2( E57_ERROR_VALUE_NOT_REPRESENTABLE,
                                   "pathName=" + pathName_ + " value=" + toString( inValue ) );
+         }
          *reinterpret_cast<int64_t *>( p ) = static_cast<int64_t>( inValue );
          break;
       case E57_BOOL:
          if ( !doConversion_ )
+         {
             throw E57_EXCEPTION2( E57_ERROR_CONVERSION_REQUIRED, "pathName=" + pathName_ );
+         }
          *reinterpret_cast<bool *>( p ) = ( inValue ? false : true );
          break;
       case E57_REAL32:
@@ -213,8 +245,10 @@ template <typename T> void SourceDestBufferImpl::_setNextReal( T inValue )
             /// Check for really large exponents that can't fit in a single
             /// precision
             if ( inValue < E57_DOUBLE_MIN || E57_DOUBLE_MAX < inValue )
+            {
                throw E57_EXCEPTION2( E57_ERROR_VALUE_NOT_REPRESENTABLE,
                                      "pathName=" + pathName_ + " value=" + toString( inValue ) );
+            }
             *reinterpret_cast<float *>( p ) = static_cast<float>( inValue );
          }
          else
@@ -246,7 +280,9 @@ void SourceDestBufferImpl::checkState_() const
    /// Throw an exception if destImageFile (destImageFile_) isn't open
    ImageFileImplSharedPtr destImageFile( destImageFile_ );
    if ( !destImageFile->isOpen() )
+   {
       throw E57_EXCEPTION2( E57_ERROR_IMAGEFILE_NOT_OPEN, "fileName=" + destImageFile->fileName() );
+   }
 
    /// Check pathName is well formed (can't verify path is defined until
    /// associate sdbuffer with CompressedVector later)
@@ -256,16 +292,22 @@ void SourceDestBufferImpl::checkState_() const
    if ( memoryRepresentation_ != E57_USTRING )
    {
       if ( base_ == nullptr )
+      {
          throw E57_EXCEPTION2( E57_ERROR_BAD_BUFFER, "pathName=" + pathName_ );
+      }
       if ( stride_ == 0 )
+      {
          throw E57_EXCEPTION2( E57_ERROR_BAD_BUFFER, "pathName=" + pathName_ );
+      }
       //??? check base alignment, depending on CPU type
       //??? check if stride too small, positive or negative
    }
    else
    {
       if ( ustrings_ == nullptr )
+      {
          throw E57_EXCEPTION2( E57_ERROR_BAD_BUFFER, "pathName=" + pathName_ );
+      }
    }
 }
 
@@ -275,7 +317,9 @@ int64_t SourceDestBufferImpl::getNextInt64()
 
    /// Verify index is within bounds
    if ( nextIndex_ >= capacity_ )
+   {
       throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "pathName=" + pathName_ );
+   }
 
    /// Fetch value from source buffer.
    /// Convert from non-integer formats if requested.
@@ -306,19 +350,25 @@ int64_t SourceDestBufferImpl::getNextInt64()
          break;
       case E57_BOOL:
          if ( !doConversion_ )
+         {
             throw E57_EXCEPTION2( E57_ERROR_CONVERSION_REQUIRED, "pathName=" + pathName_ );
+         }
          /// Convert bool to 0/1, all non-zero values map to 1.0
          value = ( *reinterpret_cast<bool *>( p ) ) ? 1 : 0;
          break;
       case E57_REAL32:
          if ( !doConversion_ )
+         {
             throw E57_EXCEPTION2( E57_ERROR_CONVERSION_REQUIRED, "pathName=" + pathName_ );
+         }
          //??? fault if get special value: NaN, NegInf...
          value = static_cast<int64_t>( *reinterpret_cast<float *>( p ) );
          break;
       case E57_REAL64:
          if ( !doConversion_ )
+         {
             throw E57_EXCEPTION2( E57_ERROR_CONVERSION_REQUIRED, "pathName=" + pathName_ );
+         }
          //??? fault if get special value: NaN, NegInf...
          value = static_cast<int64_t>( *reinterpret_cast<double *>( p ) );
          break;
@@ -349,11 +399,15 @@ int64_t SourceDestBufferImpl::getNextInt64( double scale, double offset )
 
    /// Double check non-zero scale.  Going to divide by it below.
    if ( scale == 0 )
+   {
       throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "pathName=" + pathName_ );
+   }
 
    /// Verify index is within bounds
    if ( nextIndex_ >= capacity_ )
+   {
       throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "pathName=" + pathName_ );
+   }
 
    /// Fetch value from source buffer.
    /// Convert from non-integer formats if requested
@@ -398,13 +452,19 @@ int64_t SourceDestBufferImpl::getNextInt64( double scale, double offset )
          break;
       case E57_BOOL:
          if ( *reinterpret_cast<bool *>( p ) )
+         {
             doubleRawValue = floor( ( 1 - offset ) / scale + 0.5 );
+         }
          else
+         {
             doubleRawValue = floor( ( 0 - offset ) / scale + 0.5 );
+         }
          break;
       case E57_REAL32:
          if ( !doConversion_ )
+         {
             throw E57_EXCEPTION2( E57_ERROR_CONVERSION_REQUIRED, "pathName=" + pathName_ );
+         }
          //??? fault if get special value: NaN, NegInf...
 
          /// Calc (x-offset)/scale rounded to nearest integer, but keep in
@@ -413,7 +473,9 @@ int64_t SourceDestBufferImpl::getNextInt64( double scale, double offset )
          break;
       case E57_REAL64:
          if ( !doConversion_ )
+         {
             throw E57_EXCEPTION2( E57_ERROR_CONVERSION_REQUIRED, "pathName=" + pathName_ );
+         }
          //??? fault if get special value: NaN, NegInf...
 
          /// Calc (x-offset)/scale rounded to nearest integer, but keep in
@@ -444,7 +506,9 @@ float SourceDestBufferImpl::getNextFloat()
 
    /// Verify index is within bounds
    if ( nextIndex_ >= capacity_ )
+   {
       throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "pathName=" + pathName_ );
+   }
 
    /// Fetch value from source buffer.
    /// Convert from other formats to floating point if requested
@@ -454,42 +518,58 @@ float SourceDestBufferImpl::getNextFloat()
    {
       case E57_INT8:
          if ( !doConversion_ )
+         {
             throw E57_EXCEPTION2( E57_ERROR_CONVERSION_REQUIRED, "pathName=" + pathName_ );
+         }
          value = static_cast<float>( *reinterpret_cast<int8_t *>( p ) );
          break;
       case E57_UINT8:
          if ( !doConversion_ )
+         {
             throw E57_EXCEPTION2( E57_ERROR_CONVERSION_REQUIRED, "pathName=" + pathName_ );
+         }
          value = static_cast<float>( *reinterpret_cast<uint8_t *>( p ) );
          break;
       case E57_INT16:
          if ( !doConversion_ )
+         {
             throw E57_EXCEPTION2( E57_ERROR_CONVERSION_REQUIRED, "pathName=" + pathName_ );
+         }
          value = static_cast<float>( *reinterpret_cast<int16_t *>( p ) );
          break;
       case E57_UINT16:
          if ( !doConversion_ )
+         {
             throw E57_EXCEPTION2( E57_ERROR_CONVERSION_REQUIRED, "pathName=" + pathName_ );
+         }
          value = static_cast<float>( *reinterpret_cast<uint16_t *>( p ) );
          break;
       case E57_INT32:
          if ( !doConversion_ )
+         {
             throw E57_EXCEPTION2( E57_ERROR_CONVERSION_REQUIRED, "pathName=" + pathName_ );
+         }
          value = static_cast<float>( *reinterpret_cast<int32_t *>( p ) );
          break;
       case E57_UINT32:
          if ( !doConversion_ )
+         {
             throw E57_EXCEPTION2( E57_ERROR_CONVERSION_REQUIRED, "pathName=" + pathName_ );
+         }
          value = static_cast<float>( *reinterpret_cast<uint32_t *>( p ) );
          break;
       case E57_INT64:
          if ( !doConversion_ )
+         {
             throw E57_EXCEPTION2( E57_ERROR_CONVERSION_REQUIRED, "pathName=" + pathName_ );
+         }
          value = static_cast<float>( *reinterpret_cast<int64_t *>( p ) );
          break;
       case E57_BOOL:
          if ( !doConversion_ )
+         {
             throw E57_EXCEPTION2( E57_ERROR_CONVERSION_REQUIRED, "pathName=" + pathName_ );
+         }
 
          /// Convert bool to 0/1, all non-zero values map to 1.0
          value = ( *reinterpret_cast<bool *>( p ) ) ? 1.0F : 0.0F;
@@ -505,7 +585,9 @@ float SourceDestBufferImpl::getNextFloat()
 
          ///??? silently limit here?
          if ( d < E57_DOUBLE_MIN || E57_DOUBLE_MAX < d )
+         {
             throw E57_EXCEPTION2( E57_ERROR_REAL64_TOO_LARGE, "pathName=" + pathName_ + " value=" + toString( d ) );
+         }
          value = static_cast<float>( d );
          break;
       }
@@ -524,7 +606,9 @@ double SourceDestBufferImpl::getNextDouble()
 
    /// Verify index is within bounds
    if ( nextIndex_ >= capacity_ )
+   {
       throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "pathName=" + pathName_ );
+   }
 
    /// Fetch value from source buffer.
    /// Convert from other formats to floating point if requested
@@ -534,42 +618,58 @@ double SourceDestBufferImpl::getNextDouble()
    {
       case E57_INT8:
          if ( !doConversion_ )
+         {
             throw E57_EXCEPTION2( E57_ERROR_CONVERSION_REQUIRED, "pathName=" + pathName_ );
+         }
          value = static_cast<double>( *reinterpret_cast<int8_t *>( p ) );
          break;
       case E57_UINT8:
          if ( !doConversion_ )
+         {
             throw E57_EXCEPTION2( E57_ERROR_CONVERSION_REQUIRED, "pathName=" + pathName_ );
+         }
          value = static_cast<double>( *reinterpret_cast<uint8_t *>( p ) );
          break;
       case E57_INT16:
          if ( !doConversion_ )
+         {
             throw E57_EXCEPTION2( E57_ERROR_CONVERSION_REQUIRED, "pathName=" + pathName_ );
+         }
          value = static_cast<double>( *reinterpret_cast<int16_t *>( p ) );
          break;
       case E57_UINT16:
          if ( !doConversion_ )
+         {
             throw E57_EXCEPTION2( E57_ERROR_CONVERSION_REQUIRED, "pathName=" + pathName_ );
+         }
          value = static_cast<double>( *reinterpret_cast<uint16_t *>( p ) );
          break;
       case E57_INT32:
          if ( !doConversion_ )
+         {
             throw E57_EXCEPTION2( E57_ERROR_CONVERSION_REQUIRED, "pathName=" + pathName_ );
+         }
          value = static_cast<double>( *reinterpret_cast<int32_t *>( p ) );
          break;
       case E57_UINT32:
          if ( !doConversion_ )
+         {
             throw E57_EXCEPTION2( E57_ERROR_CONVERSION_REQUIRED, "pathName=" + pathName_ );
+         }
          value = static_cast<double>( *reinterpret_cast<uint32_t *>( p ) );
          break;
       case E57_INT64:
          if ( !doConversion_ )
+         {
             throw E57_EXCEPTION2( E57_ERROR_CONVERSION_REQUIRED, "pathName=" + pathName_ );
+         }
          value = static_cast<double>( *reinterpret_cast<int64_t *>( p ) );
          break;
       case E57_BOOL:
          if ( !doConversion_ )
+         {
             throw E57_EXCEPTION2( E57_ERROR_CONVERSION_REQUIRED, "pathName=" + pathName_ );
+         }
          /// Convert bool to 0/1, all non-zero values map to 1.0
          value = ( *reinterpret_cast<bool *>( p ) ) ? 1.0 : 0.0;
          break;
@@ -594,11 +694,15 @@ ustring SourceDestBufferImpl::getNextString()
 
    /// Check have correct type buffer
    if ( memoryRepresentation_ != E57_USTRING )
+   {
       throw E57_EXCEPTION2( E57_ERROR_EXPECTING_USTRING, "pathName=" + pathName_ );
+   }
 
    /// Verify index is within bounds
    if ( nextIndex_ >= capacity_ )
+   {
       throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "pathName=" + pathName_ );
+   }
 
    /// Get ustring from vector
    return ( ( *ustrings_ )[nextIndex_++] );
@@ -610,7 +714,9 @@ void SourceDestBufferImpl::setNextInt64( int64_t value )
 
    /// Verify have room
    if ( nextIndex_ >= capacity_ )
+   {
       throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "pathName=" + pathName_ );
+   }
 
    /// Calc start of memory location, index into buffer using stride_ (the
    /// distance between elements).
@@ -620,38 +726,50 @@ void SourceDestBufferImpl::setNextInt64( int64_t value )
    {
       case E57_INT8:
          if ( value < E57_INT8_MIN || E57_INT8_MAX < value )
+         {
             throw E57_EXCEPTION2( E57_ERROR_VALUE_NOT_REPRESENTABLE,
                                   "pathName=" + pathName_ + " value=" + toString( value ) );
+         }
          *reinterpret_cast<int8_t *>( p ) = static_cast<int8_t>( value );
          break;
       case E57_UINT8:
          if ( value < E57_UINT8_MIN || E57_UINT8_MAX < value )
+         {
             throw E57_EXCEPTION2( E57_ERROR_VALUE_NOT_REPRESENTABLE,
                                   "pathName=" + pathName_ + " value=" + toString( value ) );
+         }
          *reinterpret_cast<uint8_t *>( p ) = static_cast<uint8_t>( value );
          break;
       case E57_INT16:
          if ( value < E57_INT16_MIN || E57_INT16_MAX < value )
+         {
             throw E57_EXCEPTION2( E57_ERROR_VALUE_NOT_REPRESENTABLE,
                                   "pathName=" + pathName_ + " value=" + toString( value ) );
+         }
          *reinterpret_cast<int16_t *>( p ) = static_cast<int16_t>( value );
          break;
       case E57_UINT16:
          if ( value < E57_UINT16_MIN || E57_UINT16_MAX < value )
+         {
             throw E57_EXCEPTION2( E57_ERROR_VALUE_NOT_REPRESENTABLE,
                                   "pathName=" + pathName_ + " value=" + toString( value ) );
+         }
          *reinterpret_cast<uint16_t *>( p ) = static_cast<uint16_t>( value );
          break;
       case E57_INT32:
          if ( value < E57_INT32_MIN || E57_INT32_MAX < value )
+         {
             throw E57_EXCEPTION2( E57_ERROR_VALUE_NOT_REPRESENTABLE,
                                   "pathName=" + pathName_ + " value=" + toString( value ) );
+         }
          *reinterpret_cast<int32_t *>( p ) = static_cast<int32_t>( value );
          break;
       case E57_UINT32:
          if ( value < E57_UINT32_MIN || E57_UINT32_MAX < value )
+         {
             throw E57_EXCEPTION2( E57_ERROR_VALUE_NOT_REPRESENTABLE,
                                   "pathName=" + pathName_ + " value=" + toString( value ) );
+         }
          *reinterpret_cast<uint32_t *>( p ) = static_cast<uint32_t>( value );
          break;
       case E57_INT64:
@@ -662,13 +780,17 @@ void SourceDestBufferImpl::setNextInt64( int64_t value )
          break;
       case E57_REAL32:
          if ( !doConversion_ )
+         {
             throw E57_EXCEPTION2( E57_ERROR_CONVERSION_REQUIRED, "pathName=" + pathName_ );
+         }
          //??? very large integers may lose some lowest bits here. error?
          *reinterpret_cast<float *>( p ) = static_cast<float>( value );
          break;
       case E57_REAL64:
          if ( !doConversion_ )
+         {
             throw E57_EXCEPTION2( E57_ERROR_CONVERSION_REQUIRED, "pathName=" + pathName_ );
+         }
          *reinterpret_cast<double *>( p ) = static_cast<double>( value );
          break;
       case E57_USTRING:
@@ -697,7 +819,9 @@ void SourceDestBufferImpl::setNextInt64( int64_t value, double scale, double off
 
    /// Verify have room
    if ( nextIndex_ >= capacity_ )
+   {
       throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "pathName=" + pathName_ );
+   }
 
    /// Calc start of memory location, index into buffer using stride_ (the
    /// distance between elements).
@@ -723,38 +847,50 @@ void SourceDestBufferImpl::setNextInt64( int64_t value, double scale, double off
    {
       case E57_INT8:
          if ( scaledValue < E57_INT8_MIN || E57_INT8_MAX < scaledValue )
+         {
             throw E57_EXCEPTION2( E57_ERROR_SCALED_VALUE_NOT_REPRESENTABLE,
                                   "pathName=" + pathName_ + " scaledValue=" + toString( scaledValue ) );
+         }
          *reinterpret_cast<int8_t *>( p ) = static_cast<int8_t>( scaledValue );
          break;
       case E57_UINT8:
          if ( scaledValue < E57_UINT8_MIN || E57_UINT8_MAX < scaledValue )
+         {
             throw E57_EXCEPTION2( E57_ERROR_SCALED_VALUE_NOT_REPRESENTABLE,
                                   "pathName=" + pathName_ + " scaledValue=" + toString( scaledValue ) );
+         }
          *reinterpret_cast<uint8_t *>( p ) = static_cast<uint8_t>( scaledValue );
          break;
       case E57_INT16:
          if ( scaledValue < E57_INT16_MIN || E57_INT16_MAX < scaledValue )
+         {
             throw E57_EXCEPTION2( E57_ERROR_SCALED_VALUE_NOT_REPRESENTABLE,
                                   "pathName=" + pathName_ + " scaledValue=" + toString( scaledValue ) );
+         }
          *reinterpret_cast<int16_t *>( p ) = static_cast<int16_t>( scaledValue );
          break;
       case E57_UINT16:
          if ( scaledValue < E57_UINT16_MIN || E57_UINT16_MAX < scaledValue )
+         {
             throw E57_EXCEPTION2( E57_ERROR_SCALED_VALUE_NOT_REPRESENTABLE,
                                   "pathName=" + pathName_ + " scaledValue=" + toString( scaledValue ) );
+         }
          *reinterpret_cast<uint16_t *>( p ) = static_cast<uint16_t>( scaledValue );
          break;
       case E57_INT32:
          if ( scaledValue < E57_INT32_MIN || E57_INT32_MAX < scaledValue )
+         {
             throw E57_EXCEPTION2( E57_ERROR_SCALED_VALUE_NOT_REPRESENTABLE,
                                   "pathName=" + pathName_ + " scaledValue=" + toString( scaledValue ) );
+         }
          *reinterpret_cast<int32_t *>( p ) = static_cast<int32_t>( scaledValue );
          break;
       case E57_UINT32:
          if ( scaledValue < E57_UINT32_MIN || E57_UINT32_MAX < scaledValue )
+         {
             throw E57_EXCEPTION2( E57_ERROR_SCALED_VALUE_NOT_REPRESENTABLE,
                                   "pathName=" + pathName_ + " scaledValue=" + toString( scaledValue ) );
+         }
          *reinterpret_cast<uint32_t *>( p ) = static_cast<uint32_t>( scaledValue );
          break;
       case E57_INT64:
@@ -765,17 +901,23 @@ void SourceDestBufferImpl::setNextInt64( int64_t value, double scale, double off
          break;
       case E57_REAL32:
          if ( !doConversion_ )
+         {
             throw E57_EXCEPTION2( E57_ERROR_CONVERSION_REQUIRED, "pathName=" + pathName_ );
+         }
          /// Check that exponent of result is not too big for single precision
          /// float
          if ( scaledValue < E57_DOUBLE_MIN || E57_DOUBLE_MAX < scaledValue )
+         {
             throw E57_EXCEPTION2( E57_ERROR_SCALED_VALUE_NOT_REPRESENTABLE,
                                   "pathName=" + pathName_ + " scaledValue=" + toString( scaledValue ) );
+         }
          *reinterpret_cast<float *>( p ) = static_cast<float>( scaledValue );
          break;
       case E57_REAL64:
          if ( !doConversion_ )
+         {
             throw E57_EXCEPTION2( E57_ERROR_CONVERSION_REQUIRED, "pathName=" + pathName_ );
+         }
          *reinterpret_cast<double *>( p ) = scaledValue;
          break;
       case E57_USTRING:
@@ -800,11 +942,15 @@ void SourceDestBufferImpl::setNextString( const ustring &value )
    /// don't checkImageFileOpen
 
    if ( memoryRepresentation_ != E57_USTRING )
+   {
       throw E57_EXCEPTION2( E57_ERROR_EXPECTING_USTRING, "pathName=" + pathName_ );
+   }
 
    /// Verify have room.
    if ( nextIndex_ >= capacity_ )
+   {
       throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "pathName=" + pathName_ );
+   }
 
    /// Assign to already initialized element in vector
    ( *ustrings_ )[nextIndex_] = value;

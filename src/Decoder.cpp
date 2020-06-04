@@ -308,8 +308,10 @@ void BitpackDecoder::inBufferShiftDown()
 #endif
    size_t byteCount = inBufferEndByte_ - firstNaturalByte;
    if ( byteCount > 0 )
+   {
       memmove( &inBuffer_[0], &inBuffer_[firstNaturalByte],
                byteCount ); /// Overlapping regions ok with memmove().
+   }
 
    /// Update indexes
    inBufferEndByte_ = byteCount;
@@ -332,10 +334,14 @@ void BitpackDecoder::dump( int indent, std::ostream &os )
    os << space( indent ) << "inBuffer:" << std::endl;
    unsigned i;
    for ( i = 0; i < inBuffer_.size() && i < 20; i++ )
+   {
       os << space( indent + 4 ) << "inBuffer[" << i
          << "]: " << static_cast<unsigned>( static_cast<unsigned char>( inBuffer_.at( i ) ) ) << std::endl;
+   }
    if ( i < inBuffer_.size() )
+   {
       os << space( indent + 4 ) << inBuffer_.size() - i << " more unprinted..." << std::endl;
+   }
 }
 #endif
 
@@ -374,7 +380,9 @@ size_t BitpackFloatDecoder::inputProcessAligned( const char *inbuf, const size_t
 #endif
    /// Verify first bit is zero
    if ( firstBit != 0 )
+   {
       throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "firstBit=" + toString( firstBit ) );
+   }
 #endif
 
    /// Calc how many whole records worth of data we have in inbuf
@@ -382,11 +390,15 @@ size_t BitpackFloatDecoder::inputProcessAligned( const char *inbuf, const size_t
 
    /// Can't process more records than we have input data for.
    if ( n > maxInputRecords )
+   {
       n = maxInputRecords;
+   }
 
    // Can't process more than defined in input file
    if ( n > maxRecordCount_ - currentRecordIndex_ )
+   {
       n = static_cast<unsigned>( maxRecordCount_ - currentRecordIndex_ );
+   }
 
 #ifdef E57_MAX_VERBOSE
    std::cout << "  n:" << n << std::endl; //???
@@ -439,9 +451,13 @@ void BitpackFloatDecoder::dump( int indent, std::ostream &os )
 {
    BitpackDecoder::dump( indent, os );
    if ( precision_ == E57_SINGLE )
+   {
       os << space( indent ) << "precision:                E57_SINGLE" << std::endl;
+   }
    else
+   {
       os << space( indent ) << "precision:                E57_DOUBLE" << std::endl;
+   }
 }
 #endif
 
@@ -465,7 +481,9 @@ size_t BitpackStringDecoder::inputProcessAligned( const char *inbuf, const size_
 #ifdef E57_DEBUG
    /// Verify first bit is zero (always byte-aligned)
    if ( firstBit != 0 )
+   {
       throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "firstBit=" + toString( firstBit ) );
+   }
 #endif
 
    /// Converts start/end bits to whole bytes
@@ -490,9 +508,13 @@ size_t BitpackStringDecoder::inputProcessAligned( const char *inbuf, const size_
             if ( nBytesPrefixRead_ == 0 )
             {
                if ( *inbuf & 0x01 )
+               {
                   prefixLength_ = 8; // 8 byte prefix, length upto 2^63-1
+               }
                else
+               {
                   prefixLength_ = 1; // 1 byte prefix, length upto 2^7-1
+               }
             }
 
             /// Accumulate prefix bytes
@@ -556,7 +578,9 @@ size_t BitpackStringDecoder::inputProcessAligned( const char *inbuf, const size_
          /// Can process the smaller of unread or needed bytes
          size_t nBytesProcess = nBytesAvailable - nBytesRead;
          if ( nBytesNeeded < static_cast<uint64_t>( nBytesProcess ) )
+         {
             nBytesProcess = static_cast<unsigned>( nBytesNeeded );
+         }
 
          /// Append to current string and update counts
          currentString_ += ustring( inbuf, nBytesProcess );
@@ -649,7 +673,9 @@ size_t BitpackIntegerDecoder<RegisterT>::inputProcessAligned( const char *inbuf,
 #endif
    /// Verfiy first bit is in first word
    if ( firstBit >= 8 * sizeof( RegisterT ) )
+   {
       throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "firstBit=" + toString( firstBit ) );
+   }
 #endif
 
    size_t destRecords = destBuffer_->capacity() - destBuffer_->nextIndex();
@@ -666,7 +692,9 @@ size_t BitpackIntegerDecoder<RegisterT>::inputProcessAligned( const char *inbuf,
 
    // Can't process more than defined in input file
    if ( static_cast<uint64_t>( recordCount ) > maxRecordCount_ - currentRecordIndex_ )
+   {
       recordCount = static_cast<unsigned>( maxRecordCount_ - currentRecordIndex_ );
+   }
 
 #ifdef E57_MAX_VERBOSE
    std::cout << "  recordCount=" << recordCount << std::endl;
@@ -738,9 +766,13 @@ size_t BitpackIntegerDecoder<RegisterT>::inputProcessAligned( const char *inbuf,
       /// The parameter isScaledInteger_ determines which version of
       /// setNextInt64 gets called
       if ( isScaledInteger_ )
+      {
          destBuffer_->setNextInt64( value, scale_, offset_ );
+      }
       else
+      {
          destBuffer_->setNextInt64( value );
+      }
 
       /// Store the result in next avaiable position in the user's dest buffer
 
@@ -814,17 +846,23 @@ size_t ConstantIntegerDecoder::inputProcess( const char *source, const size_t av
    size_t count = destBuffer_->capacity() - destBuffer_->nextIndex();
    uint64_t remainingRecordCount = maxRecordCount_ - currentRecordIndex_;
    if ( static_cast<uint64_t>( count ) > remainingRecordCount )
+   {
       count = static_cast<unsigned>( remainingRecordCount );
+   }
 
    if ( isScaledInteger_ )
    {
       for ( size_t i = 0; i < count; i++ )
+      {
          destBuffer_->setNextInt64( minimum_, scale_, offset_ );
+      }
    }
    else
    {
       for ( size_t i = 0; i < count; i++ )
+      {
          destBuffer_->setNextInt64( minimum_ );
+      }
    }
    currentRecordIndex_ += count;
    return ( count );

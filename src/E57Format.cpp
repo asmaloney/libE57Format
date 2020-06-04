@@ -1271,26 +1271,36 @@ void Node::checkInvariant( bool doRecurse, bool doDowncast )
    // If destImageFile not open, can't test invariant (almost every call would
    // throw)
    if ( !imf.isOpen() )
+   {
       return;
+   }
 
    // Parent attachment state is same as this attachment state
    if ( isAttached() != parent().isAttached() )
+   {
       throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+   }
 
    // Parent destination ImageFile is same as this
    if ( imf != parent().destImageFile() )
+   {
       throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+   }
 
    // If this is the ImageFile root node
    if ( *this == imf.root() )
    {
       // Must be attached
       if ( !isAttached() )
+      {
          throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+      }
 
       // Must be is a root node
       if ( !isRoot() )
+      {
          throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+      }
    }
 
    // If this is a root node
@@ -1298,28 +1308,38 @@ void Node::checkInvariant( bool doRecurse, bool doDowncast )
    {
       // Absolute pathName is "/"
       if ( pathName() != "/" )
+      {
          throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+      }
 
       // parent() returns this node
       if ( *this != parent() )
+      {
          throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+      }
    }
    else
    {
       // Non-root can't be own parent
       if ( *this == parent() )
+      {
          throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+      }
 
       // pathName is concatenation of parent pathName and this elementName
       if ( parent().isRoot() )
       {
          if ( pathName() != "/" + elementName() )
+         {
             throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+         }
       }
       else
       {
          if ( pathName() != parent().pathName() + "/" + elementName() )
+         {
             throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+         }
       }
 
       // Non-root nodes must be children of either a VectorNode or StructureNode
@@ -1329,11 +1349,15 @@ void Node::checkInvariant( bool doRecurse, bool doDowncast )
 
          // Must be defined in parent VectorNode with this elementName
          if ( !v.isDefined( elementName() ) )
+         {
             throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+         }
 
          // Getting child of parent with this elementName must return this
          if ( v.get( elementName() ) != *this )
+         {
             throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+         }
       }
       else if ( parent().type() == E57_STRUCTURE )
       {
@@ -1341,14 +1365,20 @@ void Node::checkInvariant( bool doRecurse, bool doDowncast )
 
          // Must be defined in parent VectorNode with this elementName
          if ( !s.isDefined( elementName() ) )
+         {
             throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+         }
 
          // Getting child of parent with this elementName must return this
          if ( s.get( elementName() ) != *this )
+         {
             throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+         }
       }
       else
+      {
          throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+      }
    }
 
    // If this is attached
@@ -1357,18 +1387,24 @@ void Node::checkInvariant( bool doRecurse, bool doDowncast )
       // Get root of this
       Node n = *this;
       while ( !n.isRoot() )
+      {
          n = n.parent();
+      }
 
       // If in tree of ImageFile (could be in a prototype instead)
       if ( n == imf.root() )
       {
          // pathName must be defined
          if ( !imf.root().isDefined( pathName() ) )
+         {
             throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+         }
 
          // Getting by absolute pathName must be this
          if ( imf.root().get( pathName() ) != *this )
+         {
             throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+         }
       }
    }
 
@@ -1521,11 +1557,15 @@ void StructureNode::checkInvariant( bool doRecurse, bool doUpcast )
    // If destImageFile not open, can't test invariant (almost every call would
    // throw)
    if ( !destImageFile().isOpen() )
+   {
       return;
+   }
 
    // If requested, call Node::checkInvariant
    if ( doUpcast )
+   {
       static_cast<Node>( *this ).checkInvariant( false, false );
+   }
 
    // Check each child
    for ( int64_t i = 0; i < childCount(); i++ )
@@ -1534,20 +1574,28 @@ void StructureNode::checkInvariant( bool doRecurse, bool doUpcast )
 
       // If requested, check children recursively
       if ( doRecurse )
+      {
          child.checkInvariant( doRecurse, true );
+      }
 
       // Child's parent must be this
       if ( static_cast<Node>( *this ) != child.parent() )
+      {
          throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+      }
 
       // Child's elementName must be defined
       if ( !isDefined( child.elementName() ) )
+      {
          throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+      }
 
       // Getting child by element name must yield same child
       Node n = get( child.elementName() );
       if ( n != child )
+      {
          throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+      }
    }
 }
 
@@ -1558,11 +1606,15 @@ void VectorNode::checkInvariant( bool doRecurse, bool doUpcast )
    // If destImageFile not open, can't test invariant (almost every call would
    // throw)
    if ( !destImageFile().isOpen() )
+   {
       return;
+   }
 
    // If requested, call Node::checkInvariant
    if ( doUpcast )
+   {
       static_cast<Node>( *this ).checkInvariant( false, false );
+   }
 
    // Check each child
    for ( int64_t i = 0; i < childCount(); i++ )
@@ -1571,20 +1623,28 @@ void VectorNode::checkInvariant( bool doRecurse, bool doUpcast )
 
       // If requested, check children recursively
       if ( doRecurse )
+      {
          child.checkInvariant( doRecurse, true );
+      }
 
       // Child's parent must be this
       if ( static_cast<Node>( *this ) != child.parent() )
+      {
          throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+      }
 
       // Child's elementName must be defined
       if ( !isDefined( child.elementName() ) )
+      {
          throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+      }
 
       // Getting child by element name must yield same child
       Node n = get( child.elementName() );
       if ( n != child )
+      {
          throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+      }
    }
 }
 
@@ -1595,41 +1655,57 @@ void CompressedVectorNode::checkInvariant( bool doRecurse, bool doUpcast )
    // If destImageFile not open, can't test invariant (almost every call would
    // throw)
    if ( !destImageFile().isOpen() )
+   {
       return;
+   }
 
    // If requested, call Node::checkInvariant
    if ( doUpcast )
+   {
       static_cast<Node>( *this ).checkInvariant( false, false );
+   }
 
    // Check prototype is good Node
    prototype().checkInvariant( doRecurse );
 
    // prototype attached state not same as this attached state
    if ( prototype().isAttached() != isAttached() )
+   {
       throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+   }
 
    // prototype not root
    if ( !prototype().isRoot() )
+   {
       throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+   }
 
    // prototype dest ImageFile not same as this dest ImageFile
    if ( prototype().destImageFile() != destImageFile() )
+   {
       throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+   }
 
    // Check codecs is good Node
    codecs().checkInvariant( doRecurse );
 
    // codecs attached state not same as this attached state
    if ( codecs().isAttached() != isAttached() )
+   {
       throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+   }
 
    // codecs not root
    if ( !codecs().isRoot() )
+   {
       throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+   }
 
    // codecs dest ImageFile not same as this dest ImageFile
    if ( codecs().destImageFile() != destImageFile() )
+   {
       throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+   }
 }
 /*!
 @brief Check whether IntegerNode class invariant is true
@@ -1655,14 +1731,20 @@ void IntegerNode::checkInvariant( bool /*doRecurse*/, bool doUpcast )
    // If destImageFile not open, can't test invariant (almost every call would
    // throw)
    if ( !destImageFile().isOpen() )
+   {
       return;
+   }
 
    // If requested, call Node::checkInvariant
    if ( doUpcast )
+   {
       static_cast<Node>( *this ).checkInvariant( false, false );
+   }
 
    if ( value() < minimum() || value() > maximum() )
+   {
       throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+   }
 }
 
 //! @brief Check whether ScaledIntegerNode class invariant is true
@@ -1672,23 +1754,33 @@ void ScaledIntegerNode::checkInvariant( bool /*doRecurse*/, bool doUpcast )
    // If destImageFile not open, can't test invariant (almost every call would
    // throw)
    if ( !destImageFile().isOpen() )
+   {
       return;
+   }
 
    // If requested, call Node::checkInvariant
    if ( doUpcast )
+   {
       static_cast<Node>( *this ).checkInvariant( false, false );
+   }
 
    // If value is out of bounds
    if ( rawValue() < minimum() || rawValue() > maximum() )
+   {
       throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+   }
 
    // If scale is zero
    if ( scale() == 0 )
+   {
       throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+   }
 
    // If scaled value is not calculated correctly
    if ( scaledValue() != rawValue() * scale() + offset() )
+   {
       throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+   }
 }
 //! @brief Check whether FloatNode class invariant is true
 //! @copydetails IntegerNode::checkInvariant()
@@ -1697,21 +1789,29 @@ void FloatNode::checkInvariant( bool /*doRecurse*/, bool doUpcast )
    // If destImageFile not open, can't test invariant (almost every call would
    // throw)
    if ( !destImageFile().isOpen() )
+   {
       return;
+   }
 
    // If requested, call Node::checkInvariant
    if ( doUpcast )
+   {
       static_cast<Node>( *this ).checkInvariant( false, false );
+   }
 
    if ( precision() == E57_SINGLE )
    {
-      if ( static_cast<float>(minimum()) < E57_FLOAT_MIN || static_cast<float>(maximum()) > E57_FLOAT_MAX )
+      if ( static_cast<float>( minimum() ) < E57_FLOAT_MIN || static_cast<float>( maximum() ) > E57_FLOAT_MAX )
+      {
          throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+      }
    }
 
    // If value is out of bounds
    if ( value() < minimum() || value() > maximum() )
+   {
       throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+   }
 }
 //! @brief Check whether StringNode class invariant is true
 //! @copydetails IntegerNode::checkInvariant()
@@ -1720,11 +1820,15 @@ void StringNode::checkInvariant( bool /*doRecurse*/, bool doUpcast )
    // If destImageFile not open, can't test invariant (almost every call would
    // throw)
    if ( !destImageFile().isOpen() )
+   {
       return;
+   }
 
    // If requested, call Node::checkInvariant
    if ( doUpcast )
+   {
       static_cast<Node>( *this ).checkInvariant( false, false );
+   }
    /// ? check legal UTF-8
 }
 //! @brief Check whether BlobNode class invariant is true
@@ -1734,14 +1838,20 @@ void BlobNode::checkInvariant( bool /*doRecurse*/, bool doUpcast )
    // If destImageFile not open, can't test invariant (almost every call would
    // throw)
    if ( !destImageFile().isOpen() )
+   {
       return;
+   }
 
    // If requested, call Node::checkInvariant
    if ( doUpcast )
+   {
       static_cast<Node>( *this ).checkInvariant( false, false );
+   }
 
    if ( byteCount() < 0 )
+   {
       throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+   }
 }
 /*!
 @brief Check whether CompressedVectorReader class invariant is true
@@ -1761,7 +1871,9 @@ void CompressedVectorReader::checkInvariant( bool /*doRecurse*/ )
    // If this CompressedVectorReader is not open, can't test invariant (almost
    // every call would throw)
    if ( !isOpen() )
+   {
       return;
+   }
 
    CompressedVectorNode cv = compressedVectorNode();
    ImageFile imf = cv.destImageFile();
@@ -1769,19 +1881,27 @@ void CompressedVectorReader::checkInvariant( bool /*doRecurse*/ )
    // If destImageFile not open, can't test invariant (almost every call would
    // throw)
    if ( !imf.isOpen() )
+   {
       return;
+   }
 
    // Associated CompressedVectorNode must be attached to ImageFile
    if ( !cv.isAttached() )
+   {
       throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+   }
 
    // Dest ImageFile must have at least 1 reader (this one)
    if ( imf.readerCount() < 1 )
+   {
       throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+   }
 
    // Dest ImageFile can't have any writers
    if ( imf.writerCount() != 0 )
+   {
       throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+   }
 }
 
 //! @brief Check whether CompressedVectorWriter class invariant is true
@@ -1791,7 +1911,9 @@ void CompressedVectorWriter::checkInvariant( bool /*doRecurse*/ )
    // If this CompressedVectorWriter is not open, can't test invariant (almost
    // every call would throw)
    if ( !isOpen() )
+   {
       return;
+   }
 
    CompressedVectorNode cv = compressedVectorNode();
    ImageFile imf = cv.destImageFile();
@@ -1799,23 +1921,33 @@ void CompressedVectorWriter::checkInvariant( bool /*doRecurse*/ )
    // If destImageFile not open, can't test invariant (almost every call would
    // throw)
    if ( !imf.isOpen() )
+   {
       return;
+   }
 
    // Associated CompressedVectorNode must be attached to ImageFile
    if ( !cv.isAttached() )
+   {
       throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+   }
 
    // Dest ImageFile must be writable
    if ( !imf.isWritable() )
+   {
       throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+   }
 
    // Dest ImageFile must have exactly 1 writer (this one)
    if ( imf.writerCount() != 1 )
+   {
       throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+   }
 
    // Dest ImageFile can't have any readers
    if ( imf.readerCount() != 0 )
+   {
       throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+   }
 }
 
 /*!
@@ -1840,41 +1972,57 @@ void ImageFile::checkInvariant( bool doRecurse ) const
    // If this ImageFile is not open, can't test invariant (almost every call
    // would throw)
    if ( !isOpen() )
+   {
       return;
+   }
 
    // root() node must be a root node
    if ( !root().isRoot() )
+   {
       throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+   }
 
    // Can't have empty fileName
    if ( fileName().empty() )
+   {
       throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+   }
 
    int wCount = writerCount();
    int rCount = readerCount();
 
    // Can't have negative number of readers
    if ( rCount < 0 )
+   {
       throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+   }
 
    // Can't have negative number of writers
    if ( wCount < 0 )
+   {
       throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+   }
 
    // Can't have more than one writer
    if ( 1 < wCount )
+   {
       throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+   }
 
    // If have writer
    if ( wCount > 0 )
    {
       // Must be in write-mode
       if ( !isWritable() )
+      {
          throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+      }
 
       // Can't have any readers
       if ( rCount > 0 )
+      {
          throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+      }
    }
 
    // Extension prefixes and URIs are unique
@@ -1884,9 +2032,13 @@ void ImageFile::checkInvariant( bool doRecurse ) const
       for ( size_t j = i + 1; j < eCount; j++ )
       {
          if ( extensionsPrefix( i ) == extensionsPrefix( j ) )
+         {
             throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+         }
          if ( extensionsUri( i ) == extensionsUri( j ) )
+         {
             throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+         }
       }
    }
 
@@ -1898,18 +2050,28 @@ void ImageFile::checkInvariant( bool doRecurse ) const
       ustring prefix;
       ustring uri;
       if ( !extensionsLookupPrefix( goodPrefix, uri ) )
+      {
          throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+      }
       if ( uri != goodUri )
+      {
          throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+      }
       if ( !extensionsLookupUri( goodUri, prefix ) )
+      {
          throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+      }
       if ( prefix != goodPrefix )
+      {
          throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+      }
    }
 
    // If requested, check all objects "below" this one
    if ( doRecurse )
+   {
       root().checkInvariant( doRecurse );
+   }
 }
 
 //! @brief Check whether SourceDestBuffer class invariant is true
@@ -1956,7 +2118,9 @@ void SourceDestBuffer::checkInvariant( bool /*doRecurse*/ ) const
          throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
    }
    if ( stride() < min_stride )
+   {
       throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+   }
 }
 
 /*!
@@ -2474,7 +2638,9 @@ StructureNode::operator Node()
 StructureNode::StructureNode( const Node &n )
 {
    if ( n.type() != E57_STRUCTURE )
+   {
       throw E57_EXCEPTION2( E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString( n.type() ) );
+   }
 
    /// Set our shared_ptr to the downcast shared_ptr
    impl_ = std::static_pointer_cast<StructureNodeImpl>( n.impl() );
@@ -2793,7 +2959,9 @@ VectorNode::operator Node()
 VectorNode::VectorNode( const Node &n )
 {
    if ( n.type() != E57_VECTOR )
+   {
       throw E57_EXCEPTION2( E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString( n.type() ) );
+   }
 
    /// Set our shared_ptr to the downcast shared_ptr
    impl_ = std::static_pointer_cast<VectorNodeImpl>( n.impl() );

@@ -51,14 +51,18 @@ bool StructureNodeImpl::isTypeEquivalent( NodeImplSharedPtr ni )
 
    /// Same node type?
    if ( ni->type() != E57_STRUCTURE )
+   {
       return ( false );
+   }
 
    /// Downcast to shared_ptr<StructureNodeImpl>
    std::shared_ptr<StructureNodeImpl> si( std::static_pointer_cast<StructureNodeImpl>( ni ) );
 
    /// Same number of children?
    if ( childCount() != si->childCount() )
+   {
       return ( false );
+   }
 
    /// Check each child is equivalent
    for ( unsigned i = 0; i < childCount(); i++ )
@@ -68,16 +72,22 @@ bool StructureNodeImpl::isTypeEquivalent( NodeImplSharedPtr ni )
       if ( myChildsFieldName == si->children_.at( i )->elementName() )
       {
          if ( !children_.at( i )->isTypeEquivalent( si->children_.at( i ) ) )
+         {
             return ( false );
+         }
       }
       else
       {
          /// Children in different order, so lookup by name and check if equal
          /// to our child
          if ( !si->isDefined( myChildsFieldName ) )
+         {
             return ( false );
+         }
          if ( !children_.at( i )->isTypeEquivalent( si->lookup( myChildsFieldName ) ) )
+         {
             return ( false );
+         }
       }
    }
 
@@ -128,7 +138,9 @@ NodeImplSharedPtr StructureNodeImpl::get( const ustring &pathName )
    NodeImplSharedPtr ni( lookup( pathName ) );
 
    if ( !ni )
+   {
       throw E57_EXCEPTION2( E57_ERROR_PATH_UNDEFINED, "this->pathName=" + this->pathName() + " pathName=" + pathName );
+   }
    return ( ni );
 }
 
@@ -144,6 +156,7 @@ NodeImplSharedPtr StructureNodeImpl::lookup( const ustring &pathName )
    if ( isRelative || isRoot() )
    {
       if ( fields.empty() )
+      {
          if ( isRelative )
          {
             return NodeImplSharedPtr(); /// empty pointer
@@ -153,6 +166,7 @@ NodeImplSharedPtr StructureNodeImpl::lookup( const ustring &pathName )
             NodeImplSharedPtr root( getRoot() );
             return ( root );
          }
+      }
       else
       {
          /// Find child with elementName that matches first field in path
@@ -160,7 +174,9 @@ NodeImplSharedPtr StructureNodeImpl::lookup( const ustring &pathName )
          for ( i = 0; i < children_.size(); i++ )
          {
             if ( fields.at( 0 ) == children_.at( i )->elementName() )
+            {
                break;
+            }
          }
          if ( i == children_.size() )
          {
@@ -284,7 +300,9 @@ void StructureNodeImpl::set( const std::vector<ustring> &fields, unsigned level,
 
    /// Check if trying to set the root node "/", which is illegal
    if ( level == 0 && fields.empty() )
+   {
       throw E57_EXCEPTION2( E57_ERROR_SET_TWICE, "this->pathName=" + this->pathName() + " element=/" );
+   }
 
    /// Serial search for matching field name, if find match, have error since
    /// can't set twice
@@ -309,7 +327,9 @@ void StructureNodeImpl::set( const std::vector<ustring> &fields, unsigned level,
 
    /// If this struct is type constrained, can't add new child
    if ( isTypeConstrained() )
+   {
       throw E57_EXCEPTION2( E57_ERROR_HOMOGENEOUS_VIOLATION, "this->pathName=" + this->pathName() );
+   }
 
    /// Check if we are at bottom level
    if ( level == fields.size() - 1 )
@@ -368,9 +388,13 @@ void StructureNodeImpl::writeXml( ImageFileImplSharedPtr imf, CheckedFile &cf, i
 
    ustring fieldName;
    if ( forcedFieldName != nullptr )
+   {
       fieldName = forcedFieldName;
+   }
    else
+   {
       fieldName = elementName_;
+   }
 
    cf << space( indent ) << "<" << fieldName << " type=\"Structure\"";
 

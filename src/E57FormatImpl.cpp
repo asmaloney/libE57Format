@@ -98,23 +98,31 @@ bool VectorNodeImpl::isTypeEquivalent( NodeImplSharedPtr ni )
 
    /// Same node type?
    if ( ni->type() != E57_VECTOR )
+   {
       return ( false );
+   }
 
    std::shared_ptr<VectorNodeImpl> ai( std::static_pointer_cast<VectorNodeImpl>( ni ) );
 
    /// allowHeteroChildren must match
    if ( allowHeteroChildren_ != ai->allowHeteroChildren_ )
+   {
       return ( false );
+   }
 
    /// Same number of children?
    if ( childCount() != ai->childCount() )
+   {
       return ( false );
+   }
 
    /// Check each child, must be in same order
    for ( unsigned i = 0; i < childCount(); i++ )
    {
       if ( !children_.at( i )->isTypeEquivalent( ai->children_.at( i ) ) )
+      {
          return ( false );
+      }
    }
 
    /// Types match
@@ -152,9 +160,13 @@ void VectorNodeImpl::writeXml( ImageFileImplSharedPtr imf, CheckedFile &cf, int 
 
    ustring fieldName;
    if ( forcedFieldName != nullptr )
+   {
       fieldName = forcedFieldName;
+   }
    else
+   {
       fieldName = elementName_;
+   }
 
    cf << space( indent ) << "<" << fieldName << " type=\"Vector\" allowHeterogeneousChildren=\""
       << static_cast<int64_t>( allowHeteroChildren_ ) << "\">\n";
@@ -196,7 +208,9 @@ void CompressedVectorNodeImpl::setPrototype( const NodeImplSharedPtr &prototype 
 
    /// Can't set prototype twice.
    if ( prototype_ )
+   {
       throw E57_EXCEPTION2( E57_ERROR_SET_TWICE, "this->pathName=" + this->pathName() );
+   }
 
    /// prototype can't have a parent (must be a root node)
    if ( !prototype->isRoot() )
@@ -238,7 +252,9 @@ void CompressedVectorNodeImpl::setCodecs( const std::shared_ptr<VectorNodeImpl> 
 
    /// Can't set codecs twice.
    if ( codecs_ )
+   {
       throw E57_EXCEPTION2( E57_ERROR_SET_TWICE, "this->pathName=" + this->pathName() );
+   }
 
    /// codecs can't have a parent (must be a root node)
    if ( !codecs->isRoot() )
@@ -276,19 +292,27 @@ bool CompressedVectorNodeImpl::isTypeEquivalent( NodeImplSharedPtr ni )
 
    /// Same node type?
    if ( ni->type() != E57_COMPRESSED_VECTOR )
+   {
       return ( false );
+   }
 
    std::shared_ptr<CompressedVectorNodeImpl> cvi( std::static_pointer_cast<CompressedVectorNodeImpl>( ni ) );
 
    /// recordCount must match
    if ( recordCount_ != cvi->recordCount_ )
+   {
       return ( false );
+   }
 
    /// Prototypes and codecs must match ???
    if ( !prototype_->isTypeEquivalent( cvi->prototype_ ) )
+   {
       return ( false );
+   }
    if ( !codecs_->isTypeEquivalent( cvi->codecs_ ) )
+   {
       return ( false );
+   }
 
    return ( true );
 }
@@ -305,11 +329,15 @@ void CompressedVectorNodeImpl::setAttachedRecursive()
 
    /// Mark nodes in prototype tree, if defined
    if ( prototype_ )
+   {
       prototype_->setAttachedRecursive();
+   }
 
    /// Mark nodes in codecs tree if defined
    if ( codecs_ )
+   {
       codecs_->setAttachedRecursive();
+   }
 }
 
 int64_t CompressedVectorNodeImpl::childCount() const
@@ -334,9 +362,13 @@ void CompressedVectorNodeImpl::writeXml( ImageFileImplSharedPtr imf, CheckedFile
 
    ustring fieldName;
    if ( forcedFieldName != nullptr )
+   {
       fieldName = forcedFieldName;
+   }
    else
+   {
       fieldName = elementName_;
+   }
 
    uint64_t physicalStart = cf.logicalToPhysical( binarySectionLogicalStart_ );
 
@@ -345,9 +377,13 @@ void CompressedVectorNodeImpl::writeXml( ImageFileImplSharedPtr imf, CheckedFile
    cf << "\" recordCount=\"" << recordCount_ << "\">\n";
 
    if ( prototype_ )
+   {
       prototype_->writeXml( imf, cf, indent + 2, "prototype" );
+   }
    if ( codecs_ )
+   {
       codecs_->writeXml( imf, cf, indent + 2, "codecs" );
+   }
    cf << space( indent ) << "</" << fieldName << ">\n";
 }
 
@@ -363,14 +399,18 @@ void CompressedVectorNodeImpl::dump( int indent, std::ostream &os ) const
       prototype_->dump( indent + 2, os );
    }
    else
+   {
       os << space( indent ) << "prototype: <empty>" << std::endl;
+   }
    if ( codecs_ )
    {
       os << space( indent ) << "codecs:" << std::endl;
       codecs_->dump( indent + 2, os );
    }
    else
+   {
       os << space( indent ) << "codecs: <empty>" << std::endl;
+   }
    os << space( indent ) << "recordCount:                " << recordCount_ << std::endl;
    os << space( indent ) << "binarySectionLogicalStart:  " << binarySectionLogicalStart_ << std::endl;
 }
@@ -398,13 +438,19 @@ std::shared_ptr<CompressedVectorWriterImpl> CompressedVectorNodeImpl::writer( st
 
    /// sbufs can't be empty
    if ( sbufs.empty() )
+   {
       throw E57_EXCEPTION2( E57_ERROR_BAD_API_ARGUMENT, "fileName=" + destImageFile->fileName() );
+   }
 
    if ( !destImageFile->isWriter() )
+   {
       throw E57_EXCEPTION2( E57_ERROR_FILE_IS_READ_ONLY, "fileName=" + destImageFile->fileName() );
+   }
 
    if ( !isAttached() )
+   {
       throw E57_EXCEPTION2( E57_ERROR_NODE_UNATTACHED, "fileName=" + destImageFile->fileName() );
+   }
 
    /// Get pointer to me (really shared_ptr<CompressedVectorNodeImpl>)
    NodeImplSharedPtr ni( shared_from_this() );
@@ -439,11 +485,15 @@ std::shared_ptr<CompressedVectorReaderImpl> CompressedVectorNodeImpl::reader( st
 
    /// dbufs can't be empty
    if ( dbufs.empty() )
+   {
       throw E57_EXCEPTION2( E57_ERROR_BAD_API_ARGUMENT, "fileName=" + destImageFile->fileName() );
+   }
 
    /// Can be read or write mode, but must be attached
    if ( !isAttached() )
+   {
       throw E57_EXCEPTION2( E57_ERROR_NODE_UNATTACHED, "fileName=" + destImageFile->fileName() );
+   }
 
    /// Get pointer to me (really shared_ptr<CompressedVectorNodeImpl>)
    NodeImplSharedPtr ni( shared_from_this() );
@@ -486,18 +536,24 @@ bool IntegerNodeImpl::isTypeEquivalent( NodeImplSharedPtr ni )
 
    /// Same node type?
    if ( ni->type() != E57_INTEGER )
+   {
       return ( false );
+   }
 
    /// Downcast to shared_ptr<IntegerNodeImpl>
    std::shared_ptr<IntegerNodeImpl> ii( std::static_pointer_cast<IntegerNodeImpl>( ni ) );
 
    /// minimum must match
    if ( minimum_ != ii->minimum_ )
+   {
       return ( false );
+   }
 
    /// maximum must match
    if ( maximum_ != ii->maximum_ )
+   {
       return ( false );
+   }
 
    /// ignore value_, doesn't have to match
 
@@ -537,7 +593,9 @@ void IntegerNodeImpl::checkLeavesInSet( const StringSet &pathNames, NodeImplShar
 
    /// We are a leaf node, so verify that we are listed in set.
    if ( pathNames.find( relativePathName( origin ) ) == pathNames.end() )
+   {
       throw E57_EXCEPTION2( E57_ERROR_NO_BUFFER_FOR_ELEMENT, "this->pathName=" + this->pathName() );
+   }
 }
 
 void IntegerNodeImpl::writeXml( ImageFileImplSharedPtr /*imf???*/, CheckedFile &cf, int indent,
@@ -547,23 +605,35 @@ void IntegerNodeImpl::writeXml( ImageFileImplSharedPtr /*imf???*/, CheckedFile &
 
    ustring fieldName;
    if ( forcedFieldName != nullptr )
+   {
       fieldName = forcedFieldName;
+   }
    else
+   {
       fieldName = elementName_;
+   }
 
    cf << space( indent ) << "<" << fieldName << " type=\"Integer\"";
 
    /// Don't need to write if are default values
    if ( minimum_ != E57_INT64_MIN )
+   {
       cf << " minimum=\"" << minimum_ << "\"";
+   }
    if ( maximum_ != E57_INT64_MAX )
+   {
       cf << " maximum=\"" << maximum_ << "\"";
+   }
 
    /// Write value as child text, unless it is the default value
    if ( value_ != 0 )
+   {
       cf << ">" << value_ << "</" << fieldName << ">\n";
+   }
    else
+   {
       cf << "/>\n";
+   }
 }
 
 #ifdef E57_DEBUG
@@ -623,26 +693,36 @@ bool ScaledIntegerNodeImpl::isTypeEquivalent( NodeImplSharedPtr ni )
 
    /// Same node type?
    if ( ni->type() != E57_SCALED_INTEGER )
+   {
       return ( false );
+   }
 
    /// Downcast to shared_ptr<ScaledIntegerNodeImpl>
    std::shared_ptr<ScaledIntegerNodeImpl> ii( std::static_pointer_cast<ScaledIntegerNodeImpl>( ni ) );
 
    /// minimum must match
    if ( minimum_ != ii->minimum_ )
+   {
       return ( false );
+   }
 
    /// maximum must match
    if ( maximum_ != ii->maximum_ )
+   {
       return ( false );
+   }
 
    /// scale must match
    if ( scale_ != ii->scale_ )
+   {
       return ( false );
+   }
 
    /// offset must match
    if ( offset_ != ii->offset_ )
+   {
       return ( false );
+   }
 
    /// ignore value_, doesn't have to match
 
@@ -710,7 +790,9 @@ void ScaledIntegerNodeImpl::checkLeavesInSet( const StringSet &pathNames, NodeIm
 
    /// We are a leaf node, so verify that we are listed in set.
    if ( pathNames.find( relativePathName( origin ) ) == pathNames.end() )
+   {
       throw E57_EXCEPTION2( E57_ERROR_NO_BUFFER_FOR_ELEMENT, "this->pathName=" + this->pathName() );
+   }
 }
 
 void ScaledIntegerNodeImpl::writeXml( ImageFileImplSharedPtr /*imf*/, CheckedFile &cf, int indent,
@@ -720,27 +802,43 @@ void ScaledIntegerNodeImpl::writeXml( ImageFileImplSharedPtr /*imf*/, CheckedFil
 
    ustring fieldName;
    if ( forcedFieldName != nullptr )
+   {
       fieldName = forcedFieldName;
+   }
    else
+   {
       fieldName = elementName_;
+   }
 
    cf << space( indent ) << "<" << fieldName << " type=\"ScaledInteger\"";
 
    /// Don't need to write if are default values
    if ( minimum_ != E57_INT64_MIN )
+   {
       cf << " minimum=\"" << minimum_ << "\"";
+   }
    if ( maximum_ != E57_INT64_MAX )
+   {
       cf << " maximum=\"" << maximum_ << "\"";
+   }
    if ( scale_ != 1.0 )
+   {
       cf << " scale=\"" << scale_ << "\"";
+   }
    if ( offset_ != 0.0 )
+   {
       cf << " offset=\"" << offset_ << "\"";
+   }
 
    /// Write value as child text, unless it is the default value
    if ( value_ != 0 )
+   {
       cf << ">" << value_ << "</" << fieldName << ">\n";
+   }
    else
+   {
       cf << "/>\n";
+   }
 }
 
 #ifdef E57_DEBUG
@@ -773,9 +871,13 @@ FloatNodeImpl::FloatNodeImpl( ImageFileImplWeakPtr destImageFile, double value, 
    if ( precision_ == E57_SINGLE )
    {
       if ( minimum_ < E57_FLOAT_MIN )
+      {
          minimum_ = E57_FLOAT_MIN;
+      }
       if ( maximum_ > E57_FLOAT_MAX )
+      {
          maximum_ = E57_FLOAT_MAX;
+      }
    }
 
    /// Enforce the given bounds on raw value
@@ -793,22 +895,30 @@ bool FloatNodeImpl::isTypeEquivalent( NodeImplSharedPtr ni )
 
    /// Same node type?
    if ( ni->type() != E57_FLOAT )
+   {
       return ( false );
+   }
 
    /// Downcast to shared_ptr<FloatNodeImpl>
    std::shared_ptr<FloatNodeImpl> fi( std::static_pointer_cast<FloatNodeImpl>( ni ) );
 
    /// precision must match
    if ( precision_ != fi->precision_ )
+   {
       return ( false );
+   }
 
    /// minimum must match
    if ( minimum_ != fi->minimum_ )
+   {
       return ( false );
+   }
 
    /// maximum must match
    if ( maximum_ != fi->maximum_ )
+   {
       return ( false );
+   }
 
    /// ignore value_, doesn't have to match
 
@@ -856,7 +966,9 @@ void FloatNodeImpl::checkLeavesInSet( const StringSet &pathNames, NodeImplShared
    /// or absolute form)
    if ( pathNames.find( relativePathName( origin ) ) == pathNames.end() &&
         pathNames.find( pathName() ) == pathNames.end() )
+   {
       throw E57_EXCEPTION2( E57_ERROR_NO_BUFFER_FOR_ELEMENT, "this->pathName=" + this->pathName() );
+   }
 }
 
 void FloatNodeImpl::writeXml( ImageFileImplSharedPtr /*imf*/, CheckedFile &cf, int indent, const char *forcedFieldName )
@@ -865,9 +977,13 @@ void FloatNodeImpl::writeXml( ImageFileImplSharedPtr /*imf*/, CheckedFile &cf, i
 
    ustring fieldName;
    if ( forcedFieldName != nullptr )
+   {
       fieldName = forcedFieldName;
+   }
    else
+   {
       fieldName = elementName_;
+   }
 
    cf << space( indent ) << "<" << fieldName << " type=\"Float\"";
    if ( precision_ == E57_SINGLE )
@@ -876,15 +992,23 @@ void FloatNodeImpl::writeXml( ImageFileImplSharedPtr /*imf*/, CheckedFile &cf, i
 
       /// Don't need to write if are default values
       if ( minimum_ > E57_FLOAT_MIN )
+      {
          cf << " minimum=\"" << static_cast<float>( minimum_ ) << "\"";
+      }
       if ( maximum_ < E57_FLOAT_MAX )
+      {
          cf << " maximum=\"" << static_cast<float>( maximum_ ) << "\"";
+      }
 
       /// Write value as child text, unless it is the default value
       if ( value_ != 0.0 )
+      {
          cf << ">" << static_cast<float>( value_ ) << "</" << fieldName << ">\n";
+      }
       else
+      {
          cf << "/>\n";
+      }
    }
    else
    {
@@ -892,15 +1016,23 @@ void FloatNodeImpl::writeXml( ImageFileImplSharedPtr /*imf*/, CheckedFile &cf, i
 
       /// Don't need to write if are default values
       if ( minimum_ > E57_DOUBLE_MIN )
+      {
          cf << " minimum=\"" << minimum_ << "\"";
+      }
       if ( maximum_ < E57_DOUBLE_MAX )
+      {
          cf << " maximum=\"" << maximum_ << "\"";
+      }
 
       /// Write value as child text, unless it is the default value
       if ( value_ != 0.0 )
+      {
          cf << ">" << value_ << "</" << fieldName << ">\n";
+      }
       else
+      {
          cf << "/>\n";
+      }
    }
 }
 
@@ -913,9 +1045,13 @@ void FloatNodeImpl::dump( int indent, std::ostream &os ) const
    NodeImpl::dump( indent, os );
    os << space( indent ) << "precision:   ";
    if ( precision() == E57_SINGLE )
+   {
       os << "single" << std::endl;
+   }
    else
+   {
       os << "double" << std::endl;
+   }
 
    /// Save old stream config
    const std::streamsize oldPrecision = os.precision();
@@ -945,7 +1081,9 @@ bool StringNodeImpl::isTypeEquivalent( NodeImplSharedPtr ni )
 
    /// Same node type?
    if ( ni->type() != E57_STRING )
+   {
       return ( false );
+   }
 
    /// ignore value_, doesn't have to match
 
@@ -973,7 +1111,9 @@ void StringNodeImpl::checkLeavesInSet( const StringSet &pathNames, NodeImplShare
 
    /// We are a leaf node, so verify that we are listed in set.
    if ( pathNames.find( relativePathName( origin ) ) == pathNames.end() )
+   {
       throw E57_EXCEPTION2( E57_ERROR_NO_BUFFER_FOR_ELEMENT, "this->pathName=" + this->pathName() );
+   }
 }
 
 void StringNodeImpl::writeXml( ImageFileImplSharedPtr /*imf*/, CheckedFile &cf, int indent,
@@ -983,9 +1123,13 @@ void StringNodeImpl::writeXml( ImageFileImplSharedPtr /*imf*/, CheckedFile &cf, 
 
    ustring fieldName;
    if ( forcedFieldName != nullptr )
+   {
       fieldName = forcedFieldName;
+   }
    else
+   {
       fieldName = elementName_;
+   }
 
    cf << space( indent ) << "<" << fieldName << " type=\"String\"";
 
@@ -1053,7 +1197,9 @@ BlobNodeImpl::BlobNodeImpl( ImageFileImplWeakPtr destImageFile, int64_t byteCoun
    binarySectionLogicalLength_ = sizeof( BlobSectionHeader ) + blobLogicalLength_;
    unsigned remainder = binarySectionLogicalLength_ % 4;
    if ( remainder > 0 )
+   {
       binarySectionLogicalLength_ += 4 - remainder;
+   }
 
    /// Reserve space for blob in file, extend with zeros since writes will
    /// happen at later time by caller
@@ -1092,14 +1238,18 @@ bool BlobNodeImpl::isTypeEquivalent( NodeImplSharedPtr ni )
 
    /// Same node type?
    if ( ni->type() != E57_BLOB )
+   {
       return ( false );
+   }
 
    /// Downcast to shared_ptr<BlobNodeImpl>
    std::shared_ptr<BlobNodeImpl> bi( std::static_pointer_cast<BlobNodeImpl>( ni ) );
 
    /// blob lengths must match
    if ( blobLogicalLength_ != bi->blobLogicalLength_ )
+   {
       return ( false );
+   }
 
    /// ignore blob contents, doesn't have to match
 
@@ -1147,9 +1297,13 @@ void BlobNodeImpl::write( uint8_t *buf, int64_t start, size_t count )
    ImageFileImplSharedPtr destImageFile( destImageFile_ );
 
    if ( !destImageFile->isWriter() )
+   {
       throw E57_EXCEPTION2( E57_ERROR_FILE_IS_READ_ONLY, "fileName=" + destImageFile->fileName() );
+   }
    if ( !isAttached() )
+   {
       throw E57_EXCEPTION2( E57_ERROR_NODE_UNATTACHED, "fileName=" + destImageFile->fileName() );
+   }
 
    if ( static_cast<uint64_t>( start ) + count > blobLogicalLength_ )
    {
@@ -1171,7 +1325,9 @@ void BlobNodeImpl::checkLeavesInSet( const StringSet &pathNames, NodeImplSharedP
    /// We are a leaf node, so verify that we are listed in set. ???true for
    /// blobs? what exception get if try blob in compressedvector?
    if ( pathNames.find( relativePathName( origin ) ) == pathNames.end() )
+   {
       throw E57_EXCEPTION2( E57_ERROR_NO_BUFFER_FOR_ELEMENT, "this->pathName=" + this->pathName() );
+   }
 }
 
 void BlobNodeImpl::writeXml( ImageFileImplSharedPtr /*imf*/, CheckedFile &cf, int indent, const char *forcedFieldName )
@@ -1180,9 +1336,13 @@ void BlobNodeImpl::writeXml( ImageFileImplSharedPtr /*imf*/, CheckedFile &cf, in
 
    ustring fieldName;
    if ( forcedFieldName != nullptr )
+   {
       fieldName = forcedFieldName;
+   }
    else
+   {
       fieldName = elementName_;
+   }
 
    //??? need to implement
    //??? Type --> type
@@ -1227,7 +1387,9 @@ void CompressedVectorSectionHeader::verify( uint64_t filePhysicalSize )
 {
    /// Verify that section is correct type
    if ( sectionId != COMPRESSED_VECTOR_SECTION )
+   {
       throw E57_EXCEPTION2( E57_ERROR_BAD_CV_HEADER, "sectionId=" + toString( sectionId ) );
+   }
 
    /// Verify reserved fields are zero. ???  if fileversion==1.0 ???
    for ( unsigned i = 0; i < sizeof( reserved1 ); i++ )
@@ -1241,7 +1403,9 @@ void CompressedVectorSectionHeader::verify( uint64_t filePhysicalSize )
 
    /// Check section length is multiple of 4
    if ( sectionLogicalLength % 4 )
+   {
       throw E57_EXCEPTION2( E57_ERROR_BAD_CV_HEADER, "sectionLogicalLength=" + toString( sectionLogicalLength ) );
+   }
 
    /// Check sectionLogicalLength is in bounds
    if ( filePhysicalSize > 0 && sectionLogicalLength >= filePhysicalSize )
@@ -1321,7 +1485,9 @@ CompressedVectorWriterImpl::CompressedVectorWriterImpl( std::shared_ptr<Compress
       NodeImplSharedPtr readNode = proto_->get( sbufs.at( i ).pathName() );
       uint64_t bytestreamNumber = 0;
       if ( !proto_->findTerminalPosition( readNode, bytestreamNumber ) )
+      {
          throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "sbufIndex=" + toString( i ) );
+      }
 
       /// EncoderFactory picks the appropriate encoder to match type declared in
       /// prototype
@@ -1375,7 +1541,9 @@ CompressedVectorWriterImpl::~CompressedVectorWriterImpl()
    try
    {
       if ( isOpen_ )
+      {
          close();
+      }
    }
    catch ( ... )
    {
@@ -1397,7 +1565,9 @@ void CompressedVectorWriterImpl::close()
    /// don't call checkWriterOpen();
 
    if ( !isOpen_ )
+   {
       return;
+   }
 
    /// Set closed before do anything, so if get fault and start unwinding, don't
    /// try to close again.
@@ -1545,16 +1715,18 @@ void CompressedVectorWriterImpl::write( const size_t requestedRecordCount )
 
       /// We are done if have no more work, break out of loop
       if ( totalRecordCount == 0 )
+      {
          break;
+      }
 
-         /// Estimate how many records can write before have enough data to fill
-         /// data packet to efficient length Efficient packet length is >= 75%
-         /// of maximum packet length. It is OK if get too much data (more than
-         /// one packet) in an iteration. Reader will be able to handle packets
-         /// whose streams are not exactly synchronized to the record
-         /// boundaries. But try to do a good job of keeping the stream
-         /// synchronization "close enough" (so a reader that can cache only two
-         /// packets is efficient).
+      /// Estimate how many records can write before have enough data to fill
+      /// data packet to efficient length Efficient packet length is >= 75%
+      /// of maximum packet length. It is OK if get too much data (more than
+      /// one packet) in an iteration. Reader will be able to handle packets
+      /// whose streams are not exactly synchronized to the record
+      /// boundaries. But try to do a good job of keeping the stream
+      /// synchronization "close enough" (so a reader that can cache only two
+      /// packets is efficient).
 
 #ifdef E57_MAX_VERBOSE
       std::cout << "  currentPacketSize()=" << currentPacketSize() << std::endl; //???
@@ -1641,7 +1813,9 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
    /// Double check that we have work to do
    size_t totalOutput = totalOutputAvailable();
    if ( totalOutput == 0 )
+   {
       return ( 0 );
+   }
 #ifdef E57_MAX_VERBOSE
    std::cout << "  totalOutput=" << totalOutput << std::endl; //???
 #endif
@@ -1662,7 +1836,9 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
    {
       /// We can fit everything in one packet
       for ( unsigned i = 0; i < bytestreams_.size(); i++ )
+      {
          count.at( i ) = bytestreams_.at( i )->outputAvailable();
+      }
    }
    else
    {
@@ -1687,7 +1863,9 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
    /// Double check sum of count is <= packetMaxPayloadBytes
    size_t totalByteCount = 0;
    for ( size_t i : count )
+   {
       totalByteCount += i;
+   }
    if ( totalByteCount > packetMaxPayloadBytes )
    {
       throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "totalByteCount=" + toString( totalByteCount ) +
@@ -1737,7 +1915,9 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
       /// Double check we aren't accidentally going to write off end of
       /// vector<char>
       if ( &p[n] > &packet[DATA_PACKET_MAX] )
+      {
          throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "n=" + toString( n ) );
+      }
 #endif
 
       /// Read from encoder output into packet
@@ -1769,7 +1949,9 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
       /// Double check we aren't accidentally going to write off end of
       /// vector<char>
       if ( p >= &packet[DATA_PACKET_MAX - 1] )
+      {
          throw E57_EXCEPTION1( E57_ERROR_INTERNAL );
+      }
       *p++ = 0;
       packetLength++;
 #ifdef E57_MAX_VERBOSE
@@ -1803,7 +1985,9 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
    /// close report file
    /// good/bad?
    if ( dataPacketsCount_ == 0 )
+   {
       dataPhysicalOffset_ = packetPhysicalOffset;
+   }
    dataPacketsCount_++;
 
    ///!!! update seekIndex here? if started new chunk?
@@ -1927,7 +2111,9 @@ CompressedVectorReaderImpl::CompressedVectorReaderImpl( std::shared_ptr<Compress
       NodeImplSharedPtr readNode = proto_->get( dbufs.at( i ).pathName() );
       uint64_t bytestreamNumber = 0;
       if ( !proto_->findTerminalPosition( readNode, bytestreamNumber ) )
+      {
          throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "dbufIndex=" + toString( i ) );
+      }
 
       channels_.emplace_back( dbufs.at( i ), decoder, static_cast<unsigned>( bytestreamNumber ),
                               cVector_->childCount() );
@@ -2094,7 +2280,9 @@ unsigned CompressedVectorReaderImpl::read()
 
       /// If nobody's hungry, we are done with the read
       if ( earliestPacketLogicalOffset == E57_UINT64_MAX )
+      {
          break;
+      }
 
       /// Feed packet to the hungry decoders
       feedPacketToDecoders( earliestPacketLogicalOffset );
@@ -2371,7 +2559,9 @@ void CompressedVectorReaderImpl::close()
 
    /// No error if reader not open
    if ( !isOpen_ )
+   {
       return;
+   }
 
    /// Destroy decoders
    channels_.clear();
@@ -2444,7 +2634,9 @@ bool DecodeChannel::isOutputBlocked() const
 {
    /// If we have completed the entire vector, we are done
    if ( decoder->totalRecordsCompleted() >= maxRecordCount )
+   {
       return ( true );
+   }
 
    /// If we have filled the dest buffer, we are blocked
    return ( dbuf.impl()->nextIndex() == dbuf.impl()->capacity() );
@@ -2454,7 +2646,9 @@ bool DecodeChannel::isInputBlocked() const
 {
    /// If have read until the section end, we are done
    if ( inputFinished )
+   {
       return ( true );
+   }
 
    /// If have eaten all the input in the current packet, we are blocked.
    return ( currentBytestreamBufferIndex == currentBytestreamBufferLength );

@@ -116,7 +116,9 @@ XMLSize_t E57FileInputStream::readBytes( XMLByte *const toFill, const XMLSize_t 
 
    int64_t available = logicalStart_ + logicalLength_ - logicalPosition_;
    if ( available <= 0 )
+   {
       return ( 0 );
+   }
 
    /// size_t and XMLSize_t should be compatible, should get compiler warning
    /// here if not
@@ -125,8 +127,10 @@ XMLSize_t E57FileInputStream::readBytes( XMLByte *const toFill, const XMLSize_t 
    /// Be careful if size_t is smaller than int64_t
    size_t available_size;
    if ( sizeof( size_t ) >= sizeof( int64_t ) )
+   {
       /// size_t is at least as big as int64_t
       available_size = static_cast<size_t>( available );
+   }
    else
    {
       /// size_t is smaller than int64_t, Calc max that size_t can hold
@@ -135,9 +139,13 @@ XMLSize_t E57FileInputStream::readBytes( XMLByte *const toFill, const XMLSize_t 
       /// read smaller of size_max, available
       ///??? redo
       if ( size_max < available )
+      {
          available_size = static_cast<size_t>( size_max );
+      }
       else
+      {
          available_size = static_cast<size_t>( available );
+      }
    }
 
    size_t readCount = std::min( maxToRead_size, available_size );
@@ -190,9 +198,13 @@ void E57XmlParser::ParseInfo::dump( int indent, std::ostream &os ) const
    os << space( indent ) << "allowHeterogeneousChildren: " << allowHeterogeneousChildren << std::endl;
    os << space( indent ) << "recordCount:    " << recordCount << std::endl;
    if ( container_ni )
+   {
       os << space( indent ) << "container_ni:   <defined>" << std::endl;
+   }
    else
+   {
       os << space( indent ) << "container_ni:   <null>" << std::endl;
+   }
    os << space( indent ) << "childText:      \"" << childText << "\"" << std::endl;
 }
 
@@ -381,7 +393,9 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
          if ( precision_str == "single" )
             pi.precision = E57_SINGLE;
          else if ( precision_str == "double" )
+         {
             pi.precision = E57_DOUBLE;
+         }
          else
          {
             throw E57_EXCEPTION2( E57_ERROR_BAD_XML_FORMAT,
@@ -406,9 +420,13 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
          /// Not defined defined in XML, so defaults to E57_FLOAT_MIN or
          /// E57_DOUBLE_MIN
          if ( pi.precision == E57_SINGLE )
+         {
             pi.floatMinimum = E57_FLOAT_MIN;
+         }
          else
+         {
             pi.floatMinimum = E57_DOUBLE_MIN;
+         }
       }
 
       if ( isAttributeDefined( attributes, att_maximum ) )
@@ -420,7 +438,9 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
       {
          /// Not defined defined in XML, so defaults to FLOAT_MAX or DOUBLE_MAX
          if ( pi.precision == E57_SINGLE )
+         {
             pi.floatMaximum = E57_FLOAT_MAX;
+         }
          else
             pi.floatMaximum = E57_DOUBLE_MAX;
       }
@@ -512,7 +532,9 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
       /// After have Structure, check again if E57Root, if so mark attached so
       /// all children will be attached when added
       if ( toUString( localName ) == "e57Root" )
+      {
          s_ni->setAttachedRecursive();
+      }
 
       /// Push info so far onto stack
       stack_.push( pi );
@@ -531,9 +553,13 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
          int64_t i64 = convertStrToLL( allowHetero_str );
 
          if ( i64 == 0 )
+         {
             pi.allowHeterogeneousChildren = false;
+         }
          else if ( i64 == 1 )
+         {
             pi.allowHeterogeneousChildren = true;
+         }
          else
          {
             throw E57_EXCEPTION2( E57_ERROR_BAD_XML_FORMAT,
@@ -656,9 +682,13 @@ void E57XmlParser::endElement( const XMLCh *const uri, const XMLCh *const localN
          /// Convert child text (if any) to value, else default to 0.0
          double floatValue;
          if ( pi.childText.length() > 0 )
+         {
             floatValue = atof( pi.childText.c_str() );
+         }
          else
+         {
             floatValue = 0.0;
+         }
          std::shared_ptr<FloatNodeImpl> f_ni(
             new FloatNodeImpl( imf_, floatValue, pi.precision, pi.floatMinimum, pi.floatMaximum ) );
          current_ni = f_ni;
@@ -739,7 +769,9 @@ void E57XmlParser::endElement( const XMLCh *const uri, const XMLCh *const localN
 
          /// n can be either prototype or codecs
          if ( uQName == "prototype" )
+         {
             cv_ni->setPrototype( current_ni );
+         }
          else if ( uQName == "codecs" )
          {
             if ( current_ni->type() != E57_VECTOR )
@@ -801,7 +833,9 @@ void E57XmlParser::characters( const XMLCh *const chars, const XMLSize_t length 
          /// If characters aren't whitespace, have an error, else ignore
          ustring s = toUString( chars );
          if ( s.find_first_not_of( " \t\n\r" ) != std::string::npos )
+         {
             throw E57_EXCEPTION2( E57_ERROR_BAD_XML_FORMAT, "chars=" + toUString( chars ) );
+         }
       }
       break;
       default:
@@ -851,7 +885,9 @@ ustring E57XmlParser::lookupAttribute( const Attributes &attributes, const XMLCh
 {
    XMLSize_t attr_index;
    if ( !attributes.getIndex( attribute_name, attr_index ) )
+   {
       throw E57_EXCEPTION2( E57_ERROR_BAD_XML_FORMAT, "attributeName=" + toUString( attribute_name ) );
+   }
    return ( toUString( attributes.getValue( attr_index ) ) );
 }
 

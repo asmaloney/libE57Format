@@ -354,11 +354,15 @@ void DataPacketHeader::verify( unsigned bufferLength ) const
    /// Check packetLength is at least large enough to hold header
    unsigned packetLength = packetLogicalLengthMinus1 + 1;
    if ( packetLength < sizeof( *this ) )
+   {
       throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET, "packetLength=" + toString( packetLength ) );
+   }
 
    /// Check packet length is multiple of 4
    if ( packetLength % 4 )
+   {
       throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET, "packetLength=" + toString( packetLength ) );
+   }
 
    /// Check actual packet length is large enough.
    if ( bufferLength > 0 && packetLength > bufferLength )
@@ -370,7 +374,9 @@ void DataPacketHeader::verify( unsigned bufferLength ) const
    /// Make sure there is at least one entry in packet  ??? 0 record cvect
    /// allowed?
    if ( bytestreamCount == 0 )
+   {
       throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET, "bytestreamCount=" + toString( bytestreamCount ) );
+   }
 
    /// Check packet is at least long enough to hold bytestreamBufferLength array
    if ( sizeof( DataPacketHeader ) + 2 * bytestreamCount > packetLength )
@@ -470,7 +476,9 @@ char *DataPacket::getBytestream( unsigned bytestreamNumber, unsigned &byteCount 
    /// Sum size of preceeding stream buffers to get position
    unsigned totalPreceeding = 0;
    for ( unsigned i = 0; i < bytestreamNumber; i++ )
+   {
       totalPreceeding += bsbLength[i];
+   }
 
    byteCount = bsbLength[bytestreamNumber];
 
@@ -546,7 +554,9 @@ void IndexPacket::verify( unsigned bufferLength, uint64_t totalRecordCount, uint
    /// Check packetLength is at least large enough to hold header
    unsigned packetLength = packetLogicalLengthMinus1 + 1;
    if ( packetLength < sizeof( *this ) )
+   {
       throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET, "packetLength=" + toString( packetLength ) );
+   }
 
    /// Check packet length is multiple of 4
    if ( packetLength % 4 )
@@ -555,30 +565,40 @@ void IndexPacket::verify( unsigned bufferLength, uint64_t totalRecordCount, uint
    /// Make sure there is at least one entry in packet  ??? 0 record cvect
    /// allowed?
    if ( entryCount == 0 )
+   {
       throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET, "entryCount=" + toString( entryCount ) );
+   }
 
    /// Have to have <= 2048 entries
    if ( entryCount > MAX_ENTRIES )
+   {
       throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET, "entryCount=" + toString( entryCount ) );
+   }
 
    /// Index level should be <= 5.  Because (5+1)* 11 bits = 66 bits, which will
    /// cover largest number of chunks possible.
    if ( indexLevel > 5 )
+   {
       throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET, "indexLevel=" + toString( indexLevel ) );
+   }
 
    /// Index packets above level 0 must have at least two entries (otherwise no
    /// point to existing).
    ///??? check that this is in spec
    if ( indexLevel > 0 && entryCount < 2 )
+   {
       throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET,
                             "indexLevel=" + toString( indexLevel ) + " entryCount=" + toString( entryCount ) );
+   }
 
    /// If not later version, verify reserved fields are zero. ??? test file
    /// version if (version <= E57_FORMAT_MAJOR) { //???
    for ( unsigned i = 0; i < sizeof( reserved1 ); i++ )
    {
       if ( reserved1[i] != 0 )
+      {
          throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET, "i=" + toString( i ) );
+      }
    }
 
    /// Check actual packet length is large enough.
@@ -674,12 +694,16 @@ void EmptyPacketHeader::verify( unsigned bufferLength ) const
 {
    /// Verify that packet is correct type
    if ( packetType != EMPTY_PACKET )
+   {
       throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET, "packetType=" + toString( packetType ) );
+   }
 
    /// Check packetLength is at least large enough to hold header
    unsigned packetLength = packetLogicalLengthMinus1 + 1;
    if ( packetLength < sizeof( *this ) )
+   {
       throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET, "packetLength=" + toString( packetLength ) );
+   }
 
    /// Check packet length is multiple of 4
    if ( packetLength % 4 )

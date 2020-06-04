@@ -877,8 +877,10 @@ namespace e57
       os << space( indent ) << "readerCount: " << readerCount_ << std::endl;
       os << space( indent ) << "isWriter:    " << isWriter_ << std::endl;
       for ( size_t i = 0; i < extensionsCount(); i++ )
+      {
          os << space( indent ) << "nameSpace[" << i << "]: prefix=" << extensionsPrefix( i )
             << " uri=" << extensionsUri( i ) << std::endl;
+      }
       os << space( indent ) << "root:      " << std::endl;
       root_->dump( indent + 2, os );
    }

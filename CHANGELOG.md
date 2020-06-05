@@ -3,7 +3,7 @@
 - v2.2.0 (in development)
   - Enable building E57Format as a shared library ([#40](https://github.com/asmaloney/libE57Format/pull/40)) (Thanks	Amodio!)
   - Remove all usage of dynamic_cast<> ([#39](https://github.com/asmaloney/libE57Format/pull/39))	(Thanks	Jiri!)
-  - Added [clang-format](https://clang.llvm.org/docs/ClangFormat.html) file and reformatted code
+  - Added a [clang-format](https://clang.llvm.org/docs/ClangFormat.html) file, a cmake target for it ("format"), and reformatted the code
   - {win} Fix MSVC warnings  ([#34](https://github.com/asmaloney/libE57Format/pull/34))) ([#36](https://github.com/asmaloney/libE57Format/pull/36))
   - {cmake} Review and update cmake files
   - {doc} Add info about using [SPDX License Identifiers](https://spdx.org/ids)

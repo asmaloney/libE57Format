@@ -22,6 +22,16 @@ I have also changed the main include file's name from `E57Foundation.h` to `E57F
 
 Versions of **libE57Format** start at 2.0.
 
+## Contributing
+
+I am happy to review any contributions - [pull requests](https://github.com/asmaloney/libE57Format/pulls), documentation, etc.. Please keep any pull requests as short as possible. Each pull request should be atomic and only address one issue.
+
+Note that this project uses [clang-format](https://clang.llvm.org/docs/ClangFormat.html) to format the code. There is a cmake target (*format*) - which runs *clang-format* on the source files. After changes have been made, and before you submit your pull request, run the following:
+
+```sh
+cmake --build . --target format
+```
+
 ## Tools
 
 Ryan Baumann has updated the `e57unpack` and `e57validate` tools to work with **libE57Format**. You can find them in the [e57tools](https://github.com/ryanfb/e57tools) repo.

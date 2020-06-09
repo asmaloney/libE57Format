@@ -63,7 +63,7 @@ namespace e57
       return impl_->IsOpen();
    };
 
-   bool Reader::Close() const
+   bool Reader::Close()
    {
       return impl_->Close();
    };
@@ -102,22 +102,22 @@ namespace e57
       return impl_->GetData3DCount();
    };
 
-   ImageFile Reader::GetRawIMF()
+   ImageFile Reader::GetRawIMF() const
    {
       return impl_->GetRawIMF();
    }
 
-   StructureNode Reader::GetRawE57Root()
+   StructureNode Reader::GetRawE57Root() const
    {
       return impl_->GetRawE57Root();
    };
 
-   VectorNode Reader::GetRawData3D()
+   VectorNode Reader::GetRawData3D() const
    {
       return impl_->GetRawData3D();
    };
 
-   VectorNode Reader::GetRawImages2D()
+   VectorNode Reader::GetRawImages2D() const
    {
       return impl_->GetRawImages2D();
    };
@@ -159,7 +159,7 @@ namespace e57
       return impl_->IsOpen();
    };
 
-   bool Writer::Close() const
+   bool Writer::Close()
    {
       return impl_->Close();
    };
@@ -184,30 +184,30 @@ namespace e57
       return impl_->GetRawImages2D();
    };
 
-   int64_t Writer::NewImage2D( Image2D &image2DHeader ) const
+   int64_t Writer::NewImage2D( Image2D &image2DHeader )
    {
       return impl_->NewImage2D( image2DHeader );
    };
 
    int64_t Writer::WriteImage2DData( int64_t imageIndex, Image2DType imageType, Image2DProjection imageProjection,
-                                     void *pBuffer, int64_t start, int64_t count ) const
+                                     void *pBuffer, int64_t start, int64_t count )
    {
       return impl_->WriteImage2DData( imageIndex, imageType, imageProjection, pBuffer, start, count );
    };
 
-   int64_t Writer::NewData3D( Data3D &data3DHeader ) const
+   int64_t Writer::NewData3D( Data3D &data3DHeader )
    {
       return impl_->NewData3D( data3DHeader );
    };
 
    CompressedVectorWriter Writer::SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
-                                                         const Data3DPointsData &buffers ) const
+                                                         const Data3DPointsData &buffers )
    {
       return impl_->SetUpData3DPointsData( dataIndex, pointCount, buffers );
    }
 
    bool Writer::WriteData3DGroupsData( int64_t dataIndex, int64_t groupCount, int64_t *idElementValue,
-                                       int64_t *startPointIndex, int64_t *pointCount ) const
+                                       int64_t *startPointIndex, int64_t *pointCount )
    {
       return impl_->WriteData3DGroupsData( dataIndex, groupCount, idElementValue, startPointIndex, pointCount );
    }

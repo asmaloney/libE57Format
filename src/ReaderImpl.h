@@ -35,6 +35,49 @@ namespace e57
    //! most of the functions follows Reader
    class ReaderImpl
    {
+   public:
+      ReaderImpl( const ustring &filePath );
+
+      ~ReaderImpl();
+
+      bool IsOpen() const;
+
+      bool Close();
+
+      bool GetE57Root( E57Root &fileHeader ) const;
+
+      int64_t GetImage2DCount() const;
+
+      bool ReadImage2D( int64_t imageIndex, Image2D &Image2DHeader ) const;
+
+      bool GetImage2DSizes( int64_t imageIndex, Image2DProjection &imageProjection, Image2DType &imageType,
+                            int64_t &imageWidth, int64_t &imageHeight, int64_t &imageSize, Image2DType &imageMaskType,
+                            Image2DType &imageVisualType ) const;
+
+      int64_t ReadImage2DData( int64_t imageIndex, Image2DProjection imageProjection, Image2DType imageType,
+                               void *pBuffer, int64_t start, int64_t count ) const;
+
+      int64_t GetData3DCount() const;
+
+      bool ReadData3D( int64_t dataIndex, Data3D &data3DHeader ) const;
+
+      bool GetData3DSizes( int64_t dataIndex, int64_t &rowMax, int64_t &columnMax, int64_t &pointsSize,
+                           int64_t &groupsSize, int64_t &countSize, bool &bColumnIndex ) const;
+
+      bool ReadData3DGroupsData( int64_t dataIndex, int64_t groupCount, int64_t *idElementValue,
+                                 int64_t *startPointIndex, int64_t *pointCount ) const;
+
+      CompressedVectorReader SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
+                                                    const Data3DPointsData &buffers ) const;
+
+      StructureNode GetRawE57Root() const;
+
+      VectorNode GetRawData3D() const;
+
+      VectorNode GetRawImages2D() const;
+
+      ImageFile GetRawIMF() const;
+
    private:
       ImageFile imf_;
       StructureNode root_;
@@ -52,7 +95,7 @@ namespace e57
       //! @param [out] imageMaskType This is E57_PNG_IMAGE_MASK if "imageMask" is defined in the projection
       //! @return Returns true if sucessful
       bool GetImage2DNodeSizes( StructureNode image, Image2DType &imageType, int64_t &imageWidth, int64_t &imageHeight,
-                                int64_t &imageSize, Image2DType &imageMaskType );
+                                int64_t &imageSize, Image2DType &imageMaskType ) const;
 
       //! @brief Reads the data out of a given image node
       //! @param [in] image 1 of 3 projects or the visual
@@ -62,50 +105,7 @@ namespace e57
       //! @param [out] count size of desired chuck or buffer size
       //! @return number of bytes read
       int64_t ReadImage2DNode( StructureNode image, Image2DType imageType, void *pBuffer, int64_t start,
-                               int64_t count );
-
-   public:
-      ReaderImpl( const ustring &filePath );
-
-      ~ReaderImpl();
-
-      bool IsOpen();
-
-      bool Close();
-
-      bool GetE57Root( E57Root &fileHeader );
-
-      int64_t GetImage2DCount();
-
-      bool ReadImage2D( int64_t imageIndex, Image2D &Image2DHeader );
-
-      bool GetImage2DSizes( int64_t imageIndex, Image2DProjection &imageProjection, Image2DType &imageType,
-                            int64_t &imageWidth, int64_t &imageHeight, int64_t &imageSize, Image2DType &imageMaskType,
-                            Image2DType &imageVisualType );
-
-      int64_t ReadImage2DData( int64_t imageIndex, Image2DProjection imageProjection, Image2DType imageType,
-                               void *pBuffer, int64_t start, int64_t count );
-
-      int64_t GetData3DCount();
-
-      bool ReadData3D( int64_t dataIndex, Data3D &data3DHeader );
-
-      bool GetData3DSizes( int64_t dataIndex, int64_t &rowMax, int64_t &columnMax, int64_t &pointsSize,
-                           int64_t &groupsSize, int64_t &countSize, bool &bColumnIndex );
-
-      bool ReadData3DGroupsData( int64_t dataIndex, int64_t groupCount, int64_t *idElementValue,
-                                 int64_t *startPointIndex, int64_t *pointCount );
-
-      CompressedVectorReader SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
-                                                    const Data3DPointsData &buffers );
-
-      StructureNode GetRawE57Root();
-
-      VectorNode GetRawData3D();
-
-      VectorNode GetRawImages2D();
-
-      ImageFile GetRawIMF();
+                               int64_t count ) const;
    }; // end Reader class
 
 } // end namespace e57

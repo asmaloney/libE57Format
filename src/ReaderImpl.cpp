@@ -39,11 +39,13 @@ namespace e57
    ReaderImpl::~ReaderImpl()
    {
       if ( IsOpen() )
+      {
          Close();
+      }
    }
 
    // This function returns true if the file is open
-   bool ReaderImpl::IsOpen()
+   bool ReaderImpl::IsOpen() const
    {
       return imf_.isOpen();
    }
@@ -61,7 +63,7 @@ namespace e57
    }
 
    // This function returns the file header information
-   bool ReaderImpl::GetE57Root( E57Root &fileHeader )
+   bool ReaderImpl::GetE57Root( E57Root &fileHeader ) const
    {
       if ( !IsOpen() )
       {
@@ -94,13 +96,13 @@ namespace e57
       return true;
    }
 
-   int64_t ReaderImpl::GetImage2DCount()
+   int64_t ReaderImpl::GetImage2DCount() const
    {
       return images2D_.childCount();
    }
 
    // This function returns the Image2Ds header and positions the cursor
-   bool ReaderImpl::ReadImage2D( int64_t imageIndex, Image2D &image2DHeader )
+   bool ReaderImpl::ReadImage2D( int64_t imageIndex, Image2D &image2DHeader ) const
    {
       if ( !IsOpen() )
       {
@@ -271,7 +273,7 @@ namespace e57
 
    // This function reads one of the image blobs
    int64_t ReaderImpl::ReadImage2DNode( StructureNode image, Image2DType imageType, void *pBuffer, int64_t start,
-                                        int64_t count )
+                                        int64_t count ) const
    {
       int64_t transferred = 0;
       switch ( imageType )
@@ -316,7 +318,7 @@ namespace e57
 
    // This function reads one of the image blobs
    bool ReaderImpl::GetImage2DNodeSizes( StructureNode image, Image2DType &imageType, int64_t &imageWidth,
-                                         int64_t &imageHeight, int64_t &imageSize, Image2DType &imageMaskType )
+                                         int64_t &imageHeight, int64_t &imageSize, Image2DType &imageMaskType ) const
    {
       imageWidth = 0;
       imageHeight = 0;
@@ -360,7 +362,7 @@ namespace e57
    // This function returns the image sizes
    bool ReaderImpl::GetImage2DSizes( int64_t imageIndex, Image2DProjection &imageProjection, Image2DType &imageType,
                                      int64_t &imageWidth, int64_t &imageHeight, int64_t &imageSize,
-                                     Image2DType &imageMaskType, Image2DType &imageVisualType )
+                                     Image2DType &imageMaskType, Image2DType &imageVisualType ) const
    {
       if ( ( imageIndex < 0 ) || ( imageIndex >= images2D_.childCount() ) )
          return 0;
@@ -409,7 +411,7 @@ namespace e57
 
    // This function reads the block
    int64_t ReaderImpl::ReadImage2DData( int64_t imageIndex, Image2DProjection imageProjection, Image2DType imageType,
-                                        void *pBuffer, int64_t start, int64_t count )
+                                        void *pBuffer, int64_t start, int64_t count ) const
    {
       if ( ( imageIndex < 0 ) || ( imageIndex >= images2D_.childCount() ) )
          return 0;
@@ -457,32 +459,32 @@ namespace e57
       return transferred;
    }
 
-   int64_t ReaderImpl::GetData3DCount()
+   int64_t ReaderImpl::GetData3DCount() const
    {
       return data3D_.childCount();
    }
 
-   StructureNode ReaderImpl::GetRawE57Root()
+   StructureNode ReaderImpl::GetRawE57Root() const
    {
       return root_;
    }
 
-   VectorNode ReaderImpl::GetRawData3D()
+   VectorNode ReaderImpl::GetRawData3D() const
    {
       return data3D_;
    }
 
-   VectorNode ReaderImpl::GetRawImages2D()
+   VectorNode ReaderImpl::GetRawImages2D() const
    {
       return images2D_;
    }
 
-   ImageFile ReaderImpl::GetRawIMF()
+   ImageFile ReaderImpl::GetRawIMF() const
    {
       return imf_;
    }
 
-   bool ReaderImpl::ReadData3D( int64_t dataIndex, Data3D &data3DHeader )
+   bool ReaderImpl::ReadData3D( int64_t dataIndex, Data3D &data3DHeader ) const
    {
       if ( !IsOpen() )
       {
@@ -1020,7 +1022,7 @@ namespace e57
 
    // This function returns the size of the point data
    bool ReaderImpl::GetData3DSizes( int64_t dataIndex, int64_t &row, int64_t &column, int64_t &pointsSize,
-                                    int64_t &groupsSize, int64_t &countSize, bool &bColumnIndex )
+                                    int64_t &groupsSize, int64_t &countSize, bool &bColumnIndex ) const
    {
       row = 0;
       column = 0;
@@ -1110,7 +1112,7 @@ namespace e57
 
    // This funtion writes out the group data
    bool ReaderImpl::ReadData3DGroupsData( int64_t dataIndex, int64_t groupCount, int64_t *idElementValue,
-                                          int64_t *startPointIndex, int64_t *pointCount )
+                                          int64_t *startPointIndex, int64_t *pointCount ) const
    {
       if ( ( dataIndex < 0 ) || ( dataIndex >= data3D_.childCount() ) )
       {
@@ -1165,7 +1167,7 @@ namespace e57
    }
 
    CompressedVectorReader ReaderImpl::SetUpData3DPointsData( int64_t dataIndex, size_t count,
-                                                             const Data3DPointsData &buffers )
+                                                             const Data3DPointsData &buffers ) const
    {
       StructureNode scan( data3D_.get( dataIndex ) );
       CompressedVectorNode points( scan.get( "points" ) );

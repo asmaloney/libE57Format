@@ -84,7 +84,7 @@ namespace e57
          Close();
    }
 
-   bool WriterImpl::IsOpen()
+   bool WriterImpl::IsOpen() const
    {
       return imf_.isOpen();
    }

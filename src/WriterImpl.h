@@ -35,29 +35,12 @@ namespace e57
    //! most of the functions follows Writer
    class WriterImpl
    {
-   private:
-      ImageFile imf_;
-      StructureNode root_;
-
-      VectorNode data3D_;
-
-      VectorNode images2D_;
-
-      //! @brief This function writes the projection image
-      //! @param image 1 of 3 projects or the visual
-      //! @param imageType identifies the image format desired.
-      //! @param pBuffer pointer the buffer
-      //! @param start position in the block to start reading
-      //! @param count size of desired chuck or buffer size
-      int64_t WriteImage2DNode( StructureNode image, Image2DType imageType, void *pBuffer, int64_t start,
-                                int64_t count );
-
    public:
       WriterImpl( const ustring &filePath, const ustring &coordinateMetaData );
 
       ~WriterImpl();
 
-      bool IsOpen();
+      bool IsOpen() const;
 
       bool Close();
 
@@ -81,6 +64,23 @@ namespace e57
       VectorNode GetRawImages2D();
 
       ImageFile GetRawIMF();
+
+   private:
+      ImageFile imf_;
+      StructureNode root_;
+
+      VectorNode data3D_;
+
+      VectorNode images2D_;
+
+      //! @brief This function writes the projection image
+      //! @param image 1 of 3 projects or the visual
+      //! @param imageType identifies the image format desired.
+      //! @param pBuffer pointer the buffer
+      //! @param start position in the block to start reading
+      //! @param count size of desired chuck or buffer size
+      int64_t WriteImage2DNode( StructureNode image, Image2DType imageType, void *pBuffer, int64_t start,
+                                int64_t count );
    }; // end Writer class
 
 } // end namespace e57

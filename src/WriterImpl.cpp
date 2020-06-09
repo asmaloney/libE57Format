@@ -429,30 +429,25 @@ namespace e57
       if ( data3DHeader.atmosphericPressure != E57_FLOAT_MAX )
          scan.set( "atmosphericPressure", FloatNode( imf_, data3DHeader.atmosphericPressure ) );
 
-      if ( ( data3DHeader.indexBounds.rowMinimum != 0 ) || ( data3DHeader.indexBounds.rowMaximum != 0 ) ||
-           ( data3DHeader.indexBounds.columnMinimum != 0 ) || ( data3DHeader.indexBounds.columnMaximum != 0 ) ||
-           ( data3DHeader.indexBounds.returnMinimum != 0 ) || ( data3DHeader.indexBounds.returnMaximum != 0 ) )
+      if ( data3DHeader.indexBounds != IndexBounds{} )
       {
          StructureNode ibox = StructureNode( imf_ );
 
-         //		if( (data3DHeader.indexBounds.rowMinimum != 0) ||
-         //			(data3DHeader.indexBounds.rowMaximum != 0) )
-         //		{
-         ibox.set( "rowMinimum", IntegerNode( imf_, data3DHeader.indexBounds.rowMinimum ) );
-         ibox.set( "rowMaximum", IntegerNode( imf_, data3DHeader.indexBounds.rowMaximum ) );
-         //		}
-         //		if( (data3DHeader.indexBounds.columnMinimum != 0) ||
-         //			(data3DHeader.indexBounds.columnMaximum != 0) )
-         //		{
-         ibox.set( "columnMinimum", IntegerNode( imf_, data3DHeader.indexBounds.columnMinimum ) );
-         ibox.set( "columnMaximum", IntegerNode( imf_, data3DHeader.indexBounds.columnMaximum ) );
-         //		}
-         //		if( (data3DHeader.indexBounds.returnMinimum != 0) ||
-         //			(data3DHeader.indexBounds.returnMaximum != 0) )
-         //		{
-         ibox.set( "returnMinimum", IntegerNode( imf_, data3DHeader.indexBounds.returnMinimum ) );
-         ibox.set( "returnMaximum", IntegerNode( imf_, data3DHeader.indexBounds.returnMaximum ) );
-         //		}
+         if ( ( data3DHeader.indexBounds.rowMinimum != 0 ) || ( data3DHeader.indexBounds.rowMaximum != 0 ) )
+         {
+            ibox.set( "rowMinimum", IntegerNode( imf_, data3DHeader.indexBounds.rowMinimum ) );
+            ibox.set( "rowMaximum", IntegerNode( imf_, data3DHeader.indexBounds.rowMaximum ) );
+         }
+         if ( ( data3DHeader.indexBounds.columnMinimum != 0 ) || ( data3DHeader.indexBounds.columnMaximum != 0 ) )
+         {
+            ibox.set( "columnMinimum", IntegerNode( imf_, data3DHeader.indexBounds.columnMinimum ) );
+            ibox.set( "columnMaximum", IntegerNode( imf_, data3DHeader.indexBounds.columnMaximum ) );
+         }
+         if ( ( data3DHeader.indexBounds.returnMinimum != 0 ) || ( data3DHeader.indexBounds.returnMaximum != 0 ) )
+         {
+            ibox.set( "returnMinimum", IntegerNode( imf_, data3DHeader.indexBounds.returnMinimum ) );
+            ibox.set( "returnMaximum", IntegerNode( imf_, data3DHeader.indexBounds.returnMaximum ) );
+         }
          scan.set( "indexBounds", ibox );
       }
 
@@ -661,89 +656,77 @@ namespace e57
       StructureNode proto = StructureNode( imf_ );
 
       // Because ScaledInteger min/max are the raw integer min/max, we must calculate them from the data min/max
-      double pointRangeScale = data3DHeader.pointFields.pointRangeScaledInteger;
-      double pointRangeOffset = 0.;
+      const double pointRangeScale = data3DHeader.pointFields.pointRangeScaledInteger;
+      const double pointRangeOffset = 0.;
       int64_t pointRangeMinimum =
          (int64_t)floor( ( data3DHeader.pointFields.pointRangeMinimum - pointRangeOffset ) / pointRangeScale + .5 );
       int64_t pointRangeMaximum =
          (int64_t)floor( ( data3DHeader.pointFields.pointRangeMaximum - pointRangeOffset ) / pointRangeScale + .5 );
 
+      const auto pointScaledIntegerProto =
+         ScaledIntegerNode( imf_, 0, pointRangeMinimum, pointRangeMaximum, pointRangeScale, pointRangeOffset );
+      const auto pointFloatProto =
+         FloatNode( imf_, 0., ( pointRangeScale < E57_NOT_SCALED_USE_FLOAT ) ? E57_DOUBLE : E57_SINGLE,
+                    data3DHeader.pointFields.pointRangeMinimum, data3DHeader.pointFields.pointRangeMaximum );
+
       if ( data3DHeader.pointFields.cartesianXField )
       {
-         if ( data3DHeader.pointFields.pointRangeScaledInteger > 0. )
-            proto.set( "cartesianX", ScaledIntegerNode( imf_, 0, pointRangeMinimum, pointRangeMaximum, pointRangeScale,
-                                                        pointRangeOffset ) );
+         if ( pointRangeScale > E57_NOT_SCALED_USE_FLOAT )
+            proto.set( "cartesianX", pointScaledIntegerProto );
          else
-            proto.set(
-               "cartesianX",
-               FloatNode( imf_, 0., ( data3DHeader.pointFields.pointRangeScaledInteger < 0. ) ? E57_DOUBLE : E57_SINGLE,
-                          data3DHeader.pointFields.pointRangeMinimum, data3DHeader.pointFields.pointRangeMaximum ) );
+            proto.set( "cartesianX", pointFloatProto );
       }
       if ( data3DHeader.pointFields.cartesianYField )
       {
-         if ( data3DHeader.pointFields.pointRangeScaledInteger > 0. )
-            proto.set( "cartesianY", ScaledIntegerNode( imf_, 0, pointRangeMinimum, pointRangeMaximum, pointRangeScale,
-                                                        pointRangeOffset ) );
+         if ( pointRangeScale > E57_NOT_SCALED_USE_FLOAT )
+            proto.set( "cartesianY", pointScaledIntegerProto );
          else
-            proto.set(
-               "cartesianY",
-               FloatNode( imf_, 0., ( data3DHeader.pointFields.pointRangeScaledInteger < 0. ) ? E57_DOUBLE : E57_SINGLE,
-                          data3DHeader.pointFields.pointRangeMinimum, data3DHeader.pointFields.pointRangeMaximum ) );
+            proto.set( "cartesianY", pointFloatProto );
       }
 
       if ( data3DHeader.pointFields.cartesianZField )
       {
-         if ( data3DHeader.pointFields.pointRangeScaledInteger > 0. )
-            proto.set( "cartesianZ", ScaledIntegerNode( imf_, 0, pointRangeMinimum, pointRangeMaximum, pointRangeScale,
-                                                        pointRangeOffset ) );
+         if ( pointRangeScale > E57_NOT_SCALED_USE_FLOAT )
+            proto.set( "cartesianZ", pointScaledIntegerProto );
          else
-            proto.set(
-               "cartesianZ",
-               FloatNode( imf_, 0., ( data3DHeader.pointFields.pointRangeScaledInteger < 0. ) ? E57_DOUBLE : E57_SINGLE,
-                          data3DHeader.pointFields.pointRangeMinimum, data3DHeader.pointFields.pointRangeMaximum ) );
+            proto.set( "cartesianZ", pointFloatProto );
       }
 
       if ( data3DHeader.pointFields.sphericalRangeField )
       {
-         if ( data3DHeader.pointFields.pointRangeScaledInteger > 0. )
-            proto.set( "sphericalRange", ScaledIntegerNode( imf_, 0, pointRangeMinimum, pointRangeMaximum,
-                                                            pointRangeScale, pointRangeOffset ) );
+         if ( pointRangeScale > E57_NOT_SCALED_USE_FLOAT )
+            proto.set( "sphericalRange", pointScaledIntegerProto );
          else
-            proto.set(
-               "sphericalRange",
-               FloatNode( imf_, 0., ( data3DHeader.pointFields.pointRangeScaledInteger < 0. ) ? E57_DOUBLE : E57_SINGLE,
-                          data3DHeader.pointFields.pointRangeMinimum, data3DHeader.pointFields.pointRangeMaximum ) );
+            proto.set( "sphericalRange", pointFloatProto );
       }
 
-      double angleScale = data3DHeader.pointFields.angleScaledInteger;
-      double angleOffset = 0.;
+      const double angleScale = data3DHeader.pointFields.angleScaledInteger;
+      const double angleOffset = 0.;
       int64_t angleMinimum =
          (int64_t)std::floor( ( data3DHeader.pointFields.angleMinimum - angleOffset ) / angleScale + .5 );
       int64_t angleMaximum =
          (int64_t)std::floor( ( data3DHeader.pointFields.angleMaximum - angleOffset ) / angleScale + .5 );
 
+      const auto angleScaledIntegerProto =
+         ScaledIntegerNode( imf_, 0, angleMinimum, angleMaximum, angleScale, angleOffset );
+      const auto angleFloatProto =
+         FloatNode( imf_, 0., ( angleScale < E57_NOT_SCALED_USE_FLOAT ) ? E57_DOUBLE : E57_SINGLE,
+                    data3DHeader.pointFields.angleMinimum, data3DHeader.pointFields.angleMaximum );
+
       if ( data3DHeader.pointFields.sphericalAzimuthField )
       {
-         if ( data3DHeader.pointFields.angleScaledInteger > 0. )
-            proto.set( "sphericalAzimuth",
-                       ScaledIntegerNode( imf_, 0, angleMinimum, angleMaximum, angleScale, angleOffset ) );
+         if ( angleScale > E57_NOT_SCALED_USE_FLOAT )
+            proto.set( "sphericalAzimuth", angleScaledIntegerProto );
          else
-            proto.set( "sphericalAzimuth",
-                       FloatNode( imf_, 0.,
-                                  ( data3DHeader.pointFields.angleScaledInteger < 0. ) ? E57_DOUBLE : E57_SINGLE,
-                                  data3DHeader.pointFields.angleMinimum, data3DHeader.pointFields.angleMaximum ) );
+            proto.set( "sphericalAzimuth", angleFloatProto );
       }
 
       if ( data3DHeader.pointFields.sphericalElevationField )
       {
-         if ( data3DHeader.pointFields.angleScaledInteger > 0. )
-            proto.set( "sphericalElevation",
-                       ScaledIntegerNode( imf_, 0, angleMinimum, angleMaximum, angleScale, angleOffset ) );
+         if ( angleScale > E57_NOT_SCALED_USE_FLOAT )
+            proto.set( "sphericalElevation", angleScaledIntegerProto );
          else
-            proto.set( "sphericalElevation",
-                       FloatNode( imf_, 0.,
-                                  ( data3DHeader.pointFields.angleScaledInteger < 0. ) ? E57_DOUBLE : E57_SINGLE,
-                                  data3DHeader.pointFields.angleMinimum, data3DHeader.pointFields.angleMaximum ) );
+            proto.set( "sphericalElevation", angleFloatProto );
       }
 
       if ( data3DHeader.pointFields.intensityField )

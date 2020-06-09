@@ -26,8 +26,8 @@
  */
 
 #include "WriterImpl.h"
-#include "Common.h"
 
+#include "Common.h"
 #include <cmath>
 
 namespace e57

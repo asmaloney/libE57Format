@@ -27,7 +27,7 @@
 
 #pragma once
 
-#include "E57Simple.h"
+#include "E57SimpleData.h"
 
 namespace e57
 {

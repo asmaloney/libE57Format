@@ -29,7 +29,9 @@ target_sources( E57Format
         ${CMAKE_CURRENT_LIST_DIR}/E57Format.cpp
         ${CMAKE_CURRENT_LIST_DIR}/E57FormatImpl.cpp
         ${CMAKE_CURRENT_LIST_DIR}/E57FormatImpl.h
-        ${CMAKE_CURRENT_LIST_DIR}/E57Simple.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/E57SimpleData.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/E57SimpleReader.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/E57SimpleWriter.cpp
         ${CMAKE_CURRENT_LIST_DIR}/E57Version.h
         ${CMAKE_CURRENT_LIST_DIR}/E57XmlParser.cpp
         ${CMAKE_CURRENT_LIST_DIR}/E57XmlParser.h

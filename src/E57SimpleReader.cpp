@@ -25,35 +25,12 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-//! @file E57Simple.cpp
-
-// for M_PI. This needs to be first, otherwise we might already include math header
-// without M_PI and we would get nothing because of the header guards.
-#define _USE_MATH_DEFINES
-#include <cmath>
-
-#include "E57Simple.h"
+#include "E57SimpleReader.h"
 #include "ReaderImpl.h"
-#include "WriterImpl.h"
 
 namespace e57
 {
 
-   // to avoid exposing M_PI constructor is here
-   SphericalBounds::SphericalBounds()
-   {
-      rangeMinimum = 0.;
-      rangeMaximum = E57_DOUBLE_MAX;
-      azimuthStart = -M_PI;
-      azimuthEnd = M_PI;
-      elevationMinimum = -M_PI / 2.;
-      elevationMaximum = M_PI / 2.;
-   }
-
-   ////////////////////////////////////////////////////////////////////
-   //
-   //	Reader
-   //
    Reader::Reader( const ustring &filePath ) : impl_( new ReaderImpl( filePath ) )
    {
    }
@@ -143,73 +120,6 @@ namespace e57
                                                          const Data3DPointsData &buffers ) const
    {
       return impl_->SetUpData3DPointsData( dataIndex, pointCount, buffers );
-   }
-
-   ////////////////////////////////////////////////////////////////////
-   //
-   //	Writer
-   //
-   Writer::Writer( const ustring &filePath, const ustring &coordinateMetaData ) :
-      impl_( new WriterImpl( filePath, coordinateMetaData ) )
-   {
-   }
-
-   bool Writer::IsOpen() const
-   {
-      return impl_->IsOpen();
-   };
-
-   bool Writer::Close()
-   {
-      return impl_->Close();
-   };
-
-   ImageFile Writer::GetRawIMF()
-   {
-      return impl_->GetRawIMF();
-   }
-
-   StructureNode Writer::GetRawE57Root()
-   {
-      return impl_->GetRawE57Root();
-   };
-
-   VectorNode Writer::GetRawData3D()
-   {
-      return impl_->GetRawData3D();
-   };
-
-   VectorNode Writer::GetRawImages2D()
-   {
-      return impl_->GetRawImages2D();
-   };
-
-   int64_t Writer::NewImage2D( Image2D &image2DHeader )
-   {
-      return impl_->NewImage2D( image2DHeader );
-   };
-
-   int64_t Writer::WriteImage2DData( int64_t imageIndex, Image2DType imageType, Image2DProjection imageProjection,
-                                     void *pBuffer, int64_t start, int64_t count )
-   {
-      return impl_->WriteImage2DData( imageIndex, imageType, imageProjection, pBuffer, start, count );
-   };
-
-   int64_t Writer::NewData3D( Data3D &data3DHeader )
-   {
-      return impl_->NewData3D( data3DHeader );
-   };
-
-   CompressedVectorWriter Writer::SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
-                                                         const Data3DPointsData &buffers )
-   {
-      return impl_->SetUpData3DPointsData( dataIndex, pointCount, buffers );
-   }
-
-   bool Writer::WriteData3DGroupsData( int64_t dataIndex, int64_t groupCount, int64_t *idElementValue,
-                                       int64_t *startPointIndex, int64_t *pointCount )
-   {
-      return impl_->WriteData3DGroupsData( dataIndex, groupCount, idElementValue, startPointIndex, pointCount );
    }
 
 } // end namespace e57

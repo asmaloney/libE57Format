@@ -77,10 +77,14 @@ namespace e57
       fileHeader.versionMinor = (uint32_t)IntegerNode( root_.get( "versionMinor" ) ).value();
       fileHeader.guid = StringNode( root_.get( "guid" ) ).value();
       if ( root_.isDefined( "e57LibraryVersion" ) )
+      {
          fileHeader.e57LibraryVersion = StringNode( root_.get( "e57LibraryVersion" ) ).value();
+      }
 
       if ( root_.isDefined( "coordinateMetadata" ) )
+      {
          fileHeader.coordinateMetadata = StringNode( root_.get( "coordinateMetadata" ) ).value();
+      }
 
       if ( root_.isDefined( "creationDateTime" ) )
       {
@@ -120,20 +124,32 @@ namespace e57
       image2DHeader.guid = StringNode( image.get( "guid" ) ).value();
 
       if ( image.isDefined( "name" ) )
+      {
          image2DHeader.name = StringNode( image.get( "name" ) ).value();
+      }
 
       if ( image.isDefined( "description" ) )
+      {
          image2DHeader.description = StringNode( image.get( "description" ) ).value();
+      }
 
       if ( image.isDefined( "sensorVendor" ) )
+      {
          image2DHeader.sensorVendor = StringNode( image.get( "sensorVendor" ) ).value();
+      }
       if ( image.isDefined( "sensorModel" ) )
+      {
          image2DHeader.sensorModel = StringNode( image.get( "sensorModel" ) ).value();
+      }
       if ( image.isDefined( "sensorSerialNumber" ) )
+      {
          image2DHeader.sensorSerialNumber = StringNode( image.get( "sensorSerialNumber" ) ).value();
+      }
 
       if ( image.isDefined( "associatedData3DGuid" ) )
+      {
          image2DHeader.associatedData3DGuid = StringNode( image.get( "associatedData3DGuid" ) ).value();
+      }
 
       if ( image.isDefined( "acquisitionDateTime" ) )
       {
@@ -170,14 +186,20 @@ namespace e57
          StructureNode visualReferenceRepresentation( image.get( "visualReferenceRepresentation" ) );
 
          if ( visualReferenceRepresentation.isDefined( "jpegImage" ) )
+         {
             image2DHeader.visualReferenceRepresentation.jpegImageSize =
                BlobNode( visualReferenceRepresentation.get( "jpegImage" ) ).byteCount();
+         }
          if ( visualReferenceRepresentation.isDefined( "pngImage" ) )
+         {
             image2DHeader.visualReferenceRepresentation.pngImageSize =
                BlobNode( visualReferenceRepresentation.get( "pngImage" ) ).byteCount();
+         }
          if ( visualReferenceRepresentation.isDefined( "imageMask" ) )
+         {
             image2DHeader.visualReferenceRepresentation.imageMaskSize =
                BlobNode( visualReferenceRepresentation.get( "imageMask" ) ).byteCount();
+         }
 
          image2DHeader.visualReferenceRepresentation.imageHeight =
             (int32_t)IntegerNode( visualReferenceRepresentation.get( "imageHeight" ) ).value();
@@ -190,14 +212,20 @@ namespace e57
          StructureNode pinholeRepresentation( image.get( "pinholeRepresentation" ) );
 
          if ( pinholeRepresentation.isDefined( "jpegImage" ) )
+         {
             image2DHeader.pinholeRepresentation.jpegImageSize =
                BlobNode( pinholeRepresentation.get( "jpegImage" ) ).byteCount();
+         }
          if ( pinholeRepresentation.isDefined( "pngImage" ) )
+         {
             image2DHeader.pinholeRepresentation.pngImageSize =
                BlobNode( pinholeRepresentation.get( "pngImage" ) ).byteCount();
+         }
          if ( pinholeRepresentation.isDefined( "imageMask" ) )
+         {
             image2DHeader.pinholeRepresentation.imageMaskSize =
                BlobNode( pinholeRepresentation.get( "imageMask" ) ).byteCount();
+         }
 
          image2DHeader.pinholeRepresentation.focalLength =
             FloatNode( pinholeRepresentation.get( "focalLength" ) ).value();
@@ -220,14 +248,20 @@ namespace e57
          StructureNode sphericalRepresentation( image.get( "sphericalRepresentation" ) );
 
          if ( sphericalRepresentation.isDefined( "jpegImage" ) )
+         {
             image2DHeader.sphericalRepresentation.jpegImageSize =
                BlobNode( sphericalRepresentation.get( "jpegImage" ) ).byteCount();
+         }
          if ( sphericalRepresentation.isDefined( "pngImage" ) )
+         {
             image2DHeader.sphericalRepresentation.pngImageSize =
                BlobNode( sphericalRepresentation.get( "pngImage" ) ).byteCount();
+         }
          if ( sphericalRepresentation.isDefined( "imageMask" ) )
+         {
             image2DHeader.sphericalRepresentation.imageMaskSize =
                BlobNode( sphericalRepresentation.get( "imageMask" ) ).byteCount();
+         }
 
          image2DHeader.sphericalRepresentation.imageHeight =
             (int32_t)IntegerNode( sphericalRepresentation.get( "imageHeight" ) ).value();
@@ -244,14 +278,20 @@ namespace e57
          StructureNode cylindricalRepresentation( image.get( "cylindricalRepresentation" ) );
 
          if ( cylindricalRepresentation.isDefined( "jpegImage" ) )
+         {
             image2DHeader.cylindricalRepresentation.jpegImageSize =
                BlobNode( cylindricalRepresentation.get( "jpegImage" ) ).byteCount();
+         }
          if ( cylindricalRepresentation.isDefined( "pngImage" ) )
+         {
             image2DHeader.cylindricalRepresentation.pngImageSize =
                BlobNode( cylindricalRepresentation.get( "pngImage" ) ).byteCount();
+         }
          if ( cylindricalRepresentation.isDefined( "imageMask" ) )
+         {
             image2DHeader.cylindricalRepresentation.imageMaskSize =
                BlobNode( cylindricalRepresentation.get( "imageMask" ) ).byteCount();
+         }
 
          image2DHeader.cylindricalRepresentation.imageHeight =
             (int32_t)IntegerNode( cylindricalRepresentation.get( "imageHeight" ) ).value();
@@ -327,14 +367,22 @@ namespace e57
       imageMaskType = E57_NO_IMAGE;
 
       if ( image.isDefined( "imageWidth" ) )
+      {
          imageWidth = IntegerNode( image.get( "imageWidth" ) ).value();
+      }
       else
+      {
          return false;
+      }
 
       if ( image.isDefined( "imageHeight" ) )
+      {
          imageHeight = IntegerNode( image.get( "imageHeight" ) ).value();
+      }
       else
+      {
          return false;
+      }
 
       if ( image.isDefined( "jpegImage" ) )
       {
@@ -365,7 +413,9 @@ namespace e57
                                      Image2DType &imageMaskType, Image2DType &imageVisualType ) const
    {
       if ( ( imageIndex < 0 ) || ( imageIndex >= images2D_.childCount() ) )
+      {
          return 0;
+      }
 
       imageProjection = E57_NO_PROJECTION;
       imageType = E57_NO_IMAGE;
@@ -414,7 +464,9 @@ namespace e57
                                         void *pBuffer, int64_t start, int64_t count ) const
    {
       if ( ( imageIndex < 0 ) || ( imageIndex >= images2D_.childCount() ) )
+      {
          return 0;
+      }
 
       int64_t transferred = 0;
       StructureNode image( images2D_.get( imageIndex ) );
@@ -506,9 +558,13 @@ namespace e57
       data3DHeader.guid = StringNode( scan.get( "guid" ) ).value();
 
       if ( scan.isDefined( "name" ) )
+      {
          data3DHeader.name = StringNode( scan.get( "name" ) ).value();
+      }
       if ( scan.isDefined( "description" ) )
+      {
          data3DHeader.description = StringNode( scan.get( "description" ) ).value();
+      }
 
       if ( scan.isDefined( "originalGuids" ) )
       {
@@ -527,25 +583,43 @@ namespace e57
 
       // Get various sensor and version strings to scan.
       if ( scan.isDefined( "sensorVendor" ) )
+      {
          data3DHeader.sensorVendor = StringNode( scan.get( "sensorVendor" ) ).value();
+      }
       if ( scan.isDefined( "sensorModel" ) )
+      {
          data3DHeader.sensorModel = StringNode( scan.get( "sensorModel" ) ).value();
+      }
       if ( scan.isDefined( "sensorSerialNumber" ) )
+      {
          data3DHeader.sensorSerialNumber = StringNode( scan.get( "sensorSerialNumber" ) ).value();
+      }
       if ( scan.isDefined( "sensorHardwareVersion" ) )
+      {
          data3DHeader.sensorHardwareVersion = StringNode( scan.get( "sensorHardwareVersion" ) ).value();
+      }
       if ( scan.isDefined( "sensorSoftwareVersion" ) )
+      {
          data3DHeader.sensorSoftwareVersion = StringNode( scan.get( "sensorSoftwareVersion" ) ).value();
+      }
       if ( scan.isDefined( "sensorFirmwareVersion" ) )
+      {
          data3DHeader.sensorFirmwareVersion = StringNode( scan.get( "sensorFirmwareVersion" ) ).value();
+      }
 
       // Get temp/humidity to scan.
       if ( scan.isDefined( "temperature" ) )
+      {
          data3DHeader.temperature = (float)FloatNode( scan.get( "temperature" ) ).value();
+      }
       if ( scan.isDefined( "relativeHumidity" ) )
+      {
          data3DHeader.relativeHumidity = (float)FloatNode( scan.get( "relativeHumidity" ) ).value();
+      }
       if ( scan.isDefined( "atmosphericPressure" ) )
+      {
          data3DHeader.atmosphericPressure = (float)FloatNode( scan.get( "atmosphericPressure" ) ).value();
+      }
 
       if ( scan.isDefined( "indexBounds" ) )
       {
@@ -582,8 +656,10 @@ namespace e57
 
             StructureNode lineGroupRecord( groups.prototype() );
             if ( lineGroupRecord.isDefined( "pointCount" ) )
+            {
                data3DHeader.pointGroupingSchemes.groupingByLine.pointCountSize =
                   IntegerNode( lineGroupRecord.get( "pointCount" ) ).maximum();
+            }
          }
       }
 
@@ -776,17 +852,23 @@ namespace e57
       data3DHeader.pointFields.columnIndexMaximum = 0;
 
       if ( proto.isDefined( "rowIndex" ) )
+      {
          data3DHeader.pointFields.rowIndexMaximum = (uint32_t)IntegerNode( proto.get( "rowIndex" ) ).maximum();
+      }
 
       if ( proto.isDefined( "columnIndex" ) )
+      {
          data3DHeader.pointFields.columnIndexMaximum = (uint32_t)IntegerNode( proto.get( "columnIndex" ) ).maximum();
+      }
 
       data3DHeader.pointFields.returnIndexField = proto.isDefined( "returnIndex" );
       data3DHeader.pointFields.returnCountField = proto.isDefined( "returnCount" );
       data3DHeader.pointFields.returnMaximum = 0;
 
       if ( proto.isDefined( "returnIndex" ) )
+      {
          data3DHeader.pointFields.returnMaximum = (uint8_t)IntegerNode( proto.get( "returnIndex" ) ).maximum();
+      }
 
       data3DHeader.pointFields.timeStampField = proto.isDefined( "timeStamp" );
       data3DHeader.pointFields.isTimeStampInvalidField = proto.isDefined( "isTimeStampInvalid" );
@@ -1050,12 +1132,16 @@ namespace e57
       {
          StructureNode indexBounds( scan.get( "indexBounds" ) );
          if ( indexBounds.isDefined( "columnMaximum" ) )
+         {
             column = IntegerNode( indexBounds.get( "columnMaximum" ) ).value() -
                      IntegerNode( indexBounds.get( "columnMinimum" ) ).value() + 1;
+         }
 
          if ( indexBounds.isDefined( "rowMaximum" ) )
+         {
             row = IntegerNode( indexBounds.get( "rowMaximum" ) ).value() -
                   IntegerNode( indexBounds.get( "rowMinimum" ) ).value() + 1;
+         }
       }
 
       if ( scan.isDefined( "pointGroupingSchemes" ) )
@@ -1067,7 +1153,9 @@ namespace e57
 
             StringNode idElementName( groupingByLine.get( "idElementName" ) );
             if ( idElementName.value().compare( "columnIndex" ) == 0 )
+            {
                bColumnIndex = true;
+            }
 
             CompressedVectorNode groups( groupingByLine.get( "groups" ) );
             groupsSize = groups.childCount();
@@ -1075,19 +1163,31 @@ namespace e57
             StructureNode lineGroupRecord( groups.prototype() );
 
             if ( lineGroupRecord.isDefined( "idElementValue" ) )
+            {
                elementSize = IntegerNode( lineGroupRecord.get( "idElementValue" ) ).maximum() -
                              IntegerNode( lineGroupRecord.get( "idElementValue" ) ).minimum() + 1;
+            }
             else if ( bColumnIndex )
+            {
                elementSize = column;
+            }
             else
+            {
                elementSize = row;
+            }
 
             if ( lineGroupRecord.isDefined( "pointCount" ) )
+            {
                countSize = IntegerNode( lineGroupRecord.get( "pointCount" ) ).maximum();
+            }
             else if ( bColumnIndex )
+            {
                countSize = row;
+            }
             else
+            {
                countSize = column;
+            }
          }
       }
 
@@ -1095,16 +1195,24 @@ namespace e57
       if ( row == 0 )
       {
          if ( bColumnIndex )
+         {
             row = countSize;
+         }
          else
+         {
             row = elementSize;
+         }
       }
       if ( column == 0 )
       {
          if ( bColumnIndex )
+         {
             column = elementSize;
+         }
          else
+         {
             column = countSize;
+         }
       }
 
       return true;
@@ -1147,15 +1255,21 @@ namespace e57
 
          if ( ( name.compare( "idElementValue" ) == 0 ) && lineGroupRecord.isDefined( "idElementValue" ) &&
               ( idElementValue != nullptr ) )
+         {
             groupSDBuffers.push_back( SourceDestBuffer( imf_, "idElementValue", idElementValue, groupCount, true ) );
+         }
 
          if ( ( name.compare( "startPointIndex" ) == 0 ) && lineGroupRecord.isDefined( "startPointIndex" ) &&
               ( startPointIndex != nullptr ) )
+         {
             groupSDBuffers.push_back( SourceDestBuffer( imf_, "startPointIndex", startPointIndex, groupCount, true ) );
+         }
 
          if ( ( name.compare( "pointCount" ) == 0 ) && lineGroupRecord.isDefined( "pointCount" ) &&
               ( pointCount != nullptr ) )
+         {
             groupSDBuffers.push_back( SourceDestBuffer( imf_, "pointCount", pointCount, groupCount, true ) );
+         }
       }
 
       CompressedVectorReader reader = groups.reader( groupSDBuffers );
@@ -1189,85 +1303,126 @@ namespace e57
 
          if ( ( name.compare( "cartesianX" ) == 0 ) && proto.isDefined( "cartesianX" ) &&
               ( buffers.cartesianX != nullptr ) )
+         {
             destBuffers.push_back( SourceDestBuffer( imf_, "cartesianX", buffers.cartesianX, count, true, scaled ) );
+         }
          else if ( ( name.compare( "cartesianY" ) == 0 ) && proto.isDefined( "cartesianY" ) &&
                    ( buffers.cartesianY != nullptr ) )
+         {
             destBuffers.push_back( SourceDestBuffer( imf_, "cartesianY", buffers.cartesianY, count, true, scaled ) );
+         }
          else if ( ( name.compare( "cartesianZ" ) == 0 ) && proto.isDefined( "cartesianZ" ) &&
                    ( buffers.cartesianZ != nullptr ) )
+         {
             destBuffers.push_back( SourceDestBuffer( imf_, "cartesianZ", buffers.cartesianZ, count, true, scaled ) );
+         }
          else if ( ( name.compare( "cartesianInvalidState" ) == 0 ) && proto.isDefined( "cartesianInvalidState" ) &&
                    ( buffers.cartesianInvalidState != nullptr ) )
+         {
             destBuffers.push_back(
                SourceDestBuffer( imf_, "cartesianInvalidState", buffers.cartesianInvalidState, count, true ) );
-
+         }
          else if ( ( name.compare( "sphericalRange" ) == 0 ) && proto.isDefined( "sphericalRange" ) &&
                    ( buffers.sphericalRange != nullptr ) )
+         {
             destBuffers.push_back(
                SourceDestBuffer( imf_, "sphericalRange", buffers.sphericalRange, count, true, scaled ) );
+         }
          else if ( ( name.compare( "sphericalAzimuth" ) == 0 ) && proto.isDefined( "sphericalAzimuth" ) &&
                    ( buffers.sphericalAzimuth != nullptr ) )
+         {
             destBuffers.push_back(
                SourceDestBuffer( imf_, "sphericalAzimuth", buffers.sphericalAzimuth, count, true, scaled ) );
+         }
          else if ( ( name.compare( "sphericalElevation" ) == 0 ) && proto.isDefined( "sphericalElevation" ) &&
                    ( buffers.sphericalElevation != nullptr ) )
+         {
             destBuffers.push_back(
                SourceDestBuffer( imf_, "sphericalElevation", buffers.sphericalElevation, count, true, scaled ) );
+         }
          else if ( ( name.compare( "sphericalInvalidState" ) == 0 ) && proto.isDefined( "sphericalInvalidState" ) &&
                    ( buffers.sphericalInvalidState != nullptr ) )
+         {
             destBuffers.push_back(
                SourceDestBuffer( imf_, "sphericalInvalidState", buffers.sphericalInvalidState, count, true ) );
-
+         }
          else if ( ( name.compare( "rowIndex" ) == 0 ) && proto.isDefined( "rowIndex" ) &&
                    ( buffers.rowIndex != nullptr ) )
+         {
             destBuffers.push_back( SourceDestBuffer( imf_, "rowIndex", buffers.rowIndex, count, true ) );
+         }
          else if ( ( name.compare( "columnIndex" ) == 0 ) && proto.isDefined( "columnIndex" ) &&
                    ( buffers.columnIndex != nullptr ) )
+         {
             destBuffers.push_back( SourceDestBuffer( imf_, "columnIndex", buffers.columnIndex, count, true ) );
+         }
          else if ( ( name.compare( "returnIndex" ) == 0 ) && proto.isDefined( "returnIndex" ) &&
                    ( buffers.returnIndex != nullptr ) )
+         {
             destBuffers.push_back( SourceDestBuffer( imf_, "returnIndex", buffers.returnIndex, count, true ) );
+         }
          else if ( ( name.compare( "returnCount" ) == 0 ) && proto.isDefined( "returnCount" ) &&
                    ( buffers.returnCount != nullptr ) )
+         {
             destBuffers.push_back( SourceDestBuffer( imf_, "returnCount", buffers.returnCount, count, true ) );
-
+         }
          else if ( ( name.compare( "timeStamp" ) == 0 ) && proto.isDefined( "timeStamp" ) &&
                    ( buffers.timeStamp != nullptr ) )
+         {
             destBuffers.push_back( SourceDestBuffer( imf_, "timeStamp", buffers.timeStamp, count, true, scaled ) );
+         }
          else if ( ( name.compare( "isTimeStampInvalid" ) == 0 ) && proto.isDefined( "isTimeStampInvalid" ) &&
                    ( buffers.isTimeStampInvalid != nullptr ) )
+         {
             destBuffers.push_back(
                SourceDestBuffer( imf_, "isTimeStampInvalid", buffers.isTimeStampInvalid, count, true ) );
-
+         }
          else if ( ( name.compare( "intensity" ) == 0 ) && proto.isDefined( "intensity" ) &&
                    ( buffers.intensity != nullptr ) )
+         {
             destBuffers.push_back( SourceDestBuffer( imf_, "intensity", buffers.intensity, count, true, scaled ) );
+         }
          else if ( ( name.compare( "isIntensityInvalid" ) == 0 ) && proto.isDefined( "isIntensityInvalid" ) &&
                    ( buffers.isIntensityInvalid != nullptr ) )
+         {
             destBuffers.push_back(
                SourceDestBuffer( imf_, "isIntensityInvalid", buffers.isIntensityInvalid, count, true ) );
-
+         }
          else if ( ( name.compare( "colorRed" ) == 0 ) && proto.isDefined( "colorRed" ) &&
                    ( buffers.colorRed != nullptr ) )
+         {
             destBuffers.push_back( SourceDestBuffer( imf_, "colorRed", buffers.colorRed, count, true, scaled ) );
+         }
          else if ( ( name.compare( "colorGreen" ) == 0 ) && proto.isDefined( "colorGreen" ) &&
                    ( buffers.colorGreen != nullptr ) )
+         {
             destBuffers.push_back( SourceDestBuffer( imf_, "colorGreen", buffers.colorGreen, count, true, scaled ) );
+         }
          else if ( ( name.compare( "colorBlue" ) == 0 ) && proto.isDefined( "colorBlue" ) &&
                    ( buffers.colorBlue != nullptr ) )
+         {
             destBuffers.push_back( SourceDestBuffer( imf_, "colorBlue", buffers.colorBlue, count, true, scaled ) );
+         }
          else if ( ( name.compare( "isColorInvalid" ) == 0 ) && proto.isDefined( "isColorInvalid" ) &&
                    ( buffers.isColorInvalid != nullptr ) )
+         {
             destBuffers.push_back( SourceDestBuffer( imf_, "isColorInvalid", buffers.isColorInvalid, count, true ) );
+         }
          else if ( haveNormalsExt && ( name.compare( "nor:normalX" ) == 0 ) && proto.isDefined( "nor:normalX" ) &&
                    ( buffers.normalX != nullptr ) )
+         {
             destBuffers.push_back( SourceDestBuffer( imf_, "nor:normalX", buffers.normalX, count, true, scaled ) );
+         }
          else if ( haveNormalsExt && ( name.compare( "nor:normalY" ) == 0 ) && proto.isDefined( "nor:normalY" ) &&
                    ( buffers.normalY != nullptr ) )
+         {
             destBuffers.push_back( SourceDestBuffer( imf_, "nor:normalY", buffers.normalY, count, true, scaled ) );
+         }
          else if ( haveNormalsExt && ( name.compare( "nor:normalZ" ) == 0 ) && proto.isDefined( "nor:normalZ" ) &&
                    ( buffers.normalZ != nullptr ) )
+         {
             destBuffers.push_back( SourceDestBuffer( imf_, "nor:normalZ", buffers.normalZ, count, true, scaled ) );
+         }
       }
 
       CompressedVectorReader reader = points.reader( destBuffers );

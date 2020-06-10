@@ -200,4 +200,7 @@ namespace e57
 
    using StringList = std::vector<std::string>;
    using StringSet = std::set<std::string>;
+
+   //! generates a new random GUID
+   std::string generateRandomGUID();
 }

@@ -1,6 +1,7 @@
 # libE57Format
 
 - v2.2.0 (in development)
+  - Add and update the E57Simple API from the old reference library ([#41](https://github.com/asmaloney/libE57Format/pull/41))	(Thanks	Jiri!)
   - Enable building E57Format as a shared library ([#40](https://github.com/asmaloney/libE57Format/pull/40)) (Thanks	Amodio!)
   - Remove all usage of dynamic_cast<> ([#39](https://github.com/asmaloney/libE57Format/pull/39))	(Thanks	Jiri!)
   - Added a [clang-format](https://clang.llvm.org/docs/ClangFormat.html) file, a cmake target for it ("format"), and reformatted the code

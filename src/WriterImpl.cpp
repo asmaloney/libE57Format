@@ -733,57 +733,36 @@ namespace e57
       int64_t pointRangeMaximum =
          (int64_t)floor( ( data3DHeader.pointFields.pointRangeMaximum - pointRangeOffset ) / pointRangeScale + .5 );
 
-      const auto pointScaledIntegerProto =
-         ScaledIntegerNode( imf_, 0, pointRangeMinimum, pointRangeMaximum, pointRangeScale, pointRangeOffset );
-      const auto pointFloatProto =
-         FloatNode( imf_, 0., ( pointRangeScale < E57_NOT_SCALED_USE_FLOAT ) ? E57_DOUBLE : E57_SINGLE,
-                    data3DHeader.pointFields.pointRangeMinimum, data3DHeader.pointFields.pointRangeMaximum );
+      const auto getPointProto = [=]() -> Node {
+         if ( pointRangeScale > E57_NOT_SCALED_USE_FLOAT )
+         {
+            return ScaledIntegerNode( imf_, 0, pointRangeMinimum, pointRangeMaximum, pointRangeScale,
+                                      pointRangeOffset );
+         }
+         else
+         {
+            return FloatNode( imf_, 0., ( pointRangeScale < E57_NOT_SCALED_USE_FLOAT ) ? E57_DOUBLE : E57_SINGLE,
+                              data3DHeader.pointFields.pointRangeMinimum, data3DHeader.pointFields.pointRangeMaximum );
+         }
+      };
 
       if ( data3DHeader.pointFields.cartesianXField )
       {
-         if ( pointRangeScale > E57_NOT_SCALED_USE_FLOAT )
-         {
-            proto.set( "cartesianX", pointScaledIntegerProto );
-         }
-         else
-         {
-            proto.set( "cartesianX", pointFloatProto );
-         }
+         proto.set( "cartesianX", getPointProto() );
       }
       if ( data3DHeader.pointFields.cartesianYField )
       {
-         if ( pointRangeScale > E57_NOT_SCALED_USE_FLOAT )
-         {
-            proto.set( "cartesianY", pointScaledIntegerProto );
-         }
-         else
-         {
-            proto.set( "cartesianY", pointFloatProto );
-         }
+         proto.set( "cartesianY", getPointProto() );
       }
 
       if ( data3DHeader.pointFields.cartesianZField )
       {
-         if ( pointRangeScale > E57_NOT_SCALED_USE_FLOAT )
-         {
-            proto.set( "cartesianZ", pointScaledIntegerProto );
-         }
-         else
-         {
-            proto.set( "cartesianZ", pointFloatProto );
-         }
+         proto.set( "cartesianZ", getPointProto() );
       }
 
       if ( data3DHeader.pointFields.sphericalRangeField )
       {
-         if ( pointRangeScale > E57_NOT_SCALED_USE_FLOAT )
-         {
-            proto.set( "sphericalRange", pointScaledIntegerProto );
-         }
-         else
-         {
-            proto.set( "sphericalRange", pointFloatProto );
-         }
+         proto.set( "sphericalRange", getPointProto() );
       }
 
       const double angleScale = data3DHeader.pointFields.angleScaledInteger;
@@ -793,34 +772,26 @@ namespace e57
       int64_t angleMaximum =
          (int64_t)std::floor( ( data3DHeader.pointFields.angleMaximum - angleOffset ) / angleScale + .5 );
 
-      const auto angleScaledIntegerProto =
-         ScaledIntegerNode( imf_, 0, angleMinimum, angleMaximum, angleScale, angleOffset );
-      const auto angleFloatProto =
-         FloatNode( imf_, 0., ( angleScale < E57_NOT_SCALED_USE_FLOAT ) ? E57_DOUBLE : E57_SINGLE,
-                    data3DHeader.pointFields.angleMinimum, data3DHeader.pointFields.angleMaximum );
-
-      if ( data3DHeader.pointFields.sphericalAzimuthField )
-      {
+      const auto getAngleProto = [=]() -> Node {
          if ( angleScale > E57_NOT_SCALED_USE_FLOAT )
          {
-            proto.set( "sphericalAzimuth", angleScaledIntegerProto );
+            return ScaledIntegerNode( imf_, 0, angleMinimum, angleMaximum, angleScale, angleOffset );
          }
          else
          {
-            proto.set( "sphericalAzimuth", angleFloatProto );
+            return FloatNode( imf_, 0., ( angleScale < E57_NOT_SCALED_USE_FLOAT ) ? E57_DOUBLE : E57_SINGLE,
+                              data3DHeader.pointFields.angleMinimum, data3DHeader.pointFields.angleMaximum );
          }
+      };
+
+      if ( data3DHeader.pointFields.sphericalAzimuthField )
+      {
+         proto.set( "sphericalAzimuth", getAngleProto() );
       }
 
       if ( data3DHeader.pointFields.sphericalElevationField )
       {
-         if ( angleScale > E57_NOT_SCALED_USE_FLOAT )
-         {
-            proto.set( "sphericalElevation", angleScaledIntegerProto );
-         }
-         else
-         {
-            proto.set( "sphericalElevation", angleFloatProto );
-         }
+         proto.set( "sphericalElevation", getAngleProto() );
       }
 
       if ( data3DHeader.pointFields.intensityField )

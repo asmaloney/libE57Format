@@ -14,7 +14,9 @@ install(
 	FILES
 		E57Format.h
 		E57Exception.h
-		E57Simple.h
+		E57SimpleData.h
+		E57SimpleReader.h
+		E57SimpleWriter.h
 	DESTINATION
 		include/E57Format
 )

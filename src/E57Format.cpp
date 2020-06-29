@@ -28,220 +28,7 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-/*!
-@mainpage
-
-@section main_Introduction Introduction
-This browser-based document describes the E57 Foundation API (Application
-Programmer Interface) version 0.51, which is a collection of functions that help
-a C++ programmer read and write ASTM E57 format files. The API acts a documented
-software connector between an application (above the interface) and an
-implementation of the API (also called an E57 Foundation Implementation, below
-the interface). There could (and hopefully will be) more than one E57 Foundation
-Implementation of this API (perhaps written by a different programmer, or with
-different performance characteristics), but initially there is a single
-implementation: the Reference Implementation.
-
-@section main_ReferenceImplemenation The Reference Implementation
-There are two main goals for the Reference Implementation.
-The first is to provide a kick-start for vendors that want to support the E57
-format, lowering the barrier to adoption. The Foundation API and underlying
-Reference Implementation hide much of the complexity of using the E57 data
-format standard. The second goal of the Reference Implementation is to promote
-interoperability by being a paragon of functionality. Test applications linked
-with the Reference Implementation can attempt to interoperate with a vendor's
-application.
-
-Vendors are not required to incorporate the Reference Implementation into their
-own applications (they can roll their own E57 format reader/writer library). But
-if they do compile the Reference Implementation into their application, they
-increase the likelihood that the application will interoperate smoothly. The
-rest of this document is not about the Reference Implementation, but about the
-interface (the Foundation API) that controls it.
-
-@section main_ASTMStandard ASTM standard
-The Foundation API and libe57 aren't part of the ASTM standard; they support it.
-The Foundation API and libe57 aren't sanctioned or approved in any way by ASTM.
-The designer of the API and author of the Reference Implementation (Kevin
-Ackley) was heavily involved in the drafting of the E57 format standard.
-However, the E57 Standard for 3D Imaging Data Exchange is the final word on what
-is a legal/valid .e57 file.
-
-@section main_NeedStandard Do I need to get the ASTM standard?
-Yes. The Foundation API provides the building blocks (the E57 primitive
-elements) for constructing and interpreting an E57 file, but the data structures
-that are built with these building blocks are up to the user of the API. The
-required names and types of these data structures (not to mention their
-meanings) are specified in the ASTM standard, so you need a copy.
-
-ASTM owns the standard, which is currently being balloted.
-ASTM E57 committee members can get draft versions of standards.
-After approval, everyone will need to purchase the standard from the ASTM
-website. Only a very few of the 100+ ASTM committees make money, and E57 isn't
-one of them. So support your industry and buy a copy.
-
-@section main_IsXml Is the E57 format XML?
-Only partially, but it's a highly specialized XML.
-It's better think of an E57 file as hierarchical tree of eight data types, that
-happens to be partly encoded in XML on the disk. The E57 format is a hybrid of
-XML (encoding the tree) and binary sections (which efficiently encode the
-records of point data). For efficiency, the binary sections must be read/written
-in large blocks of records. The XML section, although it holds most of the
-complexity in the file, is much smaller and objects can be accessed
-individually. The binary sections aren't embedded in the XML section. The XML
-section makes references to the binary sections, which are stored separately
-within the E57 file.
-
-@section main_ApiObjects The API objects
-The Foundation API is described in C++, and is object-oriented.
-There are 15 types of objects, each described in a C++ class.
-There is a class that encapsulates the E57 file (ImageFile), a class for each of
-the eight E57 primitive elements described in the standard (IntegerNode,
-ScaledIntegerNode, FloatNode, StringNode, BlobNode, StructureNode, VectorNode,
-and CompressedVectorNode) and a base class that encapsulates the common
-functionality of all nodes (Node). There are two classes that keep track of the
-block reads/writes to the binary sections (CompressedVectorReader,
-CompressedVectorWriter) and a class to manage buffers for these block transfers
-(SourceDestBuffer). Finally, there is a class to organize the reporting of
-errors (E57Exception), and a class for miscellaneous functions that are not
-associated with any of the other objects (E57Utilities).
-
-@section main_SetOnce Set-once design
-The primary motivation for the E57 file is to be a conduit between the
-proprietary formats of two different vendors' software (the reader and the
-writer). It is not a general-purpose 3D database. The API design reflects this
-use case by not allowing modifications of data. This simplifies the
-implementation. For example, it is not possible to change a value of a node, or
-delete an attached child node, and it is an error to attempt to attach a node to
-the tree using an already existing name.
-
-@section main_HandleSemantics Handle semantics
-All but one of the classes (the exception being E57Exception) have handle
-semantics, which means that there is a level of indirection. The Foundation API
-classes are actually just pointers to an underlying object. The pointers are
-smart (they have reference counts), so the user doesn't have to explicitly free
-them. If two handles exist to the same underlying object, the object is not
-deleted until both handles are destroyed. So the programmer is not burdened with
-keeping track of who is going to delete an object, the object "deletes itself"
-when all the references to it are gone. This simplifies the use of the API,
-especially in the creation of trees of objects. After you attach some object
-into a tree, there will be two references to the object, yours and the parent of
-the object in the tree. So when you delete your reference, the parent's
-reference will keep the object alive (until the parent is destroyed).
-
-A second benefit of smart pointers is that the copy and assignment functions in
-the classes are very cheap. They just copy or assign the handle, not the
-underlying object. So function call arguments (that are API objects) are always
-"call-by-reference", and the underlying object is not copied. It is impossible
-to assign the underlying state of one object directly into another. This
-restriction fits well into the set-once scheme described above.
-
-The bottom line is that you should not use new/delete with the E57 Foundation
-objects, nor reference types (e.g. ImageFile&). You don't have to keep track of
-who will delete the object, nor try to speed up the passing of handles to
-functions. And the API objects clean up after themselves when an exception
-occurs.
-
-@section main_NoDefaultConstructors No default constructors
-None of the API classes contain default constructors, so there is no equivalent
-to a NULL handle (with no underlying object). So if you have an API handle, you
-know it points to a valid object.
-
-@section main_VersionNumbers Version numbers
-There are three separate entities that have version numbers: the ASTM E57 format
-standard itself, the E57 Library (libe57), and the Foundation API.
-
-When the E57 standard is approved, its version will start out at version 1.0.
-Until that time, and until it is verified that the Reference Implementation
-writes the correct format, the E57 format version number written in an .e57 file
-is less than 1.0 (currently 0.5). The Reference Implementation is currently
-configured to reject any E57 format version numbers less than the one it was
-built to write. So don't invest a lot of time in creating .e57 files that can't
-be recreated, because the format version number in the file will advance at
-least once more.
-
-The E57 library (libe57) is a collection of tools, examples, data files, tests,
-and software libraries that help read and write .e57 files. The Reference
-Implementation is a key component of the libe57, but there are other parts as
-well. For example, libe57 contains tools that sit on top of the Foundation API,
-that process E57 files (e.g. las2e57, e57fields). The entire collection of tools
-and software libraries is tracked by a single version number: the version of
-libe57. The libe57 version identifier has 3 parts, the major version number, the
-minor version number, and the build number. The E57 Library version will start
-at about 0.1.20. The minor version number will advance with each phase of beta
-release. The build number always increases, it is basically the version number
-from the source code tracking system. The version will be advanced to 1.0.XX at
-the end of the beta period.
-
-The Foundation API version is tracked by two numbers: the major version number,
-and the minor version number. The minor version number of the Foundation API
-version will advance when there is any change to the interface (either
-backwardly compatible or not). The major version number will advance for changes
-that are not backward compatible. Currently the API is at version 0.51. When the
-API has completely solidified, the version number will advance to 1.00. In some
-situations, a third number (the subversion build number of libe57) may be listed
-in the Foundation API version identifier. This number can be ignored. Changes in
-the build number do not imply changes in the API. If the major and minor version
-number haven't changed, the API hasn't changed.
-
-@section main_WhereStart Where to start learning about the API
-To learn about the API, start reading at the HelloWorld.cpp example.
-It has a lot of detail about the basics of the API and the basic mechanics of
-using it. You might try pasting the HelloWorld.cpp example into a file, compile
-it, and link with the Reference Implementation. Then read the Detailed
-Descriptions at the bottom of each of the 15 class pages listed on the
-Class/ClassList tab. Then look at the discussion of each of the example program
-listings on the Files/FileList tab. Finally, find DemoWrite01.cpp, included in
-libe57, which writes a real .e57 file that meets all the specifications of the
-ASTM standard.
-
-If your existing software already writes LAS format v1.0 to v1.2, look at the
-utility las2e57.exe. You may be able to use it to write an LAS file and convert
-to it E57 without any programming at all. Two utilities are useful for examining
-what you have written: e57xmldump.exe and e57fields.exe.
-
-@section main_GetCopy How do I get a copy of the source?
-The full source of libe57 is available to anyone on the SourceForge website:
-http://sourceforge.net/projects/e57-3d-imgfmt/. The libe57 source is distributed
-under the very liberal Boost Software License. Binary distributions may be made
-available for some compiler/OSes.
-
-@section main_GetHelp How can I get help?
-Help is available by email through E57 SourceForge repository.
-To get help during the beta phase of the software release you have to agree to
-be a beta tester (you have to describe what you are doing and hopefully to give
-a review of your experience). To get more information about the beta test,
-contact Roland Schwarz by email at roland_schwarz@users.sourceforge.net.
-*/
-/*!
-@page CopyRightPage Copyright
-
-Copyright 2010 Kevin Ackley (kackley@gwi.net)
-
-Permission is hereby granted, free of charge, to any person or organization
-obtaining a copy of the software and accompanying documentation covered by
-this license (the "Software") to use, reproduce, display, distribute,
-execute, and transmit the Software, and to prepare derivative works of the
-Software, and to permit third-parties to whom the Software is furnished to
-do so, all subject to the following:
-
-The copyright notices in the Software and this entire statement, including
-the above license grant, this restriction and the following disclaimer,
-must be included in all copies of the Software, in whole or in part, and
-all derivative works of the Software, unless such copies or derivative
-works are solely in the form of machine-executable object code generated by
-a source language processor.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE, TITLE AND NON-INFRINGEMENT. IN NO EVENT
-SHALL THE COPYRIGHT HOLDERS OR ANYONE DISTRIBUTING THE SOFTWARE BE LIABLE
-FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
-ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-DEALINGS IN THE SOFTWARE.
-*/
-
-//! @file E57Foundation.cpp
+//! @file E57Format.cpp
 
 #include "E57FormatImpl.h"
 
@@ -249,995 +36,6 @@ DEALINGS IN THE SOFTWARE.
 #include "SourceDestBufferImpl.h"
 
 using namespace e57;
-
-/*!
-@file HelloWorld.cpp
-Also see listing at end of this page for source without line numbers (to
-cut&paste from).
-@includelineno HelloWorld.cpp
-
-This example program writes a very simple E57 file with a single String element
-in it, then reopens the file for reading, and prints out the String value to the
-console. Note that this program does not attempt to create a complete E57 file
-according to the ASTM standard (which requires many elements to be defined with
-specific names). The numbering in the source listing is not quite sequential
-(e.g. lines 2 and 3 are missing). This is because some of the lines have
-documentation directives (for Doxygen) that don't appear in the listings.
-
-<b>Source line 4</b> includes the @c iostream header because the example uses @c
-cout. The API does not require @c iostream to be included (@c stdio.h could be
-used, or nothing at all). <b>Source line 5</b> includes E57Foundation.h, the E57
-Foundation API header file where all the API classes are declared. All programs
-that use the E57 Foundation API must include E57Foundation.h It is OK (but
-wasteful) to include the E57Foundation.h header twice in the same file, as the
-header has an include guard.
-
-<b>Source line 6</b> has a @c using directive which allows all the Foundation
-API classes and functions to be referenced without having to preceed each
-reference with <tt>e57::</tt> (for example: <tt>e57::StructureNode root =
-imf.root();</tt>). The <tt>using namespace e57;</tt> directive must follow the
-inclusion of the E57Foundation.h header file. The entire API is declared in the
-"e57" namespace to eliminate the risk that in a large application a class name
-conflicts with an existing type. All preprocessor macros defined in
-E57Foundation.h (which cannot be in a namespace) begin with the prefix @c "E57",
-so there is low risk of name clashes. For convenience, the @c using directive on
-<b>source line 7</b> allows all names in the @c std namespace to be used without
-qualification (e.g. @c cout instead of @c std::cout).
-
-In the @c main function there are two @c try blocks, the first creates a new
-file on disk, and the second reads the file back. The @c try block is used
-because the API reports errors by throwing c++ exceptions rather than returning
-an error code from each function (see E57Exception for more details). On
-<b>source line 10</b>, the function argument names @c argc and @c argv are
-commented out so that the c++ compiler doesn't complain about unused variables
-when compiler warnings are enabled.
-
-In the first @c try block, the variable @c imf is constructed on <b>source line
-12</b>, with the file name to create on the disk and the "w" mode string that
-indicates that the file is to be written to. The scope of the first @c imf
-variable will end at the end of the first @c try block. It is a good idea to
-limit the scope of smart handles (such as the ImageFile object), as memory will
-not be reclaimed until all references to the underlying object are destroyed.
-The file name is @c "temp._e57" is used instead of @c "temp.e57", because the
-file won't be a complete, legal ASTM E57 Format file,  it just exercises some of
-the primitive E57 element data types. If the file already exists on the disk,
-the old copy is deleted before a new, empty one is created.
-
-The @c imf variable is a handle to the ImageFile object, which represents the
-entire contents of an E57 file. The state of an ImageFile is stored partially in
-memory and partially on the disk, so the disk file may grow as elements are
-added to the ImageFile. All the objects in the API are implemented as reference
-counted handles, which means that there is a level of indirection (using smart
-pointers). This means that you don't have to manipulate pointers to objects or
-use the @c new
-/@c delete operators. Also the handles are very small, so copying them (as an
-argument to a function call, for example) is very cheap. Thirdly, since the
-handle are "smart" (they do reference counting), you don't have to worry about
-freeing any objects when you are done with them. Operationally, this means you
-probably will never need to create a variable with type ImageFile* or
-ImageFile&.
-
-An E57 file is conceptually a single hierarchical tree of elements.
-After the @c imf object is constructed, the tree is empty, with only the
-top-most root element defined. New elements are added to the ImageFile by
-attaching them into the tree as either children of the root element directly, or
-indirectly to children of elements that have been already attached into the
-tree. It is OK to temporarily have small trees that are not yet attached to an
-ImageFile. However it is recommended to limit the extent of these unattached
-sub-trees, as some of the API operations (that write large quantities of data)
-require that the object be attached to an ImageFile (e.g. writing to a
-BlobNode). It is also OK (but not recommended) to create E57 element nodes that
-are never attached to an ImageFile.
-
-In <b>source line 13</b>, a handle to the predefined root element of the
-ImageFile is fetched and stored in variable @c root. The root element of an
-ImageFile is always a StructureNode and that is the type that ImageFile::root()
-returns.
-
-In <b>source line 15</b>, a new StringNode element is created and attached as a
-child to the @c root StructureNode. There are three API calls (one is inserted
-silently by the compiler) in this line. First a StringNode is created with a
-value of "Hello world.". The first argument of the StringNode constructor in
-<b>source line 15</b> is the handle to the ImageFile where the StringNode will
-@em eventually be attached. The StringNode constructor returns a handle, which
-is used in the call to StructureNode::set(). Since we don't need the StringNode
-handle for anything else, we don't have to save it in a variable, which would
-take another line of code.
-
-The second function call in <b>source line 15</b> is inserted automatically by
-the compiler. The actual argument passed to StructureNode::set in the second
-position is a StringNode type. But StructureNode::set is only defined to take
-generic Node handles in the second position. There is a function in the API that
-can safely convert from a StringNode handle to a generic Node handle. This
-function can automatically be applied by the C++ compiler. This process is
-called "upcasting", which saves a lot of code duplication (functions that can
-handle all eight types of Nodes don't need to be defined for each specific
-type).
-
-The third function call in <b>source line 15</b> attaches the new StringNode
-element as a child of the @c root StructureNode. The new child is given the
-element name "greeting", and after attachment to the ImageFile, the element has
-an absolute pathname of "/greeting". It would be an error if the root node
-already had a child with the element name "greeting", because the design of the
-API forbids any element from being set twice.
-
-The statement on <b>source line 17</b> explicitly closes the file on the disk
-and the ImageFile referred to by the handle @c imf enters the @c closed state.
-All data in memory is written into the disk file, and the file is closed. No
-further input/output operations are possible with the file after it is closed.
-It is important to explicitly close the file using the ImageFile::close()
-function rather than have it closed in the ImageFile destructor since errors are
-reported using exceptions, which are impossible to throw from a destructor in
-C++.
-
-The @c catch statement at the end of the first try block will be invoked if an
-error occurs in one of the API function calls inside the @c try block. For
-example, an exception would occur if there was not enough disk space and the
-file could not be completely written. In this example program, the error is
-reported by printing a few lines of helpful explanation to the console, using
-the E57Exception::report function. The three arguments to the
-E57Exception::report function allow the position in the code where the exception
-is handled to be reported as well as where the exception was thrown. It is
-possible that calls to E57 Foundation API functions can produce exceptions other
-than E57Exception (for example: bad_alloc when there is insufficient memory).
-Production code would probably have more handlers for other classes of
-exceptions. A non-zero value is returned in <b>source line 20</b> to indicate to
-the caller that the program did not succeed.
-
-In the second try block, the file is reopened in read mode.
-This time the tree of elements in the ImageFile is not empty, since E57 elements
-have been read in from the disk file. In <b>source line 25</b> the root element
-of the ImageFile is fetched.
-
-In <b>source line 27</b>, two API calls are invoked to get a handle on the
-StringNode that was written in the first @c try block. The first obvious call is
-to StructureNode::get(const ustring&) const which fetches a handle of a child
-element of the @c root node. If @c root didn't have a child element named
-"greeting", an exception would be thrown. But since we just wrote the file in
-the first @c try block above, we can be sure that child element does exist.
-Another way to be sure that a child element exists with a certain name is if it
-is required by the ASTM standard. If the element is optional in the ASTM
-standard, then existence must be queried by using StructureNode::isDefined()
-before fetching with StructureNode::get(const ustring&) const.
-
-The second, not so obvious, API call in <b>source line 27</b> is to a type
-conversion: from a Node handle (returned by StructureNode::get(const ustring&)
-const) to a StringNode handle stored in the variable @c greeting. This
-conversion is required since a child of a StructureNode can be any E57 element
-type. Here again, we know that the node type must be StringNode since we wrote
-the file in the previous @c try block. In an E57 file, the type of a given
-element may be mandated. If the type of "greeting" was not StringNode, then the
-conversion would throw an exception to indicate an error condition. If the ASTM
-standard allows several types for a given element, then the actual type in the
-file may be queried using Node::type() before a type conversion is requested.
-
-The value of the StringNode is printed to the console on <b>source line 28</b>.
-As on <b>source line 17</b>, the ImageFile is explicitly closed on <b>source
-line 30</b>. After the ImageFile is closed, no further I/O is possible with the
-@c imf handle.
-
-The following console output is produced:
-@includelineno HelloWorld.out
-
-The XML section of the @c temp._e57 E57 file produced by this example program is
-as follows:
-@includelineno HelloWorld.xml
-
-Here is the source code without line numbers to cut&paste from:
-@include HelloWorld.cpp
-
-*/
-/*!
-@file Cancel.cpp
-Also see listing at end of this page for source without line numbers (to cut&paste from).
-@includelineno Cancel.cpp
-
-This example program shows how to stop the writing of an ImageFile and gracefully remove any partially written files
-from the disk. See the HelloWorld.cpp example for discussion of the use of include files, constructing an ImageFile, and
-the try/catch block to handle exceptions.
-
-The ImageFile is opened for writing in <b>source line 21</b>.
-<b>Source line 23</b> calls a function to print out whether ImageFile is open (which it is).
-Some error is encountered (illustrated by <b>source line 24</b>), and ImageFile::cancel is called on <b>source line
-26</b>. This call causes the disk file to be unlinked (deleted) and the ImageFile isOpen state changes to false. The
-state is printed on the console by function called on <b>source line 27</b>. At this point, most of the calls to API
-functions (those that require the ImageFile to be open) will fail with an exception. So there is not much to do except
-communicate the abort to the caller.
-
-The following console output is produced:
-@includelineno Cancel.out
-
-There is no XML section of the @c temp._e57 E57 file, because it was deleted by the program during the abort.
-
-Here is the source code without line numbers to cut&paste from:
-@include Cancel.cpp
-
-*/
-/*!
-@file Extensions.cpp
-Also see listing at end of this page for source without line numbers (to cut&paste from).
-@includelineno Extensions.cpp
-
-This example program shows how to declare an E57 extension prefix and URI in an ImageFile.
-See the HelloWorld.cpp example for discussion of the use of include files, constructing an ImageFile, and the try/catch
-block to handle exceptions.
-
-In <b>source line 12</b> an write-mode ImageFile is created.
-In <b>source line 14</b> an E57 extension is declared in the ImageFile, with prefix "ext1" and a given URI.
-The extension must be declared before the prefix is used in any element names.
-<b>Source lines 17 and 23</b> show that given a prefix, the corresponding URI can be found (and vice versa).
-<b>Source lines 28-30</b> show how to iterate over all extensions defined in the file.
-Note that the standardized default ASTM URI does not qualify as an "extension" and is not printed in the output.
-Finally, a StringNode is added to the ImageFile root on <b>source line 32</b>, using the "ext1" extension in the element
-name. If some unknown extension had been given instead in the element name on <b>source line 32</b> (e.g. "ext2"), then
-the StructureNode::set function would have thrown an E57_ERROR_BAD_PATH_NAME exception.
-
-In the XML listing below, the "ext1" prefix is declared in <b>XML line 3</b>, and is used in the element name in <b>XML
-line 5</b>.
-
-The following console output is produced:
-@includelineno Extensions.out
-
-The XML section of the @c temp._e57 E57 file produced by this example program is as follows:
-@includelineno Extensions.xml
-
-Here is the source code without line numbers to cut&paste from:
-@include Extensions.cpp
-
-*/
-/*!
-@file NameParse.cpp
-Also see listing at end of this page for source without line numbers (to cut&paste from).
-@includelineno NameParse.cpp
-
-This example program illustrates the element parsing functions of ImageFile.
-See the HelloWorld.cpp example for discussion of the use of include files, constructing an ImageFile, and the try/catch
-block to handle exceptions.
-
-A write-mode ImageFile is created in <b>source line 31</b>.
-A test function is called with two example element names in <b>source lines 33-34</b>.
-The parsing functions don't actually check to see if there are objects defined with the given path names or element
-names, they just test whether they are syntactically correct. The ImageFile::isElementNameExtended functions only checks
-to see if a prefix is used, and not if it is declared in the ImageFile.
-
-The <b>output lines 2-3</b> show that "bar" can be parsed and it is not extended.
-The <b>output lines 5-6</b> show that "foo:bar" can be parsed and it is extended.
-
-The following console output is produced:
-@includelineno NameParse.out
-
-The XML section of the @c temp._e57 E57 file produced by this example program is as follows:
-@includelineno NameParse.xml
-
-Here is the source code without line numbers to cut&paste from:
-@include NameParse.cpp
-
-*/
-/*!
-@file ImageFileDump.cpp
-Also see listing at end of this page for source without line numbers (to cut&paste from).
-@includelineno ImageFileDump.cpp
-
-This example program creates an ImageFile, then creates various kinds of nodes, dumps out their internal state to the
-console, then reads back the ImageFile and dumps out some more objects' state. See the HelloWorld.cpp example for
-discussion of the use of include files, constructing an ImageFile, and the try/catch block to handle exceptions.
-
-The format of the output isn't documented and may vary from one API implementation to another.
-However several observations can be made about the Reference Implementation output:
-The indenting is used to show the nesting of objects and sub-objects or sub-children.
-The entire sub-tree is printed recursively, with children being more indented.
-The output listing is very comprehensive, but can be very long.
-Some of the dump functions (e.g. CompressedVectorWriter::dump) have detail that is only understandable to the
-implementation author, but others (like Node::dump) show a lot of state that is already visible through the API.
-
-The following console output is produced:
-@includelineno ImageFileDump.out
-
-The XML section of the @c temp._e57 E57 file produced by this example program is as follows:
-@includelineno ImageFileDump.xml
-
-Here is the source code without line numbers to cut&paste from:
-@include ImageFileDump.cpp
-
-*/
-/*!
-@file NodeFunctions.cpp
-Also see listing at end of this page for source without line numbers (to cut&paste from).
-@includelineno NodeFunctions.cpp
-
-This example program illustrates the manipulation and interrogation of generic Nodes.
-A tree three levels deep is created and printed.
-See the HelloWorld.cpp example for discussion of the use of include files, constructing an ImageFile, and the try/catch
-block to handle exceptions.
-
-In <b>source lines 82-83</b>, an new E57 file is opened for writing, and the predefined root node is fetched.
-On <b>source line 86</b>, a StructureNode is created, and a handle to it is saved in @c child.
-On <b>source line 87</b>, a StringNode is created, and a handle to it is saved in @c grandchild.
-The StructureNode is then attached to the root of the ImageFile, on <b>source line 88</b>, with a resulting absolute
-path name of "/child". Then, in <b>source line 89</b>, the StringNode is attached into the ImageFile tree with a
-resulting absolute path name of "/child/grandchild".
-
-<b>Source line 92</b> calls a routine @c printSpecificInfo that prints out information that is specific to the type of
-the node. However the format argument to the function is of type Node, and the type of actual argument provided is type
-StructureNode in <b>source line 92</b>. This type mis-match is resolved by the compiler by using the upcast function of
-StructureNode that can convert the handle into a generic Node. This conversion is silently by the compiler, as it is
-always type-safe. Once inside @c printSpecificInfo, the true type of @c n is temporarily lost. A Node handle does not
-have the member function to get how many children the underlying StructureNode object has. On <b>source line 24</b>, the
-true type of @c n is fetched, and used in a @c switch statement to protect against attempting to convert a generic Node
-handle to a handle of the incorrect underlying type (this attempt would fail with an exception). The generic Node handle
-is convert back to the correct underlying type (e.g. in <b>source line 26</b>) by calling a handle downcast function.
-Note that in <b>source lines 27-29</b>, three alternate syntaxes are given for calling the exact same downcast function.
-The specific handle is used to print out some information that can't be gotten using the generic handle. Then @c
-printGenericInfo is called to print out the state of seven generic Node attributes that are common to all Node types.
-
-Some state of the three nodes ("/", "/child", and "/child/grandchild") are listed in the <b>output lines 1-27</b>.
-The two more nodes are created, but not attached to the root node, and some of their state is printed out in <b>output
-lines 28-45</b>. Note that the isAttached attribute is false for both nodes. When the @c try block ends in <b>source
-line 111</b>, all the constructed objects will be deleted. The two unattached nodes will not be saved in the E57 file,
-because the were not attached directly or indirectly to the ImageFile root node. This is reflected in the XML listing,
-where only three elements show up, instead of five. Also note that the two unattached nodes remember (see <b>output
-lines 35 and 44</b>) which destination ImageFile was declared during their creation, even though they never get attached
-to that file. It is not an error to fail to attach a node to the declared ImageFile (it's just wasteful).
-
-The following console output is produced:
-@includelineno NodeFunctions.out
-
-The XML section of the @c temp._e57 E57 file produced by this example program is as follows:
-@includelineno NodeFunctions.xml
-
-Here is the source code without line numbers to cut&paste from:
-@include NodeFunctions.cpp
-
-*/
-/*!
-@file StructureCreate.cpp
-Also see listing at end of this page for source without line numbers (to cut&paste from).
-@includelineno StructureCreate.cpp
-
-This example program writes an ImageFile containing two StructureNodes (/child1, and /child2) and a StringNode
-(/child1/grandchild). Some StructureNode functions then interrogate the resulting tree. See the HelloWorld.cpp example
-for discussion of the use of include files, constructing an ImageFile, and the try/catch block to handle exceptions.
-
-Two StructureNodes are created in <b>source lines 16-17</b>, and are attached as children to the ImageFile root node in
-<b>source lines 19-20</b>. Handles are saved (in @c child1 and @c child2) so that they may be referred to later in the
-program. A StringNode (with handle @c grandchild) is created and attached underneath @c child1. Attaching @c grandchild
-to @c child1 before it was attached to the ImageFile root would have also been possible. The number of children of @c
-root is printed (2) in <b>source line 23</b>.
-
-A for loop, in <b>source lines 24-32</b>, that iterates through the two children of @c root and prints out some
-information about each. Each child is fetched by index in <b>source line 25</b>. The StructureNode::get(int64_t) const
-function returns a generic Node handle whose type must be checked before it is downcast to StructureNode (also see
-discussion in the IntegerNode::IntegerNode example concerning downcasting).
-
-<b>Source line 34</b> illustrates a call to see if a structure contains an node using a relative pathname (relative to
-@c child1). In contrast, <b>source line 37</b> illustrates a test of existance of an node using an absolute pathname
-(the path from the root of the tree that contains the @c child1 node). <b>Source lines 41-42</b> show the testing of
-existance of an absolute pathName in a tree that is several levels deep Once the existence of the elements is
-established in <b>source line 41</b>, it may be safely fetched in <b>source line 42</b>.
-
-The following console output is produced:
-@includelineno StructureCreate.out
-
-The XML section of the @c temp._e57 E57 file produced by this example program is as follows:
-@includelineno StructureCreate.xml
-
-Here is the source code without line numbers to cut&paste from:
-@include StructureCreate.cpp
-
-*/
-/*!
-@file VectorCreate.cpp
-Also see listing at end of this page for source without line numbers (to cut&paste from).
-@includelineno VectorCreate.cpp
-
-This example program writes an ImageFile containing two VectorNodes, one VectorNode must contain children of the same
-type, and the second VectorNode can contain children of differing types. See the HelloWorld.cpp example for discussion
-of the use of include files, constructing an ImageFile, and the try/catch block to handle exceptions.
-
-<b>Source lines 16-17</b> create a homogeneous VectorNode (can only contain children of the same type) and attaches it
-the ImageFile root node. In <b>source line 18</b> the first StringNode is added to the VectorNode by appending to the
-end. Since the VectorNode was initially empty, the first string is put in the 0 child index position. After the first
-child is appended to the VectorNode, any further children appended must be the same type as the first. The second
-append, on <b>source line 19</b>, is in fact the same type, and it is put in the 1 child index position.
-
-<b>Source lines 22-23</b> create a heterogeneous VectorNode and attach it to the ImageFile root node.
-<b>Source lines 24-25</b> show that it is not an error to append child nodes of different types to the heterogeneous
-VectorNode. <b>Source lines 27-30</b> show that the heterogeneous attribute can be interrogated.
-
-The following console output is produced:
-@includelineno VectorCreate.out
-
-The XML section of the @c temp._e57 E57 file produced by this example program is as follows:
-@includelineno VectorCreate.xml
-
-Here is the source code without line numbers to cut&paste from:
-@include VectorCreate.cpp
-
-*/
-/*!
-@file VectorFunctions.cpp
-Also see listing at end of this page for source without line numbers (to cut&paste from).
-@includelineno VectorFunctions.cpp
-
-This example program writes an ImageFile containing a VectorNode that contains two IntegerNodes.  The VectorNode is
-interrogated is several ways. See the HelloWorld.cpp example for discussion of the use of include files, constructing an
-ImageFile, and the try/catch block to handle exceptions.
-
-In <b>source lines 16-19</b> a homogeneous VectorNode (can only contain children with identical types) is created,
-attached to the root of the ImageFile, and two IntegerNodes are appended. The number of children is printed out in
-<b>source line 21</b>. In <b>source lines 22-29</b>, a for loop iterates over the children, downcasting them to
-IntegerNode handles, and then prints out some information about each. <b>Source lines 31 and 33</b> check to see whether
-a particular child is defined, but using a ustring element name rather than an integer index. <b>Source lines 37-40</b>
-illustrates the downcasting of the VectorNode itself.
-
-The following console output is produced:
-@includelineno VectorFunctions.out
-
-The XML section of the @c temp._e57 E57 file produced by this example program is as follows:
-@includelineno VectorFunctions.xml
-
-Here is the source code without line numbers to cut&paste from:
-@include VectorFunctions.cpp
-
-*/
-/*!
-@file IntegerCreate.cpp
-Also see listing at end of this page for source without line numbers (to cut&paste from).
-@includelineno IntegerCreate.cpp
-
-This example program writes an ImageFile containing 4 IntegerNodes.
-It then prints out some basic information about the state of each IntegerNode.
-See the HelloWorld.cpp example for discussion of the use of include files, constructing an ImageFile, and the try/catch
-block to handle exceptions.
-
-<b>Source lines 35-38</b> construct the 4 IntegerNodes and attach them with distinct element names to the root node.
-In <b>source line 35</b>, the IntegerNode is constructed with a default value, default minimum, and default maximum.
-The defaults are specified in the E57Foundation.h include file.
-The default values create a zero value IntegerNode with minimum/maximum range set to the largest values that can be
-represented by a signed 64 bit number (which is the underlying representation in the reference implementation of the E57
-Foundation API). <b>Source line 36</b> attaches an IntegerNode with a given value but default min/max. <b>Source line
-37</b> creates a IntegerNode that can represent all values of an unsigned 10 bit number. <b>Source line 38</b> creates a
-IntegerNode that can represent all values of an signed 8 bit number. The minimum/maximum specified don't have to be
-representable by an integral number of bits (e.g. minimum=1, maximum=100 is OK). In <b>source lines 37-38</b>, if the
-specified value had been chosen outside the given minimum/maximum bounds, an exception would have been thrown (since the
-ASTM spec requires the value be within the bounds).
-
-Each IntegerNode is then fetched by absolute path name in <b>source line 17</b>.
-The call to StructureNode::get(const ustring&) const in <b>source line 17</b> can throw an exception
-(::E57_ERROR_PATH_UNDEFINED) if the path name is not defined. <b>Source line 16</b> checks that the path name is
-actually defined before fetching the child node. The return type of the StructureNode::get(const ustring&) const
-function is a generic Node handle (because containers can hold any type of node, not just IntegerNode). A test on
-<b>source line 18</b> makes sure we aren't surprised by an exception in <b>source line 19</b>, where the generic Node
-handle is downcast to a handle to IntegerNode. This downcast could have been specified in three other equivalent forms:
-<tt>"IntegerNode iNode(root.get(pathName));"</tt> or <tt>"IntegerNode iNode = IntegerNode(root.get(pathName));"</tt>,
-<tt>"IntegerNode iNode = (IntegerNode)root.get(pathName);"</tt>, resulting in exactly the same function call. The
-static_cast form used in the code makes it clear that a type conversion is being performed. It is not possible for the
-iNode variable to refer to any other type of node. If the downcast could not be performed, an exception would be thrown.
-
-Once we have iNode handle in <b>source line 19</b>, we can then call IntegerNode specific functions (in <b>source lines
-20-22</b>) to print out the state of the IntegerNode. The functions in <b>source lines 20-22</b> can be called even
-though the ImageFile was opened in write mode. All read functions for objects stored in a write-mode ImageFile work
-correctly. The are some functions that are accessible with a generic Node handle (for example Node::pathName is called
-in <b>source line 24</b>). Note that in <b>output listing lines 3-4 and 7-8</b> the minimum and maximum are very large
-numbers which are the defaults if they aren't explicitly specified. Also note that on <b>XML line 4</b>, the IntegerNode
-value, minimum, and maximum aren't given since the ASTM E57 standard specifies default values that match those specified
-in the API header file. Only in <b>XML line 6</b> is it necessary to list all three numbers for the IntegerNode.
-
-The following console output is produced:
-The following console output is produced:
-@includelineno IntegerCreate.out
-
-The XML section of the @c temp._e57 E57 file produced by this example program is as follows:
-@includelineno IntegerCreate.xml
-
-Here is the source code without line numbers to cut&paste from:
-@include IntegerCreate.cpp
-
-*/
-/*!
-@file ScaledIntegerCreate.cpp
-Also see listing at end of this page for source without line numbers (to cut&paste from).
-@includelineno ScaledIntegerCreate.cpp
-
-This example program writes an ImageFile containing 5 ScaledIntegerNodes.
-It then prints out some basic information about the state of each ScaledIntegerNode.
-See the HelloWorld.cpp example for discussion of the use of include files, constructing an ImageFile, and the try/catch
-block to handle exceptions. Also see discussion in the IntegerCreate.cpp example concerning downcasting.
-
-<b>Source lines 38-42</b> illustrate the use of the default arguments in the ScaledIntegerNode constructor.
-It only make sense to use a ScaledIntegerNode object when the scale or offset is specified explicitly as in <b>source
-lines 41-42</b> (otherwise the representation domain is the same as an IntegerNode element).
-
-In <b>source lines 40-42</b>, if the specified raw value had been chosen outside the given minimum/maximum bounds, an
-exception would have been thrown (since the ASTM spec requires the value be within the bounds).
-
-Note that in <b>output listing lines 23-24</b>, the scaled value is 0.001 times the size of the raw value (using the
-specified scale factor 0.001). Also in <b>output line 31</b>, an additional offset of 100.0 has been added.
-
-The following console output is produced:
-@includelineno ScaledIntegerCreate.out
-
-The XML section of the @c temp._e57 E57 file produced by this example program is as follows:
-@includelineno ScaledIntegerCreate.xml
-
-Here is the source code without line numbers to cut&paste from:
-@include ScaledIntegerCreate.cpp
-
-*/
-/*!
-@file FloatCreate.cpp
-Also see listing at end of this page for source without line numbers (to cut&paste from).
-@includelineno FloatCreate.cpp
-
-This example program writes an ImageFile containing 7 FloatNodes.
-It then prints out some basic information about the state of each FloatNode.
-See the HelloWorld.cpp example for discussion of the use of include files, constructing an ImageFile, and the try/catch
-block to handle exceptions. Also see discussion in the IntegerCreate.cpp example concerning downcasting.
-
-FloatNodes come in two different precisions: E57_SINGLE and E57_DOUBLE, that are 32 bit or 64 bit IEEE encoding
-respectively. <b>Source lines 36-42</b> illustrate the use of the default arguments in the FloatNode constructor.
-<b>Source line 36</b> specifies a 0.0 E57_DOUBLE, with largest possible double precision bounds.
-Because there is only one FloatNode constructor, <b>source lines 37-38</b> both produce an E57_DOUBLE (the type of the
-second argument in <b>source line 37</b> is promoted to double precision by the compiler). In <b>source lines 39-40</b>,
-the explicit use of the E57_SINGLE argument causes both FloatNodes to have minimum/maximum bounds set to the min/max
-representable by a single precision IEEE floating point number (see <b>output listing lines 19-20 and 24-25</b>).
-<b>Source line 41</b> has same effect as <b>source lines 37-38</b>. <b>Source line 42</b> produces a FloatNode with all
-three value/minimum/maximum numbers specified explicitly. Because of the potential confusion, it is recommended that
-form in <b>source line 37</b> be avoided.
-
-In <b>source line 42</b>, if the specified value had been chosen outside the given minimum/maximum bounds, an exception
-would have been thrown (since the ASTM spec requires the value be within the bounds).
-
-On the <b>XML line 5</b>, the number is different than <b>XML line 6</b>, because of the conversion performed by the
-compiler on <b>source line 37</b>. Also note that <b>XML lines 4-9</b> don't have to explicitly specify the
-minimum/maximum attributes since the API default values match those given in the ASTM spec.
-
-The following console output is produced:
-@includelineno FloatCreate.out
-
-The XML section of the @c temp._e57 E57 file produced by this example program is as follows:
-@includelineno FloatCreate.xml
-
-Here is the source code without line numbers to cut&paste from:
-@include FloatCreate.cpp
-
-*/
-/*!
-@file StringCreate.cpp
-Also see listing at end of this page for source without line numbers (to cut&paste from).
-@includelineno StringCreate.cpp
-
-This example program writes an ImageFile containing 3 StringNodes.
-It then prints out the value of each StringNode.
-See the HelloWorld.cpp example for discussion of the use of include files, constructing an ImageFile, and the try/catch
-block to handle exceptions. Also see discussion in the IntegerCreate.cpp example concerning downcasting.
-
-<b>Source lines 33-35</b> illustrate the use of the default arguments in the StringNode constructor.
-In <b>source line 33</b>, an empty string is created.
-In <b>source line 34</b>, a 9 character string is created.
-In <b>source line 35</b>, a 15 character string is created that has a problematic "]]>" substring embedded in it.
-The ASTM E57 standard specifies special handling for strings that contain a "]]>" substring.
-<b>XML line 6</b> shows how the string is encoded in XML.
-This is handled automatically by the API implementation, without intervention by the API user.
-
-The following console output is produced:
-@includelineno StringCreate.out
-
-The XML section of the @c temp._e57 E57 file produced by this example program is as follows:
-@includelineno StringCreate.xml
-
-Here is the source code without line numbers to cut&paste from:
-@include StringCreate.cpp
-
-*/
-/*!
-@file BlobCreate.cpp
-Also see listing at end of this page for source without line numbers (to cut&paste from).
-@includelineno BlobCreate.cpp
-
-This example program writes an ImageFile containing a BlobNode, then reads it back and prints out the BlobNode contents.
-See the HelloWorld.cpp example for discussion of the use of include files, constructing an ImageFile, and the try/catch
-block to handle exceptions.
-
-In <b>source line 18</b>, an empty 10 byte long BlobNode is created in the ImageFile.
-The 10 bytes are initially zero, but this example overwrites the zeroes with some given values from a buffer.
-The writing is performed in two pieces of 5 bytes each on <b>source lines 22-23</b>.
-
-The ImageFile is closed, and then reopened for reading on <b>source line 32</b>.
-A handle to the BlobNode is fetched on <b>source line 35</b> (with no checking since this program wrote the file).
-The byte length (10) of the BlobNode is printed out in <b>source line 37</b>.
-The for loop on <b>source lines 38-42</b> reads the blob back one byte at a time and prints the values.
-Production code would, of course, read in much larger blocks, or perhaps a single, full length read into an allocated
-buffer. Since blobs are a byte sequence, they do not suffer from "endian-ness" (dependency on byte ordering of the host
-CPU). The BlobNode vales are stored in the binary section of the E57 file, and hence don't appear in the XML listing
-below.
-
-The following console output is produced:
-@includelineno BlobCreate.out
-
-The XML section of the @c temp._e57 E57 file produced by this example program is as follows:
-@includelineno BlobCreate.xml
-
-Here is the source code without line numbers to cut&paste from:
-@include BlobCreate.cpp
-
-*/
-/*!
-@file CompressedVectorCreate.cpp
-Also see listing at end of this page for source without line numbers (to cut&paste from).
-@includelineno CompressedVectorCreate.cpp
-
-This example program writes a CompressedVectorNode in an ImageFile from three separate arrays, each containing 4 double
-coordinates. The CompressedVectorNode is then read back into a single array of structures. See the HelloWorld.cpp
-example for discussion of the use of include files, constructing an ImageFile, and the try/catch block to handle
-exceptions.
-
-In <b>source lines 20-21</b>, a new ImageFile is opened for writing, and its predefined root node is fetched.
-In <b>source lines 23-26</b>, a @c prototype structure is created that describes the fields that will be stored in each
-record in the CompressedVectorNode. Each record will consist of 3 double precision floating-point numbers, with element
-names @c cartesianX, @c cartesianY, and @c cartesianZ.
-
-<b>Source line 28</b> creates an empty heterogeneous VectorNode whose handle is stored in variable name @c codecs.
-A codec (coder/decoder) is a pair of algorithms that copy the data between main memory and the data file.
-The coder/decoder algorithms are implemented internally in an E57 Foundation Implementation.
-The coder is utilized during the writing of an E57 file, and the decoder is utilized during the reading of an E57 file.
-A coder algorithm gets a data item (a double in this example) from a memory buffer in the writing program, perhaps does
-some processing on it to make it smaller, and then stores the result in the disk file. A decoder algorithm gets some
-data from the previously written disk file, undoes any processing that the coder did, and stores the reconstituted data
-into a memory buffer in the reading program. Currently there is only one codec option (bitPackCodec) in the Reference
-Implementation, and it is the default option if no codecs are specified for a field in the record. So an empty @c codecs
-VectorNode requests the bitPackCodec for each of the three fields in the record.
-
-Technically, there are four elements in the prototype tree: three FloatNodes and a StructureNode which contains them.
-However, container elements in the @c prototype tree do not need to be encoded in the binary section of the E57 file, so
-they don't need a codec specified for them. The values stored in the three FloatNodes are all zero (that's what the
-default to in the constructors on <b>source lines 24-26</b>). In a prototype, however, the values are ignored. It is the
-type of the node and any specified limits on what value can be stored that are important. In the example, the type is
-FloatNode, the precision is E57_DOUBLE, and the default limits are set to the smallest and largest values possible in a
-double precision float (so effectively there are no limits to the value that can be stored). Because no compression is
-used in the coder, each record will require 3*64=192 bits of storage in the file.
-
-<b>source line 30</b> creates the CompressedVectorNode using the two trees @c prototype and @c codecs.
-The CompressedVectorNode @c cv is attached into the tree of the ImageFile, under the path name "/points".
-The two trees @c prototype and @c codecs don't contain any data values and aren't connected into the data tree of an
-ImageFile in the same way as nodes that do contain values. They function more like the arguments to the constructors of
-other Node types (e.g. the @c precision of FloatNode, or the byteCount of BlobNode). They don't get path names. However
-you can get them back by fetching the CompressedVectorNode by its path name, then call CompressedVectorNode::prototype
-or CompressedVectorNode::codecs.
-
-Three built-in C++ arrays are specified in <b>source lines 34-36</b>, each holding four coordinates.
-Although it doesn't matter in this example, the arrays are declared @c static, which means they are not stored on the
-stack. Storing large built-in arrays on the stack risks causing a stack overflow. In <b>source lines 37-40</b>, a
-SourceDestBuffer object is created that describes each array, and a vector of the three SourceDestBuffers is created.
-The vector function @b push_back appends the SourceDestBuffers one-at-a-time to the vector.
-Constructing a three element vector and assigning the SourceDestBuffer to each element (e.g. sourceBuffers[0] =
-SourceDestBuffer(...)) won't work because SourceDestBuffer has no default constructor (it is impossible to make the
-equivalent of a NULL handle). In the construction of each SourceDestBuffer, the address of the buffer is given, along
-with the number of elements in the buffer, and the pathname in the prototype that identifies the field of the record
-that will get the values stored in the buffer. For writers, all the fields specified in the prototype must be written at
-one time. The writer cannot write each field separately. Readers may read any combination of defined fields that suit
-them.
-
-The types of memory buffers for both writer and reader in this example program match the representation specified in the
-prototype. Therefore no representation conversions will be required during writing or reading. If there were conversions
-needed, they would be specified with additional arguments during the construction of the SourceDestBuffers.
-
-The local block in <b>source lines 42-46</b> will create an iterator that can write blocks of data into the
-CompressedVector. In this example only a single block is written. A C++ local block (the nested {}) is used to limit the
-scope of the iterator variable @c writer. It is good practice to control the scope of reader/writer iterators, so that
-you can control their lifetimes. In this example, the local block is not essential.
-
-On <b>source line 43</b>, the CompressedVectorWriter iterator object is created by specifying which buffers the iterator
-will transfer data from. The creation of the CompressedVectorWriter doesn't perform the first write. The first write is
-requested explicitly as in <b>source line 44</b>. In programming, iterators often process one item in a collection at a
-time. In the Foundation API, however, for efficiency reasons the data should be processed in blocks of 100s or 1000s of
-points at a time. The specified buffers can be refilled after they are written, and the iterator can be called for a
-second write with just the number of points to write (in <b>source line 44</b>), or a different buffers can be filled
-and handed to the iterator using an overloaded write function that takes a new vector of SourceDestBuffers.
-
-In <b>source line 45</b>, the CompressedVectorWriter::close must be explicitly to signal the end of the write.
-This call is required for much the same reason as the ImageFile::close is required: communicating error conditions from
-a destructor using exceptions is impossible. If CompressedVectorWriter::close hadn't been called, the points written
-using the CompressedVectorWriter would have been discarded.
-
-In <b>source lines 55-56</b>, the E57 file is reopened and the root node is fetched.
-In <b>source line 58</b> the CompressedVectorNode is fetched by name, and downcast to the type that it is known to be
-(without checking). Since this program just wrote the file, the reader routine knows that the "/points"
-CompressedVectorNode exists and that the prototype has three elements in it that store double precision floating point
-numbers. Readers that have no guarantee of the layout of the file must consult the prototype to determine what fields
-they recognize and what memory representation types are appropriate. Often the number of possibilities are constrained
-by the ASTM E57 format standard or by the documentation of an extension.
-
-In <b>source lines 61-68</b>, the SourceDestBuffer objects that describe the memory buffers that will receive the data
-are created. In contrast to the writer, the organization of the XYZ coordinates is different in the reader routine. The
-XYZ values are no longer stored in separate arrays. They are stored as a single array of @c XYZStruct. This is handled
-by using the stride argument in the SourceDestBuffer constructor. Three SourceDestBuffers are still needed, but stride
-value is set to the size of the @c XYZStruct. When the CompressedVectorReader iterator writes a series of @c x values
-into the buffer, instead of storing them contiguously, the iterator advances by adding the stride value to the output
-pointer, thereby skipping over the intervening @c yz fields to the next @c x field. Note that in <b>source line 63</b>
-the address of the buffer passed to the SourceDestBuffer constructor is not the start of the whole array, but the
-address of the first x (the same is true for the y, and z fields).
-
-In <b>source line 72</b>, the CompressedVectorReader iterator is created.
-Unlike the writer case, the reader does not have to request all the defined fields in the read.
-In the @c while loop on <b>source lines 76-83</b>, blocks of records are read until the read function returns 0.
-Alternatively, the number of records defined could have been fetched using CompressedVectorNode::childCount.
-Like the CompressedVectorWriter, the CompressedVectorReader is explicitly closed in <b>source line 86</b>.
-
-Note that the FloatNode values written in the file do not appear in the XML listing, as they are stored in the binary
-section of the file that is not printed by the utility (E57xmldump.exe) that generated the listing. On <b>XML line
-4</b>, you can see the @c fileOffset XML attribute that indicates the binary section that holds the CompressedVectorNode
-values starts at the physical offset of 40 (decimal) in the disk file.
-
-The following console output is produced:
-@includelineno CompressedVectorCreate.out
-
-The XML section of the @c temp._e57 E57 file produced by this example program is as follows:
-@includelineno CompressedVectorCreate.xml
-
-Here is the source code without line numbers to cut&paste from:
-@include CompressedVectorCreate.cpp
-
-*/
-/*!
-@file SourceDestBufferFunctions.cpp
-Also see listing at end of this page for source without line numbers (to cut&paste from).
-@includelineno SourceDestBufferFunctions.cpp
-
-This example program illustrates the state interrogation functions for SourceDestBuffer, CompressedVectorWriter, and
-CompressedVectorReader. A very simple CompressedVectorNode is written and then read back in. See the HelloWorld.cpp
-example for discussion of the use of include files, constructing an ImageFile, and the try/catch block to handle
-exceptions. See CompressedVectorCreate.cpp example for discussion about the writing/reading a CompressedVectorNode.
-
-ImageFile::isWritable is called on <b>source lines 16 and 70</b>.
-In the CompressedVectorWriter nested block on <b>source lines 30-47</b>, ImageFile::writerCount is called before,
-during, and after the use of the CompressedVectorWriter object to show how many writers a open. Also
-CompressedVectorWriter::isOpen is called three times to show is behavior after close is called.
-
-<b>Source lines 50-55</b> show the use of the functions that interrogate the state of a SourceDestBuffer.
-Note in <b>output lines 17-19</b>, the default values for @c doConversion and @c doScaling are false, and the default
-value for @c stride with a @c double buffer is sizeof(double) == 8.
-
-In the reader section on <b>source lines 68-103</b>, similar printouts are produced for ImageFile::readerCount, and
-CompressedVectorReader::isOpen.
-
-The following console output is produced:
-@includelineno SourceDestBufferFunctions.out
-
-The XML section of the @c temp._e57 E57 file produced by this example program is as follows:
-@includelineno SourceDestBufferFunctions.xml
-
-Here is the source code without line numbers to cut&paste from:
-@include SourceDestBufferFunctions.cpp
-
-*/
-/*!
-@file SourceDestBufferNumericCreate.cpp
-Also see listing at end of this page for source without line numbers (to cut&paste from).
-@includelineno SourceDestBufferNumericCreate.cpp
-
-This example program illustrates the writing and reading of numbers (IntegerNode, ScaledIntegerNode, and FloatNode) in a
-CompressedVectorNode. See the HelloWorld.cpp example for discussion of the use of include files, constructing an
-ImageFile, and the try/catch block to handle exceptions. See CompressedVectorCreate.cpp example for discussion about the
-writing/reading a CompressedVectorNode.
-
-<b>Source lines 18-27</b> create a CompressedVectorNode prototype with eight ScaledIntegerNodes and two FloatNodes.
-The ScaledIntegerNode rawValues are constrained to be in interval [-10000, 10000], and are scaled by a factor of 1/1000
-with no offset. One FloatNode is a double precision and the other is single precision, both with no constrain on the
-value.
-
-<b>Source lines 34-53</b> prepare a vector of eight SourceDestBuffers holding integer of various numbers of bytes and
-signed/unsigned combinations, as well as two SourceDestBuffers of single and double precision floating point numbers.
-Note that the buffer declared in <b>source line 40</b>, @c i64, is read twice: once with no scaling requested (the
-default value on <b>source line 50</b>), and once with scaling requested (on <b>source line 51</b>).
-
-The CompressedVectorNode is written in <b>source lines 56-59</b>.
-The file is then reopened on <b>source line 69</b>.
-The CompressedVectorNode is then fetched by name (with no checking) in <b>source line 72</b>.
-In <b>source line 78</b>, the prototype is fetched from the CompressedVectorNode (with a little checking on <b>source
-lines 76-77</b>).
-
-A for loop on <b>source line 84</b> iterates through the prototype children, and reads each field twice, printing the
-results. The first read is with no scaling requested in <b>source line 93</b>. The second read is with scaling requested
-in <b>source line 111</b>. Note on both reads, @c doConversion is true, which requests that the file representation be
-converted automatically to the memory buffer representation. This is necessary, since the read memory buffer is a @c
-double, and eight of the ten children are ScaledIntegerNodes. Requesting conversion is not necessary in the case of the
-two FloatNode children, but doesn't hurt.
-
-The following observations can be made about the results printed in the output listing below:
-
-The seven ScaledIntegerNodes that were written without any scaling all work about the same (in <b>output lines
-5-60</b>). The raw value is stored in the file, and is read back the same. The scaled read produces a scaled value that
-is multiplied by 0.001.
-
-The ScaledIntegerNode that was written with scaling requested, has a raw value that is 1000 times larger than the number
-stored in the memory buffer (in <b>output lines 77-80</b>). This is because "scaling" for a writer means dividing by the
-@c scale factor before storing the result. Note that the raw value for the last point of the buffer where write scaling
-was requested had a value of 10000, which was just at the edge of the maximum allowed value. If a slightly larger value
-was written with scaling requested in this example, an E57Exception with an errorCode of E57_ERROR_VALUE_OUT_OF_BOUNDS
-would have been thrown. Whether you perform the scaling yourself, or request the E57 Foundation to do it, you should
-make sure that result is within the declared bounds. This is necessary because the coding schemes that store the
-representation in the file cannot (and will not) reliably store any value outside of the declared [minimum, maximum]
-interval.
-
-The scaling options have no effect on the FloatNodes, as reflected by the <b>output lines 79-93</b>.
-
-The following console output is produced:
-@includelineno SourceDestBufferNumericCreate.out
-
-The XML section of the @c temp._e57 E57 file produced by this example program is as follows:
-@includelineno SourceDestBufferNumericCreate.xml
-
-Here is the source code without line numbers to cut&paste from:
-@include SourceDestBufferNumericCreate.cpp
-
-*/
-/*!
-@file SourceDestBufferStringCreate.cpp
-Also see listing at end of this page for source without line numbers (to cut&paste from).
-@includelineno SourceDestBufferStringCreate.cpp
-
-This example program illustrates the writing and reading of StringNodes in a CompressedVectorNode.
-See the HelloWorld.cpp example for discussion of the use of include files, constructing an ImageFile, and the try/catch
-block to handle exceptions. See CompressedVectorCreate.cpp example for discussion about the writing/reading a
-CompressedVectorNode. See SourceDestBufferNumericCreate.cpp example for discussion about writing numbers in a
-CompressedVectorNode.
-
-It is envisioned that for most uses of the E57 format, the fields of a CompressedVectorNode record will be entirely
-numeric. However it is possible to store Unicode strings in the record of a CompressedVectorNode (i.e. store strings in
-the compressed section of an E57 file). Writing and reading strings in a CompressedVectorNode are a little different
-than numbers: their values are not a known fixed width. Rather than using built-in C++ arrays as memory buffers to hold
-numbers, string use vector<ustring> buffers. The vector<ustring> has a fixed number of entries, just like the C++ arrays
-from numbers, but the length of each ustring in the vector can be different (i.e. sbuf[0].length() can be different than
-sbuf[1].length()).
-
-<b>Source lines 12-21</b> create a CompressedVectorNode that has a record that has a single string element @c s.
-<b>Source lines 24-28</b> create a SourceDestBuffer that represents a two element vector that holds two ustrings of
-different lengths. Note that the third argument in the SourceDestBuffer constructor on <b>source line 28</b>, is the
-address of the vector to use, rather than the vector itself. <b>Source lines 31-33</b> write the 2 strings to the
-CompressedVectorNode as a block.
-
-In <b>source lines 43-46</b>, the E57 file is reopened for reading, and the CompressedVectorNode is fetched.
-An vector of strings is constructed in <b>source line 49</b> which is large enough to hold all the strings from all the
-records defined (which is two records in this example), and a corresponding SourceDestBuffer is created in <b>source
-line 50</b>. The strings are read in one gulp on <b>source line 55</b>. The string values are printed on <b>source lines
-58-59</b>. Repeated calls to CompressedVectorReader::read with a fixed length vector would be preferable in working
-code, as the number of records in a CompressedVectorNode is unbounded. Even with fetching a fixed number of strings on
-each read call, the amount of memory required is unknown because the strings read can be of any length.
-
-Note that the string values written in the file do not appear in the XML listing, as they are stored in the binary
-section of the file that is not printed by the utility (E57xmldump.exe) that generated the listing. On <b>XML line
-4</b>, you can see the @c fileOffset XML attribute that indicates the binary section that holds the CompressedVectorNode
-values starts at the physical offset of 40 (decimal) in the disk file.
-
-The following console output is produced:
-@includelineno SourceDestBufferStringCreate.out
-
-The XML section of the @c temp._e57 E57 file produced by this example program is as follows:
-@includelineno SourceDestBufferStringCreate.xml
-
-Here is the source code without line numbers to cut&paste from:
-@include SourceDestBufferStringCreate.cpp
-
-*/
-/*!
-@file E57ExceptionFunctions.cpp
-Also see listing at end of this page for source without line numbers (to cut&paste from).
-@includelineno E57ExceptionFunctions.cpp
-
-This example program demonstrates several functions for extracting information out of an E57Exception object thrown by
-the API. See the HelloWorld.cpp example for discussion of the use of include files, constructing an ImageFile, and the
-try/catch block to handle exceptions.
-
-<b>Source line 13</b> attempts to read a file that doesn't exist, hence causing an E57Exception to be thrown with an
-errorCode of E57_ERROR_OPEN_FAILED. Because of the @c throw, <b>source line 14</b> doesn't execute, and execution
-resumes on <b>source line 16</b>. <b>Source lines 16-23</b> extract various fields from the E57Exception and print them
-on the console. In <b>output line 3</b>, the context string can have some very useful values of variables near where the
-exception was thrown. These variable values can be useful in debugging. The context string format might be useful for a
-programmer, but not necessarily useful for an end-user of the software. <b>Output lines 5-7</b> show information about
-where the exception was thrown in the implementation internal source code.
-
-<b>Source line 26</b> uses a single E57Exception function, E57Exception::report, that prints out all the information to
-the console shown on <b>output lines 9-15</b>, as well as the source location where the exception @c catch is located in
-the user's source. The format of <b>output lines 14-15</b> is chosen so that smart text editors (e.g. GNU emacs) can
-interpret the lines as error messages and create an automatic link, that when clicked on, opens the given file at the
-line number there the exception was thrown, or caught. Different editors may require a different formatting of the lines
-to create the clickable link.
-
-<b>Source lines 29-30</b> illustrate the printing of a custom error message based on the value of the error code.
-The errorCode could also have been tested in a @c switch statement.
-
-The following console output is produced:
-@includelineno E57ExceptionFunctions.out
-
-The XML section of the @c temp._e57 E57 file produced by this example program is as follows:
-@includelineno E57ExceptionFunctions.xml
-
-Here is the source code without line numbers to cut&paste from:
-@include E57ExceptionFunctions.cpp
-
-*/
-/*!
-@file RawXML.cpp
-Also see listing at end of this page for source without line numbers (to cut&paste from).
-@includelineno RawXML.cpp
-
-This example program writes a very small ImageFile, then uses the two XML utility functions to read the XML section of
-the file without opening it as an ImageFile in read-mode.
-
-<b>Source lines 13-18</b> write a simple ImageFile on the disk.
-In <b>source line 25</b> a E57Utilities object is created once, to avoid overhead of constructing it multiple times
-(which might be expensive in some API implementations, see E57Utilities::E57Utilities for more discussion). <b>Source
-line 28</b> gets the logical length of the XML section in the file on disk. The @c for loop on <b>source lines 31-40</b>
-repeatedly fetch buffers of the XML section. In a production version, the buffer would be much larger than 8 characters.
-The buffers are sent to the @c cout ostream on <b>source line 39</b>, with appropriate casts to keep the compiler happy.
-The XML is not parsed, just read in blocks. If the file is corrupted and has checksum errors, the raw XML utility
-functions will fail. There are no E57 Fountation API functions to read a corrupt E57 file (a .e57 file with checksum
-errors).
-
-The following console output is produced:
-@includelineno RawXML.out
-
-The XML section of the @c temp._e57 E57 file produced by this example program is as follows:
-@includelineno RawXML.xml
-
-Here is the source code without line numbers to cut&paste from:
-@include RawXML.cpp
-
-*/
-/*!
-@file Versions.cpp
-Also see listing at end of this page for source without line numbers (to cut&paste from).
-@includelineno Versions.cpp
-
-This example program demonstrates the use of a utility function to fetch version information from the underlying API
-implementation.
-
-The getVersion function is a member function of an object that is created at run-time, by E57Utilities::E57Utilities.
-The reason for this unusual invocation is explained in E57Utilities::E57Utilities.
-
-Once E57Utilities is constructed on <b>source line 14</b>, the E57Utilities::getVersions function is called which
-returns three variables that are printed on <b>source lines 16-18</b>.
-
-Once the ASTM draft standard is approved and the testing phase of the Reference Implementation is complete, astmMajor=1
-and astmMinor=0 will be returned.
-
-The following console output is produced:
-@includelineno Versions.out
-
-The XML section of the @c temp._e57 E57 file produced by this example program is as follows:
-@includelineno Versions.xml
-
-Here is the source code without line numbers to cut&paste from:
-@include Versions.cpp
-
-*/
-/*!
-@file CheckInvariant.cpp
-Also see listing at end of this page for source without line numbers (to cut&paste from).
-@includelineno CheckInvariant.cpp
-
-This example program demonstrates the use of the checkInvariant function of various API classes.
-See the HelloWorld.cpp example for discussion of the use of include files, constructing an ImageFile, and the try/catch
-block to handle exceptions.
-
-A class invariant is a collection of statements that are always true before and after a call to any member function of
-the class. The checkInvariant functions are diagnostics that check an object and its access functions for consistency.
-Each API call in this example, is followed (with an extra indentation) by checkInvariant calls to the object that was
-invoked and any objects used as arguments that might have been modified. This example illustrates that it can become
-tedious to manually check each object for consistency. A E57 Foundation Implementation may have a specially-built
-library version that can perform these checks on all objects used in API functions, before and after the call. It may be
-useful to selectively call checkInvariant explicitly from user code when debugging a particular problem.
-
-The following console output is produced:
-@includelineno CheckInvariant.out
-
-The XML section of the @c temp._e57 E57 file produced by this example program is as follows:
-@includelineno CheckInvariant.xml
-
-Here is the source code without line numbers to cut&paste from:
-@include CheckInvariant.cpp
-*/
 
 /*!
 @brief Check whether Node class invariant is true
@@ -1258,7 +56,7 @@ recursively may be expensive if the tree is large, so should be used
 judiciously, in debug versions of the application.
 @post    No visible state is modified.
 @throw   ::E57_ERROR_INVARIANCE_VIOLATION or any other E57 ErrorCode
-@see     CheckInvariant.cpp example, Class Invariant section in Node,
+@see     Class Invariant section in Node,
 IntegerNode::checkInvariant, ScaledIntegerNode::checkInvariant,
 FloatNode::checkInvariant, BlobNode::checkInvariant,
 StructureNode::checkInvariant, VectorNode::checkInvariant,
@@ -1546,7 +344,7 @@ invariant is violated:
 @skip checkInvariant(
 @until end Node::checkInvariant
 
-@see     StructureNode, VectorNode, CompressedVectorNode, IntegerNode,
+@see StructureNode, VectorNode, CompressedVectorNode, IntegerNode,
 ScaledIntegerNode, FloatNode, StringNode, BlobNode
 */
 
@@ -1724,7 +522,6 @@ Checking the invariant recursively may be expensive if the tree is large, so
 should be used judiciously, in debug versions of the application.
 @post    No visible state is modified.
 @throw   ::E57_ERROR_INVARIANCE_VIOLATION or any other E57 ErrorCode
-@see     CheckInvariant.cpp example
 */
 void IntegerNode::checkInvariant( bool /*doRecurse*/, bool doUpcast )
 {
@@ -1864,7 +661,6 @@ invariants that are implementation-dependent may also be checked. If any
 invariant clause is violated, an E57Exception with errorCode of
 E57_ERROR_INVARIANCE_VIOLATION is thrown.
 @post    No visible state is modified.
-@see     CheckInvariant.cpp example
 */
 void CompressedVectorReader::checkInvariant( bool /*doRecurse*/ )
 {
@@ -1965,7 +761,7 @@ Checking the invariant recursively may be expensive if the tree is large, so
 should be used judiciously, in debug versions of the application.
 @post    No visible state is modified.
 @throw   ::E57_ERROR_INVARIANCE_VIOLATION or any other E57 ErrorCode
-@see     CheckInvariant.cpp example, Node::checkInvariant
+@see     Node::checkInvariant
 */
 void ImageFile::checkInvariant( bool doRecurse ) const
 {
@@ -2134,8 +930,7 @@ NodeType enumeration values:
 ::E57_SCALED_INTEGER,
 ::E57_FLOAT, ::E57_STRING, ::E57_BLOB.
 @post    No visible state is modified.
-@see     NodeFunctions.cpp example, NodeType, StructureCreate.cpp example,
-upcast/dowcast discussion in Node
+@see     NodeType, upcast/dowcast discussion in Node
 */
 NodeType Node::type() const
 {
@@ -2158,8 +953,7 @@ CompressedVectorNode::CompressedVectorNode for more details).
 @return  true if this node is a root node.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     NodeFunctions.cpp example, Node::parent, Node::isAttached,
-CompressedVectorNode::CompressedVectorNode
+@see     Node::parent, Node::isAttached, CompressedVectorNode::CompressedVectorNode
 */
 bool Node::isRoot() const
 {
@@ -2191,8 +985,7 @@ Node::isRoot to avoid infinite loops or infinite recursion.
 root node.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     NodeFunctions.cpp example, Node::isRoot, Node::isAttached,
-CompressedVectorNode::CompressedVectorNode, Node::elementName
+@see     Node::isRoot, Node::isAttached, CompressedVectorNode::CompressedVectorNode, Node::elementName
 */
 Node Node::parent() const
 {
@@ -2225,8 +1018,7 @@ as its elementName.
 @return  The absolute path name of the node.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     NodeFunctions.cpp example, Node::elementName, Node::parent,
-Node::isRoot
+@see     Node::elementName, Node::parent, Node::isRoot
 */
 ustring Node::pathName() const
 {
@@ -2256,7 +1048,7 @@ is not stored in the file and is deduced by the position of the child.
 @return  The element name of the node, or "" if a root node.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     NodeFunctions.cpp example, Node::pathName, Node::parent, Node::isRoot
+@see     Node::pathName, Node::parent, Node::isRoot
 */
 ustring Node::elementName() const
 {
@@ -2275,7 +1067,7 @@ Node::isAttached to check if the node actually did get attached.
 @post    No visible object state is modified.
 @return  The ImageFile that was declared as the destination for the node when it
 was created.
-@see     NodeFunctions.cpp example, Node::isAttached,
+@see     Node::isAttached,
 StructureNode::StructureNode(), VectorNode::VectorNode(),
 CompressedVectorNode::CompressedVectorNode(), IntegerNode::IntegerNode(),
 ScaledIntegerNode::ScaledIntegerNode(), FloatNode::FloatNode(),
@@ -2301,7 +1093,7 @@ to create nodes that are not eventually attached to the ImageFile.
 CompressedVectorNode of) the root node of an ImageFile.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     NodeFunctions.cpp example, Node::destImageFile, ImageFile::root
+@see     Node::destImageFile, ImageFile::root
 */
 bool Node::isAttached() const
 {
@@ -2325,7 +1117,6 @@ functions should still be defined). The output format may change from version to
 version.
 @post    No visible object state is modified.
 @throw   No E57Exceptions
-@see     ImageFileDump.cpp example
 */
 #ifdef E57_DEBUG
 void Node::dump( int indent, std::ostream &os ) const
@@ -2415,7 +1206,7 @@ destImageFile.isWritable() must be true).
 @return  A smart StructureNode handle referencing the underlying object.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     StructureCreate.cpp example, NodeFunctions.cpp example, Node
+@see     Node
 */
 StructureNode::StructureNode( ImageFile destImageFile ) : impl_( new StructureNodeImpl( destImageFile.impl() ) )
 {
@@ -2471,7 +1262,7 @@ bool StructureNode::isAttached() const
 @return  Number of child nodes contained by this StructureNode.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     StructureCreate.cpp example, StructureNode::get(int64_t) const,
+@see     StructureNode::get(int64_t) const,
 StructureNode::set, VectorNode::childCount
 */
 int64_t StructureNode::childCount() const
@@ -2494,7 +1285,7 @@ pathName origin root will not the root node of an ImageFile.
 @throw   ::E57_ERROR_BAD_PATH_NAME
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     StructureCreate.cpp example, ImageFile::root, VectorNode::isDefined
+@see     ImageFile::root, VectorNode::isDefined
 */
 bool StructureNode::isDefined( const ustring &pathName ) const
 {
@@ -2515,7 +1306,7 @@ more children are added to the StructureNode.
 @throw   ::E57_ERROR_CHILD_INDEX_OUT_OF_BOUNDS
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     StructureCreate.cpp example, StructureNode::childCount,
+@see     StructureNode::childCount,
 StructureNode::get(const ustring&) const, VectorNode::get
 */
 Node StructureNode::get( int64_t index ) const
@@ -2539,7 +1330,7 @@ an ImageFile.
 @throw   ::E57_ERROR_PATH_UNDEFINED
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     StructureCreate.cpp example, StructureNode::get(int64_t) const
+@see     StructureNode::get(int64_t) const
 */
 Node StructureNode::get( const ustring &pathName ) const
 {
@@ -2585,7 +1376,7 @@ same (i.e. destImageFile() == n.destImageFile()).
 @throw   ::E57_ERROR_HOMOGENEOUS_VIOLATION
 @throw   ::E57_ERROR_FILE_IS_READ_ONLY
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     StructureCreate.cpp example, VectorNode::append
+@see     VectorNode::append
 */
 void StructureNode::set( const ustring &pathName, const Node &n )
 {
@@ -2612,8 +1403,7 @@ void StructureNode::dump( int indent, std::ostream &os ) const
 for initializations of Node variables and Node function arguments.
 @return  A smart Node handle referencing the underlying object.
 @throw   No E57Exceptions.
-@see     NodeFunctions.cpp example, StructureCreate.cpp example, explanation in
-Node, Node::type(), StructureNode(const Node&)
+@see     explanation in Node, Node::type(), StructureNode(const Node&)
 */
 StructureNode::operator Node() const
 {
@@ -2632,8 +1422,7 @@ function must be explicitly called (c++ compiler cannot insert it
 automatically).
 @return  A smart StructureNode handle referencing the underlying object.
 @throw   ::E57_ERROR_BAD_NODE_DOWNCAST
-@see     NodeFunctions.cpp example, StructureCreate.cpp example, Node::type(),
-StructureNode::operator Node()
+@see     Node::type(), StructureNode::operator Node()
 */
 StructureNode::StructureNode( const Node &n )
 {
@@ -2723,8 +1512,7 @@ destImageFile.isWritable() must be true).
 @return  A smart VectorNode handle referencing the underlying object.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     VectorCreate.cpp example, VectorFunctions.cpp example, Node,
-VectorNode::allowHeteroChildren, ::E57_ERROR_HOMOGENEOUS_VIOLATION
+@see     Node, VectorNode::allowHeteroChildren, ::E57_ERROR_HOMOGENEOUS_VIOLATION
 */
 VectorNode::VectorNode( ImageFile destImageFile, bool allowHeteroChildren ) :
    impl_( new VectorNodeImpl( destImageFile.impl(), allowHeteroChildren ) )
@@ -2785,7 +1573,7 @@ the VectorNode is created, and cannot be changed.
 @return  True if child elements can be different types.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     VectorCreate.cpp example, ::E57_ERROR_HOMOGENEOUS_VIOLATION
+@see     ::E57_ERROR_HOMOGENEOUS_VIOLATION
 */
 bool VectorNode::allowHeteroChildren() const
 {
@@ -2799,8 +1587,7 @@ bool VectorNode::allowHeteroChildren() const
 @return  Number of child elements in this VectorNode.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     VectorFunctions.cpp example, VectorNode::get(int64_t),
-VectorNode::append, StructureNode::childCount
+@see     VectorNode::get(int64_t), VectorNode::append, StructureNode::childCount
 */
 int64_t VectorNode::childCount() const
 {
@@ -2825,7 +1612,7 @@ strings, starting at "0".
 @throw   ::E57_ERROR_BAD_PATH_NAME
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     VectorFunctions.cpp example, StructureNode::isDefined
+@see     StructureNode::isDefined
 */
 bool VectorNode::isDefined( const ustring &pathName ) const
 {
@@ -2842,8 +1629,7 @@ bool VectorNode::isDefined( const ustring &pathName ) const
 @throw   ::E57_ERROR_CHILD_INDEX_OUT_OF_BOUNDS
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     VectorFunctions.cpp example, VectorNode::childCount,
-VectorNode::append, StructureNode::get(int64_t) const
+@see     VectorNode::childCount, VectorNode::append, StructureNode::get(int64_t) const
 */
 Node VectorNode::get( int64_t index ) const
 {
@@ -2870,8 +1656,7 @@ strings, starting at "0".
 @throw   ::E57_ERROR_PATH_UNDEFINED
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     VectorFunctions.cpp example, VectorNode::childCount,
-VectorNode::append, StructureNode::get(int64_t) const
+@see     VectorNode::childCount, VectorNode::append, StructureNode::get(int64_t) const
 */
 Node VectorNode::get( const ustring &pathName ) const
 {
@@ -2904,8 +1689,7 @@ destImageFile().isWritable()).
 @throw   ::E57_ERROR_ALREADY_HAS_PARENT
 @throw   ::E57_ERROR_DIFFERENT_DEST_IMAGEFILE
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     VectorFunctions.cpp example, VectorNode::childCount,
-VectorNode::get(int64_t), StructureNode::set
+@see     VectorNode::childCount, VectorNode::get(int64_t), StructureNode::set
 */
 void VectorNode::append( const Node &n )
 {
@@ -2932,9 +1716,7 @@ void VectorNode::dump( int indent, std::ostream &os ) const
 for initializations of Node variables and Node function arguments.
 @return  A smart Node handle referencing the underlying object.
 @throw   No E57Exceptions.
-@see     VectorFunctions.cpp example, NodeFunctions.cpp example,
-VectorNode(const Node&) example, explanation in Node, Node::type(),
-VectorNode(const Node&)
+@see     explanation in Node, Node::type(), VectorNode(const Node&)
 */
 VectorNode::operator Node() const
 {
@@ -2953,8 +1735,7 @@ function must be explicitly called (c++ compiler cannot insert it
 automatically).
 @return  A smart VectorNode handle referencing the underlying object.
 @throw   ::E57_ERROR_BAD_NODE_DOWNCAST
-@see     VectorFunctions.cpp example, NodeFunctions.cpp example, Node::type(),
-VectorNode::operator Node()
+@see     Node::type(), VectorNode::operator Node()
 */
 VectorNode::VectorNode( const Node &n )
 {
@@ -3065,8 +1846,7 @@ true).
 @throw   ::E57_ERROR_BAD_BUFFER
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     SourceDestBufferNumericCreate.cpp example,
-SourceDestVufferStringCreate.cpp example, ImageFile::reader, ImageFile::writer,
+@see     ImageFile::reader, ImageFile::writer,
 CompressedVectorReader::read(std::vector<SourceDestBuffer>&),
 CompressedVectorWriter::write(std::vector<SourceDestBuffer>&)
 */
@@ -3214,9 +1994,7 @@ true).
 @throw   ::E57_ERROR_BAD_BUFFER
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     SourceDestBufferStringCreate.cpp example,
-SourceDestBufferNumericCreate.cpp example, SourceDestBuffer::doConversion for
-discussion on representations compatible with string SourceDestBuffers.
+@see     SourceDestBuffer::doConversion for discussion on representations compatible with string SourceDestBuffers.
 */
 SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, StringList *b ) :
    impl_( new SourceDestBufferImpl( destImageFile.impl(), pathName, b ) )
@@ -3240,8 +2018,7 @@ CompressedVectorReader::read(std::vector<SourceDestBuffer>&)).
 @return  Path name in prototype that this SourceDestBuffer will transfer data
 to/from.
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     SourceDestBufferFunctions.cpp example, CompressedVector,
-CompressedVectorNode::prototype
+@see     CompressedVector, CompressedVectorNode::prototype
 */
 ustring SourceDestBuffer::pathName() const
 {
@@ -3266,7 +2043,7 @@ possible (e.g. E57_INT16 and StringNode).
 @post    No visible state is modified.
 @return  Memory representation of the elements in buffer.
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     SourceDestBufferFunctions.cpp example, MemoryRepresentation, NodeType
+@see     MemoryRepresentation, NodeType
 */
 MemoryRepresentation SourceDestBuffer::memoryRepresentation() const
 {
@@ -3282,7 +2059,6 @@ buffer. This function returns that declared length. If the length is incorrect
 @post    No visible state is modified.
 @return  Total capacity of buffer.
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     SourceDestBufferFunctions.cpp example
 */
 size_t SourceDestBuffer::capacity() const
 {
@@ -3317,7 +2093,6 @@ CompressedVectorReader or CompressedVectorWriter is created).
 buffer.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     SourceDestBufferFunctions.cpp example
 */
 bool SourceDestBuffer::doConversion() const
 {
@@ -3354,8 +2129,7 @@ will have a fractional part.
 @post    No visible state is modified.
 @return  true if scaling will be performed for ScaledInteger transfers.
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     SourceDestBufferFunctions.cpp example,
-SourceDestBufferNumericCreate.cpp example, ScaledIntegerNode
+@see     ScaledIntegerNode
 */
 bool SourceDestBuffer::doScaling() const
 {
@@ -3373,7 +2147,6 @@ stored consecutively in memory, the stride equals the size of the memory
 representation of the element.
 @post    No visible state is modified.
 @return  Number of bytes between consecutive memory elements in buffer
-@see     SourceDestBufferNumericCreate.cpp example
 */
 size_t SourceDestBuffer::stride() const
 {
@@ -3498,8 +2271,7 @@ ImageFile in undocumented state
 @throw   ::E57_ERROR_BAD_CHECKSUM       This CompressedVectorReader, associated
 ImageFile in undocumented state
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     SourceDestBufferNumericCreate.cpp example,
-CompressedVectorReader::read(std::vector<SourceDestBuffer>&),
+@see     CompressedVectorReader::read(std::vector<SourceDestBuffer>&),
 CompressedVectorNode::reader, SourceDestBuffer,
 CompressedVectorReader::read(std::vector<SourceDestBuffer>&)
 */
@@ -3571,8 +2343,7 @@ ImageFile in undocumented state
 @throw   ::E57_ERROR_BAD_CHECKSUM       This CompressedVectorReader, associated
 ImageFile in undocumented state
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     SourceDestBufferNumericCreate.cpp example,
-CompressedVectorReader::read(), CompressedVectorNode::reader, SourceDestBuffer
+@see     CompressedVectorReader::read(), CompressedVectorNode::reader, SourceDestBuffer
 */
 unsigned CompressedVectorReader::read( std::vector<SourceDestBuffer> &dbufs )
 {
@@ -3600,7 +2371,7 @@ one record past end of CompressedVectorNode).
 @throw   ::E57_ERROR_READ_FAILED
 @throw   ::E57_ERROR_BAD_CHECKSUM
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     SourceDestBufferNumericCreate.cpp example, CompressedVectorNode::reader
+@see     CompressedVectorNode::reader
 */
 void CompressedVectorReader::seek( int64_t recordNumber )
 {
@@ -3617,8 +2388,7 @@ CompressedVectorReader to enter the closed state, and any further transfers
 requests will fail.
 
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     SourceDestBufferNumericCreate.cpp example,
-CompressedVectorReader::isOpen, CompressedVectorNode::reader
+@see     CompressedVectorReader::isOpen, CompressedVectorNode::reader
 */
 void CompressedVectorReader::close()
 {
@@ -3630,8 +2400,7 @@ void CompressedVectorReader::close()
 @pre     The associated ImageFile must be open.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     SourceDestBufferNumericCreate.cpp example,
-CompressedVectorReader::close, CompressedVectorNode::reader
+@see     CompressedVectorReader::close, CompressedVectorNode::reader
 */
 bool CompressedVectorReader::isOpen()
 {
@@ -3647,8 +2416,7 @@ It is not an error if this CompressedVectorReader is closed.
 being read from.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     SourceDestBufferNumericCreate.cpp example,
-CompressedVectorReader::close, CompressedVectorNode::reader
+@see     CompressedVectorReader::close, CompressedVectorNode::reader
 */
 CompressedVectorNode CompressedVectorReader::compressedVectorNode() const
 {
@@ -3781,8 +2549,7 @@ ImageFile in undocumented state
 @throw   ::E57_ERROR_BAD_CHECKSUM       This CompressedVectorWriter, associated
 ImageFile in undocumented state
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     SourceDestBufferNumericCreate.cpp example,
-CompressedVectorWriter::write(std::vector<SourceDestBuffer>&,unsigned),
+@see     CompressedVectorWriter::write(std::vector<SourceDestBuffer>&,unsigned),
 CompressedVectorNode::writer, CompressedVectorWriter::close, SourceDestBuffer,
 E57Exception
 */
@@ -3853,8 +2620,7 @@ ImageFile in undocumented state
 @throw   ::E57_ERROR_BAD_CHECKSUM       This CompressedVectorWriter, associated
 ImageFile in undocumented state
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     SourceDestBufferNumericCreate.cpp example,
-CompressedVectorWriter::write(unsigned), CompressedVectorNode::writer,
+@see     CompressedVectorWriter::write(unsigned), CompressedVectorNode::writer,
 CompressedVectorWriter::close, SourceDestBuffer, E57Exception
 */
 void CompressedVectorWriter::write( std::vector<SourceDestBuffer> &sbufs, const size_t recordCount )
@@ -3888,8 +2654,7 @@ ImageFile in undocumented state
 @throw   ::E57_ERROR_BAD_CHECKSUM       This CompressedVectorWriter, associated
 ImageFile in undocumented state
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     SourceDestBufferNumericCreate.cpp example,
-CompressedVectorWriter::isOpen
+@see     CompressedVectorWriter::isOpen
 */
 void CompressedVectorWriter::close()
 {
@@ -3901,8 +2666,7 @@ void CompressedVectorWriter::close()
 @pre     The associated ImageFile must be open.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     SourceDestBufferFunctions.cpp example, CompressedVectorWriter::close,
-CompressedVectorNode::writer
+@see     CompressedVectorWriter::close, CompressedVectorNode::writer
 */
 bool CompressedVectorWriter::isOpen()
 {
@@ -3916,7 +2680,7 @@ bool CompressedVectorWriter::isOpen()
 being written to.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     SourceDestBufferNumericCreate.cpp example, CompressedVectorNode::writer
+@see     CompressedVectorNode::writer
 */
 CompressedVectorNode CompressedVectorWriter::compressedVectorNode() const
 {
@@ -4054,8 +2818,7 @@ codecs.isRoot())
 @throw   ::E57_ERROR_ALREADY_HAS_PARENT
 @throw   ::E57_ERROR_DIFFERENT_DEST_IMAGEFILE
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     CompressedVectorCreate.cpp example, SourceDestBuffer, Node,
-CompressedVectorNode::reader, CompressedVectorNode::writer
+@see     SourceDestBuffer, Node, CompressedVectorNode::reader, CompressedVectorNode::writer
 */
 CompressedVectorNode::CompressedVectorNode( ImageFile destImageFile, const Node &prototype, const VectorNode &codecs ) :
    impl_( new CompressedVectorNodeImpl( destImageFile.impl() ) )
@@ -4119,8 +2882,7 @@ number will reflect any writes completed.
 @return  Current number of records in CompressedVectorNode.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     CompressedVectorCreate.cpp example, CompressedVectorNode::reader,
-CompressedVectorNode::writer
+@see     CompressedVectorNode::reader, CompressedVectorNode::writer
 */
 int64_t CompressedVectorNode::childCount() const
 {
@@ -4134,8 +2896,7 @@ int64_t CompressedVectorNode::childCount() const
 @return  A smart Node handle referencing the root of the prototype tree.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     SourceDestBufferNumericCreate.cpp example,
-CompressedVectorNode::CompressedVectorNode, SourceDestBuffer,
+@see     CompressedVectorNode::CompressedVectorNode, SourceDestBuffer,
 CompressedVectorNode::reader, CompressedVectorNode::writer
 */
 Node CompressedVectorNode::prototype() const
@@ -4151,8 +2912,7 @@ the CompressedVectorNode.
 @return  A smart VectorNode handle referencing the root of the codecs tree.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     SourceDestBufferNumericCreate.cpp example,
-CompressedVectorNode::CompressedVectorNode, SourceDestBuffer,
+@see     CompressedVectorNode::CompressedVectorNode, SourceDestBuffer,
 CompressedVectorNode::reader, CompressedVectorNode::writer
 */
 VectorNode CompressedVectorNode::codecs() const
@@ -4180,8 +2940,7 @@ void CompressedVectorNode::dump( int indent, std::ostream &os ) const
 for initializations of Node variables and Node function arguments.
 @return  A smart Node handle referencing the underlying object.
 @throw   No E57Exceptions.
-@see     NodeFunctions.cpp example, CompressedVectorNode(const Node&) example,
-explanation in Node, Node::type(), CompressedVectorNode(const Node&)
+@see     explanation in Node, Node::type(), CompressedVectorNode(const Node&)
 */
 CompressedVectorNode::operator Node() const
 {
@@ -4200,8 +2959,7 @@ This function must be explicitly called (c++ compiler cannot insert it
 automatically).
 @return  A smart CompressedVectorNode handle referencing the underlying object.
 @throw   ::E57_ERROR_BAD_NODE_DOWNCAST
-@see     NodeFunctions.cpp example, Node::type(), CompressedVectorNode::operator
-Node()
+@see     Node::type(), CompressedVectorNode::operator, Node()
 */
 CompressedVectorNode::CompressedVectorNode( const Node &n )
 {
@@ -4261,8 +3019,7 @@ iterator object.
 @throw   ::E57_ERROR_BUFFER_DUPLICATE_PATHNAME
 @throw   ::E57_ERROR_NO_BUFFER_FOR_ELEMENT
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     SourceDestBufferFunctions.cpp example, CompressedVectorWriter,
-SourceDestBuffer, CompressedVectorNode::CompressedVectorNode,
+@see     CompressedVectorWriter, SourceDestBuffer, CompressedVectorNode::CompressedVectorNode,
 CompressedVectorNode::prototype
 */
 CompressedVectorWriter CompressedVectorNode::writer( std::vector<SourceDestBuffer> &sbufs )
@@ -4298,8 +3055,7 @@ iterator object.
 @throw   ::E57_ERROR_BUFFER_DUPLICATE_PATHNAME
 @throw   ::E57_ERROR_BAD_CV_HEADER
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     SourceDestBufferFunctions.cpp example, CompressedVectorReader,
-SourceDestBuffer, CompressedVectorNode::CompressedVectorNode,
+@see     CompressedVectorReader, SourceDestBuffer, CompressedVectorNode::CompressedVectorNode,
 CompressedVectorNode::prototype
 */
 CompressedVectorReader CompressedVectorNode::reader( const std::vector<SourceDestBuffer> &dbufs )
@@ -4374,8 +3130,7 @@ destImageFile.isWritable() must be true).
 @throw   ::E57_ERROR_FILE_IS_READ_ONLY
 @throw   ::E57_ERROR_VALUE_OUT_OF_BOUNDS
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     IntegerCreate.cpp example, IntegerNode::value, Node,
-CompressedVectorNode, CompressedVectorNode::prototype
+@see     IntegerNode::value, Node, CompressedVectorNode, CompressedVectorNode::prototype
 */
 IntegerNode::IntegerNode( ImageFile destImageFile, int64_t value, int64_t minimum, int64_t maximum ) :
    impl_( new IntegerNodeImpl( destImageFile.impl(), value, minimum, maximum ) )
@@ -4432,7 +3187,7 @@ bool IntegerNode::isAttached() const
 @return  integer value stored.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     IntegerCreate.cpp example, IntegerNode::minimum, IntegerNode::maximum
+@see     IntegerNode::minimum, IntegerNode::maximum
 */
 int64_t IntegerNode::value() const
 {
@@ -4460,7 +3215,7 @@ int64_t IntegerNode::minimum() const
 @return  The declared maximum that the value may take.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     IntegerCreate.cpp example, IntegerNode::value
+@see     IntegerNode::value
 */
 int64_t IntegerNode::maximum() const
 {
@@ -4487,8 +3242,7 @@ void IntegerNode::dump( int indent, std::ostream &os ) const
 for initializations of Node variables and Node function arguments.
 @return  A smart Node handle referencing the underlying object.
 @throw   No E57Exceptions.
-@see     NodeFunctions.cpp example, IntegerNode(const Node&) example,
-explanation in Node, Node::type(), IntegerNode(const Node&)
+@see     explanation in Node, Node::type(), IntegerNode(const Node&)
 */
 IntegerNode::operator Node() const
 {
@@ -4507,7 +3261,7 @@ function must be explicitly called (c++ compiler cannot insert it
 automatically).
 @return  A smart IntegerNode handle referencing the underlying object.
 @throw   ::E57_ERROR_BAD_NODE_DOWNCAST
-@see     NodeFunctions.cpp example, Node::type(), IntegerNode::operator Node()
+@see     Node::type(), IntegerNode::operator Node()
 */
 IntegerNode::IntegerNode( const Node &n )
 {
@@ -4602,8 +3356,7 @@ destImageFile.isWritable() must be true).
 @throw   ::E57_ERROR_FILE_IS_READ_ONLY
 @throw   ::E57_ERROR_VALUE_OUT_OF_BOUNDS
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     ScaledIntegerCreate.cpp example, ScaledIntegerNode::rawValue, Node,
-CompressedVectorNode, CompressedVectorNode::prototype
+@see     ScaledIntegerNode::rawValue, Node, CompressedVectorNode, CompressedVectorNode::prototype
 */
 ScaledIntegerNode::ScaledIntegerNode( ImageFile destImageFile, int64_t rawValue, int64_t minimum, int64_t maximum,
                                       double scale, double offset ) :
@@ -4658,8 +3411,7 @@ destImageFile.isWritable() must be true).
 @throw   ::E57_ERROR_FILE_IS_READ_ONLY
 @throw   ::E57_ERROR_VALUE_OUT_OF_BOUNDS
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     ScaledIntegerCreate.cpp example, ScaledIntegerNode::scaledValue, Node,
-CompressedVectorNode, CompressedVectorNode::prototype
+@see     ScaledIntegerNode::scaledValue, Node, CompressedVectorNode, CompressedVectorNode::prototype
 */
 ScaledIntegerNode::ScaledIntegerNode( ImageFile destImageFile, double scaledValue, double scaledMinimum,
                                       double scaledMaximum, double scale, double offset ) :
@@ -4716,8 +3468,7 @@ bool ScaledIntegerNode::isAttached() const
 @return  The raw unscaled integer value stored.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     ScaledIntegerCreate.cpp example, ScaledIntegerNode::scaledValue,
-ScaledIntegerNode::minimum, ScaledIntegerNode::maximum
+@see     ScaledIntegerNode::scaledValue, ScaledIntegerNode::minimum, ScaledIntegerNode::maximum
 */
 int64_t ScaledIntegerNode::rawValue() const
 {
@@ -4732,7 +3483,7 @@ int64_t ScaledIntegerNode::rawValue() const
 stored.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     ScaledIntegerCreate.cpp example, ScaledIntegerNode::rawValue
+@see     ScaledIntegerNode::rawValue
 */
 double ScaledIntegerNode::scaledValue() const
 {
@@ -4746,8 +3497,7 @@ double ScaledIntegerNode::scaledValue() const
 @return  The declared minimum that the rawValue may take.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     ScaledIntegerCreate.cpp example, ScaledIntegerNode::maximum,
-ScaledIntegerNode::rawValue
+@see     ScaledIntegerNode::maximum, ScaledIntegerNode::rawValue
 */
 int64_t ScaledIntegerNode::minimum() const
 {
@@ -4760,8 +3510,7 @@ int64_t ScaledIntegerNode::minimum() const
 @return  The declared minimum that the rawValue may take.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     ScaledIntegerCreate.cpp example, ScaledIntegerNode::scaledMaximum,
-ScaledIntegerNode::scaledValue
+@see     ScaledIntegerNode::scaledMaximum, ScaledIntegerNode::scaledValue
 */
 double ScaledIntegerNode::scaledMinimum() const
 {
@@ -4774,8 +3523,7 @@ double ScaledIntegerNode::scaledMinimum() const
 @return  The declared maximum that the rawValue may take.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     ScaledIntegerCreate.cpp example, ScaledIntegerNode::minimum,
-ScaledIntegerNode::rawValue
+@see     ScaledIntegerNode::minimum, ScaledIntegerNode::rawValue
 */
 int64_t ScaledIntegerNode::maximum() const
 {
@@ -4788,8 +3536,7 @@ int64_t ScaledIntegerNode::maximum() const
 @return  The declared maximum that the rawValue may take.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     ScaledIntegerCreate.cpp example, ScaledIntegerNode::scaledMinimum,
-ScaledIntegerNode::scaledValue
+@see     ScaledIntegerNode::scaledMinimum, ScaledIntegerNode::scaledValue
 */
 double ScaledIntegerNode::scaledMaximum() const // Added by SC
 {
@@ -4802,7 +3549,7 @@ double ScaledIntegerNode::scaledMaximum() const // Added by SC
 @return  The scaling factor used to compute scaledValue from rawValue.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     ScaledIntegerCreate.cpp example, ScaledIntegerNode::scaledValue
+@see     ScaledIntegerNode::scaledValue
 */
 double ScaledIntegerNode::scale() const
 {
@@ -4816,7 +3563,7 @@ double ScaledIntegerNode::scale() const
 @return  The offset used to compute scaledValue from rawValue.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     ScaledIntegerCreate.cpp example, ScaledIntegerNode::scaledValue
+@see     ScaledIntegerNode::scaledValue
 */
 double ScaledIntegerNode::offset() const
 {
@@ -4843,8 +3590,7 @@ void ScaledIntegerNode::dump( int indent, std::ostream &os ) const
 for initializations of Node variables and Node function arguments.
 @return  A smart Node handle referencing the underlying object.
 @throw   No E57Exceptions.
-@see     NodeFunctions.cpp example, ScaledIntegerNode(const Node&) example,
-explanation in Node, Node::type(), ScaledIntegerNode(const Node&)
+@see     Explanation in Node, Node::type(), ScaledIntegerNode(const Node&)
 */
 ScaledIntegerNode::operator Node() const
 {
@@ -4863,8 +3609,7 @@ function must be explicitly called (c++ compiler cannot insert it
 automatically).
 @return  A smart ScaledIntegerNode handle referencing the underlying object.
 @throw   ::E57_ERROR_BAD_NODE_DOWNCAST
-@see     NodeFunctions.cpp example, Node::type(), ScaledIntegerNode::operator
-Node()
+@see     Node::type(), ScaledIntegerNode::operator, Node()
 */
 ScaledIntegerNode::ScaledIntegerNode( const Node &n )
 {
@@ -4969,8 +3714,7 @@ destImageFile.isWritable() must be true).
 @throw   ::E57_ERROR_FILE_IS_READ_ONLY
 @throw   ::E57_ERROR_VALUE_OUT_OF_BOUNDS
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     FloatCreate.cpp example, FloatPrecision, FloatNode::value, Node,
-CompressedVectorNode, CompressedVectorNode::prototype
+@see     FloatPrecision, FloatNode::value, Node, CompressedVectorNode, CompressedVectorNode::prototype
 */
 FloatNode::FloatNode( ImageFile destImageFile, double value, FloatPrecision precision, double minimum,
                       double maximum ) :
@@ -5031,7 +3775,7 @@ If precision is E57_DOUBLE, the double precision value is returned as a double.
 @return  The IEEE floating point value stored, represented as a double.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     FloatCreate.cpp example, FloatNode::minimum, FloatNode::maximum
+@see     FloatNode::minimum, FloatNode::maximum
 */
 double FloatNode::value() const
 {
@@ -5046,7 +3790,7 @@ double FloatNode::value() const
 ::E57_SINGLE or ::E57_DOUBLE.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     FloatCreate.cpp example, FloatPrecision
+@see     FloatPrecision
 */
 FloatPrecision FloatNode::precision() const
 {
@@ -5064,7 +3808,7 @@ a double.
 @return  The declared minimum that the value may take.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     FloatCreate.cpp example, FloatNode::maximum, FloatNode::value
+@see     FloatNode::maximum, FloatNode::value
 */
 double FloatNode::minimum() const
 {
@@ -5082,7 +3826,7 @@ a double.
 @return  The declared maximum that the value may take.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     FloatCreate.cpp example, FloatNode::minimum, FloatNode::value
+@see     FloatNode::minimum, FloatNode::value
 */
 double FloatNode::maximum() const
 {
@@ -5109,8 +3853,7 @@ void FloatNode::dump( int indent, std::ostream &os ) const
 for initializations of Node variables and Node function arguments.
 @return  A smart Node handle referencing the underlying object.
 @throw   No E57Exceptions.
-@see     NodeFunctions.cpp example, FloatNode(const Node&) example, explanation
-in Node, Node::type()
+@see     Explanation in Node, Node::type()
 */
 FloatNode::operator Node() const
 {
@@ -5129,7 +3872,7 @@ function must be explicitly called (c++ compiler cannot insert it
 automatically).
 @return  A smart FloatNode handle referencing the underlying object.
 @throw   ::E57_ERROR_BAD_NODE_DOWNCAST
-@see     NodeFunctions.cpp example, Node::type(), FloatNode::operator Node()
+@see     Node::type(), FloatNode::operator Node()
 */
 FloatNode::FloatNode( const Node &n )
 {
@@ -5202,8 +3945,7 @@ destImageFile.isWritable() must be true).
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_FILE_IS_READ_ONLY
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     StringCreate.cpp example, StringNode::value, Node,
-CompressedVectorNode, CompressedVectorNode::prototype
+@see     StringNode::value, Node, CompressedVectorNode, CompressedVectorNode::prototype
 */
 StringNode::StringNode( ImageFile destImageFile, const ustring &value ) :
    impl_( new StringNodeImpl( destImageFile.impl(), value ) )
@@ -5260,7 +4002,6 @@ bool StringNode::isAttached() const
 @return  The Unicode character string value stored.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     StringCreate.cpp example
 */
 ustring StringNode::value() const
 {
@@ -5287,8 +4028,7 @@ void StringNode::dump( int indent, std::ostream &os ) const
 for initializations of Node variables and Node function arguments.
 @return  A smart Node handle referencing the underlying object.
 @throw   No E57Exceptions.
-@see     NodeFunctions.cpp example, StringNode(const Node&) example, explanation
-in Node, Node::type(), StringNode(const Node&)
+@see     Explanation in Node, Node::type(), StringNode(const Node&)
 */
 StringNode::operator Node() const
 {
@@ -5307,7 +4047,7 @@ function must be explicitly called (c++ compiler cannot insert it
 automatically).
 @return  A smart StringNode handle referencing the underlying object.
 @throw   ::E57_ERROR_BAD_NODE_DOWNCAST
-@see     NodeFunctions.cpp example, Node::type(), StringNode::operator Node()
+@see     Node::type(), StringNode::operator Node()
 */
 StringNode::StringNode( const Node &n )
 {
@@ -5409,7 +4149,7 @@ destImageFile.isWritable() must be true).
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_FILE_IS_READ_ONLY
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     BlobCreate.cpp example, Node, BlobNode::read, BlobNode::write
+@see     Node, BlobNode::read, BlobNode::write
 */
 BlobNode::BlobNode( ImageFile destImageFile, int64_t byteCount ) :
    impl_( new BlobNodeImpl( destImageFile.impl(), byteCount ) )
@@ -5466,7 +4206,7 @@ bool BlobNode::isAttached() const
 @return  The declared size of the blob when it was created.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     BlobCreate.cpp example, BlobNode::read, BlobNode::write
+@see     BlobNode::read, BlobNode::write
 */
 int64_t BlobNode::byteCount() const
 {
@@ -5498,7 +4238,7 @@ the Blob data can be read zero or more times.
 @throw   ::E57_ERROR_READ_FAILED
 @throw   ::E57_ERROR_BAD_CHECKSUM
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     BlobCreate.cpp example, BlobNode::byteCount, BlobNode::write
+@see     BlobNode::byteCount, BlobNode::write
 */
 void BlobNode::read( uint8_t *buf, int64_t start, size_t count )
 {
@@ -5540,7 +4280,7 @@ destImageFile().isWritable()).
 @throw   ::E57_ERROR_WRITE_FAILED
 @throw   ::E57_ERROR_BAD_CHECKSUM
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     BlobCreate.cpp example, BlobNode::byteCount, BlobNode::read
+@see     BlobNode::byteCount, BlobNode::read
 */
 void BlobNode::write( uint8_t *buf, int64_t start, size_t count )
 {
@@ -5567,8 +4307,7 @@ void BlobNode::dump( int indent, std::ostream &os ) const
 for initializations of Node variables and Node function arguments.
 @return  A smart Node handle referencing the underlying object.
 @throw   No E57Exceptions.
-@see     NodeFunctions.cpp example, BlobNode(const Node&) example, explanation
-in Node, Node::type(), BlobNode(const Node&)
+@see     Explanation in Node, Node::type(), BlobNode(const Node&)
 */
 BlobNode::operator Node() const
 {
@@ -5587,7 +4326,7 @@ function must be explicitly called (c++ compiler cannot insert it
 automatically).
 @return  A smart BlobNode handle referencing the underlying object.
 @throw   ::E57_ERROR_BAD_NODE_DOWNCAST
-@see     NodeFunctions.cpp example, Node::type(), BlobNode::operator Node()
+@see     Node::type(), BlobNode::operator Node()
 */
 BlobNode::BlobNode( const Node &n )
 {
@@ -5745,7 +4484,7 @@ exception thrown).
 @throw   ::E57_ERROR_BAD_XML_FORMAT
 @throw   ::E57_ERROR_BAD_CONFIGURATION
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     HelloWorld.cpp example, IntegerNode, ScaledIntegerNode, FloatNode,
+@see     IntegerNode, ScaledIntegerNode, FloatNode,
 StringNode, BlobNode, StructureNode, VectorNode, CompressedVectorNode,
 E57Exception, E57Utilities::E57Utilities
 */
@@ -5770,7 +4509,7 @@ StructureNode. The root node is empty in a newly created write mode ImageFile.
 @return  A smart StructureNode handle referencing the underlying object.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     HelloWorld.cpp example, StructureNode.
+@see     StructureNode.
 */
 StructureNode ImageFile::root() const
 {
@@ -5806,7 +4545,7 @@ It is not an error if ImageFile is already closed.
 @throw   ::E57_ERROR_CLOSE_FAILED
 @throw   ::E57_ERROR_BAD_CHECKSUM
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     HelloWorld.cpp example, ImageFile::cancel, ImageFile::isOpen
+@see     ImageFile::cancel, ImageFile::isOpen
 */
 void ImageFile::close()
 {
@@ -5823,8 +4562,7 @@ mode, the behavior is same as calling ImageFile::close, but no exceptions are
 thrown. It is not an error if ImageFile is already closed.
 @post    ImageFile is in @c closed state.
 @throw   No E57Exceptions.
-@see     Cancel.cpp example, ImageFile::ImageFile, ImageFile::close,
-ImageFile::isOpen
+@see     ImageFile::ImageFile, ImageFile::close, ImageFile::isOpen
 */
 void ImageFile::cancel()
 {
@@ -5836,7 +4574,7 @@ void ImageFile::cancel()
 @post    No visible state is modified.
 @return  true if ImageFile is in @c open state.
 @throw   No E57Exceptions.
-@see     Cancel.cpp example, ImageFile::ImageFile, ImageFile::close
+@see     ImageFile::ImageFile, ImageFile::close
 */
 bool ImageFile::isOpen() const
 {
@@ -5848,8 +4586,7 @@ bool ImageFile::isOpen() const
 @post    No visible state is modified.
 @return  true if ImageFile was opened in write mode.
 @throw   No E57Exceptions.
-@see     SourceDestBufferFunctions.cpp example, ImageFile::ImageFile,
-ImageFile::isOpen
+@see     ImageFile::ImageFile, ImageFile::isOpen
 */
 bool ImageFile::isWritable() const
 {
@@ -5861,7 +4598,7 @@ bool ImageFile::isWritable() const
 @post    No visible state is modified.
 @return  The file name the ImageFile was created with.
 @throw   No E57Exceptions.
-@see     NodeFunctions.cpp example, Cancel.cpp example, ImageFile::ImageFile
+@see     Cancel.cpp example, ImageFile::ImageFile
 */
 ustring ImageFile::fileName() const
 {
@@ -5881,8 +4618,7 @@ CompressedVectorNode::writer function.
 ImageFile.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     SourceDestBufferFunctions.cpp example, CompressedVectorNode::writer,
-CompressedVectorWriter
+@see     CompressedVectorNode::writer, CompressedVectorWriter
 */
 int ImageFile::writerCount() const
 {
@@ -5902,8 +4638,7 @@ CompressedVectorNode::reader function.
 ImageFile.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     SourceDestBuffer::pathName() example, CompressedVectorNode::reader,
-CompressedVectorReader
+@see     CompressedVectorNode::reader, CompressedVectorReader
 */
 int ImageFile::readerCount() const
 {
@@ -5950,8 +4685,7 @@ namespaces.
 @throw   ::E57_ERROR_DUPLICATE_NAMESPACE_PREFIX
 @throw   ::E57_ERROR_DUPLICATE_NAMESPACE_URI
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     Extensions.cpp example, ImageFile::extensionsCount,
-ImageFile::extensionsLookupPrefix, ImageFile::extensionsLookupUri
+@see     ImageFile::extensionsCount, ImageFile::extensionsLookupPrefix, ImageFile::extensionsLookupUri
 */
 void ImageFile::extensionsAdd( const ustring &prefix, const ustring &uri )
 {
@@ -5975,7 +4709,7 @@ is not an error if @a prefix is well-formed, but not defined in the ImageFile
 @throw   ::E57_ERROR_BAD_API_ARGUMENT
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     Extensions.cpp example, ImageFile::extensionsLookupUri
+@see     ImageFile::extensionsLookupUri
 */
 bool ImageFile::extensionsLookupPrefix( const ustring &prefix, ustring &uri ) const
 {
@@ -6000,7 +4734,7 @@ false).
 @throw   ::E57_ERROR_BAD_API_ARGUMENT
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     Extensions.cpp example, ImageFile::extensionsLookupPrefix
+@see     ImageFile::extensionsLookupPrefix
 */
 bool ImageFile::extensionsLookupUri( const ustring &uri, ustring &prefix ) const
 {
@@ -6016,8 +4750,7 @@ The default E57 namespace does not count as an extension.
 @return  The number of E57 extensions defined in the ImageFile.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     Extensions.cpp example, ImageFile::extensionsPrefix,
-ImageFile::extensionsUri
+@see     ImageFile::extensionsPrefix, ImageFile::extensionsUri
 */
 size_t ImageFile::extensionsCount() const
 {
@@ -6038,8 +4771,7 @@ order. The default E57 namespace is not counted as an extension.
 @throw   ::E57_ERROR_BAD_API_ARGUMENT
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     Extensions.cpp example, ImageFile::extensionsCount,
-ImageFile::extensionsUri
+@see     ImageFile::extensionsCount, ImageFile::extensionsUri
 */
 ustring ImageFile::extensionsPrefix( const size_t index ) const
 {
@@ -6060,8 +4792,7 @@ default E57 namespace is not counted as an extension.
 @throw   ::E57_ERROR_BAD_API_ARGUMENT
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     Extensions.cpp example, ImageFile::extensionsCount,
-ImageFile::extensionsPrefix
+@see     ImageFile::extensionsCount, ImageFile::extensionsPrefix
 */
 ustring ImageFile::extensionsUri( const size_t index ) const
 {
@@ -6078,7 +4809,6 @@ elementNameParse(elementName,prefix,dummy) would succeed, and returned prefix !=
 @post    No visible state is modified.
 @return  True if the E57 element name has an extension prefix.
 @throw   No E57Exceptions.
-@see     NameParse.cpp example
 */
 bool ImageFile::isElementNameExtended( const ustring &elementName ) const
 {
@@ -6099,7 +4829,7 @@ have to be declared in the ImageFile.
 @post    No visible state is modified.
 @throw   ::E57_ERROR_BAD_PATH_NAME
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     NameParse.cpp example, ImageFile::isElementNameExtended
+@see     ImageFile::isElementNameExtended
 */
 void ImageFile::elementNameParse( const ustring &elementName, ustring &prefix, ustring &localPart ) const
 {

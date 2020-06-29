@@ -250,30 +250,6 @@ namespace e57
    }
 
    //=====================================================================================
-   /*!
-   @class E57Utilities
-   @brief   Utility functions not associated with any object.
-   @details
-   The E57Utilities encapsulates the miscellaneous functions that aren't associated
-   with an API object. Having these functions be member functions of a constructed
-   object allows these functions to be dynamically linked at run-time rather than
-   be statically linked at compile time.
-   */
-
-   /*!
-   @fn      E57Utilities::E57Utilities(const std::string &)
-   @brief   Create an object that allows access to functions that are not
-   associated with an ImageFile.
-   @details
-   Because the construction of the E57Utilities object may be expensive, it is
-   recommended that an application create and save a single instance of the object
-   to use to access its member functions without constructing a E57Utilites object
-   on every call.
-   @return  An object that allows access to functions that are not associated with
-   an ImageFile.
-   @throw   ::E57_ERROR_BAD_CONFIGURATION
-   @see     Versions.cpp example, ImageFile::ImageFile
-   */
 
    /*!
    @brief   Get the version of ASTM E57 standard that the API implementation
@@ -289,7 +265,6 @@ namespace e57
    can't be determined at compile-time. This function returns these identifiers
    from the underlying implementation.
    @throw   No E57Exceptions.
-   @see     Versions.cpp example
    */
    void Utilities::getVersions( int &astmMajor, int &astmMinor, std::string &libraryId )
    {
@@ -311,7 +286,7 @@ namespace e57
    The errorCode is translated into a one-line English string.
    @return  English std::string describing error.
    @throw   No E57Exceptions.
-   @see     E57ExceptionsFunctions.cpp example, E57Exception::errorCode
+   @see     E57Exception::errorCode
    */
    std::string Utilities::errorCodeToString( ErrorCode ecode )
    {

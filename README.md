@@ -22,6 +22,10 @@ I have also changed the main include file's name from `E57Foundation.h` to `E57F
 
 Versions of **libE57Format** start at 2.0.
 
+## Documentation
+
+The doxygen-generated documentation may be [found here](https://asmaloney.github.io/libE57Format-docs/). These docs are generated and saved in the [libE57Format-docs](https://github.com/asmaloney/libE57Format-docs) repo.
+
 ## E57Simple API
 
 Since the original fork, [Jiri Hörner](https://github.com/ptc-jhoerner) has added the E57Simple API from the old reference implementation and updated it.
@@ -32,7 +36,7 @@ Since the original fork, [Jiri Hörner](https://github.com/ptc-jhoerner) has add
 
 ## Contributing
 
-I am happy to review any contributions - [pull requests](https://github.com/asmaloney/libE57Format/pulls), documentation, etc.. Please keep any pull requests as short as possible. Each pull request should be atomic and only address one issue.
+I am happy to review any contributions - [pull requests](https://github.com/asmaloney/libE57Format/pulls), [documentation](https://github.com/asmaloney/libE57Format-docs), etc.. Please keep any pull requests as short as possible. Each pull request should be atomic and only address one issue.
 
 This project uses [clang-format](https://clang.llvm.org/docs/ClangFormat.html) to format the code. There is a cmake target (*format*) - which runs *clang-format* on the source files. After changes have been made, and before you submit your pull request, please run the following:
 

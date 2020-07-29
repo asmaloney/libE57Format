@@ -184,7 +184,7 @@ void PacketReadCache::readPacket( unsigned oldestEntry, uint64_t packetLogicalOf
 #endif
 
    /// Read header of packet first to get length.  Use EmptyPacketHeader since
-   /// it has the commom fields to all packets.
+   /// it has the fields common to all packets.
    EmptyPacketHeader header;
 
    cFile_->seek( packetLogicalOffset, CheckedFile::Logical );

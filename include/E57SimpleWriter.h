@@ -91,7 +91,7 @@ namespace e57
       CompressedVectorWriter SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
                                                     const Data3DPointsData &buffers );
 
-      //! @brief This funtion writes out the group data
+      //! @brief This function writes out the group data
       //! @param [in] dataIndex data block index given by the NewData3D
       //! @param [in] groupCount size of each of the buffers given
       //! @param [in] buffer of idElementValue index for this group

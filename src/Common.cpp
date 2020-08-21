@@ -10,23 +10,25 @@ namespace e57
 
    std::string generateRandomGUID()
    {
-      static constexpr const char UUID_CHARS[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+      static constexpr const char UUID_CHARS[] = "0123456789ABCDEF";
       static std::random_device rd;
       static std::mt19937 gen( rd() );
-      static std::uniform_int_distribution<> dis( 0, 61 /* number of chars in UUID_CHARS */ );
+      static std::uniform_int_distribution<> dis( 0, 15 /* number of chars in UUID_CHARS */ );
 
-      std::string uuid( 36, ' ' );
+      std::string uuid( 38, ' ' );
 
-      uuid[8] = '-';
-      uuid[13] = '-';
-      uuid[18] = '-';
-      uuid[23] = '-';
+      uuid[0] = '{';
+      uuid[9] = '-';
+      uuid[14] = '-';
+      uuid[19] = '-';
+      uuid[24] = '-';
+      uuid[37] = '}';
 
-      uuid[14] = '4';
+      uuid[15] = '4';
 
-      for ( int i = 0; i < 36; ++i )
+      for ( int i = 1; i < 37; ++i )
       {
-         if ( i != 8 && i != 13 && i != 18 && i != 14 && i != 23 )
+         if ( i != 9 && i != 14 && i != 19 && i != 24 && i != 15 )
          {
             uuid[i] = UUID_CHARS[dis( gen )];
          }

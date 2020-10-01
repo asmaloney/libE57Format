@@ -93,18 +93,18 @@ namespace e57
    //! an ImageFile (0-100%).
    using ReadChecksumPolicy = int;
 
-   const ReadChecksumPolicy CHECKSUM_POLICY_NONE = 0; //! Do not verify the checksums. (fast)
-   const ReadChecksumPolicy CHECKSUM_POLICY_SPARSE =
+   constexpr ReadChecksumPolicy CHECKSUM_POLICY_NONE = 0; //! Do not verify the checksums. (fast)
+   constexpr ReadChecksumPolicy CHECKSUM_POLICY_SPARSE =
       25; //! Only verify 25% of the checksums. The last block is always verified.
-   const ReadChecksumPolicy CHECKSUM_POLICY_HALF =
+   constexpr ReadChecksumPolicy CHECKSUM_POLICY_HALF =
       50; //! Only verify 50% of the checksums. The last block is always verified.
-   const ReadChecksumPolicy CHECKSUM_POLICY_ALL = 100; //! Verify all checksums. This is the default. (slow)
+   constexpr ReadChecksumPolicy CHECKSUM_POLICY_ALL = 100; //! Verify all checksums. This is the default. (slow)
 
    //! @brief The major version number of the Foundation API
-   const int E57_FOUNDATION_API_MAJOR = 0;
+   constexpr int E57_FOUNDATION_API_MAJOR = 0;
 
    //! @brief The minor version number of the Foundation API
-   const int E57_FOUNDATION_API_MINOR = 51;
+   constexpr int E57_FOUNDATION_API_MINOR = 51;
 
    //! @brief The URI of ASTM E57 v1.0 standard XML namespace
    // Used to identify the standard field names and the grammar that relates them.
@@ -113,27 +113,27 @@ namespace e57
 
    //! @cond documentNonPublic   The following aren't documented
    // Minimum and maximum values for integers
-   const int8_t E57_INT8_MIN = -128;
-   const int8_t E57_INT8_MAX = 127;
-   const int16_t E57_INT16_MIN = -32768;
-   const int16_t E57_INT16_MAX = 32767;
-   const int32_t E57_INT32_MIN = -2147483647 - 1;
-   const int32_t E57_INT32_MAX = 2147483647;
-   const int64_t E57_INT64_MIN = -9223372036854775807LL - 1;
-   const int64_t E57_INT64_MAX = 9223372036854775807LL;
-   const uint8_t E57_UINT8_MIN = 0U;
-   const uint8_t E57_UINT8_MAX = 0xffU; /* 255U */
-   const uint16_t E57_UINT16_MIN = 0U;
-   const uint16_t E57_UINT16_MAX = 0xffffU; /* 65535U */
-   const uint32_t E57_UINT32_MIN = 0U;
-   const uint32_t E57_UINT32_MAX = 0xffffffffU; /* 4294967295U */
-   const uint64_t E57_UINT64_MIN = 0ULL;
-   const uint64_t E57_UINT64_MAX = 0xffffffffffffffffULL; /* 18446744073709551615ULL */
+   constexpr int8_t E57_INT8_MIN = -128;
+   constexpr int8_t E57_INT8_MAX = 127;
+   constexpr int16_t E57_INT16_MIN = -32768;
+   constexpr int16_t E57_INT16_MAX = 32767;
+   constexpr int32_t E57_INT32_MIN = -2147483647 - 1;
+   constexpr int32_t E57_INT32_MAX = 2147483647;
+   constexpr int64_t E57_INT64_MIN = -9223372036854775807LL - 1;
+   constexpr int64_t E57_INT64_MAX = 9223372036854775807LL;
+   constexpr uint8_t E57_UINT8_MIN = 0U;
+   constexpr uint8_t E57_UINT8_MAX = 0xffU; /* 255U */
+   constexpr uint16_t E57_UINT16_MIN = 0U;
+   constexpr uint16_t E57_UINT16_MAX = 0xffffU; /* 65535U */
+   constexpr uint32_t E57_UINT32_MIN = 0U;
+   constexpr uint32_t E57_UINT32_MAX = 0xffffffffU; /* 4294967295U */
+   constexpr uint64_t E57_UINT64_MIN = 0ULL;
+   constexpr uint64_t E57_UINT64_MAX = 0xffffffffffffffffULL; /* 18446744073709551615ULL */
 
-   const float E57_FLOAT_MIN = -FLT_MAX;
-   const float E57_FLOAT_MAX = FLT_MAX;
-   const double E57_DOUBLE_MIN = -DBL_MAX;
-   const double E57_DOUBLE_MAX = DBL_MAX;
+   constexpr float E57_FLOAT_MIN = -FLT_MAX;
+   constexpr float E57_FLOAT_MAX = FLT_MAX;
+   constexpr double E57_DOUBLE_MIN = -DBL_MAX;
+   constexpr double E57_DOUBLE_MAX = DBL_MAX;
 //! @endcond
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't

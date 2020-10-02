@@ -951,97 +951,90 @@ namespace e57
       std::vector<SourceDestBuffer> sourceBuffers;
       if ( proto.isDefined( "cartesianX" ) && ( buffers.cartesianX != nullptr ) )
       {
-         sourceBuffers.push_back( SourceDestBuffer( imf_, "cartesianX", buffers.cartesianX, count, true, true ) );
+         sourceBuffers.emplace_back( imf_, "cartesianX", buffers.cartesianX, count, true, true );
       }
       if ( proto.isDefined( "cartesianY" ) && ( buffers.cartesianY != nullptr ) )
       {
-         sourceBuffers.push_back( SourceDestBuffer( imf_, "cartesianY", buffers.cartesianY, count, true, true ) );
+         sourceBuffers.emplace_back( imf_, "cartesianY", buffers.cartesianY, count, true, true );
       }
       if ( proto.isDefined( "cartesianZ" ) && ( buffers.cartesianZ != nullptr ) )
       {
-         sourceBuffers.push_back( SourceDestBuffer( imf_, "cartesianZ", buffers.cartesianZ, count, true, true ) );
+         sourceBuffers.emplace_back( imf_, "cartesianZ", buffers.cartesianZ, count, true, true );
       }
 
       if ( proto.isDefined( "sphericalRange" ) && ( buffers.sphericalRange != nullptr ) )
       {
-         sourceBuffers.push_back(
-            SourceDestBuffer( imf_, "sphericalRange", buffers.sphericalRange, count, true, true ) );
+         sourceBuffers.emplace_back( imf_, "sphericalRange", buffers.sphericalRange, count, true, true );
       }
       if ( proto.isDefined( "sphericalAzimuth" ) && ( buffers.sphericalAzimuth != nullptr ) )
       {
-         sourceBuffers.push_back(
-            SourceDestBuffer( imf_, "sphericalAzimuth", buffers.sphericalAzimuth, count, true, true ) );
+         sourceBuffers.emplace_back( imf_, "sphericalAzimuth", buffers.sphericalAzimuth, count, true, true );
       }
       if ( proto.isDefined( "sphericalElevation" ) && ( buffers.sphericalElevation != nullptr ) )
       {
-         sourceBuffers.push_back(
-            SourceDestBuffer( imf_, "sphericalElevation", buffers.sphericalElevation, count, true, true ) );
+         sourceBuffers.emplace_back( imf_, "sphericalElevation", buffers.sphericalElevation, count, true, true );
       }
 
       if ( proto.isDefined( "intensity" ) && ( buffers.intensity != nullptr ) )
       {
-         sourceBuffers.push_back( SourceDestBuffer( imf_, "intensity", buffers.intensity, count, true, true ) );
+         sourceBuffers.emplace_back( imf_, "intensity", buffers.intensity, count, true, true );
       }
 
       if ( proto.isDefined( "colorRed" ) && ( buffers.colorRed != nullptr ) )
       {
-         sourceBuffers.push_back( SourceDestBuffer( imf_, "colorRed", buffers.colorRed, count, true ) );
+         sourceBuffers.emplace_back( imf_, "colorRed", buffers.colorRed, count, true );
       }
       if ( proto.isDefined( "colorGreen" ) && ( buffers.colorGreen != nullptr ) )
       {
-         sourceBuffers.push_back( SourceDestBuffer( imf_, "colorGreen", buffers.colorGreen, count, true ) );
+         sourceBuffers.emplace_back( imf_, "colorGreen", buffers.colorGreen, count, true );
       }
       if ( proto.isDefined( "colorBlue" ) && ( buffers.colorBlue != nullptr ) )
       {
-         sourceBuffers.push_back( SourceDestBuffer( imf_, "colorBlue", buffers.colorBlue, count, true ) );
+         sourceBuffers.emplace_back( imf_, "colorBlue", buffers.colorBlue, count, true );
       }
 
       if ( proto.isDefined( "returnIndex" ) && ( buffers.returnIndex != nullptr ) )
       {
-         sourceBuffers.push_back( SourceDestBuffer( imf_, "returnIndex", buffers.returnIndex, count, true ) );
+         sourceBuffers.emplace_back( imf_, "returnIndex", buffers.returnIndex, count, true );
       }
       if ( proto.isDefined( "returnCount" ) && ( buffers.returnCount != nullptr ) )
       {
-         sourceBuffers.push_back( SourceDestBuffer( imf_, "returnCount", buffers.returnCount, count, true ) );
+         sourceBuffers.emplace_back( imf_, "returnCount", buffers.returnCount, count, true );
       }
 
       if ( proto.isDefined( "rowIndex" ) && ( buffers.rowIndex != nullptr ) )
       {
-         sourceBuffers.push_back( SourceDestBuffer( imf_, "rowIndex", buffers.rowIndex, count, true ) );
+         sourceBuffers.emplace_back( imf_, "rowIndex", buffers.rowIndex, count, true );
       }
       if ( proto.isDefined( "columnIndex" ) && ( buffers.columnIndex != nullptr ) )
       {
-         sourceBuffers.push_back( SourceDestBuffer( imf_, "columnIndex", buffers.columnIndex, count, true ) );
+         sourceBuffers.emplace_back( imf_, "columnIndex", buffers.columnIndex, count, true );
       }
 
       if ( proto.isDefined( "timeStamp" ) && ( buffers.timeStamp != nullptr ) )
       {
-         sourceBuffers.push_back( SourceDestBuffer( imf_, "timeStamp", buffers.timeStamp, count, true, true ) );
+         sourceBuffers.emplace_back( imf_, "timeStamp", buffers.timeStamp, count, true, true );
       }
 
       if ( proto.isDefined( "cartesianInvalidState" ) && ( buffers.cartesianInvalidState != nullptr ) )
       {
-         sourceBuffers.push_back(
-            SourceDestBuffer( imf_, "cartesianInvalidState", buffers.cartesianInvalidState, count, true ) );
+         sourceBuffers.emplace_back( imf_, "cartesianInvalidState", buffers.cartesianInvalidState, count, true );
       }
       if ( proto.isDefined( "sphericalInvalidState" ) && ( buffers.sphericalInvalidState != nullptr ) )
       {
-         sourceBuffers.push_back(
-            SourceDestBuffer( imf_, "sphericalInvalidState", buffers.sphericalInvalidState, count, true ) );
+         sourceBuffers.emplace_back( imf_, "sphericalInvalidState", buffers.sphericalInvalidState, count, true );
       }
       if ( proto.isDefined( "isIntensityInvalid" ) && ( buffers.isIntensityInvalid != nullptr ) )
       {
-         sourceBuffers.push_back(
-            SourceDestBuffer( imf_, "isIntensityInvalid", buffers.isIntensityInvalid, count, true ) );
+         sourceBuffers.emplace_back( imf_, "isIntensityInvalid", buffers.isIntensityInvalid, count, true );
       }
       if ( proto.isDefined( "isColorInvalid" ) && ( buffers.isColorInvalid != nullptr ) )
       {
-         sourceBuffers.push_back( SourceDestBuffer( imf_, "isColorInvalid", buffers.isColorInvalid, count, true ) );
+         sourceBuffers.emplace_back( imf_, "isColorInvalid", buffers.isColorInvalid, count, true );
       }
       if ( proto.isDefined( "isTimeStampInvalid" ) && ( buffers.isTimeStampInvalid != nullptr ) )
       {
-         sourceBuffers.push_back(
-            SourceDestBuffer( imf_, "isTimeStampInvalid", buffers.isTimeStampInvalid, count, true ) );
+         sourceBuffers.emplace_back( imf_, "isTimeStampInvalid", buffers.isTimeStampInvalid, count, true );
       }
 
       // E57_EXT_surface_normals
@@ -1050,15 +1043,15 @@ namespace e57
       {
          if ( proto.isDefined( "nor:normalX" ) && ( buffers.normalX != nullptr ) )
          {
-            sourceBuffers.push_back( SourceDestBuffer( imf_, "nor:normalX", buffers.normalX, count, true, true ) );
+            sourceBuffers.emplace_back( imf_, "nor:normalX", buffers.normalX, count, true, true );
          }
          if ( proto.isDefined( "nor:normalY" ) && ( buffers.normalY != nullptr ) )
          {
-            sourceBuffers.push_back( SourceDestBuffer( imf_, "nor:normalY", buffers.normalY, count, true, true ) );
+            sourceBuffers.emplace_back( imf_, "nor:normalY", buffers.normalY, count, true, true );
          }
          if ( proto.isDefined( "nor:normalZ" ) && ( buffers.normalZ != nullptr ) )
          {
-            sourceBuffers.push_back( SourceDestBuffer( imf_, "nor:normalZ", buffers.normalZ, count, true, true ) );
+            sourceBuffers.emplace_back( imf_, "nor:normalZ", buffers.normalZ, count, true, true );
          }
       }
 
@@ -1098,9 +1091,9 @@ namespace e57
       CompressedVectorNode groups( groupingByLine.get( "groups" ) );
 
       std::vector<SourceDestBuffer> groupSDBuffers;
-      groupSDBuffers.push_back( SourceDestBuffer( imf_, "idElementValue", idElementValue, groupCount, true ) );
-      groupSDBuffers.push_back( SourceDestBuffer( imf_, "startPointIndex", startPointIndex, groupCount, true ) );
-      groupSDBuffers.push_back( SourceDestBuffer( imf_, "pointCount", pointCount, groupCount, true ) );
+      groupSDBuffers.emplace_back( imf_, "idElementValue", idElementValue, groupCount, true );
+      groupSDBuffers.emplace_back( imf_, "startPointIndex", startPointIndex, groupCount, true );
+      groupSDBuffers.emplace_back( imf_, "pointCount", pointCount, groupCount, true );
 
       CompressedVectorWriter writer = groups.writer( groupSDBuffers );
       writer.write( groupCount );

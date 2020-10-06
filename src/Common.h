@@ -68,14 +68,6 @@ namespace e57
 #define E57_EXCEPTION2( ecode, context )                                                                               \
    ( E57Exception( ( ecode ), ( context ), __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) ) )
 
-// The URI of the LAS extension.
-// Used to identify the extended field names for encoding data from LAS files
-// (LAS versions 1.0 to 1.3). By convention, will typically be used with prefix
-// "las".  ???"las13"?
-#define LAS_V1_0_URI                                                                                                   \
-   "http://www.astm.org/COMMIT/E57/2010-las-v1.0" //??? change to v1.0 before \
-                                                  //final release
-
    /// Create whitespace of given length, for indenting printouts in dump()
    /// functions
    inline std::string space( size_t n )

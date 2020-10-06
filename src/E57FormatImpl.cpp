@@ -29,6 +29,7 @@
 
 #include <cmath>
 #include <cstring>
+#include <numeric>
 
 #include "E57FormatImpl.h"
 
@@ -1385,12 +1386,6 @@ CompressedVectorSectionHeader::CompressedVectorSectionHeader()
 
 void CompressedVectorSectionHeader::verify( uint64_t filePhysicalSize )
 {
-   /// Verify that section is correct type
-   if ( sectionId != COMPRESSED_VECTOR_SECTION )
-   {
-      throw E57_EXCEPTION2( E57_ERROR_BAD_CV_HEADER, "sectionId=" + toString( sectionId ) );
-   }
-
    /// Verify reserved fields are zero. ???  if fileversion==1.0 ???
    for ( unsigned i = 0; i < sizeof( reserved1 ); i++ )
    {
@@ -1701,7 +1696,7 @@ void CompressedVectorWriterImpl::write( const size_t requestedRecordCount )
 
    /// Loop until all channels have completed requestedRecordCount transfers
    uint64_t endRecordIndex = recordCount_ + requestedRecordCount;
-   for ( ;; )
+   while ( true )
    {
       /// Calc remaining record counts for all channels
       uint64_t totalRecordCount = 0;
@@ -1733,10 +1728,10 @@ void CompressedVectorWriterImpl::write( const size_t requestedRecordCount )
 #endif
 
 #ifdef E57_WRITE_CRAZY_PACKET_MODE
-///??? depends on number of streams
-#define E57_TARGET_PACKET_SIZE 500
+      ///??? depends on number of streams
+      constexpr size_t E57_TARGET_PACKET_SIZE = 500;
 #else
-#define E57_TARGET_PACKET_SIZE ( DATA_PACKET_MAX * 3 / 4 )
+      constexpr size_t E57_TARGET_PACKET_SIZE = ( DATA_PACKET_MAX * 3 / 4 );
 #endif
       /// If have more than target fraction of packet, send it now
       if ( currentPacketSize() >= E57_TARGET_PACKET_SIZE )
@@ -1756,7 +1751,7 @@ void CompressedVectorWriterImpl::write( const size_t requestedRecordCount )
       }
 
 #ifdef E57_MAX_VERBOSE
-      float totalBytesPerRecord = std::max( totalBitsPerRecord / 8, 0.1F ); //??? trust
+      const float totalBytesPerRecord = std::max( totalBitsPerRecord / 8, 0.1F ); //??? trust
 
       std::cout << "  totalBytesPerRecord=" << totalBytesPerRecord << std::endl; //???
 #endif
@@ -1766,8 +1761,7 @@ void CompressedVectorWriterImpl::write( const size_t requestedRecordCount )
       /// Process channels that are furthest behind first. ???
 
       ///!!!! For now just process one record per loop until packet is full
-      /// enough, or completed
-      /// request
+      /// enough, or completed request
       for ( auto &bytestream : bytestreams_ )
       {
          if ( bytestream->currentRecordIndex() < endRecordIndex )
@@ -1861,11 +1855,8 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
 
 #ifdef E57_DEBUG
    /// Double check sum of count is <= packetMaxPayloadBytes
-   size_t totalByteCount = 0;
-   for ( size_t i : count )
-   {
-      totalByteCount += i;
-   }
+   const size_t totalByteCount = std::accumulate( count.begin(), count.end(), 0 );
+
    if ( totalByteCount > packetMaxPayloadBytes )
    {
       throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "totalByteCount=" + toString( totalByteCount ) +

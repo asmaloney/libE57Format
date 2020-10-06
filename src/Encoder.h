@@ -46,7 +46,7 @@ namespace e57
       virtual float bitsPerRecord() = 0;
       virtual bool registerFlushToOutput() = 0;
 
-      virtual size_t outputAvailable() = 0;                              /// number of bytes that can be read
+      virtual size_t outputAvailable() const = 0;                        /// number of bytes that can be read
       virtual void outputRead( char *dest, const size_t byteCount ) = 0; /// get data from encoder
       virtual void outputClear() = 0;
 
@@ -77,7 +77,7 @@ namespace e57
       float bitsPerRecord() override = 0;
       bool registerFlushToOutput() override = 0;
 
-      size_t outputAvailable() override; /// number of bytes that can be read
+      size_t outputAvailable() const override; /// number of bytes that can be read
       void outputRead( char *dest,
                        const size_t byteCount ) override; /// get data from encoder
       void outputClear() override;
@@ -177,7 +177,7 @@ namespace e57
       float bitsPerRecord() override;
       bool registerFlushToOutput() override;
 
-      size_t outputAvailable() override; /// number of bytes that can be read
+      size_t outputAvailable() const override; /// number of bytes that can be read
       void outputRead( char *dest,
                        const size_t byteCount ) override; /// get data from encoder
       void outputClear() override;

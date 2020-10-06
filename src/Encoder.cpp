@@ -215,9 +215,9 @@ uint64_t BitpackEncoder::currentRecordIndex()
    return ( currentRecordIndex_ );
 }
 
-size_t BitpackEncoder::outputAvailable()
+size_t BitpackEncoder::outputAvailable() const
 {
-   return ( outBufferEnd_ - outBufferFirst_ );
+   return outBufferEnd_ - outBufferFirst_;
 }
 
 void BitpackEncoder::outputRead( char *dest, const size_t byteCount )
@@ -916,10 +916,10 @@ bool ConstantIntegerEncoder::registerFlushToOutput()
    return ( true );
 }
 
-size_t ConstantIntegerEncoder::outputAvailable()
+size_t ConstantIntegerEncoder::outputAvailable() const
 {
    /// We don't produce any output
-   return ( 0 );
+   return 0;
 }
 
 void ConstantIntegerEncoder::outputRead( char * /*dest*/, const size_t byteCount )

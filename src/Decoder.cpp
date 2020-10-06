@@ -28,6 +28,7 @@
 #include <algorithm>
 #include <cstring>
 
+#include "CompressedVectorNodeImpl.h"
 #include "Decoder.h"
 #include "E57FormatImpl.h"
 #include "ImageFileImpl.h"

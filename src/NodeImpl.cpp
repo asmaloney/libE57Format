@@ -29,6 +29,7 @@
 #include "E57FormatImpl.h"
 #include "ImageFileImpl.h"
 #include "SourceDestBufferImpl.h"
+#include "VectorNodeImpl.h"
 
 using namespace e57;
 

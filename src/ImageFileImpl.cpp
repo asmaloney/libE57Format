@@ -30,6 +30,7 @@
 #include "E57FormatImpl.h"
 #include "E57Version.h"
 #include "E57XmlParser.h"
+#include "StructureNodeImpl.h"
 
 namespace e57
 {

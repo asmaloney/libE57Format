@@ -2359,42 +2359,44 @@ DataPacket *CompressedVectorReaderImpl::dataPacket( uint64_t inLogicalOffset ) c
    return reinterpret_cast<DataPacket *>( packet );
 }
 
+inline bool _alreadyReadPacket( const DecodeChannel &channel, uint64_t currentPacketLogicalOffset )
+{
+   return ( ( channel.currentPacketLogicalOffset != currentPacketLogicalOffset ) || channel.isOutputBlocked() );
+}
+
 void CompressedVectorReaderImpl::feedPacketToDecoders( uint64_t currentPacketLogicalOffset )
 {
-   /// Read earliest packet into cache and send data to decoders with unblocked
-   /// output
-   bool channelHasExhaustedPacket = false;
-   uint64_t nextPacketLogicalOffset = E57_UINT64_MAX;
-
-   /// Get packet at currentPacketLogicalOffset into memory.
+   // Get packet at currentPacketLogicalOffset into memory.
    auto dpkt = dataPacket( currentPacketLogicalOffset );
 
-   /// Double check that have a data packet.  Should have already determined
-   /// this.
+   // Double check that have a data packet.  Should have already determined
+   // this.
    if ( dpkt->header.packetType != DATA_PACKET )
    {
       throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "packetType=" + toString( dpkt->header.packetType ) );
    }
 
-   /// Feed bytestreams to channels with unblocked output that are reading from
-   /// this packet
+   // Read earliest packet into cache and send data to decoders with unblocked
+   // output
+
+   bool anyChannelHasExhaustedPacket = false;
+   uint64_t nextPacketLogicalOffset = E57_UINT64_MAX;
+
+   // Feed bytestreams to channels with unblocked output that are reading from
+   // this packet
    for ( DecodeChannel &channel : channels_ )
    {
-      /// Skip channels that have already read this packet.
-      if ( channel.currentPacketLogicalOffset != currentPacketLogicalOffset || channel.isOutputBlocked() )
+      // Skip channels that have already read this packet.
+      if ( _alreadyReadPacket( channel, currentPacketLogicalOffset ) )
       {
          continue;
       }
 
-      /// Get bytestream buffer for this channel from packet
+      // Get bytestream buffer for this channel from packet
       unsigned int bsbLength = 0;
       const char *bsbStart = dpkt->getBytestream( channel.bytestreamNumber, bsbLength );
 
-      /// Calc where we are in the buffer
-      const char *uneatenStart = &bsbStart[channel.currentBytestreamBufferIndex];
-      const size_t uneatenLength = bsbLength - channel.currentBytestreamBufferIndex;
-
-      /// Double check we are not off end of buffer
+      // Double check we are not off end of buffer
       if ( channel.currentBytestreamBufferIndex > bsbLength )
       {
          throw E57_EXCEPTION2( E57_ERROR_INTERNAL,
@@ -2402,18 +2404,23 @@ void CompressedVectorReaderImpl::feedPacketToDecoders( uint64_t currentPacketLog
                                   " bsbLength=" + toString( bsbLength ) );
       }
 
+      // Calc where we are in the buffer
+      const char *uneatenStart = &bsbStart[channel.currentBytestreamBufferIndex];
+      const size_t uneatenLength = bsbLength - channel.currentBytestreamBufferIndex;
+
       if ( &uneatenStart[uneatenLength] > &bsbStart[bsbLength] )
       {
          throw E57_EXCEPTION2( E57_ERROR_INTERNAL,
                                "uneatenLength=" + toString( uneatenLength ) + " bsbLength=" + toString( bsbLength ) );
       }
 
-      /// Feed into decoder
-      size_t bytesProcessed = channel.decoder->inputProcess( uneatenStart, uneatenLength );
+      // Feed into decoder
+      const size_t bytesProcessed = channel.decoder->inputProcess( uneatenStart, uneatenLength );
 
 #ifdef E57_MAX_VERBOSE
       std::cout << "  stream[" << channel.bytestreamNumber << "]: feeding decoder " << uneatenLength << " bytes"
                 << std::endl;
+
       if ( uneatenLength == 0 )
       {
          channel.dump( 8 );
@@ -2422,73 +2429,83 @@ void CompressedVectorReaderImpl::feedPacketToDecoders( uint64_t currentPacketLog
       std::cout << "  stream[" << channel.bytestreamNumber << "]: bytesProcessed=" << bytesProcessed << std::endl;
 #endif
 
-      /// Adjust counts of bytestream location
+      // Adjust counts of bytestream location
       channel.currentBytestreamBufferIndex += bytesProcessed;
 
-      /// Check if this channel has exhausted its bytestream buffer in this
-      /// packet
+      // Check if this channel has exhausted its bytestream buffer in this
+      // packet
       if ( channel.isInputBlocked() )
       {
 #ifdef E57_MAX_VERBOSE
          std::cout << "  stream[" << channel.bytestreamNumber << "] has exhausted its input in current packet"
                    << std::endl;
 #endif
-         channelHasExhaustedPacket = true;
+         anyChannelHasExhaustedPacket = true;
          nextPacketLogicalOffset = currentPacketLogicalOffset + dpkt->header.packetLogicalLengthMinus1 + 1;
       }
    }
 
-   /// Skip over any index or empty packets to next data packet.
+   // Skip over any index or empty packets to next data packet.
    nextPacketLogicalOffset = findNextDataPacket( nextPacketLogicalOffset );
 
-   /// If some channel has exhausted this packet, find next data packet and
-   /// update currentPacketLogicalOffset for all interested channels.
-   if ( channelHasExhaustedPacket )
+   // If no channel is exhausted, we're done
+   if ( !anyChannelHasExhaustedPacket )
    {
-      if ( nextPacketLogicalOffset < E57_UINT64_MAX )
-      { //??? huh?
-         /// Get packet at nextPacketLogicalOffset into memory.
-         dpkt = dataPacket( nextPacketLogicalOffset );
+      return;
+   }
 
-         /// Got a data packet, update the channels with exhausted input
+   // Some channel has exhausted this packet, so find next data packet and
+   // update currentPacketLogicalOffset for all interested channels.
+
+   if ( nextPacketLogicalOffset < E57_UINT64_MAX )
+   { //??? huh?
+      // Get packet at nextPacketLogicalOffset into memory.
+      dpkt = dataPacket( nextPacketLogicalOffset );
+
+      // Got a data packet, update the channels with exhausted input
+      for ( DecodeChannel &channel : channels_ )
+      {
+         // Skip channels that have already read this packet.
+         if ( _alreadyReadPacket( channel, currentPacketLogicalOffset ) )
+         {
+            continue;
+         }
+
+         channel.currentPacketLogicalOffset = nextPacketLogicalOffset;
+         channel.currentBytestreamBufferIndex = 0;
+
+         // It is OK if the next packet doesn't contain any data for this
+         // channel, will skip packet on next iter of loop
+         channel.currentBytestreamBufferLength = dpkt->getBytestreamBufferLength( channel.bytestreamNumber );
+
+#ifdef E57_MAX_VERBOSE
+         std::cout << "  set new stream buffer for channel[" << channel.bytestreamNumber
+                   << "], length=" << channel.currentBytestreamBufferLength << std::endl;
+#endif
+         // ??? perform flush if new packet flag set?
+      }
+   }
+   else
+   {
+      // Reached end without finding data packet, mark exhausted channels as
+      // finished
+#ifdef E57_MAX_VERBOSE
+      std::cout << "  at end of data packets" << std::endl;
+#endif
+      if ( nextPacketLogicalOffset >= sectionEndLogicalOffset_ )
+      {
          for ( DecodeChannel &channel : channels_ )
          {
-            if ( ( channel.currentPacketLogicalOffset == currentPacketLogicalOffset ) && channel.isInputBlocked() )
+            // Skip channels that have already read this packet.
+            if ( _alreadyReadPacket( channel, currentPacketLogicalOffset ) )
             {
-               channel.currentPacketLogicalOffset = nextPacketLogicalOffset;
-               channel.currentBytestreamBufferIndex = 0;
-
-               /// It is OK if the next packet doesn't contain any data for this
-               /// channel, will skip packet on next iter of loop
-               channel.currentBytestreamBufferLength = dpkt->getBytestreamBufferLength( channel.bytestreamNumber );
+               continue;
+            }
 
 #ifdef E57_MAX_VERBOSE
-               std::cout << "  set new stream buffer for channel[" << channel.bytestreamNumber
-                         << "], length=" << channel.currentBytestreamBufferLength << std::endl;
+            std::cout << "  Marking channel[" << channel.bytestreamNumber << "] as finished" << std::endl;
 #endif
-               /// ??? perform flush if new packet flag set?
-            }
-         }
-      }
-      else
-      {
-         /// Reached end without finding data packet, mark exhausted channels as
-         /// finished
-#ifdef E57_MAX_VERBOSE
-         std::cout << "  at end of data packets" << std::endl;
-#endif
-         if ( nextPacketLogicalOffset >= sectionEndLogicalOffset_ )
-         {
-            for ( DecodeChannel &channel : channels_ )
-            {
-               if ( ( channel.currentPacketLogicalOffset == currentPacketLogicalOffset ) && channel.isInputBlocked() )
-               {
-#ifdef E57_MAX_VERBOSE
-                  std::cout << "  Marking channel[" << channel.bytestreamNumber << "] as finished" << std::endl;
-#endif
-                  channel.inputFinished = true;
-               }
-            }
+            channel.inputFinished = true;
          }
       }
    }

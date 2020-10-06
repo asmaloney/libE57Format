@@ -100,15 +100,9 @@ namespace e57
       50; //! Only verify 50% of the checksums. The last block is always verified.
    constexpr ReadChecksumPolicy CHECKSUM_POLICY_ALL = 100; //! Verify all checksums. This is the default. (slow)
 
-   //! @brief The major version number of the Foundation API
-   constexpr int E57_FOUNDATION_API_MAJOR = 0;
-
-   //! @brief The minor version number of the Foundation API
-   constexpr int E57_FOUNDATION_API_MINOR = 51;
-
    //! @brief The URI of ASTM E57 v1.0 standard XML namespace
-   // Used to identify the standard field names and the grammar that relates them.
-   // Will typically be associated with the default namespace in an E57 file.
+   //! Note that even though this URI does not point to a valid document, the standard (section 8.4.2.3)
+   //! says that this is the required namespace.
    constexpr char E57_V1_0_URI[] = "http://www.astm.org/COMMIT/E57/2010-e57-v1.0";
 
    //! @cond documentNonPublic   The following aren't documented

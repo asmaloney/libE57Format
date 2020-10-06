@@ -32,9 +32,11 @@
 #include <xercesc/util/TransService.hpp>
 
 #include "CheckedFile.h"
+#include "CompressedVectorNodeImpl.h"
 #include "E57FormatImpl.h"
 #include "E57XmlParser.h"
 #include "ImageFileImpl.h"
+#include "VectorNodeImpl.h"
 
 using namespace e57;
 using namespace XERCES_CPP_NAMESPACE;

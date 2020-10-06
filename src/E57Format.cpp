@@ -32,8 +32,12 @@
 
 #include "E57FormatImpl.h"
 
+#include "CompressedVectorNodeImpl.h"
+#include "CompressedVectorReaderImpl.h"
+#include "CompressedVectorWriterImpl.h"
 #include "ImageFileImpl.h"
 #include "SourceDestBufferImpl.h"
+#include "VectorNodeImpl.h"
 
 using namespace e57;
 

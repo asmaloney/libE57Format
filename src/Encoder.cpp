@@ -28,9 +28,11 @@
 #include <algorithm>
 #include <cstring>
 
+#include "CompressedVectorNodeImpl.h"
 #include "E57FormatImpl.h"
 #include "Encoder.h"
 #include "ImageFileImpl.h"
+#include "Packet.h"
 #include "SourceDestBufferImpl.h"
 
 using namespace e57;

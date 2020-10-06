@@ -7,6 +7,14 @@ target_sources( E57Format
         ${CMAKE_CURRENT_LIST_DIR}/CheckedFile.cpp
         ${CMAKE_CURRENT_LIST_DIR}/Common.h
         ${CMAKE_CURRENT_LIST_DIR}/Common.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/CompressedVectorNodeImpl.h
+        ${CMAKE_CURRENT_LIST_DIR}/CompressedVectorNodeImpl.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/CompressedVectorReaderImpl.h
+        ${CMAKE_CURRENT_LIST_DIR}/CompressedVectorReaderImpl.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/CompressedVectorWriterImpl.h
+        ${CMAKE_CURRENT_LIST_DIR}/CompressedVectorWriterImpl.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/DecodeChannel.h
+        ${CMAKE_CURRENT_LIST_DIR}/DecodeChannel.cpp
         ${CMAKE_CURRENT_LIST_DIR}/Decoder.h
         ${CMAKE_CURRENT_LIST_DIR}/Decoder.cpp
         ${CMAKE_CURRENT_LIST_DIR}/Encoder.h
@@ -19,10 +27,14 @@ target_sources( E57Format
         ${CMAKE_CURRENT_LIST_DIR}/ImageFileImpl.h
         ${CMAKE_CURRENT_LIST_DIR}/ReaderImpl.cpp
         ${CMAKE_CURRENT_LIST_DIR}/ReaderImpl.h
+        ${CMAKE_CURRENT_LIST_DIR}/SectionHeaders.h
+        ${CMAKE_CURRENT_LIST_DIR}/SectionHeaders.cpp
         ${CMAKE_CURRENT_LIST_DIR}/SourceDestBufferImpl.h
         ${CMAKE_CURRENT_LIST_DIR}/SourceDestBufferImpl.cpp
         ${CMAKE_CURRENT_LIST_DIR}/StructureNodeImpl.h
         ${CMAKE_CURRENT_LIST_DIR}/StructureNodeImpl.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/VectorNodeImpl.h
+        ${CMAKE_CURRENT_LIST_DIR}/VectorNodeImpl.cpp
         ${CMAKE_CURRENT_LIST_DIR}/WriterImpl.cpp
         ${CMAKE_CURRENT_LIST_DIR}/WriterImpl.h
         ${CMAKE_CURRENT_LIST_DIR}/E57Exception.cpp

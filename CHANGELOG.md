@@ -1,12 +1,16 @@
 # libE57Format
 
 - v2.2.0 (in development)
-  - Add and update the E57Simple API from the old reference library ([#41](https://github.com/asmaloney/libE57Format/pull/41))	(Thanks	Jiri!)
-  - Enable building E57Format as a shared library ([#40](https://github.com/asmaloney/libE57Format/pull/40)) (Thanks	Amodio!)
-  - Remove all usage of dynamic_cast<> ([#39](https://github.com/asmaloney/libE57Format/pull/39))	(Thanks	Jiri!)
+  - Add and update the E57Simple API from the old reference library ([#41](https://github.com/asmaloney/libE57Format/pull/41))	(Thanks Jiri!)
+  - Enable building E57Format as a shared library ([#40](https://github.com/asmaloney/libE57Format/pull/40)) (Thanks Amodio!)
+  - Remove all usage of dynamic_cast<> ([#39](https://github.com/asmaloney/libE57Format/pull/39))	(Thanks Jiri!)
   - Added a [clang-format](https://clang.llvm.org/docs/ClangFormat.html) file, a cmake target for it ("format"), and reformatted the code
+  - Fix building with E57_MAX_VERBOSE defined ([#44](https://github.com/asmaloney/libE57Format/pull/44))
+  - `E57_V1_0_URI` was changed from a `#define` to a `constexpr`, so if you use it, it will need to be updated with a namespace: `e57::E57_V1_0_URI`
+  - Split classes out from E57FormatImpl.[h,cpp]
   - {win} Fix MSVC warnings  ([#34](https://github.com/asmaloney/libE57Format/pull/34))) ([#36](https://github.com/asmaloney/libE57Format/pull/36))
   - {cmake} Review and update cmake files
+  - {doc} Moved some documentation to new repo ([libE57Format-docs](https://github.com/asmaloney/libE57Format-docs)) and generate the [docs](https://asmaloney.github.io/libE57Format-docs/)
   - {doc} Add info about using [SPDX License Identifiers](https://spdx.org/ids)
   - {ci} Add GitHub Actions to build macOS, Linux, and Windows ([#35](https://github.com/asmaloney/libE57Format/pull/35))
 

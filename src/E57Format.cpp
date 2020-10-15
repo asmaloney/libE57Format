@@ -30,13 +30,16 @@
 
 //! @file E57Format.cpp
 
-#include "E57FormatImpl.h"
-
+#include "BlobNodeImpl.h"
 #include "CompressedVectorNodeImpl.h"
 #include "CompressedVectorReaderImpl.h"
 #include "CompressedVectorWriterImpl.h"
+#include "FloatNodeImpl.h"
 #include "ImageFileImpl.h"
+#include "IntegerNodeImpl.h"
+#include "ScaledIntegerNodeImpl.h"
 #include "SourceDestBufferImpl.h"
+#include "StringNodeImpl.h"
 #include "VectorNodeImpl.h"
 
 using namespace e57;

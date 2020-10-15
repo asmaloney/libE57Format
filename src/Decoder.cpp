@@ -30,8 +30,10 @@
 
 #include "CompressedVectorNodeImpl.h"
 #include "Decoder.h"
-#include "E57FormatImpl.h"
+#include "FloatNodeImpl.h"
 #include "ImageFileImpl.h"
+#include "IntegerNodeImpl.h"
+#include "ScaledIntegerNodeImpl.h"
 #include "SourceDestBufferImpl.h"
 
 using namespace e57;

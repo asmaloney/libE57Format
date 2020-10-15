@@ -31,11 +31,15 @@
 #include <xercesc/util/BinInputStream.hpp>
 #include <xercesc/util/TransService.hpp>
 
+#include "BlobNodeImpl.h"
 #include "CheckedFile.h"
 #include "CompressedVectorNodeImpl.h"
-#include "E57FormatImpl.h"
 #include "E57XmlParser.h"
+#include "FloatNodeImpl.h"
 #include "ImageFileImpl.h"
+#include "IntegerNodeImpl.h"
+#include "ScaledIntegerNodeImpl.h"
+#include "StringNodeImpl.h"
 #include "VectorNodeImpl.h"
 
 using namespace e57;

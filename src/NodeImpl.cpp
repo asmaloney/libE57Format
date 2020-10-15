@@ -26,7 +26,6 @@
  */
 
 #include "NodeImpl.h"
-#include "E57FormatImpl.h"
 #include "ImageFileImpl.h"
 #include "SourceDestBufferImpl.h"
 #include "VectorNodeImpl.h"

@@ -148,7 +148,7 @@ install(
 
 install(
     FILES
-        ${CMAKE_CURRENT_SOURCE_DIR}/cmake/E57Format-config.cmake
+        ${CMAKE_CURRENT_SOURCE_DIR}/cmake/e57format-config.cmake
     DESTINATION
         lib/cmake/E57Format
 )

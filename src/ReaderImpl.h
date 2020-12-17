@@ -50,6 +50,8 @@ namespace e57
 
       bool ReadImage2D( int64_t imageIndex, Image2D &Image2DHeader ) const;
 
+      void SaveImage2DData( void *buffer, int64_t count, const ustring &savePath );
+
       bool GetImage2DSizes( int64_t imageIndex, Image2DProjection &imageProjection, Image2DType &imageType,
                             int64_t &imageWidth, int64_t &imageHeight, int64_t &imageSize, Image2DType &imageMaskType,
                             Image2DType &imageVisualType ) const;

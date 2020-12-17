@@ -71,41 +71,5 @@ int main(int argc, char **argv){
 
       } 
     }
-    // if (!root.isDefined("/data3D"))
-    // {
-    //   cout << "File doesn't contain 3D images" << endl;
-    //   return 0;
-    // }
-    // Node n = root.get("/data3D");
-    // if (n.type() != E57_VECTOR)
-    // {
-    //   cout << "bad file" << endl;
-    //   return 0;
-    // }
-
-    // /// The node is a vector so we can safely get a VectorNode handle to it.
-    // /// If n was not a VectorNode, this would raise an exception.
-    // VectorNode data3D(n);
-
-    // /// Print number of children of data3D.  This is the number of scans in file.
-    // int64_t scanCount = data3D.childCount();
-    // cout << "Number of scans in file:" << scanCount << endl;
-
-    // /// For each scan, print out first 4 points in either Cartesian or Spherical coordinates.
-    // for (int scanIndex = 0; scanIndex < scanCount; scanIndex++)
-    // {
-    //   /// Get scan from "/data3D", assume its a Structure (else get exception)
-    //   StructureNode scan(data3D.get(scanIndex));
-    //   cout << "got:" << scan.pathName() << endl;
-
-    //   /// Get "points" field in scan.  Should be a CompressedVectorNode.
-    //   CompressedVectorNode points(scan.get("points"));
-    //   cout << "got:" << points.pathName() << endl;
-
-    //   /// Call subroutine in this file to print the points
-    //   //printSomePoints(imf, points);
-    // }
-
-    // imf.close();
     
 }

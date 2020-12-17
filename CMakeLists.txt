@@ -128,6 +128,10 @@ endif()
 # Target Libraries
 target_link_libraries( E57Format PRIVATE XercesC::XercesC )
 
+SET( APP_EXE MyExecutable )
+add_executable(${APP_EXE} main.cpp)
+target_link_libraries(${APP_EXE} PUBLIC E57Format XercesC::XercesC)
+
 # Install
 install(
     TARGETS

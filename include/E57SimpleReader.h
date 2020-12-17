@@ -86,6 +86,11 @@ namespace e57
                             int64_t &imageWidth, int64_t &imageHeight, int64_t &imageSize, Image2DType &imageMaskType,
                             Image2DType &imageVisualType ) const;
 
+      //! @brief This function is to save the image
+      //! @param [in] buffer pointer the raw image buffer
+      //! @param [in] output file location
+      void SaveImage2DData( void *buffer, int64_t count, const ustring &savePath );
+
       //! @brief This function reads an image
       //! @param [in] imageIndex index of the image. Must be less than GetImage2DCount()
       //! @param [in] imageProjection identifies the projection desired.

@@ -1280,8 +1280,9 @@ namespace e57
       return true;
    }
 
+   template <typename COORDTYPE>
    CompressedVectorReader ReaderImpl::SetUpData3DPointsData( int64_t dataIndex, size_t count,
-                                                             const Data3DPointsData &buffers ) const
+                                                             const Data3DPointsData_t<COORDTYPE> &buffers ) const
    {
       StructureNode scan( data3D_.get( dataIndex ) );
       CompressedVectorNode points( scan.get( "points" ) );
@@ -1422,5 +1423,12 @@ namespace e57
 
       return reader;
    }
+
+   // Explicit template instantiation
+   template CompressedVectorReader ReaderImpl::SetUpData3DPointsData(
+      int64_t dataIndex, size_t pointCount, const Data3DPointsData_t<float> &buffers ) const;
+
+   template CompressedVectorReader ReaderImpl::SetUpData3DPointsData(
+      int64_t dataIndex, size_t pointCount, const Data3DPointsData_t<double> &buffers ) const;
 
 } // end namespace e57

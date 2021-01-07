@@ -435,15 +435,16 @@ namespace e57
    };
 
    //! @brief Stores pointers to user-provided buffers
-   struct E57_DLL Data3DPointsData
+   template <typename COORDTYPE=float>
+   struct Data3DPointsData_t
    {
-      float *cartesianX{
+      COORDTYPE *cartesianX{
          nullptr
       }; //!< pointer to a buffer with the X coordinate (in meters) of the point in Cartesian coordinates
-      float *cartesianY{
+      COORDTYPE *cartesianY{
          nullptr
       }; //!< pointer to a buffer with the Y coordinate (in meters) of the point in Cartesian coordinates
-      float *cartesianZ{
+      COORDTYPE *cartesianZ{
          nullptr
       }; //!< pointer to a buffer with the Z coordinate (in meters) of the point in Cartesian coordinates
       int8_t *cartesianInvalidState{ nullptr }; //!< Value = 0 if the point is considered valid, 1 otherwise
@@ -456,13 +457,13 @@ namespace e57
       uint8_t *colorBlue{ nullptr };     //!< pointer to a buffer with the Blue color coefficient. Unit is unspecified
       int8_t *isColorInvalid{ nullptr }; //!< Value = 0 if the color is considered valid, 1 otherwise
 
-      float *sphericalRange{
+      COORDTYPE *sphericalRange{
          nullptr
       }; //!< pointer to a buffer with the range (in meters) of points in spherical coordinates. Shall be non-negative
-      float *sphericalAzimuth{
+      COORDTYPE *sphericalAzimuth{
          nullptr
       }; //!< pointer to a buffer with the Azimuth angle (in radians) of point in spherical coordinates
-      float *sphericalElevation{
+      COORDTYPE *sphericalElevation{
          nullptr
       }; //!< pointer to a buffer with the Elevation angle (in radians) of point in spherical coordinates
       int8_t *sphericalInvalidState{ nullptr }; //!< Value = 0 if the range is considered valid, 1 otherwise
@@ -493,6 +494,9 @@ namespace e57
       float *normalY{ nullptr }; //!< The Y component of a surface normal vector (E57_EXT_surface_normals).
       float *normalZ{ nullptr }; //!< The Z component of a surface normal vector (E57_EXT_surface_normals).
    };
+
+   typedef Data3DPointsData_t<float> Data3DPointsData;
+   typedef Data3DPointsData_t<double> Data3DPointsData_d;
 
    //! @brief Stores an image that is to be used only as a visual reference.
    struct E57_DLL VisualReferenceRepresentation

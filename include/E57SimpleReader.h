@@ -145,6 +145,16 @@ namespace e57
       CompressedVectorReader SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
                                                     const Data3DPointsData &buffers ) const;
 
+      //! @brief Use this function to read the actual 3D data
+      //! @details All the non-NULL buffers in buffers have number of elements = pointCount.
+      //!          Call the CompressedVectorReader::read() until all data is read.
+      //! @param [in] dataIndex data block index given by the NewData3D
+      //! @param [in] pointCount size of each element buffer.
+      //! @param [in] buffers pointers to user-provided buffers
+      //! @return vector reader setup to read the selected data into the provided buffers
+      CompressedVectorReader SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
+                                                    const Data3DPointsData_d &buffers ) const;
+
       //!@}
 
       //! @name Foundation API file information

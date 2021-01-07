@@ -941,8 +941,9 @@ namespace e57
       return pos;
    }
 
+   template <typename COORDTYPE>
    CompressedVectorWriter WriterImpl::SetUpData3DPointsData( int64_t dataIndex, size_t count,
-                                                             const Data3DPointsData &buffers )
+                                                             const Data3DPointsData_t<COORDTYPE> &buffers )
    {
       StructureNode scan( data3D_.get( dataIndex ) );
       CompressedVectorNode points( scan.get( "points" ) );
@@ -1060,6 +1061,13 @@ namespace e57
 
       return writer;
    }
+
+   // Explicit template instantiation
+   template CompressedVectorWriter WriterImpl::SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
+                                                                      const Data3DPointsData_t<float> &buffers );
+
+   template CompressedVectorWriter WriterImpl::SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
+                                                                      const Data3DPointsData_t<double> &buffers );
 
    // This funtion writes out the group data
    bool WriterImpl::WriteData3DGroupsData( int64_t dataIndex, int64_t groupCount, int64_t *idElementValue,

@@ -86,5 +86,4 @@ int main(int argc, char **argv )
        reader.SaveImage2DData( imageBuffer, size, savePath );
       } 
     }
-    
 }

@@ -68,8 +68,9 @@ namespace e57
                                      imageMaskType, imageVisualType );
    };
 
-   void Reader::SaveImage2DData( void *buffer, int64_t count, const ustring &savePath){
-      return impl_->SaveImage2DData(buffer, count, savePath );
+   void Reader::SaveImage2DData( void *buffer, int64_t count, const ustring &savePath )
+   {
+      return impl_->SaveImage2DData( buffer, count, savePath );
    };
 
    int64_t Reader::ReadImage2DData( int64_t imageIndex, Image2DProjection imageProjection, Image2DType imageType,

@@ -408,10 +408,11 @@ namespace e57
    }
 
    // This function saves the image
-   void ReaderImpl::SaveImage2DData( void *buffer, int64_t count, const ustring &savePath ){
-      FILE* fp = fopen(savePath.c_str(),"wb");
-      fwrite(buffer,(size_t)count,1,fp);
-      fclose(fp);
+   void ReaderImpl::SaveImage2DData( void *buffer, int64_t count, const ustring &savePath )
+   {
+      FILE *fp = fopen( savePath.c_str(), "wb" );
+      fwrite( buffer, (size_t)count, 1, fp );
+      fclose( fp );
    };
 
    // This function returns the image sizes

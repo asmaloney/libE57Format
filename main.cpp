@@ -8,11 +8,17 @@ int main(int argc, char **argv){
       cout << "try: -i filepath -o outPath"<< endl; 
       return 0;
     }
+    
     string outPath=string(argv[4]);
     Reader reader(argv[2]);
-    
-    cout<<"Total contain images: "<<reader.GetImage2DCount()<<endl;
-    for (int64_t img = 0; img < reader.GetImage2DCount(); ++img){
+    int images = reader.GetImage2DCount();
+    if (images == 0){
+      cout<<"This E57 file does not contain images"<<images<<endl;
+      return 0;
+    }
+
+    cout<<"Total containing images: "<<images<<endl;
+    for (int64_t img = 0; img < images; ++img){
       Image2D img_header;
       reader.ReadImage2D(img, img_header);
       if (img_header.visualReferenceRepresentation.jpegImageSize != 0){

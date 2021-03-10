@@ -128,7 +128,9 @@ endif()
 # Target Libraries
 target_link_libraries( E57Format PRIVATE XercesC::XercesC )
 
-SET( APP_EXE ExampleUse )
+set( APP_EXE ExampleUse )
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_executable(${APP_EXE} ExampleUse.cpp)
 target_link_libraries(${APP_EXE} PUBLIC E57Format XercesC::XercesC)
 

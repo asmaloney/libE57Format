@@ -10,7 +10,6 @@ int main(int argc, char **argv )
       cout << "try: -i filepath -o outPath"<< endl; 
       return 0;
     }
-    cout<<"testing"<<endl;
     string outPath=string( argv[4] );
     Reader reader( argv[2] );
     int images = reader.GetImage2DCount();

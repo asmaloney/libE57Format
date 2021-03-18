@@ -94,6 +94,9 @@ include( E57ExportHeader )
 add_subdirectory( extern/CRCpp )
 add_subdirectory( include )
 add_subdirectory( src )
+if(E57_BUILD_EXAMPLES)
+   add_subdirectory( examples/src )
+endif()
 
 include( ClangFormat )
 
@@ -127,12 +130,6 @@ endif()
 
 # Target Libraries
 target_link_libraries( E57Format PRIVATE XercesC::XercesC )
-
-set( APP_EXE ExampleUse )
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-add_executable(${APP_EXE} ExampleUse.cpp)
-target_link_libraries(${APP_EXE} PUBLIC E57Format XercesC::XercesC)
 
 # Install
 install(

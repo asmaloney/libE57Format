@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [2.2.0] - 2021-04-01
+## [2.2.0](https://github.com/asmaloney/libE57Format/releases/tag/v2.2.0) - 2021-04-01
 
 ### Added
 
@@ -30,7 +30,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Removed all internal usage of dynamic_cast<>. ([#39](https://github.com/asmaloney/libE57Format/pull/39)) (Thanks Jiri!)
 - Split classes out from E57FormatImpl.[h,cpp] intot their own files.
 
-## [2.1.0] - 2020-04-01
+## [2.1.0](https://github.com/asmaloney/libE57Format/releases/tag/v2.1) - 2020-04-01
 
 ### Added
 
@@ -52,14 +52,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - {cmake} Various cleanups.
 - Internal code cleanups.
 
-## [2.0.1] - 2019-01-15
+## [2.0.1](https://github.com/asmaloney/libE57Format/releases/tag/v2.0.1) - 2019-01-15
 
 ### Fixed
 
 - Writing files was broken and would produce the following error:
   > Error: bad API function argument provided by user (E57_ERROR_BAD_API_ARGUMENT) (ImageFileImpl.cpp line 109)
 
-## [2.0.0] - 2019-01-06
+## [2.0.0](https://github.com/asmaloney/libE57Format/releases/tag/v2.0) - 2019-01-06
 
 Forked from [E57RefImpl](https://sourceforge.net/projects/e57-3d-imgfmt/).
 

@@ -1425,10 +1425,10 @@ namespace e57
    }
 
    // Explicit template instantiation
-   template CompressedVectorReader ReaderImpl::SetUpData3DPointsData(
-      int64_t dataIndex, size_t pointCount, const Data3DPointsData_t<float> &buffers ) const;
+   template CompressedVectorReader ReaderImpl::SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
+                                                                      const Data3DPointsData_t<float> &buffers ) const;
 
-   template CompressedVectorReader ReaderImpl::SetUpData3DPointsData(
-      int64_t dataIndex, size_t pointCount, const Data3DPointsData_t<double> &buffers ) const;
+   template CompressedVectorReader ReaderImpl::SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
+                                                                      const Data3DPointsData_t<double> &buffers ) const;
 
 } // end namespace e57

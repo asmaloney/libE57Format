@@ -435,8 +435,7 @@ namespace e57
    };
 
    //! @brief Stores pointers to user-provided buffers
-   template <typename COORDTYPE=float>
-   struct Data3DPointsData_t
+   template <typename COORDTYPE = float> struct Data3DPointsData_t
    {
       COORDTYPE *cartesianX{
          nullptr

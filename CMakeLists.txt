@@ -94,6 +94,9 @@ include( E57ExportHeader )
 add_subdirectory( extern/CRCpp )
 add_subdirectory( include )
 add_subdirectory( src )
+if(E57_BUILD_EXAMPLES)
+   add_subdirectory( examples/src )
+endif()
 
 include( ClangFormat )
 

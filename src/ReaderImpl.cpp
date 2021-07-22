@@ -414,7 +414,7 @@ namespace e57
    {
       if ( ( imageIndex < 0 ) || ( imageIndex >= images2D_.childCount() ) )
       {
-         return 0;
+         return false;
       }
 
       imageProjection = E57_NO_PROJECTION;
@@ -1297,7 +1297,7 @@ namespace e57
       {
          ustring name = proto.get( protoIndex ).elementName();
          NodeType type = proto.get( protoIndex ).type();
-         bool scaled = type == E57_SCALED_INTEGER ? true : false;
+         bool scaled = (type == E57_SCALED_INTEGER);
          // E57_EXT_surface_normals
          ustring norExtUri;
          bool haveNormalsExt = imf_.extensionsLookupPrefix( "nor", norExtUri );

@@ -66,7 +66,7 @@
 #endif
 
 #ifndef O_BINARY
-#define O_BINARY ( 0 )
+constexpr int O_BINARY = 0;
 #endif
 
 using namespace e57;

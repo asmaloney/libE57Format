@@ -885,32 +885,20 @@ void SourceDestBuffer::checkInvariant( bool /*doRecurse*/ ) const
    switch ( memoryRepresentation() )
    {
       case E57_INT8:
-         min_stride = 1;
-         break;
       case E57_UINT8:
+      case E57_BOOL:
          min_stride = 1;
          break;
       case E57_INT16:
-         min_stride = 2;
-         break;
       case E57_UINT16:
          min_stride = 2;
          break;
       case E57_INT32:
-         min_stride = 4;
-         break;
       case E57_UINT32:
-         min_stride = 4;
-         break;
-      case E57_INT64:
-         min_stride = 8;
-         break;
-      case E57_BOOL:
-         min_stride = 1;
-         break;
       case E57_REAL32:
          min_stride = 4;
          break;
+      case E57_INT64:
       case E57_REAL64:
          min_stride = 8;
          break;

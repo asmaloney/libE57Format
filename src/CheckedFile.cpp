@@ -194,7 +194,7 @@ int CheckedFile::open64( const ustring &fileName, int flags, int mode )
    }
    return handle;
 #elif defined( __GNUC__ )
-   int result = open( fileName_.c_str(), flags, mode );
+   int result = ::open( fileName_.c_str(), flags, mode );
    if ( result < 0 )
    {
       throw E57_EXCEPTION2( E57_ERROR_OPEN_FAILED, "result=" + toString( result ) + " fileName=" + fileName +

@@ -549,7 +549,9 @@ void IndexPacket::verify( unsigned bufferLength, uint64_t totalRecordCount, uint
 
    /// Verify that packet is correct type
    if ( packetType != INDEX_PACKET )
+   {
       throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET, "packetType=" + toString( packetType ) );
+   }
 
    /// Check packetLength is at least large enough to hold header
    unsigned packetLength = packetLogicalLengthMinus1 + 1;
@@ -560,7 +562,9 @@ void IndexPacket::verify( unsigned bufferLength, uint64_t totalRecordCount, uint
 
    /// Check packet length is multiple of 4
    if ( packetLength % 4 )
+   {
       throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET, "packetLength=" + toString( packetLength ) );
+   }
 
    /// Make sure there is at least one entry in packet  ??? 0 record cvect
    /// allowed?
@@ -707,7 +711,9 @@ void EmptyPacketHeader::verify( unsigned bufferLength ) const
 
    /// Check packet length is multiple of 4
    if ( packetLength % 4 )
+   {
       throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET, "packetLength=" + toString( packetLength ) );
+   }
 
    /// Check actual packet length is large enough.
    if ( bufferLength > 0 && packetLength > bufferLength )

@@ -122,7 +122,9 @@ E57FileInputStream::E57FileInputStream( CheckedFile *cf, uint64_t logicalStart, 
 XMLSize_t E57FileInputStream::readBytes( XMLByte *const toFill, const XMLSize_t maxToRead )
 {
    if ( logicalPosition_ > logicalStart_ + logicalLength_ )
+   {
       return ( 0 );
+   }
 
    int64_t available = logicalStart_ + logicalLength_ - logicalPosition_;
    if ( available <= 0 )
@@ -401,7 +403,9 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
       {
          ustring precision_str = lookupAttribute( attributes, att_precision );
          if ( precision_str == "single" )
+         {
             pi.precision = E57_SINGLE;
+         }
          else if ( precision_str == "double" )
          {
             pi.precision = E57_DOUBLE;
@@ -452,7 +456,9 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
             pi.floatMaximum = E57_FLOAT_MAX;
          }
          else
+         {
             pi.floatMaximum = E57_DOUBLE_MAX;
+         }
       }
 
       /// Push info so far onto stack
@@ -667,7 +673,9 @@ void E57XmlParser::endElement( const XMLCh *const uri, const XMLCh *const localN
             intValue = convertStrToLL( pi.childText );
          }
          else
+         {
             intValue = 0;
+         }
          std::shared_ptr<IntegerNodeImpl> i_ni( new IntegerNodeImpl( imf_, intValue, pi.minimum, pi.maximum ) );
          current_ni = i_ni;
       }
@@ -681,7 +689,9 @@ void E57XmlParser::endElement( const XMLCh *const uri, const XMLCh *const localN
             intValue = convertStrToLL( pi.childText );
          }
          else
+         {
             intValue = 0;
+         }
          std::shared_ptr<ScaledIntegerNodeImpl> si_ni(
             new ScaledIntegerNodeImpl( imf_, intValue, pi.minimum, pi.maximum, pi.scale, pi.offset ) );
          current_ni = si_ni;

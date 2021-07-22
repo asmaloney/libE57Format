@@ -2959,7 +2959,9 @@ automatically).
 CompressedVectorNode::CompressedVectorNode( const Node &n )
 {
    if ( n.type() != E57_COMPRESSED_VECTOR )
+   {
       throw E57_EXCEPTION2( E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString( n.type() ) );
+   }
 
    /// Set our shared_ptr to the downcast shared_ptr
    impl_ = std::static_pointer_cast<CompressedVectorNodeImpl>( n.impl() );
@@ -3261,7 +3263,9 @@ automatically).
 IntegerNode::IntegerNode( const Node &n )
 {
    if ( n.type() != E57_INTEGER )
+   {
       throw E57_EXCEPTION2( E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString( n.type() ) );
+   }
 
    /// Set our shared_ptr to the downcast shared_ptr
    impl_ = std::static_pointer_cast<IntegerNodeImpl>( n.impl() );
@@ -3609,7 +3613,9 @@ automatically).
 ScaledIntegerNode::ScaledIntegerNode( const Node &n )
 {
    if ( n.type() != E57_SCALED_INTEGER )
+   {
       throw E57_EXCEPTION2( E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString( n.type() ) );
+   }
 
    /// Set our shared_ptr to the downcast shared_ptr
    impl_ = std::static_pointer_cast<ScaledIntegerNodeImpl>( n.impl() );
@@ -3872,7 +3878,9 @@ automatically).
 FloatNode::FloatNode( const Node &n )
 {
    if ( n.type() != E57_FLOAT )
+   {
       throw E57_EXCEPTION2( E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString( n.type() ) );
+   }
 
    /// Set our shared_ptr to the downcast shared_ptr
    impl_ = std::static_pointer_cast<FloatNodeImpl>( n.impl() );
@@ -4047,7 +4055,9 @@ automatically).
 StringNode::StringNode( const Node &n )
 {
    if ( n.type() != E57_STRING )
+   {
       throw E57_EXCEPTION2( E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString( n.type() ) );
+   }
 
    /// Set our shared_ptr to the downcast shared_ptr
    impl_ = std::static_pointer_cast<StringNodeImpl>( n.impl() );
@@ -4326,7 +4336,9 @@ automatically).
 BlobNode::BlobNode( const Node &n )
 {
    if ( n.type() != E57_BLOB )
+   {
       throw E57_EXCEPTION2( E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString( n.type() ) );
+   }
 
    /// Set our shared_ptr to the downcast shared_ptr
    impl_ = std::static_pointer_cast<BlobNodeImpl>( n.impl() );

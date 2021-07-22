@@ -176,7 +176,9 @@ void NodeImpl::setParent( NodeImplSharedPtr parent, const ustring &elementName )
 
    /// If parent is attached then we are attached (and all of our children)
    if ( parent->isAttached() )
+   {
       setAttachedRecursive();
+   }
 }
 
 NodeImplSharedPtr NodeImpl::getRoot()
@@ -214,7 +216,9 @@ bool NodeImpl::isTypeConstrained()
             /// If homogenous vector and have more than one child, then can't
             /// change them
             if ( !ai->allowHeteroChildren() && ai->childCount() > 1 )
+            {
                return ( true );
+            }
          }
          break;
          case E57_COMPRESSED_VECTOR:
@@ -293,13 +297,17 @@ void NodeImpl::checkBuffers( const std::vector<SourceDestBuffer> &sdbufs,
       /// Add each pathName to set, error if already in set (a duplicate
       /// pathName in sdbufs)
       if ( !pathNames.insert( pathName ).second )
+      {
          throw E57_EXCEPTION2( E57_ERROR_BUFFER_DUPLICATE_PATHNAME,
                                "this->pathName=" + this->pathName() + " sdbuf.pathName=" + pathName );
+      }
 
       /// Check no bad fields in sdbufs
       if ( !isDefined( pathName ) )
+      {
          throw E57_EXCEPTION2( E57_ERROR_PATH_UNDEFINED,
                                "this->pathName=" + this->pathName() + " sdbuf.pathName=" + pathName );
+      }
    }
 
    if ( !allowMissing )

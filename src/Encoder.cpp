@@ -396,8 +396,10 @@ uint64_t BitpackFloatEncoder::processRecords( size_t recordCount )
    /// Verify that outBufferEnd_ is multiple of typeSize (so transfers of floats
    /// are aligned naturally in memory).
    if ( outBufferEnd_ % typeSize )
+   {
       throw E57_EXCEPTION2( E57_ERROR_INTERNAL,
                             "outBufferEnd=" + toString( outBufferEnd_ ) + " typeSize=" + toString( typeSize ) );
+   }
 #endif
 
    /// Figure out how many records will fit in output.
@@ -715,7 +717,9 @@ template <typename RegisterT> uint64_t BitpackIntegerEncoder<RegisterT>::process
          rawValue = sourceBuffer_->getNextInt64( scale_, offset_ );
       }
       else
+      {
          rawValue = sourceBuffer_->getNextInt64();
+      }
 
       /// Enforce min/max specification on value
       if ( rawValue < minimum_ || maximum_ < rawValue )

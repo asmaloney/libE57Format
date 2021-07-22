@@ -981,12 +981,6 @@ void SourceDestBufferImpl::checkCompatible( const std::shared_ptr<SourceDestBuff
                             "doConversion=" + toString( doConversion_ ) +
                                "newDoConversion=" + toString( newBuf->doConversion() ) );
    }
-   if ( doConversion_ != newBuf->doConversion() )
-   {
-      throw E57_EXCEPTION2( E57_ERROR_BUFFERS_NOT_COMPATIBLE,
-                            "doConversion=" + toString( doConversion_ ) +
-                               " newDoConversion=" + toString( newBuf->doConversion() ) );
-   }
    if ( stride_ != newBuf->stride() )
    {
       throw E57_EXCEPTION2( E57_ERROR_BUFFERS_NOT_COMPATIBLE,

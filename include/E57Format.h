@@ -93,12 +93,14 @@ namespace e57
    //! an ImageFile (0-100%).
    using ReadChecksumPolicy = int;
 
-   constexpr ReadChecksumPolicy CHECKSUM_POLICY_NONE = 0; //! Do not verify the checksums. (fast)
-   constexpr ReadChecksumPolicy CHECKSUM_POLICY_SPARSE =
-      25; //! Only verify 25% of the checksums. The last block is always verified.
-   constexpr ReadChecksumPolicy CHECKSUM_POLICY_HALF =
-      50; //! Only verify 50% of the checksums. The last block is always verified.
-   constexpr ReadChecksumPolicy CHECKSUM_POLICY_ALL = 100; //! Verify all checksums. This is the default. (slow)
+   //! Do not verify the checksums. (fast)
+   constexpr ReadChecksumPolicy CHECKSUM_POLICY_NONE = 0;
+   //! Only verify 25% of the checksums. The last block is always verified.
+   constexpr ReadChecksumPolicy CHECKSUM_POLICY_SPARSE = 25;
+   //! Only verify 50% of the checksums. The last block is always verified.
+   constexpr ReadChecksumPolicy CHECKSUM_POLICY_HALF = 50;
+   //! Verify all checksums. This is the default. (slow)
+   constexpr ReadChecksumPolicy CHECKSUM_POLICY_ALL = 100;
 
    //! @brief The URI of ASTM E57 v1.0 standard XML namespace
    //! Note that even though this URI does not point to a valid document, the standard (section 8.4.2.3)

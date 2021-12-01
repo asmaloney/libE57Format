@@ -525,7 +525,7 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
             if ( toUString( attributes.getURI( i ) ) == "http://www.w3.org/2000/xmlns/" )
             {
 #ifdef E57_VERBOSE
-               cout << "declared extension, prefix=" << toUString( attributes.getLocalName( i ) )
+               std::cout << "declared extension, prefix=" << toUString( attributes.getLocalName( i ) )
                     << " URI=" << toUString( attributes.getValue( i ) ) << std::endl;
 #endif
                imf_->extensionsAdd( toUString( attributes.getLocalName( i ) ), toUString( attributes.getValue( i ) ) );

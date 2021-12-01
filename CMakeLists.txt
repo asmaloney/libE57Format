@@ -76,6 +76,10 @@ if( BUILD_SHARED_LIBS )
 	set( E57_BUILD_SHARED ON )
 endif()
 
+option( E57_MAX_DEBUG, "Compile library with maximum debug checking" OFF )
+option( E57_VERBOSE,   "Compile library with vebose logging" OFF )
+option( E57_MAX_VERBOSE, "Compile library with maximum verbose logging" OFF )
+
 set( revision_id "${PROJECT_NAME}-${PROJECT_VERSION}-${${PROJECT_NAME}_BUILD_TAG}" )
 message( STATUS "[E57] Revison ID: ${revision_id}" )
 
@@ -114,6 +118,18 @@ target_compile_definitions( E57Format
         CRCPP_BRANCHLESS
         REVISION_ID="${revision_id}"
 )
+
+if ( E57_MAX_DEBUG )
+target_compile_definitions( E57Format PRIVATE E57_MAX_DEBUG )
+endif()
+
+if ( E57_VERBOSE )
+target_compile_definitions( E57Format PRIVATE E57_VERBOSE )
+endif()
+
+if ( E57_MAX_VERBOSE )
+target_compile_definitions( E57Format PRIVATE E57_MAX_VERBOSE )
+endif()
 
 if ( WIN32 )
     option( USING_STATIC_XERCES "Turn on if you are linking with Xerces as a static lib" OFF )

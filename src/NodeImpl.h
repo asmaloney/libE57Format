@@ -73,7 +73,9 @@ namespace e57
 #endif
 
    private:
+#ifdef E57_DEBUG
       bool _verifyPathNameAbsolute( const ustring &inPathName );
+#endif
 
       NodeImplSharedPtr _verifyAndGetRoot();
 

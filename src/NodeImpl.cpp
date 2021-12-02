@@ -241,7 +241,9 @@ NodeImplSharedPtr NodeImpl::get( const ustring &pathName )
    /// function. Only absolute pathNames make any sense here, because the
    /// terminal types can't have children, so relative pathNames are illegal.
 
+#ifdef E57_DEBUG
    _verifyPathNameAbsolute( pathName );
+#endif
 
    NodeImplSharedPtr root = _verifyAndGetRoot();
 
@@ -256,7 +258,9 @@ void NodeImpl::set( const ustring &pathName, NodeImplSharedPtr ni, bool autoPath
    /// function. Only absolute pathNames make any sense here, because the
    /// terminal types can't have children, so relative pathNames are illegal.
 
+#ifdef E57_DEBUG
    _verifyPathNameAbsolute( pathName );
+#endif
 
    NodeImplSharedPtr root = _verifyAndGetRoot();
 
@@ -405,6 +409,7 @@ bool NodeImpl::_verifyPathNameAbsolute( const ustring &inPathName )
 
    return isRelative;
 }
+#endif
 
 NodeImplSharedPtr NodeImpl::_verifyAndGetRoot()
 {
@@ -424,4 +429,3 @@ NodeImplSharedPtr NodeImpl::_verifyAndGetRoot()
 
    return root;
 }
-#endif

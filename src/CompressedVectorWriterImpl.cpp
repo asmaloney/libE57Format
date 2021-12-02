@@ -614,6 +614,7 @@ namespace e57
       }
    }
 
+#ifdef E57_DEBUG
    void CompressedVectorWriterImpl::dump( int indent, std::ostream &os )
    {
       os << space( indent ) << "isOpen:" << isOpen_ << std::endl;
@@ -655,4 +656,5 @@ namespace e57
       os << space( indent ) << "dataPacketsCount:          " << dataPacketsCount_ << std::endl;
       os << space( indent ) << "indexPacketsCount:         " << indexPacketsCount_ << std::endl;
    }
+#endif
 }

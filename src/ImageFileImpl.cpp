@@ -869,6 +869,7 @@ namespace e57
       }
    }
 
+#ifdef E57_DEBUG
    void ImageFileImpl::dump( int indent, std::ostream &os ) const
    {
       /// no checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__)
@@ -884,6 +885,7 @@ namespace e57
       os << space( indent ) << "root:      " << std::endl;
       root_->dump( indent + 2, os );
    }
+#endif
 
    unsigned ImageFileImpl::bitsNeeded( int64_t minimum, int64_t maximum )
    {

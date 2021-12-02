@@ -66,6 +66,7 @@ namespace e57
       return ( currentBytestreamBufferIndex == currentBytestreamBufferLength );
    }
 
+#ifdef E57_DEBUG
    void DecodeChannel::dump( int indent, std::ostream &os )
    {
       os << space( indent ) << "dbuf" << std::endl;
@@ -83,4 +84,5 @@ namespace e57
       os << space( indent ) << "isInputBlocked():              " << isInputBlocked() << std::endl;
       os << space( indent ) << "isOutputBlocked():             " << isOutputBlocked() << std::endl;
    }
+#endif
 }

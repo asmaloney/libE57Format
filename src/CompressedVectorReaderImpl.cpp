@@ -574,6 +574,7 @@ namespace e57
       }
    }
 
+#ifdef E57_DEBUG
    void CompressedVectorReaderImpl::dump( int indent, std::ostream &os )
    {
       os << space( indent ) << "isOpen:" << isOpen_ << std::endl;
@@ -600,5 +601,6 @@ namespace e57
       os << space( indent ) << "maxRecordCount:          " << maxRecordCount_ << std::endl;
       os << space( indent ) << "sectionEndLogicalOffset: " << sectionEndLogicalOffset_ << std::endl;
    }
+#endif
 
 }

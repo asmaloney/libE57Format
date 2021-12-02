@@ -76,9 +76,26 @@ if( BUILD_SHARED_LIBS )
 	set( E57_BUILD_SHARED ON )
 endif()
 
+#########################################################################################
+
+# Various levels of cross checking and verification in the code.
+# The extra code does not change the file contents.
+# Recommend that E57_DEBUG remain defined even for production versions.
+
+option( E57_DEBUG,     "Compile library with minimal debug checking" ON )
 option( E57_MAX_DEBUG, "Compile library with maximum debug checking" OFF )
-option( E57_VERBOSE,   "Compile library with vebose logging" OFF )
+
+# Various levels of printing to the console of what is going on in the code.
+# Optional
+
+option( E57_VERBOSE,     "Compile library with verbose logging" OFF )
 option( E57_MAX_VERBOSE, "Compile library with maximum verbose logging" OFF )
+
+# Enable writing packets that are correct but will stress the reader.
+
+option( E57_WRITE_CRAZY_PACKET_MODE, "Compile library to enable reader-stressing packets" OFF )
+
+#########################################################################################
 
 set( revision_id "${PROJECT_NAME}-${PROJECT_VERSION}-${${PROJECT_NAME}_BUILD_TAG}" )
 message( STATUS "[E57] Revison ID: ${revision_id}" )
@@ -119,16 +136,24 @@ target_compile_definitions( E57Format
         REVISION_ID="${revision_id}"
 )
 
+if ( E57_DEBUG )
+    target_compile_definitions( E57Format PRIVATE E57_DEBUG )
+endif()
+
 if ( E57_MAX_DEBUG )
-target_compile_definitions( E57Format PRIVATE E57_MAX_DEBUG )
+    target_compile_definitions( E57Format PRIVATE E57_MAX_DEBUG )
 endif()
 
 if ( E57_VERBOSE )
-target_compile_definitions( E57Format PRIVATE E57_VERBOSE )
+    target_compile_definitions( E57Format PRIVATE E57_VERBOSE )
 endif()
 
 if ( E57_MAX_VERBOSE )
-target_compile_definitions( E57Format PRIVATE E57_MAX_VERBOSE )
+    target_compile_definitions( E57Format PRIVATE E57_MAX_VERBOSE )
+endif()
+
+if ( E57_WRITE_CRAZY_PACKET_MODE )
+    target_compile_definitions( E57Format PRIVATE E57_WRITE_CRAZY_PACKET_MODE )
 endif()
 
 if ( WIN32 )

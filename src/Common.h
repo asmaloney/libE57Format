@@ -39,21 +39,6 @@
 #define E57_INTERNAL_IMPLEMENTATION_ENABLE 1
 #include "E57Format.h"
 
-// Uncomment the lines below to enable various levels of cross checking and
-// verification in the code. The extra code does not change the file contents.
-// Recommend that E57_DEBUG remain defined even for production versions.
-#define E57_DEBUG 1
-//#define E57_MAX_DEBUG   1
-
-// Uncomment the lines below to enable various levels of printing to the console
-// of what is going on in the code.
-//#define E57_VERBOSE     1
-//#define E57_MAX_VERBOSE 1
-
-// Uncomment the line below to enable writing packets that are correct but will
-// stress the reader.
-//#define E57_WRITE_CRAZY_PACKET_MODE 1
-
 #ifdef _MSC_VER
 // Disable MSVC warning: warning C4224: nonstandard extension used : formal
 // parameter 'locale' was previously defined as a type

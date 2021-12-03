@@ -361,7 +361,7 @@ BitpackFloatDecoder::BitpackFloatDecoder( unsigned bytestreamNumber, SourceDestB
 size_t BitpackFloatDecoder::inputProcessAligned( const char *inbuf, const size_t firstBit, const size_t endBit )
 {
 #ifdef E57_MAX_VERBOSE
-   std::cout << "BitpackFloatDecoder::inputProcessAligned() called, inbuf=" << inbuf << " firstBit=" << firstBit
+   std::cout << "BitpackFloatDecoder::inputProcessAligned() called, inbuf=" << reinterpret_cast<const void *>(inbuf) << " firstBit=" << firstBit
              << " endBit=" << endBit << std::endl;
 #endif
    /// Read from inbuf, decode, store in destBuffer

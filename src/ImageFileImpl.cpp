@@ -774,9 +774,9 @@ namespace e57
 #ifdef E57_MAX_VERBOSE
       std::cout << "pathNameParse returning: isRelative=" << isRelative << " fields.size()=" << fields.size()
                 << " fields=";
-      for ( size_t i = 0; i < fields.size(); i++ )
+      for ( auto &field : fields )
       {
-         std::cout << fields[i] << ",";
+         std::cout << field << ",";
       }
       std::cout << std::endl;
 #endif

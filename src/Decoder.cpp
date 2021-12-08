@@ -361,8 +361,8 @@ BitpackFloatDecoder::BitpackFloatDecoder( unsigned bytestreamNumber, SourceDestB
 size_t BitpackFloatDecoder::inputProcessAligned( const char *inbuf, const size_t firstBit, const size_t endBit )
 {
 #ifdef E57_MAX_VERBOSE
-   std::cout << "BitpackFloatDecoder::inputProcessAligned() called, inbuf=" << reinterpret_cast<const void *>(inbuf) << " firstBit=" << firstBit
-             << " endBit=" << endBit << std::endl;
+   std::cout << "BitpackFloatDecoder::inputProcessAligned() called, inbuf=" << reinterpret_cast<const void *>( inbuf )
+             << " firstBit=" << firstBit << " endBit=" << endBit << std::endl;
 #endif
    /// Read from inbuf, decode, store in destBuffer
    /// Repeat until have filled destBuffer, or completed all records
@@ -674,7 +674,7 @@ size_t BitpackIntegerDecoder<RegisterT>::inputProcessAligned( const char *inbuf,
    if ((reinterpret_cast<unsigned>(inbuf)) % sizeof(RegisterT))
       throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "inbuf=" + toString(reinterpret_cast<unsigned>(inbuf)));
 #endif
-   /// Verfiy first bit is in first word
+   /// Verify first bit is in first word
    if ( firstBit >= 8 * sizeof( RegisterT ) )
    {
       throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "firstBit=" + toString( firstBit ) );
@@ -777,7 +777,7 @@ size_t BitpackIntegerDecoder<RegisterT>::inputProcessAligned( const char *inbuf,
          destBuffer_->setNextInt64( value );
       }
 
-      /// Store the result in next avaiable position in the user's dest buffer
+      /// Store the result in next available position in the user's dest buffer
 
       /// Calc next bit alignment and which word it starts in
       bitOffset += bitsPerRecord_;

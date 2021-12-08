@@ -1218,7 +1218,7 @@ namespace e57
       return true;
    }
 
-   // This funtion writes out the group data
+   // This function writes out the group data
    bool ReaderImpl::ReadData3DGroupsData( int64_t dataIndex, int64_t groupCount, int64_t *idElementValue,
                                           int64_t *startPointIndex, int64_t *pointCount ) const
    {
@@ -1297,7 +1297,7 @@ namespace e57
       {
          ustring name = proto.get( protoIndex ).elementName();
          NodeType type = proto.get( protoIndex ).type();
-         bool scaled = (type == E57_SCALED_INTEGER);
+         bool scaled = ( type == E57_SCALED_INTEGER );
          // E57_EXT_surface_normals
          ustring norExtUri;
          bool haveNormalsExt = imf_.extensionsLookupPrefix( "nor", norExtUri );

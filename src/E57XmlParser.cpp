@@ -526,7 +526,7 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
             {
 #ifdef E57_VERBOSE
                std::cout << "declared extension, prefix=" << toUString( attributes.getLocalName( i ) )
-                    << " URI=" << toUString( attributes.getValue( i ) ) << std::endl;
+                         << " URI=" << toUString( attributes.getValue( i ) ) << std::endl;
 #endif
                imf_->extensionsAdd( toUString( attributes.getLocalName( i ) ), toUString( attributes.getValue( i ) ) );
             }

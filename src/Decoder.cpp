@@ -739,7 +739,7 @@ size_t BitpackIntegerDecoder<RegisterT>::inputProcessAligned( const char *inbuf,
       }
       // Avoid reading the next word, unless it is needed
       // If the last record finishes on the last bit of input, avoid UMR
-      else if ( bitOffset + bitsPerRecord_ <= registerBits_)
+      else if ( bitOffset + bitsPerRecord_ <= RegisterBits )
       {
          w = low >> bitOffset;
       }
@@ -755,7 +755,7 @@ size_t BitpackIntegerDecoder<RegisterT>::inputProcessAligned( const char *inbuf,
          /// Shift high to just above the lower bits, shift low LSBit to bit0,
          /// OR together. Note shifts are logical (not arithmetic) because using
          /// unsigned variables.
-         w = ( high << ( registerBits_ - bitOffset ) ) | ( low >> bitOffset );
+         w = ( high << ( RegisterBits - bitOffset ) ) | ( low >> bitOffset );
       }
 
 #ifdef E57_MAX_VERBOSE

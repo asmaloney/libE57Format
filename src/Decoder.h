@@ -149,7 +149,7 @@ namespace e57
       double offset_;
       unsigned bitsPerRecord_;
       RegisterT destBitMask_;
-      static const size_t registerBits_ = sizeof(RegisterT) * 8;
+      static constexpr size_t RegisterBits = sizeof( RegisterT ) * 8;
    };
 
    class ConstantIntegerDecoder : public Decoder

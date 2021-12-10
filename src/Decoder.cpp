@@ -645,8 +645,7 @@ BitpackIntegerDecoder<RegisterT>::BitpackIntegerDecoder( bool isScaledInteger, u
                                                          SourceDestBuffer &dbuf, int64_t minimum, int64_t maximum,
                                                          double scale, double offset, uint64_t maxRecordCount ) :
    BitpackDecoder( bytestreamNumber, dbuf, sizeof( RegisterT ), maxRecordCount ),
-   isScaledInteger_( isScaledInteger ), minimum_( minimum ), maximum_( maximum ), scale_( scale ), offset_( offset ),
-   registerBits_( sizeof(RegisterT) * 8)
+   isScaledInteger_( isScaledInteger ), minimum_( minimum ), maximum_( maximum ), scale_( scale ), offset_( offset )
 {
    /// Get pointer to parent ImageFileImpl
    ImageFileImplSharedPtr imf( dbuf.impl()->destImageFile() ); //??? should be function for this,

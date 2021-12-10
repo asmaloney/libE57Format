@@ -706,17 +706,17 @@ size_t BitpackIntegerDecoder<RegisterT>::inputProcessAligned( const char *inbuf,
    auto inp = reinterpret_cast<const RegisterT *>( inbuf );
    unsigned wordPosition = 0; /// The index in inbuf of the word we are currently working on.
 
-   ///  For example on little endian machine:
-   ///  Assume: registerT=uint32_t, bitOffset=20, destBitMask=0x00007fff (for a
-   ///  15 bit value). inp[wordPosition]                    LLLLLLLL LLLLXXXX
-   ///  XXXXXXXX XXXXXXXX   Note LSB of value is at bit20 inp(wordPosition+1]
-   ///  XXXXXXXX XXXXXXXX XXXXXXXX XXXXXHHH H=high bits of value,
-   ///  X=uninteresting bits low = inp[i] >> bitOffset            00000000
-   ///  00000000 0000LLLL LLLLLLLL   L=low bits of value, X=uninteresting bits
-   ///  high = inp[i+1] << (32-bitOffset)    XXXXXXXX XXXXXXXX XHHH0000 00000000
-   ///  w = high | low XXXXXXXX XXXXXXXX XHHHLLLL LLLLLLLL destBitmask 00000000
-   ///  00000000 01111111 11111111 w & mask                             00000000
-   ///  00000000 0HHHLLLL LLLLLLLL
+   // clang-format off
+   /// For example on little endian machine:
+   /// Assume: registerT=uint32_t, bitOffset=20, destBitMask=0x00007fff (for a 15 bit value).
+   /// inp[wordPosition]                    LLLLLLLL LLLLXXXX XXXXXXXX XXXXXXXX   Note LSB of value is at bit20
+   /// inp(wordPosition+1]                  XXXXXXXX XXXXXXXX XXXXXXXX XXXXXHHH   H=high bits of value, X=uninteresting bits
+   /// low = inp[i] >> bitOffset            00000000 00000000 0000LLLL LLLLLLLL   L=low bits of value, X=uninteresting bits
+   /// high = inp[i+1] << (32-bitOffset)    XXXXXXXX XXXXXXXX XHHH0000 00000000
+   /// w = high | low                       XXXXXXXX XXXXXXXX XHHHLLLL LLLLLLLL
+   /// destBitmask                          00000000 00000000 01111111 11111111
+   /// w & mask                             00000000 00000000 0HHHLLLL LLLLLLLL
+   // clang-format on
 
    size_t bitOffset = firstBit;
 

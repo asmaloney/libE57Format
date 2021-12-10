@@ -45,7 +45,7 @@ Since the original fork, [Jiri Hörner](https://github.com/ptc-jhoerner) has add
 [Xerces-C++](https://xerces.apache.org/xerces-c/) validating XML parser is needed at runtime and
 [clang-format](https://clang.llvm.org/docs/ClangFormat.html) for checking C++ formatting.
 
-For Ubuntu 20.04: `$ sudo apt install libxerces-c-dev clang-format`
+Ubuntu 20.04 (bionic): `$ sudo apt install libxerces-c-dev clang-format`
 
 ## License
 

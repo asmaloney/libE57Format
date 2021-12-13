@@ -32,7 +32,7 @@ namespace e57
 
    ReaderImpl::ReaderImpl( const ustring &filePath ) :
       imf_( filePath, "r" ), root_( imf_.root() ), data3D_( root_.get( "/data3D" ) ),
-      images2D_( root_.get( "/images2D" ) )
+      images2D_( root_.isDefined( "/images2D" ) ? root_.get( "/images2D" ) : VectorNode( imf_ ) )
    {
    }
 
@@ -90,8 +90,12 @@ namespace e57
       {
          StructureNode creationDateTime( root_.get( "creationDateTime" ) );
          fileHeader.creationDateTime.dateTimeValue = FloatNode( creationDateTime.get( "dateTimeValue" ) ).value();
-         fileHeader.creationDateTime.isAtomicClockReferenced =
-            (int32_t)IntegerNode( creationDateTime.get( "isAtomicClockReferenced" ) ).value();
+
+         if ( creationDateTime.isDefined( "isAtomicClockReferenced" ) )
+         {
+            fileHeader.creationDateTime.isAtomicClockReferenced =
+               (int32_t)IntegerNode( creationDateTime.get( "isAtomicClockReferenced" ) ).value();
+         }
       }
 
       fileHeader.data3DSize = data3D_.childCount();
@@ -156,8 +160,12 @@ namespace e57
          StructureNode acquisitionDateTime( image.get( "acquisitionDateTime" ) );
          image2DHeader.acquisitionDateTime.dateTimeValue =
             FloatNode( acquisitionDateTime.get( "dateTimeValue" ) ).value();
-         image2DHeader.acquisitionDateTime.isAtomicClockReferenced =
-            (int32_t)IntegerNode( acquisitionDateTime.get( "isAtomicClockReferenced" ) ).value();
+
+         if ( acquisitionDateTime.isDefined( "isAtomicClockReferenced" ) )
+         {
+            image2DHeader.acquisitionDateTime.isAtomicClockReferenced =
+               (int32_t)IntegerNode( acquisitionDateTime.get( "isAtomicClockReferenced" ) ).value();
+         }
       }
 
       // Get pose structure for scan.
@@ -752,16 +760,24 @@ namespace e57
       {
          StructureNode acquisitionStart( scan.get( "acquisitionStart" ) );
          data3DHeader.acquisitionStart.dateTimeValue = FloatNode( acquisitionStart.get( "dateTimeValue" ) ).value();
-         data3DHeader.acquisitionStart.isAtomicClockReferenced =
-            (int32_t)IntegerNode( acquisitionStart.get( "isAtomicClockReferenced" ) ).value();
+
+         if ( acquisitionStart.isDefined( "isAtomicClockReferenced" ) )
+         {
+            data3DHeader.acquisitionStart.isAtomicClockReferenced =
+               (int32_t)IntegerNode( acquisitionStart.get( "isAtomicClockReferenced" ) ).value();
+         }
       }
 
       if ( scan.isDefined( "acquisitionEnd" ) )
       {
          StructureNode acquisitionEnd( scan.get( "acquisitionEnd" ) );
          data3DHeader.acquisitionEnd.dateTimeValue = FloatNode( acquisitionEnd.get( "dateTimeValue" ) ).value();
-         data3DHeader.acquisitionEnd.isAtomicClockReferenced =
-            (int32_t)IntegerNode( acquisitionEnd.get( "isAtomicClockReferenced" ) ).value();
+
+         if ( acquisitionEnd.isDefined( "isAtomicClockReferenced" ) )
+         {
+            data3DHeader.acquisitionEnd.isAtomicClockReferenced =
+               (int32_t)IntegerNode( acquisitionEnd.get( "isAtomicClockReferenced" ) ).value();
+         }
       }
 
       // Get a prototype of datatypes that will be stored in points record.

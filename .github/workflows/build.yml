@@ -65,7 +65,7 @@ jobs:
           -B libE57Format-build
           -G "Ninja"
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
-          -DE57_MAX_VERBOSE=1
+          -DE57_MAX_DEBUG=1
           .
 
       - name: Configure (Release)

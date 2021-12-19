@@ -6,25 +6,15 @@ jobs:
   build:
     name: ${{ matrix.config.name }} (${{ matrix.build_type }})
     runs-on: ${{ matrix.config.os }}
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
 
     strategy:
       fail-fast: false
       matrix:
-        build_type: ["Debug", "Release"]
+        build_type: ['Debug', 'Release']
         config:
-          - {
-              name: "macOS Clang",
-              os: macos-latest,
-            }
-          - {
-              name: "Ubuntu GCC",
-              os: ubuntu-latest,
-            }
-          - {
-              name: "Windows MSVC",
-              os: windows-latest,
-           }
+          - { name: 'macOS Clang', os: macos-latest }
+          - { name: 'Ubuntu GCC', os: ubuntu-latest }
+          - { name: 'Windows MSVC', os: windows-latest }
 
     steps:
       - name: Checkout
@@ -56,17 +46,18 @@ jobs:
           conda install -y ninja xerces-c
 
       - name: Configure MSVC console (Windows)
-        if:  matrix.config.os == 'windows-latest'
+        if: matrix.config.os == 'windows-latest'
         uses: ilammy/msvc-dev-cmd@v1
 
       - name: Set environment for MSVC (Windows)
-        if:  matrix.config.os == 'windows-latest'
+        if: matrix.config.os == 'windows-latest'
         run: |
           # Set these env vars so cmake picks the correct compiler
           echo "CXX=cl.exe" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           echo "CC=cl.exe" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
-      - name: Configure
+      - name: Configure (Debug)
+        if: matrix.build_type == 'Debug'
         run: >
           mkdir libE57Format-build
 
@@ -74,7 +65,19 @@ jobs:
           -B libE57Format-build
           -G "Ninja"
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
-          -DCMAKE_CXX_FLAGS_DEBUG="-g -DE57_MAX_VERBOSE"
+          -DE57_MAX_DEBUG=1
+          .
+
+      - name: Configure (Release)
+        if: matrix.build_type == 'Release'
+        run: >
+          mkdir libE57Format-build
+
+          cmake
+          -B libE57Format-build
+          -G "Ninja"
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          -DE57_DEBUG=0
           .
 
       - name: Build

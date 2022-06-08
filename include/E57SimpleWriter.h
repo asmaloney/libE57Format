@@ -43,7 +43,7 @@ namespace e57
       //! @brief This function is the constructor for the writer class
       //! @param [in] filePath file path to E57 file
       //! @param [in] coordinateMetaData Information describing the Coordinate Reference System to be used for the file
-      Writer( const ustring &filePath, const ustring &coordinateMetaData = {} );
+      Writer( const ustring &filePath, const ustring &coordinateMetaData = {}, const ustring &guid = {} );
 
       //! @brief This function returns true if the file is open
       bool IsOpen() const;

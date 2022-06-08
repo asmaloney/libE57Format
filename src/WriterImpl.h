@@ -36,7 +36,7 @@ namespace e57
    class WriterImpl
    {
    public:
-      WriterImpl( const ustring &filePath, const ustring &coordinateMetaData );
+      WriterImpl( const ustring &filePath, const ustring &coordinateMetaData, const ustring &guid );
 
       ~WriterImpl();
 

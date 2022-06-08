@@ -33,7 +33,7 @@
 namespace e57
 {
 
-   WriterImpl::WriterImpl( const ustring &filePath, const ustring &coordinateMetadata ) :
+   WriterImpl::WriterImpl( const ustring &filePath, const ustring &coordinateMetadata, const ustring &guid ) :
       imf_( filePath, "w" ), root_( imf_.root() ), data3D_( imf_, true ), images2D_( imf_, true )
    {
       // We are using the E57 v1.0 data format standard fieldnames.
@@ -44,7 +44,14 @@ namespace e57
       // Set per-file properties.
       // Path names: "/formatName", "/majorVersion", "/minorVersion", "/coordinateMetadata"
       root_.set( "formatName", StringNode( imf_, "ASTM E57 3D Imaging Data File" ) );
-      root_.set( "guid", StringNode( imf_, generateRandomGUID() ) );
+      if (guid.length())
+      {
+         root_.set( "guid", StringNode( imf_, guid ) );
+      }
+      else
+      {
+         root_.set( "guid", StringNode( imf_, generateRandomGUID() ) );
+      }
 
       // Get ASTM version number supported by library, so can write it into file
       int astmMajor;

@@ -124,9 +124,11 @@ namespace e57
       image2DHeader = {};
 
       StructureNode image( images2D_.get( imageIndex ) );
-
-      image2DHeader.guid = StringNode( image.get( "guid" ) ).value();
-
+      
+      if ( image.isDefined( "guid" ) )
+      {
+      	 image2DHeader.guid = StringNode( image.get( "guid" ) ).value();
+      }
       if ( image.isDefined( "name" ) )
       {
          image2DHeader.name = StringNode( image.get( "name" ) ).value();

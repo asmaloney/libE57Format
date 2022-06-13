@@ -25,6 +25,8 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
+#include <limits>
+
 #include <xercesc/sax2/Attributes.hpp>
 #include <xercesc/sax2/XMLReaderFactory.hpp>
 
@@ -41,10 +43,6 @@
 #include "ScaledIntegerNodeImpl.h"
 #include "StringNodeImpl.h"
 #include "VectorNodeImpl.h"
-
-#if __GNUC__ >= 11
-#include <limits>
-#endif
 
 using namespace e57;
 using namespace XERCES_CPP_NAMESPACE;

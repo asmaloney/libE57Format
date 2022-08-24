@@ -804,7 +804,7 @@ void SourceDestBufferImpl::setNextInt64( int64_t value, double scale, double off
 {
    /// don't checkImageFileOpen
 
-   /// Apply a scale and offset to numbers from file before puting in user's
+   /// Apply a scale and offset to numbers from file before putting in user's
    /// buffer.
 
    /// Incorporating the scale is optional (requested by user when constructing

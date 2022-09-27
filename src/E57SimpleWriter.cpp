@@ -31,13 +31,13 @@
 namespace e57
 {
 
-   Writer::Writer( const ustring &filePath, const ustring &coordinateMetaData ) :
-      impl_( new WriterImpl( filePath, coordinateMetaData, {} ) )
+   Writer::Writer( const ustring &filePath, const ustring &coordinateMetadata ) :
+      impl_( new WriterImpl( filePath, coordinateMetadata ) )
    {
    }
 
    Writer::Writer( const ustring &filePath, const WriterOptions &options ) :
-      impl_( new WriterImpl( filePath, options.coordinateMetaData, options.guid ) )
+      impl_( new WriterImpl( filePath, options ) )
    {
    }
 

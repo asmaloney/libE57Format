@@ -28,6 +28,7 @@
 #pragma once
 
 #include "E57SimpleData.h"
+#include "E57SimpleWriter.h"
 
 namespace e57
 {
@@ -36,7 +37,8 @@ namespace e57
    class WriterImpl
    {
    public:
-      WriterImpl( const ustring &filePath, const ustring &coordinateMetaData, const ustring &guid );
+      WriterImpl( const ustring &filePath, const ustring &coordinateMetadata );
+      WriterImpl( const ustring &filePath, const WriterOptions &options );
 
       ~WriterImpl();
 

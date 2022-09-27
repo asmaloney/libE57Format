@@ -95,7 +95,7 @@ option( E57_MAX_VERBOSE  "Compile library with maximum verbose logging" OFF )
 
 option( E57_WRITE_CRAZY_PACKET_MODE "Compile library to enable reader-stressing packets" OFF )
 
-option( E57_VISIBILITY_HIDDEN       "Compile library with hidden symbol visibility" OFF)
+option( E57_VISIBILITY_HIDDEN       "Compile library with hidden symbol visibility" ON )
 
 #########################################################################################
 

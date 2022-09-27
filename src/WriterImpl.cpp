@@ -33,11 +33,6 @@
 namespace e57
 {
 
-   WriterImpl::WriterImpl( const ustring &filePath, const ustring &coordinateMetadata) :
-      WriterImpl( filePath, WriterOptions{{}, coordinateMetadata} )
-   {
-   }
-
    WriterImpl::WriterImpl( const ustring &filePath, const WriterOptions &options ) :
       imf_( filePath, "w" ), root_( imf_.root() ), data3D_( imf_, true ), images2D_( imf_, true )
    {

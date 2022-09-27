@@ -32,7 +32,7 @@ namespace e57
 {
 
    Writer::Writer( const ustring &filePath, const ustring &coordinateMetadata ) :
-      impl_( new WriterImpl( filePath, coordinateMetadata ) )
+      impl_( new WriterImpl( filePath, WriterOptions{{}, coordinateMetadata} ) )
    {
    }
 

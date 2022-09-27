@@ -102,10 +102,6 @@ option( E57_VISIBILITY_HIDDEN       "Compile library with hidden symbol visibili
 set( revision_id "${PROJECT_NAME}-${PROJECT_VERSION}-${${PROJECT_NAME}_BUILD_TAG}" )
 message( STATUS "[E57] Revision ID: ${revision_id}" )
 
-if ( E57_VISIBILITY_HIDDEN )
-    set(CMAKE_CXX_VISIBILITY_PRESET hidden)
-endif()
-
 # Target
 if ( E57_BUILD_SHARED )
 	message( STATUS "[E57] Building shared library" )
@@ -160,6 +156,10 @@ endif()
 
 if ( E57_WRITE_CRAZY_PACKET_MODE )
     target_compile_definitions( E57Format PRIVATE E57_WRITE_CRAZY_PACKET_MODE )
+endif()
+
+if ( E57_VISIBILITY_HIDDEN )
+    set_target_properties( E57Format PROPERTIES CXX_VISIBILITY_PRESET hidden)
 endif()
 
 if ( WIN32 )

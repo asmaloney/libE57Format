@@ -163,7 +163,11 @@ CheckedFile::CheckedFile( const ustring &fileName, Mode mode, ReadChecksumPolicy
 
       case WriteCreate:
          /// File truncated to zero length if already exists
+#if defined( _MSC_VER )
          fd_ = open64( fileName_, O_RDWR | O_CREAT | O_TRUNC | O_BINARY, S_IWRITE | S_IREAD );
+#else
+         fd_ = open64( fileName_, O_RDWR | O_CREAT | O_TRUNC | O_BINARY, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH );
+#endif
          break;
 
       case WriteExisting:

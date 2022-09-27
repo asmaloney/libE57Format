@@ -74,10 +74,6 @@
 #include <cassert>
 #endif
 
-#ifndef O_BINARY
-constexpr int O_BINARY = 0;
-#endif
-
 using namespace e57;
 
 // These extra definitions are required in C++11.
@@ -151,7 +147,14 @@ CheckedFile::CheckedFile( const ustring &fileName, Mode mode, ReadChecksumPolicy
    switch ( mode )
    {
       case ReadOnly:
-         fd_ = open64( fileName_, O_RDONLY | O_BINARY, 0 );
+      {
+#if defined( _MSC_VER )
+         constexpr int readFlags = O_RDONLY | O_BINARY;
+#else
+         constexpr int readFlags = O_RDONLY;
+#endif
+
+         fd_ = open64( fileName_, readFlags, 0 );
 
          readOnly_ = true;
 
@@ -159,22 +162,38 @@ CheckedFile::CheckedFile( const ustring &fileName, Mode mode, ReadChecksumPolicy
          lseek64( 0, SEEK_SET );
 
          logicalLength_ = physicalToLogical( physicalLength_ );
-         break;
+      }
+      break;
 
       case WriteCreate:
+      {
          /// File truncated to zero length if already exists
+
 #if defined( _MSC_VER )
-         fd_ = open64( fileName_, O_RDWR | O_CREAT | O_TRUNC | O_BINARY, S_IWRITE | S_IREAD );
+         constexpr int writeFlags = O_RDWR | O_CREAT | O_TRUNC | O_BINARY;
+         constexpr int writeMode = S_IREAD | S_IWRITE;
 #else
-         fd_ = open64( fileName_, O_RDWR | O_CREAT | O_TRUNC | O_BINARY, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH );
+         constexpr int writeFlags = O_RDWR | O_CREAT | O_TRUNC;
+         constexpr int writeMode = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH;
 #endif
-         break;
+
+         fd_ = open64( fileName_, writeFlags, writeMode );
+      }
+      break;
 
       case WriteExisting:
-         fd_ = open64( fileName_, O_RDWR | O_BINARY, 0 );
+      {
+#if defined( _MSC_VER )
+         constexpr int writeFlags = O_RDWR | O_BINARY;
+#else
+         constexpr int writeFlags = O_RDWR;
+#endif
+
+         fd_ = open64( fileName_, writeFlags, 0 );
 
          logicalLength_ = physicalToLogical( length( Physical ) ); //???
-         break;
+      }
+      break;
    }
 }
 

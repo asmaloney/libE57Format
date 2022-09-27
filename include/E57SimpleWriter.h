@@ -35,6 +35,11 @@
 
 namespace e57
 {
+   struct E57_DLL WriterOptions
+   {
+      ustring guid;               //!< Optional file guid
+      ustring coordinateMetadata; //!< Information describing the Coordinate Reference System to be used for the file
+   };
 
    //! @brief Used for writing of the E57 file with E57 Simple API
    class E57_DLL Writer
@@ -42,8 +47,13 @@ namespace e57
    public:
       //! @brief This function is the constructor for the writer class
       //! @param [in] filePath file path to E57 file
-      //! @param [in] coordinateMetaData Information describing the Coordinate Reference System to be used for the file
-      Writer( const ustring &filePath, const ustring &coordinateMetaData = {} );
+      //! @param [in] coordinateMetadata Information describing the Coordinate Reference System to be used for the file
+      Writer( const ustring &filePath, const ustring &coordinateMetadata = {} );
+
+      //! @brief This function is the constructor for the writer class
+      //! @param [in] filePath file path to E57 file
+      //! @param [in] options Options to be used for the file
+      Writer( const ustring &filePath, const WriterOptions &options );
 
       //! @brief This function returns true if the file is open
       bool IsOpen() const;

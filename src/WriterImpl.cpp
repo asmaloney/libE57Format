@@ -33,7 +33,7 @@
 namespace e57
 {
 
-   WriterImpl::WriterImpl( const ustring &filePath, const ustring &coordinateMetadata ) :
+   WriterImpl::WriterImpl( const ustring &filePath, const WriterOptions &options ) :
       imf_( filePath, "w" ), root_( imf_.root() ), data3D_( imf_, true ), images2D_( imf_, true )
    {
       // We are using the E57 v1.0 data format standard fieldnames.
@@ -44,7 +44,14 @@ namespace e57
       // Set per-file properties.
       // Path names: "/formatName", "/majorVersion", "/minorVersion", "/coordinateMetadata"
       root_.set( "formatName", StringNode( imf_, "ASTM E57 3D Imaging Data File" ) );
-      root_.set( "guid", StringNode( imf_, generateRandomGUID() ) );
+      if (options.guid.length())
+      {
+         root_.set( "guid", StringNode( imf_, options.guid ) );
+      }
+      else
+      {
+         root_.set( "guid", StringNode( imf_, generateRandomGUID() ) );
+      }
 
       // Get ASTM version number supported by library, so can write it into file
       int astmMajor;
@@ -58,9 +65,9 @@ namespace e57
 
       // Save a dummy string for coordinate system.
       // Really should be a valid WKT string identifying the coordinate reference system (CRS).
-      if ( !coordinateMetadata.empty() )
+      if ( !options.coordinateMetadata.empty() )
       {
-         root_.set( "coordinateMetadata", StringNode( imf_, coordinateMetadata ) );
+         root_.set( "coordinateMetadata", StringNode( imf_, options.coordinateMetadata ) );
       }
 
 // Create creationDateTime structure

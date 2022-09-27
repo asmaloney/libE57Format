@@ -95,6 +95,8 @@ option( E57_MAX_VERBOSE  "Compile library with maximum verbose logging" OFF )
 
 option( E57_WRITE_CRAZY_PACKET_MODE "Compile library to enable reader-stressing packets" OFF )
 
+option( E57_VISIBILITY_HIDDEN       "Compile library with hidden symbol visibility" ON )
+
 #########################################################################################
 
 set( revision_id "${PROJECT_NAME}-${PROJECT_VERSION}-${${PROJECT_NAME}_BUILD_TAG}" )
@@ -154,6 +156,10 @@ endif()
 
 if ( E57_WRITE_CRAZY_PACKET_MODE )
     target_compile_definitions( E57Format PRIVATE E57_WRITE_CRAZY_PACKET_MODE )
+endif()
+
+if ( E57_VISIBILITY_HIDDEN )
+    set_target_properties( E57Format PROPERTIES CXX_VISIBILITY_PRESET hidden)
 endif()
 
 if ( WIN32 )

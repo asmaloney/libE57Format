@@ -71,7 +71,7 @@ namespace e57
    //! @brief Represents a rigid body rotation.
    struct E57_DLL Quaternion
    {
-      double w{ 0. }; //!< The real part of the quaternion. Shall be nonnegative
+      double w{ 1. }; //!< The real part of the quaternion. Shall be nonnegative
       double x{ 0. }; //!< The i coefficient of the quaternion
       double y{ 0. }; //!< The j coefficient of the quaternion
       double z{ 0. }; //!< The k coefficient of the quaternion

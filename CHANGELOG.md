@@ -6,12 +6,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## 2.3.0 - (in progress)
 
+### Added
+
+- {cmake} Added E57_VISIBILITY_HIDDEN option to control [CXX_VISIBILITY_PRESET](https://cmake.org/cmake/help/latest/prop_tgt/LANG_VISIBILITY_PRESET.html). Defaults to ON. ([#104](https://github.com/asmaloney/libE57Format/pull/104)) (Thanks Nigel!)
+- Added BSD support. ([#99](https://github.com/asmaloney/libE57Format/pull/99)) (Thanks Christophe!)
+
 ### Changed
 
+- Change file creation to use 0666 permissions on POSIX systems. ([#105](https://github.com/asmaloney/libE57Format/pull/105)) (Thanks Nigel!)
+- {cmake} [CXX_VISIBILITY_PRESET](https://cmake.org/cmake/help/latest/prop_tgt/LANG_VISIBILITY_PRESET.html) is now set and ON by default. ([#104](https://github.com/asmaloney/libE57Format/pull/104)) (Thanks Nigel!)
+- A new E57SimpleWriter constructor takes a `WriterOptions` struct which allows setting the file's GUID.
+  ```cpp
+  Writer( const ustring &filePath, const WriterOptions &options );
+  ```
+  The old constructor taking only `coordinateMetadata` is deprecated and will be removed in the future. ([#96](https://github.com/asmaloney/libE57Format/pull/96)) (Thanks Nigel!)
 - Change `E57_DEBUG`, `E57_MAX_DEBUG`, `E57_VERBOSE`, `E57_MAX_VERBOSE`, `E57_WRITE_CRAZY_PACKET_MODE` from **#defines** to cmake options. ([#80](https://github.com/asmaloney/libE57Format/pull/80)) (Thanks Nigel!)
 
 ### Fixed
 
+- Fix E57SimpleWriter's writing of invalid quaternions. It now defaults to the identity quaternion. ([#108](https://github.com/asmaloney/libE57Format/pull/108)) (Thanks Nigel!)
 - Fix E57SimpleReader to handle missing `images2D` and `isAtomicClockReferenced` nodes. ([#90](https://github.com/asmaloney/libE57Format/pull/90)) (Thanks Olli!)
 - Fix **BitpackIntegerDecoder** sometimes reading past end of input buffer. ([#87](https://github.com/asmaloney/libE57Format/pull/87)) (Thanks Nigel!)
 - Fix compilation when some debug options are set. ([#81](https://github.com/asmaloney/libE57Format/pull/81), [#82](https://github.com/asmaloney/libE57Format/pull/82), [#84](https://github.com/asmaloney/libE57Format/pull/84)) (Thanks Nigel!)

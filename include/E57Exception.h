@@ -113,7 +113,7 @@ namespace e57
       //! \cond documentNonPublic   The following isn't part of the API, and isn't
       //! documented.
       E57Exception() = delete;
-      E57Exception( ErrorCode ecode, const std::string &context, const std::string &srcFileName = nullptr,
+      E57Exception( ErrorCode ecode, const std::string &context, const std::string &srcFileName = {},
                     int srcLineNumber = 0, const char *srcFunctionName = nullptr );
       ~E57Exception() noexcept override = default;
 

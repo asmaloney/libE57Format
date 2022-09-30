@@ -494,8 +494,8 @@ namespace e57
       float *normalZ{ nullptr }; //!< The Z component of a surface normal vector (E57_EXT_surface_normals).
    };
 
-   typedef Data3DPointsData_t<float> Data3DPointsData;
-   typedef Data3DPointsData_t<double> Data3DPointsData_d;
+   using Data3DPointsData = Data3DPointsData_t<float>;
+   using Data3DPointsData_d = Data3DPointsData_t<double>;
 
    //! @brief Stores an image that is to be used only as a visual reference.
    struct E57_DLL VisualReferenceRepresentation

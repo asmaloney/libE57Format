@@ -192,14 +192,13 @@ NodeImplSharedPtr StructureNodeImpl::lookup( const ustring &pathName )
       /// Call lookup on child object with remaining fields in path name
       return children_.at( i )->lookup( imf->pathNameUnparse( true, fields ) );
    }
-   else
-   { /// Absolute pathname and we aren't at the root
-      /// Find root of the tree
-      NodeImplSharedPtr root( getRoot() );
 
-      /// Call lookup on root
-      return ( root->lookup( pathName ) );
-   }
+   /// Absolute pathname and we aren't at the root
+   /// Find root of the tree
+   NodeImplSharedPtr root( getRoot() );
+
+   /// Call lookup on root
+   return ( root->lookup( pathName ) );
 }
 
 void StructureNodeImpl::set( int64_t index64, NodeImplSharedPtr ni )

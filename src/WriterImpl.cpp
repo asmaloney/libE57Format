@@ -44,7 +44,7 @@ namespace e57
       // Set per-file properties.
       // Path names: "/formatName", "/majorVersion", "/minorVersion", "/coordinateMetadata"
       root_.set( "formatName", StringNode( imf_, "ASTM E57 3D Imaging Data File" ) );
-      if (options.guid.length())
+      if ( options.guid.length() )
       {
          root_.set( "guid", StringNode( imf_, options.guid ) );
       }

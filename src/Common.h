@@ -100,7 +100,9 @@ namespace e57
       {
          ss << ( ( x & ( 1LL << i ) ) ? 1 : 0 );
          if ( i > 0 && i % 8 == 0 )
+         {
             ss << " ";
+         }
       }
       return ( ss.str() );
    }
@@ -111,7 +113,9 @@ namespace e57
       {
          ss << ( ( x & ( 1LL << i ) ) ? 1 : 0 );
          if ( i > 0 && i % 8 == 0 )
+         {
             ss << " ";
+         }
       }
       return ( ss.str() );
    }
@@ -122,7 +126,9 @@ namespace e57
       {
          ss << ( ( x & ( 1LL << i ) ) ? 1 : 0 );
          if ( i > 0 && i % 8 == 0 )
+         {
             ss << " ";
+         }
       }
       return ( ss.str() );
    }
@@ -133,7 +139,9 @@ namespace e57
       {
          ss << ( ( x & ( 1LL << i ) ) ? 1 : 0 );
          if ( i > 0 && i % 8 == 0 )
+         {
             ss << " ";
+         }
       }
       return ( ss.str() );
    }

@@ -36,7 +36,7 @@ namespace e57
    class ReaderImpl
    {
    public:
-      ReaderImpl( const ustring &filePath );
+      explicit ReaderImpl( const ustring &filePath );
 
       ~ReaderImpl();
 

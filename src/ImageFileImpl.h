@@ -41,7 +41,7 @@ namespace e57
    class ImageFileImpl : public std::enable_shared_from_this<ImageFileImpl>
    {
    public:
-      ImageFileImpl( ReadChecksumPolicy policy );
+      explicit ImageFileImpl( ReadChecksumPolicy policy );
       void construct2( const ustring &fileName, const ustring &mode );
       void construct2( const char *input, uint64_t size );
       std::shared_ptr<StructureNodeImpl> root();

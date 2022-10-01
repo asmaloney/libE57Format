@@ -33,8 +33,8 @@ namespace e57
    class IntegerNodeImpl : public NodeImpl
    {
    public:
-      IntegerNodeImpl( ImageFileImplWeakPtr destImageFile, int64_t value = 0, int64_t minimum = 0,
-                       int64_t maximum = 0 );
+      explicit IntegerNodeImpl( ImageFileImplWeakPtr destImageFile, int64_t value = 0, int64_t minimum = 0,
+                                int64_t maximum = 0 );
       ~IntegerNodeImpl() override = default;
 
       NodeType type() const override

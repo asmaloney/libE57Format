@@ -35,7 +35,7 @@ namespace e57
    class StructureNodeImpl : public NodeImpl
    {
    public:
-      StructureNodeImpl( ImageFileImplWeakPtr destImageFile );
+      explicit StructureNodeImpl( ImageFileImplWeakPtr destImageFile );
       ~StructureNodeImpl() override = default;
 
       NodeType type() const override;

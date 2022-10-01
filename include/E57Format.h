@@ -217,7 +217,7 @@ protected:                                                                      
    {
    public:
       StructureNode() = delete;
-      StructureNode( ImageFile destImageFile );
+      explicit StructureNode( ImageFile destImageFile );
 
       int64_t childCount() const;
       bool isDefined( const ustring &pathName ) const;
@@ -246,8 +246,8 @@ protected:                                                                      
    private:
       friend class ImageFile;
 
-      StructureNode( std::shared_ptr<StructureNodeImpl> ni );   // internal use only
-      StructureNode( std::weak_ptr<ImageFileImpl> fileParent ); // internal use only
+      explicit StructureNode( std::shared_ptr<StructureNodeImpl> ni );   // internal use only
+      explicit StructureNode( std::weak_ptr<ImageFileImpl> fileParent ); // internal use only
 
       E57_OBJECT_IMPLEMENTATION( StructureNode ) // Internal implementation details, not part of API, must
                                                  // be last in object
@@ -289,7 +289,7 @@ protected:                                                                      
    private:
       friend class CompressedVectorNode;
 
-      VectorNode( std::shared_ptr<VectorNodeImpl> ni ); // internal use only
+      explicit VectorNode( std::shared_ptr<VectorNodeImpl> ni ); // internal use only
 
       E57_OBJECT_IMPLEMENTATION( VectorNode ) // Internal implementation details, not part of API, must be
                                               // last in object
@@ -361,7 +361,7 @@ protected:                                                                      
    private:
       friend class CompressedVectorNode;
 
-      CompressedVectorReader( std::shared_ptr<CompressedVectorReaderImpl> ni );
+      explicit CompressedVectorReader( std::shared_ptr<CompressedVectorReaderImpl> ni );
 
       E57_OBJECT_IMPLEMENTATION( CompressedVectorReader ) // Internal implementation details, not
                                                           // part of API, must be last in object
@@ -387,7 +387,7 @@ protected:                                                                      
    private:
       friend class CompressedVectorNode;
 
-      CompressedVectorWriter( std::shared_ptr<CompressedVectorWriterImpl> ni );
+      explicit CompressedVectorWriter( std::shared_ptr<CompressedVectorWriterImpl> ni );
 
       E57_OBJECT_IMPLEMENTATION( CompressedVectorWriter ) // Internal implementation details, not
                                                           // part of API, must be last in object
@@ -468,7 +468,7 @@ protected:                                                                      
       //! \cond documentNonPublic   The following isn't part of the API, and isn't
       //! documented.
    private:
-      IntegerNode( std::shared_ptr<IntegerNodeImpl> ni ); // internal use only
+      explicit IntegerNode( std::shared_ptr<IntegerNodeImpl> ni ); // internal use only
 
       E57_OBJECT_IMPLEMENTATION( IntegerNode ) // Internal implementation details, not part of API, must be
                                                // last in object
@@ -516,7 +516,7 @@ protected:                                                                      
       //! \cond documentNonPublic   The following isn't part of the API, and isn't
       //! documented.
    private:
-      ScaledIntegerNode( std::shared_ptr<ScaledIntegerNodeImpl> ni ); // internal use only
+      explicit ScaledIntegerNode( std::shared_ptr<ScaledIntegerNodeImpl> ni ); // internal use only
 
       E57_OBJECT_IMPLEMENTATION( ScaledIntegerNode ) // Internal implementation details, not part of
                                                      // API, must be last in object
@@ -554,7 +554,7 @@ protected:                                                                      
       //! \cond documentNonPublic   The following isn't part of the API, and isn't
       //! documented.
    private:
-      FloatNode( std::shared_ptr<FloatNodeImpl> ni ); // internal use only
+      explicit FloatNode( std::shared_ptr<FloatNodeImpl> ni ); // internal use only
 
       E57_OBJECT_IMPLEMENTATION( FloatNode ) // Internal implementation details, not part of API, must be
                                              // last in object
@@ -589,7 +589,7 @@ protected:                                                                      
       //! documented.
    private:
       friend class StringNodeImpl;
-      StringNode( std::shared_ptr<StringNodeImpl> ni ); // internal use only
+      explicit StringNode( std::shared_ptr<StringNodeImpl> ni ); // internal use only
 
       E57_OBJECT_IMPLEMENTATION( StringNode ) // Internal implementation details, not part of API, must be
                                               // last in object
@@ -627,7 +627,7 @@ protected:                                                                      
    private:
       friend class E57XmlParser;
 
-      BlobNode( std::shared_ptr<BlobNodeImpl> ni ); // internal use only
+      explicit BlobNode( std::shared_ptr<BlobNodeImpl> ni ); // internal use only
 
       // Internal use only, create blob already in a file
       BlobNode( ImageFile destImageFile, int64_t fileOffset, int64_t length );
@@ -674,8 +674,8 @@ protected:                                                                      
       //! \cond documentNonPublic   The following isn't part of the API, and isn't
       //! documented.
    private:
-      ImageFile( double ); // Give a second dummy constructor, better error msg
-                           // for: ImageFile(0)
+      explicit ImageFile( double ); // Give a second dummy constructor, better error msg
+                                    // for: ImageFile(0)
 
       friend class Node;
       friend class StructureNode;
@@ -687,7 +687,7 @@ protected:                                                                      
       friend class StringNode;
       friend class BlobNode;
 
-      ImageFile( std::shared_ptr<ImageFileImpl> imfi ); // internal use only
+      explicit ImageFile( std::shared_ptr<ImageFileImpl> imfi ); // internal use only
 
       E57_OBJECT_IMPLEMENTATION( ImageFile ) // Internal implementation details, not part of API, must be
                                              // last in object

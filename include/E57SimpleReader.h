@@ -42,7 +42,7 @@ namespace e57
    public:
       //! @brief This function is the constructor for the reader class
       //! @param [in] filePath file path to E57 file
-      Reader( const ustring &filePath );
+      explicit Reader( const ustring &filePath );
 
       //! @brief This function returns true if the file is open
       bool IsOpen() const;

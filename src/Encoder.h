@@ -63,7 +63,7 @@ namespace e57
       virtual void dump( int indent = 0, std::ostream &os = std::cout ) const;
 #endif
    protected:
-      Encoder( unsigned bytestreamNumber );
+      explicit Encoder( unsigned bytestreamNumber );
 
       unsigned bytestreamNumber_;
    };

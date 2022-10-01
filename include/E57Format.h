@@ -300,25 +300,25 @@ protected:                                                                      
    {
    public:
       SourceDestBuffer() = delete;
-      SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, int8_t *b, const size_t capacity,
+      SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, int8_t *b, size_t capacity,
                         bool doConversion = false, bool doScaling = false, size_t stride = sizeof( int8_t ) );
-      SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, uint8_t *b, const size_t capacity,
+      SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, uint8_t *b, size_t capacity,
                         bool doConversion = false, bool doScaling = false, size_t stride = sizeof( uint8_t ) );
-      SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, int16_t *b, const size_t capacity,
+      SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, int16_t *b, size_t capacity,
                         bool doConversion = false, bool doScaling = false, size_t stride = sizeof( int16_t ) );
-      SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, uint16_t *b, const size_t capacity,
+      SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, uint16_t *b, size_t capacity,
                         bool doConversion = false, bool doScaling = false, size_t stride = sizeof( uint16_t ) );
-      SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, int32_t *b, const size_t capacity,
+      SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, int32_t *b, size_t capacity,
                         bool doConversion = false, bool doScaling = false, size_t stride = sizeof( int32_t ) );
-      SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, uint32_t *b, const size_t capacity,
+      SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, uint32_t *b, size_t capacity,
                         bool doConversion = false, bool doScaling = false, size_t stride = sizeof( uint32_t ) );
-      SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, int64_t *b, const size_t capacity,
+      SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, int64_t *b, size_t capacity,
                         bool doConversion = false, bool doScaling = false, size_t stride = sizeof( int64_t ) );
-      SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, bool *b, const size_t capacity,
+      SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, bool *b, size_t capacity,
                         bool doConversion = false, bool doScaling = false, size_t stride = sizeof( bool ) );
-      SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, float *b, const size_t capacity,
+      SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, float *b, size_t capacity,
                         bool doConversion = false, bool doScaling = false, size_t stride = sizeof( float ) );
-      SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, double *b, const size_t capacity,
+      SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, double *b, size_t capacity,
                         bool doConversion = false, bool doScaling = false, size_t stride = sizeof( double ) );
       SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, std::vector<ustring> *b );
 
@@ -373,8 +373,8 @@ protected:                                                                      
    public:
       CompressedVectorWriter() = delete;
 
-      void write( const size_t recordCount );
-      void write( std::vector<SourceDestBuffer> &sbufs, const size_t recordCount );
+      void write( size_t recordCount );
+      void write( std::vector<SourceDestBuffer> &sbufs, size_t recordCount );
       void close();
       bool isOpen();
       CompressedVectorNode compressedVectorNode() const;
@@ -642,7 +642,7 @@ protected:                                                                      
    public:
       ImageFile() = delete;
       ImageFile( const ustring &fname, const ustring &mode, ReadChecksumPolicy checksumPolicy = CHECKSUM_POLICY_ALL );
-      ImageFile( const char *input, const uint64_t size, ReadChecksumPolicy checksumPolicy = CHECKSUM_POLICY_ALL );
+      ImageFile( const char *input, uint64_t size, ReadChecksumPolicy checksumPolicy = CHECKSUM_POLICY_ALL );
 
       StructureNode root() const;
       void close();
@@ -658,8 +658,8 @@ protected:                                                                      
       bool extensionsLookupPrefix( const ustring &prefix, ustring &uri ) const;
       bool extensionsLookupUri( const ustring &uri, ustring &prefix ) const;
       size_t extensionsCount() const;
-      ustring extensionsPrefix( const size_t index ) const;
-      ustring extensionsUri( const size_t index ) const;
+      ustring extensionsPrefix( size_t index ) const;
+      ustring extensionsUri( size_t index ) const;
 
       // Field name functions:
       bool isElementNameExtended( const ustring &elementName ) const;

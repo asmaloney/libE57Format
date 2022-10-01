@@ -42,7 +42,7 @@ namespace e57
 
       virtual void destBufferSetNew( std::vector<SourceDestBuffer> &dbufs ) = 0;
       virtual uint64_t totalRecordsCompleted() = 0;
-      virtual size_t inputProcess( const char *source, const size_t count ) = 0;
+      virtual size_t inputProcess( const char *source, size_t count ) = 0;
       virtual void stateReset() = 0;
       unsigned bytestreamNumber() const
       {
@@ -68,8 +68,8 @@ namespace e57
          return ( currentRecordIndex_ );
       }
 
-      size_t inputProcess( const char *source, const size_t availableByteCount ) override;
-      virtual size_t inputProcessAligned( const char *inbuf, const size_t firstBit, const size_t endBit ) = 0;
+      size_t inputProcess( const char *source, size_t availableByteCount ) override;
+      virtual size_t inputProcessAligned( const char *inbuf, size_t firstBit, size_t endBit ) = 0;
 
       void stateReset() override;
 
@@ -101,7 +101,7 @@ namespace e57
       BitpackFloatDecoder( unsigned bytestreamNumber, SourceDestBuffer &dbuf, FloatPrecision precision,
                            uint64_t maxRecordCount );
 
-      size_t inputProcessAligned( const char *inbuf, const size_t firstBit, const size_t endBit ) override;
+      size_t inputProcessAligned( const char *inbuf, size_t firstBit, size_t endBit ) override;
 
 #ifdef E57_DEBUG
       void dump( int indent = 0, std::ostream &os = std::cout ) override;
@@ -115,7 +115,7 @@ namespace e57
    public:
       BitpackStringDecoder( unsigned bytestreamNumber, SourceDestBuffer &dbuf, uint64_t maxRecordCount );
 
-      size_t inputProcessAligned( const char *inbuf, const size_t firstBit, const size_t endBit ) override;
+      size_t inputProcessAligned( const char *inbuf, size_t firstBit, size_t endBit ) override;
 
 #ifdef E57_DEBUG
       void dump( int indent = 0, std::ostream &os = std::cout ) override;
@@ -136,7 +136,7 @@ namespace e57
       BitpackIntegerDecoder( bool isScaledInteger, unsigned bytestreamNumber, SourceDestBuffer &dbuf, int64_t minimum,
                              int64_t maximum, double scale, double offset, uint64_t maxRecordCount );
 
-      size_t inputProcessAligned( const char *inbuf, const size_t firstBit, const size_t endBit ) override;
+      size_t inputProcessAligned( const char *inbuf, size_t firstBit, size_t endBit ) override;
 
 #ifdef E57_DEBUG
       void dump( int indent = 0, std::ostream &os = std::cout ) override;
@@ -162,7 +162,7 @@ namespace e57
       {
          return currentRecordIndex_;
       }
-      size_t inputProcess( const char *source, const size_t availableByteCount ) override;
+      size_t inputProcess( const char *source, size_t availableByteCount ) override;
       void stateReset() override;
 #ifdef E57_DEBUG
       void dump( int indent = 0, std::ostream &os = std::cout ) override;

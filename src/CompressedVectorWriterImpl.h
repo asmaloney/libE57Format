@@ -37,7 +37,7 @@ namespace e57
       CompressedVectorWriterImpl( std::shared_ptr<CompressedVectorNodeImpl> ni, std::vector<SourceDestBuffer> &sbufs );
       ~CompressedVectorWriterImpl();
       void write( size_t requestedRecordCount );
-      void write( std::vector<SourceDestBuffer> &sbufs, const size_t requestedRecordCount );
+      void write( std::vector<SourceDestBuffer> &sbufs, size_t requestedRecordCount );
       bool isOpen() const;
       std::shared_ptr<CompressedVectorNodeImpl> compressedVectorNode() const;
       void close();

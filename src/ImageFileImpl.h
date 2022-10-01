@@ -43,7 +43,7 @@ namespace e57
    public:
       ImageFileImpl( ReadChecksumPolicy policy );
       void construct2( const ustring &fileName, const ustring &mode );
-      void construct2( const char *input, const uint64_t size );
+      void construct2( const char *input, uint64_t size );
       std::shared_ptr<StructureNodeImpl> root();
       void close();
       void cancel();
@@ -62,8 +62,8 @@ namespace e57
       bool extensionsLookupPrefix( const ustring &prefix, ustring &uri ) const;
       bool extensionsLookupUri( const ustring &uri, ustring &prefix ) const;
       size_t extensionsCount() const;
-      ustring extensionsPrefix( const size_t index ) const;
-      ustring extensionsUri( const size_t index ) const;
+      ustring extensionsPrefix( size_t index ) const;
+      ustring extensionsUri( size_t index ) const;
 
       /// Utility functions:
       bool isElementNameExtended( const ustring &elementName );

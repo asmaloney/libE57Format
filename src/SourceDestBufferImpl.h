@@ -36,7 +36,7 @@ namespace e57
    class SourceDestBufferImpl : public std::enable_shared_from_this<SourceDestBufferImpl>
    {
    public:
-      SourceDestBufferImpl( ImageFileImplWeakPtr destImageFile, const ustring &pathName, const size_t capacity,
+      SourceDestBufferImpl( ImageFileImplWeakPtr destImageFile, const ustring &pathName, size_t capacity,
                             bool doConversion = false, bool doScaling = false );
 
       template <typename T> void setTypeInfo( T *base, size_t stride = sizeof( T ) );

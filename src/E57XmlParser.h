@@ -60,7 +60,7 @@ namespace e57
       void startElement( const XMLCh *const uri, const XMLCh *const localName, const XMLCh *const qName,
                          const Attributes &attributes ) override;
       void endElement( const XMLCh *const uri, const XMLCh *const localName, const XMLCh *const qName ) override;
-      void characters( const XMLCh *const chars, const XMLSize_t length ) override;
+      void characters( const XMLCh *const chars, XMLSize_t length ) override;
 
       /// SAX error interface
       void warning( const SAXParseException &ex ) override;

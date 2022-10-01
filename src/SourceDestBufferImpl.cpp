@@ -35,7 +35,8 @@ using namespace e57;
 SourceDestBufferImpl::SourceDestBufferImpl( ImageFileImplWeakPtr destImageFile, const ustring &pathName,
                                             const size_t capacity, bool doConversion, bool doScaling ) :
    destImageFile_( destImageFile ),
-   pathName_( pathName ), capacity_( capacity ), doConversion_( doConversion ), doScaling_( doScaling )
+   pathName_( pathName ), memoryRepresentation_( E57_INT32 ), capacity_( capacity ), doConversion_( doConversion ),
+   doScaling_( doScaling )
 {
 }
 

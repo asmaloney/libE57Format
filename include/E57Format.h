@@ -29,7 +29,7 @@
 
 #pragma once
 
-//! @file  E57Format.h header file for the E57 API
+//! @file  E57Format.h Header file for the E57 API.
 
 #include <cfloat>
 #include <memory>

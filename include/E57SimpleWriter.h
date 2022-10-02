@@ -112,7 +112,7 @@ namespace e57
       //! @brief This function writes out the group data
       //! @param [in] dataIndex data block index given by the NewData3D
       //! @param [in] groupCount size of each of the buffers given
-      //! @param [in] buffer of idElementValue index for this group
+      //! @param [in] idElementValue buffer with idElementValue indices for this group
       //! @param [in] startPointIndex buffer with starting indices in to the "points" data vector for the groups
       //! @param [in] pointCount buffer with sizes of the groups given
       //! @return Return true if successful, false otherwise

@@ -27,6 +27,8 @@
 
 #pragma once
 
+//! @file E57Exception.h Exception handling for E57 API.
+
 #include <exception>
 #include <iostream>
 #include <string>

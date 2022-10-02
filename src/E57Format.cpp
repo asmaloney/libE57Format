@@ -69,6 +69,7 @@ FloatNode::checkInvariant, BlobNode::checkInvariant,
 StructureNode::checkInvariant, VectorNode::checkInvariant,
 CompressedVectorNode::checkInvariant
 */
+// beginExample Node::checkInvariant
 void Node::checkInvariant( bool doRecurse, bool doDowncast )
 {
    ImageFile imf = destImageFile();
@@ -271,9 +272,10 @@ void Node::checkInvariant( bool doRecurse, bool doDowncast )
       }
    }
 }
+// endExample Node::checkInvariant
 
 /*!
-@class Node
+@class e57::Node
 @brief   Generic handle to any of the 8 types of E57 element objects.
 @details
 A Node is a generic handle to an underlying object that is any of the eight type
@@ -346,10 +348,9 @@ only externally visible state, or can refer to internal implementation-specific
 state that is not visible to the API user. The following C++ code checks
 externally visible state for consistency and throws an exception if the
 invariant is violated:
-@dontinclude E57Foundation.cpp
-@skip begin Node::checkInvariant
-@skip checkInvariant(
-@until end Node::checkInvariant
+@dontinclude E57Format.cpp
+@skip beginExample Node::checkInvariant
+@until endExample Node::checkInvariant
 
 @see StructureNode, VectorNode, CompressedVectorNode, IntegerNode,
 ScaledIntegerNode, FloatNode, StringNode, BlobNode
@@ -357,6 +358,7 @@ ScaledIntegerNode, FloatNode, StringNode, BlobNode
 
 //! @brief Check whether StructureNode class invariant is true
 //! @copydetails IntegerNode::checkInvariant()
+// beginExample StructureNode::checkInvariant
 void StructureNode::checkInvariant( bool doRecurse, bool doUpcast )
 {
    // If destImageFile not open, can't test invariant (almost every call would
@@ -403,9 +405,11 @@ void StructureNode::checkInvariant( bool doRecurse, bool doUpcast )
       }
    }
 }
+// endExample StructureNode::checkInvariant
 
 //! @brief Check whether VectorNode class invariant is true
 //! @copydetails IntegerNode::checkInvariant()
+// beginExample VectorNode::checkInvariant
 void VectorNode::checkInvariant( bool doRecurse, bool doUpcast )
 {
    // If destImageFile not open, can't test invariant (almost every call would
@@ -452,9 +456,11 @@ void VectorNode::checkInvariant( bool doRecurse, bool doUpcast )
       }
    }
 }
+// endExample VectorNode::checkInvariant
 
 //! @brief Check whether CompressedVectorNode class invariant is true
 //! @copydetails IntegerNode::checkInvariant()
+// beginExample CompressedVectorNode::checkInvariant
 void CompressedVectorNode::checkInvariant( bool doRecurse, bool doUpcast )
 {
    // If destImageFile not open, can't test invariant (almost every call would
@@ -512,6 +518,8 @@ void CompressedVectorNode::checkInvariant( bool doRecurse, bool doUpcast )
       throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
    }
 }
+// endExample CompressedVectorNode::checkInvariant
+
 /*!
 @brief Check whether IntegerNode class invariant is true
 @param   [in] doRecurse   If true, also check invariants of all children or
@@ -530,6 +538,7 @@ should be used judiciously, in debug versions of the application.
 @post    No visible state is modified.
 @throw   ::E57_ERROR_INVARIANCE_VIOLATION or any other E57 ErrorCode
 */
+// beginExample IntegerNode::checkInvariant
 void IntegerNode::checkInvariant( bool /*doRecurse*/, bool doUpcast )
 {
    // If destImageFile not open, can't test invariant (almost every call would
@@ -550,9 +559,11 @@ void IntegerNode::checkInvariant( bool /*doRecurse*/, bool doUpcast )
       throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
    }
 }
+// endExample IntegerNode::checkInvariant
 
 //! @brief Check whether ScaledIntegerNode class invariant is true
 //! @copydetails IntegerNode::checkInvariant()
+// beginExample ScaledIntegerNode::checkInvariant
 void ScaledIntegerNode::checkInvariant( bool /*doRecurse*/, bool doUpcast )
 {
    // If destImageFile not open, can't test invariant (almost every call would
@@ -586,8 +597,11 @@ void ScaledIntegerNode::checkInvariant( bool /*doRecurse*/, bool doUpcast )
       throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
    }
 }
+// endExample ScaledIntegerNode::checkInvariant
+
 //! @brief Check whether FloatNode class invariant is true
 //! @copydetails IntegerNode::checkInvariant()
+// beginExample FloatNode::checkInvariant
 void FloatNode::checkInvariant( bool /*doRecurse*/, bool doUpcast )
 {
    // If destImageFile not open, can't test invariant (almost every call would
@@ -617,8 +631,11 @@ void FloatNode::checkInvariant( bool /*doRecurse*/, bool doUpcast )
       throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
    }
 }
+// endExample FloatNode::checkInvariant
+
 //! @brief Check whether StringNode class invariant is true
 //! @copydetails IntegerNode::checkInvariant()
+// beginExample StringNode::checkInvariant
 void StringNode::checkInvariant( bool /*doRecurse*/, bool doUpcast )
 {
    // If destImageFile not open, can't test invariant (almost every call would
@@ -635,8 +652,11 @@ void StringNode::checkInvariant( bool /*doRecurse*/, bool doUpcast )
    }
    /// ? check legal UTF-8
 }
+// endExample StringNode::checkInvariant
+
 //! @brief Check whether BlobNode class invariant is true
 //! @copydetails IntegerNode::checkInvariant()
+// beginExample BlobNode::checkInvariant
 void BlobNode::checkInvariant( bool /*doRecurse*/, bool doUpcast )
 {
    // If destImageFile not open, can't test invariant (almost every call would
@@ -657,6 +677,8 @@ void BlobNode::checkInvariant( bool /*doRecurse*/, bool doUpcast )
       throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
    }
 }
+// endExample BlobNode::checkInvariant
+
 /*!
 @brief Check whether CompressedVectorReader class invariant is true
 @param   [in] doRecurse   If true, also check invariants of all children or
@@ -669,6 +691,7 @@ invariant clause is violated, an E57Exception with errorCode of
 E57_ERROR_INVARIANCE_VIOLATION is thrown.
 @post    No visible state is modified.
 */
+// beginExample CompressedVectorReader::checkInvariant
 void CompressedVectorReader::checkInvariant( bool /*doRecurse*/ )
 {
    // If this CompressedVectorReader is not open, can't test invariant (almost
@@ -706,9 +729,11 @@ void CompressedVectorReader::checkInvariant( bool /*doRecurse*/ )
       throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
    }
 }
+// endExample CompressedVectorReader::checkInvariant
 
 //! @brief Check whether CompressedVectorWriter class invariant is true
 //! @copydetails CompressedVectorReader::checkInvariant
+// beginExample CompressedVectorWriter::checkInvariant
 void CompressedVectorWriter::checkInvariant( bool /*doRecurse*/ )
 {
    // If this CompressedVectorWriter is not open, can't test invariant (almost
@@ -752,6 +777,7 @@ void CompressedVectorWriter::checkInvariant( bool /*doRecurse*/ )
       throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
    }
 }
+// endExample CompressedVectorWriter::checkInvariant
 
 /*!
 @brief Check whether ImageFile class invariant is true
@@ -770,6 +796,7 @@ should be used judiciously, in debug versions of the application.
 @throw   ::E57_ERROR_INVARIANCE_VIOLATION or any other E57 ErrorCode
 @see     Node::checkInvariant
 */
+// beginExample ImageFile::checkInvariant
 void ImageFile::checkInvariant( bool doRecurse ) const
 {
    // If this ImageFile is not open, can't test invariant (almost every call
@@ -876,8 +903,10 @@ void ImageFile::checkInvariant( bool doRecurse ) const
       root().checkInvariant( doRecurse );
    }
 }
+// endExample ImageFile::checkInvariant
 
 //! @brief Check whether SourceDestBuffer class invariant is true
+// beginExample SourceDestBuffer::checkInvariant
 void SourceDestBuffer::checkInvariant( bool /*doRecurse*/ ) const
 {
    // Stride must be >= a memory type dependent value
@@ -913,6 +942,7 @@ void SourceDestBuffer::checkInvariant( bool /*doRecurse*/ ) const
       throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
    }
 }
+// endExample SourceDestBuffer::checkInvariant
 
 /*!
 @brief   Return the NodeType of a generic Node.
@@ -1157,7 +1187,7 @@ Node::Node( NodeImplSharedPtr ni ) : impl_( ni )
 
 //=====================================================================================
 /*!
-@class StructureNode
+@class e57::StructureNode
 @brief   An E57 element containing named child nodes.
 @details
 A StructureNode is a container of named child nodes, which may be any of the
@@ -1176,9 +1206,8 @@ state that is not visible to the API user. The following C++ code checks
 externally visible state for consistency and throws an exception if the
 invariant is violated:
 @dontinclude E57Format.cpp
-@skip begin StructureNode::checkInvariant
-@skip checkInvariant(
-@until end StructureNode::checkInvariant
+@skip beginExample StructureNode::checkInvariant
+@until endExample StructureNode::checkInvariant
 
 @see     Node
 */
@@ -1443,7 +1472,7 @@ StructureNode::StructureNode( std::shared_ptr<StructureNodeImpl> ni ) : impl_( n
 
 //=====================================================================================
 /*!
-@class VectorNode
+@class e57::VectorNode
 @brief   An E57 element containing ordered vector of child nodes.
 @details
 A VectorNode is a container of ordered child nodes.
@@ -1466,9 +1495,8 @@ state that is not visible to the API user. The following C++ code checks
 externally visible state for consistency and throws an exception if the
 invariant is violated:
 @dontinclude E57Format.cpp
-@skip begin VectorNode::checkInvariant
-@skip checkInvariant(
-@until end VectorNode::checkInvariant
+@skip beginExample VectorNode::checkInvariant
+@until endExample VectorNode::checkInvariant
 
 @see     Node
 */
@@ -1752,7 +1780,7 @@ VectorNode::VectorNode( std::shared_ptr<VectorNodeImpl> ni ) : impl_( ni )
 
 //=====================================================================================
 /*!
-@class SourceDestBuffer
+@class e57::SourceDestBuffer
 @brief   A memory buffer to transfer data to/from a CompressedVectorNode in a
 block.
 @details
@@ -1786,9 +1814,8 @@ state that is not visible to the API user. The following C++ code checks
 externally visible state for consistency and throws an exception if the
 invariant is violated:
 @dontinclude E57Format.cpp
-@skip begin SourceDestBuffer::checkInvariant
-@skip checkInvariant(
-@until end SourceDestBuffer::checkInvariant
+@skip beginExample SourceDestBuffer::checkInvariant
+@until endExample SourceDestBuffer::checkInvariant
 
 @see     Node
 */
@@ -1852,10 +1879,8 @@ SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &path
    impl_->setTypeInfo<int8_t>( b, stride );
 }
 
-//! @brief   Designate buffers to transfer data to/from a CompressedVectorNode
-//! in a block.
-//! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const
-//! ustring,int8_t*,size_t,bool,bool,size_t)
+//! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
+//! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const ustring&,int8_t*,size_t,bool,bool,size_t)
 SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, uint8_t *b, const size_t capacity,
                                     bool doConversion, bool doScaling, size_t stride ) :
    impl_( new SourceDestBufferImpl( destImageFile.impl(), pathName, capacity, doConversion, doScaling ) )
@@ -1863,10 +1888,8 @@ SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &path
    impl_->setTypeInfo<uint8_t>( b, stride );
 }
 
-//! @brief   Designate buffers to transfer data to/from a CompressedVectorNode
-//! in a block.
-//! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const
-//! ustring,int8_t*,size_t,bool,bool,size_t)
+//! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
+//! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const ustring&,int8_t*,size_t,bool,bool,size_t)
 SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, int16_t *b, const size_t capacity,
                                     bool doConversion, bool doScaling, size_t stride ) :
    impl_( new SourceDestBufferImpl( destImageFile.impl(), pathName, capacity, doConversion, doScaling ) )
@@ -1874,10 +1897,8 @@ SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &path
    impl_->setTypeInfo<int16_t>( b, stride );
 }
 
-//! @brief   Designate buffers to transfer data to/from a CompressedVectorNode
-//! in a block.
-//! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const
-//! ustring,int8_t*,size_t,bool,bool,size_t)
+//! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
+//! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const ustring&,int8_t*,size_t,bool,bool,size_t)
 SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, uint16_t *b,
                                     const size_t capacity, bool doConversion, bool doScaling, size_t stride ) :
    impl_( new SourceDestBufferImpl( destImageFile.impl(), pathName, capacity, doConversion, doScaling ) )
@@ -1885,10 +1906,8 @@ SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &path
    impl_->setTypeInfo<uint16_t>( b, stride );
 }
 
-//! @brief   Designate buffers to transfer data to/from a CompressedVectorNode
-//! in a block.
-//! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const
-//! ustring,int8_t*,size_t,bool,bool,size_t)
+//! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
+//! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const ustring&,int8_t*,size_t,bool,bool,size_t)
 SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, int32_t *b, const size_t capacity,
                                     bool doConversion, bool doScaling, size_t stride ) :
    impl_( new SourceDestBufferImpl( destImageFile.impl(), pathName, capacity, doConversion, doScaling ) )
@@ -1896,10 +1915,8 @@ SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &path
    impl_->setTypeInfo<int32_t>( b, stride );
 }
 
-//! @brief   Designate buffers to transfer data to/from a CompressedVectorNode
-//! in a block.
-//! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const
-//! ustring,int8_t*,size_t,bool,bool,size_t)
+//! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
+//! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const ustring&,int8_t*,size_t,bool,bool,size_t)
 SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, uint32_t *b,
                                     const size_t capacity, bool doConversion, bool doScaling, size_t stride ) :
    impl_( new SourceDestBufferImpl( destImageFile.impl(), pathName, capacity, doConversion, doScaling ) )
@@ -1907,10 +1924,8 @@ SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &path
    impl_->setTypeInfo<uint32_t>( b, stride );
 }
 
-//! @brief   Designate buffers to transfer data to/from a CompressedVectorNode
-//! in a block.
-//! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const
-//! ustring,int8_t*,size_t,bool,bool,size_t)
+//! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
+//! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const ustring&,int8_t*,size_t,bool,bool,size_t)
 SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, int64_t *b, const size_t capacity,
                                     bool doConversion, bool doScaling, size_t stride ) :
    impl_( new SourceDestBufferImpl( destImageFile.impl(), pathName, capacity, doConversion, doScaling ) )
@@ -1918,10 +1933,8 @@ SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &path
    impl_->setTypeInfo<int64_t>( b, stride );
 }
 
-//! @brief   Designate buffers to transfer data to/from a CompressedVectorNode
-//! in a block.
-//! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const
-//! ustring,int8_t*,size_t,bool,bool,size_t)
+//! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
+//! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const ustring&,int8_t*,size_t,bool,bool,size_t)
 SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, bool *b, const size_t capacity,
                                     bool doConversion, bool doScaling, size_t stride ) :
    impl_( new SourceDestBufferImpl( destImageFile.impl(), pathName, capacity, doConversion, doScaling ) )
@@ -1929,10 +1942,8 @@ SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &path
    impl_->setTypeInfo<bool>( b, stride );
 }
 
-//! @brief   Designate buffers to transfer data to/from a CompressedVectorNode
-//! in a block.
-//! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const
-//! ustring,int8_t*,size_t,bool,bool,size_t)
+//! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
+//! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const ustring&,int8_t*,size_t,bool,bool,size_t)
 SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, float *b, const size_t capacity,
                                     bool doConversion, bool doScaling, size_t stride ) :
    impl_( new SourceDestBufferImpl( destImageFile.impl(), pathName, capacity, doConversion, doScaling ) )
@@ -1940,10 +1951,8 @@ SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &path
    impl_->setTypeInfo<float>( b, stride );
 }
 
-//! @brief   Designate buffers to transfer data to/from a CompressedVectorNode
-//! in a block.
-//! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const
-//! ustring,int8_t*,size_t,bool,bool,size_t)
+//! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
+//! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const ustring&,int8_t*,size_t,bool,bool,size_t)
 SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, double *b, const size_t capacity,
                                     bool doConversion, bool doScaling, size_t stride ) :
    impl_( new SourceDestBufferImpl( destImageFile.impl(), pathName, capacity, doConversion, doScaling ) )
@@ -1991,7 +2000,7 @@ true).
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     SourceDestBuffer::doConversion for discussion on representations compatible with string SourceDestBuffers.
 */
-SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, StringList *b ) :
+SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, std::vector<ustring> *b ) :
    impl_( new SourceDestBufferImpl( destImageFile.impl(), pathName, b ) )
 {
 }
@@ -2164,7 +2173,7 @@ void SourceDestBuffer::dump( int indent, std::ostream &os ) const
 
 //=====================================================================================
 /*!
-@class CompressedVectorReader
+@class e57::CompressedVectorReader
 @brief   An iterator object keeping track of a read in progress from a
 CompressedVectorNode.
 @details
@@ -2200,9 +2209,8 @@ state that is not visible to the API user. The following C++ code checks
 externally visible state for consistency and throws an exception if the
 invariant is violated:
 @dontinclude E57Format.cpp
-@skip begin CompressedVectorReader::checkInvariant
-@skip checkInvariant(
-@until end CompressedVectorReader::checkInvariant
+@skip beginExample CompressedVectorReader::checkInvariant
+@until endExample CompressedVectorReader::checkInvariant
 
 @see     CompressedVectorNode, CompressedVectorWriter
 */
@@ -2434,7 +2442,7 @@ void CompressedVectorReader::dump( int indent, std::ostream &os ) const
 
 //=====================================================================================
 /*!
-@class CompressedVectorWriter
+@class e57::CompressedVectorWriter
 @brief   An iterator object keeping track of a write in progress to a
 CompressedVectorNode.
 @details
@@ -2471,9 +2479,8 @@ state that is not visible to the API user. The following C++ code checks
 externally visible state for consistency and throws an exception if the
 invariant is violated:
 @dontinclude E57Format.cpp
-@skip begin CompressedVectorWriter::checkInvariant
-@skip checkInvariant(
-@until end CompressedVectorWriter::checkInvariant
+@skip beginExample CompressedVectorWriter::checkInvariant
+@until endExample CompressedVectorWriter::checkInvariant
 
 @see     CompressedVectorNode, CompressedVectorReader
 */
@@ -2698,7 +2705,7 @@ void CompressedVectorWriter::dump( int indent, std::ostream &os ) const
 
 //=====================================================================================
 /*!
-@class CompressedVectorNode
+@class e57::CompressedVectorNode
 @brief   An E57 element containing ordered vector of child nodes, stored in an
 efficient binary format.
 @details
@@ -2759,9 +2766,8 @@ state that is not visible to the API user. The following C++ code checks
 externally visible state for consistency and throws an exception if the
 invariant is violated:
 @dontinclude E57Format.cpp
-@skip begin CompressedVectorNode::checkInvariant
-@skip checkInvariant(
-@until end CompressedVectorNode::checkInvariant
+@skip beginExample CompressedVectorNode::checkInvariant
+@until endExample CompressedVectorNode::checkInvariant
 
 @see     CompressedVectorReader, CompressedVectorWriter, Node
 */
@@ -3062,7 +3068,7 @@ CompressedVectorReader CompressedVectorNode::reader( const std::vector<SourceDes
 
 //=====================================================================================
 /*!
-@class IntegerNode
+@class e57::IntegerNode
 @brief   An E57 element encoding an integer value.
 @details
 An IntegerNode is a terminal node (i.e. having no children) that holds an
@@ -3085,9 +3091,8 @@ state that is not visible to the API user. The following C++ code checks
 externally visible state for consistency and throws an exception if the
 invariant is violated:
 @dontinclude E57Format.cpp
-@skip begin IntegerNode::checkInvariant
-@skip checkInvariant(
-@until end IntegerNode::checkInvariant
+@skip beginExample IntegerNode::checkInvariant
+@until endExample IntegerNode::checkInvariant
 
 @see     Node, CompressedVector
 */
@@ -3280,7 +3285,7 @@ IntegerNode::IntegerNode( std::shared_ptr<IntegerNodeImpl> ni ) : impl_( ni )
 
 //=====================================================================================
 /*!
-@class ScaledIntegerNode
+@class e57::ScaledIntegerNode
 @brief   An E57 element encoding a fixed point number.
 @details
 An ScaledIntegerNode is a terminal node (i.e. having no children) that holds a
@@ -3306,9 +3311,8 @@ state that is not visible to the API user. The following C++ code checks
 externally visible state for consistency and throws an exception if the
 invariant is violated:
 @dontinclude E57Format.cpp
-@skip begin ScaledIntegerNode::checkInvariant
-@skip checkInvariant(
-@until end ScaledIntegerNode::checkInvariant
+@skip beginExample ScaledIntegerNode::checkInvariant
+@until endExample ScaledIntegerNode::checkInvariant
 
 @see     Node
 */
@@ -3630,7 +3634,7 @@ ScaledIntegerNode::ScaledIntegerNode( std::shared_ptr<ScaledIntegerNodeImpl> ni 
 
 //=====================================================================================
 /*!
-@class FloatNode
+@class e57::FloatNode
 @brief   An E57 element encoding a single or double precision IEEE floating
 point number.
 @details
@@ -3663,9 +3667,8 @@ state that is not visible to the API user. The following C++ code checks
 externally visible state for consistency and throws an exception if the
 invariant is violated:
 @dontinclude E57Format.cpp
-@skip begin FloatNode::checkInvariant
-@skip checkInvariant(
-@until end FloatNode::checkInvariant
+@skip beginExample FloatNode::checkInvariant
+@until endExample FloatNode::checkInvariant
 
 @see     Node
 */
@@ -3895,7 +3898,7 @@ FloatNode::FloatNode( std::shared_ptr<FloatNodeImpl> ni ) : impl_( ni )
 
 //=====================================================================================
 /*!
-@class StringNode
+@class e57::StringNode
 @brief   An E57 element encoding a Unicode character string value.
 @details
 A StringNode is a terminal node (i.e. having no children) that holds an Unicode
@@ -3914,9 +3917,8 @@ state that is not visible to the API user. The following C++ code checks
 externally visible state for consistency and throws an exception if the
 invariant is violated:
 @dontinclude E57Format.cpp
-@skip begin StringNode::checkInvariant
-@skip checkInvariant(
-@until end StringNode::checkInvariant
+@skip beginExample StringNode::checkInvariant
+@until endExample StringNode::checkInvariant
 
 @see     Node
 */
@@ -4072,7 +4074,7 @@ StringNode::StringNode( std::shared_ptr<StringNodeImpl> ni ) : impl_( ni )
 
 //=====================================================================================
 /*!
-@class BlobNode
+@class e57::BlobNode
 @brief   An E57 element encoding an fixed-length sequence of bytes with an
 opaque format.
 @details
@@ -4116,9 +4118,8 @@ state that is not visible to the API user. The following C++ code checks
 externally visible state for consistency and throws an exception if the
 invariant is violated:
 @dontinclude E57Format.cpp
-@skip begin BlobNode::checkInvariant
-@skip checkInvariant(
-@until end BlobNode::checkInvariant
+@skip beginExample BlobNode::checkInvariant
+@until endExample BlobNode::checkInvariant
 
 @see     Node
 */
@@ -4358,7 +4359,7 @@ BlobNode::BlobNode( std::shared_ptr<BlobNodeImpl> ni ) : impl_( ni )
 
 //=====================================================================================
 /*!
-@class ImageFile
+@class e57::ImageFile
 @brief   An ASTM E57 3D format file object.
 @details
 @section imagefile_ClassOverview Class overview
@@ -4437,9 +4438,8 @@ state that is not visible to the API user. The following C++ code checks
 externally visible state for consistency and throws an exception if the
 invariant is violated:
 @dontinclude E57Format.cpp
-@skip begin ImageFile::checkInvariant
-@skip checkInvariant(
-@until end ImageFile::checkInvariant
+@skip beginExample ImageFile::checkInvariant
+@until endExample ImageFile::checkInvariant
 */
 
 /*!

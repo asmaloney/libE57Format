@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file. The format 
 
 ## 3.0.0 (in progress)
 
+### Changed
+
+- Now requires a C++14 compatible compiler.
+
 ## [2.3.0](https://github.com/asmaloney/libE57Format/releases/tag/v2.3.0) - 2022-10-04
 
 ### Added

@@ -1,21 +1,20 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
-
-## 2.3.0 - (in progress)
+## [2.3.0](https://github.com/asmaloney/libE57Format/releases/tag/v2.3) - 2022-10-04
 
 ### Added
 
-- {cmake} Added E57_VISIBILITY_HIDDEN option to control [CXX_VISIBILITY_PRESET](https://cmake.org/cmake/help/latest/prop_tgt/LANG_VISIBILITY_PRESET.html). Defaults to ON. ([#104](https://github.com/asmaloney/libE57Format/pull/104)) (Thanks Nigel!)
+- {cmake} Added `E57_VISIBILITY_HIDDEN` option to control [CXX_VISIBILITY_PRESET](https://cmake.org/cmake/help/latest/prop_tgt/LANG_VISIBILITY_PRESET.html). Defaults to `ON`. ([#104](https://github.com/asmaloney/libE57Format/pull/104)) (Thanks Nigel!)
 - Added BSD support. ([#99](https://github.com/asmaloney/libE57Format/pull/99)) (Thanks Christophe!)
 
 ### Changed
 
-- Change file creation to use 0666 permissions on POSIX systems. ([#105](https://github.com/asmaloney/libE57Format/pull/105)) (Thanks Nigel!)
-- {cmake} [CXX_VISIBILITY_PRESET](https://cmake.org/cmake/help/latest/prop_tgt/LANG_VISIBILITY_PRESET.html) is now set and ON by default. ([#104](https://github.com/asmaloney/libE57Format/pull/104)) (Thanks Nigel!)
-- A new E57SimpleWriter constructor takes a `WriterOptions` struct which allows setting the file's GUID.
+- Updated &amp; reorganized the [online API docs](https://asmaloney.github.io/libE57Format-docs/) and changed to a [cleaner theme](https://github.com/jothepro/doxygen-awesome-css).
+- Change file creation to use _0666_ permissions on [POSIX](https://en.wikipedia.org/wiki/POSIX) systems. ([#105](https://github.com/asmaloney/libE57Format/pull/105)) (Thanks Nigel!)
+- {cmake} [CXX_VISIBILITY_PRESET](https://cmake.org/cmake/help/latest/prop_tgt/LANG_VISIBILITY_PRESET.html) is now set and `ON` by default. ([#104](https://github.com/asmaloney/libE57Format/pull/104)) (Thanks Nigel!)
+- A new **E57SimpleWriter** constructor takes a `WriterOptions` struct which allows setting the file's GUID.
   ```cpp
   Writer( const ustring &filePath, const WriterOptions &options );
   ```
@@ -24,12 +23,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Fixed
 
-- Fix E57SimpleWriter's writing of invalid quaternions. It now defaults to the identity quaternion. ([#108](https://github.com/asmaloney/libE57Format/pull/108)) (Thanks Nigel!)
-- Fix E57SimpleReader to handle missing `images2D` and `isAtomicClockReferenced` nodes. ([#90](https://github.com/asmaloney/libE57Format/pull/90)) (Thanks Olli!)
+- Fix **E57SimpleWriter**'s writing of invalid quaternions. It now defaults to the identity quaternion. ([#108](https://github.com/asmaloney/libE57Format/pull/108)) (Thanks Nigel!)
+- Fix **E57SimpleReader** to handle missing `images2D` and `isAtomicClockReferenced` nodes. ([#90](https://github.com/asmaloney/libE57Format/pull/90)) (Thanks Olli!)
 - Fix **BitpackIntegerDecoder** sometimes reading past end of input buffer. ([#87](https://github.com/asmaloney/libE57Format/pull/87)) (Thanks Nigel!)
 - Fix compilation when some debug options are set. ([#81](https://github.com/asmaloney/libE57Format/pull/81), [#82](https://github.com/asmaloney/libE57Format/pull/82), [#84](https://github.com/asmaloney/libE57Format/pull/84)) (Thanks Nigel!)
 - Fix compilation with [musl libc](https://musl.libc.org/) ([#70](https://github.com/asmaloney/libE57Format/pull/70)) (Thanks Dimitri!)
 - Add missing include for [GCC 11](https://gcc.gnu.org/gcc-11/porting_to.html#header-dep-changes) ([#68](https://github.com/asmaloney/libE57Format/pull/68)) (Thanks bartoszek!)
+
+**Note:** The next release will be 3.0 and will require a [C++14](https://en.cppreference.com/w/cpp/14) compiler.
 
 ## [2.2.0](https://github.com/asmaloney/libE57Format/releases/tag/v2.2.0) - 2021-04-01
 

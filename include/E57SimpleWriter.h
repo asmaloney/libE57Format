@@ -46,12 +46,15 @@ namespace e57
    {
    public:
       //! @brief This function is the constructor for the writer class
-      //! @param [in] filePath file path to E57 file
+      //! @param [in] filePath Path to E57 file
       //! @param [in] coordinateMetadata Information describing the Coordinate Reference System to be used for the file
-      Writer( const ustring &filePath, const ustring &coordinateMetadata = {} );
+      //! @deprecated Will be removed in 4.0. Use Writer( const ustring &filePath, const WriterOptions &options )
+      //! instead.
+      [[deprecated( "Will be removed in 4.0. Use Writer( ustring, WriterOptions )." )]] // TODO Remove in 4.0
+      explicit Writer( const ustring &filePath, const ustring &coordinateMetadata = {} );
 
       //! @brief This function is the constructor for the writer class
-      //! @param [in] filePath file path to E57 file
+      //! @param [in] filePath Path to E57 file
       //! @param [in] options Options to be used for the file
       Writer( const ustring &filePath, const WriterOptions &options );
 

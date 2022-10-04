@@ -1,6 +1,6 @@
 # libE57Format
 
-[![Build Status](https://travis-ci.org/asmaloney/libE57Format.svg?branch=master)](https://travis-ci.org/asmaloney/libE57Format)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/asmaloney/libE57Format)](https://github.com/asmaloney/libE57Format/releases/latest) [![Docs](https://img.shields.io/badge/docs-online-orange)](https://asmaloney.github.io/libE57Format-docs/) [![GitHub](https://img.shields.io/github/license/asmaloney/libE57Format)](LICENSE) ![Build](https://github.com/asmaloney/libE57Format/actions/workflows/build.yml/badge.svg)
 
 A library to provide read & write support for the E57 file format.
 

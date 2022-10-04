@@ -39,7 +39,7 @@ project( E57Format
 	LANGUAGES
 	    CXX
 	VERSION
-	    2.3.0
+	    3.0.0
 )
 
 include( Tags )

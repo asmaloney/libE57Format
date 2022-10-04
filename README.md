@@ -6,7 +6,7 @@ A library to provide read & write support for the E57 file format.
 
 This is a fork of [E57RefImpl](https://sourceforge.net/projects/e57-3d-imgfmt/) v1.1.332. The original source is from [E57RefImpl 1.1.332](https://sourceforge.net/projects/e57-3d-imgfmt/files/E57Refimpl-src/) and then everything was stripped out except the main implementation for reading and writing E57.
 
-This version also removes the dependency on [Boost](http://www.boost.org/) and requires C++11.
+This version also removes the dependency on [Boost](http://www.boost.org/) and - as of version 3.0 - requires [C++14](https://en.cppreference.com/w/cpp/14). (libE57Format version 2.x required [C++11](https://en.cppreference.com/w/cpp/11).)
 
 Many, many other changes were made prior to the first release of this fork. See the [CHANGELOG](CHANGELOG.md) and git history for details.
 
@@ -45,7 +45,11 @@ Since the original fork, [Jiri Hörner](https://github.com/ptc-jhoerner) has add
 [Xerces-C++](https://xerces.apache.org/xerces-c/) validating XML parser is needed at runtime and
 [clang-format](https://clang.llvm.org/docs/ClangFormat.html) for checking C++ formatting.
 
-Ubuntu 20.04 (bionic): `$ sudo apt install libxerces-c-dev clang-format`
+Linux (Ubuntu):
+
+```sh
+$ sudo apt install libxerces-c-dev clang-format
+```
 
 ## License
 

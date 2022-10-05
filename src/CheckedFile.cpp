@@ -213,26 +213,30 @@ CheckedFile::CheckedFile( const char *input, uint64_t size, ReadChecksumPolicy p
 int CheckedFile::open64( const ustring &fileName, int flags, int mode )
 {
 #if defined( _MSC_VER )
+   // Ref: https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/sopen-s-wsopen-s
+
    // Handle UTF-8 file names - Windows requires conversion to UTF-16
    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
    std::wstring widePath = converter.from_bytes( fileName );
 
    int handle;
    int err = _wsopen_s( &handle, widePath.c_str(), flags, _SH_DENYNO, mode );
-   if ( handle < 0 )
+   if ( err < 0 )
    {
-      throw E57_EXCEPTION2( E57_ERROR_OPEN_FAILED, "err=" + toString( err ) + " fileName=" + fileName +
-                                                      " flags=" + toString( flags ) + " mode=" + toString( mode ) );
+      throw E57_EXCEPTION2( E57_ERROR_OPEN_FAILED, "errno=" + toString( errno ) + " error='" + strerror( errno ) +
+                                                      "' fileName=" + fileName + " flags=" + toString( flags ) +
+                                                      " mode=" + toString( mode ) );
    }
    return handle;
 #elif defined( __GNUC__ )
-   int result = ::open( fileName_.c_str(), flags, mode );
-   if ( result < 0 )
+   int fd = ::open( fileName_.c_str(), flags, mode );
+   if ( fd < 0 )
    {
-      throw E57_EXCEPTION2( E57_ERROR_OPEN_FAILED, "result=" + toString( result ) + " fileName=" + fileName +
-                                                      " flags=" + toString( flags ) + " mode=" + toString( mode ) );
+      throw E57_EXCEPTION2( E57_ERROR_OPEN_FAILED, "errno=" + toString( errno ) + " error='" + strerror( errno ) +
+                                                      "' fileName=" + fileName + " flags=" + toString( flags ) +
+                                                      " mode=" + toString( mode ) );
    }
-   return result;
+   return fd;
 #else
 #error "no supported compiler defined"
 #endif

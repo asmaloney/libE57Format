@@ -77,7 +77,6 @@ if( BUILD_SHARED_LIBS )
 endif()
 
 #########################################################################################
-
 # Various levels of cross checking and verification in the code.
 # The extra code does not change the file contents.
 # Recommend that E57_DEBUG remain defined even for production versions.
@@ -124,6 +123,7 @@ if ( CCACHE_PROGRAM )
 endif()
 
 include( E57ExportHeader )
+include( GitUpdate )
 
 # Main sources and includes
 add_subdirectory( extern/CRCpp )
@@ -195,6 +195,18 @@ install(
     LIBRARY DESTINATION lib
     RUNTIME DESTINATION bin
 )
+
+# Testing
+option( E57_BUILD_TEST
+    "Build tests"
+    ${E57_BUILDING_SELF}
+)
+
+if ( E57_BUILD_TEST )
+    enable_testing()
+
+    add_subdirectory( test )
+endif()
 
 # CMake package files
 install(

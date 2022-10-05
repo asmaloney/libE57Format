@@ -108,12 +108,12 @@ namespace e57
 
    //! @cond documentNonPublic   The following isn't part of the API, and isn't
    //! documented.
-   E57Exception::E57Exception( ErrorCode ecode, const std::string &context, const std::string &srcFileName,
-                               int srcLineNumber, const char *srcFunctionName ) :
+   E57Exception::E57Exception( ErrorCode ecode, std::string context, const char *srcFileName, int srcLineNumber,
+                               const char *srcFunctionName ) :
       errorCode_( ecode ),
-      context_( context ), sourceFunctionName_( srcFunctionName ), sourceLineNumber_( srcLineNumber )
+      context_( std::move( context ) ), sourceFileName_( srcFileName ), sourceFunctionName_( srcFunctionName ),
+      sourceLineNumber_( srcLineNumber )
    {
-      sourceFileName_ = srcFileName.substr( srcFileName.find_last_of( "/\\" ) + 1 );
    }
    //! @endcond
 
@@ -135,7 +135,7 @@ namespace e57
    @see     E57ExceptionFunctions.cpp example, ErrorCode, HelloWorld.cpp example
    */
    void E57Exception::report( const char *reportingFileName, int reportingLineNumber, const char *reportingFunctionName,
-                              std::ostream &os ) const
+                              std::ostream &os ) const noexcept
    {
       os << "**** Got an e57 exception: " << e57::Utilities::errorCodeToString( errorCode() ) << std::endl;
 
@@ -167,7 +167,7 @@ namespace e57
    @see     E57ExceptionFunctions.cpp example, E57Utilities::errorCodeToString,
    ErrorCode
    */
-   ErrorCode E57Exception::errorCode() const
+   ErrorCode E57Exception::errorCode() const noexcept
    {
       return errorCode_;
    }
@@ -184,7 +184,7 @@ namespace e57
    @throw   No E57Exceptions.
    @see     E57ExceptionsFunctions.cpp example
    */
-   std::string E57Exception::context() const
+   std::string E57Exception::context() const noexcept
    {
       return context_;
    }
@@ -214,7 +214,7 @@ namespace e57
    @throw   No E57Exceptions.
    @see     E57ExceptionsFunctions.cpp example
    */
-   const char *E57Exception::sourceFileName() const
+   const char *E57Exception::sourceFileName() const noexcept
    {
       return sourceFileName_.c_str();
    }
@@ -231,7 +231,7 @@ namespace e57
    debugging.
    @throw   No E57Exceptions.
    */
-   const char *E57Exception::sourceFunctionName() const
+   const char *E57Exception::sourceFunctionName() const noexcept
    {
       return sourceFunctionName_;
    }
@@ -248,7 +248,7 @@ namespace e57
    debugging.
    @throw   No E57Exceptions.
    */
-   int E57Exception::sourceLineNumber() const
+   int E57Exception::sourceLineNumber() const noexcept
    {
       return sourceLineNumber_;
    }
@@ -292,7 +292,7 @@ namespace e57
    @throw   No E57Exceptions.
    @see     E57Exception::errorCode
    */
-   std::string Utilities::errorCodeToString( ErrorCode ecode )
+   std::string Utilities::errorCodeToString( ErrorCode ecode ) noexcept
    {
       switch ( ecode )
       {

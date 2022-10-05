@@ -102,24 +102,22 @@ namespace e57
    {
    public:
       void report( const char *reportingFileName = nullptr, int reportingLineNumber = 0,
-                   const char *reportingFunctionName = nullptr, std::ostream &os = std::cout ) const;
-      ErrorCode errorCode() const;
-      std::string context() const;
+                   const char *reportingFunctionName = nullptr, std::ostream &os = std::cout ) const noexcept;
+      ErrorCode errorCode() const noexcept;
+      std::string context() const noexcept;
       const char *what() const noexcept override;
 
       // For debugging purposes:
-      const char *sourceFileName() const;
-      const char *sourceFunctionName() const;
-      int sourceLineNumber() const;
+      const char *sourceFileName() const noexcept;
+      const char *sourceFunctionName() const noexcept;
+      int sourceLineNumber() const noexcept;
 
-      //! \cond documentNonPublic   The following isn't part of the API, and isn't
-      //! documented.
+      //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
       E57Exception() = delete;
-      E57Exception( ErrorCode ecode, const std::string &context, const std::string &srcFileName = {},
-                    int srcLineNumber = 0, const char *srcFunctionName = nullptr );
-      ~E57Exception() noexcept override = default;
+      E57Exception( ErrorCode ecode, std::string context, const char *srcFileName = nullptr, int srcLineNumber = 0,
+                    const char *srcFunctionName = nullptr );
 
-   protected:
+   private:
       ErrorCode errorCode_;
       std::string context_;
       std::string sourceFileName_;
@@ -133,6 +131,6 @@ namespace e57
       // Get latest version of ASTM standard supported, and library id string
       E57_DLL void getVersions( int &astmMajor, int &astmMinor, std::string &libraryId );
 
-      E57_DLL std::string errorCodeToString( ErrorCode ecode );
+      E57_DLL std::string errorCodeToString( ErrorCode ecode ) noexcept;
    }
 }

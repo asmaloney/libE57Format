@@ -220,8 +220,8 @@ int CheckedFile::open64( const ustring &fileName, int flags, int mode )
    std::wstring widePath = converter.from_bytes( fileName );
 
    int handle;
-   int err = _wsopen_s( &handle, widePath.c_str(), flags, _SH_DENYNO, mode );
-   if ( err < 0 )
+   errno_t err = _wsopen_s( &handle, widePath.c_str(), flags, _SH_DENYNO, mode );
+   if ( err != 0 )
    {
       throw E57_EXCEPTION2( E57_ERROR_OPEN_FAILED, "errno=" + toString( errno ) + " error='" + strerror( errno ) +
                                                       "' fileName=" + fileName + " flags=" + toString( flags ) +

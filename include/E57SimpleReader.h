@@ -43,6 +43,7 @@ namespace e57
       //! @brief This function is the constructor for the reader class
       //! @param [in] filePath file path to E57 file
       Reader( const ustring &filePath );
+
       //! @brief This function returns true if the file is open
       bool IsOpen() const;
 
@@ -174,8 +175,7 @@ namespace e57
 
       //!@}
 
-      //! @cond documentNonPublic   The following isn't part of the API, and isn't
-      //! documented.
+      //! @cond documentNonPublic   The following isn't part of the API, and isn't documented.
    protected:
       friend class ReaderImpl;
 

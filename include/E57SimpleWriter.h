@@ -79,7 +79,7 @@ namespace e57
       //! @param [in] imageProjection identifies the projection desired.
       //! @param [in] buffer pointer the buffer
       //! @param [in] start position in the block to start writing
-      //! @param [in] count size of desired chuck or buffer size
+      //! @param [in] count size of desired chunk or buffer size
       //! @return Returns the number of bytes written
       int64_t WriteImage2DData( int64_t imageIndex, Image2DType imageType, Image2DProjection imageProjection,
                                 void *buffer, int64_t start, int64_t count );
@@ -138,8 +138,7 @@ namespace e57
 
       //!@}
 
-      //! @cond documentNonPublic   The following isn't part of the API, and isn't
-      //! documented.
+      //! @cond documentNonPublic   The following isn't part of the API, and isn't documented.
    protected:
       friend class WriterImpl;
 

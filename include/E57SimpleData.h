@@ -253,7 +253,7 @@ namespace e57
    //! @brief Stores the top-level information for the XML section of the file.
    struct E57_DLL E57Root
    {
-      ustring formatName;         //!< Contains the string "ASTM E57 3D Image File"
+      ustring formatName;         //!< Contains the string "ASTM E57 3D Imaging Data File"
       ustring guid;               //!< A globally unique identification string for the current version of the file
       uint32_t versionMajor{ 1 }; //!< Major version number, should be 1
       uint32_t versionMinor{ 0 }; //!< Minor version number, should be 0

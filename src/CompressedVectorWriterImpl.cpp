@@ -416,7 +416,7 @@ namespace e57
 #endif
 
       /// Calc maximum number of bytestream values can put in data packet.
-      size_t packetMaxPayloadBytes =
+      const size_t packetMaxPayloadBytes =
          DATA_PACKET_MAX - sizeof( DataPacketHeader ) - bytestreams_.size() * sizeof( uint16_t );
 #ifdef E57_MAX_VERBOSE
       std::cout << "  packetMaxPayloadBytes=" << packetMaxPayloadBytes << std::endl; //???
@@ -457,7 +457,7 @@ namespace e57
 
 #ifdef E57_DEBUG
       /// Double check sum of count is <= packetMaxPayloadBytes
-      const size_t totalByteCount = std::accumulate( count.begin(), count.end(), 0 );
+      const size_t totalByteCount = std::accumulate( count.begin(), count.end(), static_cast<size_t>( 0 ) );
 
       if ( totalByteCount > packetMaxPayloadBytes )
       {

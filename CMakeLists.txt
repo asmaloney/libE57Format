@@ -145,8 +145,6 @@ set_target_properties( E57Format
 # Target definitions
 target_compile_definitions( E57Format
     PRIVATE
-        CRCPP_USE_CPP11
-        CRCPP_BRANCHLESS
         REVISION_ID="${revision_id}"
 )
 

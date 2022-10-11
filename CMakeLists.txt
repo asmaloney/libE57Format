@@ -111,6 +111,18 @@ else()
 	add_library( E57Format STATIC )
 endif()
 
+# ccache
+# https://crascit.com/2016/04/09/using-ccache-with-cmake/
+find_program( CCACHE_PROGRAM ccache )
+if ( CCACHE_PROGRAM )
+    message( STATUS "[E57] Using ccache" )
+    set_target_properties( E57Format
+        PROPERTIES
+            CXX_COMPILER_LAUNCHER "${CCACHE_PROGRAM}"
+            C_COMPILER_LAUNCHER "${CCACHE_PROGRAM}"
+    )
+endif()
+
 include( E57ExportHeader )
 
 # Main sources and includes

@@ -118,6 +118,19 @@ namespace e57
    //! @endcond
 
    /*!
+   @brief   Get string description of exception category.
+   @details Returns "E57 Exception" for all E57Exceptions, no matter what the errorCode.
+   @post    No visible state is modified.
+   @return  The string description of exception category.
+   @throw   No E57Exceptions.
+   @see     E57ExceptionsFunctions.cpp example
+   */
+   const char *E57Exception::what() const noexcept
+   {
+      return "E57 exception";
+   }
+
+   /*!
    @brief   Print error information on a given output stream.
    @param   [in] reportingFileName     Name of file where catch statement caught
    the exception. NULL if unknown.
@@ -137,7 +150,7 @@ namespace e57
    void E57Exception::report( const char *reportingFileName, int reportingLineNumber, const char *reportingFunctionName,
                               std::ostream &os ) const noexcept
    {
-      os << "**** Got an e57 exception: " << e57::Utilities::errorCodeToString( errorCode() ) << std::endl;
+      os << "**** Got an e57 exception: " << errorStr() << std::endl;
 
 #ifdef E57_DEBUG
       os << "  Debug info: " << std::endl;
@@ -164,12 +177,22 @@ namespace e57
    @post    No visible state is modified.
    @return  The numeric ::ErrorCode associated with the exception.
    @throw   No E57Exceptions.
-   @see     E57ExceptionFunctions.cpp example, E57Utilities::errorCodeToString,
-   ErrorCode
+   @see     E57Exception::errorStr, Utilities::errorCodeToString, ErrorCode
    */
    ErrorCode E57Exception::errorCode() const noexcept
    {
       return errorCode_;
+   }
+
+   /*!
+   @brief   Get error string associated with the exception.
+   @post    No visible state is modified.
+   @return  The error string associated with the exception.
+   @throw   No E57Exceptions.
+   */
+   std::string E57Exception::errorStr() const noexcept
+   {
+      return Utilities::errorCodeToString( errorCode_ );
    }
 
    /*!
@@ -187,20 +210,6 @@ namespace e57
    std::string E57Exception::context() const noexcept
    {
       return context_;
-   }
-
-   /*!
-   @brief   Get string description of exception category.
-   @details
-   Returns "E57 Exception" for all E57Exceptions, no matter what the errorCode.
-   @post    No visible state is modified.
-   @return  The string description of exception category.
-   @throw   No E57Exceptions.
-   @see     E57ExceptionsFunctions.cpp example
-   */
-   const char *E57Exception::what() const noexcept
-   {
-      return "E57 exception";
    }
 
    /*!

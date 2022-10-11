@@ -101,11 +101,15 @@ namespace e57
    class E57_DLL E57Exception : public std::exception
    {
    public:
+      const char *what() const noexcept override;
+
       void report( const char *reportingFileName = nullptr, int reportingLineNumber = 0,
                    const char *reportingFunctionName = nullptr, std::ostream &os = std::cout ) const noexcept;
+
       ErrorCode errorCode() const noexcept;
+      std::string errorStr() const noexcept;
+
       std::string context() const noexcept;
-      const char *what() const noexcept override;
 
       // For debugging purposes:
       const char *sourceFileName() const noexcept;

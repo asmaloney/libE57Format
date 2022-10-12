@@ -4,9 +4,25 @@ All notable changes to this project will be documented in this file. The format 
 
 ## 3.0.0 (in progress)
 
+### Added
+
+- Added `E57Exception::errorStr()` to get the error string directly. ([#128](https://github.com/asmaloney/libE57Format/pull/128))
+- {cmake} Use [ccache](https://ccache.dev/) if available. ([#129](https://github.com/asmaloney/libE57Format/pull/129))
+- {ci} Added a CI check for proper clang-formatted code. ([#125](https://github.com/asmaloney/libE57Format/pull/125))
+
 ### Changed
 
-- Now requires a C++14 compatible compiler.
+- Now requires a [C++14](https://en.cppreference.com/w/cpp/14) compatible compiler.
+- Update [CRCpp](https://github.com/d-bahr/CRCpp) to 1.2. ([#130](https://github.com/asmaloney/libE57Format/pull/130))
+- `E57Exception` changes ([#118](https://github.com/asmaloney/libE57Format/pull/118)):
+  - mark methods as `noexcept`
+  - use `private` instead of `protected`
+- Old `e57::Writer` constructor marked as deprecated. ([#117](https://github.com/asmaloney/libE57Format/pull/117))
+
+### Fixed
+
+- {win} Fix conversion warning when compiling with debug on. ([#124](https://github.com/asmaloney/libE57Format/pull/124))
+- Add errno detail to `E57_ERROR_OPEN_FAILED` exception. ([#119](https://github.com/asmaloney/libE57Format/pull/119), [#120](https://github.com/asmaloney/libE57Format/pull/120))
 
 ## [2.3.0](https://github.com/asmaloney/libE57Format/releases/tag/v2.3.0) - 2022-10-04
 

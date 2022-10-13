@@ -19,6 +19,25 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          submodules: 'true'
+
+      - name: Checkout Test Data
+        uses: actions/checkout@v3
+        with:
+          repository: 'asmaloney/libE57Format-test-data'
+          path: libE57Format-test-data
+
+      - name: List Test Data Files (macOS/Linux)
+        if: matrix.config.os != 'windows-latest'
+        run: |
+          pwd
+
+          ls -laR libE57Format-test-data/images
+
+          ls -laR libE57Format-test-data/reference
+
+          ls -laR libE57Format-test-data/self
 
       - name: Install Dependencies (macOS)
         if: matrix.config.os == 'macos-latest'
@@ -81,5 +100,7 @@ jobs:
           .
 
       - name: Build
-        run: |
-          cmake --build libE57Format-build
+        run: cmake --build libE57Format-build
+
+      - name: Test
+        run: libE57Format-build/test/testE57

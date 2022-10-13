@@ -78,7 +78,7 @@ All notable changes to this project will be documented in this file. The format 
 ### Other
 
 - Removed all internal usage of dynamic_cast<>. ([#39](https://github.com/asmaloney/libE57Format/pull/39)) (Thanks Jiri!)
-- Split classes out from E57FormatImpl.[h,cpp] intot their own files.
+- Split classes out from E57FormatImpl.[h,cpp] into their own files.
 
 ## [2.1.0](https://github.com/asmaloney/libE57Format/releases/tag/v2.1) - 2020-04-01
 

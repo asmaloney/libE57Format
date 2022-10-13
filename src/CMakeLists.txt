@@ -3,16 +3,20 @@
 
 target_sources( E57Format
     PRIVATE
+        ${CMAKE_CURRENT_LIST_DIR}/BlobNode.cpp
         ${CMAKE_CURRENT_LIST_DIR}/BlobNodeImpl.h
         ${CMAKE_CURRENT_LIST_DIR}/BlobNodeImpl.cpp
         ${CMAKE_CURRENT_LIST_DIR}/CheckedFile.h
         ${CMAKE_CURRENT_LIST_DIR}/CheckedFile.cpp
         ${CMAKE_CURRENT_LIST_DIR}/Common.h
         ${CMAKE_CURRENT_LIST_DIR}/Common.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/CompressedVectorNode.cpp
         ${CMAKE_CURRENT_LIST_DIR}/CompressedVectorNodeImpl.h
         ${CMAKE_CURRENT_LIST_DIR}/CompressedVectorNodeImpl.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/CompressedVectorReader.cpp
         ${CMAKE_CURRENT_LIST_DIR}/CompressedVectorReaderImpl.h
         ${CMAKE_CURRENT_LIST_DIR}/CompressedVectorReaderImpl.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/CompressedVectorWriter.cpp
         ${CMAKE_CURRENT_LIST_DIR}/CompressedVectorWriterImpl.h
         ${CMAKE_CURRENT_LIST_DIR}/CompressedVectorWriterImpl.cpp
         ${CMAKE_CURRENT_LIST_DIR}/DecodeChannel.h
@@ -21,34 +25,42 @@ target_sources( E57Format
         ${CMAKE_CURRENT_LIST_DIR}/Decoder.cpp
         ${CMAKE_CURRENT_LIST_DIR}/Encoder.h
         ${CMAKE_CURRENT_LIST_DIR}/Encoder.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/FloatNode.cpp
         ${CMAKE_CURRENT_LIST_DIR}/FloatNodeImpl.h
         ${CMAKE_CURRENT_LIST_DIR}/FloatNodeImpl.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/ImageFile.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/ImageFileImpl.h
+        ${CMAKE_CURRENT_LIST_DIR}/ImageFileImpl.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/IntegerNode.cpp
         ${CMAKE_CURRENT_LIST_DIR}/IntegerNodeImpl.h
         ${CMAKE_CURRENT_LIST_DIR}/IntegerNodeImpl.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/Node.cpp
         ${CMAKE_CURRENT_LIST_DIR}/NodeImpl.h
         ${CMAKE_CURRENT_LIST_DIR}/NodeImpl.cpp
         ${CMAKE_CURRENT_LIST_DIR}/Packet.h
         ${CMAKE_CURRENT_LIST_DIR}/Packet.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/ImageFileImpl.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/ImageFileImpl.h
-        ${CMAKE_CURRENT_LIST_DIR}/ReaderImpl.cpp
         ${CMAKE_CURRENT_LIST_DIR}/ReaderImpl.h
+        ${CMAKE_CURRENT_LIST_DIR}/ReaderImpl.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/ScaledIntegerNode.cpp
         ${CMAKE_CURRENT_LIST_DIR}/ScaledIntegerNodeImpl.h
         ${CMAKE_CURRENT_LIST_DIR}/ScaledIntegerNodeImpl.cpp
         ${CMAKE_CURRENT_LIST_DIR}/SectionHeaders.h
         ${CMAKE_CURRENT_LIST_DIR}/SectionHeaders.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/SourceDestBuffer.cpp
         ${CMAKE_CURRENT_LIST_DIR}/SourceDestBufferImpl.h
         ${CMAKE_CURRENT_LIST_DIR}/SourceDestBufferImpl.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/StringNode.cpp
         ${CMAKE_CURRENT_LIST_DIR}/StringNodeImpl.h
         ${CMAKE_CURRENT_LIST_DIR}/StringNodeImpl.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/StructureNode.cpp
         ${CMAKE_CURRENT_LIST_DIR}/StructureNodeImpl.h
         ${CMAKE_CURRENT_LIST_DIR}/StructureNodeImpl.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/VectorNode.cpp
         ${CMAKE_CURRENT_LIST_DIR}/VectorNodeImpl.h
         ${CMAKE_CURRENT_LIST_DIR}/VectorNodeImpl.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/WriterImpl.cpp
         ${CMAKE_CURRENT_LIST_DIR}/WriterImpl.h
+        ${CMAKE_CURRENT_LIST_DIR}/WriterImpl.cpp
         ${CMAKE_CURRENT_LIST_DIR}/E57Exception.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/E57Format.cpp
         ${CMAKE_CURRENT_LIST_DIR}/E57SimpleData.cpp
         ${CMAKE_CURRENT_LIST_DIR}/E57SimpleReader.cpp
         ${CMAKE_CURRENT_LIST_DIR}/E57SimpleWriter.cpp

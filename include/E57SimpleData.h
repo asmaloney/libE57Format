@@ -87,9 +87,7 @@ namespace e57
 
       static Quaternion identity()
       {
-         Quaternion identity;
-         identity.w = 1.;
-         return identity;
+         return {};
       }
    };
 

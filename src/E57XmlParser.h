@@ -48,7 +48,7 @@ namespace e57
    class E57XmlParser : public DefaultHandler
    {
    public:
-      E57XmlParser( ImageFileImplSharedPtr imf );
+      explicit E57XmlParser( ImageFileImplSharedPtr imf );
       ~E57XmlParser() override;
 
       void init();

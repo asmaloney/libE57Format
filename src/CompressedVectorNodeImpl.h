@@ -33,7 +33,7 @@ namespace e57
    class CompressedVectorNodeImpl : public NodeImpl
    {
    public:
-      CompressedVectorNodeImpl( ImageFileImplWeakPtr destImageFile );
+      explicit CompressedVectorNodeImpl( ImageFileImplWeakPtr destImageFile );
       ~CompressedVectorNodeImpl() override = default;
 
       NodeType type() const override

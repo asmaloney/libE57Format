@@ -53,7 +53,7 @@ namespace e57
 #endif
 
    protected:
-      Decoder( unsigned bytestreamNumber );
+      explicit Decoder( unsigned bytestreamNumber );
 
       unsigned int bytestreamNumber_;
    };

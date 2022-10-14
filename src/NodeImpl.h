@@ -85,7 +85,7 @@ namespace e57
       friend class Decoder;
       friend class Encoder;
 
-      NodeImpl( ImageFileImplWeakPtr destImageFile );
+      explicit NodeImpl( ImageFileImplWeakPtr destImageFile );
       NodeImpl &operator=( NodeImpl &n );
       virtual NodeImplSharedPtr lookup( const ustring & /*pathName*/ )
       {

@@ -1,6 +1,7 @@
 // libE57Format testing Copyright © 2022 Andy Maloney <asmaloney@gmail.com>
 // SPDX-License-Identifier: MIT
 
+#include <array>
 #include <fstream>
 
 #include "gtest/gtest.h"
@@ -9,6 +10,34 @@
 
 #include "Helpers.h"
 #include "TestData.h"
+
+namespace
+{
+   using Point = std::array<float, 3>;
+   using Cube = std::array<Point, 8>;
+
+   constexpr auto cCubeCorners =
+      Cube{ Point{ -0.5f, -0.5f, -0.5f }, { 0.5f, -0.5f, -0.5f }, { 0.5f, 0.5f, -0.5f }, { -0.5f, 0.5f, -0.5f },
+            Point{ -0.5f, 0.5f, 0.5f },   { 0.5f, 0.5f, 0.5f },   { 0.5f, -0.5f, 0.5f }, { -0.5f, -0.5f, 0.5f } };
+
+   constexpr auto cIndexSequence = std::make_index_sequence<3>{};
+
+   template <class T, size_t... Is, size_t N>
+   constexpr std::array<T, N> multiply( std::array<T, N> const &src, std::index_sequence<Is...>, T const &mul )
+   {
+      return std::array<T, N>{ { ( src[Is] * mul )... } };
+   }
+
+   // Call a function for each of the corner points for a cube centred on the origin, sized using cubeSize.
+   void generateCubePoints( float cubeSize, const std::function<void( const Point &point )> &lambda )
+   {
+      for ( const auto &point : cCubeCorners )
+      {
+         const auto cSized = multiply( point, cIndexSequence, cubeSize );
+         lambda( cSized );
+      }
+   }
+}
 
 TEST( SimpleWriter, PathError )
 {
@@ -24,6 +53,68 @@ TEST( SimpleWriter, WriteEmpty )
    options.guid = "File GUID";
 
    E57_ASSERT_NO_THROW( e57::Writer writer( "./empty.e57", options ) );
+}
+
+TEST( SimpleWriter, WriteMultipleScans )
+{
+   e57::WriterOptions options;
+   options.guid = "Multiple Scans File GUID";
+
+   e57::Writer *writer = nullptr;
+
+   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./MultipleScans.e57", options ) );
+
+   constexpr int cNumPoints = 8;
+
+   e57::Data3DPointsData pointsData;
+   pointsData.cartesianX = new float[cNumPoints];
+   pointsData.cartesianY = new float[cNumPoints];
+   pointsData.cartesianZ = new float[cNumPoints];
+
+   e57::Data3D header;
+   header.pointsSize = cNumPoints;
+   header.pointFields.cartesianXField = true;
+   header.pointFields.cartesianYField = true;
+   header.pointFields.cartesianZField = true;
+
+   // scan 1
+   header.guid = "Header Scan 1 GUID";
+
+   const int64_t cScanIndex1 = writer->NewData3D( header );
+
+   int64_t i = 0;
+   auto writePointLambda = [&]( const Point &point ) {
+      pointsData.cartesianX[i] = point[0];
+      pointsData.cartesianY[i] = point[1];
+      pointsData.cartesianZ[i] = point[2];
+      ++i;
+   };
+
+   generateCubePoints( 1.0, writePointLambda );
+
+   e57::CompressedVectorWriter dataWriter = writer->SetUpData3DPointsData( cScanIndex1, cNumPoints, pointsData );
+
+   dataWriter.write( cNumPoints );
+   dataWriter.close();
+
+   // scan 2
+   header.guid = "Header Scan 2 GUID";
+
+   const int64_t cScanIndex2 = writer->NewData3D( header );
+
+   i = 0;
+   generateCubePoints( 0.5, writePointLambda );
+
+   dataWriter = writer->SetUpData3DPointsData( cScanIndex2, cNumPoints, pointsData );
+
+   dataWriter.write( cNumPoints );
+   dataWriter.close();
+
+   delete[] pointsData.cartesianX;
+   delete[] pointsData.cartesianY;
+   delete[] pointsData.cartesianZ;
+
+   delete writer;
 }
 
 // https://github.com/asmaloney/libE57Format/issues/26

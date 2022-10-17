@@ -381,23 +381,21 @@ TEST( SimpleWriter, MultipleScans )
 }
 
 // https://github.com/asmaloney/libE57Format/issues/26
-// File name UTF-8 encoded to avoid editor issues.
 TEST( SimpleWriter, ChineseFileName )
 {
    e57::WriterOptions options;
    options.guid = "Chinese File Name File GUID";
 
-   E57_ASSERT_NO_THROW( e57::Writer writer( "./\xe6\xb5\x8b\xe8\xaf\x95\xe7\x82\xb9\xe4\xba\x91.e57", options ) );
+   E57_ASSERT_NO_THROW( e57::Writer writer( "./测试点云.e57", options ) );
 }
 
 // https://github.com/asmaloney/libE57Format/issues/69
-// File name UTF-8 encoded to avoid editor issues.
 TEST( SimpleWriter, WriteUmlautFileName )
 {
    e57::WriterOptions options;
    options.guid = "Umlaut File Name File GUID";
 
-   E57_ASSERT_NO_THROW( e57::Writer writer( "./test filename \x61\xcc\x88\x6f\xcc\x88\x75\xcc\x88.e57", options ) );
+   E57_ASSERT_NO_THROW( e57::Writer writer( "./test filename äöü.e57", options ) );
 }
 
 TEST( SimpleWriter, CartesianPoints )

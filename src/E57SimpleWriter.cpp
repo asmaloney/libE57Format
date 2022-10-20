@@ -31,8 +31,9 @@
 namespace e57
 {
 
+   // Note that this constructor is deprecated (see header).
    Writer::Writer( const ustring &filePath, const ustring &coordinateMetadata ) :
-      impl_( new WriterImpl( filePath, WriterOptions{ {}, coordinateMetadata } ) )
+      Writer( filePath, WriterOptions{ {}, coordinateMetadata } )
    {
    }
 

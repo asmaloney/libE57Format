@@ -916,7 +916,7 @@ namespace e57
          ustring norExtUri;
          if ( !imf_.extensionsLookupPrefix( "nor", norExtUri ) )
          {
-            imf_.extensionsAdd( "nor", "http://www.libe57.org/E57_NOR_surface_normals.txt" );
+            imf_.extensionsAdd( "nor", "http://www.libe57.org/E57_EXT_surface_normals.txt" );
          }
       }
 

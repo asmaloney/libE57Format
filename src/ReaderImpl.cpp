@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2010 Stan Coleby (scoleby@intelisum.com)
  * Copyright (c) 2020 PTC Inc.
+ * Copyright (c) 2022 Andy Maloney <asmaloney@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person or organization
  * obtaining a copy of the software and accompanying documentation covered by
@@ -1103,6 +1104,7 @@ namespace e57
       }
 
       // E57_EXT_surface_normals
+      // See: http://www.libe57.org/E57_EXT_surface_normals.txt
       ustring norExtUri;
       if ( imf_.extensionsLookupPrefix( "nor", norExtUri ) )
       {

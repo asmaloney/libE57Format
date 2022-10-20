@@ -1,5 +1,5 @@
 /*
- * ScaledInteger.cpp - implementation of public functions of the ScaledInteger class.
+ * ScaledIntegerNode.cpp - implementation of public functions of the ScaledIntegerNode class.
  *
  * Original work Copyright 2009 - 2010 Kevin Ackley (kackley@gwi.net)
  * Modified work Copyright 2018 - 2020 Andy Maloney <asmaloney@gmail.com>
@@ -27,7 +27,7 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-//! @file ScaledInteger.cpp
+//! @file ScaledIntegerNode.cpp
 
 #include "ScaledIntegerNodeImpl.h"
 
@@ -59,7 +59,7 @@ only externally visible state, or can refer to internal implementation-specific
 state that is not visible to the API user. The following C++ code checks
 externally visible state for consistency and throws an exception if the
 invariant is violated:
-@dontinclude E57Format.cpp
+@dontinclude ScaledIntegerNode.cpp
 @skip beginExample ScaledIntegerNode::checkInvariant
 @until endExample ScaledIntegerNode::checkInvariant
 

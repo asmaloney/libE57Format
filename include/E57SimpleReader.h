@@ -3,6 +3,7 @@
  *
  * Copyright (c) 2010 Stan Coleby (scoleby@intelisum.com)
  * Copyright (c) 2020 PTC Inc.
+ * Copyright (c) 2022 Andy Maloney <asmaloney@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person or organization
  * obtaining a copy of the software and accompanying documentation covered by
@@ -29,7 +30,8 @@
 
 #pragma once
 
-//! @file E57SimpleReader.h E57 Simple API for reading E57
+//! @file E57SimpleReader.h E57 Simple API for reading E57 with support for the
+//! [E57_EXT_surface_normals](http://www.libe57.org/E57_EXT_surface_normals.txt) extension.
 
 #include "E57SimpleData.h"
 
@@ -41,7 +43,10 @@ namespace e57
       ReadChecksumPolicy checksumPolicy = CHECKSUM_POLICY_ALL;
    };
 
-   //! @brief Used for reading of the E57 file with E57 Simple API
+   //! @brief Used for reading an E57 file using E57 Simple API.
+   //!
+   //! The Reader includes support for the [E57_EXT_surface_normals](http://www.libe57.org/E57_EXT_surface_normals.txt)
+   //! extension.
    class E57_DLL Reader
    {
    public:

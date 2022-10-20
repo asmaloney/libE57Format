@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file. The format 
 
 ### Added
 
+- Added Testing using [GoogleTest](https://github.com/google/googletest). For details, please see [test/README.md](test/README.md) ([#121](https://github.com/asmaloney/libE57Format/pull/121))
 - Added `E57Exception::errorStr()` to get the error string directly. ([#128](https://github.com/asmaloney/libE57Format/pull/128))
 - {cmake} Use [ccache](https://ccache.dev/) if available. ([#129](https://github.com/asmaloney/libE57Format/pull/129))
 - {ci} Added a CI check for proper clang-formatted code. ([#125](https://github.com/asmaloney/libE57Format/pull/125))
@@ -13,6 +14,12 @@ All notable changes to this project will be documented in this file. The format 
 ### Changed
 
 - Now requires a [C++14](https://en.cppreference.com/w/cpp/14) compatible compiler.
+- A new **E57SimpleReader** constructor takes a `ReaderOptions` struct which allows setting the checksum policy.
+  ```cpp
+  Reader( const ustring &filePath, const ReaderOptions &options );
+  ```
+  The old constructor taking only `filePath` is deprecated and will be removed in the future. ([#139](https://github.com/asmaloney/libE57Format/pull/139))
+- Avoid implicit conversion in constructors. ([#135](https://github.com/asmaloney/libE57Format/pull/135))
 - Update [CRCpp](https://github.com/d-bahr/CRCpp) to 1.2. ([#130](https://github.com/asmaloney/libE57Format/pull/130))
 - `E57Exception` changes ([#118](https://github.com/asmaloney/libE57Format/pull/118)):
   - mark methods as `noexcept`
@@ -21,6 +28,7 @@ All notable changes to this project will be documented in this file. The format 
 
 ### Fixed
 
+- Fix the [E57_EXT_surface_normals](http://www.libe57.org/E57_EXT_surface_normals.txt) extension's URI in **E57SimpleWriter**. ([#143](https://github.com/asmaloney/libE57Format/pull/143))
 - {win} Fix conversion warning when compiling with debug on. ([#124](https://github.com/asmaloney/libE57Format/pull/124))
 - Add errno detail to `E57_ERROR_OPEN_FAILED` exception. ([#119](https://github.com/asmaloney/libE57Format/pull/119), [#120](https://github.com/asmaloney/libE57Format/pull/120))
 

@@ -35,14 +35,25 @@
 
 namespace e57
 {
+   struct E57_DLL ReaderOptions
+   {
+      //! Set how frequently to verify the checksums (see ReadChecksumPolicy).
+      ReadChecksumPolicy checksumPolicy = CHECKSUM_POLICY_ALL;
+   };
 
    //! @brief Used for reading of the E57 file with E57 Simple API
    class E57_DLL Reader
    {
    public:
       //! @brief This function is the constructor for the reader class
-      //! @param [in] filePath file path to E57 file
+      //! @param [in] filePath Path to E57 file
+      [[deprecated( "Will be removed in 4.0. Use Reader( ustring, ReaderOptions )." )]] // TODO Remove in 4.0
       explicit Reader( const ustring &filePath );
+
+      //! @brief This function is the constructor for the reader class
+      //! @param [in] filePath Path to E57 file
+      //! @param [in] options Options to be used for the file
+      Reader( const ustring &filePath, const ReaderOptions &options );
 
       //! @brief This function returns true if the file is open
       bool IsOpen() const;

@@ -51,13 +51,11 @@ jobs:
 
           sudo apt-get install -y libxerces-c-dev ninja-build
 
-      - name: Install miniconda (Windows)
+      - name: Setup miniconda (Windows)
         if: matrix.config.os == 'windows-latest'
         uses: conda-incubator/setup-miniconda@v2
         with:
-          auto-update-conda: true
           channels: conda-forge
-          miniconda-version: 'latest'
 
       - name: Install Dependencies (Windows)
         if: matrix.config.os == 'windows-latest'

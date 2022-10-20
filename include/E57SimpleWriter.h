@@ -3,6 +3,7 @@
  *
  * Copyright (c) 2010 Stan Coleby (scoleby@intelisum.com)
  * Copyright (c) 2020 PTC Inc.
+ * Copyright (c) 2022 Andy Maloney <asmaloney@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person or organization
  * obtaining a copy of the software and accompanying documentation covered by
@@ -29,7 +30,8 @@
 
 #pragma once
 
-//! @file E57SimpleWriter.h E57 Simple API for writing E57
+//! @file E57SimpleWriter.h E57 Simple API for writing E57 with support for the
+//! [E57_EXT_surface_normals](http://www.libe57.org/E57_EXT_surface_normals.txt) extension.
 
 #include "E57SimpleData.h"
 
@@ -41,7 +43,10 @@ namespace e57
       ustring coordinateMetadata; //!< Information describing the Coordinate Reference System to be used for the file
    };
 
-   //! @brief Used for writing of the E57 file with E57 Simple API
+   //! @brief Used for writing an E57 file using the E57 Simple API.
+   //!
+   //! The Writer includes support for the [E57_EXT_surface_normals](http://www.libe57.org/E57_EXT_surface_normals.txt)
+   //! extension.
    class E57_DLL Writer
    {
    public:

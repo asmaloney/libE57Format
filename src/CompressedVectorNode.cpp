@@ -95,7 +95,7 @@ only externally visible state, or can refer to internal implementation-specific
 state that is not visible to the API user. The following C++ code checks
 externally visible state for consistency and throws an exception if the
 invariant is violated:
-@dontinclude E57Format.cpp
+@dontinclude CompressedVectorNode.cpp
 @skip beginExample CompressedVectorNode::checkInvariant
 @until endExample CompressedVectorNode::checkInvariant
 

@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2010 Stan Coleby (scoleby@intelisum.com)
  * Copyright (c) 2020 PTC Inc.
+ * Copyright (c) 2022 Andy Maloney <asmaloney@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person or organization
  * obtaining a copy of the software and accompanying documentation covered by
@@ -908,6 +909,7 @@ namespace e57
       }
 
       // E57_EXT_surface_normals
+      // See: http://www.libe57.org/E57_EXT_surface_normals.txt
       if ( data3DHeader.pointFields.normalX || data3DHeader.pointFields.normalY || data3DHeader.pointFields.normalZ )
       {
          // make sure we declare the extension before using the fields with prefix

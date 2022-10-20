@@ -28,6 +28,7 @@
 #pragma once
 
 #include "E57SimpleData.h"
+#include "E57SimpleReader.h"
 
 namespace e57
 {
@@ -36,7 +37,7 @@ namespace e57
    class ReaderImpl
    {
    public:
-      explicit ReaderImpl( const ustring &filePath );
+      explicit ReaderImpl( const ustring &filePath, const ReaderOptions &options );
 
       ~ReaderImpl();
 

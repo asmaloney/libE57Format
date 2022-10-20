@@ -23,14 +23,14 @@ namespace
 
 TEST( SimpleReader, PathError )
 {
-   E57_ASSERT_THROW( e57::Reader( "./no-path/empty.e57" ) );
+   E57_ASSERT_THROW( e57::Reader( "./no-path/empty.e57", {} ) );
 }
 
 TEST( SimpleReaderData, ReadEmpty )
 {
    e57::Reader *reader = nullptr;
 
-   E57_ASSERT_NO_THROW( reader = new e57::Reader( TestData::Path() + "/self/empty.e57" ) );
+   E57_ASSERT_NO_THROW( reader = new e57::Reader( TestData::Path() + "/self/empty.e57", {} ) );
 
    ASSERT_TRUE( reader->IsOpen() );
    EXPECT_EQ( reader->GetImage2DCount(), 0 );
@@ -47,7 +47,12 @@ TEST( SimpleReaderData, ReadEmpty )
 
 TEST( SimpleReaderData, BadCRC )
 {
-   E57_ASSERT_THROW( e57::Reader( TestData::Path() + "/self/bad-crc.e57" ) );
+   E57_ASSERT_THROW( e57::Reader( TestData::Path() + "/self/bad-crc.e57", {} ) );
+}
+
+TEST( SimpleReaderData, DoNotCheckCRC )
+{
+   E57_ASSERT_NO_THROW( e57::Reader( TestData::Path() + "/self/bad-crc.e57", { e57::CHECKSUM_POLICY_NONE } ) );
 }
 
 // https://github.com/asmaloney/libE57Format/issues/26
@@ -55,7 +60,7 @@ TEST( SimpleReaderData, BadCRC )
 TEST( SimpleReaderData, ReadChineseFileName )
 {
    E57_ASSERT_NO_THROW(
-      e57::Reader( TestData::Path() + "/self/\xe6\xb5\x8b\xe8\xaf\x95\xe7\x82\xb9\xe4\xba\x91.e57" ) );
+      e57::Reader( TestData::Path() + "/self/\xe6\xb5\x8b\xe8\xaf\x95\xe7\x82\xb9\xe4\xba\x91.e57", {} ) );
 }
 
 // https://github.com/asmaloney/libE57Format/issues/69
@@ -64,14 +69,14 @@ TEST( SimpleReaderData, ReadChineseFileName )
 // TEST( SimpleReaderData, ReadUmlautFileName )
 //{
 //   E57_ASSERT_NO_THROW(
-//      e57::Reader( TestData::Path() + "/self/test filename \x61\xcc\x88\x6f\xcc\x88\x75\xcc\x88.e57" ) );
+//      e57::Reader( TestData::Path() + "/self/test filename \x61\xcc\x88\x6f\xcc\x88\x75\xcc\x88.e57", {} ) );
 //}
 
 TEST( SimpleReaderData, ReadBunnyDouble )
 {
    e57::Reader *reader = nullptr;
 
-   E57_ASSERT_NO_THROW( reader = new e57::Reader( TestData::Path() + "/reference/bunnyDouble.e57" ) );
+   E57_ASSERT_NO_THROW( reader = new e57::Reader( TestData::Path() + "/reference/bunnyDouble.e57", {} ) );
 
    ASSERT_TRUE( reader->IsOpen() );
    EXPECT_EQ( reader->GetImage2DCount(), 0 );
@@ -115,7 +120,7 @@ TEST( SimpleReaderData, ReadBunnyInt32 )
 {
    e57::Reader *reader = nullptr;
 
-   E57_ASSERT_NO_THROW( reader = new e57::Reader( TestData::Path() + "/reference/bunnyInt32.e57" ) );
+   E57_ASSERT_NO_THROW( reader = new e57::Reader( TestData::Path() + "/reference/bunnyInt32.e57", {} ) );
 
    ASSERT_TRUE( reader->IsOpen() );
    EXPECT_EQ( reader->GetImage2DCount(), 0 );

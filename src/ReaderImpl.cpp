@@ -30,8 +30,8 @@
 namespace e57
 {
 
-   ReaderImpl::ReaderImpl( const ustring &filePath ) :
-      imf_( filePath, "r" ), root_( imf_.root() ), data3D_( root_.get( "/data3D" ) ),
+   ReaderImpl::ReaderImpl( const ustring &filePath, const ReaderOptions &options ) :
+      imf_( filePath, "r", options.checksumPolicy ), root_( imf_.root() ), data3D_( root_.get( "/data3D" ) ),
       images2D_( root_.isDefined( "/images2D" ) ? root_.get( "/images2D" ) : VectorNode( imf_ ) )
    {
    }

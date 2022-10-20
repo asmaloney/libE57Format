@@ -31,7 +31,13 @@
 namespace e57
 {
 
-   Reader::Reader( const ustring &filePath ) : impl_( new ReaderImpl( filePath ) )
+   // Note that this constructor is deprecated (see header).
+   Reader::Reader( const ustring &filePath ) : Reader( filePath, {} )
+   {
+   }
+
+   Reader::Reader( const ustring &filePath, const ReaderOptions &options ) :
+      impl_( new ReaderImpl( filePath, options ) )
    {
    }
 

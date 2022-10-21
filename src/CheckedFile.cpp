@@ -412,6 +412,8 @@ CheckedFile &CheckedFile::operator<<( double d )
 
 template <class FTYPE> CheckedFile &CheckedFile::writeFloatingPoint( FTYPE value, int precision )
 {
+   static_assert( std::is_floating_point<FTYPE>::value, "Floating point type required." );
+
 #ifdef E57_MAX_VERBOSE
    std::cout << "CheckedFile::writeFloatingPoint, value=" << value << " precision=" << precision << std::endl;
 #endif

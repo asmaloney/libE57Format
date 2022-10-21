@@ -29,6 +29,7 @@
 
 #include "CheckedFile.h"
 #include "ImageFileImpl.h"
+#include "StringFunctions.h"
 #include "StructureNodeImpl.h"
 
 using namespace e57;

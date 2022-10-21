@@ -28,6 +28,7 @@
 #include "NodeImpl.h"
 #include "ImageFileImpl.h"
 #include "SourceDestBufferImpl.h"
+#include "StringFunctions.h"
 #include "VectorNodeImpl.h"
 
 using namespace e57;

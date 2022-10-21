@@ -30,6 +30,7 @@
 //! @file IntegerNode.cpp
 
 #include "IntegerNodeImpl.h"
+#include "StringFunctions.h"
 
 using namespace e57;
 

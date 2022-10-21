@@ -27,6 +27,7 @@
 
 #include "IntegerNodeImpl.h"
 #include "CheckedFile.h"
+#include "StringFunctions.h"
 
 namespace e57
 {

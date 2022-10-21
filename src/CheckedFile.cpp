@@ -68,6 +68,7 @@
 #include "CRC.h"
 
 #include "CheckedFile.h"
+#include "StringFunctions.h"
 
 //#define E57_CHECK_FILE_DEBUG
 #ifdef E57_CHECK_FILE_DEBUG

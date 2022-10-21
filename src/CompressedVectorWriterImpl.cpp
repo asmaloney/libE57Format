@@ -34,6 +34,7 @@
 #include "ImageFileImpl.h"
 #include "SectionHeaders.h"
 #include "SourceDestBufferImpl.h"
+#include "StringFunctions.h"
 
 namespace e57
 {

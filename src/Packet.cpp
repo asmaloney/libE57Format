@@ -29,6 +29,7 @@
 
 #include "CheckedFile.h"
 #include "Packet.h"
+#include "StringFunctions.h"
 
 using namespace e57;
 

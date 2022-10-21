@@ -41,6 +41,7 @@
 #include "ImageFileImpl.h"
 #include "IntegerNodeImpl.h"
 #include "ScaledIntegerNodeImpl.h"
+#include "StringFunctions.h"
 #include "StringNodeImpl.h"
 #include "VectorNodeImpl.h"
 

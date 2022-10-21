@@ -35,6 +35,7 @@
 #include "IntegerNodeImpl.h"
 #include "ScaledIntegerNodeImpl.h"
 #include "SourceDestBufferImpl.h"
+#include "StringFunctions.h"
 
 using namespace e57;
 

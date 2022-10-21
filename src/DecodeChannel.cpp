@@ -27,6 +27,7 @@
 
 #include "DecodeChannel.h"
 #include "SourceDestBufferImpl.h"
+#include "StringFunctions.h"
 
 namespace e57
 {

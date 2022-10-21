@@ -50,6 +50,7 @@ target_sources( E57Format
         ${CMAKE_CURRENT_LIST_DIR}/SourceDestBufferImpl.h
         ${CMAKE_CURRENT_LIST_DIR}/SourceDestBufferImpl.cpp
         ${CMAKE_CURRENT_LIST_DIR}/StringNode.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/StringFunctions.h
         ${CMAKE_CURRENT_LIST_DIR}/StringNodeImpl.h
         ${CMAKE_CURRENT_LIST_DIR}/StringNodeImpl.cpp
         ${CMAKE_CURRENT_LIST_DIR}/StructureNode.cpp

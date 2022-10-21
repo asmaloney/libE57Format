@@ -29,6 +29,7 @@
 
 #include "ImageFileImpl.h"
 #include "SourceDestBufferImpl.h"
+#include "StringFunctions.h"
 
 using namespace e57;
 

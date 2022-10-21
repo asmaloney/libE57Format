@@ -30,6 +30,7 @@
 //! @file BlobNode.cpp
 
 #include "BlobNodeImpl.h"
+#include "StringFunctions.h"
 
 using namespace e57;
 

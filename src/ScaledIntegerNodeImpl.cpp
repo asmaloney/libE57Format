@@ -29,6 +29,7 @@
 
 #include "CheckedFile.h"
 #include "ScaledIntegerNodeImpl.h"
+#include "StringFunctions.h"
 
 namespace e57
 {

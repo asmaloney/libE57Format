@@ -29,6 +29,7 @@
 
 //! @file VectorNode.cpp
 
+#include "StringFunctions.h"
 #include "VectorNodeImpl.h"
 
 using namespace e57;

@@ -29,6 +29,7 @@
 
 //! @file StringNode.cpp
 
+#include "StringFunctions.h"
 #include "StringNodeImpl.h"
 
 using namespace e57;

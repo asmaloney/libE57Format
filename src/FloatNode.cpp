@@ -30,6 +30,7 @@
 //! @file FloatNode.cpp
 
 #include "FloatNodeImpl.h"
+#include "StringFunctions.h"
 
 using namespace e57;
 

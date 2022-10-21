@@ -31,6 +31,7 @@
 //! @file CompressedVectorNode.cpp
 
 #include "CompressedVectorNodeImpl.h"
+#include "StringFunctions.h"
 
 using namespace e57;
 

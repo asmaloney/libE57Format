@@ -30,6 +30,7 @@
 //! @file ScaledIntegerNode.cpp
 
 #include "ScaledIntegerNodeImpl.h"
+#include "StringFunctions.h"
 
 using namespace e57;
 

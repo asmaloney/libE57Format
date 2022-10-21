@@ -30,6 +30,7 @@
 #include "CompressedVectorReaderImpl.h"
 #include "CompressedVectorWriterImpl.h"
 #include "ImageFileImpl.h"
+#include "StringFunctions.h"
 #include "VectorNodeImpl.h"
 
 namespace e57

@@ -29,6 +29,7 @@
 
 //! @file StructureNode.cpp
 
+#include "StringFunctions.h"
 #include "StructureNodeImpl.h"
 
 using namespace e57;

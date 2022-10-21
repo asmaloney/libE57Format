@@ -26,6 +26,7 @@
  */
 
 #include "SectionHeaders.h"
+#include "StringFunctions.h"
 
 namespace e57
 {

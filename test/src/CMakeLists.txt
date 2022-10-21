@@ -7,4 +7,5 @@ target_sources( ${PROJECT_NAME}
         ${CMAKE_CURRENT_SOURCE_DIR}/TestData.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/test_SimpleReader.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/test_SimpleWriter.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/test_StringFunctions.cpp
 )

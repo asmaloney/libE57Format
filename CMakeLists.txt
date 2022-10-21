@@ -169,7 +169,7 @@ if ( E57_WRITE_CRAZY_PACKET_MODE )
 endif()
 
 if ( E57_VISIBILITY_HIDDEN )
-    set_target_properties( E57Format PROPERTIES CXX_VISIBILITY_PRESET hidden)
+    set_target_properties( E57Format PROPERTIES CXX_VISIBILITY_PRESET hidden )
 endif()
 
 if ( WIN32 )
@@ -203,6 +203,9 @@ option( E57_BUILD_TEST
 )
 
 if ( E57_BUILD_TEST )
+    # If we are building tests, we need access to all the symbols, so override CXX_VISIBILITY_PRESET
+    set_target_properties( E57Format PROPERTIES CXX_VISIBILITY_PRESET default )
+
     enable_testing()
 
     add_subdirectory( test )

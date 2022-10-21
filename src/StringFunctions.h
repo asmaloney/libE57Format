@@ -172,4 +172,7 @@ namespace e57
    {
       return binaryString( static_cast<uint8_t>( x ) );
    }
+
+   // Convert a floating point number to a string and do some clean up.
+   template <class FTYPE> std::string floatingPointToStr( FTYPE value, int precision );
 }

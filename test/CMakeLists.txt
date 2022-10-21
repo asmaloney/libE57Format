@@ -35,6 +35,11 @@ if ( CCACHE_PROGRAM )
     )
 endif()
 
+target_include_directories( testE57
+    PRIVATE
+        ../src
+)
+
 target_link_libraries( testE57
     PRIVATE
         E57Format

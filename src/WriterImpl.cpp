@@ -950,6 +950,8 @@ namespace e57
    CompressedVectorWriter WriterImpl::SetUpData3DPointsData( int64_t dataIndex, size_t count,
                                                              const Data3DPointsData_t<COORDTYPE> &buffers )
    {
+      static_assert( std::is_floating_point<COORDTYPE>::value, "Floating point type required." );
+
       StructureNode scan( data3D_.get( dataIndex ) );
       CompressedVectorNode points( scan.get( "points" ) );
       StructureNode proto( points.prototype() );

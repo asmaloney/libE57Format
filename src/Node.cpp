@@ -118,7 +118,7 @@ ScaledIntegerNode, FloatNode, StringNode, BlobNode
 /*!
 @brief   Return the NodeType of a generic Node.
 @details This function allows the actual node type to be interrogated before
-upcasting the handle to the actual node type (see Upcasting and Dowcasting
+upcasting the handle to the actual node type (see Upcasting and Downcasting
 section in Node).
 @return  The NodeType of a generic Node, which may be one of the following
 NodeType enumeration values:
@@ -126,7 +126,7 @@ NodeType enumeration values:
 ::E57_SCALED_INTEGER,
 ::E57_FLOAT, ::E57_STRING, ::E57_BLOB.
 @post    No visible state is modified.
-@see     NodeType, upcast/dowcast discussion in Node
+@see     NodeType, upcast/downcast discussion in Node
 */
 NodeType Node::type() const
 {

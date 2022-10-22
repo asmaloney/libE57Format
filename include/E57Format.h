@@ -49,7 +49,7 @@ namespace e57
    using std::uint8_t;
 
    // Shorthand for unicode string
-   //! @brief UTF-8 encodeded Unicode string
+   //! @brief UTF-8 encoded Unicode string
    using ustring = std::string;
 
    //! @brief Identifiers for types of E57 elements

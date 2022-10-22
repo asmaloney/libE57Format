@@ -155,7 +155,7 @@ namespace e57
       //! @brief Use this function to read the actual 3D data
       //! @details All the non-NULL buffers in buffers have number of elements = pointCount.
       //!          Call the CompressedVectorReader::read() until all data is read.
-      //! @param [in] dataIndex data block index given by the NewData3D
+      //! @param [in] dataIndex data block index
       //! @param [in] pointCount size of each element buffer.
       //! @param [in] buffers pointers to user-provided buffers
       //! @return vector reader setup to read the selected data into the provided buffers
@@ -165,7 +165,7 @@ namespace e57
       //! @brief Use this function to read the actual 3D data
       //! @details All the non-NULL buffers in buffers have number of elements = pointCount.
       //!          Call the CompressedVectorReader::read() until all data is read.
-      //! @param [in] dataIndex data block index given by the NewData3D
+      //! @param [in] dataIndex data block index
       //! @param [in] pointCount size of each element buffer.
       //! @param [in] buffers pointers to user-provided buffers
       //! @return vector reader setup to read the selected data into the provided buffers

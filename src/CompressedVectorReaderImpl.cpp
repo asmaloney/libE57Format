@@ -338,21 +338,18 @@ namespace e57
       // Get packet at currentPacketLogicalOffset into memory.
       auto dpkt = dataPacket( currentPacketLogicalOffset );
 
-      // Double check that have a data packet.  Should have already determined
-      // this.
+      // Double check that have a data packet.  Should have already determined this.
       if ( dpkt->header.packetType != DATA_PACKET )
       {
          throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "packetType=" + toString( dpkt->header.packetType ) );
       }
 
-      // Read earliest packet into cache and send data to decoders with unblocked
-      // output
+      // Read earliest packet into cache and send data to decoders with unblocked output
 
       bool anyChannelHasExhaustedPacket = false;
       uint64_t nextPacketLogicalOffset = E57_UINT64_MAX;
 
-      // Feed bytestreams to channels with unblocked output that are reading from
-      // this packet
+      // Feed bytestreams to channels with unblocked output that are reading from this packet
       for ( DecodeChannel &channel : channels_ )
       {
          // Skip channels that have already read this packet.

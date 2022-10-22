@@ -217,7 +217,7 @@ unsigned CompressedVectorReader::read( std::vector<SourceDestBuffer> &dbufs )
 
 /*!
 @brief   Set record number of CompressedVectorNode where next read will start.
-@param   [in] recordNumber   The index of record in ComressedVectorNode where
+@param   [in] recordNumber   The index of record in CompressedVectorNode where
 next read using this CompressedVectorReader will start.
 @details
 This function may be called at any time (as long as ImageFile and

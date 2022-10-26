@@ -66,16 +66,13 @@ TEST( SimpleWriter, WriteMultipleScans )
 
    constexpr int cNumPoints = 8;
 
-   e57::Data3DPointsData pointsData;
-   pointsData.cartesianX = new float[cNumPoints];
-   pointsData.cartesianY = new float[cNumPoints];
-   pointsData.cartesianZ = new float[cNumPoints];
-
    e57::Data3D header;
    header.pointsSize = cNumPoints;
    header.pointFields.cartesianXField = true;
    header.pointFields.cartesianYField = true;
    header.pointFields.cartesianZField = true;
+
+   e57::Data3DPointsData pointsData( header );
 
    // scan 1
    header.guid = "Header Scan 1 GUID";
@@ -109,10 +106,6 @@ TEST( SimpleWriter, WriteMultipleScans )
 
    dataWriter.write( cNumPoints );
    dataWriter.close();
-
-   delete[] pointsData.cartesianX;
-   delete[] pointsData.cartesianY;
-   delete[] pointsData.cartesianZ;
 
    delete writer;
 }
@@ -157,10 +150,7 @@ TEST( SimpleWriter, WriteCartesianPoints )
 
    const int64_t scanIndex = writer->NewData3D( header );
 
-   e57::Data3DPointsData pointsData;
-   pointsData.cartesianX = new float[cNumPoints];
-   pointsData.cartesianY = new float[cNumPoints];
-   pointsData.cartesianZ = new float[cNumPoints];
+   e57::Data3DPointsData pointsData( header );
 
    for ( int64_t i = 0; i < cNumPoints; ++i )
    {
@@ -174,10 +164,6 @@ TEST( SimpleWriter, WriteCartesianPoints )
 
    dataWriter.write( cNumPoints );
    dataWriter.close();
-
-   delete[] pointsData.cartesianX;
-   delete[] pointsData.cartesianY;
-   delete[] pointsData.cartesianZ;
 
    delete writer;
 }
@@ -208,13 +194,7 @@ TEST( SimpleWriter, WriteColouredCartesianPoints )
 
    const int64_t scanIndex = writer->NewData3D( header );
 
-   e57::Data3DPointsData pointsData;
-   pointsData.cartesianX = new float[cNumPoints];
-   pointsData.cartesianY = new float[cNumPoints];
-   pointsData.cartesianZ = new float[cNumPoints];
-   pointsData.colorRed = new uint8_t[cNumPoints];
-   pointsData.colorGreen = new uint8_t[cNumPoints];
-   pointsData.colorBlue = new uint8_t[cNumPoints];
+   e57::Data3DPointsData pointsData( header );
 
    for ( int64_t i = 0; i < cNumPoints; ++i )
    {
@@ -232,13 +212,6 @@ TEST( SimpleWriter, WriteColouredCartesianPoints )
 
    dataWriter.write( cNumPoints );
    dataWriter.close();
-
-   delete[] pointsData.cartesianX;
-   delete[] pointsData.cartesianY;
-   delete[] pointsData.cartesianZ;
-   delete[] pointsData.colorRed;
-   delete[] pointsData.colorGreen;
-   delete[] pointsData.colorBlue;
 
    delete writer;
 }

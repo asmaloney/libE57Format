@@ -96,10 +96,7 @@ TEST( SimpleReaderData, ReadBunnyDouble )
 
    const uint64_t cNumPoints = data3DHeader.pointsSize;
 
-   e57::Data3DPointsData pointsData;
-   pointsData.cartesianX = new float[cNumPoints];
-   pointsData.cartesianY = new float[cNumPoints];
-   pointsData.cartesianZ = new float[cNumPoints];
+   e57::Data3DPointsData pointsData( data3DHeader );
 
    auto vectorReader = reader->SetUpData3DPointsData( 0, cNumPoints, pointsData );
 
@@ -108,10 +105,6 @@ TEST( SimpleReaderData, ReadBunnyDouble )
    vectorReader.close();
 
    EXPECT_EQ( cNumRead, cNumPoints );
-
-   delete[] pointsData.cartesianX;
-   delete[] pointsData.cartesianY;
-   delete[] pointsData.cartesianZ;
 
    delete reader;
 }
@@ -140,10 +133,7 @@ TEST( SimpleReaderData, ReadBunnyInt32 )
 
    const uint64_t cNumPoints = data3DHeader.pointsSize;
 
-   e57::Data3DPointsData pointsData;
-   pointsData.cartesianX = new float[cNumPoints];
-   pointsData.cartesianY = new float[cNumPoints];
-   pointsData.cartesianZ = new float[cNumPoints];
+   e57::Data3DPointsData pointsData( data3DHeader );
 
    auto vectorReader = reader->SetUpData3DPointsData( 0, cNumPoints, pointsData );
 
@@ -152,10 +142,6 @@ TEST( SimpleReaderData, ReadBunnyInt32 )
    vectorReader.close();
 
    EXPECT_EQ( cNumRead, cNumPoints );
-
-   delete[] pointsData.cartesianX;
-   delete[] pointsData.cartesianY;
-   delete[] pointsData.cartesianZ;
 
    delete reader;
 }

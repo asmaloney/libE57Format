@@ -1108,9 +1108,9 @@ namespace e57
       ustring norExtUri;
       if ( imf_.extensionsLookupPrefix( "nor", norExtUri ) )
       {
-         data3DHeader.pointFields.normalX = proto.isDefined( "nor:normalX" );
-         data3DHeader.pointFields.normalY = proto.isDefined( "nor:normalY" );
-         data3DHeader.pointFields.normalZ = proto.isDefined( "nor:normalZ" );
+         data3DHeader.pointFields.normalXField = proto.isDefined( "nor:normalX" );
+         data3DHeader.pointFields.normalYField = proto.isDefined( "nor:normalY" );
+         data3DHeader.pointFields.normalZField = proto.isDefined( "nor:normalZ" );
       }
 
       return true;

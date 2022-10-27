@@ -910,7 +910,8 @@ namespace e57
 
       // E57_EXT_surface_normals
       // See: http://www.libe57.org/E57_EXT_surface_normals.txt
-      if ( data3DHeader.pointFields.normalX || data3DHeader.pointFields.normalY || data3DHeader.pointFields.normalZ )
+      if ( data3DHeader.pointFields.normalXField || data3DHeader.pointFields.normalYField ||
+           data3DHeader.pointFields.normalZField )
       {
          // make sure we declare the extension before using the fields with prefix
          ustring norExtUri;
@@ -921,15 +922,15 @@ namespace e57
       }
 
       // currently we support writing normals only as float32
-      if ( data3DHeader.pointFields.normalX )
+      if ( data3DHeader.pointFields.normalXField )
       {
          proto.set( "nor:normalX", FloatNode( imf_, 0., E57_SINGLE, -1., 1. ) );
       }
-      if ( data3DHeader.pointFields.normalY )
+      if ( data3DHeader.pointFields.normalYField )
       {
          proto.set( "nor:normalY", FloatNode( imf_, 0., E57_SINGLE, -1., 1. ) );
       }
-      if ( data3DHeader.pointFields.normalZ )
+      if ( data3DHeader.pointFields.normalZField )
       {
          proto.set( "nor:normalZ", FloatNode( imf_, 0., E57_SINGLE, -1., 1. ) );
       }

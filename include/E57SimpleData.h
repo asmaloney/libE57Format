@@ -375,9 +375,9 @@ namespace e57
       bool colorBlueField = false;      //!< Indicates that the PointRecord colorBlue field is active
       bool isColorInvalidField = false; //!< Indicates that the PointRecord isColorInvalid field is active
 
-      bool normalX = false; //!< Indicates that the PointRecord nor:normalX field is active
-      bool normalY = false; //!< Indicates that the PointRecord nor:normalY field is active
-      bool normalZ = false; //!< Indicates that the PointRecord nor:normalZ field is active
+      bool normalXField = false; //!< Indicates that the PointRecord nor:normalX field is active
+      bool normalYField = false; //!< Indicates that the PointRecord nor:normalY field is active
+      bool normalZField = false; //!< Indicates that the PointRecord nor:normalZ field is active
    };
 
    //! @brief Stores the top-level information for a single lidar scan
@@ -442,9 +442,20 @@ namespace e57
    };
 
    //! @brief Stores pointers to user-provided buffers
-   template <typename COORDTYPE = float> struct Data3DPointsData_t
+   template <typename COORDTYPE = float> struct E57_DLL Data3DPointsData_t
    {
       static_assert( std::is_floating_point<COORDTYPE>::value, "Floating point type required." );
+
+      //! @brief Default constructor does not manage any memory
+      Data3DPointsData_t() = default;
+
+      //! @brief Constructor which allocates buffers for all valid fields in the given Data3D header
+      //! @param [in] data3D Completed header which indicates the fields wee are using
+      explicit Data3DPointsData_t( const e57::Data3D &data3D );
+
+      //! @brief Destructor will delete any memory allocated using the Data3DPointsData_t( const e57::Data3D & )
+      //! constructor
+      ~Data3DPointsData_t();
 
       //! Pointer to a buffer with the X coordinate (in meters) of the point in Cartesian coordinates
       COORDTYPE *cartesianX = nullptr;
@@ -508,6 +519,10 @@ namespace e57
       float *normalX = nullptr; //!< The X component of a surface normal vector (E57_EXT_surface_normals extension).
       float *normalY = nullptr; //!< The Y component of a surface normal vector (E57_EXT_surface_normals extension).
       float *normalZ = nullptr; //!< The Z component of a surface normal vector (E57_EXT_surface_normals extension).
+
+   private:
+      //! Keeps track of whether we used the Data3D constructor or not so we can free our memory.
+      bool _selfAllocated = false;
    };
 
    using Data3DPointsData = Data3DPointsData_t<float>;

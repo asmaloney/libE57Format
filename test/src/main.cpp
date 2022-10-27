@@ -3,10 +3,13 @@
 
 #include "gtest/gtest.h"
 
+#include "RandomNum.h"
 #include "TestData.h"
 
 int main( int argc, char **argv )
 {
+   Random::seed( 42 );
+
    ::testing::FLAGS_gtest_color = "yes";
    ::testing::InitGoogleTest( &argc, argv );
 
@@ -16,5 +19,7 @@ int main( int argc, char **argv )
       ::testing::GTEST_FLAG( filter ) = "-*Data.*";
    }
 
-   return RUN_ALL_TESTS();
+   int result = RUN_ALL_TESTS();
+
+   return result;
 }

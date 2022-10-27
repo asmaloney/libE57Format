@@ -7,14 +7,14 @@
 
 #include "Helpers.h"
 
-TEST( SimpleDataH, InvalidPointSize )
+TEST( SimpleDataHeader, InvalidPointSize )
 {
    e57::Data3D dataHeader;
 
    E57_ASSERT_THROW( e57::Data3DPointsData pointsData( dataHeader ) );
 }
 
-TEST( SimpleDataH, HeaderMinMaxFloat )
+TEST( SimpleDataHeader, HeaderMinMaxFloat )
 {
    e57::Data3D dataHeader;
 
@@ -38,7 +38,7 @@ TEST( SimpleDataH, HeaderMinMaxFloat )
    EXPECT_EQ( dataHeader.pointFields.timeMaximum, e57::E57_FLOAT_MAX );
 }
 
-TEST( SimpleDataH, HeaderMinMaxDouble )
+TEST( SimpleDataHeader, HeaderMinMaxDouble )
 {
    e57::Data3D dataHeader;
 

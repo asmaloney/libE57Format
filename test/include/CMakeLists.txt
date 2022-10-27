@@ -4,6 +4,7 @@
 target_sources( ${PROJECT_NAME}
 	PRIVATE
 	    ${CMAKE_CURRENT_SOURCE_DIR}/Helpers.h
+		${CMAKE_CURRENT_SOURCE_DIR}/RandomNum.h
 		${CMAKE_CURRENT_SOURCE_DIR}/TestData.h
 )
 

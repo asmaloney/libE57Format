@@ -50,7 +50,7 @@ TEST( SimpleWriter, PathError )
 TEST( SimpleWriter, WriteEmpty )
 {
    e57::WriterOptions options;
-   options.guid = "File GUID";
+   options.guid = "Empty File GUID";
 
    E57_ASSERT_NO_THROW( e57::Writer writer( "./empty.e57", options ) );
 }
@@ -75,7 +75,7 @@ TEST( SimpleWriter, WriteMultipleScans )
    e57::Data3DPointsData pointsData( header );
 
    // scan 1
-   header.guid = "Header Scan 1 GUID";
+   header.guid = "Multiple Scans Scan 1 Header GUID";
 
    const int64_t cScanIndex1 = writer->NewData3D( header );
 
@@ -95,7 +95,7 @@ TEST( SimpleWriter, WriteMultipleScans )
    dataWriter.close();
 
    // scan 2
-   header.guid = "Header Scan 2 GUID";
+   header.guid = "Multiple Scans Scan 2 Header GUID";
 
    const int64_t cScanIndex2 = writer->NewData3D( header );
 
@@ -115,7 +115,7 @@ TEST( SimpleWriter, WriteMultipleScans )
 TEST( SimpleWriter, WriteChineseFileName )
 {
    e57::WriterOptions options;
-   options.guid = "File GUID";
+   options.guid = "Chinese File Name File GUID";
 
    E57_ASSERT_NO_THROW( e57::Writer writer( "./\xe6\xb5\x8b\xe8\xaf\x95\xe7\x82\xb9\xe4\xba\x91.e57", options ) );
 }
@@ -125,7 +125,7 @@ TEST( SimpleWriter, WriteChineseFileName )
 TEST( SimpleWriter, WriteUmlautFileName )
 {
    e57::WriterOptions options;
-   options.guid = "File GUID";
+   options.guid = "Umlaut File Name File GUID";
 
    E57_ASSERT_NO_THROW( e57::Writer writer( "./test filename \x61\xcc\x88\x6f\xcc\x88\x75\xcc\x88.e57", options ) );
 }
@@ -133,16 +133,16 @@ TEST( SimpleWriter, WriteUmlautFileName )
 TEST( SimpleWriter, WriteCartesianPoints )
 {
    e57::WriterOptions options;
-   options.guid = "File GUID";
+   options.guid = "Cartesian Points File GUID";
 
    e57::Writer *writer = nullptr;
 
-   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./Cartesian-Points-1025.e57", options ) );
+   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./CartesianPoints-1025.e57", options ) );
 
    constexpr int64_t cNumPoints = 1025;
 
    e57::Data3D header;
-   header.guid = "Header GUID";
+   header.guid = "Cartesian Points Header GUID";
    header.pointsSize = cNumPoints;
    header.pointFields.cartesianXField = true;
    header.pointFields.cartesianYField = true;
@@ -171,16 +171,16 @@ TEST( SimpleWriter, WriteCartesianPoints )
 TEST( SimpleWriter, WriteColouredCartesianPoints )
 {
    e57::WriterOptions options;
-   options.guid = "File GUID";
+   options.guid = "Coloured Cartesian Points File GUID";
 
    e57::Writer *writer = nullptr;
 
-   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./Coloured-Cartesian-Points-1025.e57", options ) );
+   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./ColouredCartesianPoints-1025.e57", options ) );
 
    constexpr int64_t cNumPoints = 1025;
 
    e57::Data3D header;
-   header.guid = "Header GUID";
+   header.guid = "Coloured Cartesian Points Header GUID";
    header.pointsSize = cNumPoints;
    header.pointFields.cartesianXField = true;
    header.pointFields.cartesianYField = true;
@@ -219,7 +219,7 @@ TEST( SimpleWriter, WriteColouredCartesianPoints )
 TEST( SimpleWriterData, WriteVisualRefImage )
 {
    e57::WriterOptions options;
-   options.guid = "File GUID";
+   options.guid = "Visual Reference Image File GUID";
 
    e57::Writer *writer = nullptr;
 
@@ -242,7 +242,7 @@ TEST( SimpleWriterData, WriteVisualRefImage )
 
    e57::Image2D image2DHeader;
    image2DHeader.name = "JPEG Image Test";
-   image2DHeader.guid = "JPEG Image GUID";
+   image2DHeader.guid = "Visual Reference Image - JPEG Image GUID";
    image2DHeader.description = "JPEG image test";
    image2DHeader.visualReferenceRepresentation.imageWidth = 225;
    image2DHeader.visualReferenceRepresentation.imageHeight = 300;

@@ -7,7 +7,7 @@
 
 TEST( StringFunctions, FloatToStrConversion )
 {
-   const auto converted = e57::floatingPointToStr<float>( 3.14159265, 7 );
+   const auto converted = e57::floatingPointToStr<float>( 3.14159265f, 7 );
 
    ASSERT_EQ( converted, "3.1415927e+00" );
 }
@@ -21,7 +21,7 @@ TEST( StringFunctions, DoubleToStrConversion )
 
 TEST( StringFunctions, FloatToStrConversion2 )
 {
-   const auto converted = e57::floatingPointToStr<float>( 123456.0, 7 );
+   const auto converted = e57::floatingPointToStr<float>( 123456.0f, 7 );
 
    ASSERT_EQ( converted, "1.2345600e+05" );
 }

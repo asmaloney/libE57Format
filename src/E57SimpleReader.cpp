@@ -78,7 +78,12 @@ namespace e57
    int64_t Reader::ReadImage2DData( int64_t imageIndex, Image2DProjection imageProjection, Image2DType imageType,
                                     void *pBuffer, int64_t start, int64_t count ) const
    {
-      return impl_->ReadImage2DData( imageIndex, imageProjection, imageType, pBuffer, start, count );
+      auto *buffer = static_cast<uint8_t *>( pBuffer );
+      const auto size = static_cast<size_t>( count );
+
+      const size_t read = impl_->ReadImage2DData( imageIndex, imageProjection, imageType, buffer, start, size );
+
+      return static_cast<int64_t>( read );
    };
 
    int64_t Reader::GetData3DCount() const

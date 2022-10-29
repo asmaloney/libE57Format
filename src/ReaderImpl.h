@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2010 Stan Coleby (scoleby@intelisum.com)
  * Copyright (c) 2020 PTC Inc.
+ * Copyright (c) 2022 Andy Maloney <asmaloney@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person or organization
  * obtaining a copy of the software and accompanying documentation covered by
@@ -32,14 +33,18 @@
 
 namespace e57
 {
-
    //! most of the functions follows Reader
    class ReaderImpl
    {
    public:
       explicit ReaderImpl( const ustring &filePath, const ReaderOptions &options );
-
       ~ReaderImpl();
+
+      // disallow copying a ReaderImpl
+      ReaderImpl( const ReaderImpl & ) = delete;
+      ReaderImpl &operator=( ReaderImpl const & ) = delete;
+      ReaderImpl( const ReaderImpl && ) = delete;
+      ReaderImpl &operator=( const ReaderImpl && ) = delete;
 
       bool IsOpen() const;
 
@@ -55,8 +60,8 @@ namespace e57
                             int64_t &imageWidth, int64_t &imageHeight, int64_t &imageSize, Image2DType &imageMaskType,
                             Image2DType &imageVisualType ) const;
 
-      int64_t ReadImage2DData( int64_t imageIndex, Image2DProjection imageProjection, Image2DType imageType,
-                               void *pBuffer, int64_t start, int64_t count ) const;
+      size_t ReadImage2DData( int64_t imageIndex, Image2DProjection imageProjection, Image2DType imageType,
+                              uint8_t *pBuffer, int64_t start, size_t count ) const;
 
       int64_t GetData3DCount() const;
 
@@ -87,27 +92,5 @@ namespace e57
       VectorNode data3D_;
 
       VectorNode images2D_;
-
-      //! @brief This function reads one of the image blobs
-      //! @param [in] image 1 of 3 projects or the visual
-      //! @param [out] imageType identifies the image format desired.
-      //! @param [out] imageWidth The image width (in pixels).
-      //! @param [out] imageHeight The image height (in pixels).
-      //! @param [out] imageSize This is the total number of bytes for the image blob.
-      //! @param [out] imageMaskType This is E57_PNG_IMAGE_MASK if "imageMask" is defined in the projection
-      //! @return Returns true if successful
-      bool GetImage2DNodeSizes( StructureNode image, Image2DType &imageType, int64_t &imageWidth, int64_t &imageHeight,
-                                int64_t &imageSize, Image2DType &imageMaskType ) const;
-
-      //! @brief Reads the data out of a given image node
-      //! @param [in] image 1 of 3 projects or the visual
-      //! @param [in] imageType identifies the image format desired.
-      //! @param [out] pBuffer pointer the buffer
-      //! @param [out] start position in the block to start reading
-      //! @param [out] count size of desired chuck or buffer size
-      //! @return number of bytes read
-      int64_t ReadImage2DNode( StructureNode image, Image2DType imageType, void *pBuffer, int64_t start,
-                               int64_t count ) const;
    }; // end Reader class
-
 } // end namespace e57

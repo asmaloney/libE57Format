@@ -29,13 +29,24 @@ namespace e57
    }
 
    template <typename COORDTYPE>
-   Data3DPointsData_t<COORDTYPE>::Data3DPointsData_t( const Data3D &data3D ) : _selfAllocated( true )
+   Data3DPointsData_t<COORDTYPE>::Data3DPointsData_t( Data3D &data3D ) : _selfAllocated( true )
    {
       const auto cSize = data3D.pointsSize;
 
       if ( cSize < 1 )
       {
          throw E57_EXCEPTION2( E57_ERROR_VALUE_OUT_OF_BOUNDS, "pointsSize=" + toString( cSize ) + " minimum=1" );
+      }
+
+      // We need to adjust min/max for floats.
+      if ( std::is_same<COORDTYPE, float>::value )
+      {
+         data3D.pointFields.pointRangeMinimum = E57_FLOAT_MIN;
+         data3D.pointFields.pointRangeMaximum = E57_FLOAT_MAX;
+         data3D.pointFields.angleMinimum = E57_FLOAT_MIN;
+         data3D.pointFields.angleMaximum = E57_FLOAT_MAX;
+         data3D.pointFields.timeMinimum = E57_FLOAT_MIN;
+         data3D.pointFields.timeMaximum = E57_FLOAT_MAX;
       }
 
       if ( data3D.pointFields.cartesianXField )
@@ -196,8 +207,8 @@ namespace e57
       *this = Data3DPointsData_t<COORDTYPE>();
    }
 
-   template Data3DPointsData_t<float>::Data3DPointsData_t( const Data3D &data3D );
-   template Data3DPointsData_t<double>::Data3DPointsData_t( const Data3D &data3D );
+   template Data3DPointsData_t<float>::Data3DPointsData_t( Data3D &data3D );
+   template Data3DPointsData_t<double>::Data3DPointsData_t( Data3D &data3D );
 
    template Data3DPointsData_t<float>::~Data3DPointsData_t();
    template Data3DPointsData_t<double>::~Data3DPointsData_t();

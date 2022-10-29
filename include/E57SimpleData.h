@@ -308,27 +308,27 @@ namespace e57
       bool sphericalElevationField = false;    //!< Indicates that the PointRecord sphericalElevation field is active
       bool sphericalInvalidStateField = false; //!< Indicates that the PointRecord sphericalInvalidState field is active
 
-      //! Indicates that the PointRecord cartesian and range fields should be configured with this minimum value
-      //! E57_FLOAT_MIN. If using a ScaledIntegerNode then this needs to be a minimum range value.
-      double pointRangeMinimum = E57_FLOAT_MIN;
+      //! Indicates that the PointRecord cartesian and range fields should be configured with this minimum value e.g.
+      //! E57_FLOAT_MIN or E57_DOUBLE_MIN. If using a ScaledIntegerNode then this needs to be a minimum range value.
+      double pointRangeMinimum = E57_DOUBLE_MIN;
 
-      //! Indicates that the PointRecord cartesian and range fields should be  configured with this maximum value
-      //! E57_FLOAT_MAX. If using a ScaledIntegerNode then this needs to be a maximum range value.
-      double pointRangeMaximum = E57_FLOAT_MAX;
+      //! Indicates that the PointRecord cartesian and range fields should be configured with this maximum value e.g.
+      //! E57_FLOAT_MAX or E57_DOUBLE_MAX. If using a ScaledIntegerNode then this needs to be a maximum range value.
+      double pointRangeMaximum = E57_DOUBLE_MAX;
 
       //! Indicates that the PointRecord cartesian and range fields should be configured
       //! as a ScaledIntegerNode with this scale setting. If E57_NOT_SCALED_USE_FLOAT, then use FloatNode.
       double pointRangeScaledInteger = E57_NOT_SCALED_USE_FLOAT;
 
-      //! Indicates that the PointRecord angle fields should be configured with  this minimum value E57_FLOAT_MIN. If
-      //! using a ScaledIntegerNode then this needs to be a minimum angle value.
-      double angleMinimum = E57_FLOAT_MIN;
+      //! Indicates that the PointRecord angle fields should be configured with this minimum value E57_FLOAT_MIN or
+      //! E57_DOUBLE_MIN. If using a ScaledIntegerNode then this needs to be a minimum angle value.
+      double angleMinimum = E57_DOUBLE_MIN;
 
-      //! Indicates that the PointRecord angle fields should be configured with this maximum value E57_FLOAT_MAX. If
-      //! using a ScaledIntegerNode then this needs to be a maximum angle value.
-      double angleMaximum = E57_FLOAT_MAX;
+      //! Indicates that the PointRecord angle fields should be configured with this maximum value e.g. E57_FLOAT_MAX or
+      //! E57_DOUBLE_MAX. If using a ScaledIntegerNode then this needs to be a maximum angle value.
+      double angleMaximum = E57_DOUBLE_MAX;
 
-      //! Indicates that the PointRecord angle fields should be configured as a  ScaledIntegerNode with this scale
+      //! Indicates that the PointRecord angle fields should be configured as a ScaledIntegerNode with this scale
       //! setting. If E57_NOT_SCALED_USE_FLOAT, then use FloatNode.
       double angleScaledInteger = E57_NOT_SCALED_USE_FLOAT;
 
@@ -352,12 +352,14 @@ namespace e57
       bool timeStampField = false;          //!< Indicates that the PointRecord timeStamp field is active
       bool isTimeStampInvalidField = false; //!< Indicates that the PointRecord isTimeStampInvalid field is active
 
-      //! Indicates that the PointRecord timeStamp fields should be configured with this maximum value.
-      double timeMaximum = E57_DOUBLE_MAX;
-
-      //! Indicates that the PointRecord timeStamp fields should be configured  with this minimum value E57_DOUBLE_MIN.
-      //! If using a ScaledIntegerNode then this needs to be a minimum time value.
+      //! Indicates that the PointRecord timeStamp fields should be configured with this minimum value e.g.
+      //! E57_UINT32_MIN, E57_DOUBLE_MIN or E57_DOUBLE_MIN. If using a ScaledIntegerNode then this needs to be a minimum
+      //! time value.
       double timeMinimum = E57_DOUBLE_MIN;
+
+      //! Indicates that the PointRecord timeStamp fields should be configured with this maximum value. e.g.
+      //! E57_UINT32_MAX, E57_DOUBLE_MAX or E57_DOUBLE_MAX.
+      double timeMaximum = E57_DOUBLE_MAX;
 
       //! Indicates that the PointRecord timeStamp fields should be configured as a ScaledIntegerNode with this scale
       //! setting. If E57_NOT_SCALED_USE_FLOAT then use FloatNode, if E57_NOT_SCALED_USE_INTEGER use IntegerNode.
@@ -446,12 +448,13 @@ namespace e57
    {
       static_assert( std::is_floating_point<COORDTYPE>::value, "Floating point type required." );
 
-      //! @brief Default constructor does not manage any memory
+      //! @brief Default constructor does not manage any memory or adjust min/max for floats.
       Data3DPointsData_t() = default;
 
       //! @brief Constructor which allocates buffers for all valid fields in the given Data3D header
+      //! This constructor will also adjust the min/max fields in the data3D pointFields if we are using floats.
       //! @param [in] data3D Completed header which indicates the fields we are using
-      explicit Data3DPointsData_t( const e57::Data3D &data3D );
+      explicit Data3DPointsData_t( e57::Data3D &data3D );
 
       //! @brief Destructor will delete any memory allocated using the Data3DPointsData_t( const e57::Data3D & )
       //! constructor

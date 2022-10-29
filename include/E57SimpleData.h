@@ -450,7 +450,7 @@ namespace e57
       Data3DPointsData_t() = default;
 
       //! @brief Constructor which allocates buffers for all valid fields in the given Data3D header
-      //! @param [in] data3D Completed header which indicates the fields wee are using
+      //! @param [in] data3D Completed header which indicates the fields we are using
       explicit Data3DPointsData_t( const e57::Data3D &data3D );
 
       //! @brief Destructor will delete any memory allocated using the Data3DPointsData_t( const e57::Data3D & )

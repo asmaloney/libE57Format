@@ -81,8 +81,13 @@ namespace e57
    int64_t Writer::WriteImage2DData( int64_t imageIndex, Image2DType imageType, Image2DProjection imageProjection,
                                      void *pBuffer, int64_t start, int64_t count )
    {
-      return impl_->WriteImage2DData( imageIndex, imageType, imageProjection, pBuffer, start, count );
-   };
+      auto *buffer = static_cast<uint8_t *>( pBuffer );
+      const auto size = static_cast<size_t>( count );
+
+      const size_t written = impl_->WriteImage2DData( imageIndex, imageType, imageProjection, buffer, start, size );
+
+      return static_cast<int64_t>( written );
+   }
 
    int64_t Writer::NewData3D( Data3D &data3DHeader )
    {

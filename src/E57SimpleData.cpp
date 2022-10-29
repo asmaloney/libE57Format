@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: BSL-1.0
 // Copyright (c) 2020 PTC Inc.
+// Copyright (c) 2022 Andy Maloney <asmaloney@gmail.com>
 
-// for M_PI. This needs to be first, otherwise we might already include math header
+// For M_PI. This needs to be first, otherwise we might already include math header
 // without M_PI and we would get nothing because of the header guards.
 #define _USE_MATH_DEFINES
 #include <cmath>
@@ -20,8 +21,11 @@ namespace e57
       rangeMaximum = E57_DOUBLE_MAX;
       azimuthStart = -M_PI;
       azimuthEnd = M_PI;
-      elevationMinimum = -M_PI / 2.;
-      elevationMaximum = M_PI / 2.;
+
+      constexpr auto HALF_PI = M_PI / 2.0;
+
+      elevationMinimum = -HALF_PI;
+      elevationMaximum = HALF_PI;
    }
 
    template <typename COORDTYPE>

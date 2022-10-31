@@ -56,21 +56,16 @@ TEST( SimpleReaderData, DoNotCheckCRC )
 }
 
 // https://github.com/asmaloney/libE57Format/issues/26
-// File name UTF-8 encoded to avoid editor issues.
 TEST( SimpleReaderData, ChineseFileName )
 {
-   E57_ASSERT_NO_THROW(
-      e57::Reader( TestData::Path() + "/self/\xe6\xb5\x8b\xe8\xaf\x95\xe7\x82\xb9\xe4\xba\x91.e57", {} ) );
+   E57_ASSERT_NO_THROW( e57::Reader( TestData::Path() + "/self/测试点云.e57", {} ) );
 }
 
 // https://github.com/asmaloney/libE57Format/issues/69
-// File name UTF-8 encoded to avoid editor issues.
-// No idea why this fails on Linux and Windows with "No such file or directory".
-// TEST( SimpleReaderData, UmlautFileName )
-//{
-//   E57_ASSERT_NO_THROW(
-//      e57::Reader( TestData::Path() + "/self/test filename \x61\xcc\x88\x6f\xcc\x88\x75\xcc\x88.e57", {} ) );
-//}
+TEST( SimpleReaderData, UmlautFileName )
+{
+   E57_ASSERT_NO_THROW( e57::Reader( TestData::Path() + "/self/test filename äöü.e57", {} ) );
+}
 
 TEST( SimpleReaderData, ColouredCubeFloat )
 {

@@ -23,6 +23,13 @@ if ( E57_VISIBILITY_HIDDEN )
 	set_target_properties( testE57 PROPERTIES CXX_VISIBILITY_PRESET hidden)
 endif()
 
+target_compile_options( testE57
+	PUBLIC
+	    # add switches to MSVC for UTF-8 handling in our test files
+		$<$<C_COMPILER_ID:MSVC>:/utf-8>
+		$<$<CXX_COMPILER_ID:MSVC>:/utf-8>
+)
+
 # ccache
 # https://crascit.com/2016/04/09/using-ccache-with-cmake/
 find_program( CCACHE_PROGRAM ccache )

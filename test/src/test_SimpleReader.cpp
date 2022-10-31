@@ -26,7 +26,7 @@ TEST( SimpleReader, PathError )
    E57_ASSERT_THROW( e57::Reader( "./no-path/empty.e57", {} ) );
 }
 
-TEST( SimpleReaderData, ReadEmpty )
+TEST( SimpleReaderData, Empty )
 {
    e57::Reader *reader = nullptr;
 
@@ -40,7 +40,7 @@ TEST( SimpleReaderData, ReadEmpty )
    ASSERT_TRUE( reader->GetE57Root( fileHeader ) );
 
    CheckFileHeader( fileHeader );
-   EXPECT_EQ( fileHeader.guid, "File GUID" );
+   EXPECT_EQ( fileHeader.guid, "Empty File GUID" );
 
    delete reader;
 }
@@ -57,7 +57,7 @@ TEST( SimpleReaderData, DoNotCheckCRC )
 
 // https://github.com/asmaloney/libE57Format/issues/26
 // File name UTF-8 encoded to avoid editor issues.
-TEST( SimpleReaderData, ReadChineseFileName )
+TEST( SimpleReaderData, ChineseFileName )
 {
    E57_ASSERT_NO_THROW(
       e57::Reader( TestData::Path() + "/self/\xe6\xb5\x8b\xe8\xaf\x95\xe7\x82\xb9\xe4\xba\x91.e57", {} ) );
@@ -66,13 +66,87 @@ TEST( SimpleReaderData, ReadChineseFileName )
 // https://github.com/asmaloney/libE57Format/issues/69
 // File name UTF-8 encoded to avoid editor issues.
 // No idea why this fails on Linux and Windows with "No such file or directory".
-// TEST( SimpleReaderData, ReadUmlautFileName )
+// TEST( SimpleReaderData, UmlautFileName )
 //{
 //   E57_ASSERT_NO_THROW(
 //      e57::Reader( TestData::Path() + "/self/test filename \x61\xcc\x88\x6f\xcc\x88\x75\xcc\x88.e57", {} ) );
 //}
 
-TEST( SimpleReaderData, ReadBunnyDouble )
+TEST( SimpleReaderData, ColouredCubeFloat )
+{
+   e57::Reader *reader = nullptr;
+
+   E57_ASSERT_NO_THROW( reader = new e57::Reader( TestData::Path() + "/self/ColouredCubeFloat.e57", {} ) );
+
+   ASSERT_TRUE( reader->IsOpen() );
+   EXPECT_EQ( reader->GetImage2DCount(), 0 );
+   ASSERT_EQ( reader->GetData3DCount(), 1 );
+
+   e57::E57Root fileHeader;
+   ASSERT_TRUE( reader->GetE57Root( fileHeader ) );
+
+   CheckFileHeader( fileHeader );
+   EXPECT_EQ( fileHeader.guid, "Coloured Cube File GUID" );
+
+   e57::Data3D data3DHeader;
+   ASSERT_TRUE( reader->ReadData3D( 0, data3DHeader ) );
+
+   ASSERT_EQ( data3DHeader.pointsSize, 7'680 );
+   EXPECT_EQ( data3DHeader.guid, "Coloured Cube Float Scan Header GUID" );
+
+   const uint64_t cNumPoints = data3DHeader.pointsSize;
+
+   e57::Data3DPointsData pointsData( data3DHeader );
+
+   auto vectorReader = reader->SetUpData3DPointsData( 0, cNumPoints, pointsData );
+
+   const uint64_t cNumRead = vectorReader.read();
+
+   vectorReader.close();
+
+   EXPECT_EQ( cNumRead, cNumPoints );
+
+   delete reader;
+}
+
+TEST( SimpleReaderData, ColouredCubeFloatToDouble )
+{
+   e57::Reader *reader = nullptr;
+
+   E57_ASSERT_NO_THROW( reader = new e57::Reader( TestData::Path() + "/self/ColouredCubeFloat.e57", {} ) );
+
+   ASSERT_TRUE( reader->IsOpen() );
+   EXPECT_EQ( reader->GetImage2DCount(), 0 );
+   ASSERT_EQ( reader->GetData3DCount(), 1 );
+
+   e57::E57Root fileHeader;
+   ASSERT_TRUE( reader->GetE57Root( fileHeader ) );
+
+   CheckFileHeader( fileHeader );
+   EXPECT_EQ( fileHeader.guid, "Coloured Cube File GUID" );
+
+   e57::Data3D data3DHeader;
+   ASSERT_TRUE( reader->ReadData3D( 0, data3DHeader ) );
+
+   ASSERT_EQ( data3DHeader.pointsSize, 7'680 );
+   EXPECT_EQ( data3DHeader.guid, "Coloured Cube Float Scan Header GUID" );
+
+   const uint64_t cNumPoints = data3DHeader.pointsSize;
+
+   e57::Data3DPointsData_d pointsData( data3DHeader );
+
+   auto vectorReader = reader->SetUpData3DPointsData( 0, cNumPoints, pointsData );
+
+   const uint64_t cNumRead = vectorReader.read();
+
+   vectorReader.close();
+
+   EXPECT_EQ( cNumRead, cNumPoints );
+
+   delete reader;
+}
+
+TEST( SimpleReaderData, BunnyDouble )
 {
    e57::Reader *reader = nullptr;
 
@@ -109,7 +183,7 @@ TEST( SimpleReaderData, ReadBunnyDouble )
    delete reader;
 }
 
-TEST( SimpleReaderData, ReadBunnyInt32 )
+TEST( SimpleReaderData, BunnyInt32 )
 {
    e57::Reader *reader = nullptr;
 

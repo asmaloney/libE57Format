@@ -9,11 +9,15 @@
 #include "E57SimpleWriter.h"
 
 #include "Helpers.h"
+#include "RandomNum.h"
 #include "TestData.h"
 
 namespace
 {
-   using Point = std::array<float, 3>;
+   constexpr uint8_t cNumAxes = 3;
+   constexpr uint8_t cNumCubeFaces = 6;
+
+   using Point = std::array<float, cNumAxes>;
    using Cube = std::array<Point, 8>;
 
    constexpr auto cCubeCorners =
@@ -29,12 +33,95 @@ namespace
    }
 
    // Call a function for each of the corner points for a cube centred on the origin, sized using cubeSize.
-   void generateCubePoints( float cubeSize, const std::function<void( const Point &point )> &lambda )
+   void generateCubeCornerPoints( float inCubeSize, const std::function<void( const Point &inPoint )> &lambda )
    {
       for ( const auto &point : cCubeCorners )
       {
-         const auto cSized = multiply( point, cIndexSequence, cubeSize );
+         const auto cSized = multiply( point, cIndexSequence, inCubeSize );
          lambda( cSized );
+      }
+   }
+
+   // Create "inPointsPerFace" pseudo-random points per face for a cube centred on the origin,
+   // sized using cubeSize, and call a function for each of them.
+   // This gives us a cube with non-uniform points which can be useful for testing.
+   // (Note that we set a seed in each test so the results will always be the same pseudo-random points.)
+   void generateCubePoints( float inCubeSize, uint16_t inPointsPerFace,
+                            const std::function<void( uint8_t inFace, const Point &inPoint )> &lambda )
+   {
+      Point point;
+
+      const auto cHalfSize = inCubeSize / 2.0f;
+
+      for ( uint8_t face = 0; face < cNumCubeFaces; ++face )
+      {
+         const uint8_t axis = face % cNumAxes;
+
+         for ( uint16_t i = 0; i < inPointsPerFace; ++i )
+         {
+            point[axis] = ( face > 2 ) ? cHalfSize : -cHalfSize;
+            point[( axis + 1 ) % cNumAxes] = Random::num() * inCubeSize - cHalfSize;
+            point[( axis + 2 ) % cNumAxes] = Random::num() * inCubeSize - cHalfSize;
+
+            lambda( face, point );
+         }
+      }
+   }
+
+   // Set the header to indicate we are using coloured cartesian points.
+   // Just used to avoid a bunch of repetition.
+   inline void setUsingColouredCartesianPoints( e57::Data3D &ioHeader )
+   {
+      ioHeader.pointFields.cartesianXField = true;
+      ioHeader.pointFields.cartesianYField = true;
+      ioHeader.pointFields.cartesianZField = true;
+
+      ioHeader.pointFields.colorRedField = true;
+      ioHeader.pointFields.colorGreenField = true;
+      ioHeader.pointFields.colorBlueField = true;
+
+      ioHeader.colorLimits.colorRedMaximum = 255;
+      ioHeader.colorLimits.colorGreenMaximum = 255;
+      ioHeader.colorLimits.colorBlueMaximum = 255;
+   }
+
+   // Fill in a point and its colour given an index, which face it is on, and the data.
+   template <typename T>
+   inline void fillColouredCartesianPoint( e57::Data3DPointsData_t<T> &ioPointsData, int64_t inIndex, uint8_t inFace,
+                                           const Point &inPoint )
+   {
+      static_assert( std::is_floating_point<T>::value, "Floating point type required." );
+
+      ioPointsData.cartesianX[inIndex] = inPoint[0];
+      ioPointsData.cartesianY[inIndex] = inPoint[1];
+      ioPointsData.cartesianZ[inIndex] = inPoint[2];
+
+      switch ( inFace )
+      {
+         case 0:
+         case 3:
+         {
+            ioPointsData.colorRed[inIndex] = 0;
+            ioPointsData.colorGreen[inIndex] = 0;
+            ioPointsData.colorBlue[inIndex] = 255;
+            break;
+         }
+         case 1:
+         case 4:
+         {
+            ioPointsData.colorRed[inIndex] = 0;
+            ioPointsData.colorGreen[inIndex] = 255;
+            ioPointsData.colorBlue[inIndex] = 0;
+            break;
+         }
+         case 2:
+         case 5:
+         {
+            ioPointsData.colorRed[inIndex] = 255;
+            ioPointsData.colorGreen[inIndex] = 0;
+            ioPointsData.colorBlue[inIndex] = 0;
+            break;
+         }
       }
    }
 }
@@ -47,7 +134,7 @@ TEST( SimpleWriter, PathError )
    E57_ASSERT_THROW( e57::Writer( "./no-path/empty.e57", options ) );
 }
 
-TEST( SimpleWriter, WriteEmpty )
+TEST( SimpleWriter, Empty )
 {
    e57::WriterOptions options;
    options.guid = "Empty File GUID";
@@ -55,7 +142,190 @@ TEST( SimpleWriter, WriteEmpty )
    E57_ASSERT_NO_THROW( e57::Writer writer( "./empty.e57", options ) );
 }
 
-TEST( SimpleWriter, WriteMultipleScans )
+// Write a coloured cube of points using doubles.
+TEST( SimpleWriter, ColouredCubeDouble )
+{
+   Random::seed( 42 );
+
+   e57::WriterOptions options;
+   options.guid = "Coloured Cube File GUID";
+
+   e57::Writer *writer = nullptr;
+
+   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./ColouredCubeDouble.e57", options ) );
+
+   constexpr uint16_t cNumPointsPerFace = 1280;
+   constexpr uint16_t cNumPoints = cNumPointsPerFace * cNumCubeFaces;
+
+   e57::Data3D header;
+   header.guid = "Coloured Cube Double Scan Header GUID";
+   header.description = "libE57Format test: cube of coloured points using doubles";
+   header.pointsSize = cNumPoints;
+
+   // setting this to < 0.0 indicates we want to write doubles
+   header.pointFields.pointRangeScaledInteger = -1.0;
+
+   setUsingColouredCartesianPoints( header );
+
+   e57::Data3DPointsData_d pointsData( header );
+
+   // reset these so we can calculate them using min/max
+   header.pointFields.pointRangeMinimum = e57::E57_DOUBLE_MAX;
+   header.pointFields.pointRangeMaximum = e57::E57_DOUBLE_MIN;
+
+   int64_t i = 0;
+   auto writePointLambda = [&]( uint8_t inFace, const Point &inPoint ) {
+      ASSERT_LE( i, cNumPoints );
+
+      fillColouredCartesianPoint( pointsData, i, inFace, inPoint );
+
+      header.pointFields.pointRangeMinimum = std::min( pointsData.cartesianX[i], header.pointFields.pointRangeMinimum );
+      header.pointFields.pointRangeMinimum = std::min( pointsData.cartesianY[i], header.pointFields.pointRangeMinimum );
+      header.pointFields.pointRangeMinimum = std::min( pointsData.cartesianZ[i], header.pointFields.pointRangeMinimum );
+
+      header.pointFields.pointRangeMaximum = std::max( pointsData.cartesianX[i], header.pointFields.pointRangeMaximum );
+      header.pointFields.pointRangeMaximum = std::max( pointsData.cartesianY[i], header.pointFields.pointRangeMaximum );
+      header.pointFields.pointRangeMaximum = std::max( pointsData.cartesianZ[i], header.pointFields.pointRangeMaximum );
+
+      ++i;
+   };
+
+   generateCubePoints( 1.0, cNumPointsPerFace, writePointLambda );
+
+   const int64_t cScanIndex1 = writer->NewData3D( header );
+
+   e57::CompressedVectorWriter dataWriter = writer->SetUpData3DPointsData( cScanIndex1, cNumPoints, pointsData );
+
+   dataWriter.write( cNumPoints );
+   dataWriter.close();
+
+   delete writer;
+}
+
+// Write a coloured cube of points using floats.
+TEST( SimpleWriter, ColouredCubeFloat )
+{
+   Random::seed( 42 );
+
+   e57::WriterOptions options;
+   options.guid = "Coloured Cube File GUID";
+
+   e57::Writer *writer = nullptr;
+
+   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./ColouredCubeFloat.e57", options ) );
+
+   constexpr uint16_t cNumPointsPerFace = 1280;
+   constexpr uint16_t cNumPoints = cNumPointsPerFace * cNumCubeFaces;
+
+   e57::Data3D header;
+   header.guid = "Coloured Cube Float Scan Header GUID";
+   header.description = "libE57Format test: cube of coloured points using floats";
+   header.pointsSize = cNumPoints;
+
+   setUsingColouredCartesianPoints( header );
+
+   e57::Data3DPointsData pointsData( header );
+
+   // reset these so we can calculate them using min/max
+   header.pointFields.pointRangeMinimum = e57::E57_FLOAT_MAX;
+   header.pointFields.pointRangeMaximum = e57::E57_FLOAT_MIN;
+
+   int64_t i = 0;
+   auto writePointLambda = [&]( uint8_t inFace, const Point &inPoint ) {
+      ASSERT_LE( i, cNumPoints );
+
+      fillColouredCartesianPoint( pointsData, i, inFace, inPoint );
+
+      header.pointFields.pointRangeMinimum =
+         std::min( static_cast<double>( pointsData.cartesianX[i] ), header.pointFields.pointRangeMinimum );
+      header.pointFields.pointRangeMinimum =
+         std::min( static_cast<double>( pointsData.cartesianY[i] ), header.pointFields.pointRangeMinimum );
+      header.pointFields.pointRangeMinimum =
+         std::min( static_cast<double>( pointsData.cartesianZ[i] ), header.pointFields.pointRangeMinimum );
+
+      header.pointFields.pointRangeMaximum =
+         std::max( static_cast<double>( pointsData.cartesianX[i] ), header.pointFields.pointRangeMaximum );
+      header.pointFields.pointRangeMaximum =
+         std::max( static_cast<double>( pointsData.cartesianY[i] ), header.pointFields.pointRangeMaximum );
+      header.pointFields.pointRangeMaximum =
+         std::max( static_cast<double>( pointsData.cartesianZ[i] ), header.pointFields.pointRangeMaximum );
+
+      ++i;
+   };
+
+   generateCubePoints( 1.0, cNumPointsPerFace, writePointLambda );
+
+   const int64_t cScanIndex1 = writer->NewData3D( header );
+
+   e57::CompressedVectorWriter dataWriter = writer->SetUpData3DPointsData( cScanIndex1, cNumPoints, pointsData );
+
+   dataWriter.write( cNumPoints );
+   dataWriter.close();
+
+   delete writer;
+}
+
+// Write a cube of points using scaled ints.
+TEST( SimpleWriter, ColouredCubeScaledInt )
+{
+   Random::seed( 42 );
+
+   e57::WriterOptions options;
+   options.guid = "Coloured Cube Scaled Int File GUID";
+
+   e57::Writer *writer = nullptr;
+
+   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./ColouredCubeScaledInt.e57", options ) );
+
+   constexpr uint16_t cNumPointsPerFace = 1280;
+   constexpr uint16_t cNumPoints = cNumPointsPerFace * cNumCubeFaces;
+
+   e57::Data3D header;
+   header.guid = "Cube Scaled Int Scan Header GUID";
+   header.description = "libE57Format test: cube of coloured points using scaled integers";
+   header.pointsSize = cNumPoints;
+
+   // setting this to > 0.0 indicates we want to write scaled ints and to use this as the scale
+   header.pointFields.pointRangeScaledInteger = 0.001;
+
+   setUsingColouredCartesianPoints( header );
+
+   e57::Data3DPointsData_d pointsData( header );
+
+   // reset these so we can calculate them using min/max
+   header.pointFields.pointRangeMinimum = e57::E57_DOUBLE_MAX;
+   header.pointFields.pointRangeMaximum = e57::E57_DOUBLE_MIN;
+
+   int64_t i = 0;
+   auto writePointLambda = [&]( uint8_t inFace, const Point &inPoint ) {
+      ASSERT_LE( i, cNumPoints );
+
+      fillColouredCartesianPoint( pointsData, i, inFace, inPoint );
+
+      header.pointFields.pointRangeMinimum = std::min( pointsData.cartesianX[i], header.pointFields.pointRangeMinimum );
+      header.pointFields.pointRangeMinimum = std::min( pointsData.cartesianY[i], header.pointFields.pointRangeMinimum );
+      header.pointFields.pointRangeMinimum = std::min( pointsData.cartesianZ[i], header.pointFields.pointRangeMinimum );
+
+      header.pointFields.pointRangeMaximum = std::max( pointsData.cartesianX[i], header.pointFields.pointRangeMaximum );
+      header.pointFields.pointRangeMaximum = std::max( pointsData.cartesianY[i], header.pointFields.pointRangeMaximum );
+      header.pointFields.pointRangeMaximum = std::max( pointsData.cartesianZ[i], header.pointFields.pointRangeMaximum );
+
+      ++i;
+   };
+
+   generateCubePoints( 1.0, cNumPointsPerFace, writePointLambda );
+
+   const int64_t cScanIndex1 = writer->NewData3D( header );
+
+   e57::CompressedVectorWriter dataWriter = writer->SetUpData3DPointsData( cScanIndex1, cNumPoints, pointsData );
+
+   dataWriter.write( cNumPoints );
+   dataWriter.close();
+
+   delete writer;
+}
+
+TEST( SimpleWriter, MultipleScans )
 {
    e57::WriterOptions options;
    options.guid = "Multiple Scans File GUID";
@@ -87,7 +357,7 @@ TEST( SimpleWriter, WriteMultipleScans )
       ++i;
    };
 
-   generateCubePoints( 1.0, writePointLambda );
+   generateCubeCornerPoints( 1.0, writePointLambda );
 
    e57::CompressedVectorWriter dataWriter = writer->SetUpData3DPointsData( cScanIndex1, cNumPoints, pointsData );
 
@@ -100,7 +370,7 @@ TEST( SimpleWriter, WriteMultipleScans )
    const int64_t cScanIndex2 = writer->NewData3D( header );
 
    i = 0;
-   generateCubePoints( 0.5, writePointLambda );
+   generateCubeCornerPoints( 0.5, writePointLambda );
 
    dataWriter = writer->SetUpData3DPointsData( cScanIndex2, cNumPoints, pointsData );
 
@@ -112,7 +382,7 @@ TEST( SimpleWriter, WriteMultipleScans )
 
 // https://github.com/asmaloney/libE57Format/issues/26
 // File name UTF-8 encoded to avoid editor issues.
-TEST( SimpleWriter, WriteChineseFileName )
+TEST( SimpleWriter, ChineseFileName )
 {
    e57::WriterOptions options;
    options.guid = "Chinese File Name File GUID";
@@ -130,7 +400,7 @@ TEST( SimpleWriter, WriteUmlautFileName )
    E57_ASSERT_NO_THROW( e57::Writer writer( "./test filename \x61\xcc\x88\x6f\xcc\x88\x75\xcc\x88.e57", options ) );
 }
 
-TEST( SimpleWriter, WriteCartesianPoints )
+TEST( SimpleWriter, CartesianPoints )
 {
    e57::WriterOptions options;
    options.guid = "Cartesian Points File GUID";
@@ -168,7 +438,7 @@ TEST( SimpleWriter, WriteCartesianPoints )
    delete writer;
 }
 
-TEST( SimpleWriter, WriteColouredCartesianPoints )
+TEST( SimpleWriter, ColouredCartesianPoints )
 {
    e57::WriterOptions options;
    options.guid = "Coloured Cartesian Points File GUID";
@@ -182,15 +452,8 @@ TEST( SimpleWriter, WriteColouredCartesianPoints )
    e57::Data3D header;
    header.guid = "Coloured Cartesian Points Header GUID";
    header.pointsSize = cNumPoints;
-   header.pointFields.cartesianXField = true;
-   header.pointFields.cartesianYField = true;
-   header.pointFields.cartesianZField = true;
-   header.pointFields.colorRedField = true;
-   header.pointFields.colorGreenField = true;
-   header.pointFields.colorBlueField = true;
-   header.colorLimits.colorRedMaximum = 255;
-   header.colorLimits.colorGreenMaximum = 255;
-   header.colorLimits.colorBlueMaximum = 255;
+
+   setUsingColouredCartesianPoints( header );
 
    const int64_t scanIndex = writer->NewData3D( header );
 
@@ -216,7 +479,7 @@ TEST( SimpleWriter, WriteColouredCartesianPoints )
    delete writer;
 }
 
-TEST( SimpleWriterData, WriteVisualRefImage )
+TEST( SimpleWriterData, VisualRefImage )
 {
    e57::WriterOptions options;
    options.guid = "Visual Reference Image File GUID";

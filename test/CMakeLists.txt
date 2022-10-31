@@ -19,10 +19,6 @@ set_target_properties( testE57
 		POSITION_INDEPENDENT_CODE ON
 )
 
-if ( E57_VISIBILITY_HIDDEN )
-	set_target_properties( testE57 PROPERTIES CXX_VISIBILITY_PRESET hidden)
-endif()
-
 target_compile_options( testE57
 	PUBLIC
 	    # add switches to MSVC for UTF-8 handling in our test files

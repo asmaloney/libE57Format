@@ -834,7 +834,6 @@ namespace e57
       data3DHeader.pointFields.cartesianZField = proto.isDefined( "cartesianZ" );
       data3DHeader.pointFields.cartesianInvalidStateField = proto.isDefined( "cartesianInvalidState" );
 
-      data3DHeader.pointFields.pointRangeScaledInteger = E57_NOT_SCALED_USE_FLOAT; // FloatNode
       data3DHeader.pointFields.pointRangeMinimum = 0.0;
       data3DHeader.pointFields.pointRangeMaximum = 0.0;
 
@@ -860,7 +859,11 @@ namespace e57
 
             data3DHeader.pointFields.pointRangeMinimum = floatCartesianX.minimum();
             data3DHeader.pointFields.pointRangeMaximum = floatCartesianX.maximum();
-            data3DHeader.pointFields.pointRangeScaledInteger = E57_NOT_SCALED_USE_FLOAT;
+
+            if ( floatCartesianX.precision() == E57_DOUBLE )
+            {
+               data3DHeader.pointFields.pointRangeScaledInteger = -1.0;
+            }
          }
       }
       else if ( proto.isDefined( "sphericalRange" ) )
@@ -885,7 +888,11 @@ namespace e57
 
             data3DHeader.pointFields.pointRangeMinimum = floatSphericalRange.minimum();
             data3DHeader.pointFields.pointRangeMaximum = floatSphericalRange.maximum();
-            data3DHeader.pointFields.pointRangeScaledInteger = E57_NOT_SCALED_USE_FLOAT;
+
+            if ( floatSphericalRange.precision() == E57_DOUBLE )
+            {
+               data3DHeader.pointFields.pointRangeScaledInteger = -1.0;
+            }
          }
       }
 
@@ -894,7 +901,6 @@ namespace e57
       data3DHeader.pointFields.sphericalElevationField = proto.isDefined( "sphericalElevation" );
       data3DHeader.pointFields.sphericalInvalidStateField = proto.isDefined( "sphericalInvalidState" );
 
-      data3DHeader.pointFields.angleScaledInteger = E57_NOT_SCALED_USE_FLOAT; // FloatNode
       data3DHeader.pointFields.angleMinimum = 0.0;
       data3DHeader.pointFields.angleMaximum = 0.0;
 
@@ -920,7 +926,11 @@ namespace e57
 
             data3DHeader.pointFields.angleMinimum = floatSphericalAzimuth.minimum();
             data3DHeader.pointFields.angleMaximum = floatSphericalAzimuth.maximum();
-            data3DHeader.pointFields.angleScaledInteger = E57_NOT_SCALED_USE_FLOAT;
+
+            if ( floatSphericalAzimuth.precision() == E57_DOUBLE )
+            {
+               data3DHeader.pointFields.angleScaledInteger = -1.0;
+            }
          }
       }
 
@@ -955,7 +965,6 @@ namespace e57
       data3DHeader.pointFields.isTimeStampInvalidField = proto.isDefined( "isTimeStampInvalid" );
       data3DHeader.pointFields.timeMaximum = 0.0;
       data3DHeader.pointFields.timeMinimum = 0.0;
-      data3DHeader.pointFields.timeScaledInteger = E57_NOT_SCALED_USE_FLOAT;
 
       if ( proto.isDefined( "timeStamp" ) )
       {
@@ -967,7 +976,7 @@ namespace e57
 
             data3DHeader.pointFields.timeMaximum = static_cast<double>( integerTimeStamp.maximum() );
             data3DHeader.pointFields.timeMinimum = static_cast<double>( integerTimeStamp.minimum() );
-            data3DHeader.pointFields.timeScaledInteger = E57_NOT_SCALED_USE_FLOAT;
+            data3DHeader.pointFields.timeScaledInteger = -1.0;
          }
          else if ( timeStampProto.type() == E57_SCALED_INTEGER )
          {
@@ -988,7 +997,6 @@ namespace e57
 
             data3DHeader.pointFields.timeMinimum = floatTimeStamp.minimum();
             data3DHeader.pointFields.timeMaximum = floatTimeStamp.maximum();
-            data3DHeader.pointFields.timeScaledInteger = E57_NOT_SCALED_USE_FLOAT;
          }
       }
 
@@ -996,7 +1004,6 @@ namespace e57
       data3DHeader.pointFields.isIntensityInvalidField = proto.isDefined( "isIntensityInvalid" );
       data3DHeader.intensityLimits.intensityMinimum = 0.0;
       data3DHeader.intensityLimits.intensityMaximum = 0.0;
-      data3DHeader.pointFields.intensityScaledInteger = E57_NOT_SCALED_USE_FLOAT;
 
       if ( scan.isDefined( "intensityLimits" ) )
       {

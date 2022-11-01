@@ -526,7 +526,7 @@ namespace e57
          const double intensityMin = data3DHeader.intensityLimits.intensityMinimum;
          const double intensityMax = data3DHeader.intensityLimits.intensityMaximum;
 
-         if ( data3DHeader.pointFields.intensityScaledInteger > 0.0 )
+         if ( data3DHeader.pointFields.intensityScaledInteger > E57_NOT_SCALED_USE_FLOAT )
          {
             const double scale = data3DHeader.pointFields.intensityScaledInteger;
             const double offset = 0.0;
@@ -539,7 +539,7 @@ namespace e57
             intbox.set( "intensityMaximum", ScaledIntegerNode( imf_, rawIntegerMaximum, rawIntegerMinimum,
                                                                rawIntegerMaximum, scale, offset ) );
          }
-         else if ( data3DHeader.pointFields.intensityScaledInteger == 0.0 )
+         else if ( data3DHeader.pointFields.intensityScaledInteger == E57_NOT_SCALED_USE_FLOAT )
          {
             intbox.set( "intensityMinimum", FloatNode( imf_, intensityMin ) );
             intbox.set( "intensityMaximum", FloatNode( imf_, intensityMax ) );

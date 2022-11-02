@@ -1136,8 +1136,7 @@ namespace e57
 
       // E57_EXT_surface_normals
       // See: http://www.libe57.org/E57_EXT_surface_normals.txt
-      ustring norExtUri;
-      if ( imf_.extensionsLookupPrefix( "nor", norExtUri ) )
+      if ( imf_.extensionsLookupPrefix( "nor" ) )
       {
          data3DHeader.pointFields.normalXField = proto.isDefined( "nor:normalX" );
          data3DHeader.pointFields.normalYField = proto.isDefined( "nor:normalY" );

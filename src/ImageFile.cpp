@@ -375,6 +375,26 @@ void ImageFile::extensionsAdd( const ustring &prefix, const ustring &uri )
 }
 
 /*!
+@brief   Look up an E57 extension prefix in the ImageFile.
+@param   [in] prefix The shorthand name of the extension to look up.
+@details
+If @a prefix = "" or @a prefix is declared in the ImageFile, then the function returns true. It is an error if @a prefix
+contains an illegal character combination for E57 namespace prefixes.
+@pre     This ImageFile must be open (i.e. isOpen()).
+@post    No visible state is modified.
+@return  true if prefix is declared in the ImageFile.
+@throw   ::E57_ERROR_BAD_API_ARGUMENT
+@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
+@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@see     ImageFile::extensionsLookupUri
+*/
+bool ImageFile::extensionsLookupPrefix( const ustring &prefix ) const
+{
+   ustring uri;
+   return impl_->extensionsLookupPrefix( prefix, uri );
+}
+
+/*!
 @brief   Get URI associated with an E57 extension prefix in the ImageFile.
 @param   [in] prefix    The shorthand name of the extension to look up.
 @param   [out] uri      The URI that was associated with the given @a prefix.

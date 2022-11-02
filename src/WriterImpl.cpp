@@ -941,8 +941,7 @@ namespace e57
            data3DHeader.pointFields.normalZField )
       {
          // make sure we declare the extension before using the fields with prefix
-         ustring norExtUri;
-         if ( !imf_.extensionsLookupPrefix( "nor", norExtUri ) )
+         if ( !imf_.extensionsLookupPrefix( "nor" ) )
          {
             imf_.extensionsAdd( "nor", "http://www.libe57.org/E57_EXT_surface_normals.txt" );
          }
@@ -1088,8 +1087,7 @@ namespace e57
       }
 
       // E57_EXT_surface_normals
-      ustring norExtUri;
-      if ( imf_.extensionsLookupPrefix( "nor", norExtUri ) )
+      if ( imf_.extensionsLookupPrefix( "nor" ) )
       {
          if ( proto.isDefined( "nor:normalX" ) && ( buffers.normalX != nullptr ) )
          {

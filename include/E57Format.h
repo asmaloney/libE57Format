@@ -655,6 +655,7 @@ protected:                                                                      
 
       // Manipulate registered extensions in the file
       void extensionsAdd( const ustring &prefix, const ustring &uri );
+      bool extensionsLookupPrefix( const ustring &prefix ) const;
       bool extensionsLookupPrefix( const ustring &prefix, ustring &uri ) const;
       bool extensionsLookupUri( const ustring &uri, ustring &prefix ) const;
       size_t extensionsCount() const;

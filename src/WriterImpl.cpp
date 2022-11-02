@@ -91,7 +91,8 @@ namespace e57
       // Set per-file properties.
       // Path names: "/formatName", "/majorVersion", "/minorVersion", "/coordinateMetadata"
       root_.set( "formatName", StringNode( imf_, "ASTM E57 3D Imaging Data File" ) );
-      if ( options.guid.length() > 0 )
+
+      if ( !options.guid.empty() )
       {
          root_.set( "guid", StringNode( imf_, options.guid ) );
       }
@@ -693,38 +694,6 @@ namespace e57
          lineGroupProto.set( "idElementValue", IntegerNode( imf_, 0, 0, groupsSize - 1 ) );
          lineGroupProto.set( "pointCount", IntegerNode( imf_, 0, 0, countSize ) );
 
-         // Not supported in this Simple API for now
-         /*
-               StructureNode bbox = StructureNode(imf_);
-               bbox.set("xMinimum", FloatNode(imf_, 0.0, E57_SINGLE,
-                     data3DHeader.pointFields.pointRangeMinimum,	data3DHeader.pointFields.pointRangeMaximum));
-               bbox.set("xMaximum", FloatNode(imf_, 0.0, E57_SINGLE,
-                     data3DHeader.pointFields.pointRangeMinimum,	data3DHeader.pointFields.pointRangeMaximum));
-               bbox.set("yMinimum", FloatNode(imf_, 0.0, E57_SINGLE,
-                     data3DHeader.pointFields.pointRangeMinimum,	data3DHeader.pointFields.pointRangeMaximum));
-               bbox.set("yMaximum", FloatNode(imf_, 0.0, E57_SINGLE,
-                     data3DHeader.pointFields.pointRangeMinimum,	data3DHeader.pointFields.pointRangeMaximum));
-               bbox.set("zMinimum", FloatNode(imf_, 0.0, E57_SINGLE,
-                     data3DHeader.pointFields.pointRangeMinimum,	data3DHeader.pointFields.pointRangeMaximum));
-               bbox.set("zMaximum", FloatNode(imf_, 0.0, E57_SINGLE,
-                     data3DHeader.pointFields.pointRangeMinimum,	data3DHeader.pointFields.pointRangeMaximum));
-               lineGroupProto.set("cartesianBounds", bbox);
-
-               StructureNode sbox = StructureNode(imf_);
-               sbox.set("rangeMinimum", FloatNode(imf_, 0.0, E57_SINGLE,
-                     data3DHeader.pointFields.pointRangeMinimum,	data3DHeader.pointFields.pointRangeMaximum));
-               sbox.set("rangeMaximum", FloatNode(imf_, 0.0, E57_SINGLE,
-                     data3DHeader.pointFields.pointRangeMinimum,	data3DHeader.pointFields.pointRangeMaximum));
-               sbox.set("elevationMinimum", FloatNode(imf_, 0.0, E57_SINGLE,
-                     data3DHeader.pointFields.angleMinimum, data3DHeader.pointFields.angleMaximum));
-               sbox.set("elevationMaximum", FloatNode(imf_, 0.0, E57_SINGLE,
-                     data3DHeader.pointFields.angleMinimum, data3DHeader.pointFields.angleMaximum));
-               sbox.set("azimuthStart", FloatNode(imf_, 0.0, E57_SINGLE,
-                     data3DHeader.pointFields.angleMinimum, data3DHeader.pointFields.angleMaximum));
-               sbox.set("azimuthEnd", FloatNode(imf_, 0.0, E57_SINGLE,
-                     data3DHeader.pointFields.angleMinimum, data3DHeader.pointFields.angleMaximum));
-               lineGroupProto.set("sphericalBounds", sbox);
-         */
          // Make empty codecs vector for use in creating groups CompressedVector.
          // If this vector is empty, it is assumed that all fields will use the BitPack codec.
          const VectorNode lineGroupCodecs( imf_, true );

@@ -81,17 +81,17 @@ namespace e57
 
       if ( data3D.pointFields.colorRedField )
       {
-         colorRed = new uint8_t[cPointCount];
+         colorRed = new uint16_t[cPointCount];
       }
 
       if ( data3D.pointFields.colorGreenField )
       {
-         colorGreen = new uint8_t[cPointCount];
+         colorGreen = new uint16_t[cPointCount];
       }
 
       if ( data3D.pointFields.colorBlueField )
       {
-         colorBlue = new uint8_t[cPointCount];
+         colorBlue = new uint16_t[cPointCount];
       }
 
       if ( data3D.pointFields.isColorInvalidField )

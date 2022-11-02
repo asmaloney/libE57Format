@@ -487,9 +487,9 @@ namespace e57
       //! Value = 0 if the intensity is considered valid, 1 otherwise
       int8_t *isIntensityInvalid = nullptr;
 
-      uint8_t *colorRed = nullptr;      //!< Pointer to a buffer with the Red color coefficient. Unit is unspecified
-      uint8_t *colorGreen = nullptr;    //!< Pointer to a buffer with the Green color coefficient. Unit is unspecified
-      uint8_t *colorBlue = nullptr;     //!< Pointer to a buffer with the Blue color coefficient. Unit is unspecified
+      uint16_t *colorRed = nullptr;     //!< Pointer to a buffer with the Red color coefficient. Unit is unspecified
+      uint16_t *colorGreen = nullptr;   //!< Pointer to a buffer with the Green color coefficient. Unit is unspecified
+      uint16_t *colorBlue = nullptr;    //!< Pointer to a buffer with the Blue color coefficient. Unit is unspecified
       int8_t *isColorInvalid = nullptr; //!< Value = 0 if the color is considered valid, 1 otherwise
 
       //! Pointer to a buffer with the range (in meters) of points in spherical coordinates.

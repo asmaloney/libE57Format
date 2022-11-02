@@ -175,4 +175,7 @@ namespace e57
 
    // Convert a floating point number to a string and do some clean up.
    template <class FTYPE> std::string floatingPointToStr( FTYPE value, int precision );
+
+   extern template std::string floatingPointToStr<float>( float value, int precision );
+   extern template std::string floatingPointToStr<double>( double value, int precision );
 }

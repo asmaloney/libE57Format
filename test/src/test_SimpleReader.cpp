@@ -86,10 +86,10 @@ TEST( SimpleReaderData, ColouredCubeFloat )
    e57::Data3D data3DHeader;
    ASSERT_TRUE( reader->ReadData3D( 0, data3DHeader ) );
 
-   ASSERT_EQ( data3DHeader.pointsSize, 7'680 );
+   ASSERT_EQ( data3DHeader.pointCount, 7'680 );
    EXPECT_EQ( data3DHeader.guid, "Coloured Cube Float Scan Header GUID" );
 
-   const uint64_t cNumPoints = data3DHeader.pointsSize;
+   const uint64_t cNumPoints = data3DHeader.pointCount;
 
    e57::Data3DPointsData pointsData( data3DHeader );
 
@@ -123,10 +123,10 @@ TEST( SimpleReaderData, ColouredCubeFloatToDouble )
    e57::Data3D data3DHeader;
    ASSERT_TRUE( reader->ReadData3D( 0, data3DHeader ) );
 
-   ASSERT_EQ( data3DHeader.pointsSize, 7'680 );
+   ASSERT_EQ( data3DHeader.pointCount, 7'680 );
    EXPECT_EQ( data3DHeader.guid, "Coloured Cube Float Scan Header GUID" );
 
-   const uint64_t cNumPoints = data3DHeader.pointsSize;
+   const uint64_t cNumPoints = data3DHeader.pointCount;
 
    e57::Data3DPointsData_d pointsData( data3DHeader );
 
@@ -160,10 +160,10 @@ TEST( SimpleReaderData, BunnyDouble )
    e57::Data3D data3DHeader;
    ASSERT_TRUE( reader->ReadData3D( 0, data3DHeader ) );
 
-   ASSERT_EQ( data3DHeader.pointsSize, 30'571 );
+   ASSERT_EQ( data3DHeader.pointCount, 30'571 );
    EXPECT_EQ( data3DHeader.guid, "{9CA24C38-C93E-40E8-A366-F49977C7E3EB}" );
 
-   const uint64_t cNumPoints = data3DHeader.pointsSize;
+   const uint64_t cNumPoints = data3DHeader.pointCount;
 
    e57::Data3DPointsData pointsData( data3DHeader );
 
@@ -197,10 +197,10 @@ TEST( SimpleReaderData, BunnyInt32 )
    e57::Data3D data3DHeader;
    ASSERT_TRUE( reader->ReadData3D( 0, data3DHeader ) );
 
-   EXPECT_EQ( data3DHeader.pointsSize, 30'571 );
+   EXPECT_EQ( data3DHeader.pointCount, 30'571 );
    EXPECT_EQ( data3DHeader.guid, "{9CA24C38-C93E-40E8-A366-F49977C7E3EB}" );
 
-   const uint64_t cNumPoints = data3DHeader.pointsSize;
+   const uint64_t cNumPoints = data3DHeader.pointCount;
 
    e57::Data3DPointsData pointsData( data3DHeader );
 

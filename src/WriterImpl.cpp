@@ -686,11 +686,11 @@ namespace e57
          //     "/data3D/0/pointGroupingSchemes/groupingByLine/groups/0/idElementValue"
          const int64_t groupsSize = data3DHeader.pointGroupingSchemes.groupingByLine.groupsSize;
          const int64_t countSize = data3DHeader.pointGroupingSchemes.groupingByLine.pointCountSize;
-         const int64_t pointsSize = data3DHeader.pointsSize;
+         const int64_t pointsCount = data3DHeader.pointCount;
 
          StructureNode lineGroupProto( imf_ );
 
-         lineGroupProto.set( "startPointIndex", IntegerNode( imf_, 0, 0, pointsSize - 1 ) );
+         lineGroupProto.set( "startPointIndex", IntegerNode( imf_, 0, 0, pointsCount - 1 ) );
          lineGroupProto.set( "idElementValue", IntegerNode( imf_, 0, 0, groupsSize - 1 ) );
          lineGroupProto.set( "pointCount", IntegerNode( imf_, 0, 0, countSize ) );
 

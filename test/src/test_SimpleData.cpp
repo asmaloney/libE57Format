@@ -18,7 +18,7 @@ TEST( SimpleDataHeader, HeaderMinMaxFloat )
 {
    e57::Data3D dataHeader;
 
-   dataHeader.pointsSize = 1;
+   dataHeader.pointCount = 1;
 
    EXPECT_EQ( dataHeader.pointFields.pointRangeMinimum, e57::E57_DOUBLE_MIN );
    EXPECT_EQ( dataHeader.pointFields.pointRangeMaximum, e57::E57_DOUBLE_MAX );
@@ -42,7 +42,7 @@ TEST( SimpleDataHeader, HeaderMinMaxDouble )
 {
    e57::Data3D dataHeader;
 
-   dataHeader.pointsSize = 1;
+   dataHeader.pointCount = 1;
 
    EXPECT_EQ( dataHeader.pointFields.pointRangeMinimum, e57::E57_DOUBLE_MIN );
    EXPECT_EQ( dataHeader.pointFields.pointRangeMaximum, e57::E57_DOUBLE_MAX );

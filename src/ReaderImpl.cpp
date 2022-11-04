@@ -597,7 +597,7 @@ namespace e57
       const StructureNode proto( points.prototype() );
 
       data3DHeader.guid = StringNode( scan.get( "guid" ) ).value();
-      data3DHeader.pointsSize = points.childCount();
+      data3DHeader.pointCount = points.childCount();
 
       if ( scan.isDefined( "name" ) )
       {

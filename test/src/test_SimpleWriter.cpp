@@ -160,7 +160,7 @@ TEST( SimpleWriter, ColouredCubeDouble )
    e57::Data3D header;
    header.guid = "Coloured Cube Double Scan Header GUID";
    header.description = "libE57Format test: cube of coloured points using doubles";
-   header.pointsSize = cNumPoints;
+   header.pointCount = cNumPoints;
 
    // setting this to < 0.0 indicates we want to write doubles
    header.pointFields.pointRangeScaledInteger = -1.0;
@@ -220,7 +220,7 @@ TEST( SimpleWriter, ColouredCubeFloat )
    e57::Data3D header;
    header.guid = "Coloured Cube Float Scan Header GUID";
    header.description = "libE57Format test: cube of coloured points using floats";
-   header.pointsSize = cNumPoints;
+   header.pointCount = cNumPoints;
 
    setUsingColouredCartesianPoints( header );
 
@@ -283,7 +283,7 @@ TEST( SimpleWriter, ColouredCubeScaledInt )
    e57::Data3D header;
    header.guid = "Cube Scaled Int Scan Header GUID";
    header.description = "libE57Format test: cube of coloured points using scaled integers";
-   header.pointsSize = cNumPoints;
+   header.pointCount = cNumPoints;
 
    // setting this to > 0.0 indicates we want to write scaled ints and to use this as the scale
    header.pointFields.pointRangeScaledInteger = 0.001;
@@ -337,7 +337,7 @@ TEST( SimpleWriter, MultipleScans )
    constexpr int cNumPoints = 8;
 
    e57::Data3D header;
-   header.pointsSize = cNumPoints;
+   header.pointCount = cNumPoints;
    header.pointFields.cartesianXField = true;
    header.pointFields.cartesianYField = true;
    header.pointFields.cartesianZField = true;
@@ -411,7 +411,7 @@ TEST( SimpleWriter, CartesianPoints )
 
    e57::Data3D header;
    header.guid = "Cartesian Points Header GUID";
-   header.pointsSize = cNumPoints;
+   header.pointCount = cNumPoints;
    header.pointFields.cartesianXField = true;
    header.pointFields.cartesianYField = true;
    header.pointFields.cartesianZField = true;
@@ -449,7 +449,7 @@ TEST( SimpleWriter, ColouredCartesianPoints )
 
    e57::Data3D header;
    header.guid = "Coloured Cartesian Points Header GUID";
-   header.pointsSize = cNumPoints;
+   header.pointCount = cNumPoints;
 
    setUsingColouredCartesianPoints( header );
 

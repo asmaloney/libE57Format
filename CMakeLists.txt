@@ -130,8 +130,6 @@ add_subdirectory( extern/CRCpp )
 add_subdirectory( include )
 add_subdirectory( src )
 
-include( ClangFormat )
-
 # Target properties
 set_target_properties( E57Format
 	PROPERTIES
@@ -218,6 +216,9 @@ if ( E57_BUILD_TEST )
 
     add_subdirectory( test )
 endif()
+
+# Formatting
+include( ClangFormat )
 
 # CMake package files
 install(

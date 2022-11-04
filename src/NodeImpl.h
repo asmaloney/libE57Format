@@ -87,10 +87,12 @@ namespace e57
 
       explicit NodeImpl( ImageFileImplWeakPtr destImageFile );
       NodeImpl &operator=( NodeImpl &n );
+
       virtual NodeImplSharedPtr lookup( const ustring & /*pathName*/ )
       {
          return NodeImplSharedPtr();
       }
+
       NodeImplSharedPtr getRoot();
 
       ImageFileImplWeakPtr destImageFile_;

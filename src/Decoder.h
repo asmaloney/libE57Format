@@ -44,6 +44,7 @@ namespace e57
       virtual uint64_t totalRecordsCompleted() = 0;
       virtual size_t inputProcess( const char *source, size_t count ) = 0;
       virtual void stateReset() = 0;
+
       unsigned bytestreamNumber() const
       {
          return bytestreamNumber_;
@@ -158,10 +159,12 @@ namespace e57
       ConstantIntegerDecoder( bool isScaledInteger, unsigned bytestreamNumber, SourceDestBuffer &dbuf, int64_t minimum,
                               double scale, double offset, uint64_t maxRecordCount );
       void destBufferSetNew( std::vector<SourceDestBuffer> &dbufs ) override;
+
       uint64_t totalRecordsCompleted() override
       {
          return currentRecordIndex_;
       }
+
       size_t inputProcess( const char *source, size_t availableByteCount ) override;
       void stateReset() override;
 #ifdef E57_DEBUG

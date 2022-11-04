@@ -52,38 +52,47 @@ namespace e57
       {
          return pathName_;
       }
+
       MemoryRepresentation memoryRepresentation() const
       {
          return memoryRepresentation_;
       }
+
       void *base() const
       {
          return base_;
       }
+
       StringList *ustrings() const
       {
          return ustrings_;
       }
+
       bool doConversion() const
       {
          return doConversion_;
       }
+
       bool doScaling() const
       {
          return doScaling_;
       }
+
       size_t stride() const
       {
          return stride_;
       }
+
       size_t capacity() const
       {
          return capacity_;
       }
+
       unsigned nextIndex() const
       {
          return nextIndex_;
       }
+
       void rewind()
       {
          nextIndex_ = 0;

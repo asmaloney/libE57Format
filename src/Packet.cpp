@@ -627,7 +627,9 @@ void IndexPacket::verify( unsigned bufferLength, uint64_t totalRecordCount, uint
    for ( unsigned i = neededLength; i < packetLength; i++ )
    {
       if ( p[i] != 0 )
+      {
          throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET, "i=" + toString( i ) );
+      }
    }
 
    /// Verify records and offsets are in sorted order

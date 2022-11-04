@@ -24,6 +24,7 @@ AlwaysBreakBeforeMultilineStrings: false
 AlwaysBreakTemplateDeclarations: MultiLine
 BinPackArguments: true
 BinPackParameters: true
+BitFieldColonSpacing: Both
 BraceWrapping:
   AfterCaseLabel: true
   AfterClass: true
@@ -57,6 +58,8 @@ ContinuationIndentWidth: 3
 Cpp11BracedListStyle: false
 DeriveLineEnding: false
 DerivePointerAlignment: false
+EmptyLineBeforeAccessModifier: LogicalBlock
+EmptyLineAfterAccessModifier: Never
 FixNamespaceComments: false
 IncludeBlocks: Preserve
 IncludeCategories:
@@ -71,6 +74,7 @@ IndentCaseLabels: true
 IndentPPDirectives: None
 IndentWidth: 3
 IndentWrappedFunctionNames: true
+InsertBraces: true
 KeepEmptyLinesAtTheStartOfBlocks: true
 Language: Cpp
 MaxEmptyLinesToKeep: 1
@@ -91,6 +95,7 @@ SpaceAfterCStyleCast: false
 SpaceAfterLogicalNot: false
 SpaceAfterTemplateKeyword: true
 SpaceBeforeAssignmentOperators: true
+SpaceBeforeCaseColon: false
 SpaceBeforeCpp11BracedList: false
 SpaceBeforeCtorInitializerColon: true
 SpaceBeforeInheritanceColon: true

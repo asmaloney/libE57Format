@@ -76,10 +76,12 @@ namespace e57
       uint64_t position( OffsetMode omode = Logical );
       uint64_t length( OffsetMode omode = Logical );
       void extend( uint64_t newLength, OffsetMode omode = Logical );
+
       e57::ustring fileName() const
       {
          return fileName_;
       }
+
       void close();
       void unlink();
 

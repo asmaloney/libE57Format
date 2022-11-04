@@ -75,11 +75,28 @@ namespace e57
       //! @name Image2D
       //!@{
 
+      //! @brief This function writes the Image2D data to the file
+      //! @details The user needs to config a Image2D structure with all the camera information before making this call.
+      //! @note @p image2DHeader may be modified (adding a guid or adding missing, required fields).
+      //! @param [in,out] image2DHeader header metadata
+      //! @param [in] imageType identifies the image format
+      //! @param [in] imageProjection identifies the projection
+      //! @param [in] startPos position in the block to start writing
+      //! @param [in] buffer pointer the data buffer
+      //! @param [in] byteCount buffer size
+      //! @return Returns the number of bytes written
+      int64_t WriteImage2DData( Image2D &image2DHeader, Image2DType imageType, Image2DProjection imageProjection,
+                                int64_t startPos, void *buffer, int64_t byteCount );
+
       //! @brief Writes a new Image2D header
       //! @details The user needs to config a Image2D structure with all the camera information before making this call.
       //! @param [in,out] image2DHeader header metadata
       //! @return Returns the image2D index
-      int64_t NewImage2D( Image2D &image2DHeader );
+      //! @deprecated Will be removed in 4.0. Use WriteImage2DData(Image2D &,Image2DType,Image2DProjection,int64_t,void
+      //! *,int64_t) instead.
+      [[deprecated( "Will be removed in 4.0. Use WriteImage2DData()." )]] // TODO Remove in 4.0
+      int64_t
+         NewImage2D( Image2D &image2DHeader );
 
       //! @brief Writes the actual image data
       //! @param [in] imageIndex picture block index given by the NewImage2D
@@ -89,32 +106,55 @@ namespace e57
       //! @param [in] start position in the block to start writing
       //! @param [in] count size of desired chunk or buffer size
       //! @return Returns the number of bytes written
-      int64_t WriteImage2DData( int64_t imageIndex, Image2DType imageType, Image2DProjection imageProjection,
-                                void *buffer, int64_t start, int64_t count );
+      //! @deprecated Will be removed in 4.0. Use WriteImage2DData(Image2D &,Image2DType,Image2DProjection,int64_t,void
+      //! *,int64_t) instead.
+      [[deprecated( "Will be removed in 4.0. Use WriteImage2DData(Image2D &,Image2DType,Image2DProjection,int64_t,void "
+                    "*,int64_t)." )]] // TODO Remove in 4.0
+      int64_t
+         WriteImage2DData( int64_t imageIndex, Image2DType imageType, Image2DProjection imageProjection, void *buffer,
+                           int64_t start, int64_t count );
 
       //!@}
 
       //! @name Data3D
       //!@{
 
-      //! @brief Writes new Data3D header
+      //! @brief This function writes the Data3D data to the file
+      //! @details The user needs to config a Data3D structure with all the scanning information before making this
+      //! call.
+      //! @note @p data3DHeader may be modified (adding a guid or adding missing, required fields).
+      //! @param [in,out] data3DHeader metadata about what is included in the buffers
+      //! @param [in] buffers pointers to user-provided buffers containing the actual data
+      //! @return Returns the index of the new scan's data3D block.
+      int64_t WriteData3DData( Data3D &data3DHeader, const Data3DPointsData &buffers );
+
+      //! @overload
+      int64_t WriteData3DData( Data3D &data3DHeader, const Data3DPointsData_d &buffers );
+
+      //! @brief Writes a new Data3D header
       //! @details The user needs to config a Data3D structure with all the scanning information before making this
       //! call.
       //! @param [in,out] data3DHeader scan metadata
       //! @return Returns the index of the new scan's data3D block.
-      int64_t NewData3D( Data3D &data3DHeader );
+      //! @deprecated Will be removed in 4.0. Use WriteData3DData() instead.
+      [[deprecated( "Will be removed in 4.0. Use WriteData3DData()." )]] // TODO Remove in 4.0
+      int64_t
+         NewData3D( Data3D &data3DHeader );
 
       //! @brief Sets up a writer to write the actual scan data
       //! @param [in] dataIndex index returned by NewData3D
       //! @param [in] pointCount Number of points to write (number of elements in each of the buffers)
       //! @param [in] buffers pointers to user-provided buffers
       //! @return returns a vector writer setup to write the selected scan data
-      CompressedVectorWriter SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
-                                                    const Data3DPointsData &buffers );
+      //! @deprecated Will be removed in 4.0. Use WriteData3DData() instead.
+      [[deprecated( "Will be removed in 4.0. Use WriteData3DData()." )]] // TODO Remove in 4.0
+      CompressedVectorWriter
+         SetUpData3DPointsData( int64_t dataIndex, size_t pointCount, const Data3DPointsData &buffers );
 
       //! @overload
-      CompressedVectorWriter SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
-                                                    const Data3DPointsData_d &buffers );
+      [[deprecated( "Will be removed in 4.0. Use WriteData3DData()." )]] // TODO Remove in 4.0
+      CompressedVectorWriter
+         SetUpData3DPointsData( int64_t dataIndex, size_t pointCount, const Data3DPointsData_d &buffers );
 
       //! @brief Writes out the group data
       //! @param [in] dataIndex data block index given by the NewData3D

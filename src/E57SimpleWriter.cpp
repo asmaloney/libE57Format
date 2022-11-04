@@ -50,26 +50,20 @@ namespace e57
    bool Writer::Close()
    {
       return impl_->Close();
-   };
-
-   ImageFile Writer::GetRawIMF()
-   {
-      return impl_->GetRawIMF();
    }
 
-   StructureNode Writer::GetRawE57Root()
+   int64_t Writer::WriteImage2DData( Image2D &image2DHeader, Image2DType imageType, Image2DProjection imageProjection,
+                                     int64_t startPos, void *pBuffer, int64_t byteCount )
    {
-      return impl_->GetRawE57Root();
-   };
+      auto *buffer = static_cast<uint8_t *>( pBuffer );
+      const auto sizeInBytes = static_cast<size_t>( byteCount );
 
-   VectorNode Writer::GetRawData3D()
-   {
-      return impl_->GetRawData3D();
-   };
+      const int64_t imageIndex = impl_->NewImage2D( image2DHeader );
 
-   VectorNode Writer::GetRawImages2D()
-   {
-      return impl_->GetRawImages2D();
+      const size_t written =
+         impl_->WriteImage2DData( imageIndex, imageType, imageProjection, buffer, startPos, sizeInBytes );
+
+      return static_cast<int64_t>( written );
    };
 
    int64_t Writer::NewImage2D( Image2D &image2DHeader )
@@ -86,6 +80,32 @@ namespace e57
       const size_t written = impl_->WriteImage2DData( imageIndex, imageType, imageProjection, buffer, start, size );
 
       return static_cast<int64_t>( written );
+   }
+
+   int64_t Writer::WriteData3DData( Data3D &data3DHeader, const Data3DPointsData &buffers )
+   {
+      const int64_t scanIndex = impl_->NewData3D( data3DHeader );
+
+      e57::CompressedVectorWriter dataWriter =
+         impl_->SetUpData3DPointsData( scanIndex, data3DHeader.pointCount, buffers );
+
+      dataWriter.write( data3DHeader.pointCount );
+      dataWriter.close();
+
+      return scanIndex;
+   }
+
+   int64_t Writer::WriteData3DData( Data3D &data3DHeader, const Data3DPointsData_d &buffers )
+   {
+      const int64_t scanIndex = impl_->NewData3D( data3DHeader );
+
+      e57::CompressedVectorWriter dataWriter =
+         impl_->SetUpData3DPointsData( scanIndex, data3DHeader.pointCount, buffers );
+
+      dataWriter.write( data3DHeader.pointCount );
+      dataWriter.close();
+
+      return scanIndex;
    }
 
    int64_t Writer::NewData3D( Data3D &data3DHeader )
@@ -110,4 +130,24 @@ namespace e57
    {
       return impl_->WriteData3DGroupsData( dataIndex, groupCount, idElementValue, startPointIndex, pointCount );
    }
+
+   ImageFile Writer::GetRawIMF()
+   {
+      return impl_->GetRawIMF();
+   }
+
+   StructureNode Writer::GetRawE57Root()
+   {
+      return impl_->GetRawE57Root();
+   };
+
+   VectorNode Writer::GetRawData3D()
+   {
+      return impl_->GetRawData3D();
+   };
+
+   VectorNode Writer::GetRawImages2D()
+   {
+      return impl_->GetRawImages2D();
+   };
 } // end namespace e57

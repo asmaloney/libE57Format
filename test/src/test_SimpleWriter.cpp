@@ -192,12 +192,7 @@ TEST( SimpleWriter, ColouredCubeDouble )
 
    generateCubePoints( 1.0, cNumPointsPerFace, writePointLambda );
 
-   const int64_t cScanIndex1 = writer->NewData3D( header );
-
-   e57::CompressedVectorWriter dataWriter = writer->SetUpData3DPointsData( cScanIndex1, cNumPoints, pointsData );
-
-   dataWriter.write( cNumPoints );
-   dataWriter.close();
+   writer->WriteData3DData( header, pointsData );
 
    delete writer;
 }
@@ -255,12 +250,7 @@ TEST( SimpleWriter, ColouredCubeFloat )
 
    generateCubePoints( 1.0, cNumPointsPerFace, writePointLambda );
 
-   const int64_t cScanIndex1 = writer->NewData3D( header );
-
-   e57::CompressedVectorWriter dataWriter = writer->SetUpData3DPointsData( cScanIndex1, cNumPoints, pointsData );
-
-   dataWriter.write( cNumPoints );
-   dataWriter.close();
+   writer->WriteData3DData( header, pointsData );
 
    delete writer;
 }
@@ -315,12 +305,7 @@ TEST( SimpleWriter, ColouredCubeScaledInt )
 
    generateCubePoints( 1.0, cNumPointsPerFace, writePointLambda );
 
-   const int64_t cScanIndex1 = writer->NewData3D( header );
-
-   e57::CompressedVectorWriter dataWriter = writer->SetUpData3DPointsData( cScanIndex1, cNumPoints, pointsData );
-
-   dataWriter.write( cNumPoints );
-   dataWriter.close();
+   writer->WriteData3DData( header, pointsData );
 
    delete writer;
 }
@@ -347,8 +332,6 @@ TEST( SimpleWriter, MultipleScans )
    // scan 1
    header.guid = "Multiple Scans Scan 1 Header GUID";
 
-   const int64_t cScanIndex1 = writer->NewData3D( header );
-
    int64_t i = 0;
    auto writePointLambda = [&]( const Point &point ) {
       pointsData.cartesianX[i] = point[0];
@@ -359,23 +342,15 @@ TEST( SimpleWriter, MultipleScans )
 
    generateCubeCornerPoints( 1.0, writePointLambda );
 
-   e57::CompressedVectorWriter dataWriter = writer->SetUpData3DPointsData( cScanIndex1, cNumPoints, pointsData );
-
-   dataWriter.write( cNumPoints );
-   dataWriter.close();
+   writer->WriteData3DData( header, pointsData );
 
    // scan 2
    header.guid = "Multiple Scans Scan 2 Header GUID";
 
-   const int64_t cScanIndex2 = writer->NewData3D( header );
-
    i = 0;
    generateCubeCornerPoints( 0.5, writePointLambda );
 
-   dataWriter = writer->SetUpData3DPointsData( cScanIndex2, cNumPoints, pointsData );
-
-   dataWriter.write( cNumPoints );
-   dataWriter.close();
+   writer->WriteData3DData( header, pointsData );
 
    delete writer;
 }
@@ -416,8 +391,6 @@ TEST( SimpleWriter, CartesianPoints )
    header.pointFields.cartesianYField = true;
    header.pointFields.cartesianZField = true;
 
-   const int64_t scanIndex = writer->NewData3D( header );
-
    e57::Data3DPointsData pointsData( header );
 
    for ( int64_t i = 0; i < cNumPoints; ++i )
@@ -428,10 +401,7 @@ TEST( SimpleWriter, CartesianPoints )
       pointsData.cartesianZ[i] = floati;
    }
 
-   e57::CompressedVectorWriter dataWriter = writer->SetUpData3DPointsData( scanIndex, cNumPoints, pointsData );
-
-   dataWriter.write( cNumPoints );
-   dataWriter.close();
+   writer->WriteData3DData( header, pointsData );
 
    delete writer;
 }
@@ -453,8 +423,6 @@ TEST( SimpleWriter, ColouredCartesianPoints )
 
    setUsingColouredCartesianPoints( header );
 
-   const int64_t scanIndex = writer->NewData3D( header );
-
    e57::Data3DPointsData pointsData( header );
 
    for ( int64_t i = 0; i < cNumPoints; ++i )
@@ -469,10 +437,7 @@ TEST( SimpleWriter, ColouredCartesianPoints )
       pointsData.colorBlue[i] = 255;
    }
 
-   e57::CompressedVectorWriter dataWriter = writer->SetUpData3DPointsData( scanIndex, cNumPoints, pointsData );
-
-   dataWriter.write( cNumPoints );
-   dataWriter.close();
+   writer->WriteData3DData( header, pointsData );
 
    delete writer;
 }
@@ -509,9 +474,7 @@ TEST( SimpleWriterData, VisualRefImage )
    image2DHeader.visualReferenceRepresentation.imageHeight = 300;
    image2DHeader.visualReferenceRepresentation.jpegImageSize = cImageSize;
 
-   int64_t imageIndex = writer->NewImage2D( image2DHeader );
-
-   writer->WriteImage2DData( imageIndex, e57::E57_JPEG_IMAGE, e57::E57_VISUAL, imageBuffer, 0, cImageSize );
+   writer->WriteImage2DData( image2DHeader, e57::E57_JPEG_IMAGE, e57::E57_VISUAL, 0, imageBuffer, cImageSize );
 
    delete[] imageBuffer;
 

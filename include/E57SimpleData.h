@@ -438,9 +438,8 @@ namespace e57
       PointGroupingSchemes pointGroupingSchemes;    //!< The defined schemes that group points in different ways
       PointStandardizedFieldsAvailable pointFields; //!< The active fields used in the WritePoints function.
 
-      //! Total size of the compressed vector of PointRecord structures referring to the binary data that actually
-      //! stores the point data
-      int64_t pointsSize = 0;
+      //! The number of points in the Data3D.
+      int64_t pointCount = 0;
    };
 
    //! @brief Stores pointers to user-provided buffers

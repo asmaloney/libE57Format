@@ -31,11 +31,11 @@ namespace e57
    template <typename COORDTYPE>
    Data3DPointsData_t<COORDTYPE>::Data3DPointsData_t( Data3D &data3D ) : _selfAllocated( true )
    {
-      const auto cSize = data3D.pointsSize;
+      const auto cPointCount = data3D.pointCount;
 
-      if ( cSize < 1 )
+      if ( cPointCount < 1 )
       {
-         throw E57_EXCEPTION2( E57_ERROR_VALUE_OUT_OF_BOUNDS, "pointsSize=" + toString( cSize ) + " minimum=1" );
+         throw E57_EXCEPTION2( E57_ERROR_VALUE_OUT_OF_BOUNDS, "pointCount=" + toString( cPointCount ) + " minimum=1" );
       }
 
       // We need to adjust min/max for floats.
@@ -51,117 +51,117 @@ namespace e57
 
       if ( data3D.pointFields.cartesianXField )
       {
-         cartesianX = new COORDTYPE[cSize];
+         cartesianX = new COORDTYPE[cPointCount];
       }
 
       if ( data3D.pointFields.cartesianYField )
       {
-         cartesianY = new COORDTYPE[cSize];
+         cartesianY = new COORDTYPE[cPointCount];
       }
 
       if ( data3D.pointFields.cartesianZField )
       {
-         cartesianZ = new COORDTYPE[cSize];
+         cartesianZ = new COORDTYPE[cPointCount];
       }
 
       if ( data3D.pointFields.cartesianInvalidStateField )
       {
-         cartesianInvalidState = new int8_t[cSize];
+         cartesianInvalidState = new int8_t[cPointCount];
       }
 
       if ( data3D.pointFields.intensityField )
       {
-         intensity = new float[cSize];
+         intensity = new float[cPointCount];
       }
 
       if ( data3D.pointFields.isIntensityInvalidField )
       {
-         isIntensityInvalid = new int8_t[cSize];
+         isIntensityInvalid = new int8_t[cPointCount];
       }
 
       if ( data3D.pointFields.colorRedField )
       {
-         colorRed = new uint8_t[cSize];
+         colorRed = new uint8_t[cPointCount];
       }
 
       if ( data3D.pointFields.colorGreenField )
       {
-         colorGreen = new uint8_t[cSize];
+         colorGreen = new uint8_t[cPointCount];
       }
 
       if ( data3D.pointFields.colorBlueField )
       {
-         colorBlue = new uint8_t[cSize];
+         colorBlue = new uint8_t[cPointCount];
       }
 
       if ( data3D.pointFields.isColorInvalidField )
       {
-         isColorInvalid = new int8_t[cSize];
+         isColorInvalid = new int8_t[cPointCount];
       }
 
       if ( data3D.pointFields.sphericalRangeField )
       {
-         sphericalRange = new COORDTYPE[cSize];
+         sphericalRange = new COORDTYPE[cPointCount];
       }
 
       if ( data3D.pointFields.sphericalAzimuthField )
       {
-         sphericalAzimuth = new COORDTYPE[cSize];
+         sphericalAzimuth = new COORDTYPE[cPointCount];
       }
 
       if ( data3D.pointFields.sphericalElevationField )
       {
-         sphericalElevation = new COORDTYPE[cSize];
+         sphericalElevation = new COORDTYPE[cPointCount];
       }
 
       if ( data3D.pointFields.sphericalInvalidStateField )
       {
-         sphericalInvalidState = new int8_t[cSize];
+         sphericalInvalidState = new int8_t[cPointCount];
       }
 
       if ( data3D.pointFields.rowIndexField )
       {
-         rowIndex = new int32_t[cSize];
+         rowIndex = new int32_t[cPointCount];
       }
 
       if ( data3D.pointFields.columnIndexField )
       {
-         columnIndex = new int32_t[cSize];
+         columnIndex = new int32_t[cPointCount];
       }
 
       if ( data3D.pointFields.returnIndexField )
       {
-         returnIndex = new int8_t[cSize];
+         returnIndex = new int8_t[cPointCount];
       }
 
       if ( data3D.pointFields.returnCountField )
       {
-         returnCount = new int8_t[cSize];
+         returnCount = new int8_t[cPointCount];
       }
 
       if ( data3D.pointFields.timeStampField )
       {
-         timeStamp = new double[cSize];
+         timeStamp = new double[cPointCount];
       }
 
       if ( data3D.pointFields.isTimeStampInvalidField )
       {
-         isTimeStampInvalid = new int8_t[cSize];
+         isTimeStampInvalid = new int8_t[cPointCount];
       }
 
       if ( data3D.pointFields.normalXField )
       {
-         normalX = new float[cSize];
+         normalX = new float[cPointCount];
       }
 
       if ( data3D.pointFields.normalYField )
       {
-         normalY = new float[cSize];
+         normalY = new float[cPointCount];
       }
 
       if ( data3D.pointFields.normalZField )
       {
-         normalZ = new float[cSize];
+         normalZ = new float[cPointCount];
       }
    }
 

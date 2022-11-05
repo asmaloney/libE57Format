@@ -70,7 +70,7 @@
 #include "CheckedFile.h"
 #include "StringFunctions.h"
 
-//#define E57_CHECK_FILE_DEBUG
+// #define E57_CHECK_FILE_DEBUG
 #ifdef E57_CHECK_FILE_DEBUG
 #include <cassert>
 #endif
@@ -289,10 +289,10 @@ void CheckedFile::read( char *buf, size_t nRead, size_t /*bufSize*/ )
 
       switch ( checkSumPolicy_ )
       {
-         case CHECKSUM_POLICY_NONE:
+         case ChecksumPolicy::None:
             break;
 
-         case CHECKSUM_POLICY_ALL:
+         case ChecksumPolicy::All:
             verifyChecksum( page_buffer, page );
             break;
 

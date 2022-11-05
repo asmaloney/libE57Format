@@ -102,7 +102,7 @@ namespace e57
       uint64_t logicalLength_ = 0;
       uint64_t physicalLength_ = 0;
 
-      ReadChecksumPolicy checkSumPolicy_ = CHECKSUM_POLICY_ALL;
+      ReadChecksumPolicy checkSumPolicy_ = ChecksumPolicy::All;
 
       int fd_ = -1;
       BufferView *bufView_ = nullptr;

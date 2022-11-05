@@ -52,7 +52,7 @@ TEST( SimpleReaderData, BadCRC )
 
 TEST( SimpleReaderData, DoNotCheckCRC )
 {
-   E57_ASSERT_NO_THROW( e57::Reader( TestData::Path() + "/self/bad-crc.e57", { e57::CHECKSUM_POLICY_NONE } ) );
+   E57_ASSERT_NO_THROW( e57::Reader( TestData::Path() + "/self/bad-crc.e57", { e57::ChecksumPolicy::None } ) );
 }
 
 // https://github.com/asmaloney/libE57Format/issues/26

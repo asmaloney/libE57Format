@@ -151,7 +151,6 @@ existing E57 data file.
 
 @post    Resulting ImageFile is in @c open state if constructor succeeds (no
 exception thrown).
-@return  A smart ImageFile handle referencing the underlying object.
 @throw   ::E57_ERROR_BAD_API_ARGUMENT
 @throw   ::E57_ERROR_OPEN_FAILED
 @throw   ::E57_ERROR_LSEEK_FAILED

@@ -75,7 +75,6 @@ error to attempt to attach the StructureNode to a different ImageFile.
 true).
 @pre     The @a destImageFile must have been opened in write mode (i.e.
 destImageFile.isWritable() must be true).
-@return  A smart StructureNode handle referencing the underlying object.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     Node
@@ -343,7 +342,6 @@ exception is thrown. In designs that need to avoid the exception, use
 Node::type() to determine the actual type of the @a n before downcasting. This
 function must be explicitly called (c++ compiler cannot insert it
 automatically).
-@return  A smart StructureNode handle referencing the underlying object.
 @throw   ::E57_ERROR_BAD_NODE_DOWNCAST
 @see     Node::type(), StructureNode::operator Node()
 */

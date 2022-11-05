@@ -36,7 +36,7 @@ using namespace e57;
 
 /*!
 @class e57::ScaledIntegerNode
-@brief   An E57 element encoding a fixed point number.
+@brief An E57 element encoding a fixed point number.
 @details
 An ScaledIntegerNode is a terminal node (i.e. having no children) that holds a
 fixed point number encoded by an integer @c rawValue, a double precision
@@ -68,18 +68,18 @@ invariant is violated:
 */
 
 /*!
-@brief   Create an E57 element for storing a fixed point number.
-@param   [in] destImageFile   The ImageFile where the new node will eventually
+@brief Create an E57 element for storing a fixed point number.
+@param [in] destImageFile   The ImageFile where the new node will eventually
 be stored.
-@param   [in] rawValue  The raw integer value of the element.
-@param   [in] minimum   The smallest rawValue that the element may take.
-@param   [in] maximum   The largest rawValue that the element may take.
-@param   [in] scale     The scaling factor used to compute scaledValue from
+@param [in] rawValue  The raw integer value of the element.
+@param [in] minimum   The smallest rawValue that the element may take.
+@param [in] maximum   The largest rawValue that the element may take.
+@param [in] scale     The scaling factor used to compute scaledValue from
 rawValue.
-@param   [in] offset    The offset factor used to compute scaledValue from
+@param [in] offset    The offset factor used to compute scaledValue from
 rawValue.
 @details
-An ScaledIntegerNode stores an integer value, a lower and upper bound, and two
+A ScaledIntegerNode stores an integer value, a lower and upper bound, and two
 conversion factors. The ScaledIntegerNode class corresponds to the ASTM E57
 standard ScaledInteger element. See the class discussion at bottom of
 ScaledIntegerNode page for more details.
@@ -103,7 +103,6 @@ true).
 destImageFile.isWritable() must be true).
 @pre     minimum <= rawValue <= maximum
 @pre     scale != 0
-@return  A smart ScaledIntegerNode handle referencing the underlying object.
 @throw   ::E57_ERROR_BAD_API_ARGUMENT
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_FILE_IS_READ_ONLY
@@ -129,20 +128,20 @@ ScaledIntegerNode::ScaledIntegerNode( ImageFile destImageFile, int rawValue, int
 {
 }
 /*!
-@brief   This second constructor create an E57 element for storing a fixed point
+@brief This second constructor creates an E57 element for storing a fixed point
 number but does the scaling for you.
-@param   [in] destImageFile   The ImageFile where the new node will eventually
+@param [in] destImageFile   The ImageFile where the new node will eventually
 be stored.
-@param   [in] scaledValue     The scaled integer value of the element.
-@param   [in] scaledMinimum   The smallest scaledValue that the element may
+@param [in] scaledValue     The scaled integer value of the element.
+@param [in] scaledMinimum   The smallest scaledValue that the element may
 take.
-@param   [in] scaledMaximum   The largest scaledValue that the element may take.
-@param   [in] scale     The scaling factor used to compute scaledValue from
+@param [in] scaledMaximum   The largest scaledValue that the element may take.
+@param [in] scale     The scaling factor used to compute scaledValue from
 rawValue.
-@param   [in] offset    The offset factor used to compute scaledValue from
+@param [in] offset    The offset factor used to compute scaledValue from
 rawValue.
 @details
-An ScaledIntegerNode stores an integer value, a lower and upper bound, and two
+A ScaledIntegerNode stores an integer value, a lower and upper bound, and two
 conversion factors. This ScaledIntegerNode constructor calculates the rawValue,
 minimum, and maximum by doing the floor((scaledValue - offset)/scale + .5) on
 each scaled parameters.
@@ -158,7 +157,6 @@ true).
 destImageFile.isWritable() must be true).
 @pre     scaledMinimum <= scaledValue <= scaledMaximum
 @pre     scale != 0
-@return  A smart ScaledIntegerNode handle referencing the underlying object.
 @throw   ::E57_ERROR_BAD_API_ARGUMENT
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_FILE_IS_READ_ONLY
@@ -398,7 +396,6 @@ an exception is thrown. In designs that need to avoid the exception, use
 Node::type() to determine the actual type of the @a n before downcasting. This
 function must be explicitly called (c++ compiler cannot insert it
 automatically).
-@return  A smart ScaledIntegerNode handle referencing the underlying object.
 @throw   ::E57_ERROR_BAD_NODE_DOWNCAST
 @see     Node::type(), ScaledIntegerNode::operator, Node()
 */

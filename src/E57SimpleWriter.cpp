@@ -31,15 +31,14 @@
 
 namespace e57
 {
+   Writer::Writer( const ustring &filePath, const WriterOptions &options ) :
+      impl_( new WriterImpl( filePath, options ) )
+   {
+   }
 
    // Note that this constructor is deprecated (see header).
    Writer::Writer( const ustring &filePath, const ustring &coordinateMetadata ) :
       Writer( filePath, WriterOptions{ {}, coordinateMetadata } )
-   {
-   }
-
-   Writer::Writer( const ustring &filePath, const WriterOptions &options ) :
-      impl_( new WriterImpl( filePath, options ) )
    {
    }
 
@@ -111,5 +110,4 @@ namespace e57
    {
       return impl_->WriteData3DGroupsData( dataIndex, groupCount, idElementValue, startPointIndex, pointCount );
    }
-
 } // end namespace e57

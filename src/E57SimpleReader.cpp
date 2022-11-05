@@ -31,14 +31,13 @@
 
 namespace e57
 {
-
-   // Note that this constructor is deprecated (see header).
-   Reader::Reader( const ustring &filePath ) : Reader( filePath, {} )
+   Reader::Reader( const ustring &filePath, const ReaderOptions &options ) :
+      impl_( new ReaderImpl( filePath, options ) )
    {
    }
 
-   Reader::Reader( const ustring &filePath, const ReaderOptions &options ) :
-      impl_( new ReaderImpl( filePath, options ) )
+   // Note that this constructor is deprecated (see header).
+   Reader::Reader( const ustring &filePath ) : Reader( filePath, {} )
    {
    }
 
@@ -139,5 +138,4 @@ namespace e57
    {
       return impl_->SetUpData3DPointsData( dataIndex, pointCount, buffers );
    }
-
 } // end namespace e57

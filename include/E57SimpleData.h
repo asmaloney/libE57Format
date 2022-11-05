@@ -30,15 +30,16 @@
 
 #pragma once
 
-//! @file E57SimpleData.h Data structures for E57 Simple API
+//! @file
+//! @brief Data structures for E57 Simple API
 
 #include "E57Format.h"
 
 namespace e57
 {
-
    //! Indicates to use FloatNode instead of ScaledIntegerNode in fields that can use both.
    constexpr double E57_NOT_SCALED_USE_FLOAT = 0.0;
+
    //! Indicates to use ScaledIntegerNode instead of FloatNode in fields that can use both.
    constexpr double E57_NOT_SCALED_USE_INTEGER = -1.0;
 
@@ -58,6 +59,7 @@ namespace e57
       {
          return ( x == rhs.x ) && ( y == rhs.y ) && ( z == rhs.z );
       }
+
       bool operator!=( const Translation &rhs ) const
       {
          return !operator==( rhs );
@@ -81,6 +83,7 @@ namespace e57
       {
          return ( w == rhs.w ) && ( x == rhs.x ) && ( y == rhs.y ) && ( z == rhs.z );
       }
+
       bool operator!=( const Quaternion &rhs ) const
       {
          return !operator==( rhs );
@@ -102,6 +105,7 @@ namespace e57
       {
          return ( rotation == rhs.rotation ) && ( translation == rhs.translation );
       }
+
       bool operator!=( const RigidBodyTransform &rhs ) const
       {
          return !operator==( rhs );
@@ -128,6 +132,7 @@ namespace e57
          return ( xMinimum == rhs.xMinimum ) && ( xMaximum == rhs.xMaximum ) && ( yMinimum == rhs.yMinimum ) &&
                 ( yMaximum == rhs.yMaximum ) && ( zMinimum == rhs.zMinimum ) && ( zMaximum == rhs.zMaximum );
       }
+
       bool operator!=( const CartesianBounds &rhs ) const
       {
          return !operator==( rhs );
@@ -151,6 +156,7 @@ namespace e57
                 ( elevationMinimum == rhs.elevationMinimum ) && ( elevationMaximum == rhs.elevationMaximum ) &&
                 ( azimuthStart == rhs.azimuthStart ) && ( azimuthEnd == rhs.azimuthEnd );
       }
+
       bool operator!=( const SphericalBounds &rhs ) const
       {
          return !operator==( rhs );
@@ -175,6 +181,7 @@ namespace e57
                 ( columnMinimum == rhs.columnMinimum ) && ( columnMaximum == rhs.columnMaximum ) &&
                 ( returnMinimum == rhs.returnMinimum ) && ( returnMaximum == rhs.returnMaximum );
       }
+
       bool operator!=( const IndexBounds &rhs ) const
       {
          return !operator==( rhs );
@@ -191,6 +198,7 @@ namespace e57
       {
          return ( intensityMinimum == rhs.intensityMinimum ) && ( intensityMaximum == rhs.intensityMaximum );
       }
+
       bool operator!=( const IntensityLimits &rhs ) const
       {
          return !operator==( rhs );
@@ -215,6 +223,7 @@ namespace e57
                 ( colorGreenMinimum == rhs.colorGreenMinimum ) && ( colorGreenMaximum == rhs.colorGreenMaximum ) &&
                 ( colorBlueMinimum == rhs.colorBlueMinimum ) && ( colorBlueMaximum == rhs.colorBlueMaximum );
       }
+
       bool operator!=( const ColorLimits &rhs ) const
       {
          return !operator==( rhs );
@@ -237,6 +246,7 @@ namespace e57
       {
          return ( dateTimeValue == rhs.dateTimeValue ) && ( isAtomicClockReferenced == rhs.isAtomicClockReferenced );
       }
+
       bool operator!=( const DateTime &rhs ) const
       {
          return !operator==( rhs );
@@ -551,6 +561,7 @@ namespace e57
                 ( imageMaskSize == rhs.imageMaskSize ) && ( imageWidth == rhs.imageWidth ) &&
                 ( imageHeight == rhs.imageHeight );
       }
+
       bool operator!=( const VisualReferenceRepresentation &rhs ) const
       {
          return !operator==( rhs );
@@ -582,6 +593,7 @@ namespace e57
                 ( pixelWidth == rhs.pixelWidth ) && ( pixelHeight == rhs.pixelHeight ) &&
                 ( principalPointX == rhs.principalPointX ) && ( principalPointY == rhs.principalPointY );
       }
+
       bool operator!=( const PinholeRepresentation &rhs ) const
       {
          return !operator==( rhs );
@@ -606,6 +618,7 @@ namespace e57
                 ( imageHeight == rhs.imageHeight ) && ( pixelWidth == rhs.pixelWidth ) &&
                 ( pixelHeight == rhs.pixelHeight );
       }
+
       bool operator!=( const SphericalRepresentation &rhs ) const
       {
          return !operator==( rhs );
@@ -639,6 +652,7 @@ namespace e57
                 ( pixelHeight == rhs.pixelHeight ) && ( radius == rhs.radius ) &&
                 ( principalPointY == rhs.principalPointY );
       }
+
       bool operator!=( const CylindricalRepresentation &rhs ) const
       {
          return !operator==( rhs );
@@ -696,5 +710,4 @@ namespace e57
       E57_SPHERICAL = 3,     //!< SphericalRepresentation for the image data
       E57_CYLINDRICAL = 4    //!< CylindricalRepresentation for the image data
    };
-
 } // end namespace e57

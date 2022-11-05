@@ -30,13 +30,16 @@
 
 #pragma once
 
-//! @file E57SimpleWriter.h E57 Simple API for writing E57 with support for the
-//! [E57_EXT_surface_normals](http://www.libe57.org/E57_EXT_surface_normals.txt) extension.
+//! @file
+//! @brief E57 Simple API for writing E57.
+//! @details This includes support for the [E57_EXT_surface_normals](http://www.libe57.org/E57_EXT_surface_normals.txt)
+//! extension.
 
 #include "E57SimpleData.h"
 
 namespace e57
 {
+   //! Options to the Writer constructor
    struct E57_DLL WriterOptions
    {
       ustring guid;               //!< Optional file guid
@@ -50,7 +53,12 @@ namespace e57
    class E57_DLL Writer
    {
    public:
-      //! @brief This function is the constructor for the writer class
+      //! @brief Writer constructor
+      //! @param [in] filePath Path to E57 file
+      //! @param [in] options Options to be used for the file
+      Writer( const ustring &filePath, const WriterOptions &options );
+
+      //! @brief Writer constructor (deprecated)
       //! @param [in] filePath Path to E57 file
       //! @param [in] coordinateMetadata Information describing the Coordinate Reference System to be used for the file
       //! @deprecated Will be removed in 4.0. Use Writer( const ustring &filePath, const WriterOptions &options )
@@ -58,27 +66,22 @@ namespace e57
       [[deprecated( "Will be removed in 4.0. Use Writer( ustring, WriterOptions )." )]] // TODO Remove in 4.0
       explicit Writer( const ustring &filePath, const ustring &coordinateMetadata = {} );
 
-      //! @brief This function is the constructor for the writer class
-      //! @param [in] filePath Path to E57 file
-      //! @param [in] options Options to be used for the file
-      Writer( const ustring &filePath, const WriterOptions &options );
-
-      //! @brief This function returns true if the file is open
+      //! @brief Returns true if the file is open
       bool IsOpen() const;
 
-      //! @brief This function closes the file
+      //! @brief Closes the file
       bool Close();
 
       //! @name Image2D
       //!@{
 
-      //! @brief This function writes a new Image2D header
+      //! @brief Writes a new Image2D header
       //! @details The user needs to config a Image2D structure with all the camera information before making this call.
       //! @param [in,out] image2DHeader header metadata
       //! @return Returns the image2D index
       int64_t NewImage2D( Image2D &image2DHeader );
 
-      //! @brief This function writes the actual image data
+      //! @brief Writes the actual image data
       //! @param [in] imageIndex picture block index given by the NewImage2D
       //! @param [in] imageType identifies the image format desired.
       //! @param [in] imageProjection identifies the projection desired.
@@ -94,14 +97,14 @@ namespace e57
       //! @name Data3D
       //!@{
 
-      //! @brief This function writes new Data3D header
+      //! @brief Writes new Data3D header
       //! @details The user needs to config a Data3D structure with all the scanning information before making this
       //! call.
       //! @param [in,out] data3DHeader scan metadata
       //! @return Returns the index of the new scan's data3D block.
       int64_t NewData3D( Data3D &data3DHeader );
 
-      //! @brief This function setups a writer to write the actual scan data
+      //! @brief Sets up a writer to write the actual scan data
       //! @param [in] dataIndex index returned by NewData3D
       //! @param [in] pointCount Number of points to write (number of elements in each of the buffers)
       //! @param [in] buffers pointers to user-provided buffers
@@ -109,15 +112,11 @@ namespace e57
       CompressedVectorWriter SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
                                                     const Data3DPointsData &buffers );
 
-      //! @brief This function setups a writer to write the actual scan data
-      //! @param [in] dataIndex index returned by NewData3D
-      //! @param [in] pointCount Number of points to write (number of elements in each of the buffers)
-      //! @param [in] buffers pointers to user-provided buffers
-      //! @return returns a vector writer setup to write the selected scan data
+      //! @overload
       CompressedVectorWriter SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
                                                     const Data3DPointsData_d &buffers );
 
-      //! @brief This function writes out the group data
+      //! @brief Writes out the group data
       //! @param [in] dataIndex data block index given by the NewData3D
       //! @param [in] groupCount size of each of the buffers given
       //! @param [in] idElementValue buffer with idElementValue indices for this group
@@ -132,13 +131,13 @@ namespace e57
       //! @name Foundation API file information
       //!@{
 
-      //! @brief This function returns the file raw E57Root Structure Node
+      //! @brief Returns the file raw E57Root Structure Node
       StructureNode GetRawE57Root();
-      //! @brief This function returns the raw Data3D Vector Node
+      //! @brief Returns the raw Data3D Vector Node
       VectorNode GetRawData3D();
-      //! @brief This function returns the raw Image2D Vector Node
+      //! @brief Returns the raw Image2D Vector Node
       VectorNode GetRawImages2D();
-      //! @brief This function returns the ram ImageFile Node which is need to add enhancements
+      //! @brief Returns the ram ImageFile Node which is need to add enhancements
       ImageFile GetRawIMF();
 
       //!@}

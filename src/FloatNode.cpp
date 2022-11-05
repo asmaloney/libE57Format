@@ -113,7 +113,6 @@ true).
 @pre     The @a destImageFile must have been opened in write mode (i.e.
 destImageFile.isWritable() must be true).
 @pre     minimum <= value <= maximum
-@return  A smart FloatNode handle referencing the underlying object.
 @throw   ::E57_ERROR_BAD_API_ARGUMENT
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_FILE_IS_READ_ONLY
@@ -309,7 +308,6 @@ exception is thrown. In designs that need to avoid the exception, use
 Node::type() to determine the actual type of the @a n before downcasting. This
 function must be explicitly called (c++ compiler cannot insert it
 automatically).
-@return  A smart FloatNode handle referencing the underlying object.
 @throw   ::E57_ERROR_BAD_NODE_DOWNCAST
 @see     Node::type(), FloatNode::operator Node()
 */

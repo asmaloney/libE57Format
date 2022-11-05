@@ -116,7 +116,6 @@ participate in a transfer with a CompressedVectorNode.
 @pre     The @a destImageFile must be open (i.e. destImageFile.isOpen() must be
 true).
 @pre     The stride must be >= sizeof(*b)
-@return  A smart SourceDestBuffer handle referencing the underlying object.
 @throw   ::E57_ERROR_BAD_API_ARGUMENT
 @throw   ::E57_ERROR_BAD_PATH_NAME
 @throw   ::E57_ERROR_BAD_BUFFER
@@ -246,7 +245,6 @@ Foundation Implementation cannot detect that the buffer been destroyed).
 @pre     b.size() must be > 0.
 @pre     The @a destImageFile must be open (i.e. destImageFile.isOpen() must be
 true).
-@return  A smart SourceDestBuffer handle referencing the underlying object.
 @throw   ::E57_ERROR_BAD_API_ARGUMENT
 @throw   ::E57_ERROR_BAD_PATH_NAME
 @throw   ::E57_ERROR_BAD_BUFFER

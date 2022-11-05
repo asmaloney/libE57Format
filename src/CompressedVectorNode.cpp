@@ -142,7 +142,6 @@ destImageFile.isWritable() must be true).
 codecs.isRoot())
 @post    prototype.isAttached()
 @post    codecs.isAttached()
-@return  A smart CompressedVectorNode handle referencing the underlying object.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_FILE_IS_READ_ONLY
 @throw   ::E57_ERROR_BAD_PROTOTYPE
@@ -351,7 +350,6 @@ otherwise an exception is thrown. In designs that need to avoid the exception,
 use Node::type() to determine the actual type of the @a n before downcasting.
 This function must be explicitly called (c++ compiler cannot insert it
 automatically).
-@return  A smart CompressedVectorNode handle referencing the underlying object.
 @throw   ::E57_ERROR_BAD_NODE_DOWNCAST
 @see     Node::type(), CompressedVectorNode::operator, Node()
 */

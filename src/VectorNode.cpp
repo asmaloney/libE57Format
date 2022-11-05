@@ -95,7 +95,6 @@ VectorNode are completely unconstrained.
 true).
 @pre     The @a destImageFile must have been opened in write mode (i.e.
 destImageFile.isWritable() must be true).
-@return  A smart VectorNode handle referencing the underlying object.
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     Node, VectorNode::allowHeteroChildren, ::E57_ERROR_HOMOGENEOUS_VIOLATION
@@ -370,7 +369,6 @@ exception is thrown. In designs that need to avoid the exception, use
 Node::type() to determine the actual type of the @a n before downcasting. This
 function must be explicitly called (c++ compiler cannot insert it
 automatically).
-@return  A smart VectorNode handle referencing the underlying object.
 @throw   ::E57_ERROR_BAD_NODE_DOWNCAST
 @see     Node::type(), VectorNode::operator Node()
 */

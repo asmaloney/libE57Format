@@ -89,18 +89,46 @@ namespace e57
       E57_USTRING = 11 //!< Unicode UTF-8 std::string
    };
 
+   //! @brief Default checksum policies for e57::ReadChecksumPolicy
+   //! @details These are some convenient default checksum policies, though you can use any value you want (0-100).
+   enum ChecksumPolicy
+   {
+      None = 0,    ///< Do not verify the checksums. (fast)
+      Sparse = 25, ///< Only verify 25% of the checksums. The last block is always verified.
+      Half = 50,   ///< Only verify 50% of the checksums. The last block is always verified.
+      All = 100    ///< Verify all checksums. This is the default. (slow)
+   };
+
    //! @brief Specifies the percentage of checksums which are verified when reading
    //! an ImageFile (0-100%).
+   //! @see e57::ChecksumPolicy
    using ReadChecksumPolicy = int;
 
+   //! @name Deprecated Checksum Policies
+   //! These have been replaced by the enum e57::ChecksumPolicy.
+   //!@{
+
    //! Do not verify the checksums. (fast)
+   //! @deprecated Will be removed in 4.0. Use ChecksumPolicy::None.
+   [[deprecated( "Will be removed in 4.0. Use ChecksumPolicy::None." )]] // TODO Remove in 4.0
    constexpr ReadChecksumPolicy CHECKSUM_POLICY_NONE = 0;
+
    //! Only verify 25% of the checksums. The last block is always verified.
+   //! @deprecated Will be removed in 4.0. Use ChecksumPolicy::Sparse.
+   [[deprecated( "Will be removed in 4.0. Use ChecksumPolicy::Sparse." )]] // TODO Remove in 4.0
    constexpr ReadChecksumPolicy CHECKSUM_POLICY_SPARSE = 25;
+
    //! Only verify 50% of the checksums. The last block is always verified.
+   //! @deprecated Will be removed in 4.0. Use ChecksumPolicy::Half.
+   [[deprecated( "Will be removed in 4.0. Use ChecksumPolicy::Half." )]] // TODO Remove in 4.0
    constexpr ReadChecksumPolicy CHECKSUM_POLICY_HALF = 50;
+
    //! Verify all checksums. This is the default. (slow)
+   //! @deprecated Will be removed in 4.0. Use ChecksumPolicy::All.
+   [[deprecated( "Will be removed in 4.0. Use ChecksumPolicy::All." )]] // TODO Remove in 4.0
    constexpr ReadChecksumPolicy CHECKSUM_POLICY_ALL = 100;
+
+   //!@}
 
    //! @brief The URI of ASTM E57 v1.0 standard XML namespace
    //! Note that even though this URI does not point to a valid document, the standard (section 8.4.2.3)
@@ -641,8 +669,8 @@ protected:                                                                      
    {
    public:
       ImageFile() = delete;
-      ImageFile( const ustring &fname, const ustring &mode, ReadChecksumPolicy checksumPolicy = CHECKSUM_POLICY_ALL );
-      ImageFile( const char *input, uint64_t size, ReadChecksumPolicy checksumPolicy = CHECKSUM_POLICY_ALL );
+      ImageFile( const ustring &fname, const ustring &mode, ReadChecksumPolicy checksumPolicy = ChecksumPolicy::All );
+      ImageFile( const char *input, uint64_t size, ReadChecksumPolicy checksumPolicy = ChecksumPolicy::All );
 
       StructureNode root() const;
       void close();

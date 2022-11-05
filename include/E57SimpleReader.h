@@ -43,7 +43,7 @@ namespace e57
    struct E57_DLL ReaderOptions
    {
       //! Set how frequently to verify the checksums (see ReadChecksumPolicy).
-      ReadChecksumPolicy checksumPolicy = CHECKSUM_POLICY_ALL;
+      ReadChecksumPolicy checksumPolicy = ChecksumPolicy::All;
    };
 
    //! @brief Used for reading an E57 file using E57 Simple API.

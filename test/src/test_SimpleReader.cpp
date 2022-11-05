@@ -214,3 +214,42 @@ TEST( SimpleReaderData, BunnyInt32 )
 
    delete reader;
 }
+
+TEST( SimpleReaderData, ColourRepresentation )
+{
+   e57::Reader *reader = nullptr;
+
+   E57_ASSERT_NO_THROW( reader =
+                           new e57::Reader( TestData::Path() + "/3rdParty/las2e57/ColourRepresentation.e57", {} ) );
+
+   ASSERT_TRUE( reader->IsOpen() );
+   EXPECT_EQ( reader->GetImage2DCount(), 0 );
+   ASSERT_EQ( reader->GetData3DCount(), 1 );
+
+   e57::E57Root fileHeader;
+   ASSERT_TRUE( reader->GetE57Root( fileHeader ) );
+
+   CheckFileHeader( fileHeader );
+   EXPECT_EQ( fileHeader.guid, "6107aa44-6289-4e9c-80bd-f36cc3fbd44b" );
+
+   e57::Data3D data3DHeader;
+   ASSERT_TRUE( reader->ReadData3D( 0, data3DHeader ) );
+
+   ASSERT_EQ( data3DHeader.pointCount, 153 );
+   EXPECT_EQ( data3DHeader.guid, "98d85152-82b3-4120-b06e-0c1bb10b6dec" );
+
+   const uint64_t cNumPoints = data3DHeader.pointCount;
+
+   e57::Data3DPointsData pointsData( data3DHeader );
+
+   auto vectorReader = reader->SetUpData3DPointsData( 0, cNumPoints, pointsData );
+
+   uint64_t cNumRead = 0;
+   E57_ASSERT_NO_THROW( cNumRead = vectorReader.read() );
+
+   vectorReader.close();
+
+   EXPECT_EQ( cNumRead, cNumPoints );
+
+   delete reader;
+}

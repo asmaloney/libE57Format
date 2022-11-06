@@ -1,0 +1,4 @@
+name: win-build-env
+dependencies:
+  - ninja=1.11.0
+  - xerces-c=3.2.4

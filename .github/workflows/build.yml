@@ -51,16 +51,24 @@ jobs:
 
           sudo apt-get install -y libxerces-c-dev ninja-build
 
+      - name: Cache miniconda (Windows)
+        if: matrix.config.os == 'windows-latest'
+        uses: actions/cache@v3
+        env:
+          CACHE_NUMBER: 0 # Increase this value to reset cache if environment.yml has not changed
+        with:
+          path: ~/conda_pkgs_dir
+          key:
+            ${{ runner.os }}-conda-${{ env.CACHE_NUMBER }}-${{ hashFiles('.github/conda/environment.yml') }}
+
       - name: Setup miniconda (Windows)
         if: matrix.config.os == 'windows-latest'
         uses: conda-incubator/setup-miniconda@v2
         with:
           channels: conda-forge
-
-      - name: Install Dependencies (Windows)
-        if: matrix.config.os == 'windows-latest'
-        run: |
-          conda install -y ninja xerces-c
+          activate-environment: win-build-env
+          environment-file: .github/conda/environment.yml
+          use-only-tar-bz2: true # IMPORTANT: Needs to be set for caching to work properly
 
       - name: Configure MSVC console (Windows)
         if: matrix.config.os == 'windows-latest'

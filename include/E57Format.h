@@ -131,7 +131,7 @@ namespace e57
    //!@}
 
    //! @brief The URI of ASTM E57 v1.0 standard XML namespace
-   //! Note that even though this URI does not point to a valid document, the standard (section 8.4.2.3)
+   //! @note Even though this URI does not point to a valid document, the standard (section 8.4.2.3)
    //! says that this is the required namespace.
    constexpr char E57_V1_0_URI[] = "http://www.astm.org/COMMIT/E57/2010-e57-v1.0";
 
@@ -162,7 +162,7 @@ namespace e57
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't
 //! documented.
-// Internal implementation files should include E57FormatImpl.h first which
+// Internal implementation files should include Common.h first which
 // defines symbol E57_INTERNAL_IMPLEMENTATION_ENABLE. Normal API users should
 // not define this symbol. Basically the internal version allows access to the
 // pointer to the implementation (impl_)

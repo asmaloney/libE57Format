@@ -138,6 +138,7 @@ namespace e57
       checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
       return ( minimum_ );
    }
+
    double ScaledIntegerNodeImpl::scaledMinimum()
    {
       checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
@@ -149,6 +150,7 @@ namespace e57
       checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
       return ( maximum_ );
    }
+
    double ScaledIntegerNodeImpl::scaledMaximum()
    {
       checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );

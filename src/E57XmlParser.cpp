@@ -99,7 +99,9 @@ public:
    {
       return ( logicalPosition_ );
    }
+
    XMLSize_t readBytes( XMLByte *const toFill, XMLSize_t maxToRead ) override;
+
    const XMLCh *getContentType() const override
    {
       return nullptr;

@@ -41,6 +41,7 @@ namespace e57
       {
          return E57_BLOB;
       }
+
       bool isTypeEquivalent( NodeImplSharedPtr ni ) override;
       bool isDefined( const ustring &pathName ) override;
 

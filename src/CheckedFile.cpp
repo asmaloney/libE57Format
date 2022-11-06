@@ -456,7 +456,9 @@ uint64_t CheckedFile::lseek64( int64_t offset, int whence )
                           // triggered (cygwin != WIN32)?
 #ifdef E57_MAX_DEBUG
    if ( sizeof( off_t ) != sizeof( offset ) )
+   {
       throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "sizeof(off_t)=" + toString( sizeof( off_t ) ) );
+   }
 #endif
    int64_t result = ::lseek( fd_, offset, whence );
 #else

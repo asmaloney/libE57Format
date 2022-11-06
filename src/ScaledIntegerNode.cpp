@@ -115,18 +115,21 @@ ScaledIntegerNode::ScaledIntegerNode( ImageFile destImageFile, int64_t rawValue,
    impl_( new ScaledIntegerNodeImpl( destImageFile.impl(), rawValue, minimum, maximum, scale, offset ) )
 {
 }
+
 ScaledIntegerNode::ScaledIntegerNode( ImageFile destImageFile, int rawValue, int64_t minimum, int64_t maximum,
                                       double scale, double offset ) :
    impl_( new ScaledIntegerNodeImpl( destImageFile.impl(), static_cast<int64_t>( rawValue ), minimum, maximum, scale,
                                      offset ) )
 {
 }
+
 ScaledIntegerNode::ScaledIntegerNode( ImageFile destImageFile, int rawValue, int minimum, int maximum, double scale,
                                       double offset ) :
    impl_( new ScaledIntegerNodeImpl( destImageFile.impl(), static_cast<int64_t>( rawValue ),
                                      static_cast<int64_t>( minimum ), static_cast<int64_t>( maximum ), scale, offset ) )
 {
 }
+
 /*!
 @brief This second constructor creates an E57 element for storing a fixed point
 number but does the scaling for you.
@@ -169,6 +172,7 @@ ScaledIntegerNode::ScaledIntegerNode( ImageFile destImageFile, double scaledValu
    impl_( new ScaledIntegerNodeImpl( destImageFile.impl(), scaledValue, scaledMinimum, scaledMaximum, scale, offset ) )
 {
 }
+
 //! @brief   Is this a root node.
 //! @copydetails Node::isRoot()
 bool ScaledIntegerNode::isRoot() const
@@ -254,6 +258,7 @@ int64_t ScaledIntegerNode::minimum() const
 {
    return impl_->minimum();
 }
+
 /*!
 @brief   Get the declared scaled minimum that the scaled value may take.
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
@@ -267,6 +272,7 @@ double ScaledIntegerNode::scaledMinimum() const
 {
    return impl_->scaledMinimum();
 }
+
 /*!
 @brief   Get the declared maximum that the raw value may take.
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
@@ -280,6 +286,7 @@ int64_t ScaledIntegerNode::maximum() const
 {
    return impl_->maximum();
 }
+
 /*!
 @brief   Get the declared scaled maximum that the scaled value may take.
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
@@ -293,6 +300,7 @@ double ScaledIntegerNode::scaledMaximum() const // Added by SC
 {
    return impl_->scaledMaximum();
 }
+
 /*!
 @brief   Get declared scaling factor.
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).

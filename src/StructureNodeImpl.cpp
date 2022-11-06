@@ -121,6 +121,7 @@ int64_t StructureNodeImpl::childCount() const
 
    return children_.size();
 }
+
 NodeImplSharedPtr StructureNodeImpl::get( int64_t index )
 {
    checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );

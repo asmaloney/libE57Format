@@ -670,7 +670,9 @@ template <typename RegisterT> uint64_t BitpackIntegerEncoder<RegisterT>::process
    /// Double check that register will hold at least one input records worth of
    /// bits
    if ( 8 * sizeof( RegisterT ) < bitsPerRecord_ )
+   {
       throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "bitsPerRecord=" + toString( bitsPerRecord_ ) );
+   }
 #endif
 
    /// Before we add any more, try to shift current contents of outBuffer_ down

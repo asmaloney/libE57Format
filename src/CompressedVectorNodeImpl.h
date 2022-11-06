@@ -40,6 +40,7 @@ namespace e57
       {
          return E57_COMPRESSED_VECTOR;
       }
+
       bool isTypeEquivalent( NodeImplSharedPtr ni ) override;
       bool isDefined( const ustring &pathName ) override;
       void setAttachedRecursive() override;
@@ -64,14 +65,17 @@ namespace e57
       {
          return ( recordCount_ );
       }
+
       uint64_t getBinarySectionLogicalStart() const
       {
          return ( binarySectionLogicalStart_ );
       }
+
       void setRecordCount( int64_t recordCount )
       {
          recordCount_ = recordCount;
       }
+
       void setBinarySectionLogicalStart( uint64_t binarySectionLogicalStart )
       {
          binarySectionLogicalStart_ = binarySectionLogicalStart;

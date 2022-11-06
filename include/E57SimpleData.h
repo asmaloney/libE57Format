@@ -326,8 +326,13 @@ namespace e57
       //! E57_FLOAT_MAX or E57_DOUBLE_MAX. If using a ScaledIntegerNode then this needs to be a maximum range value.
       double pointRangeMaximum = E57_DOUBLE_MAX;
 
-      //! Indicates that the PointRecord cartesian and range fields should be configured
-      //! as a ScaledIntegerNode with this scale setting. If E57_NOT_SCALED_USE_FLOAT, then use FloatNode.
+      //! @brief Controls the type of Node used for the PointRecord cartesian and range fields
+      //! @details The value determines which type of Node to use and whether to use floats or doubles.
+      //! Value | Node Type
+      //! -- | --
+      //! &lt; 0.0 | FloatNode using doubles
+      //! == 0.0 (e57::E57_NOT_SCALED_USE_FLOAT) | FloatNode using floats (@em default)
+      //! &gt; 0.0 | ScaledIntegerNode with the value as the scale setting
       double pointRangeScaledInteger = E57_NOT_SCALED_USE_FLOAT;
 
       //! Indicates that the PointRecord angle fields should be configured with this minimum value E57_FLOAT_MIN or
@@ -338,58 +343,74 @@ namespace e57
       //! E57_DOUBLE_MAX. If using a ScaledIntegerNode then this needs to be a maximum angle value.
       double angleMaximum = E57_DOUBLE_MAX;
 
-      //! Indicates that the PointRecord angle fields should be configured as a ScaledIntegerNode with this scale
-      //! setting. If E57_NOT_SCALED_USE_FLOAT, then use FloatNode.
+      //! @brief Controls the type of Node used for the PointRecord angle fields
+      //! @details The value determines which type of Node to use and whether to use floats or doubles.
+      //! Value | Node Type
+      //! -- | --
+      //! &lt; 0.0 | FloatNode using doubles
+      //! == 0.0 (e57::E57_NOT_SCALED_USE_FLOAT) | FloatNode using floats (@em default)
+      //! &gt; 0.0 | ScaledIntegerNode with the value as the scale setting
       double angleScaledInteger = E57_NOT_SCALED_USE_FLOAT;
 
-      bool rowIndexField = false; //!< Indicates that the PointRecord rowIndex field is active
+      bool rowIndexField = false; //!< Indicates that the PointRecord @a rowIndex field is active
 
-      //! Indicates that the PointRecord index fields should be configured with this maximum value where the minimum
-      //! will be set to 0.
+      //! Indicates that the PointRecord @a rowIndex fields should be configured with this maximum value where the
+      //! minimum will be set to 0.
       uint32_t rowIndexMaximum = E57_UINT32_MAX;
 
-      bool columnIndexField = false; //!< Indicates that the PointRecord columnIndex field is active
+      bool columnIndexField = false; //!< Indicates that the PointRecord @a columnIndex field is active
 
-      //! Indicates that the PointRecord index fields should be configured with this maximum value where the minimum
-      //! will be set to 0.
+      //! Indicates that the PointRecord @a columnIndex fields should be configured with this maximum value where the
+      //! minimum will be set to 0.
       uint32_t columnIndexMaximum = E57_UINT32_MAX;
 
-      bool returnIndexField = false;         //!< Indicates that the PointRecord returnIndex field is active
-      bool returnCountField = false;         //!< Indicates that the PointRecord returnCount field is active
+      bool returnIndexField = false;         //!< Indicates that the PointRecord @a returnIndex field is active
+      bool returnCountField = false;         //!< Indicates that the PointRecord @a returnCount field is active
       uint8_t returnMaximum = E57_UINT8_MAX; //!< Indicates that the PointRecord return fields should be configured
                                              //!< with this maximum value where the minimum will be set to 0.
 
-      bool timeStampField = false;          //!< Indicates that the PointRecord timeStamp field is active
-      bool isTimeStampInvalidField = false; //!< Indicates that the PointRecord isTimeStampInvalid field is active
+      bool timeStampField = false;          //!< Indicates that the PointRecord @a timeStamp field is active
+      bool isTimeStampInvalidField = false; //!< Indicates that the PointRecord @a isTimeStampInvalid field is active
 
-      //! Indicates that the PointRecord timeStamp fields should be configured with this minimum value e.g.
+      //! Indicates that the PointRecord @a timeStamp fields should be configured with this minimum value e.g.
       //! E57_UINT32_MIN, E57_DOUBLE_MIN or E57_DOUBLE_MIN. If using a ScaledIntegerNode then this needs to be a minimum
       //! time value.
       double timeMinimum = E57_DOUBLE_MIN;
 
-      //! Indicates that the PointRecord timeStamp fields should be configured with this maximum value. e.g.
+      //! Indicates that the PointRecord @a timeStamp fields should be configured with this maximum value. e.g.
       //! E57_UINT32_MAX, E57_DOUBLE_MAX or E57_DOUBLE_MAX.
       double timeMaximum = E57_DOUBLE_MAX;
 
-      //! Indicates that the PointRecord timeStamp fields should be configured as a ScaledIntegerNode with this scale
-      //! setting. If E57_NOT_SCALED_USE_FLOAT then use FloatNode, if E57_NOT_SCALED_USE_INTEGER use IntegerNode.
+      //! @brief Controls the type of Node used for the PointRecord @a timeStamp fields
+      //! @details The value determines which type of Node to use and whether to use floats or doubles.
+      //! Value  | Node Type
+      //! -- | --
+      //! &lt; 0.0 | IntegerNode
+      //! == 0.0 (e57::E57_NOT_SCALED_USE_FLOAT) | FloatNode using floats if (::timeMaximum == E57_FLOAT_MAX)
+      //! == 0.0 | FloatNode using doubles if (::timeMaximum == E57_DOUBLE_MAX) (@em default)
+      //! &gt; 0.0 | ScaledIntegerNode with the value as the scale setting
       double timeScaledInteger = E57_NOT_SCALED_USE_FLOAT;
 
-      bool intensityField = false;          //!< Indicates that the PointRecord intensity field is active
-      bool isIntensityInvalidField = false; //!< Indicates that the PointRecord isIntensityInvalid field is active
+      bool intensityField = false;          //!< Indicates that the PointRecord @a intensity field is active
+      bool isIntensityInvalidField = false; //!< Indicates that the PointRecord @a isIntensityInvalid field is active
 
-      //! Indicates that the PointRecord intensity fields should be configured as a  ScaledIntegerNode with this
-      //! setting. If E57_NOT_SCALED_USE_FLOAT then use FloatNode, if E57_NOT_SCALED_USE_INTEGER use IntegerNode
+      //! @brief Controls the type of Node used for the PointRecord @a intensity fields
+      //! @details The value determines which type of Node to use.
+      //! Value | Node Type
+      //! -- | --
+      //! &lt; 0.0 | IntegerNode
+      //! == 0.0 (e57::E57_NOT_SCALED_USE_FLOAT) | FloatNode using floats (@em default)
+      //! &gt; 0.0 | ScaledIntegerNode with the value as the scale setting
       double intensityScaledInteger = E57_NOT_SCALED_USE_INTEGER;
 
-      bool colorRedField = false;       //!< Indicates that the PointRecord colorRed field is active
-      bool colorGreenField = false;     //!< Indicates that the PointRecord colorGreen field is active
-      bool colorBlueField = false;      //!< Indicates that the PointRecord colorBlue field is active
-      bool isColorInvalidField = false; //!< Indicates that the PointRecord isColorInvalid field is active
+      bool colorRedField = false;       //!< Indicates that the PointRecord @a colorRed field is active
+      bool colorGreenField = false;     //!< Indicates that the PointRecord @a colorGreen field is active
+      bool colorBlueField = false;      //!< Indicates that the PointRecord @a colorBlue field is active
+      bool isColorInvalidField = false; //!< Indicates that the PointRecord @a isColorInvalid field is active
 
-      bool normalXField = false; //!< Indicates that the PointRecord nor:normalX field is active
-      bool normalYField = false; //!< Indicates that the PointRecord nor:normalY field is active
-      bool normalZField = false; //!< Indicates that the PointRecord nor:normalZ field is active
+      bool normalXField = false; //!< Indicates that the PointRecord @a nor:normalX field is active
+      bool normalYField = false; //!< Indicates that the PointRecord @a nor:normalY field is active
+      bool normalZField = false; //!< Indicates that the PointRecord @a nor:normalZ field is active
    };
 
    //! @brief Stores the top-level information for a single lidar scan

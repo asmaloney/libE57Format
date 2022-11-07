@@ -51,6 +51,8 @@ jobs:
 
           sudo apt-get install -y libxerces-c-dev ninja-build
 
+          sudo locale-gen fr_FR
+
       - name: Cache miniconda (Windows)
         if: matrix.config.os == 'windows-latest'
         uses: actions/cache@v3
@@ -58,8 +60,7 @@ jobs:
           CACHE_NUMBER: 0 # Increase this value to reset cache if environment.yml has not changed
         with:
           path: ~/conda_pkgs_dir
-          key:
-            ${{ runner.os }}-conda-${{ env.CACHE_NUMBER }}-${{ hashFiles('.github/conda/environment.yml') }}
+          key: ${{ runner.os }}-conda-${{ env.CACHE_NUMBER }}-${{ hashFiles('.github/conda/environment.yml') }}
 
       - name: Setup miniconda (Windows)
         if: matrix.config.os == 'windows-latest'

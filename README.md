@@ -32,6 +32,8 @@ Versions of **libE57Format** started at 2.0.
 
 Since the original fork, [Jiri Hörner](https://github.com/ptc-jhoerner) has added the E57Simple API from the old reference implementation and updated it.
 
+This `Simple API` has evolved since this original port to fix some problems and to make it more foolproof & easier to use.
+
 ### Tools
 
 [Ryan Baumann](https://github.com/ryanfb) has updated the `e57unpack` and `e57validate` tools to work with **libE57Format**. You can find them in the [e57tools](https://github.com/ryanfb/e57tools) repo.

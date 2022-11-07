@@ -4,15 +4,18 @@ All notable changes to this project will be documented in this file. The format 
 
 ## 3.0.0 (in progress)
 
+There have been many changes around the `Simple API` in this release to fix some problems, avoid potential errors, and simplify the use of the API. Where possible these changes are marked as deprecated to be removed later. Others could not be deprecated and will require code changes. The notable ones are marked with 🚧 below.
+
 ### Added
 
+- Add `ImageFile::extensionsLookupPrefix()` overload for more concise user code ([#161](https://github.com/asmaloney/libE57Format/pull/161)).
 - Added a constructor & destructor for **E57SimpleData**'s `Data3DPointsData_t`. This will create all the required buffers based on an `e57::Data3D` struct and handle their cleanup. See the `SimpleWriter` tests for examples. ([#149](https://github.com/asmaloney/libE57Format/pull/149))
 - A new **E57SimpleReader** constructor takes a `ReaderOptions` struct which allows setting the checksum policy.
   ```cpp
   Reader( const ustring &filePath, const ReaderOptions &options );
   ```
   The old constructor taking only `filePath` is deprecated and will be removed in the future. ([#139](https://github.com/asmaloney/libE57Format/pull/139))
-- Added testing using [GoogleTest](https://github.com/google/googletest). For details, please see [test/README.md](test/README.md) ([#121](https://github.com/asmaloney/libE57Format/pull/121))
+- {test} Added testing using [GoogleTest](https://github.com/google/googletest). For details, please see [test/README.md](test/README.md) ([#121](https://github.com/asmaloney/libE57Format/pull/121))
 - Added `E57Exception::errorStr()` to get the error string directly. ([#128](https://github.com/asmaloney/libE57Format/pull/128))
 - {cmake} Use [ccache](https://ccache.dev/) if available. ([#129](https://github.com/asmaloney/libE57Format/pull/129))
 - {ci} Added a CI check for proper clang-formatted code. ([#125](https://github.com/asmaloney/libE57Format/pull/125))
@@ -20,7 +23,20 @@ All notable changes to this project will be documented in this file. The format 
 ### Changed
 
 - Now requires a [C++14](https://en.cppreference.com/w/cpp/14) compatible compiler.
-- Renamed the [E57_EXT_surface_normals](http://www.libe57.org/E57_EXT_surface_normals.txt) extension's fields in **E57SimpleData**'s `PointStandardizedFieldsAvailable` to be in line with existing code. ([#149](https://github.com/asmaloney/libE57Format/pull/149))
+- {format} Update clang-format rules for clang-format 15. ([#168](https://github.com/asmaloney/libE57Format/pull/168))
+- 🚧 E57Simple: Colours now use uint16_t instead of uint8_t. ([#167](https://github.com/asmaloney/libE57Format/pull/167))
+- Change default checksum policies to an enum. ([#166](https://github.com/asmaloney/libE57Format/pull/166))
+  Old | New
+  --|--
+  CHECKSUM_POLICY_NONE | ChecksumPolicy::None
+  CHECKSUM_POLICY_SPARSE | ChecksumPolicy::Sparse
+  CHECKSUM_POLICY_HALF | ChecksumPolicy::Half
+  CHECKSUM_POLICY_ALL | ChecksumPolicy::All
+
+- 🚧 Change **E57SimpleData**'s Data3D field name from `pointsSize` to `pointCount`. ([#164](https://github.com/asmaloney/libE57Format/pull/164))
+- 🚧 Min/max fields in **E57SimpleData**'s Data3D's point fields were a mix of floats and doubles. Since the fields are doubles, set them all to doubles and use the new `Data3DPointsData_t` constructor to set them properly for floats. ([#153](https://github.com/asmaloney/libE57Format/pull/153))
+  > **Note:** If you were previously relying on these to be floats and are not using the new `Data3DPointsData_t` constructor, you will need to set these.
+- 🚧 Renamed the [E57_EXT_surface_normals](http://www.libe57.org/E57_EXT_surface_normals.txt) extension's fields in **E57SimpleData**'s `PointStandardizedFieldsAvailable` to be in line with existing code. ([#149](https://github.com/asmaloney/libE57Format/pull/149))
   - `normalX` renamed to `normalXField`
   - `normalY` renamed to `normalYField`
   - `normalZ` renamed to `normalZField`
@@ -33,6 +49,9 @@ All notable changes to this project will be documented in this file. The format 
 
 ### Fixed
 
+- Fix writing floating point numbers when `std::locale::global` is set. ([#174](https://github.com/asmaloney/libE57Format/pull/174))
+- E57XmlParser: Parse doubles in a locale-independent way. ([#173](https://github.com/asmaloney/libE57Format/pull/173)) (Thanks Hugal31!)
+- E57SimpleReader: Ensure scaled integer fields are set as best we can when reading. ([#158](https://github.com/asmaloney/libE57Format/pull/158))
 - Fix the [E57_EXT_surface_normals](http://www.libe57.org/E57_EXT_surface_normals.txt) extension's URI in **E57SimpleWriter**. ([#143](https://github.com/asmaloney/libE57Format/pull/143))
 - {win} Fix conversion warning when compiling with debug on. ([#124](https://github.com/asmaloney/libE57Format/pull/124))
 - Add errno detail to `E57_ERROR_OPEN_FAILED` exception. ([#119](https://github.com/asmaloney/libE57Format/pull/119), [#120](https://github.com/asmaloney/libE57Format/pull/120))

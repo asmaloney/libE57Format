@@ -9,6 +9,8 @@ namespace e57
       static_assert( std::is_floating_point<FTYPE>::value, "Floating point type required." );
 
       std::stringstream ss;
+      ss.imbue( std::locale::classic() );
+
       ss << std::scientific << std::setprecision( precision ) << value;
 
       // Try to remove trailing zeroes and decimal point

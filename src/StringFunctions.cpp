@@ -1,5 +1,7 @@
 #include "StringFunctions.h"
 
+#include <locale>
+
 namespace e57
 {
    template <class FTYPE> std::string floatingPointToStr( FTYPE value, int precision )
@@ -53,4 +55,14 @@ namespace e57
 
    template std::string floatingPointToStr<float>( float value, int precision );
    template std::string floatingPointToStr<double>( double value, int precision );
+
+   double strToDouble( const std::string &inStr )
+   {
+      std::istringstream iss{ inStr };
+      iss.imbue( std::locale::classic() );
+      double res = 0.;
+      iss >> res;
+      return res;
+   }
+
 }

@@ -85,17 +85,6 @@ inline int64_t convertStrToLL( const std::string &inStr )
 #endif
 }
 
-/// Parse a double according the the classic ("C") locale.
-/// \return The parsed double or 0.0 on error.
-inline double convertStrToDouble( const std::string &inStr )
-{
-    std::istringstream iss{ inStr };
-    iss.imbue( std::locale::classic() );
-    double res = 0.;
-    iss >> res;
-    return res;
-}
-
 //=============================================================================
 // E57FileInputStream
 
@@ -384,7 +373,7 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
       if ( isAttributeDefined( attributes, att_scale ) )
       {
          ustring scale_str = lookupAttribute( attributes, att_scale );
-         pi.scale = convertStrToDouble( scale_str ); //??? use exact rounding library
+         pi.scale = strToDouble( scale_str ); //??? use exact rounding library
       }
       else
       {
@@ -395,7 +384,7 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
       if ( isAttributeDefined( attributes, att_offset ) )
       {
          ustring offset_str = lookupAttribute( attributes, att_offset );
-         pi.offset = convertStrToDouble( offset_str ); //??? use exact rounding library
+         pi.offset = strToDouble( offset_str ); //??? use exact rounding library
       }
       else
       {
@@ -441,7 +430,7 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
       if ( isAttributeDefined( attributes, att_minimum ) )
       {
          ustring minimum_str = lookupAttribute( attributes, att_minimum );
-         pi.floatMinimum = convertStrToDouble( minimum_str ); //??? use exact rounding library
+         pi.floatMinimum = strToDouble( minimum_str ); //??? use exact rounding library
       }
       else
       {
@@ -460,7 +449,7 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
       if ( isAttributeDefined( attributes, att_maximum ) )
       {
          ustring maximum_str = lookupAttribute( attributes, att_maximum );
-         pi.floatMaximum = convertStrToDouble( maximum_str ); //??? use exact rounding library
+         pi.floatMaximum = strToDouble( maximum_str ); //??? use exact rounding library
       }
       else
       {
@@ -717,7 +706,7 @@ void E57XmlParser::endElement( const XMLCh *const uri, const XMLCh *const localN
          double floatValue;
          if ( pi.childText.length() > 0 )
          {
-            floatValue = convertStrToDouble( pi.childText );
+            floatValue = strToDouble( pi.childText );
          }
          else
          {

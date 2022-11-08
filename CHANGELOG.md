@@ -23,6 +23,7 @@ There have been many changes around the `Simple API` in this release to fix some
 ### Changed
 
 - Now requires a [C++14](https://en.cppreference.com/w/cpp/14) compatible compiler.
+- Simplify the **E57SimpleWriter** API with `WriteImage2DData()` for images and `WriteData3DData()` for 3D data. This reduces code, hides complexity, and avoids potential errors. ([#171](https://github.com/asmaloney/libE57Format/pull/171))
 - {format} Update clang-format rules for clang-format 15. ([#168](https://github.com/asmaloney/libE57Format/pull/168))
 - 🚧 E57Simple: Colours now use uint16_t instead of uint8_t. ([#167](https://github.com/asmaloney/libE57Format/pull/167))
 - Change default checksum policies to an enum. ([#166](https://github.com/asmaloney/libE57Format/pull/166))

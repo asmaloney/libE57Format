@@ -102,13 +102,7 @@ TEST( SimpleData, ReadWrite )
       e57::Writer *writer = nullptr;
       E57_ASSERT_NO_THROW( writer = new e57::Writer( "./ColouredCubeDoubleCopy.e57", options ) );
 
-      const int64_t cScanIndex1 = writer->NewData3D( originalData3DHeader );
-      const uint16_t cNumPoints = originalData3DHeader.pointCount;
-
-      auto dataWriter = writer->SetUpData3DPointsData( cScanIndex1, cNumPoints, *originalPointsData );
-
-      dataWriter.write( cNumPoints );
-      dataWriter.close();
+      writer->WriteData3DData( originalData3DHeader, *originalPointsData );
 
       delete writer;
    }

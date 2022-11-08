@@ -442,6 +442,124 @@ TEST( SimpleWriter, ColouredCartesianPoints )
    delete writer;
 }
 
+// https://github.com/asmaloney/libE57Format/issues/160
+TEST( SimpleWriter, MinMaxIssuesCartesianFloat )
+{
+   e57::WriterOptions options;
+   options.guid = "Cartesian Points Min/Max Float File GUID";
+
+   e57::Writer *writer = nullptr;
+
+   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./CartesianPointsMinMaxFloat.e57", options ) );
+
+   constexpr int64_t cNumPoints = 1025;
+
+   e57::Data3D header;
+   header.guid = "Cartesian Points Min/Max Float Header GUID";
+   header.pointCount = cNumPoints;
+   header.pointFields.cartesianXField = true;
+   header.pointFields.cartesianYField = true;
+   header.pointFields.cartesianZField = true;
+
+   // Using any of these without setting their min/max explicitly should not fail
+   header.pointFields.pointRangeScaledInteger = 0.1;
+   header.pointFields.timeStampField = true;
+   header.pointFields.timeScaledInteger = 0.1;
+   header.pointFields.intensityField = true;
+   header.pointFields.intensityScaledInteger = 0.1;
+
+   e57::Data3DPointsData pointsData( header );
+
+   for ( int64_t i = 0; i < cNumPoints; ++i )
+   {
+      auto floati = static_cast<float>( i );
+      pointsData.cartesianX[i] = floati;
+      pointsData.cartesianY[i] = floati;
+      pointsData.cartesianZ[i] = floati;
+      pointsData.timeStamp[i] = floati;
+      pointsData.intensity[i] = floati + 0.01f;
+   }
+
+   try
+   {
+      writer->WriteData3DData( header, pointsData );
+   }
+   catch ( e57::E57Exception &err )
+   {
+      FAIL() << err.errorStr() << ": " << err.context();
+   }
+
+   delete writer;
+
+   EXPECT_NE( header.pointFields.pointRangeMinimum, e57::E57_FLOAT_MIN );
+   EXPECT_NE( header.pointFields.pointRangeMaximum, e57::E57_FLOAT_MAX );
+
+   EXPECT_NE( header.pointFields.timeMinimum, e57::E57_FLOAT_MIN );
+   EXPECT_NE( header.pointFields.timeMaximum, e57::E57_FLOAT_MAX );
+
+   EXPECT_NE( header.intensityLimits.intensityMinimum, 0.0 );
+   EXPECT_NE( header.intensityLimits.intensityMaximum, 0.0 );
+}
+
+// https://github.com/asmaloney/libE57Format/issues/160
+TEST( SimpleWriter, MinMaxIssuesSpericalDouble )
+{
+   e57::WriterOptions options;
+   options.guid = "Spherical Points Min/Max Double File GUID";
+
+   e57::Writer *writer = nullptr;
+
+   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./SphericalPointsMinMaxDouble.e57", options ) );
+
+   constexpr int64_t cNumPoints = 1025;
+
+   e57::Data3D header;
+   header.guid = "Spherical Points Min/Max Double Header GUID";
+   header.pointCount = cNumPoints;
+   header.pointFields.sphericalRangeField = true;
+   header.pointFields.sphericalAzimuthField = true;
+   header.pointFields.sphericalElevationField = true;
+
+   // Using any of these without setting their min/max explicitly should not fail
+   header.pointFields.pointRangeScaledInteger = 0.1;
+   header.pointFields.timeStampField = true;
+   header.pointFields.timeScaledInteger = 0.1;
+   header.pointFields.intensityField = true;
+   header.pointFields.intensityScaledInteger = 0.1;
+
+   e57::Data3DPointsData_d pointsData( header );
+
+   for ( int64_t i = 0; i < cNumPoints; ++i )
+   {
+      auto floati = static_cast<float>( i );
+      pointsData.sphericalRange[i] = floati;
+      pointsData.sphericalAzimuth[i] = floati;
+      pointsData.sphericalElevation[i] = floati;
+      pointsData.timeStamp[i] = floati;
+      pointsData.intensity[i] = floati + 0.01f;
+   }
+
+   try
+   {
+      writer->WriteData3DData( header, pointsData );
+   }
+   catch ( e57::E57Exception &err )
+   {
+      FAIL() << err.errorStr() << ": " << err.context();
+   }
+
+   delete writer;
+
+   EXPECT_NE( header.pointFields.pointRangeMinimum, e57::E57_DOUBLE_MIN );
+   EXPECT_NE( header.pointFields.pointRangeMaximum, e57::E57_DOUBLE_MAX );
+
+   EXPECT_NE( header.pointFields.timeMinimum, e57::E57_DOUBLE_MIN );
+   EXPECT_NE( header.pointFields.timeMaximum, e57::E57_DOUBLE_MAX );
+
+   EXPECT_NE( header.intensityLimits.intensityMinimum, 0.0 );
+   EXPECT_NE( header.intensityLimits.intensityMaximum, 0.0 );
+}
+
 TEST( SimpleWriterData, VisualRefImage )
 {
    e57::WriterOptions options;

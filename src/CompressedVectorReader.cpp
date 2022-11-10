@@ -113,29 +113,29 @@ destroyed.
 @pre     The associated ImageFile must be open.
 @pre     This CompressedVectorReader must be open (i.e isOpen())
 @return  The number of records read.
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_READER_NOT_OPEN
-@throw   ::E57_ERROR_CONVERSION_REQUIRED            This CompressedVectorReader
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorReaderNotOpen
+@throw   ::ErrorConversionRequired            This CompressedVectorReader
 in undocumented state
-@throw   ::E57_ERROR_VALUE_NOT_REPRESENTABLE        This CompressedVectorReader
+@throw   ::ErrorValueNotRepresentable        This CompressedVectorReader
 in undocumented state
-@throw   ::E57_ERROR_SCALED_VALUE_NOT_REPRESENTABLE This CompressedVectorReader
+@throw   ::ErrorScaledValueNotRepresentable This CompressedVectorReader
 in undocumented state
-@throw   ::E57_ERROR_REAL64_TOO_LARGE               This CompressedVectorReader
+@throw   ::ErrorReal64TooLarge               This CompressedVectorReader
 in undocumented state
-@throw   ::E57_ERROR_EXPECTING_NUMERIC              This CompressedVectorReader
+@throw   ::ErrorExpectingNumeric              This CompressedVectorReader
 in undocumented state
-@throw   ::E57_ERROR_EXPECTING_USTRING              This CompressedVectorReader
+@throw   ::ErrorExpectingUString              This CompressedVectorReader
 in undocumented state
-@throw   ::E57_ERROR_BAD_CV_PACKET      This CompressedVectorReader, associated
+@throw   ::ErrorBadCVPacket      This CompressedVectorReader, associated
 ImageFile in undocumented state
-@throw   ::E57_ERROR_LSEEK_FAILED       This CompressedVectorReader, associated
+@throw   ::ErrorSeekFailed       This CompressedVectorReader, associated
 ImageFile in undocumented state
-@throw   ::E57_ERROR_READ_FAILED        This CompressedVectorReader, associated
+@throw   ::ErrorReadFailed        This CompressedVectorReader, associated
 ImageFile in undocumented state
-@throw   ::E57_ERROR_BAD_CHECKSUM       This CompressedVectorReader, associated
+@throw   ::ErrorBadChecksum       This CompressedVectorReader, associated
 ImageFile in undocumented state
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     CompressedVectorReader::read(std::vector<SourceDestBuffer>&),
 CompressedVectorNode::reader, SourceDestBuffer,
 CompressedVectorReader::read(std::vector<SourceDestBuffer>&)
@@ -182,32 +182,32 @@ destroyed.
 @pre     The associated ImageFile must be open.
 @pre     This CompressedVectorReader must be open (i.e isOpen())
 @return  The number of records read.
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_READER_NOT_OPEN
-@throw   ::E57_ERROR_PATH_UNDEFINED
-@throw   ::E57_ERROR_BUFFER_SIZE_MISMATCH
-@throw   ::E57_ERROR_BUFFER_DUPLICATE_PATHNAME
-@throw   ::E57_ERROR_CONVERSION_REQUIRED            This CompressedVectorReader
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorReaderNotOpen
+@throw   ::ErrorPathUndefined
+@throw   ::ErrorBufferSizeMismatch
+@throw   ::ErrorBufferDuplicatePathName
+@throw   ::ErrorConversionRequired            This CompressedVectorReader
 in undocumented state
-@throw   ::E57_ERROR_VALUE_NOT_REPRESENTABLE        This CompressedVectorReader
+@throw   ::ErrorValueNotRepresentable        This CompressedVectorReader
 in undocumented state
-@throw   ::E57_ERROR_SCALED_VALUE_NOT_REPRESENTABLE This CompressedVectorReader
+@throw   ::ErrorScaledValueNotRepresentable This CompressedVectorReader
 in undocumented state
-@throw   ::E57_ERROR_REAL64_TOO_LARGE               This CompressedVectorReader
+@throw   ::ErrorReal64TooLarge               This CompressedVectorReader
 in undocumented state
-@throw   ::E57_ERROR_EXPECTING_NUMERIC              This CompressedVectorReader
+@throw   ::ErrorExpectingNumeric              This CompressedVectorReader
 in undocumented state
-@throw   ::E57_ERROR_EXPECTING_USTRING              This CompressedVectorReader
+@throw   ::ErrorExpectingUString              This CompressedVectorReader
 in undocumented state
-@throw   ::E57_ERROR_BAD_CV_PACKET      This CompressedVectorReader, associated
+@throw   ::ErrorBadCVPacket      This CompressedVectorReader, associated
 ImageFile in undocumented state
-@throw   ::E57_ERROR_LSEEK_FAILED       This CompressedVectorReader, associated
+@throw   ::ErrorSeekFailed       This CompressedVectorReader, associated
 ImageFile in undocumented state
-@throw   ::E57_ERROR_READ_FAILED        This CompressedVectorReader, associated
+@throw   ::ErrorReadFailed        This CompressedVectorReader, associated
 ImageFile in undocumented state
-@throw   ::E57_ERROR_BAD_CHECKSUM       This CompressedVectorReader, associated
+@throw   ::ErrorBadChecksum       This CompressedVectorReader, associated
 ImageFile in undocumented state
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     CompressedVectorReader::read(), CompressedVectorNode::reader, SourceDestBuffer
 */
 unsigned CompressedVectorReader::read( std::vector<SourceDestBuffer> &dbufs )
@@ -228,14 +228,14 @@ one record past end of CompressedVectorNode).
 @pre     @a recordNumber <= childCount() of CompressedVectorNode.
 @pre     The associated ImageFile must be open.
 @pre     This CompressedVectorReader must be open (i.e isOpen())
-@throw   ::E57_ERROR_BAD_API_ARGUMENT
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_READER_NOT_OPEN
-@throw   ::E57_ERROR_BAD_CV_PACKET
-@throw   ::E57_ERROR_LSEEK_FAILED
-@throw   ::E57_ERROR_READ_FAILED
-@throw   ::E57_ERROR_BAD_CHECKSUM
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorBadAPIArgument
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorReaderNotOpen
+@throw   ::ErrorBadCVPacket
+@throw   ::ErrorSeekFailed
+@throw   ::ErrorReadFailed
+@throw   ::ErrorBadChecksum
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     CompressedVectorNode::reader
 */
 void CompressedVectorReader::seek( int64_t recordNumber )
@@ -252,7 +252,7 @@ CompressedVectorReader is already closed. This function will cause the
 CompressedVectorReader to enter the closed state, and any further transfers
 requests will fail.
 
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     CompressedVectorReader::isOpen, CompressedVectorNode::reader
 */
 void CompressedVectorReader::close()
@@ -263,8 +263,8 @@ void CompressedVectorReader::close()
 /*!
 @brief   Test whether CompressedVectorReader is still open for reading.
 @pre     The associated ImageFile must be open.
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     CompressedVectorReader::close, CompressedVectorNode::reader
 */
 bool CompressedVectorReader::isOpen()
@@ -279,8 +279,8 @@ It is not an error if this CompressedVectorReader is closed.
 @pre     The associated ImageFile must be open.
 @return  A smart CompressedVectorNode handle referencing the underlying object
 being read from.
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     CompressedVectorReader::close, CompressedVectorNode::reader
 */
 CompressedVectorNode CompressedVectorReader::compressedVectorNode() const
@@ -310,8 +310,7 @@ sub-objects recursively.
 This function checks at least the assertions in the documented class invariant
 description (see class reference page for this object). Other internal
 invariants that are implementation-dependent may also be checked. If any
-invariant clause is violated, an E57Exception with errorCode of
-E57_ERROR_INVARIANCE_VIOLATION is thrown.
+invariant clause is violated, an ::ErrorInvarianceViolation E57Exception is thrown.
 @post    No visible state is modified.
 */
 // beginExample CompressedVectorReader::checkInvariant
@@ -337,19 +336,19 @@ void CompressedVectorReader::checkInvariant( bool /*doRecurse*/ )
    // Associated CompressedVectorNode must be attached to ImageFile
    if ( !cv.isAttached() )
    {
-      throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+      throw E57_EXCEPTION1( ErrorInvarianceViolation );
    }
 
    // Dest ImageFile must have at least 1 reader (this one)
    if ( imf.readerCount() < 1 )
    {
-      throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+      throw E57_EXCEPTION1( ErrorInvarianceViolation );
    }
 
    // Dest ImageFile can't have any writers
    if ( imf.writerCount() != 0 )
    {
-      throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+      throw E57_EXCEPTION1( ErrorInvarianceViolation );
    }
 }
 // endExample CompressedVectorReader::checkInvariant

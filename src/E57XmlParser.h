@@ -80,17 +80,17 @@ namespace e57
          /// Needed because not all info is available at one time to create the
          /// node.
          NodeType nodeType;               // used by all types
-         int64_t minimum;                 // used in E57_INTEGER, E57_SCALED_INTEGER
-         int64_t maximum;                 // used in E57_INTEGER, E57_SCALED_INTEGER
-         double scale;                    // used in E57_SCALED_INTEGER
-         double offset;                   // used in E57_SCALED_INTEGER
-         FloatPrecision precision;        // used in E57_FLOAT
-         double floatMinimum;             // used in E57_FLOAT
-         double floatMaximum;             // used in E57_FLOAT
-         int64_t fileOffset;              // used in E57_BLOB, E57_COMPRESSED_VECTOR
-         int64_t length;                  // used in E57_BLOB
-         bool allowHeterogeneousChildren; // used in E57_VECTOR
-         int64_t recordCount;             // used in E57_COMPRESSED_VECTOR
+         int64_t minimum;                 // used in Integer, ScaledInteger
+         int64_t maximum;                 // used in Integer, ScaledInteger
+         double scale;                    // used in ScaledInteger
+         double offset;                   // used in ScaledInteger
+         FloatPrecision precision;        // used in Float
+         double floatMinimum;             // used in Float
+         double floatMaximum;             // used in Float
+         int64_t fileOffset;              // used in Blob, CompressedVector
+         int64_t length;                  // used in Blob
+         bool allowHeterogeneousChildren; // used in Vector
+         int64_t recordCount;             // used in CompressedVector
          ustring childText;               // used by all types, accumulates all child text between tags
 
          /// Holds node for Structure, Vector, and CompressedVector so can append

@@ -23,22 +23,22 @@ TEST( SimpleDataHeader, HeaderMinMaxFloat )
 
    dataHeader.pointCount = 1;
 
-   EXPECT_EQ( dataHeader.pointFields.pointRangeMinimum, e57::E57_DOUBLE_MIN );
-   EXPECT_EQ( dataHeader.pointFields.pointRangeMaximum, e57::E57_DOUBLE_MAX );
-   EXPECT_EQ( dataHeader.pointFields.angleMinimum, e57::E57_DOUBLE_MIN );
-   EXPECT_EQ( dataHeader.pointFields.angleMaximum, e57::E57_DOUBLE_MAX );
-   EXPECT_EQ( dataHeader.pointFields.timeMinimum, e57::E57_DOUBLE_MIN );
-   EXPECT_EQ( dataHeader.pointFields.timeMaximum, e57::E57_DOUBLE_MAX );
+   EXPECT_EQ( dataHeader.pointFields.pointRangeMinimum, e57::DOUBLE_MIN );
+   EXPECT_EQ( dataHeader.pointFields.pointRangeMaximum, e57::DOUBLE_MAX );
+   EXPECT_EQ( dataHeader.pointFields.angleMinimum, e57::DOUBLE_MIN );
+   EXPECT_EQ( dataHeader.pointFields.angleMaximum, e57::DOUBLE_MAX );
+   EXPECT_EQ( dataHeader.pointFields.timeMinimum, e57::DOUBLE_MIN );
+   EXPECT_EQ( dataHeader.pointFields.timeMaximum, e57::DOUBLE_MAX );
 
    // This call should adjust our min/max for a variety of fields since we are using floats.
    e57::Data3DPointsData pointsData( dataHeader );
 
-   EXPECT_EQ( dataHeader.pointFields.pointRangeMinimum, e57::E57_FLOAT_MIN );
-   EXPECT_EQ( dataHeader.pointFields.pointRangeMaximum, e57::E57_FLOAT_MAX );
-   EXPECT_EQ( dataHeader.pointFields.angleMinimum, e57::E57_FLOAT_MIN );
-   EXPECT_EQ( dataHeader.pointFields.angleMaximum, e57::E57_FLOAT_MAX );
-   EXPECT_EQ( dataHeader.pointFields.timeMinimum, e57::E57_FLOAT_MIN );
-   EXPECT_EQ( dataHeader.pointFields.timeMaximum, e57::E57_FLOAT_MAX );
+   EXPECT_EQ( dataHeader.pointFields.pointRangeMinimum, e57::FLOAT_MIN );
+   EXPECT_EQ( dataHeader.pointFields.pointRangeMaximum, e57::FLOAT_MAX );
+   EXPECT_EQ( dataHeader.pointFields.angleMinimum, e57::FLOAT_MIN );
+   EXPECT_EQ( dataHeader.pointFields.angleMaximum, e57::FLOAT_MAX );
+   EXPECT_EQ( dataHeader.pointFields.timeMinimum, e57::FLOAT_MIN );
+   EXPECT_EQ( dataHeader.pointFields.timeMaximum, e57::FLOAT_MAX );
 }
 
 TEST( SimpleDataHeader, HeaderMinMaxDouble )
@@ -47,22 +47,22 @@ TEST( SimpleDataHeader, HeaderMinMaxDouble )
 
    dataHeader.pointCount = 1;
 
-   EXPECT_EQ( dataHeader.pointFields.pointRangeMinimum, e57::E57_DOUBLE_MIN );
-   EXPECT_EQ( dataHeader.pointFields.pointRangeMaximum, e57::E57_DOUBLE_MAX );
-   EXPECT_EQ( dataHeader.pointFields.angleMinimum, e57::E57_DOUBLE_MIN );
-   EXPECT_EQ( dataHeader.pointFields.angleMaximum, e57::E57_DOUBLE_MAX );
-   EXPECT_EQ( dataHeader.pointFields.timeMinimum, e57::E57_DOUBLE_MIN );
-   EXPECT_EQ( dataHeader.pointFields.timeMaximum, e57::E57_DOUBLE_MAX );
+   EXPECT_EQ( dataHeader.pointFields.pointRangeMinimum, e57::DOUBLE_MIN );
+   EXPECT_EQ( dataHeader.pointFields.pointRangeMaximum, e57::DOUBLE_MAX );
+   EXPECT_EQ( dataHeader.pointFields.angleMinimum, e57::DOUBLE_MIN );
+   EXPECT_EQ( dataHeader.pointFields.angleMaximum, e57::DOUBLE_MAX );
+   EXPECT_EQ( dataHeader.pointFields.timeMinimum, e57::DOUBLE_MIN );
+   EXPECT_EQ( dataHeader.pointFields.timeMaximum, e57::DOUBLE_MAX );
 
    // This call should NOT adjust our min/max for a variety of fields since we are using doubles.
    e57::Data3DPointsData_d pointsData( dataHeader );
 
-   EXPECT_EQ( dataHeader.pointFields.pointRangeMinimum, e57::E57_DOUBLE_MIN );
-   EXPECT_EQ( dataHeader.pointFields.pointRangeMaximum, e57::E57_DOUBLE_MAX );
-   EXPECT_EQ( dataHeader.pointFields.angleMinimum, e57::E57_DOUBLE_MIN );
-   EXPECT_EQ( dataHeader.pointFields.angleMaximum, e57::E57_DOUBLE_MAX );
-   EXPECT_EQ( dataHeader.pointFields.timeMinimum, e57::E57_DOUBLE_MIN );
-   EXPECT_EQ( dataHeader.pointFields.timeMaximum, e57::E57_DOUBLE_MAX );
+   EXPECT_EQ( dataHeader.pointFields.pointRangeMinimum, e57::DOUBLE_MIN );
+   EXPECT_EQ( dataHeader.pointFields.pointRangeMaximum, e57::DOUBLE_MAX );
+   EXPECT_EQ( dataHeader.pointFields.angleMinimum, e57::DOUBLE_MIN );
+   EXPECT_EQ( dataHeader.pointFields.angleMaximum, e57::DOUBLE_MAX );
+   EXPECT_EQ( dataHeader.pointFields.timeMinimum, e57::DOUBLE_MIN );
+   EXPECT_EQ( dataHeader.pointFields.timeMaximum, e57::DOUBLE_MAX );
 }
 
 // Checks that the Data3D header and the the cartesianX FloatNode data are the same when read, written, and read again.

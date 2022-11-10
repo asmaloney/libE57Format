@@ -43,7 +43,7 @@ namespace e57
       /// Enforce the given bounds on raw value
       if ( rawValue < minimum || maximum < rawValue )
       {
-         throw E57_EXCEPTION2( E57_ERROR_VALUE_OUT_OF_BOUNDS,
+         throw E57_EXCEPTION2( ErrorValueOutOfBounds,
                                "this->pathName=" + this->pathName() + " rawValue=" + toString( rawValue ) +
                                   " minimum=" + toString( minimum ) + " maximum=" + toString( maximum ) );
       }
@@ -63,10 +63,10 @@ namespace e57
       /// Enforce the given bounds on raw value
       if ( scaledValue < scaledMinimum || scaledMaximum < scaledValue )
       {
-         throw E57_EXCEPTION2( E57_ERROR_VALUE_OUT_OF_BOUNDS, "this->pathName=" + this->pathName() +
-                                                                 " scaledValue=" + toString( scaledValue ) +
-                                                                 " scaledMinimum=" + toString( scaledMinimum ) +
-                                                                 " scaledMaximum=" + toString( scaledMaximum ) );
+         throw E57_EXCEPTION2( ErrorValueOutOfBounds, "this->pathName=" + this->pathName() +
+                                                         " scaledValue=" + toString( scaledValue ) +
+                                                         " scaledMinimum=" + toString( scaledMinimum ) +
+                                                         " scaledMaximum=" + toString( scaledMaximum ) );
       }
    }
 
@@ -75,7 +75,7 @@ namespace e57
       // don't checkImageFileOpen
 
       /// Same node type?
-      if ( ni->type() != E57_SCALED_INTEGER )
+      if ( ni->type() != TypeScaledInteger )
       {
          return ( false );
       }
@@ -176,7 +176,7 @@ namespace e57
       /// We are a leaf node, so verify that we are listed in set.
       if ( pathNames.find( relativePathName( origin ) ) == pathNames.end() )
       {
-         throw E57_EXCEPTION2( E57_ERROR_NO_BUFFER_FOR_ELEMENT, "this->pathName=" + this->pathName() );
+         throw E57_EXCEPTION2( ErrorNoBufferForElement, "this->pathName=" + this->pathName() );
       }
    }
 
@@ -198,11 +198,11 @@ namespace e57
       cf << space( indent ) << "<" << fieldName << " type=\"ScaledInteger\"";
 
       /// Don't need to write if are default values
-      if ( minimum_ != E57_INT64_MIN )
+      if ( minimum_ != INT64_MIN )
       {
          cf << " minimum=\"" << minimum_ << "\"";
       }
-      if ( maximum_ != E57_INT64_MAX )
+      if ( maximum_ != INT64_MAX )
       {
          cf << " maximum=\"" << maximum_ << "\"";
       }

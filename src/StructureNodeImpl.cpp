@@ -42,7 +42,7 @@ StructureNodeImpl::StructureNodeImpl( ImageFileImplWeakPtr destImageFile ) : Nod
 NodeType StructureNodeImpl::type() const
 {
    /// don't checkImageFileOpen
-   return E57_STRUCTURE;
+   return TypeStructure;
 }
 
 //??? use visitor?
@@ -51,7 +51,7 @@ bool StructureNodeImpl::isTypeEquivalent( NodeImplSharedPtr ni )
    /// don't checkImageFileOpen
 
    /// Same node type?
-   if ( ni->type() != E57_STRUCTURE )
+   if ( ni->type() != TypeStructure )
    {
       return ( false );
    }
@@ -127,9 +127,9 @@ NodeImplSharedPtr StructureNodeImpl::get( int64_t index )
    checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
    if ( index < 0 || index >= static_cast<int64_t>( children_.size() ) )
    { // %%% Possible truncation on platforms where size_t = uint64
-      throw E57_EXCEPTION2( E57_ERROR_CHILD_INDEX_OUT_OF_BOUNDS, "this->pathName=" + this->pathName() +
-                                                                    " index=" + toString( index ) +
-                                                                    " size=" + toString( children_.size() ) );
+      throw E57_EXCEPTION2( ErrorChildIndexOutOfBounds, "this->pathName=" + this->pathName() +
+                                                           " index=" + toString( index ) +
+                                                           " size=" + toString( children_.size() ) );
    }
    return ( children_.at( static_cast<unsigned>( index ) ) );
 }
@@ -141,7 +141,7 @@ NodeImplSharedPtr StructureNodeImpl::get( const ustring &pathName )
 
    if ( !ni )
    {
-      throw E57_EXCEPTION2( E57_ERROR_PATH_UNDEFINED, "this->pathName=" + this->pathName() + " pathName=" + pathName );
+      throw E57_EXCEPTION2( ErrorPathUndefined, "this->pathName=" + this->pathName() + " pathName=" + pathName );
    }
    return ( ni );
 }
@@ -212,16 +212,15 @@ void StructureNodeImpl::set( int64_t index64, NodeImplSharedPtr ni )
    /// Allow index == current number of elements, interpret as append
    if ( index64 < 0 || index64 > UINT_MAX || index > children_.size() )
    {
-      throw E57_EXCEPTION2( E57_ERROR_CHILD_INDEX_OUT_OF_BOUNDS, "this->pathName=" + this->pathName() +
-                                                                    " index=" + toString( index64 ) +
-                                                                    " size=" + toString( children_.size() ) );
+      throw E57_EXCEPTION2( ErrorChildIndexOutOfBounds, "this->pathName=" + this->pathName() +
+                                                           " index=" + toString( index64 ) +
+                                                           " size=" + toString( children_.size() ) );
    }
 
    /// Enforce "set once" policy, only allow append
    if ( index != children_.size() )
    {
-      throw E57_EXCEPTION2( E57_ERROR_SET_TWICE,
-                            "this->pathName=" + this->pathName() + " index=" + toString( index64 ) );
+      throw E57_EXCEPTION2( ErrorSetTwice, "this->pathName=" + this->pathName() + " index=" + toString( index64 ) );
    }
 
    /// Verify that child is destined for same ImageFile as this is
@@ -229,7 +228,7 @@ void StructureNodeImpl::set( int64_t index64, NodeImplSharedPtr ni )
    ImageFileImplSharedPtr niDest( ni->destImageFile() );
    if ( thisDest != niDest )
    {
-      throw E57_EXCEPTION2( E57_ERROR_DIFFERENT_DEST_IMAGEFILE,
+      throw E57_EXCEPTION2( ErrorDifferentDestImageFile,
                             "this->destImageFile" + thisDest->fileName() + " ni->destImageFile" + niDest->fileName() );
    }
 
@@ -240,7 +239,7 @@ void StructureNodeImpl::set( int64_t index64, NodeImplSharedPtr ni )
    /// If this struct is type constrained, can't add new child
    if ( isTypeConstrained() )
    {
-      throw E57_EXCEPTION2( E57_ERROR_HOMOGENEOUS_VIOLATION, "this->pathName=" + this->pathName() );
+      throw E57_EXCEPTION2( ErrorHomogeneousViolation, "this->pathName=" + this->pathName() );
    }
 
    ni->setParent( shared_from_this(), elementName.str() );
@@ -298,7 +297,7 @@ void StructureNodeImpl::set( const std::vector<ustring> &fields, unsigned level,
    /// Check if trying to set the root node "/", which is illegal
    if ( level == 0 && fields.empty() )
    {
-      throw E57_EXCEPTION2( E57_ERROR_SET_TWICE, "this->pathName=" + this->pathName() + " element=/" );
+      throw E57_EXCEPTION2( ErrorSetTwice, "this->pathName=" + this->pathName() + " element=/" );
    }
 
    /// Serial search for matching field name, if find match, have error since
@@ -310,8 +309,7 @@ void StructureNodeImpl::set( const std::vector<ustring> &fields, unsigned level,
          if ( level == fields.size() - 1 )
          {
             /// Enforce "set once" policy, don't allow reset
-            throw E57_EXCEPTION2( E57_ERROR_SET_TWICE,
-                                  "this->pathName=" + this->pathName() + " element=" + fields[level] );
+            throw E57_EXCEPTION2( ErrorSetTwice, "this->pathName=" + this->pathName() + " element=" + fields[level] );
          }
 
          /// Recurse on child
@@ -325,7 +323,7 @@ void StructureNodeImpl::set( const std::vector<ustring> &fields, unsigned level,
    /// If this struct is type constrained, can't add new child
    if ( isTypeConstrained() )
    {
-      throw E57_EXCEPTION2( E57_ERROR_HOMOGENEOUS_VIOLATION, "this->pathName=" + this->pathName() );
+      throw E57_EXCEPTION2( ErrorHomogeneousViolation, "this->pathName=" + this->pathName() );
    }
 
    /// Check if we are at bottom level
@@ -340,7 +338,7 @@ void StructureNodeImpl::set( const std::vector<ustring> &fields, unsigned level,
       /// Not at bottom level, if not autoPathCreate have an error
       if ( !autoPathCreate )
       {
-         throw E57_EXCEPTION2( E57_ERROR_PATH_UNDEFINED,
+         throw E57_EXCEPTION2( ErrorPathUndefined,
                                "this->pathName=" + this->pathName() + " field=" + fields.at( level ) );
       }
       //??? what if extra fields are numbers?
@@ -427,7 +425,7 @@ void StructureNodeImpl::writeXml( ImageFileImplSharedPtr imf, CheckedFile &cf, i
       /// E57 standard one.
       if ( !gotDefaultNamespace )
       {
-         cf << "\n" << space( numSpaces ) << "xmlns=\"" << E57_V1_0_URI << "\"";
+         cf << "\n" << space( numSpaces ) << "xmlns=\"" << VERSION_1_0_URI << "\"";
       }
    }
    if ( !children_.empty() )

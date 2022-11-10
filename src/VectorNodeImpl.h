@@ -38,7 +38,7 @@ namespace e57
 
       NodeType type() const override
       {
-         return E57_VECTOR;
+         return TypeVector;
       }
 
       bool isTypeEquivalent( NodeImplSharedPtr ni ) override;

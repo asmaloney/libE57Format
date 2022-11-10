@@ -44,13 +44,13 @@ floating point value, and minimum/maximum bounds. The precision of the floating
 point value and attributes may be either single or double precision. Once the
 FloatNode value and attributes are set at creation, they may not be modified.
 
-If the precision option of the FloatNode is E57_SINGLE:
+If the precision option of the FloatNode is Single:
 The minimum attribute may be a number in the interval
 [-3.402823466e+38, 3.402823466e+38]. The maximum attribute may be a number in
 the interval [maximum, 3.402823466e+38]. The value may be a number in the
 interval [minimum, maximum].
 
-If the precision option of the FloatNode is E57_DOUBLE:
+If the precision option of the FloatNode is Double:
 The minimum attribute may be a number in the interval
 [-1.7976931348623158e+308, 1.7976931348623158e+308]. The maximum attribute may
 be a number in the interval [maximum, 1.7976931348623158e+308]. The value may be
@@ -75,14 +75,10 @@ invariant is violated:
 */
 
 /*!
-@brief   Create an E57 element for storing an double precision IEEE floating
-point number.
-@param   [in] destImageFile   The ImageFile where the new node will eventually
-be stored.
-@param   [in] value     The double precision IEEE floating point value of the
-element.
-@param   [in] precision The precision of IEEE floating point to use. May be
-E57_SINGLE or E57_DOUBLE.
+@brief   Create an E57 element for storing an double precision IEEE floating point number.
+@param   [in] destImageFile   The ImageFile where the new node will eventually be stored.
+@param   [in] value     The double precision IEEE floating point value of the element.
+@param   [in] precision The precision of IEEE floating point to use. May be ::PrecisionSingle or ::PrecisionDouble.
 @param   [in] minimum   The smallest value that the value may take.
 @param   [in] maximum   The largest value that the value may take.
 @details
@@ -96,8 +92,8 @@ predefined root of the ImageFile (gotten from ImageFile::root). It is not an
 error to fail to attach the FloatNode to the @a destImageFile. It is an error to
 attempt to attach the FloatNode to a different ImageFile.
 
-There is only one FloatNode constructor that handles both E57_SINGLE and
-E57_DOUBLE precision cases. If @a precision = E57_SINGLE, then the object will
+There is only one FloatNode constructor that handles both ::PrecisionSingle and
+::PrecisionDouble precision cases. If @a precision = ::PrecisionSingle, then the object will
 silently round the double precision @a value to the nearest representable single
 precision value. In this case, the lower bits will be lost, and if the value is
 outside the representable range of a single precision number, the exponent may
@@ -113,11 +109,11 @@ true).
 @pre     The @a destImageFile must have been opened in write mode (i.e.
 destImageFile.isWritable() must be true).
 @pre     minimum <= value <= maximum
-@throw   ::E57_ERROR_BAD_API_ARGUMENT
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_FILE_IS_READ_ONLY
-@throw   ::E57_ERROR_VALUE_OUT_OF_BOUNDS
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorBadAPIArgument
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorFileReadOnly
+@throw   ::ErrorValueOutOfBounds
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     FloatPrecision, FloatNode::value, Node, CompressedVectorNode, CompressedVectorNode::prototype
 */
 FloatNode::FloatNode( ImageFile destImageFile, double value, FloatPrecision precision, double minimum,
@@ -172,13 +168,13 @@ bool FloatNode::isAttached() const
 /*!
 @brief   Get IEEE floating point value stored.
 @details
-If precision is E57_SINGLE, the single precision value is returned as a double.
-If precision is E57_DOUBLE, the double precision value is returned as a double.
+If precision is ::PrecisionSingle, the single precision value is returned as a double. If precision is
+::PrecisionDouble, the double precision value is returned as a double.
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @post    No visible state is modified.
 @return  The IEEE floating point value stored, represented as a double.
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     FloatNode::minimum, FloatNode::maximum
 */
 double FloatNode::value() const
@@ -190,10 +186,9 @@ double FloatNode::value() const
 @brief   Get declared precision of the floating point number.
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @post    No visible state is modified.
-@return  The declared precision of the floating point number, either
-::E57_SINGLE or ::E57_DOUBLE.
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@return  The declared precision of the floating point number, either ::PrecisionSingle or ::PrecisionDouble.
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     FloatPrecision
 */
 FloatPrecision FloatNode::precision() const
@@ -204,14 +199,13 @@ FloatPrecision FloatNode::precision() const
 /*!
 @brief   Get the declared minimum that the value may take.
 @details
-If precision is E57_SINGLE, the single precision minimum is returned as a
-double. If precision is E57_DOUBLE, the double precision minimum is returned as
-a double.
+If precision is ::PrecisionSingle, the single precision minimum is returned as a double. If precision is
+::PrecisionDouble, the double precision minimum is returned as a double.
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @post    No visible state is modified.
 @return  The declared minimum that the value may take.
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     FloatNode::maximum, FloatNode::value
 */
 double FloatNode::minimum() const
@@ -222,14 +216,13 @@ double FloatNode::minimum() const
 /*!
 @brief   Get the declared maximum that the value may take.
 @details
-If precision is E57_SINGLE, the single precision maximum is returned as a
-double. If precision is E57_DOUBLE, the double precision maximum is returned as
-a double.
+If precision is ::PrecisionSingle, the single precision maximum is returned as a double. If precision is
+::PrecisionDouble, the double precision maximum is returned as a double.
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @post    No visible state is modified.
 @return  The declared maximum that the value may take.
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     FloatNode::minimum, FloatNode::value
 */
 double FloatNode::maximum() const
@@ -269,18 +262,18 @@ void FloatNode::checkInvariant( bool /*doRecurse*/, bool doUpcast )
       static_cast<Node>( *this ).checkInvariant( false, false );
    }
 
-   if ( precision() == E57_SINGLE )
+   if ( precision() == PrecisionSingle )
    {
-      if ( static_cast<float>( minimum() ) < E57_FLOAT_MIN || static_cast<float>( maximum() ) > E57_FLOAT_MAX )
+      if ( static_cast<float>( minimum() ) < FLOAT_MIN || static_cast<float>( maximum() ) > FLOAT_MAX )
       {
-         throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+         throw E57_EXCEPTION1( ErrorInvarianceViolation );
       }
    }
 
    // If value is out of bounds
    if ( value() < minimum() || value() > maximum() )
    {
-      throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+      throw E57_EXCEPTION1( ErrorInvarianceViolation );
    }
 }
 // endExample FloatNode::checkInvariant
@@ -308,14 +301,14 @@ exception is thrown. In designs that need to avoid the exception, use
 Node::type() to determine the actual type of the @a n before downcasting. This
 function must be explicitly called (c++ compiler cannot insert it
 automatically).
-@throw   ::E57_ERROR_BAD_NODE_DOWNCAST
+@throw   ::ErrorBadNodeDowncast
 @see     Node::type(), FloatNode::operator Node()
 */
 FloatNode::FloatNode( const Node &n )
 {
-   if ( n.type() != E57_FLOAT )
+   if ( n.type() != TypeFloat )
    {
-      throw E57_EXCEPTION2( E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString( n.type() ) );
+      throw E57_EXCEPTION2( ErrorBadNodeDowncast, "nodeType=" + toString( n.type() ) );
    }
 
    /// Set our shared_ptr to the downcast shared_ptr

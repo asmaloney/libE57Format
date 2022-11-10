@@ -93,11 +93,11 @@ true).
 @pre     The @a destImageFile must have been opened in write mode (i.e.
 destImageFile.isWritable() must be true).
 @pre     minimum <= value <= maximum
-@throw   ::E57_ERROR_BAD_API_ARGUMENT
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_FILE_IS_READ_ONLY
-@throw   ::E57_ERROR_VALUE_OUT_OF_BOUNDS
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorBadAPIArgument
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorFileReadOnly
+@throw   ::ErrorValueOutOfBounds
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     IntegerNode::value, Node, CompressedVectorNode, CompressedVectorNode::prototype
 */
 IntegerNode::IntegerNode( ImageFile destImageFile, int64_t value, int64_t minimum, int64_t maximum ) :
@@ -153,8 +153,8 @@ bool IntegerNode::isAttached() const
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @post    No visible state is modified.
 @return  integer value stored.
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     IntegerNode::minimum, IntegerNode::maximum
 */
 int64_t IntegerNode::value() const
@@ -167,8 +167,8 @@ int64_t IntegerNode::value() const
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @post    No visible state is modified.
 @return  The declared minimum that the value may take.
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     IntegerCreate.cpp example, IntegerNode::value
 */
 int64_t IntegerNode::minimum() const
@@ -181,8 +181,8 @@ int64_t IntegerNode::minimum() const
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @post    No visible state is modified.
 @return  The declared maximum that the value may take.
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     IntegerNode::value
 */
 int64_t IntegerNode::maximum() const
@@ -214,13 +214,12 @@ class.
 This function checks at least the assertions in the documented class invariant
 description (see class reference page for this object). Other internal
 invariants that are implementation-dependent may also be checked. If any
-invariant clause is violated, an E57Exception with errorCode of
-E57_ERROR_INVARIANCE_VIOLATION is thrown.
+invariant clause is violated, an ::ErrorInvarianceViolation E57Exception is thrown.
 
 Checking the invariant recursively may be expensive if the tree is large, so
 should be used judiciously, in debug versions of the application.
 @post    No visible state is modified.
-@throw   ::E57_ERROR_INVARIANCE_VIOLATION or any other E57 ErrorCode
+@throw   ::ErrorInvarianceViolation or any other E57 ErrorCode
 */
 // beginExample IntegerNode::checkInvariant
 void IntegerNode::checkInvariant( bool /*doRecurse*/, bool doUpcast )
@@ -240,7 +239,7 @@ void IntegerNode::checkInvariant( bool /*doRecurse*/, bool doUpcast )
 
    if ( value() < minimum() || value() > maximum() )
    {
-      throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+      throw E57_EXCEPTION1( ErrorInvarianceViolation );
    }
 }
 // endExample IntegerNode::checkInvariant
@@ -268,14 +267,14 @@ exception is thrown. In designs that need to avoid the exception, use
 Node::type() to determine the actual type of the @a n before downcasting. This
 function must be explicitly called (c++ compiler cannot insert it
 automatically).
-@throw   ::E57_ERROR_BAD_NODE_DOWNCAST
+@throw   ::ErrorBadNodeDowncast
 @see     Node::type(), IntegerNode::operator Node()
 */
 IntegerNode::IntegerNode( const Node &n )
 {
-   if ( n.type() != E57_INTEGER )
+   if ( n.type() != TypeInteger )
    {
-      throw E57_EXCEPTION2( E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString( n.type() ) );
+      throw E57_EXCEPTION2( ErrorBadNodeDowncast, "nodeType=" + toString( n.type() ) );
    }
 
    /// Set our shared_ptr to the downcast shared_ptr

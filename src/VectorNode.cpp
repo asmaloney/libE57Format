@@ -95,9 +95,9 @@ VectorNode are completely unconstrained.
 true).
 @pre     The @a destImageFile must have been opened in write mode (i.e.
 destImageFile.isWritable() must be true).
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     Node, VectorNode::allowHeteroChildren, ::E57_ERROR_HOMOGENEOUS_VIOLATION
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
+@see     Node, VectorNode::allowHeteroChildren, ::ErrorHomogeneousViolation
 */
 VectorNode::VectorNode( ImageFile destImageFile, bool allowHeteroChildren ) :
    impl_( new VectorNodeImpl( destImageFile.impl(), allowHeteroChildren ) )
@@ -156,9 +156,9 @@ the VectorNode is created, and cannot be changed.
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @post    No visible state is modified.
 @return  True if child elements can be different types.
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     ::E57_ERROR_HOMOGENEOUS_VIOLATION
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
+@see     ::ErrorHomogeneousViolation
 */
 bool VectorNode::allowHeteroChildren() const
 {
@@ -170,8 +170,8 @@ bool VectorNode::allowHeteroChildren() const
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @post    No visible state is modified.
 @return  Number of child elements in this VectorNode.
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     VectorNode::get(int64_t), VectorNode::append, StructureNode::childCount
 */
 int64_t VectorNode::childCount() const
@@ -194,9 +194,9 @@ strings, starting at "0".
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @post    No visible state is modified.
 @return  true if pathName is currently defined.
-@throw   ::E57_ERROR_BAD_PATH_NAME
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorBadPathName
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     StructureNode::isDefined
 */
 bool VectorNode::isDefined( const ustring &pathName ) const
@@ -211,9 +211,9 @@ bool VectorNode::isDefined( const ustring &pathName ) const
 @pre     0 <= @a index < childCount()
 @post    No visible state is modified.
 @return  A smart Node handle referencing the child node.
-@throw   ::E57_ERROR_CHILD_INDEX_OUT_OF_BOUNDS
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorChildIndexOutOfBounds
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     VectorNode::childCount, VectorNode::append, StructureNode::get(int64_t) const
 */
 Node VectorNode::get( int64_t index ) const
@@ -237,10 +237,10 @@ strings, starting at "0".
 @pre     The @a pathName must be defined (i.e. isDefined(pathName)).
 @post    No visible state is modified.
 @return  A smart Node handle referencing the child node.
-@throw   ::E57_ERROR_BAD_PATH_NAME
-@throw   ::E57_ERROR_PATH_UNDEFINED
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorBadPathName
+@throw   ::ErrorPathUndefined
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     VectorNode::childCount, VectorNode::append, StructureNode::get(int64_t) const
 */
 Node VectorNode::get( const ustring &pathName ) const
@@ -268,12 +268,12 @@ parent).
 @pre     The associated destImageFile must have been opened in write mode (i.e.
 destImageFile().isWritable()).
 @post    the childCount is incremented.
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_HOMOGENEOUS_VIOLATION
-@throw   ::E57_ERROR_FILE_IS_READ_ONLY
-@throw   ::E57_ERROR_ALREADY_HAS_PARENT
-@throw   ::E57_ERROR_DIFFERENT_DEST_IMAGEFILE
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorHomogeneousViolation
+@throw   ::ErrorFileReadOnly
+@throw   ::ErrorAlreadyHasParent
+@throw   ::ErrorDifferentDestImageFile
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     VectorNode::childCount, VectorNode::get(int64_t), StructureNode::set
 */
 void VectorNode::append( const Node &n )
@@ -327,20 +327,20 @@ void VectorNode::checkInvariant( bool doRecurse, bool doUpcast )
       // Child's parent must be this
       if ( static_cast<Node>( *this ) != child.parent() )
       {
-         throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+         throw E57_EXCEPTION1( ErrorInvarianceViolation );
       }
 
       // Child's elementName must be defined
       if ( !isDefined( child.elementName() ) )
       {
-         throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+         throw E57_EXCEPTION1( ErrorInvarianceViolation );
       }
 
       // Getting child by element name must yield same child
       Node n = get( child.elementName() );
       if ( n != child )
       {
-         throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+         throw E57_EXCEPTION1( ErrorInvarianceViolation );
       }
    }
 }
@@ -369,14 +369,14 @@ exception is thrown. In designs that need to avoid the exception, use
 Node::type() to determine the actual type of the @a n before downcasting. This
 function must be explicitly called (c++ compiler cannot insert it
 automatically).
-@throw   ::E57_ERROR_BAD_NODE_DOWNCAST
+@throw   ::ErrorBadNodeDowncast
 @see     Node::type(), VectorNode::operator Node()
 */
 VectorNode::VectorNode( const Node &n )
 {
-   if ( n.type() != E57_VECTOR )
+   if ( n.type() != TypeVector )
    {
-      throw E57_EXCEPTION2( E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString( n.type() ) );
+      throw E57_EXCEPTION2( ErrorBadNodeDowncast, "nodeType=" + toString( n.type() ) );
    }
 
    /// Set our shared_ptr to the downcast shared_ptr

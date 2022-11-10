@@ -38,7 +38,7 @@ namespace e57
 
       NodeType type() const override
       {
-         return E57_COMPRESSED_VECTOR;
+         return TypeCompressedVector;
       }
 
       bool isTypeEquivalent( NodeImplSharedPtr ni ) override;

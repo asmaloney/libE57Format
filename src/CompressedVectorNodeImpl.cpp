@@ -45,18 +45,18 @@ namespace e57
       // don't checkImageFileOpen, ctor did it
 
       //??? check ok for proto, no Blob CompressedVector, empty?
-      //??? throw E57_EXCEPTION2(E57_ERROR_BAD_PROTOTYPE)
+      //??? throw E57_EXCEPTION2(ErrorBadPrototype)
 
       /// Can't set prototype twice.
       if ( prototype_ )
       {
-         throw E57_EXCEPTION2( E57_ERROR_SET_TWICE, "this->pathName=" + this->pathName() );
+         throw E57_EXCEPTION2( ErrorSetTwice, "this->pathName=" + this->pathName() );
       }
 
       /// prototype can't have a parent (must be a root node)
       if ( !prototype->isRoot() )
       {
-         throw E57_EXCEPTION2( E57_ERROR_ALREADY_HAS_PARENT,
+         throw E57_EXCEPTION2( ErrorAlreadyHasParent,
                                "this->pathName=" + this->pathName() + " prototype->pathName=" + prototype->pathName() );
       }
 
@@ -65,9 +65,9 @@ namespace e57
       ImageFileImplSharedPtr prototypeDest( prototype->destImageFile() );
       if ( thisDest != prototypeDest )
       {
-         throw E57_EXCEPTION2( E57_ERROR_DIFFERENT_DEST_IMAGEFILE, "this->destImageFile" + thisDest->fileName() +
-                                                                      " prototype->destImageFile" +
-                                                                      prototypeDest->fileName() );
+         throw E57_EXCEPTION2( ErrorDifferentDestImageFile, "this->destImageFile" + thisDest->fileName() +
+                                                               " prototype->destImageFile" +
+                                                               prototypeDest->fileName() );
       }
 
       //!!! check for incomplete CompressedVectors when closing file
@@ -94,13 +94,13 @@ namespace e57
       /// Can't set codecs twice.
       if ( codecs_ )
       {
-         throw E57_EXCEPTION2( E57_ERROR_SET_TWICE, "this->pathName=" + this->pathName() );
+         throw E57_EXCEPTION2( ErrorSetTwice, "this->pathName=" + this->pathName() );
       }
 
       /// codecs can't have a parent (must be a root node)
       if ( !codecs->isRoot() )
       {
-         throw E57_EXCEPTION2( E57_ERROR_ALREADY_HAS_PARENT,
+         throw E57_EXCEPTION2( ErrorAlreadyHasParent,
                                "this->pathName=" + this->pathName() + " codecs->pathName=" + codecs->pathName() );
       }
 
@@ -109,9 +109,8 @@ namespace e57
       ImageFileImplSharedPtr codecsDest( codecs->destImageFile() );
       if ( thisDest != codecsDest )
       {
-         throw E57_EXCEPTION2( E57_ERROR_DIFFERENT_DEST_IMAGEFILE, "this->destImageFile" + thisDest->fileName() +
-                                                                      " codecs->destImageFile" +
-                                                                      codecsDest->fileName() );
+         throw E57_EXCEPTION2( ErrorDifferentDestImageFile, "this->destImageFile" + thisDest->fileName() +
+                                                               " codecs->destImageFile" + codecsDest->fileName() );
       }
 
       codecs_ = codecs;
@@ -133,7 +132,7 @@ namespace e57
       //??? is this test a good idea?
 
       /// Same node type?
-      if ( ni->type() != E57_COMPRESSED_VECTOR )
+      if ( ni->type() != TypeCompressedVector )
       {
          return ( false );
       }
@@ -161,7 +160,7 @@ namespace e57
 
    bool CompressedVectorNodeImpl::isDefined( const ustring &pathName )
    {
-      throw E57_EXCEPTION2( E57_ERROR_NOT_IMPLEMENTED, "this->pathName=" + this->pathName() + " pathName=" + pathName );
+      throw E57_EXCEPTION2( ErrorNotImplemented, "this->pathName=" + this->pathName() + " pathName=" + pathName );
    }
 
    void CompressedVectorNodeImpl::setAttachedRecursive()
@@ -194,7 +193,7 @@ namespace e57
 
       /// Since only called for prototype nodes, shouldn't be able to get here since
       /// CompressedVectors can't be in prototypes
-      throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "this->pathName=" + this->pathName() );
+      throw E57_EXCEPTION2( ErrorInternal, "this->pathName=" + this->pathName() );
    }
 
    void CompressedVectorNodeImpl::writeXml( ImageFileImplSharedPtr imf, CheckedFile &cf, int indent,
@@ -267,33 +266,31 @@ namespace e57
       /// Check don't have any writers/readers open for this ImageFile
       if ( destImageFile->writerCount() > 0 )
       {
-         throw E57_EXCEPTION2( E57_ERROR_TOO_MANY_WRITERS,
-                               "fileName=" + destImageFile->fileName() +
-                                  " writerCount=" + toString( destImageFile->writerCount() ) +
-                                  " readerCount=" + toString( destImageFile->readerCount() ) );
+         throw E57_EXCEPTION2( ErrorTooManyWriters, "fileName=" + destImageFile->fileName() +
+                                                       " writerCount=" + toString( destImageFile->writerCount() ) +
+                                                       " readerCount=" + toString( destImageFile->readerCount() ) );
       }
       if ( destImageFile->readerCount() > 0 )
       {
-         throw E57_EXCEPTION2( E57_ERROR_TOO_MANY_READERS,
-                               "fileName=" + destImageFile->fileName() +
-                                  " writerCount=" + toString( destImageFile->writerCount() ) +
-                                  " readerCount=" + toString( destImageFile->readerCount() ) );
+         throw E57_EXCEPTION2( ErrorTooManyReaders, "fileName=" + destImageFile->fileName() +
+                                                       " writerCount=" + toString( destImageFile->writerCount() ) +
+                                                       " readerCount=" + toString( destImageFile->readerCount() ) );
       }
 
       /// sbufs can't be empty
       if ( sbufs.empty() )
       {
-         throw E57_EXCEPTION2( E57_ERROR_BAD_API_ARGUMENT, "fileName=" + destImageFile->fileName() );
+         throw E57_EXCEPTION2( ErrorBadAPIArgument, "fileName=" + destImageFile->fileName() );
       }
 
       if ( !destImageFile->isWriter() )
       {
-         throw E57_EXCEPTION2( E57_ERROR_FILE_IS_READ_ONLY, "fileName=" + destImageFile->fileName() );
+         throw E57_EXCEPTION2( ErrorFileReadOnly, "fileName=" + destImageFile->fileName() );
       }
 
       if ( !isAttached() )
       {
-         throw E57_EXCEPTION2( E57_ERROR_NODE_UNATTACHED, "fileName=" + destImageFile->fileName() );
+         throw E57_EXCEPTION2( ErrorNodeUnattached, "fileName=" + destImageFile->fileName() );
       }
 
       /// Get pointer to me (really shared_ptr<CompressedVectorNodeImpl>)
@@ -316,29 +313,27 @@ namespace e57
       /// Check don't have any writers/readers open for this ImageFile
       if ( destImageFile->writerCount() > 0 )
       {
-         throw E57_EXCEPTION2( E57_ERROR_TOO_MANY_WRITERS,
-                               "fileName=" + destImageFile->fileName() +
-                                  " writerCount=" + toString( destImageFile->writerCount() ) +
-                                  " readerCount=" + toString( destImageFile->readerCount() ) );
+         throw E57_EXCEPTION2( ErrorTooManyWriters, "fileName=" + destImageFile->fileName() +
+                                                       " writerCount=" + toString( destImageFile->writerCount() ) +
+                                                       " readerCount=" + toString( destImageFile->readerCount() ) );
       }
       if ( destImageFile->readerCount() > 0 )
       {
-         throw E57_EXCEPTION2( E57_ERROR_TOO_MANY_READERS,
-                               "fileName=" + destImageFile->fileName() +
-                                  " writerCount=" + toString( destImageFile->writerCount() ) +
-                                  " readerCount=" + toString( destImageFile->readerCount() ) );
+         throw E57_EXCEPTION2( ErrorTooManyReaders, "fileName=" + destImageFile->fileName() +
+                                                       " writerCount=" + toString( destImageFile->writerCount() ) +
+                                                       " readerCount=" + toString( destImageFile->readerCount() ) );
       }
 
       /// dbufs can't be empty
       if ( dbufs.empty() )
       {
-         throw E57_EXCEPTION2( E57_ERROR_BAD_API_ARGUMENT, "fileName=" + destImageFile->fileName() );
+         throw E57_EXCEPTION2( ErrorBadAPIArgument, "fileName=" + destImageFile->fileName() );
       }
 
       /// Can be read or write mode, but must be attached
       if ( !isAttached() )
       {
-         throw E57_EXCEPTION2( E57_ERROR_NODE_UNATTACHED, "fileName=" + destImageFile->fileName() );
+         throw E57_EXCEPTION2( ErrorNodeUnattached, "fileName=" + destImageFile->fileName() );
       }
 
       /// Get pointer to me (really shared_ptr<CompressedVectorNodeImpl>)

@@ -59,7 +59,7 @@ std::shared_ptr<Decoder> Decoder::DecoderFactory( unsigned bytestreamNumber, //!
 
    switch ( decodeNode->type() )
    {
-      case E57_INTEGER:
+      case TypeInteger:
       {
          std::shared_ptr<IntegerNodeImpl> ini =
             std::static_pointer_cast<IntegerNodeImpl>( decodeNode ); // downcast to correct type
@@ -107,7 +107,7 @@ std::shared_ptr<Decoder> Decoder::DecoderFactory( unsigned bytestreamNumber, //!
          return decoder;
       }
 
-      case E57_SCALED_INTEGER:
+      case TypeScaledInteger:
       {
          std::shared_ptr<ScaledIntegerNodeImpl> sini =
             std::static_pointer_cast<ScaledIntegerNodeImpl>( decodeNode ); // downcast to correct type
@@ -160,7 +160,7 @@ std::shared_ptr<Decoder> Decoder::DecoderFactory( unsigned bytestreamNumber, //!
          return decoder;
       }
 
-      case E57_FLOAT:
+      case TypeFloat:
       {
          std::shared_ptr<FloatNodeImpl> fni =
             std::static_pointer_cast<FloatNodeImpl>( decodeNode ); // downcast to correct type
@@ -170,7 +170,7 @@ std::shared_ptr<Decoder> Decoder::DecoderFactory( unsigned bytestreamNumber, //!
          return decoder;
       }
 
-      case E57_STRING:
+      case TypeString:
       {
          std::shared_ptr<Decoder> decoder(
             new BitpackStringDecoder( bytestreamNumber, dbufs.at( 0 ), maxRecordCount ) );
@@ -180,7 +180,7 @@ std::shared_ptr<Decoder> Decoder::DecoderFactory( unsigned bytestreamNumber, //!
 
       default:
       {
-         throw E57_EXCEPTION2( E57_ERROR_BAD_PROTOTYPE, "nodeType=" + toString( decodeNode->type() ) );
+         throw E57_EXCEPTION2( ErrorBadPrototype, "nodeType=" + toString( decodeNode->type() ) );
       }
    }
 }
@@ -202,7 +202,7 @@ void BitpackDecoder::destBufferSetNew( std::vector<SourceDestBuffer> &dbufs )
 {
    if ( dbufs.size() != 1 )
    {
-      throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "dbufsSize=" + toString( dbufs.size() ) );
+      throw E57_EXCEPTION2( ErrorInternal, "dbufsSize=" + toString( dbufs.size() ) );
    }
 
    destBuffer_ = dbufs.at( 0 ).impl();
@@ -271,9 +271,8 @@ size_t BitpackDecoder::inputProcess( const char *source, const size_t availableB
 #ifdef E57_DEBUG
       if ( bitsEaten > endBit - inBufferFirstBit_ )
       {
-         throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "bitsEaten=" + toString( bitsEaten ) +
-                                                      " endBit=" + toString( endBit ) +
-                                                      " inBufferFirstBit=" + toString( inBufferFirstBit_ ) );
+         throw E57_EXCEPTION2( ErrorInternal, "bitsEaten=" + toString( bitsEaten ) + " endBit=" + toString( endBit ) +
+                                                 " inBufferFirstBit=" + toString( inBufferFirstBit_ ) );
       }
 #endif
       inBufferFirstBit_ += bitsEaten;
@@ -306,8 +305,8 @@ void BitpackDecoder::inBufferShiftDown()
 #ifdef E57_DEBUG
    if ( firstNaturalByte > inBufferEndByte_ )
    {
-      throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "firstNaturalByte=" + toString( firstNaturalByte ) +
-                                                   " inBufferEndByte=" + toString( inBufferEndByte_ ) );
+      throw E57_EXCEPTION2( ErrorInternal, "firstNaturalByte=" + toString( firstNaturalByte ) +
+                                              " inBufferEndByte=" + toString( inBufferEndByte_ ) );
    }
 #endif
    size_t byteCount = inBufferEndByte_ - firstNaturalByte;
@@ -353,7 +352,7 @@ void BitpackDecoder::dump( int indent, std::ostream &os )
 
 BitpackFloatDecoder::BitpackFloatDecoder( unsigned bytestreamNumber, SourceDestBuffer &dbuf, FloatPrecision precision,
                                           uint64_t maxRecordCount ) :
-   BitpackDecoder( bytestreamNumber, dbuf, ( precision == E57_SINGLE ) ? sizeof( float ) : sizeof( double ),
+   BitpackDecoder( bytestreamNumber, dbuf, ( precision == PrecisionSingle ) ? sizeof( float ) : sizeof( double ),
                    maxRecordCount ),
    precision_( precision )
 {
@@ -370,14 +369,14 @@ size_t BitpackFloatDecoder::inputProcessAligned( const char *inbuf, const size_t
 
    size_t n = destBuffer_->capacity() - destBuffer_->nextIndex();
 
-   size_t typeSize = ( precision_ == E57_SINGLE ) ? sizeof( float ) : sizeof( double );
+   size_t typeSize = ( precision_ == PrecisionSingle ) ? sizeof( float ) : sizeof( double );
 
 #ifdef E57_DEBUG
 #if 0 // I know no way to do this portably <rs>
    // Deactivate for now until a better solution is found.
    /// Verify that inbuf is naturally aligned to correct boundary (4 or 8 bytes).  Base class should be doing this for us.
    if (reinterpret_cast<unsigned>(inbuf) % typeSize) {
-      throw E57_EXCEPTION2(E57_ERROR_INTERNAL,
+      throw E57_EXCEPTION2(ErrorInternal,
                            "inbuf=" + toString(reinterpret_cast<unsigned>(inbuf))
                            + " typeSize=" + toString(typeSize));
    }
@@ -385,7 +384,7 @@ size_t BitpackFloatDecoder::inputProcessAligned( const char *inbuf, const size_t
    /// Verify first bit is zero
    if ( firstBit != 0 )
    {
-      throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "firstBit=" + toString( firstBit ) );
+      throw E57_EXCEPTION2( ErrorInternal, "firstBit=" + toString( firstBit ) );
    }
 #endif
 
@@ -408,7 +407,7 @@ size_t BitpackFloatDecoder::inputProcessAligned( const char *inbuf, const size_t
    std::cout << "  n:" << n << std::endl; //???
 #endif
 
-   if ( precision_ == E57_SINGLE )
+   if ( precision_ == PrecisionSingle )
    {
       /// Form the starting address for first data location in inBuffer
       auto inp = reinterpret_cast<const float *>( inbuf );
@@ -426,7 +425,7 @@ size_t BitpackFloatDecoder::inputProcessAligned( const char *inbuf, const size_t
       }
    }
    else
-   { /// E57_DOUBLE precision
+   { /// Double precision
       /// Form the starting address for first data location in inBuffer
       auto inp = reinterpret_cast<const double *>( inbuf );
 
@@ -454,13 +453,13 @@ size_t BitpackFloatDecoder::inputProcessAligned( const char *inbuf, const size_t
 void BitpackFloatDecoder::dump( int indent, std::ostream &os )
 {
    BitpackDecoder::dump( indent, os );
-   if ( precision_ == E57_SINGLE )
+   if ( precision_ == PrecisionSingle )
    {
-      os << space( indent ) << "precision:                E57_SINGLE" << std::endl;
+      os << space( indent ) << "precision:                Single" << std::endl;
    }
    else
    {
-      os << space( indent ) << "precision:                E57_DOUBLE" << std::endl;
+      os << space( indent ) << "precision:                Double" << std::endl;
    }
 }
 #endif
@@ -486,7 +485,7 @@ size_t BitpackStringDecoder::inputProcessAligned( const char *inbuf, const size_
    /// Verify first bit is zero (always byte-aligned)
    if ( firstBit != 0 )
    {
-      throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "firstBit=" + toString( firstBit ) );
+      throw E57_EXCEPTION2( ErrorInternal, "firstBit=" + toString( firstBit ) );
    }
 #endif
 
@@ -673,12 +672,12 @@ size_t BitpackIntegerDecoder<RegisterT>::inputProcessAligned( const char *inbuf,
    // Deactivate for now until a better solution is found.
    /// Verify that inbuf is naturally aligned to RegisterT boundary (1, 2, 4,or 8 bytes).  Base class is doing this for us.
    if ((reinterpret_cast<unsigned>(inbuf)) % sizeof(RegisterT))
-      throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "inbuf=" + toString(reinterpret_cast<unsigned>(inbuf)));
+      throw E57_EXCEPTION2(ErrorInternal, "inbuf=" + toString(reinterpret_cast<unsigned>(inbuf)));
 #endif
    /// Verify first bit is in first word
    if ( firstBit >= 8 * sizeof( RegisterT ) )
    {
-      throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "firstBit=" + toString( firstBit ) );
+      throw E57_EXCEPTION2( ErrorInternal, "firstBit=" + toString( firstBit ) );
    }
 #endif
 
@@ -836,7 +835,7 @@ void ConstantIntegerDecoder::destBufferSetNew( std::vector<SourceDestBuffer> &db
 {
    if ( dbufs.size() != 1 )
    {
-      throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "dbufsSize=" + toString( dbufs.size() ) );
+      throw E57_EXCEPTION2( ErrorInternal, "dbufsSize=" + toString( dbufs.size() ) );
    }
 
    destBuffer_ = dbufs.at( 0 ).impl();

@@ -224,18 +224,18 @@ int CheckedFile::open64( const ustring &fileName, int flags, int mode )
    errno_t err = _wsopen_s( &handle, widePath.c_str(), flags, _SH_DENYNO, mode );
    if ( err != 0 )
    {
-      throw E57_EXCEPTION2( E57_ERROR_OPEN_FAILED, "errno=" + toString( errno ) + " error='" + strerror( errno ) +
-                                                      "' fileName=" + fileName + " flags=" + toString( flags ) +
-                                                      " mode=" + toString( mode ) );
+      throw E57_EXCEPTION2( ErrorOpenFailed, "errno=" + toString( errno ) + " error='" + strerror( errno ) +
+                                                "' fileName=" + fileName + " flags=" + toString( flags ) +
+                                                " mode=" + toString( mode ) );
    }
    return handle;
 #elif defined( __GNUC__ )
    int fd = ::open( fileName_.c_str(), flags, mode );
    if ( fd < 0 )
    {
-      throw E57_EXCEPTION2( E57_ERROR_OPEN_FAILED, "errno=" + toString( errno ) + " error='" + strerror( errno ) +
-                                                      "' fileName=" + fileName + " flags=" + toString( flags ) +
-                                                      " mode=" + toString( mode ) );
+      throw E57_EXCEPTION2( ErrorOpenFailed, "errno=" + toString( errno ) + " error='" + strerror( errno ) +
+                                                "' fileName=" + fileName + " flags=" + toString( flags ) +
+                                                " mode=" + toString( mode ) );
    }
    return fd;
 #else
@@ -266,8 +266,8 @@ void CheckedFile::read( char *buf, size_t nRead, size_t /*bufSize*/ )
 
    if ( end > logicalLength )
    {
-      throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "fileName=" + fileName_ + " end=" + toString( end ) +
-                                                   " length=" + toString( logicalLength ) );
+      throw E57_EXCEPTION2( ErrorInternal, "fileName=" + fileName_ + " end=" + toString( end ) +
+                                              " length=" + toString( logicalLength ) );
    }
 
    uint64_t page = 0;
@@ -289,10 +289,10 @@ void CheckedFile::read( char *buf, size_t nRead, size_t /*bufSize*/ )
 
       switch ( checkSumPolicy_ )
       {
-         case ChecksumPolicy::None:
+         case ChecksumPolicy::ChecksumNone:
             break;
 
-         case ChecksumPolicy::All:
+         case ChecksumPolicy::ChecksumAll:
             verifyChecksum( page_buffer, page );
             break;
 
@@ -326,7 +326,7 @@ void CheckedFile::write( const char *buf, size_t nWrite )
 #endif
    if ( readOnly_ )
    {
-      throw E57_EXCEPTION2( E57_ERROR_FILE_IS_READ_ONLY, "fileName=" + fileName_ );
+      throw E57_EXCEPTION2( ErrorFileReadOnly, "fileName=" + fileName_ );
    }
 
    uint64_t end = position( Logical ) + nWrite;
@@ -445,8 +445,8 @@ uint64_t CheckedFile::lseek64( int64_t offset, int whence )
          return bufView_->pos();
       }
 
-      throw E57_EXCEPTION2( E57_ERROR_LSEEK_FAILED, "fileName=" + fileName_ + " offset=" + toString( offset ) +
-                                                       " whence=" + toString( whence ) );
+      throw E57_EXCEPTION2( ErrorSeekFailed, "fileName=" + fileName_ + " offset=" + toString( offset ) +
+                                                " whence=" + toString( whence ) );
    }
 
 #if defined( _WIN32 )
@@ -457,7 +457,7 @@ uint64_t CheckedFile::lseek64( int64_t offset, int whence )
 #ifdef E57_MAX_DEBUG
    if ( sizeof( off_t ) != sizeof( offset ) )
    {
-      throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "sizeof(off_t)=" + toString( sizeof( off_t ) ) );
+      throw E57_EXCEPTION2( ErrorInternal, "sizeof(off_t)=" + toString( sizeof( off_t ) ) );
    }
 #endif
    int64_t result = ::lseek( fd_, offset, whence );
@@ -474,9 +474,8 @@ uint64_t CheckedFile::lseek64( int64_t offset, int whence )
 
    if ( result < 0 )
    {
-      throw E57_EXCEPTION2( E57_ERROR_LSEEK_FAILED, "fileName=" + fileName_ + " offset=" + toString( offset ) +
-                                                       " whence=" + toString( whence ) +
-                                                       " result=" + toString( result ) );
+      throw E57_EXCEPTION2( ErrorSeekFailed, "fileName=" + fileName_ + " offset=" + toString( offset ) +
+                                                " whence=" + toString( whence ) + " result=" + toString( result ) );
    }
 
    return static_cast<uint64_t>( result );
@@ -527,7 +526,7 @@ void CheckedFile::extend( uint64_t newLength, OffsetMode omode )
 #endif
    if ( readOnly_ )
    {
-      throw E57_EXCEPTION2( E57_ERROR_FILE_IS_READ_ONLY, "fileName=" + fileName_ );
+      throw E57_EXCEPTION2( ErrorFileReadOnly, "fileName=" + fileName_ );
    }
 
    uint64_t newLogicalLength = 0;
@@ -546,8 +545,8 @@ void CheckedFile::extend( uint64_t newLength, OffsetMode omode )
    /// Make sure we are trying to make file longer
    if ( newLogicalLength < currentLogicalLength )
    {
-      throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "fileName=" + fileName_ + " newLength=" + toString( newLogicalLength ) +
-                                                   " currentLength=" + toString( currentLogicalLength ) );
+      throw E57_EXCEPTION2( ErrorInternal, "fileName=" + fileName_ + " newLength=" + toString( newLogicalLength ) +
+                                              " currentLength=" + toString( currentLogicalLength ) );
    }
 
    /// Calc how may zero bytes we have to add to end
@@ -629,7 +628,7 @@ void CheckedFile::close()
 #endif
       if ( result < 0 )
       {
-         throw E57_EXCEPTION2( E57_ERROR_CLOSE_FAILED, "fileName=" + fileName_ + " result=" + toString( result ) );
+         throw E57_EXCEPTION2( ErrorCloseFailed, "fileName=" + fileName_ + " result=" + toString( result ) );
       }
 
       fd_ = -1;
@@ -691,10 +690,9 @@ void CheckedFile::verifyChecksum( char *page_buffer, size_t page )
    {
       const uint64_t physicalLength = length( Physical );
 
-      throw E57_EXCEPTION2( E57_ERROR_BAD_CHECKSUM,
-                            "fileName=" + fileName_ + " computedChecksum=" + toString( check_sum ) +
-                               " storedChecksum=" + toString( check_sum_in_page ) + " page=" + toString( page ) +
-                               " length=" + toString( physicalLength ) );
+      throw E57_EXCEPTION2( ErrorBadChecksum, "fileName=" + fileName_ + " computedChecksum=" + toString( check_sum ) +
+                                                 " storedChecksum=" + toString( check_sum_in_page ) + " page=" +
+                                                 toString( page ) + " length=" + toString( physicalLength ) );
    }
 }
 
@@ -745,7 +743,7 @@ void CheckedFile::readPhysicalPage( char *page_buffer, uint64_t page )
 
    if ( result < 0 || static_cast<size_t>( result ) != physicalPageSize )
    {
-      throw E57_EXCEPTION2( E57_ERROR_READ_FAILED, "fileName=" + fileName_ + " result=" + toString( result ) );
+      throw E57_EXCEPTION2( ErrorReadFailed, "fileName=" + fileName_ + " result=" + toString( result ) );
    }
 }
 
@@ -772,6 +770,6 @@ void CheckedFile::writePhysicalPage( char *page_buffer, uint64_t page )
 
    if ( result < 0 )
    {
-      throw E57_EXCEPTION2( E57_ERROR_WRITE_FAILED, "fileName=" + fileName_ + " result=" + toString( result ) );
+      throw E57_EXCEPTION2( ErrorWriteFailed, "fileName=" + fileName_ + " result=" + toString( result ) );
    }
 }

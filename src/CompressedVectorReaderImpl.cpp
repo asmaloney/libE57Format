@@ -55,7 +55,7 @@ namespace e57
       /// Empty dbufs is an error
       if ( dbufs.empty() )
       {
-         throw E57_EXCEPTION2( E57_ERROR_BAD_API_ARGUMENT,
+         throw E57_EXCEPTION2( ErrorBadAPIArgument,
                                "imageFileName=" + cVector_->imageFileName() + " cvPathName=" + cVector_->pathName() );
       }
 
@@ -81,7 +81,7 @@ namespace e57
          uint64_t bytestreamNumber = 0;
          if ( !proto_->findTerminalPosition( readNode, bytestreamNumber ) )
          {
-            throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "dbufIndex=" + toString( i ) );
+            throw E57_EXCEPTION2( ErrorInternal, "dbufIndex=" + toString( i ) );
          }
 
          channels_.emplace_back( dbufs.at( i ), decoder, static_cast<unsigned>( bytestreamNumber ),
@@ -106,7 +106,7 @@ namespace e57
          //??? should have caught this before got here, in XML read, get this if CV
          // wasn't written to
          // by writer.
-         throw E57_EXCEPTION2( E57_ERROR_INTERNAL,
+         throw E57_EXCEPTION2( ErrorInternal,
                                "imageFileName=" + cVector_->imageFileName() + " cvPathName=" + cVector_->pathName() );
       }
       imf->file_->seek( sectionLogicalStart, CheckedFile::Logical );
@@ -133,7 +133,7 @@ namespace e57
          /// Double check that have a data packet
          if ( dpkt->header.packetType != DATA_PACKET )
          {
-            throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET, "packetType=" + toString( dpkt->header.packetType ) );
+            throw E57_EXCEPTION2( ErrorBadCVPacket, "packetType=" + toString( dpkt->header.packetType ) );
          }
 
          /// Have good packet, initialize channels
@@ -187,7 +187,7 @@ namespace e57
       {
          if ( dbufs_.size() != dbufs.size() )
          {
-            throw E57_EXCEPTION2( E57_ERROR_BUFFERS_NOT_COMPATIBLE,
+            throw E57_EXCEPTION2( ErrorBuffersNotCompatible,
                                   "oldSize=" + toString( dbufs_.size() ) + " newSize=" + toString( dbufs.size() ) );
          }
          for ( size_t i = 0; i < dbufs_.size(); i++ )
@@ -248,7 +248,7 @@ namespace e57
          uint64_t earliestPacketLogicalOffset = earliestPacketNeededForInput();
 
          /// If nobody's hungry, we are done with the read
-         if ( earliestPacketLogicalOffset == E57_UINT64_MAX )
+         if ( earliestPacketLogicalOffset == UINT64_MAX )
          {
             break;
          }
@@ -270,8 +270,8 @@ namespace e57
          {
             if ( outputCount != chan->dbuf.impl()->nextIndex() )
             {
-               throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "outputCount=" + toString( outputCount ) + " nextIndex=" +
-                                                            toString( chan->dbuf.impl()->nextIndex() ) );
+               throw E57_EXCEPTION2( ErrorInternal, "outputCount=" + toString( outputCount ) +
+                                                       " nextIndex=" + toString( chan->dbuf.impl()->nextIndex() ) );
             }
          }
       }
@@ -282,7 +282,7 @@ namespace e57
 
    uint64_t CompressedVectorReaderImpl::earliestPacketNeededForInput() const
    {
-      uint64_t earliestPacketLogicalOffset = E57_UINT64_MAX;
+      uint64_t earliestPacketLogicalOffset = UINT64_MAX;
 #ifdef E57_MAX_VERBOSE
       unsigned earliestChannel = 0;
 #endif
@@ -341,13 +341,13 @@ namespace e57
       // Double check that have a data packet.  Should have already determined this.
       if ( dpkt->header.packetType != DATA_PACKET )
       {
-         throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "packetType=" + toString( dpkt->header.packetType ) );
+         throw E57_EXCEPTION2( ErrorInternal, "packetType=" + toString( dpkt->header.packetType ) );
       }
 
       // Read earliest packet into cache and send data to decoders with unblocked output
 
       bool anyChannelHasExhaustedPacket = false;
-      uint64_t nextPacketLogicalOffset = E57_UINT64_MAX;
+      uint64_t nextPacketLogicalOffset = UINT64_MAX;
 
       // Feed bytestreams to channels with unblocked output that are reading from this packet
       for ( DecodeChannel &channel : channels_ )
@@ -365,7 +365,7 @@ namespace e57
          // Double check we are not off end of buffer
          if ( channel.currentBytestreamBufferIndex > bsbLength )
          {
-            throw E57_EXCEPTION2( E57_ERROR_INTERNAL,
+            throw E57_EXCEPTION2( ErrorInternal,
                                   "currentBytestreamBufferIndex =" + toString( channel.currentBytestreamBufferIndex ) +
                                      " bsbLength=" + toString( bsbLength ) );
          }
@@ -376,8 +376,8 @@ namespace e57
 
          if ( &uneatenStart[uneatenLength] > &bsbStart[bsbLength] )
          {
-            throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "uneatenLength=" + toString( uneatenLength ) +
-                                                         " bsbLength=" + toString( bsbLength ) );
+            throw E57_EXCEPTION2( ErrorInternal, "uneatenLength=" + toString( uneatenLength ) +
+                                                    " bsbLength=" + toString( bsbLength ) );
          }
 
          // Feed into decoder
@@ -423,7 +423,7 @@ namespace e57
       // Some channel has exhausted this packet, so find next data packet and
       // update currentPacketLogicalOffset for all interested channels.
 
-      if ( nextPacketLogicalOffset < E57_UINT64_MAX )
+      if ( nextPacketLogicalOffset < UINT64_MAX )
       { //??? huh?
          // Get packet at nextPacketLogicalOffset into memory.
          dpkt = dataPacket( nextPacketLogicalOffset );
@@ -509,7 +509,7 @@ namespace e57
       }
 
       /// Ran off end of section, so return failure code.
-      return E57_UINT64_MAX;
+      return UINT64_MAX;
    }
 
    void CompressedVectorReaderImpl::seek( uint64_t /*recordNumber*/ )
@@ -517,7 +517,7 @@ namespace e57
       checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
 
       ///!!! implement
-      throw E57_EXCEPTION1( E57_ERROR_NOT_IMPLEMENTED );
+      throw E57_EXCEPTION1( ErrorNotImplemented );
    }
 
    bool CompressedVectorReaderImpl::isOpen() const
@@ -566,7 +566,7 @@ namespace e57
    {
       if ( !isOpen_ )
       {
-         throw E57Exception( E57_ERROR_READER_NOT_OPEN,
+         throw E57Exception( ErrorReaderNotOpen,
                              "imageFileName=" + cVector_->imageFileName() + " cvPathName=" + cVector_->pathName(),
                              srcFileName, srcLineNumber, srcFunctionName );
       }

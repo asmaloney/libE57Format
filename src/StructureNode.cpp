@@ -75,8 +75,8 @@ error to attempt to attach the StructureNode to a different ImageFile.
 true).
 @pre     The @a destImageFile must have been opened in write mode (i.e.
 destImageFile.isWritable() must be true).
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     Node
 */
 StructureNode::StructureNode( ImageFile destImageFile ) : impl_( new StructureNodeImpl( destImageFile.impl() ) )
@@ -131,8 +131,8 @@ bool StructureNode::isAttached() const
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @post    No visible state is modified.
 @return  Number of child nodes contained by this StructureNode.
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     StructureNode::get(int64_t) const,
 StructureNode::set, VectorNode::childCount
 */
@@ -153,9 +153,9 @@ pathName origin root will not the root node of an ImageFile.
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @post    No visible state is modified.
 @return  true if pathName is currently defined.
-@throw   ::E57_ERROR_BAD_PATH_NAME
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorBadPathName
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     ImageFile::root, VectorNode::isDefined
 */
 bool StructureNode::isDefined( const ustring &pathName ) const
@@ -174,9 +174,9 @@ more children are added to the StructureNode.
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @post    No visible state is modified.
 @return  A smart Node handle referencing the child node.
-@throw   ::E57_ERROR_CHILD_INDEX_OUT_OF_BOUNDS
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorChildIndexOutOfBounds
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     StructureNode::childCount,
 StructureNode::get(const ustring&) const, VectorNode::get
 */
@@ -197,10 +197,10 @@ an ImageFile.
 @pre     The @a pathName must be defined (i.e. isDefined(pathName)).
 @post    No visible state is modified.
 @return  A smart Node handle referencing the child node.
-@throw   ::E57_ERROR_BAD_PATH_NAME
-@throw   ::E57_ERROR_PATH_UNDEFINED
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorBadPathName
+@throw   ::ErrorPathUndefined
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     StructureNode::get(int64_t) const
 */
 Node StructureNode::get( const ustring &pathName ) const
@@ -238,15 +238,15 @@ destImageFile().isWritable()).
 @pre     The associated destImageFile of this StructureNode and of @a n must be
 same (i.e. destImageFile() == n.destImageFile()).
 @post    The @a pathName will be defined (i.e. isDefined(pathName)).
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_BAD_PATH_NAME
-@throw   ::E57_ERROR_PATH_UNDEFINED
-@throw   ::E57_ERROR_SET_TWICE
-@throw   ::E57_ERROR_ALREADY_HAS_PARENT
-@throw   ::E57_ERROR_DIFFERENT_DEST_IMAGEFILE
-@throw   ::E57_ERROR_HOMOGENEOUS_VIOLATION
-@throw   ::E57_ERROR_FILE_IS_READ_ONLY
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorBadPathName
+@throw   ::ErrorPathUndefined
+@throw   ::ErrorSetTwice
+@throw   ::ErrorAlreadyHasParent
+@throw   ::ErrorDifferentDestImageFile
+@throw   ::ErrorHomogeneousViolation
+@throw   ::ErrorFileReadOnly
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     VectorNode::append
 */
 void StructureNode::set( const ustring &pathName, const Node &n )
@@ -300,20 +300,20 @@ void StructureNode::checkInvariant( bool doRecurse, bool doUpcast )
       // Child's parent must be this
       if ( static_cast<Node>( *this ) != child.parent() )
       {
-         throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+         throw E57_EXCEPTION1( ErrorInvarianceViolation );
       }
 
       // Child's elementName must be defined
       if ( !isDefined( child.elementName() ) )
       {
-         throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+         throw E57_EXCEPTION1( ErrorInvarianceViolation );
       }
 
       // Getting child by element name must yield same child
       Node n = get( child.elementName() );
       if ( n != child )
       {
-         throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+         throw E57_EXCEPTION1( ErrorInvarianceViolation );
       }
    }
 }
@@ -342,14 +342,14 @@ exception is thrown. In designs that need to avoid the exception, use
 Node::type() to determine the actual type of the @a n before downcasting. This
 function must be explicitly called (c++ compiler cannot insert it
 automatically).
-@throw   ::E57_ERROR_BAD_NODE_DOWNCAST
+@throw   ::ErrorBadNodeDowncast
 @see     Node::type(), StructureNode::operator Node()
 */
 StructureNode::StructureNode( const Node &n )
 {
-   if ( n.type() != E57_STRUCTURE )
+   if ( n.type() != TypeStructure )
    {
-      throw E57_EXCEPTION2( E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString( n.type() ) );
+      throw E57_EXCEPTION2( ErrorBadNodeDowncast, "nodeType=" + toString( n.type() ) );
    }
 
    /// Set our shared_ptr to the downcast shared_ptr

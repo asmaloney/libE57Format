@@ -79,7 +79,7 @@ The conversion from a general handle type to a specific handle type is called
 IntegerNode::IntegerNode(const Node&) for example). If a downcast is requested
 to an incorrect type (e.g. taking a Node handle that is actually a FloatNode and
 trying to downcast it to a IntegerNode), an E57Exception is thrown with an
-ErrorCode of E57_ERROR_BAD_NODE_DOWNCAST. Depending on the program design,
+ErrorCode of ::ErrorBadNodeDowncast. Depending on the program design,
 throwing a bad downcast exception might be acceptable, if an element must be a
 specific type and no recovery is possible. If a standard requires an element be
 one several types, then Node::type() should be used to interrogate the type in
@@ -120,11 +120,9 @@ ScaledIntegerNode, FloatNode, StringNode, BlobNode
 @details This function allows the actual node type to be interrogated before
 upcasting the handle to the actual node type (see Upcasting and Downcasting
 section in Node).
-@return  The NodeType of a generic Node, which may be one of the following
-NodeType enumeration values:
-::E57_STRUCTURE, ::E57_VECTOR, ::E57_COMPRESSED_VECTOR, ::E57_INTEGER,
-::E57_SCALED_INTEGER,
-::E57_FLOAT, ::E57_STRING, ::E57_BLOB.
+@return  The NodeType of a generic Node, which may be one of the following NodeType enumeration values:
+::TypeStructure, ::TypeVector, ::TypeCompressedVector, ::TypeInteger, ::TypeScaledInteger, ::TypeFloat, ::TypeString,
+::TypeBlob.
 @post    No visible state is modified.
 @see     NodeType, upcast/downcast discussion in Node
 */
@@ -147,8 +145,8 @@ CompressedVectorNode::CompressedVectorNode for more details).
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @post    No visible state is modified.
 @return  true if this node is a root node.
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     Node::parent, Node::isAttached, CompressedVectorNode::CompressedVectorNode
 */
 bool Node::isRoot() const
@@ -166,7 +164,7 @@ In the API, if a node has zero parents it is represented by having itself as a
 parent. Due to the set-once design of the API, a parent-child relationship
 cannot be modified once established. A child node can be any of the 8 node
 types, but a parent node can only be one of the 3 container node types
-(E57_STRUCTURE, E57_VECTOR, and E57_COMPRESSED_VECTOR). Each parent-child link
+(::TypeStructure, ::TypeVector, and ::TypeCompressedVector). Each parent-child link
 has a string name (the elementName) associated with it (See Node::elementName
 for more details). More than one tree can be formed at any given time. Typically
 small trees are temporarily constructed before attachment to an ImageFile so
@@ -179,8 +177,8 @@ Node::isRoot to avoid infinite loops or infinite recursion.
 @post    No visible state is modified.
 @return  A smart Node handle referencing the parent node or this node if is a
 root node.
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     Node::isRoot, Node::isAttached, CompressedVectorNode::CompressedVectorNode, Node::elementName
 */
 Node Node::parent() const
@@ -212,8 +210,8 @@ as its elementName.
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @post    No visible state is modified.
 @return  The absolute path name of the node.
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     Node::elementName, Node::parent, Node::isRoot
 */
 ustring Node::pathName() const
@@ -242,8 +240,8 @@ is not stored in the file and is deduced by the position of the child.
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @post    No visible state is modified.
 @return  The element name of the node, or "" if a root node.
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     Node::pathName, Node::parent, Node::isRoot
 */
 ustring Node::elementName() const
@@ -287,8 +285,8 @@ to create nodes that are not eventually attached to the ImageFile.
 @post    No visible object state is modified.
 @return  @c true if node is child of (or in codecs or prototype of a child
 CompressedVectorNode of) the root node of an ImageFile.
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     Node::destImageFile, ImageFile::root
 */
 bool Node::isAttached() const
@@ -336,14 +334,14 @@ This function checks at least the assertions in the documented class invariant
 description (see class reference page for this object). Other internal
 invariants that are implementation-dependent may also be checked. If any
 invariant clause is violated, an E57Exception with errorCode of
-E57_ERROR_INVARIANCE_VIOLATION is thrown.
+ErrorInvarianceViolation is thrown.
 
 Specifying doRecurse=true only makes sense if doDowncast=true is also specified
 (the generic Node has no way to access any children). Checking the invariant
 recursively may be expensive if the tree is large, so should be used
 judiciously, in debug versions of the application.
 @post    No visible state is modified.
-@throw   ::E57_ERROR_INVARIANCE_VIOLATION or any other E57 ErrorCode
+@throw   ::ErrorInvarianceViolation or any other E57 ErrorCode
 @see     Class Invariant section in Node,
 IntegerNode::checkInvariant, ScaledIntegerNode::checkInvariant,
 FloatNode::checkInvariant, BlobNode::checkInvariant,
@@ -365,13 +363,13 @@ void Node::checkInvariant( bool doRecurse, bool doDowncast )
    // Parent attachment state is same as this attachment state
    if ( isAttached() != parent().isAttached() )
    {
-      throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+      throw E57_EXCEPTION1( ErrorInvarianceViolation );
    }
 
    // Parent destination ImageFile is same as this
    if ( imf != parent().destImageFile() )
    {
-      throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+      throw E57_EXCEPTION1( ErrorInvarianceViolation );
    }
 
    // If this is the ImageFile root node
@@ -380,13 +378,13 @@ void Node::checkInvariant( bool doRecurse, bool doDowncast )
       // Must be attached
       if ( !isAttached() )
       {
-         throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+         throw E57_EXCEPTION1( ErrorInvarianceViolation );
       }
 
       // Must be is a root node
       if ( !isRoot() )
       {
-         throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+         throw E57_EXCEPTION1( ErrorInvarianceViolation );
       }
    }
 
@@ -396,13 +394,13 @@ void Node::checkInvariant( bool doRecurse, bool doDowncast )
       // Absolute pathName is "/"
       if ( pathName() != "/" )
       {
-         throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+         throw E57_EXCEPTION1( ErrorInvarianceViolation );
       }
 
       // parent() returns this node
       if ( *this != parent() )
       {
-         throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+         throw E57_EXCEPTION1( ErrorInvarianceViolation );
       }
    }
    else
@@ -410,7 +408,7 @@ void Node::checkInvariant( bool doRecurse, bool doDowncast )
       // Non-root can't be own parent
       if ( *this == parent() )
       {
-         throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+         throw E57_EXCEPTION1( ErrorInvarianceViolation );
       }
 
       // pathName is concatenation of parent pathName and this elementName
@@ -418,53 +416,53 @@ void Node::checkInvariant( bool doRecurse, bool doDowncast )
       {
          if ( pathName() != "/" + elementName() )
          {
-            throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+            throw E57_EXCEPTION1( ErrorInvarianceViolation );
          }
       }
       else
       {
          if ( pathName() != parent().pathName() + "/" + elementName() )
          {
-            throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+            throw E57_EXCEPTION1( ErrorInvarianceViolation );
          }
       }
 
       // Non-root nodes must be children of either a VectorNode or StructureNode
-      if ( parent().type() == E57_VECTOR )
+      if ( parent().type() == TypeVector )
       {
          VectorNode v = static_cast<VectorNode>( parent() );
 
          // Must be defined in parent VectorNode with this elementName
          if ( !v.isDefined( elementName() ) )
          {
-            throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+            throw E57_EXCEPTION1( ErrorInvarianceViolation );
          }
 
          // Getting child of parent with this elementName must return this
          if ( v.get( elementName() ) != *this )
          {
-            throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+            throw E57_EXCEPTION1( ErrorInvarianceViolation );
          }
       }
-      else if ( parent().type() == E57_STRUCTURE )
+      else if ( parent().type() == TypeStructure )
       {
          StructureNode s = static_cast<StructureNode>( parent() );
 
          // Must be defined in parent VectorNode with this elementName
          if ( !s.isDefined( elementName() ) )
          {
-            throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+            throw E57_EXCEPTION1( ErrorInvarianceViolation );
          }
 
          // Getting child of parent with this elementName must return this
          if ( s.get( elementName() ) != *this )
          {
-            throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+            throw E57_EXCEPTION1( ErrorInvarianceViolation );
          }
       }
       else
       {
-         throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+         throw E57_EXCEPTION1( ErrorInvarianceViolation );
       }
    }
 
@@ -484,13 +482,13 @@ void Node::checkInvariant( bool doRecurse, bool doDowncast )
          // pathName must be defined
          if ( !imf.root().isDefined( pathName() ) )
          {
-            throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+            throw E57_EXCEPTION1( ErrorInvarianceViolation );
          }
 
          // Getting by absolute pathName must be this
          if ( imf.root().get( pathName() ) != *this )
          {
-            throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+            throw E57_EXCEPTION1( ErrorInvarianceViolation );
          }
       }
    }
@@ -500,49 +498,49 @@ void Node::checkInvariant( bool doRecurse, bool doDowncast )
    {
       switch ( type() )
       {
-         case E57_STRUCTURE:
+         case TypeStructure:
          {
             StructureNode s( *this );
             s.checkInvariant( doRecurse, false );
          }
          break;
-         case E57_VECTOR:
+         case TypeVector:
          {
             VectorNode v( *this );
             v.checkInvariant( doRecurse, false );
          }
          break;
-         case E57_COMPRESSED_VECTOR:
+         case TypeCompressedVector:
          {
             CompressedVectorNode cv( *this );
             cv.checkInvariant( doRecurse, false );
          }
          break;
-         case E57_INTEGER:
+         case TypeInteger:
          {
             IntegerNode i( *this );
             i.checkInvariant( doRecurse, false );
          }
          break;
-         case E57_SCALED_INTEGER:
+         case TypeScaledInteger:
          {
             ScaledIntegerNode si( *this );
             si.checkInvariant( doRecurse, false );
          }
          break;
-         case E57_FLOAT:
+         case TypeFloat:
          {
             FloatNode f( *this );
             f.checkInvariant( doRecurse, false );
          }
          break;
-         case E57_STRING:
+         case TypeString:
          {
             StringNode s( *this );
             s.checkInvariant( doRecurse, false );
          }
          break;
-         case E57_BLOB:
+         case TypeBlob:
          {
             BlobNode b( *this );
             b.checkInvariant( doRecurse, false );

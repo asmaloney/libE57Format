@@ -46,10 +46,10 @@ namespace e57
 
       switch ( imageType )
       {
-         case E57_NO_IMAGE:
+         case ImageNone:
             return 0;
 
-         case E57_JPEG_IMAGE:
+         case ImageJPEG:
             if ( image.isDefined( "jpegImage" ) )
             {
                BlobNode jpegImage( image.get( "jpegImage" ) );
@@ -58,7 +58,7 @@ namespace e57
             }
             break;
 
-         case E57_PNG_IMAGE:
+         case ImagePNG:
             if ( image.isDefined( "pngImage" ) )
             {
                BlobNode pngImage( image.get( "pngImage" ) );
@@ -67,7 +67,7 @@ namespace e57
             }
             break;
 
-         case E57_PNG_IMAGE_MASK:
+         case ImageMaskPNG:
             if ( image.isDefined( "imageMask" ) )
             {
                BlobNode imageMask( image.get( "imageMask" ) );
@@ -86,7 +86,7 @@ namespace e57
       // We are using the E57 v1.0 data format standard fieldnames.
       // The standard fieldnames are used without an extension prefix (in the default namespace).
       // We explicitly register it for completeness (the reference implementation would do it for us, if we didn't).
-      imf_.extensionsAdd( "", E57_V1_0_URI );
+      imf_.extensionsAdd( "", e57::VERSION_1_0_URI );
 
       // Set per-file properties.
       // Path names: "/formatName", "/majorVersion", "/minorVersion", "/coordinateMetadata"
@@ -369,10 +369,10 @@ namespace e57
 
       switch ( imageProjection )
       {
-         case E57_NO_PROJECTION:
+         case ProjectionNone:
             return 0;
 
-         case E57_VISUAL:
+         case ProjectionVisual:
             if ( image.isDefined( "visualReferenceRepresentation" ) )
             {
                StructureNode visualReferenceRepresentation( image.get( "visualReferenceRepresentation" ) );
@@ -380,7 +380,7 @@ namespace e57
             }
             break;
 
-         case E57_PINHOLE:
+         case ProjectionPinhole:
             if ( image.isDefined( "pinholeRepresentation" ) )
             {
                StructureNode pinholeRepresentation( image.get( "pinholeRepresentation" ) );
@@ -388,7 +388,7 @@ namespace e57
             }
             break;
 
-         case E57_SPHERICAL:
+         case ProjectionSpherical:
             if ( image.isDefined( "sphericalRepresentation" ) )
             {
                StructureNode sphericalRepresentation( image.get( "sphericalRepresentation" ) );
@@ -396,7 +396,7 @@ namespace e57
             }
             break;
 
-         case E57_CYLINDRICAL:
+         case ProjectionCylindrical:
             if ( image.isDefined( "cylindricalRepresentation" ) )
             {
                StructureNode cylindricalRepresentation( image.get( "cylindricalRepresentation" ) );
@@ -478,17 +478,17 @@ namespace e57
 
       // Add temp/humidity to scan.
       // Path names: "/data3D/0/temperature", etc...
-      if ( data3DHeader.temperature != E57_FLOAT_MAX )
+      if ( data3DHeader.temperature != FLOAT_MAX )
       {
          scan.set( "temperature", FloatNode( imf_, data3DHeader.temperature ) );
       }
 
-      if ( data3DHeader.relativeHumidity != E57_FLOAT_MAX )
+      if ( data3DHeader.relativeHumidity != FLOAT_MAX )
       {
          scan.set( "relativeHumidity", FloatNode( imf_, data3DHeader.relativeHumidity ) );
       }
 
-      if ( data3DHeader.atmosphericPressure != E57_FLOAT_MAX )
+      if ( data3DHeader.atmosphericPressure != FLOAT_MAX )
       {
          scan.set( "atmosphericPressure", FloatNode( imf_, data3DHeader.atmosphericPressure ) );
       }
@@ -575,8 +575,8 @@ namespace e57
 
       // Add Cartesian bounding box to scan.
       // Path names: "/data3D/0/cartesianBounds/xMinimum", etc...
-      if ( ( data3DHeader.cartesianBounds.xMinimum != -E57_DOUBLE_MAX ) ||
-           ( data3DHeader.cartesianBounds.xMaximum != E57_DOUBLE_MAX ) )
+      if ( ( data3DHeader.cartesianBounds.xMinimum != -DOUBLE_MAX ) ||
+           ( data3DHeader.cartesianBounds.xMaximum != DOUBLE_MAX ) )
       {
          StructureNode bbox( imf_ );
 
@@ -591,7 +591,7 @@ namespace e57
       }
 
       if ( ( data3DHeader.sphericalBounds.rangeMinimum != 0.0 ) ||
-           ( data3DHeader.sphericalBounds.rangeMaximum != E57_DOUBLE_MAX ) )
+           ( data3DHeader.sphericalBounds.rangeMaximum != DOUBLE_MAX ) )
       {
          StructureNode sbox( imf_ );
 
@@ -734,7 +734,8 @@ namespace e57
                                       pointRangeOffset );
          }
 
-         return FloatNode( imf_, 0.0, ( pointRangeScale < E57_NOT_SCALED_USE_FLOAT ) ? E57_DOUBLE : E57_SINGLE,
+         return FloatNode( imf_, 0.0,
+                           ( pointRangeScale < E57_NOT_SCALED_USE_FLOAT ) ? PrecisionDouble : PrecisionSingle,
                            pointRangeMin, pointRangeMax );
       };
 
@@ -772,8 +773,8 @@ namespace e57
             return ScaledIntegerNode( imf_, 0, angleMinimum, angleMaximum, angleScale, angleOffset );
          }
 
-         return FloatNode( imf_, 0.0, ( angleScale < E57_NOT_SCALED_USE_FLOAT ) ? E57_DOUBLE : E57_SINGLE, angleMin,
-                           angleMax );
+         return FloatNode( imf_, 0.0, ( angleScale < E57_NOT_SCALED_USE_FLOAT ) ? PrecisionDouble : PrecisionSingle,
+                           angleMin, angleMax );
       };
 
       if ( data3DHeader.pointFields.sphericalAzimuthField )
@@ -803,8 +804,9 @@ namespace e57
          }
          else if ( data3DHeader.pointFields.intensityScaledInteger == E57_NOT_SCALED_USE_FLOAT )
          {
-            proto.set( "intensity", FloatNode( imf_, 0.0, E57_SINGLE, data3DHeader.intensityLimits.intensityMinimum,
-                                               data3DHeader.intensityLimits.intensityMaximum ) );
+            proto.set( "intensity",
+                       FloatNode( imf_, 0.0, PrecisionSingle, data3DHeader.intensityLimits.intensityMinimum,
+                                  data3DHeader.intensityLimits.intensityMaximum ) );
          }
          else
          {
@@ -833,21 +835,20 @@ namespace e57
 
       if ( data3DHeader.pointFields.returnIndexField )
       {
-         proto.set( "returnIndex", IntegerNode( imf_, 0, E57_UINT8_MIN, data3DHeader.pointFields.returnMaximum ) );
+         proto.set( "returnIndex", IntegerNode( imf_, 0, UINT8_MIN, data3DHeader.pointFields.returnMaximum ) );
       }
       if ( data3DHeader.pointFields.returnCountField )
       {
-         proto.set( "returnCount", IntegerNode( imf_, 0, E57_UINT8_MIN, data3DHeader.pointFields.returnMaximum ) );
+         proto.set( "returnCount", IntegerNode( imf_, 0, UINT8_MIN, data3DHeader.pointFields.returnMaximum ) );
       }
 
       if ( data3DHeader.pointFields.rowIndexField )
       {
-         proto.set( "rowIndex", IntegerNode( imf_, 0, E57_UINT32_MIN, data3DHeader.pointFields.rowIndexMaximum ) );
+         proto.set( "rowIndex", IntegerNode( imf_, 0, UINT32_MIN, data3DHeader.pointFields.rowIndexMaximum ) );
       }
       if ( data3DHeader.pointFields.columnIndexField )
       {
-         proto.set( "columnIndex",
-                    IntegerNode( imf_, 0, E57_UINT32_MIN, data3DHeader.pointFields.columnIndexMaximum ) );
+         proto.set( "columnIndex", IntegerNode( imf_, 0, UINT32_MIN, data3DHeader.pointFields.columnIndexMaximum ) );
       }
 
       if ( data3DHeader.pointFields.timeStampField )
@@ -867,13 +868,13 @@ namespace e57
          }
          else if ( data3DHeader.pointFields.timeScaledInteger == E57_NOT_SCALED_USE_FLOAT )
          {
-            if ( data3DHeader.pointFields.timeMaximum == E57_FLOAT_MAX )
+            if ( data3DHeader.pointFields.timeMaximum == FLOAT_MAX )
             {
-               proto.set( "timeStamp", FloatNode( imf_, 0.0, E57_SINGLE, E57_FLOAT_MIN, E57_FLOAT_MAX ) );
+               proto.set( "timeStamp", FloatNode( imf_, 0.0, PrecisionSingle, FLOAT_MIN, FLOAT_MAX ) );
             }
-            else if ( data3DHeader.pointFields.timeMaximum == E57_DOUBLE_MAX )
+            else if ( data3DHeader.pointFields.timeMaximum == DOUBLE_MAX )
             {
-               proto.set( "timeStamp", FloatNode( imf_, 0.0, E57_DOUBLE, E57_DOUBLE_MIN, E57_DOUBLE_MAX ) );
+               proto.set( "timeStamp", FloatNode( imf_, 0.0, PrecisionDouble, DOUBLE_MIN, DOUBLE_MAX ) );
             }
          }
          else
@@ -919,15 +920,15 @@ namespace e57
       // currently we support writing normals only as float32
       if ( data3DHeader.pointFields.normalXField )
       {
-         proto.set( "nor:normalX", FloatNode( imf_, 0.0, E57_SINGLE, -1., 1. ) );
+         proto.set( "nor:normalX", FloatNode( imf_, 0.0, PrecisionSingle, -1.0, 1.0 ) );
       }
       if ( data3DHeader.pointFields.normalYField )
       {
-         proto.set( "nor:normalY", FloatNode( imf_, 0.0, E57_SINGLE, -1., 1. ) );
+         proto.set( "nor:normalY", FloatNode( imf_, 0.0, PrecisionSingle, -1.0, 1.0 ) );
       }
       if ( data3DHeader.pointFields.normalZField )
       {
-         proto.set( "nor:normalZ", FloatNode( imf_, 0.0, E57_SINGLE, -1., 1. ) );
+         proto.set( "nor:normalZ", FloatNode( imf_, 0.0, PrecisionSingle, -1.0, 1.0 ) );
       }
 
       // Make empty codecs vector for use in creating points CompressedVector.

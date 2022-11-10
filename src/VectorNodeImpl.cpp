@@ -42,7 +42,7 @@ namespace e57
       /// don't checkImageFileOpen
 
       /// Same node type?
-      if ( ni->type() != E57_VECTOR )
+      if ( ni->type() != TypeVector )
       {
          return ( false );
       }
@@ -90,7 +90,7 @@ namespace e57
          {
             if ( !child->isTypeEquivalent( ni ) )
             {
-               throw E57_EXCEPTION2( E57_ERROR_HOMOGENEOUS_VIOLATION, "this->pathName=" + this->pathName() );
+               throw E57_EXCEPTION2( ErrorHomogeneousViolation, "this->pathName=" + this->pathName() );
             }
          }
       }

@@ -116,11 +116,11 @@ participate in a transfer with a CompressedVectorNode.
 @pre     The @a destImageFile must be open (i.e. destImageFile.isOpen() must be
 true).
 @pre     The stride must be >= sizeof(*b)
-@throw   ::E57_ERROR_BAD_API_ARGUMENT
-@throw   ::E57_ERROR_BAD_PATH_NAME
-@throw   ::E57_ERROR_BAD_BUFFER
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorBadAPIArgument
+@throw   ::ErrorBadPathName
+@throw   ::ErrorBadBuffer
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     ImageFile::reader, ImageFile::writer,
 CompressedVectorReader::read(std::vector<SourceDestBuffer>&),
 CompressedVectorWriter::write(std::vector<SourceDestBuffer>&)
@@ -214,14 +214,10 @@ SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &path
 }
 
 /*!
-@brief   Designate vector of strings to transfer data to/from a CompressedVector
-as a block.
-@param   [in] destImageFile The ImageFile where the new node will eventually be
-stored.
-@param   [in] pathName      The pathname of the field in CompressedVectorNode
-that will transfer data to/from.
-@param   [in] b             The caller created vector of ustrings to transfer
-from/to.
+@brief   Designate vector of strings to transfer data to/from a CompressedVector as a block.
+@param   [in] destImageFile The ImageFile where the new node will eventually be stored.
+@param   [in] pathName      The pathname of the field in CompressedVectorNode that will transfer data to/from.
+@param   [in] b             The caller created vector of ustrings to transfer from/to.
 @details
 This overloaded form of the SourceDestBuffer constructor declares a
 vector<ustring> to be the source/destination of a transfer of StringNode values
@@ -245,11 +241,11 @@ Foundation Implementation cannot detect that the buffer been destroyed).
 @pre     b.size() must be > 0.
 @pre     The @a destImageFile must be open (i.e. destImageFile.isOpen() must be
 true).
-@throw   ::E57_ERROR_BAD_API_ARGUMENT
-@throw   ::E57_ERROR_BAD_PATH_NAME
-@throw   ::E57_ERROR_BAD_BUFFER
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorBadAPIArgument
+@throw   ::ErrorBadPathName
+@throw   ::ErrorBadBuffer
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     SourceDestBuffer::doConversion for discussion on representations compatible with string SourceDestBuffers.
 */
 SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, std::vector<ustring> *b ) :
@@ -273,7 +269,7 @@ CompressedVectorReader::read(std::vector<SourceDestBuffer>&)).
 @post    No visible state is modified.
 @return  Path name in prototype that this SourceDestBuffer will transfer data
 to/from.
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     CompressedVector, CompressedVectorNode::prototype
 */
 ustring SourceDestBuffer::pathName() const
@@ -288,17 +284,17 @@ The memory representation is deduced from which overloaded SourceDestBuffer
 constructor was used. The memory representation is independent of the type and
 minimum/maximum bounds of the node in the prototype that the SourceDestBuffer
 will transfer to/from. However, some combinations will result in an error if
-doConversion is not requested (e.g. E57_INT16 and FloatNode).
+doConversion is not requested (e.g. ::Int16 and FloatNode).
 
 Some combinations risk an error occurring during a write, if a value is too
-large (e.g. writing a E57_INT16 memory representation to an IntegerNode with
+large (e.g. writing an ::Int16 memory representation to an IntegerNode with
 minimum=-1024 maximum=1023). Some combinations risk an error occurring during a
 read, if a value is too large (e.g. reading an IntegerNode with minimum=-1024
-maximum=1023 int an E57_INT8 memory representation). Some combinations are never
-possible (e.g. E57_INT16 and StringNode).
+maximum=1023 int an ::Int8 memory representation). Some combinations are never
+possible (e.g. ::Int16 and StringNode).
 @post    No visible state is modified.
 @return  Memory representation of the elements in buffer.
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     MemoryRepresentation, NodeType
 */
 MemoryRepresentation SourceDestBuffer::memoryRepresentation() const
@@ -314,7 +310,7 @@ buffer. This function returns that declared length. If the length is incorrect
 (in particular, too long) memory may be corrupted or erroneous values written.
 @post    No visible state is modified.
 @return  Total capacity of buffer.
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorInternal           All objects in undocumented state
 */
 size_t SourceDestBuffer::capacity() const
 {
@@ -347,8 +343,8 @@ CompressedVectorReader or CompressedVectorWriter is created).
 @post    No visible state is modified.
 @return  true if conversions will be performed to match the memory type of
 buffer.
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
 */
 bool SourceDestBuffer::doConversion() const
 {
@@ -384,7 +380,7 @@ will have a fractional part.
 
 @post    No visible state is modified.
 @return  true if scaling will be performed for ScaledInteger transfers.
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     ScaledIntegerNode
 */
 bool SourceDestBuffer::doScaling() const

@@ -86,7 +86,7 @@ namespace e57
       // don't checkImageFileOpen, NodeImpl() will do it
 
       /// Same node type?
-      if ( ni->type() != E57_BLOB )
+      if ( ni->type() != TypeBlob )
       {
          return ( false );
       }
@@ -127,9 +127,9 @@ namespace e57
       checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
       if ( static_cast<uint64_t>( start ) + count > blobLogicalLength_ )
       {
-         throw E57_EXCEPTION2( E57_ERROR_BAD_API_ARGUMENT,
-                               "this->pathName=" + this->pathName() + " start=" + toString( start ) +
-                                  " count=" + toString( count ) + " length=" + toString( blobLogicalLength_ ) );
+         throw E57_EXCEPTION2( ErrorBadAPIArgument, "this->pathName=" + this->pathName() +
+                                                       " start=" + toString( start ) + " count=" + toString( count ) +
+                                                       " length=" + toString( blobLogicalLength_ ) );
       }
 
       ImageFileImplSharedPtr imf( destImageFile_ );
@@ -147,18 +147,18 @@ namespace e57
 
       if ( !destImageFile->isWriter() )
       {
-         throw E57_EXCEPTION2( E57_ERROR_FILE_IS_READ_ONLY, "fileName=" + destImageFile->fileName() );
+         throw E57_EXCEPTION2( ErrorFileReadOnly, "fileName=" + destImageFile->fileName() );
       }
       if ( !isAttached() )
       {
-         throw E57_EXCEPTION2( E57_ERROR_NODE_UNATTACHED, "fileName=" + destImageFile->fileName() );
+         throw E57_EXCEPTION2( ErrorNodeUnattached, "fileName=" + destImageFile->fileName() );
       }
 
       if ( static_cast<uint64_t>( start ) + count > blobLogicalLength_ )
       {
-         throw E57_EXCEPTION2( E57_ERROR_BAD_API_ARGUMENT,
-                               "this->pathName=" + this->pathName() + " start=" + toString( start ) +
-                                  " count=" + toString( count ) + " length=" + toString( blobLogicalLength_ ) );
+         throw E57_EXCEPTION2( ErrorBadAPIArgument, "this->pathName=" + this->pathName() +
+                                                       " start=" + toString( start ) + " count=" + toString( count ) +
+                                                       " length=" + toString( blobLogicalLength_ ) );
       }
 
       ImageFileImplSharedPtr imf( destImageFile_ );
@@ -175,7 +175,7 @@ namespace e57
       /// blobs? what exception get if try blob in compressedvector?
       if ( pathNames.find( relativePathName( origin ) ) == pathNames.end() )
       {
-         throw E57_EXCEPTION2( E57_ERROR_NO_BUFFER_FOR_ELEMENT, "this->pathName=" + this->pathName() );
+         throw E57_EXCEPTION2( ErrorNoBufferForElement, "this->pathName=" + this->pathName() );
       }
    }
 

@@ -41,22 +41,22 @@ namespace e57
       /// Since this ctor also used to construct single precision, and defaults for
       /// minimum/maximum are for double precision, adjust bounds smaller if
       /// single.
-      if ( precision_ == E57_SINGLE )
+      if ( precision_ == PrecisionSingle )
       {
-         if ( minimum_ < E57_FLOAT_MIN )
+         if ( minimum_ < FLOAT_MIN )
          {
-            minimum_ = E57_FLOAT_MIN;
+            minimum_ = FLOAT_MIN;
          }
-         if ( maximum_ > E57_FLOAT_MAX )
+         if ( maximum_ > FLOAT_MAX )
          {
-            maximum_ = E57_FLOAT_MAX;
+            maximum_ = FLOAT_MAX;
          }
       }
 
       /// Enforce the given bounds on raw value
       if ( value < minimum || maximum < value )
       {
-         throw E57_EXCEPTION2( E57_ERROR_VALUE_OUT_OF_BOUNDS,
+         throw E57_EXCEPTION2( ErrorValueOutOfBounds,
                                "this->pathName=" + this->pathName() + " value=" + toString( value ) +
                                   " minimum=" + toString( minimum ) + " maximum=" + toString( maximum ) );
       }
@@ -67,7 +67,7 @@ namespace e57
       // don't checkImageFileOpen
 
       /// Same node type?
-      if ( ni->type() != E57_FLOAT )
+      if ( ni->type() != TypeFloat )
       {
          return ( false );
       }
@@ -140,7 +140,7 @@ namespace e57
       if ( pathNames.find( relativePathName( origin ) ) == pathNames.end() &&
            pathNames.find( pathName() ) == pathNames.end() )
       {
-         throw E57_EXCEPTION2( E57_ERROR_NO_BUFFER_FOR_ELEMENT, "this->pathName=" + this->pathName() );
+         throw E57_EXCEPTION2( ErrorNoBufferForElement, "this->pathName=" + this->pathName() );
       }
    }
 
@@ -160,16 +160,16 @@ namespace e57
       }
 
       cf << space( indent ) << "<" << fieldName << " type=\"Float\"";
-      if ( precision_ == E57_SINGLE )
+      if ( precision_ == PrecisionSingle )
       {
          cf << " precision=\"single\"";
 
          /// Don't need to write if are default values
-         if ( minimum_ > E57_FLOAT_MIN )
+         if ( minimum_ > FLOAT_MIN )
          {
             cf << " minimum=\"" << static_cast<float>( minimum_ ) << "\"";
          }
-         if ( maximum_ < E57_FLOAT_MAX )
+         if ( maximum_ < FLOAT_MAX )
          {
             cf << " maximum=\"" << static_cast<float>( maximum_ ) << "\"";
          }
@@ -189,11 +189,11 @@ namespace e57
          /// Don't need to write precision="double", because that's the default
 
          /// Don't need to write if are default values
-         if ( minimum_ > E57_DOUBLE_MIN )
+         if ( minimum_ > DOUBLE_MIN )
          {
             cf << " minimum=\"" << minimum_ << "\"";
          }
-         if ( maximum_ < E57_DOUBLE_MAX )
+         if ( maximum_ < DOUBLE_MAX )
          {
             cf << " maximum=\"" << maximum_ << "\"";
          }
@@ -218,7 +218,7 @@ namespace e57
          << " (" << type() << ")" << std::endl;
       NodeImpl::dump( indent, os );
       os << space( indent ) << "precision:   ";
-      if ( precision() == E57_SINGLE )
+      if ( precision() == PrecisionSingle )
       {
          os << "single" << std::endl;
       }

@@ -56,7 +56,7 @@ namespace e57
       /// Empty sbufs is an error
       if ( sbufs.empty() )
       {
-         throw E57_EXCEPTION2( E57_ERROR_BAD_API_ARGUMENT,
+         throw E57_EXCEPTION2( ErrorBadAPIArgument,
                                "imageFileName=" + cVector_->imageFileName() + " cvPathName=" + cVector_->pathName() );
       }
 
@@ -83,7 +83,7 @@ namespace e57
          uint64_t bytestreamNumber = 0;
          if ( !proto_->findTerminalPosition( readNode, bytestreamNumber ) )
          {
-            throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "sbufIndex=" + toString( i ) );
+            throw E57_EXCEPTION2( ErrorInternal, "sbufIndex=" + toString( i ) );
          }
 
          /// EncoderFactory picks the appropriate encoder to match type declared in
@@ -101,8 +101,8 @@ namespace e57
       {
          if ( bytestreams_.at( i )->bytestreamNumber() != i )
          {
-            throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "bytestreamIndex=" + toString( i ) + " bytestreamNumber=" +
-                                                         toString( bytestreams_.at( i )->bytestreamNumber() ) );
+            throw E57_EXCEPTION2( ErrorInternal, "bytestreamIndex=" + toString( i ) + " bytestreamNumber=" +
+                                                    toString( bytestreams_.at( i )->bytestreamNumber() ) );
          }
       }
 #endif
@@ -242,7 +242,7 @@ namespace e57
       {
          if ( sbufs_.size() != sbufs.size() )
          {
-            throw E57_EXCEPTION2( E57_ERROR_BUFFERS_NOT_COMPATIBLE,
+            throw E57_EXCEPTION2( ErrorBuffersNotCompatible,
                                   "oldSize=" + toString( sbufs_.size() ) + " newSize=" + toString( sbufs.size() ) );
          }
 
@@ -284,10 +284,10 @@ namespace e57
       /// Check that requestedRecordCount is not larger than the sbufs
       if ( requestedRecordCount > sbufs_.at( 0 ).impl()->capacity() )
       {
-         throw E57_EXCEPTION2( E57_ERROR_BAD_API_ARGUMENT,
-                               "requested=" + toString( requestedRecordCount ) +
-                                  " capacity=" + toString( sbufs_.at( 0 ).impl()->capacity() ) + " imageFileName=" +
-                                  cVector_->imageFileName() + " cvPathName=" + cVector_->pathName() );
+         throw E57_EXCEPTION2( ErrorBadAPIArgument, "requested=" + toString( requestedRecordCount ) +
+                                                       " capacity=" + toString( sbufs_.at( 0 ).impl()->capacity() ) +
+                                                       " imageFileName=" + cVector_->imageFileName() +
+                                                       " cvPathName=" + cVector_->pathName() );
       }
 
       /// Rewind all sbufs so start reading from beginning
@@ -462,8 +462,8 @@ namespace e57
 
       if ( totalByteCount > packetMaxPayloadBytes )
       {
-         throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "totalByteCount=" + toString( totalByteCount ) +
-                                                      " packetMaxPayloadBytes=" + toString( packetMaxPayloadBytes ) );
+         throw E57_EXCEPTION2( ErrorInternal, "totalByteCount=" + toString( totalByteCount ) +
+                                                 " packetMaxPayloadBytes=" + toString( packetMaxPayloadBytes ) );
       }
 #endif
 
@@ -510,7 +510,7 @@ namespace e57
          /// vector<char>
          if ( &p[n] > &packet[DATA_PACKET_MAX] )
          {
-            throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "n=" + toString( n ) );
+            throw E57_EXCEPTION2( ErrorInternal, "n=" + toString( n ) );
          }
 #endif
 
@@ -531,9 +531,9 @@ namespace e57
       /// Double check that packetLength is what we expect
       if ( packetLength != sizeof( DataPacketHeader ) + bytestreams_.size() * sizeof( uint16_t ) + totalByteCount )
       {
-         throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "packetLength=" + toString( packetLength ) + " bytestreamSize=" +
-                                                      toString( bytestreams_.size() * sizeof( uint16_t ) ) +
-                                                      " totalByteCount=" + toString( totalByteCount ) );
+         throw E57_EXCEPTION2( ErrorInternal, "packetLength=" + toString( packetLength ) + " bytestreamSize=" +
+                                                 toString( bytestreams_.size() * sizeof( uint16_t ) ) +
+                                                 " totalByteCount=" + toString( totalByteCount ) );
       }
 #endif
 
@@ -544,7 +544,7 @@ namespace e57
          /// vector<char>
          if ( p >= &packet[DATA_PACKET_MAX - 1] )
          {
-            throw E57_EXCEPTION1( E57_ERROR_INTERNAL );
+            throw E57_EXCEPTION1( ErrorInternal );
          }
          *p++ = 0;
          packetLength++;
@@ -609,7 +609,7 @@ namespace e57
    {
       if ( !isOpen_ )
       {
-         throw E57Exception( E57_ERROR_WRITER_NOT_OPEN,
+         throw E57Exception( ErrorWriterNotOpen,
                              "imageFileName=" + cVector_->imageFileName() + " cvPathName=" + cVector_->pathName(),
                              srcFileName, srcLineNumber, srcFunctionName );
       }

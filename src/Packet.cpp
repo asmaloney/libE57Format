@@ -79,7 +79,7 @@ PacketReadCache::PacketReadCache( CheckedFile *cFile, unsigned packetCount ) : c
 {
    if ( packetCount == 0 )
    {
-      throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "packetCount=" + toString( packetCount ) );
+      throw E57_EXCEPTION2( ErrorInternal, "packetCount=" + toString( packetCount ) );
    }
 }
 
@@ -92,13 +92,13 @@ std::unique_ptr<PacketLock> PacketReadCache::lock( uint64_t packetLogicalOffset,
    /// Only allow one locked packet at a time.
    if ( lockCount_ > 0 )
    {
-      throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "lockCount=" + toString( lockCount_ ) );
+      throw E57_EXCEPTION2( ErrorInternal, "lockCount=" + toString( lockCount_ ) );
    }
 
    /// Offset can't be 0
    if ( packetLogicalOffset == 0 )
    {
-      throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "packetLogicalOffset=" + toString( packetLogicalOffset ) );
+      throw E57_EXCEPTION2( ErrorInternal, "packetLogicalOffset=" + toString( packetLogicalOffset ) );
    }
 
    /// Linear scan for matching packet offset in cache
@@ -171,7 +171,7 @@ void PacketReadCache::unlock( unsigned cacheIndex )
 
    if ( lockCount_ != 1 )
    {
-      throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "lockCount=" + toString( lockCount_ ) );
+      throw E57_EXCEPTION2( ErrorInternal, "lockCount=" + toString( lockCount_ ) );
    }
 
    --lockCount_;
@@ -198,7 +198,7 @@ void PacketReadCache::readPacket( unsigned oldestEntry, uint64_t packetLogicalOf
    /// Be paranoid about packetLength before read
    if ( packetLength > DATA_PACKET_MAX )
    {
-      throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET, "packetLength=" + toString( packetLength ) );
+      throw E57_EXCEPTION2( ErrorBadCVPacket, "packetLength=" + toString( packetLength ) );
    }
 
    auto &entry = entries_.at( oldestEntry );
@@ -244,7 +244,7 @@ void PacketReadCache::readPacket( unsigned oldestEntry, uint64_t packetLogicalOf
       }
       break;
       default:
-         throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "packetType=" + toString( header.packetType ) );
+         throw E57_EXCEPTION2( ErrorInternal, "packetType=" + toString( header.packetType ) );
    }
 
    entry.logicalOffset_ = packetLogicalOffset;
@@ -290,7 +290,7 @@ void PacketReadCache::dump( int indent, std::ostream &os )
             break;
             default:
                throw E57_EXCEPTION2(
-                  E57_ERROR_INTERNAL,
+                  ErrorInternal,
                   "packetType=" +
                      toString( reinterpret_cast<EmptyPacketHeader *>( entries_.at( i ).buffer_ )->packetType ) );
          }
@@ -347,7 +347,7 @@ void DataPacketHeader::verify( unsigned bufferLength ) const
    /// Verify that packet is correct type
    if ( packetType != DATA_PACKET )
    {
-      throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET, "packetType=" + toString( packetType ) );
+      throw E57_EXCEPTION2( ErrorBadCVPacket, "packetType=" + toString( packetType ) );
    }
 
    /// ??? check reserved flags zero?
@@ -356,19 +356,19 @@ void DataPacketHeader::verify( unsigned bufferLength ) const
    unsigned packetLength = packetLogicalLengthMinus1 + 1;
    if ( packetLength < sizeof( *this ) )
    {
-      throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET, "packetLength=" + toString( packetLength ) );
+      throw E57_EXCEPTION2( ErrorBadCVPacket, "packetLength=" + toString( packetLength ) );
    }
 
    /// Check packet length is multiple of 4
    if ( packetLength % 4 )
    {
-      throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET, "packetLength=" + toString( packetLength ) );
+      throw E57_EXCEPTION2( ErrorBadCVPacket, "packetLength=" + toString( packetLength ) );
    }
 
    /// Check actual packet length is large enough.
    if ( bufferLength > 0 && packetLength > bufferLength )
    {
-      throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET,
+      throw E57_EXCEPTION2( ErrorBadCVPacket,
                             "packetLength=" + toString( packetLength ) + " bufferLength=" + toString( bufferLength ) );
    }
 
@@ -376,14 +376,14 @@ void DataPacketHeader::verify( unsigned bufferLength ) const
    /// allowed?
    if ( bytestreamCount == 0 )
    {
-      throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET, "bytestreamCount=" + toString( bytestreamCount ) );
+      throw E57_EXCEPTION2( ErrorBadCVPacket, "bytestreamCount=" + toString( bytestreamCount ) );
    }
 
    /// Check packet is at least long enough to hold bytestreamBufferLength array
    if ( sizeof( DataPacketHeader ) + 2 * bytestreamCount > packetLength )
    {
-      throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET, "packetLength=" + toString( packetLength ) +
-                                                        " bytestreamCount=" + toString( bytestreamCount ) );
+      throw E57_EXCEPTION2( ErrorBadCVPacket, "packetLength=" + toString( packetLength ) +
+                                                 " bytestreamCount=" + toString( bytestreamCount ) );
    }
 }
 
@@ -437,7 +437,7 @@ void DataPacket::verify( unsigned bufferLength ) const
    /// If needed is not with 3 bytes of actual packet size, have an error
    if ( needed > packetLength || needed + 3 < packetLength )
    {
-      throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET,
+      throw E57_EXCEPTION2( ErrorBadCVPacket,
                             "needed=" + toString( needed ) + "packetLength=" + toString( packetLength ) );
    }
 
@@ -446,7 +446,7 @@ void DataPacket::verify( unsigned bufferLength ) const
    {
       if ( reinterpret_cast<const char *>( this )[i] != 0 )
       {
-         throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET, "i=" + toString( i ) );
+         throw E57_EXCEPTION2( ErrorBadCVPacket, "i=" + toString( i ) );
       }
    }
 }
@@ -460,14 +460,14 @@ char *DataPacket::getBytestream( unsigned bytestreamNumber, unsigned &byteCount 
    /// Verify that packet is correct type
    if ( header.packetType != DATA_PACKET )
    {
-      throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET, "packetType=" + toString( header.packetType ) );
+      throw E57_EXCEPTION2( ErrorBadCVPacket, "packetType=" + toString( header.packetType ) );
    }
 
    /// Check bytestreamNumber in bounds
    if ( bytestreamNumber >= header.bytestreamCount )
    {
-      throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "bytestreamNumber=" + toString( bytestreamNumber ) +
-                                                   "bytestreamCount=" + toString( header.bytestreamCount ) );
+      throw E57_EXCEPTION2( ErrorInternal, "bytestreamNumber=" + toString( bytestreamNumber ) +
+                                              "bytestreamCount=" + toString( header.bytestreamCount ) );
    }
 
    /// Calc positions in packet
@@ -487,10 +487,10 @@ char *DataPacket::getBytestream( unsigned bytestreamNumber, unsigned &byteCount 
    if ( sizeof( DataPacketHeader ) + 2 * header.bytestreamCount + totalPreceeding + byteCount >
         header.packetLogicalLengthMinus1 + 1U )
    {
-      throw E57_EXCEPTION2( E57_ERROR_INTERNAL,
-                            "bytestreamCount=" + toString( header.bytestreamCount ) + " totalPreceeding=" +
-                               toString( totalPreceeding ) + " byteCount=" + toString( byteCount ) +
-                               " packetLogicalLengthMinus1=" + toString( header.packetLogicalLengthMinus1 ) );
+      throw E57_EXCEPTION2(
+         ErrorInternal, "bytestreamCount=" + toString( header.bytestreamCount ) +
+                           " totalPreceeding=" + toString( totalPreceeding ) + " byteCount=" + toString( byteCount ) +
+                           " packetLogicalLengthMinus1=" + toString( header.packetLogicalLengthMinus1 ) );
    }
 
    /// Return start of buffer
@@ -510,7 +510,7 @@ void DataPacket::dump( int indent, std::ostream &os ) const
 {
    if ( header.packetType != DATA_PACKET )
    {
-      throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "packetType=" + toString( header.packetType ) );
+      throw E57_EXCEPTION2( ErrorInternal, "packetType=" + toString( header.packetType ) );
    }
 
    reinterpret_cast<const DataPacketHeader *>( this )->dump( indent, os );
@@ -532,8 +532,7 @@ void DataPacket::dump( int indent, std::ostream &os ) const
       p += bsbLength[i];
       if ( p - reinterpret_cast<const uint8_t *>( this ) > DATA_PACKET_MAX )
       {
-         throw E57_EXCEPTION2( E57_ERROR_INTERNAL,
-                               "size=" + toString( p - reinterpret_cast<const uint8_t *>( this ) ) );
+         throw E57_EXCEPTION2( ErrorInternal, "size=" + toString( p - reinterpret_cast<const uint8_t *>( this ) ) );
       }
    }
 }
@@ -551,40 +550,40 @@ void IndexPacket::verify( unsigned bufferLength, uint64_t totalRecordCount, uint
    /// Verify that packet is correct type
    if ( packetType != INDEX_PACKET )
    {
-      throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET, "packetType=" + toString( packetType ) );
+      throw E57_EXCEPTION2( ErrorBadCVPacket, "packetType=" + toString( packetType ) );
    }
 
    /// Check packetLength is at least large enough to hold header
    unsigned packetLength = packetLogicalLengthMinus1 + 1;
    if ( packetLength < sizeof( *this ) )
    {
-      throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET, "packetLength=" + toString( packetLength ) );
+      throw E57_EXCEPTION2( ErrorBadCVPacket, "packetLength=" + toString( packetLength ) );
    }
 
    /// Check packet length is multiple of 4
    if ( packetLength % 4 )
    {
-      throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET, "packetLength=" + toString( packetLength ) );
+      throw E57_EXCEPTION2( ErrorBadCVPacket, "packetLength=" + toString( packetLength ) );
    }
 
    /// Make sure there is at least one entry in packet  ??? 0 record cvect
    /// allowed?
    if ( entryCount == 0 )
    {
-      throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET, "entryCount=" + toString( entryCount ) );
+      throw E57_EXCEPTION2( ErrorBadCVPacket, "entryCount=" + toString( entryCount ) );
    }
 
    /// Have to have <= 2048 entries
    if ( entryCount > MAX_ENTRIES )
    {
-      throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET, "entryCount=" + toString( entryCount ) );
+      throw E57_EXCEPTION2( ErrorBadCVPacket, "entryCount=" + toString( entryCount ) );
    }
 
    /// Index level should be <= 5.  Because (5+1)* 11 bits = 66 bits, which will
    /// cover largest number of chunks possible.
    if ( indexLevel > 5 )
    {
-      throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET, "indexLevel=" + toString( indexLevel ) );
+      throw E57_EXCEPTION2( ErrorBadCVPacket, "indexLevel=" + toString( indexLevel ) );
    }
 
    /// Index packets above level 0 must have at least two entries (otherwise no
@@ -592,7 +591,7 @@ void IndexPacket::verify( unsigned bufferLength, uint64_t totalRecordCount, uint
    ///??? check that this is in spec
    if ( indexLevel > 0 && entryCount < 2 )
    {
-      throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET,
+      throw E57_EXCEPTION2( ErrorBadCVPacket,
                             "indexLevel=" + toString( indexLevel ) + " entryCount=" + toString( entryCount ) );
    }
 
@@ -602,14 +601,14 @@ void IndexPacket::verify( unsigned bufferLength, uint64_t totalRecordCount, uint
    {
       if ( reserved1[i] != 0 )
       {
-         throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET, "i=" + toString( i ) );
+         throw E57_EXCEPTION2( ErrorBadCVPacket, "i=" + toString( i ) );
       }
    }
 
    /// Check actual packet length is large enough.
    if ( bufferLength > 0 && packetLength > bufferLength )
    {
-      throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET,
+      throw E57_EXCEPTION2( ErrorBadCVPacket,
                             "packetLength=" + toString( packetLength ) + " bufferLength=" + toString( bufferLength ) );
    }
 
@@ -617,7 +616,7 @@ void IndexPacket::verify( unsigned bufferLength, uint64_t totalRecordCount, uint
    unsigned neededLength = 16 + 8 * entryCount;
    if ( packetLength < neededLength )
    {
-      throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET,
+      throw E57_EXCEPTION2( ErrorBadCVPacket,
                             "packetLength=" + toString( packetLength ) + " neededLength=" + toString( neededLength ) );
    }
 
@@ -628,7 +627,7 @@ void IndexPacket::verify( unsigned bufferLength, uint64_t totalRecordCount, uint
    {
       if ( p[i] != 0 )
       {
-         throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET, "i=" + toString( i ) );
+         throw E57_EXCEPTION2( ErrorBadCVPacket, "i=" + toString( i ) );
       }
    }
 
@@ -638,15 +637,15 @@ void IndexPacket::verify( unsigned bufferLength, uint64_t totalRecordCount, uint
       /// Check chunkRecordNumber is in bounds
       if ( totalRecordCount > 0 && entries[i].chunkRecordNumber >= totalRecordCount )
       {
-         throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET,
-                               "i=" + toString( i ) + " chunkRecordNumber=" + toString( entries[i].chunkRecordNumber ) +
-                                  " totalRecordCount=" + toString( totalRecordCount ) );
+         throw E57_EXCEPTION2( ErrorBadCVPacket, "i=" + toString( i ) +
+                                                    " chunkRecordNumber=" + toString( entries[i].chunkRecordNumber ) +
+                                                    " totalRecordCount=" + toString( totalRecordCount ) );
       }
 
       /// Check record numbers are strictly increasing
       if ( i > 0 && entries[i - 1].chunkRecordNumber >= entries[i].chunkRecordNumber )
       {
-         throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET,
+         throw E57_EXCEPTION2( ErrorBadCVPacket,
                                "i=" + toString( i ) +
                                   " prevChunkRecordNumber=" + toString( entries[i - 1].chunkRecordNumber ) +
                                   " currentChunkRecordNumber=" + toString( entries[i].chunkRecordNumber ) );
@@ -655,15 +654,15 @@ void IndexPacket::verify( unsigned bufferLength, uint64_t totalRecordCount, uint
       /// Check chunkPhysicalOffset is in bounds
       if ( fileSize > 0 && entries[i].chunkPhysicalOffset >= fileSize )
       {
-         throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET, "i=" + toString( i ) + " chunkPhysicalOffset=" +
-                                                           toString( entries[i].chunkPhysicalOffset ) +
-                                                           " fileSize=" + toString( fileSize ) );
+         throw E57_EXCEPTION2( ErrorBadCVPacket, "i=" + toString( i ) + " chunkPhysicalOffset=" +
+                                                    toString( entries[i].chunkPhysicalOffset ) +
+                                                    " fileSize=" + toString( fileSize ) );
       }
 
       /// Check chunk offsets are strictly increasing
       if ( i > 0 && entries[i - 1].chunkPhysicalOffset >= entries[i].chunkPhysicalOffset )
       {
-         throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET,
+         throw E57_EXCEPTION2( ErrorBadCVPacket,
                                "i=" + toString( i ) +
                                   " prevChunkPhysicalOffset=" + toString( entries[i - 1].chunkPhysicalOffset ) +
                                   " currentChunkPhysicalOffset=" + toString( entries[i].chunkPhysicalOffset ) );
@@ -702,26 +701,26 @@ void EmptyPacketHeader::verify( unsigned bufferLength ) const
    /// Verify that packet is correct type
    if ( packetType != EMPTY_PACKET )
    {
-      throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET, "packetType=" + toString( packetType ) );
+      throw E57_EXCEPTION2( ErrorBadCVPacket, "packetType=" + toString( packetType ) );
    }
 
    /// Check packetLength is at least large enough to hold header
    unsigned packetLength = packetLogicalLengthMinus1 + 1;
    if ( packetLength < sizeof( *this ) )
    {
-      throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET, "packetLength=" + toString( packetLength ) );
+      throw E57_EXCEPTION2( ErrorBadCVPacket, "packetLength=" + toString( packetLength ) );
    }
 
    /// Check packet length is multiple of 4
    if ( packetLength % 4 )
    {
-      throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET, "packetLength=" + toString( packetLength ) );
+      throw E57_EXCEPTION2( ErrorBadCVPacket, "packetLength=" + toString( packetLength ) );
    }
 
    /// Check actual packet length is large enough.
    if ( bufferLength > 0 && packetLength > bufferLength )
    {
-      throw E57_EXCEPTION2( E57_ERROR_BAD_CV_PACKET,
+      throw E57_EXCEPTION2( ErrorBadCVPacket,
                             "packetLength=" + toString( packetLength ) + " bufferLength=" + toString( bufferLength ) );
    }
 }

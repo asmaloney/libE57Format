@@ -26,11 +26,136 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
+#include <limits>
+
 #include "E57SimpleWriter.h"
 #include "WriterImpl.h"
 
 namespace e57
 {
+   /// Fill in missing min/max data in the Data3D header for the following:
+   ///   - cartesian points
+   ///   - spherical points
+   ///   - intensity
+   ///   - time stamps
+   template <typename COORDTYPE>
+   static void _fillMinMaxData( Data3D &ioData3DHeader, const Data3DPointsData_t<COORDTYPE> &inBuffers )
+   {
+      static_assert( std::is_floating_point<COORDTYPE>::value, "Floating point type required." );
+
+      auto &pointFields = ioData3DHeader.pointFields;
+
+      constexpr COORDTYPE cMin = std::numeric_limits<COORDTYPE>::lowest();
+      constexpr COORDTYPE cMax = std::numeric_limits<COORDTYPE>::max();
+
+      // IF we are using scaled ints for cartesian points
+      // AND we haven't set either min or max
+      // THEN calculate them from the points
+      auto pointRangeMinimum = cMax;
+      auto pointRangeMaximum = cMin;
+
+      const bool writePointRange = ( pointFields.pointRangeScaledInteger != 0.0 ) &&
+                                   ( pointFields.pointRangeMinimum == cMin ) &&
+                                   ( pointFields.pointRangeMaximum == cMax );
+
+      // IF we are using scaled ints for spherical angles
+      // AND we haven't set either min or max
+      // THEN calculate them from the points
+      auto angleMinimum = cMax;
+      auto angleMaximum = cMin;
+
+      const bool writeAngle = ( pointFields.angleScaledInteger != 0.0 ) && ( pointFields.angleMinimum == cMin ) &&
+                              ( pointFields.angleMaximum == cMax );
+
+      // IF we are using intesity
+      // AND we haven't set either min or max
+      // THEN calculate them from the points
+      float intensityMinimum = std::numeric_limits<float>::max();
+      float intensityMaximum = std::numeric_limits<float>::lowest();
+
+      const bool writeIntensity = pointFields.intensityField && ( ioData3DHeader.intensityLimits == IntensityLimits{} );
+
+      // IF we are using scaled ints for timestamps
+      // AND we haven't set either min or max
+      // THEN calculate them from the points
+      double timeMinimum = std::numeric_limits<double>::max();
+      double timeMaximum = std::numeric_limits<double>::lowest();
+
+      const bool writeTimeStamp = pointFields.timeStampField && ( pointFields.timeScaledInteger != 0.0 ) &&
+                                  ( pointFields.timeMinimum == cMin ) && ( pointFields.timeMaximum == cMax );
+
+      // Now run through the points and set the things we need to
+      for ( int64_t i = 0; i < ioData3DHeader.pointCount; ++i )
+      {
+         if ( writePointRange && pointFields.cartesianXField )
+         {
+            pointRangeMinimum = std::min( inBuffers.cartesianX[i], pointRangeMinimum );
+            pointRangeMinimum = std::min( inBuffers.cartesianY[i], pointRangeMinimum );
+            pointRangeMinimum = std::min( inBuffers.cartesianZ[i], pointRangeMinimum );
+
+            pointRangeMaximum = std::max( inBuffers.cartesianX[i], pointRangeMaximum );
+            pointRangeMaximum = std::max( inBuffers.cartesianY[i], pointRangeMaximum );
+            pointRangeMaximum = std::max( inBuffers.cartesianZ[i], pointRangeMaximum );
+         }
+
+         if ( writePointRange && pointFields.sphericalRangeField )
+         {
+            // Note that the writer code uses pointRangeMinimum/pointRangeMaximum
+            // (see WriterImpl::NewData3D()) instead of using the sphericalBounds which has
+            // rangeMinimum and rangeMaximum.
+            pointRangeMinimum = std::min( inBuffers.sphericalRange[i], pointRangeMinimum );
+            pointRangeMaximum = std::max( inBuffers.sphericalRange[i], pointRangeMaximum );
+         }
+
+         if ( writeAngle )
+         {
+            angleMinimum = std::min( inBuffers.sphericalAzimuth[i], angleMinimum );
+            angleMinimum = std::min( inBuffers.sphericalElevation[i], angleMinimum );
+
+            angleMaximum = std::max( inBuffers.sphericalAzimuth[i], angleMaximum );
+            angleMaximum = std::max( inBuffers.sphericalElevation[i], angleMaximum );
+         }
+
+         if ( writeIntensity )
+         {
+            intensityMinimum = std::min( inBuffers.intensity[i], intensityMinimum );
+            intensityMaximum = std::max( inBuffers.intensity[i], intensityMaximum );
+         }
+
+         if ( writeTimeStamp )
+         {
+            timeMinimum = std::min( inBuffers.timeStamp[i], timeMinimum );
+            timeMaximum = std::max( inBuffers.timeStamp[i], timeMaximum );
+         }
+      }
+
+      if ( writePointRange )
+      {
+         pointFields.pointRangeMinimum = pointRangeMinimum;
+         pointFields.pointRangeMaximum = pointRangeMaximum;
+      }
+
+      if ( writeAngle )
+      {
+         pointFields.angleMinimum = angleMinimum;
+         pointFields.angleMaximum = angleMaximum;
+      }
+
+      if ( writeIntensity )
+      {
+         ioData3DHeader.intensityLimits.intensityMinimum = intensityMinimum;
+         ioData3DHeader.intensityLimits.intensityMaximum = intensityMaximum;
+      }
+
+      if ( writeTimeStamp )
+      {
+         pointFields.timeMinimum = timeMinimum;
+         pointFields.timeMaximum = timeMaximum;
+      }
+   }
+   template void _fillMinMaxData( Data3D &ioData3DHeader, const Data3DPointsData &inBuffers );
+   template void _fillMinMaxData( Data3D &ioData3DHeader, const Data3DPointsData_d &inBuffers );
+
    Writer::Writer( const ustring &filePath, const WriterOptions &options ) :
       impl_( new WriterImpl( filePath, options ) )
    {
@@ -84,6 +209,8 @@ namespace e57
 
    int64_t Writer::WriteData3DData( Data3D &data3DHeader, const Data3DPointsData &buffers )
    {
+      _fillMinMaxData( data3DHeader, buffers );
+
       const int64_t scanIndex = impl_->NewData3D( data3DHeader );
 
       e57::CompressedVectorWriter dataWriter =
@@ -97,6 +224,8 @@ namespace e57
 
    int64_t Writer::WriteData3DData( Data3D &data3DHeader, const Data3DPointsData_d &buffers )
    {
+      _fillMinMaxData( data3DHeader, buffers );
+
       const int64_t scanIndex = impl_->NewData3D( data3DHeader );
 
       e57::CompressedVectorWriter dataWriter =

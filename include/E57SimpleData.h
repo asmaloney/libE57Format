@@ -37,12 +37,6 @@
 
 namespace e57
 {
-   //! Indicates to use FloatNode instead of ScaledIntegerNode in fields that can use both.
-   constexpr double E57_NOT_SCALED_USE_FLOAT = 0.0;
-
-   //! Indicates to use ScaledIntegerNode instead of FloatNode in fields that can use both.
-   constexpr double E57_NOT_SCALED_USE_INTEGER = -1.0;
-
    //! @cond documentNonPublic   The following isn't part of the API, and isn't documented.
    class ReaderImpl;
    class WriterImpl;
@@ -305,6 +299,15 @@ namespace e57
       GroupingByLine groupingByLine; //!< Grouping information by row or column index
    };
 
+   //! @brief Used to set the type of node in some PointStandardizedFieldsAvailable fields.
+   enum class NumericalNodeType
+   {
+      Integer = 0,   ///< Use IntegerNode
+      ScaledInteger, ///< Use ScaledIntegerNode
+      Float,         ///< Use FloatNode with floats
+      Double,        ///< Use FloatNode with doubles
+   };
+
    //! @brief Used to interrogate if standardized fields are available
    struct E57_DLL PointStandardizedFieldsAvailable
    {
@@ -326,14 +329,15 @@ namespace e57
       //! E57_FLOAT_MAX or E57_DOUBLE_MAX. If using a ScaledIntegerNode then this needs to be a maximum range value.
       double pointRangeMaximum = DOUBLE_MAX;
 
-      //! @brief Controls the type of Node used for the PointRecord cartesian and range fields
-      //! @details The value determines which type of Node to use and whether to use floats or doubles.
-      //! Value | Node Type
-      //! -- | --
-      //! &lt; 0.0 | FloatNode using doubles
-      //! == 0.0 (e57::E57_NOT_SCALED_USE_FLOAT) | FloatNode using floats (@em default)
-      //! &gt; 0.0 | ScaledIntegerNode with the value as the scale setting
-      double pointRangeScaledInteger = E57_NOT_SCALED_USE_FLOAT;
+      /// @brief Controls the type of Node used for the PointRecord cartesian and range fields
+      /// @details Accepts NumericalNodeType::ScaledInteger, NumericalNodeType::Float, and
+      /// NumericalNodeType::Double.
+      NumericalNodeType pointRangeNodeType = NumericalNodeType::Float;
+
+      /// @brief Sets the scale if using scaled integers for point fields
+      /// @details If pointRangeNodeType == NumericalNodeType::ScaledInteger, it will use this value
+      /// to scale the numbers and it must be > 0.0.
+      double pointRangeScale = 0.0;
 
       //! Indicates that the PointRecord angle fields should be configured with this minimum value E57_FLOAT_MIN or
       //! E57_DOUBLE_MIN. If using a ScaledIntegerNode then this needs to be a minimum angle value.
@@ -343,14 +347,15 @@ namespace e57
       //! E57_DOUBLE_MAX. If using a ScaledIntegerNode then this needs to be a maximum angle value.
       double angleMaximum = DOUBLE_MAX;
 
-      //! @brief Controls the type of Node used for the PointRecord angle fields
-      //! @details The value determines which type of Node to use and whether to use floats or doubles.
-      //! Value | Node Type
-      //! -- | --
-      //! &lt; 0.0 | FloatNode using doubles
-      //! == 0.0 (e57::E57_NOT_SCALED_USE_FLOAT) | FloatNode using floats (@em default)
-      //! &gt; 0.0 | ScaledIntegerNode with the value as the scale setting
-      double angleScaledInteger = E57_NOT_SCALED_USE_FLOAT;
+      /// @brief Controls the type of Node used for the PointRecord angle fields
+      /// @details Accepts NumericalNodeType::ScaledInteger, NumericalNodeType::Float, and
+      /// NumericalNodeType::Double.
+      NumericalNodeType angleNodeType = NumericalNodeType::Float;
+
+      /// @brief Sets the scale if using scaled integers for angle fields
+      /// @details If angleNodeType == NumericalNodeType::ScaledInteger, it will use this value
+      /// to scale the numbers and it must be > 0.0.
+      double angleScale = 0.0;
 
       bool rowIndexField = false; //!< Indicates that the PointRecord @a rowIndex field is active
 
@@ -381,36 +386,46 @@ namespace e57
       //! E57_UINT32_MAX, E57_DOUBLE_MAX or E57_DOUBLE_MAX.
       double timeMaximum = DOUBLE_MAX;
 
-      //! @brief Controls the type of Node used for the PointRecord @a timeStamp fields
-      //! @details The value determines which type of Node to use and whether to use floats or doubles.
-      //! Value  | Node Type
-      //! -- | --
-      //! &lt; 0.0 | IntegerNode
-      //! == 0.0 (e57::E57_NOT_SCALED_USE_FLOAT) | FloatNode using floats if (::timeMaximum == E57_FLOAT_MAX)
-      //! == 0.0 | FloatNode using doubles if (::timeMaximum == E57_DOUBLE_MAX) (@em default)
-      //! &gt; 0.0 | ScaledIntegerNode with the value as the scale setting
-      double timeScaledInteger = E57_NOT_SCALED_USE_FLOAT;
+      /// @brief Controls the type of Node used for the PointRecord time fields
+      /// @details Accepts NumericalNodeType::Integer, NumericalNodeType::ScaledInteger, NumericalNodeType::Float, and
+      /// NumericalNodeType::Double.
+      NumericalNodeType timeNodeType = NumericalNodeType::Float;
 
-      bool intensityField = false;          //!< Indicates that the PointRecord @a intensity field is active
-      bool isIntensityInvalidField = false; //!< Indicates that the PointRecord @a isIntensityInvalid field is active
+      /// @brief Sets the scale if using scaled integers for time fields
+      /// @details If timeNodeType == NumericalNodeType::ScaledInteger, it will use this value
+      /// to scale the numbers and it must be > 0.0.
+      double timeScale = 0.0;
 
-      //! @brief Controls the type of Node used for the PointRecord @a intensity fields
-      //! @details The value determines which type of Node to use.
-      //! Value | Node Type
-      //! -- | --
-      //! &lt; 0.0 | IntegerNode
-      //! == 0.0 (e57::E57_NOT_SCALED_USE_FLOAT) | FloatNode using floats (@em default)
-      //! &gt; 0.0 | ScaledIntegerNode with the value as the scale setting
-      double intensityScaledInteger = E57_NOT_SCALED_USE_INTEGER;
+      /// Indicates that the PointRecord @a intensity field is active
+      bool intensityField = false;
+      /// Indicates that the PointRecord @a isIntensityInvalid field is active
+      bool isIntensityInvalidField = false;
 
-      bool colorRedField = false;       //!< Indicates that the PointRecord @a colorRed field is active
-      bool colorGreenField = false;     //!< Indicates that the PointRecord @a colorGreen field is active
-      bool colorBlueField = false;      //!< Indicates that the PointRecord @a colorBlue field is active
-      bool isColorInvalidField = false; //!< Indicates that the PointRecord @a isColorInvalid field is active
+      /// @brief Controls the type of Node used for the PointRecord intensity fields
+      /// @details Accepts NumericalNodeType::Integer, NumericalNodeType::ScaledInteger, NumericalNodeType::Float, and
+      /// NumericalNodeType::Double.
+      NumericalNodeType intensityNodeType = NumericalNodeType::Float;
 
-      bool normalXField = false; //!< Indicates that the PointRecord @a nor:normalX field is active
-      bool normalYField = false; //!< Indicates that the PointRecord @a nor:normalY field is active
-      bool normalZField = false; //!< Indicates that the PointRecord @a nor:normalZ field is active
+      /// @brief Sets the scale if using scaled integers for intensity fields
+      /// @details If intensityNodeType == NumericalNodeType::ScaledInteger, it will use this value
+      /// to scale the numbers and it must be > 0.0.
+      double intensityScale = 0.0;
+
+      /// Indicates that the PointRecord @a colorRed field is active
+      bool colorRedField = false;
+      /// Indicates that the PointRecord @a colorGreen field is active
+      bool colorGreenField = false;
+      /// Indicates that the PointRecord @a colorBlue field is active
+      bool colorBlueField = false;
+      /// Indicates that the PointRecord @a isColorInvalid field is active
+      bool isColorInvalidField = false;
+
+      /// Indicates that the PointRecord @a nor:normalX field is active
+      bool normalXField = false;
+      /// Indicates that the PointRecord @a nor:normalY field is active
+      bool normalYField = false;
+      /// Indicates that the PointRecord @a nor:normalZ field is active
+      bool normalZField = false;
    };
 
    //! @brief Stores the top-level information for a single lidar scan
@@ -478,12 +493,15 @@ namespace e57
    {
       static_assert( std::is_floating_point<COORDTYPE>::value, "Floating point type required." );
 
-      //! @brief Default constructor does not manage any memory or adjust min/max for floats.
+      //! @brief Default constructor does not manage any memory, adjust min/max for floats, or validate data.
       Data3DPointsData_t() = default;
 
-      //! @brief Constructor which allocates buffers for all valid fields in the given Data3D header
-      //! This constructor will also adjust the min/max fields in the data3D pointFields if we are using floats.
-      //! @param [in] data3D Completed header which indicates the fields we are using
+      /// @brief Constructor which allocates buffers for all valid fields in the given Data3D header.
+      /// @details This constructor will also adjust the min/max fields in the data3D pointFields if we are using
+      /// floats, and run some validation on the Data3D.
+      /// @param [in] data3D Completed header which indicates the fields we are using
+      /// @throw ::ErrorValueOutOfBounds
+      /// @throw ::ErrorInvalidNodeType
       explicit Data3DPointsData_t( e57::Data3D &data3D );
 
       //! @brief Destructor will delete any memory allocated using the Data3DPointsData_t( const e57::Data3D & )
@@ -502,8 +520,8 @@ namespace e57
       //! Value = 0 if the point is considered valid, 1 otherwise
       int8_t *cartesianInvalidState = nullptr;
 
-      //! Pointer to a buffer with the Point response intensity. Unit is unspecified.
-      float *intensity = nullptr;
+      /// @brief Pointer to a buffer with the Point response intensity. Unit is unspecified.
+      double *intensity = nullptr;
 
       //! Value = 0 if the intensity is considered valid, 1 otherwise
       int8_t *isIntensityInvalid = nullptr;

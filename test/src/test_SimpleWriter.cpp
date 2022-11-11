@@ -162,9 +162,6 @@ TEST( SimpleWriter, ColouredCubeDouble )
    header.description = "libE57Format test: cube of coloured points using doubles";
    header.pointCount = cNumPoints;
 
-   // setting this to < 0.0 indicates we want to write doubles
-   header.pointFields.pointRangeScaledInteger = -1.0;
-
    setUsingColouredCartesianPoints( header );
 
    e57::Data3DPointsData_d pointsData( header );
@@ -275,8 +272,8 @@ TEST( SimpleWriter, ColouredCubeScaledInt )
    header.description = "libE57Format test: cube of coloured points using scaled integers";
    header.pointCount = cNumPoints;
 
-   // setting this to > 0.0 indicates we want to write scaled ints and to use this as the scale
-   header.pointFields.pointRangeScaledInteger = 0.001;
+   header.pointFields.pointRangeNodeType = e57::NumericalNodeType::ScaledInteger;
+   header.pointFields.pointRangeScale = 0.001;
 
    setUsingColouredCartesianPoints( header );
 
@@ -462,11 +459,14 @@ TEST( SimpleWriter, MinMaxIssuesCartesianFloat )
    header.pointFields.cartesianZField = true;
 
    // Using any of these without setting their min/max explicitly should not fail
-   header.pointFields.pointRangeScaledInteger = 0.1;
+   header.pointFields.pointRangeNodeType = e57::NumericalNodeType::ScaledInteger;
+   header.pointFields.pointRangeScale = 0.1;
    header.pointFields.timeStampField = true;
-   header.pointFields.timeScaledInteger = 0.1;
+   header.pointFields.timeNodeType = e57::NumericalNodeType::ScaledInteger;
+   header.pointFields.timeScale = 0.1;
    header.pointFields.intensityField = true;
-   header.pointFields.intensityScaledInteger = 0.1;
+   header.pointFields.intensityNodeType = e57::NumericalNodeType::ScaledInteger;
+   header.pointFields.intensityScale = 0.1;
 
    e57::Data3DPointsData pointsData( header );
 
@@ -521,11 +521,14 @@ TEST( SimpleWriter, MinMaxIssuesSpericalDouble )
    header.pointFields.sphericalElevationField = true;
 
    // Using any of these without setting their min/max explicitly should not fail
-   header.pointFields.pointRangeScaledInteger = 0.1;
+   header.pointFields.pointRangeNodeType = e57::NumericalNodeType::ScaledInteger;
+   header.pointFields.pointRangeScale = 0.1;
    header.pointFields.timeStampField = true;
-   header.pointFields.timeScaledInteger = 0.1;
+   header.pointFields.timeNodeType = e57::NumericalNodeType::ScaledInteger;
+   header.pointFields.timeScale = 0.1;
    header.pointFields.intensityField = true;
-   header.pointFields.intensityScaledInteger = 0.1;
+   header.pointFields.intensityNodeType = e57::NumericalNodeType::ScaledInteger;
+   header.pointFields.intensityScale = 0.1;
 
    e57::Data3DPointsData_d pointsData( header );
 

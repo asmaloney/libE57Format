@@ -27,6 +27,8 @@
  */
 
 #include "ReaderImpl.h"
+#include "Common.h"
+#include "StringFunctions.h"
 
 namespace e57
 {
@@ -841,58 +843,108 @@ namespace e57
       {
          const auto cartesianXProto = proto.get( "cartesianX" );
 
-         if ( cartesianXProto.type() == TypeScaledInteger )
+         switch ( cartesianXProto.type() )
          {
-            const ScaledIntegerNode scaledCartesianX( cartesianXProto );
-            const double scale = scaledCartesianX.scale();
-            const double offset = scaledCartesianX.offset();
-            const int64_t minimum = scaledCartesianX.minimum();
-            const int64_t maximum = scaledCartesianX.maximum();
-
-            data3DHeader.pointFields.pointRangeMinimum = static_cast<double>( minimum ) * scale + offset;
-            data3DHeader.pointFields.pointRangeMaximum = static_cast<double>( maximum ) * scale + offset;
-            data3DHeader.pointFields.pointRangeScaledInteger = scale;
-         }
-         else if ( cartesianXProto.type() == TypeFloat )
-         {
-            const FloatNode floatCartesianX( cartesianXProto );
-
-            data3DHeader.pointFields.pointRangeMinimum = floatCartesianX.minimum();
-            data3DHeader.pointFields.pointRangeMaximum = floatCartesianX.maximum();
-
-            if ( floatCartesianX.precision() == PrecisionDouble )
+            case TypeInteger:
             {
-               data3DHeader.pointFields.pointRangeScaledInteger = -1.0;
+               // Should be a warning that we don't handle this type, but we don't have a mechanism for warnings.
+               break;
             }
+
+            case TypeScaledInteger:
+            {
+               const ScaledIntegerNode scaledCartesianX( cartesianXProto );
+               const double scale = scaledCartesianX.scale();
+               const double offset = scaledCartesianX.offset();
+               const int64_t minimum = scaledCartesianX.minimum();
+               const int64_t maximum = scaledCartesianX.maximum();
+
+               data3DHeader.pointFields.pointRangeMinimum = static_cast<double>( minimum ) * scale + offset;
+               data3DHeader.pointFields.pointRangeMaximum = static_cast<double>( maximum ) * scale + offset;
+
+               data3DHeader.pointFields.pointRangeNodeType = NumericalNodeType::ScaledInteger;
+               data3DHeader.pointFields.pointRangeScale = scale;
+
+               break;
+            }
+
+            case TypeFloat:
+            {
+               const FloatNode floatCartesianX( cartesianXProto );
+
+               data3DHeader.pointFields.pointRangeMinimum = floatCartesianX.minimum();
+               data3DHeader.pointFields.pointRangeMaximum = floatCartesianX.maximum();
+
+               if ( floatCartesianX.precision() == PrecisionSingle )
+               {
+                  data3DHeader.pointFields.pointRangeNodeType = NumericalNodeType::Float;
+               }
+               else
+               {
+                  data3DHeader.pointFields.pointRangeNodeType = NumericalNodeType::Double;
+               }
+
+               break;
+            }
+
+            default:
+               throw E57_EXCEPTION2( ErrorInvalidNodeType, "invalid node type reading cartesianX field: " +
+                                                              toString( cartesianXProto.type() ) );
+               break;
          }
       }
       else if ( proto.isDefined( "sphericalRange" ) )
       {
          const auto sphericalRangeProto = proto.get( "sphericalRange" );
 
-         if ( sphericalRangeProto.type() == TypeScaledInteger )
+         switch ( sphericalRangeProto.type() )
          {
-            const ScaledIntegerNode scaledSphericalRange( sphericalRangeProto );
-            const double scale = scaledSphericalRange.scale();
-            const double offset = scaledSphericalRange.offset();
-            const int64_t minimum = scaledSphericalRange.minimum();
-            const int64_t maximum = scaledSphericalRange.maximum();
-
-            data3DHeader.pointFields.pointRangeMinimum = static_cast<double>( minimum ) * scale + offset;
-            data3DHeader.pointFields.pointRangeMaximum = static_cast<double>( maximum ) * scale + offset;
-            data3DHeader.pointFields.pointRangeScaledInteger = scale;
-         }
-         else if ( sphericalRangeProto.type() == TypeFloat )
-         {
-            const FloatNode floatSphericalRange( sphericalRangeProto );
-
-            data3DHeader.pointFields.pointRangeMinimum = floatSphericalRange.minimum();
-            data3DHeader.pointFields.pointRangeMaximum = floatSphericalRange.maximum();
-
-            if ( floatSphericalRange.precision() == PrecisionDouble )
+            case TypeInteger:
             {
-               data3DHeader.pointFields.pointRangeScaledInteger = -1.0;
+               // Should be a warning that we don't handle this type, but we don't have a mechanism for warnings.
+               break;
             }
+
+            case TypeScaledInteger:
+            {
+               const ScaledIntegerNode scaledSphericalRange( sphericalRangeProto );
+               const double scale = scaledSphericalRange.scale();
+               const double offset = scaledSphericalRange.offset();
+               const int64_t minimum = scaledSphericalRange.minimum();
+               const int64_t maximum = scaledSphericalRange.maximum();
+
+               data3DHeader.pointFields.pointRangeMinimum = static_cast<double>( minimum ) * scale + offset;
+               data3DHeader.pointFields.pointRangeMaximum = static_cast<double>( maximum ) * scale + offset;
+
+               data3DHeader.pointFields.pointRangeNodeType = NumericalNodeType::ScaledInteger;
+               data3DHeader.pointFields.pointRangeScale = scale;
+
+               break;
+            }
+
+            case TypeFloat:
+            {
+               const FloatNode floatSphericalRange( sphericalRangeProto );
+
+               data3DHeader.pointFields.pointRangeMinimum = floatSphericalRange.minimum();
+               data3DHeader.pointFields.pointRangeMaximum = floatSphericalRange.maximum();
+
+               if ( floatSphericalRange.precision() == PrecisionSingle )
+               {
+                  data3DHeader.pointFields.pointRangeNodeType = NumericalNodeType::Float;
+               }
+               else
+               {
+                  data3DHeader.pointFields.pointRangeNodeType = NumericalNodeType::Double;
+               }
+
+               break;
+            }
+
+            default:
+               throw E57_EXCEPTION2( ErrorInvalidNodeType, "invalid node type reading sphericalRange field: " +
+                                                              toString( sphericalRangeProto.type() ) );
+               break;
          }
       }
 
@@ -908,29 +960,48 @@ namespace e57
       {
          const auto sphericalAzimuthProto = proto.get( "sphericalAzimuth" );
 
-         if ( sphericalAzimuthProto.type() == TypeScaledInteger )
+         switch ( sphericalAzimuthProto.type() )
          {
-            const ScaledIntegerNode scaledSphericalAzimuth( sphericalAzimuthProto );
-            const double scale = scaledSphericalAzimuth.scale();
-            const double offset = scaledSphericalAzimuth.offset();
-            const int64_t minimum = scaledSphericalAzimuth.minimum();
-            const int64_t maximum = scaledSphericalAzimuth.maximum();
-
-            data3DHeader.pointFields.angleMinimum = static_cast<double>( minimum ) * scale + offset;
-            data3DHeader.pointFields.angleMaximum = static_cast<double>( maximum ) * scale + offset;
-            data3DHeader.pointFields.angleScaledInteger = scale;
-         }
-         else if ( sphericalAzimuthProto.type() == TypeFloat )
-         {
-            const FloatNode floatSphericalAzimuth( sphericalAzimuthProto );
-
-            data3DHeader.pointFields.angleMinimum = floatSphericalAzimuth.minimum();
-            data3DHeader.pointFields.angleMaximum = floatSphericalAzimuth.maximum();
-
-            if ( floatSphericalAzimuth.precision() == PrecisionDouble )
+            case TypeScaledInteger:
             {
-               data3DHeader.pointFields.angleScaledInteger = -1.0;
+               const ScaledIntegerNode scaledSphericalAzimuth( sphericalAzimuthProto );
+               const double scale = scaledSphericalAzimuth.scale();
+               const double offset = scaledSphericalAzimuth.offset();
+               const int64_t minimum = scaledSphericalAzimuth.minimum();
+               const int64_t maximum = scaledSphericalAzimuth.maximum();
+
+               data3DHeader.pointFields.angleMinimum = static_cast<double>( minimum ) * scale + offset;
+               data3DHeader.pointFields.angleMaximum = static_cast<double>( maximum ) * scale + offset;
+
+               data3DHeader.pointFields.angleNodeType = NumericalNodeType::ScaledInteger;
+               data3DHeader.pointFields.angleScale = scale;
+
+               break;
             }
+
+            case TypeFloat:
+            {
+               const FloatNode floatSphericalAzimuth( sphericalAzimuthProto );
+
+               data3DHeader.pointFields.angleMinimum = floatSphericalAzimuth.minimum();
+               data3DHeader.pointFields.angleMaximum = floatSphericalAzimuth.maximum();
+
+               if ( floatSphericalAzimuth.precision() == PrecisionSingle )
+               {
+                  data3DHeader.pointFields.angleNodeType = NumericalNodeType::Float;
+               }
+               else
+               {
+                  data3DHeader.pointFields.angleNodeType = NumericalNodeType::Double;
+               }
+
+               break;
+            }
+
+            default:
+               throw E57_EXCEPTION2( ErrorInvalidNodeType, "invalid node type reading sphericalAzimuth field: " +
+                                                              toString( sphericalAzimuthProto.type() ) );
+               break;
          }
       }
 
@@ -970,33 +1041,61 @@ namespace e57
       {
          const auto timeStampProto = proto.get( "timeStamp" );
 
-         if ( timeStampProto.type() == TypeInteger )
+         switch ( timeStampProto.type() )
          {
-            const IntegerNode integerTimeStamp( timeStampProto );
+            case TypeInteger:
+            {
+               const IntegerNode integerTimeStamp( timeStampProto );
 
-            data3DHeader.pointFields.timeMaximum = static_cast<double>( integerTimeStamp.maximum() );
-            data3DHeader.pointFields.timeMinimum = static_cast<double>( integerTimeStamp.minimum() );
-            data3DHeader.pointFields.timeScaledInteger = -1.0;
-         }
-         else if ( timeStampProto.type() == TypeScaledInteger )
-         {
-            const ScaledIntegerNode scaledTimeStamp( timeStampProto );
+               data3DHeader.pointFields.timeMaximum = static_cast<double>( integerTimeStamp.maximum() );
+               data3DHeader.pointFields.timeMinimum = static_cast<double>( integerTimeStamp.minimum() );
 
-            const double scale = scaledTimeStamp.scale();
-            const double offset = scaledTimeStamp.offset();
-            const int64_t minimum = scaledTimeStamp.minimum();
-            const int64_t maximum = scaledTimeStamp.maximum();
+               data3DHeader.pointFields.timeNodeType = NumericalNodeType::Integer;
 
-            data3DHeader.pointFields.timeMinimum = static_cast<double>( minimum ) * scale + offset;
-            data3DHeader.pointFields.timeMaximum = static_cast<double>( maximum ) * scale + offset;
-            data3DHeader.pointFields.timeScaledInteger = scale;
-         }
-         else if ( timeStampProto.type() == TypeFloat )
-         {
-            const FloatNode floatTimeStamp( timeStampProto );
+               break;
+            }
 
-            data3DHeader.pointFields.timeMinimum = floatTimeStamp.minimum();
-            data3DHeader.pointFields.timeMaximum = floatTimeStamp.maximum();
+            case TypeScaledInteger:
+            {
+               const ScaledIntegerNode scaledTimeStamp( timeStampProto );
+
+               const double scale = scaledTimeStamp.scale();
+               const double offset = scaledTimeStamp.offset();
+               const int64_t minimum = scaledTimeStamp.minimum();
+               const int64_t maximum = scaledTimeStamp.maximum();
+
+               data3DHeader.pointFields.timeMinimum = static_cast<double>( minimum ) * scale + offset;
+               data3DHeader.pointFields.timeMaximum = static_cast<double>( maximum ) * scale + offset;
+
+               data3DHeader.pointFields.timeNodeType = NumericalNodeType::ScaledInteger;
+               data3DHeader.pointFields.timeScale = scale;
+
+               break;
+            }
+
+            case TypeFloat:
+            {
+               const FloatNode floatTimeStamp( timeStampProto );
+
+               data3DHeader.pointFields.timeMinimum = floatTimeStamp.minimum();
+               data3DHeader.pointFields.timeMaximum = floatTimeStamp.maximum();
+
+               if ( floatTimeStamp.precision() == PrecisionSingle )
+               {
+                  data3DHeader.pointFields.timeNodeType = NumericalNodeType::Float;
+               }
+               else
+               {
+                  data3DHeader.pointFields.timeNodeType = NumericalNodeType::Double;
+               }
+
+               break;
+            }
+
+            default:
+               throw E57_EXCEPTION2( ErrorInvalidNodeType, "invalid node type reading timeStamp field: " +
+                                                              toString( timeStampProto.type() ) );
+               break;
          }
       }
 
@@ -1034,46 +1133,67 @@ namespace e57
       {
          const auto intensityProto = proto.get( "intensity" );
 
-         if ( intensityProto.type() == TypeInteger )
+         switch ( intensityProto.type() )
          {
-            const IntegerNode integerIntensity( intensityProto );
-
-            if ( data3DHeader.intensityLimits.intensityMaximum == 0.0 )
+            case TypeInteger:
             {
-               data3DHeader.intensityLimits.intensityMinimum = static_cast<double>( integerIntensity.minimum() );
-               data3DHeader.intensityLimits.intensityMaximum = static_cast<double>( integerIntensity.maximum() );
+               const IntegerNode integerIntensity( intensityProto );
+
+               if ( data3DHeader.intensityLimits.intensityMaximum == 0.0 )
+               {
+                  data3DHeader.intensityLimits.intensityMinimum = static_cast<double>( integerIntensity.minimum() );
+                  data3DHeader.intensityLimits.intensityMaximum = static_cast<double>( integerIntensity.maximum() );
+               }
+
+               data3DHeader.pointFields.intensityNodeType = NumericalNodeType::Integer;
+
+               break;
             }
 
-            data3DHeader.pointFields.intensityScaledInteger = E57_NOT_SCALED_USE_INTEGER;
-         }
-         else if ( intensityProto.type() == TypeScaledInteger )
-         {
-            const ScaledIntegerNode scaledIntensity( intensityProto );
-            double scale = scaledIntensity.scale();
-            double offset = scaledIntensity.offset();
-
-            if ( data3DHeader.intensityLimits.intensityMaximum == 0.0 )
+            case TypeScaledInteger:
             {
-               const int64_t minimum = scaledIntensity.minimum();
-               const int64_t maximum = scaledIntensity.maximum();
+               const ScaledIntegerNode scaledIntensity( intensityProto );
+               double scale = scaledIntensity.scale();
+               double offset = scaledIntensity.offset();
 
-               data3DHeader.intensityLimits.intensityMinimum = static_cast<double>( minimum ) * scale + offset;
-               data3DHeader.intensityLimits.intensityMaximum = static_cast<double>( maximum ) * scale + offset;
+               if ( data3DHeader.intensityLimits.intensityMaximum == 0.0 )
+               {
+                  const int64_t minimum = scaledIntensity.minimum();
+                  const int64_t maximum = scaledIntensity.maximum();
+
+                  data3DHeader.intensityLimits.intensityMinimum = static_cast<double>( minimum ) * scale + offset;
+                  data3DHeader.intensityLimits.intensityMaximum = static_cast<double>( maximum ) * scale + offset;
+               }
+
+               data3DHeader.pointFields.intensityNodeType = NumericalNodeType::ScaledInteger;
+               data3DHeader.pointFields.intensityScale = scale;
+
+               break;
             }
 
-            data3DHeader.pointFields.intensityScaledInteger = scale;
-         }
-         else if ( proto.get( "intensity" ).type() == TypeFloat )
-         {
-            if ( data3DHeader.intensityLimits.intensityMaximum == 0.0 )
+            case TypeFloat:
             {
                const FloatNode floatIntensity( intensityProto );
 
                data3DHeader.intensityLimits.intensityMinimum = floatIntensity.minimum();
                data3DHeader.intensityLimits.intensityMaximum = floatIntensity.maximum();
+
+               if ( floatIntensity.precision() == PrecisionSingle )
+               {
+                  data3DHeader.pointFields.intensityNodeType = NumericalNodeType::Float;
+               }
+               else
+               {
+                  data3DHeader.pointFields.intensityNodeType = NumericalNodeType::Double;
+               }
+
+               break;
             }
 
-            data3DHeader.pointFields.intensityScaledInteger = E57_NOT_SCALED_USE_FLOAT;
+            default:
+               throw E57_EXCEPTION2( ErrorInvalidNodeType, "invalid node type reading intensity field: " +
+                                                              toString( intensityProto.type() ) );
+               break;
          }
       }
 

@@ -10,11 +10,45 @@
 #include "Helpers.h"
 #include "TestData.h"
 
-TEST( SimpleDataHeader, InvalidPointSize )
+TEST( SimpleDataHeader, InvalidPointCount )
 {
    e57::Data3D dataHeader;
 
    E57_ASSERT_THROW( e57::Data3DPointsData pointsData( dataHeader ) );
+}
+
+TEST( SimpleDataHeader, InvalidPointRangeNodeType )
+{
+   e57::Data3D dataHeader;
+
+   dataHeader.pointCount = 1;
+   dataHeader.pointFields.pointRangeNodeType = e57::NumericalNodeType::Integer;
+
+   E57_ASSERT_THROW( e57::Data3DPointsData pointsData( dataHeader ) );
+}
+
+TEST( SimpleDataHeader, InvalidAngleNodeType )
+{
+   e57::Data3D dataHeader;
+
+   dataHeader.pointCount = 1;
+   dataHeader.pointFields.angleNodeType = e57::NumericalNodeType::Integer;
+
+   E57_ASSERT_THROW( e57::Data3DPointsData pointsData( dataHeader ) );
+}
+
+TEST( SimpleDataHeader, AutoSetNodeTypes )
+{
+   e57::Data3D dataHeader;
+
+   dataHeader.pointCount = 1;
+
+   // dataHeader.pointFields.pointRangeNodeType and dataHeader.pointFields.angleNodeType default to Float but we are
+   // using a double structure. The constructor should correct these and set them to Double.
+   e57::Data3DPointsData_d pointsData( dataHeader );
+
+   EXPECT_EQ( dataHeader.pointFields.pointRangeNodeType, e57::NumericalNodeType::Double );
+   EXPECT_EQ( dataHeader.pointFields.angleNodeType, e57::NumericalNodeType::Double );
 }
 
 TEST( SimpleDataHeader, HeaderMinMaxFloat )
@@ -155,12 +189,13 @@ TEST( SimpleData, ReadWrite )
 
    EXPECT_EQ( originalData3DHeader.pointFields.pointRangeMinimum, copyData3DHeader.pointFields.pointRangeMinimum );
    EXPECT_EQ( originalData3DHeader.pointFields.pointRangeMaximum, copyData3DHeader.pointFields.pointRangeMaximum );
-   EXPECT_EQ( originalData3DHeader.pointFields.pointRangeScaledInteger,
-              copyData3DHeader.pointFields.pointRangeScaledInteger );
+
+   EXPECT_EQ( originalData3DHeader.pointFields.pointRangeNodeType, copyData3DHeader.pointFields.pointRangeNodeType );
+   EXPECT_EQ( originalData3DHeader.pointFields.pointRangeScale, copyData3DHeader.pointFields.pointRangeScale );
 
    EXPECT_EQ( originalData3DHeader.pointFields.angleMinimum, copyData3DHeader.pointFields.angleMinimum );
    EXPECT_EQ( originalData3DHeader.pointFields.angleMaximum, copyData3DHeader.pointFields.angleMaximum );
-   EXPECT_EQ( originalData3DHeader.pointFields.angleScaledInteger, copyData3DHeader.pointFields.angleScaledInteger );
+   EXPECT_EQ( originalData3DHeader.pointFields.angleScale, copyData3DHeader.pointFields.angleScale );
 
    EXPECT_EQ( originalData3DHeader.pointFields.rowIndexField, copyData3DHeader.pointFields.rowIndexField );
    EXPECT_EQ( originalData3DHeader.pointFields.rowIndexMaximum, copyData3DHeader.pointFields.rowIndexMaximum );
@@ -181,8 +216,7 @@ TEST( SimpleData, ReadWrite )
    EXPECT_EQ( originalData3DHeader.pointFields.intensityField, copyData3DHeader.pointFields.intensityField );
    EXPECT_EQ( originalData3DHeader.pointFields.isIntensityInvalidField,
               copyData3DHeader.pointFields.isIntensityInvalidField );
-   EXPECT_EQ( originalData3DHeader.pointFields.intensityScaledInteger,
-              copyData3DHeader.pointFields.intensityScaledInteger );
+   EXPECT_EQ( originalData3DHeader.pointFields.intensityScale, copyData3DHeader.pointFields.intensityScale );
 
    EXPECT_EQ( originalData3DHeader.pointFields.colorRedField, copyData3DHeader.pointFields.colorRedField );
    EXPECT_EQ( originalData3DHeader.pointFields.colorGreenField, copyData3DHeader.pointFields.colorGreenField );

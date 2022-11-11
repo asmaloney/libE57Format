@@ -14,6 +14,25 @@
 
 namespace e57
 {
+   /// Validates a Data3D and throws on error.
+   void _validateData3D( const Data3D &inData3D )
+   {
+      if ( inData3D.pointCount < 1 )
+      {
+         throw E57_EXCEPTION2( ErrorValueOutOfBounds, "pointCount=" + toString( inData3D.pointCount ) + " minimum=1" );
+      }
+
+      if ( inData3D.pointFields.pointRangeNodeType == NumericalNodeType::Integer )
+      {
+         throw E57_EXCEPTION2( ErrorInvalidNodeType, "pointRangeNodeType cannot be Integer" );
+      }
+
+      if ( inData3D.pointFields.angleNodeType == NumericalNodeType::Integer )
+      {
+         throw E57_EXCEPTION2( ErrorInvalidNodeType, "angleNodeType cannot be Integer" );
+      }
+   }
+
    // To avoid exposing M_PI, we define the constructor here.
    SphericalBounds::SphericalBounds()
    {
@@ -31,15 +50,12 @@ namespace e57
    template <typename COORDTYPE>
    Data3DPointsData_t<COORDTYPE>::Data3DPointsData_t( Data3D &data3D ) : _selfAllocated( true )
    {
-      const auto cPointCount = data3D.pointCount;
+      _validateData3D( data3D );
 
-      if ( cPointCount < 1 )
-      {
-         throw E57_EXCEPTION2( ErrorValueOutOfBounds, "pointCount=" + toString( cPointCount ) + " minimum=1" );
-      }
+      constexpr bool cIsFloat = std::is_same<COORDTYPE, float>::value;
 
       // We need to adjust min/max for floats.
-      if ( std::is_same<COORDTYPE, float>::value )
+      if ( cIsFloat )
       {
          data3D.pointFields.pointRangeMinimum = FLOAT_MIN;
          data3D.pointFields.pointRangeMaximum = FLOAT_MAX;
@@ -48,6 +64,22 @@ namespace e57
          data3D.pointFields.timeMinimum = FLOAT_MIN;
          data3D.pointFields.timeMaximum = FLOAT_MAX;
       }
+
+      // IF point range node type is not ScaledInteger
+      // THEN make sure the proper floating point type is set
+      if ( data3D.pointFields.pointRangeNodeType != NumericalNodeType::ScaledInteger )
+      {
+         data3D.pointFields.pointRangeNodeType = ( cIsFloat ? NumericalNodeType::Float : NumericalNodeType::Double );
+      }
+
+      // IF angle node type is not ScaledInteger
+      // THEN make sure the proper floating point type is set
+      if ( data3D.pointFields.angleNodeType != NumericalNodeType::ScaledInteger )
+      {
+         data3D.pointFields.angleNodeType = ( cIsFloat ? NumericalNodeType::Float : NumericalNodeType::Double );
+      }
+
+      const auto cPointCount = data3D.pointCount;
 
       if ( data3D.pointFields.cartesianXField )
       {
@@ -71,7 +103,7 @@ namespace e57
 
       if ( data3D.pointFields.intensityField )
       {
-         intensity = new float[cPointCount];
+         intensity = new double[cPointCount];
       }
 
       if ( data3D.pointFields.isIntensityInvalidField )

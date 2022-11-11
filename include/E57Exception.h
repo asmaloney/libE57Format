@@ -95,6 +95,8 @@ namespace e57
       ErrorBadConfiguration = 49,           //!< bad configuration string
       ErrorInvarianceViolation = 50,        //!< class invariance constraint violation in debug mode
 
+      ErrorInvalidNodeType = 51, ///< an invalid note type was passed in Data3D pointFields
+
       /// @deprecated Will be removed in 4.0. Use e57::Success.
       E57_SUCCESS [[deprecated( "Will be removed in 4.0. Use Success." )]] = Success,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorBadCVHeader.

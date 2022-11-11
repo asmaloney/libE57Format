@@ -120,12 +120,12 @@ namespace e57
    //! @brief Specifies an axis-aligned box in local cartesian coordinates.
    struct E57_DLL CartesianBounds
    {
-      double xMinimum = -E57_DOUBLE_MAX; //!< The minimum extent of the bounding box in the X direction
-      double xMaximum = E57_DOUBLE_MAX;  //!< The maximum extent of the bounding box in the X direction
-      double yMinimum = -E57_DOUBLE_MAX; //!< The minimum extent of the bounding box in the Y direction
-      double yMaximum = E57_DOUBLE_MAX;  //!< The maximum extent of the bounding box in the Y direction
-      double zMinimum = -E57_DOUBLE_MAX; //!< The minimum extent of the bounding box in the Z direction
-      double zMaximum = E57_DOUBLE_MAX;  //!< The maximum extent of the bounding box in the Z direction
+      double xMinimum = -DOUBLE_MAX; //!< The minimum extent of the bounding box in the X direction
+      double xMaximum = DOUBLE_MAX;  //!< The maximum extent of the bounding box in the X direction
+      double yMinimum = -DOUBLE_MAX; //!< The minimum extent of the bounding box in the Y direction
+      double yMaximum = DOUBLE_MAX;  //!< The maximum extent of the bounding box in the Y direction
+      double zMinimum = -DOUBLE_MAX; //!< The minimum extent of the bounding box in the Z direction
+      double zMaximum = DOUBLE_MAX;  //!< The maximum extent of the bounding box in the Z direction
 
       bool operator==( const CartesianBounds &rhs ) const
       {
@@ -320,11 +320,11 @@ namespace e57
 
       //! Indicates that the PointRecord cartesian and range fields should be configured with this minimum value e.g.
       //! E57_FLOAT_MIN or E57_DOUBLE_MIN. If using a ScaledIntegerNode then this needs to be a minimum range value.
-      double pointRangeMinimum = E57_DOUBLE_MIN;
+      double pointRangeMinimum = DOUBLE_MIN;
 
       //! Indicates that the PointRecord cartesian and range fields should be configured with this maximum value e.g.
       //! E57_FLOAT_MAX or E57_DOUBLE_MAX. If using a ScaledIntegerNode then this needs to be a maximum range value.
-      double pointRangeMaximum = E57_DOUBLE_MAX;
+      double pointRangeMaximum = DOUBLE_MAX;
 
       //! @brief Controls the type of Node used for the PointRecord cartesian and range fields
       //! @details The value determines which type of Node to use and whether to use floats or doubles.
@@ -337,11 +337,11 @@ namespace e57
 
       //! Indicates that the PointRecord angle fields should be configured with this minimum value E57_FLOAT_MIN or
       //! E57_DOUBLE_MIN. If using a ScaledIntegerNode then this needs to be a minimum angle value.
-      double angleMinimum = E57_DOUBLE_MIN;
+      double angleMinimum = DOUBLE_MIN;
 
       //! Indicates that the PointRecord angle fields should be configured with this maximum value e.g. E57_FLOAT_MAX or
       //! E57_DOUBLE_MAX. If using a ScaledIntegerNode then this needs to be a maximum angle value.
-      double angleMaximum = E57_DOUBLE_MAX;
+      double angleMaximum = DOUBLE_MAX;
 
       //! @brief Controls the type of Node used for the PointRecord angle fields
       //! @details The value determines which type of Node to use and whether to use floats or doubles.
@@ -356,18 +356,18 @@ namespace e57
 
       //! Indicates that the PointRecord @a rowIndex fields should be configured with this maximum value where the
       //! minimum will be set to 0.
-      uint32_t rowIndexMaximum = E57_UINT32_MAX;
+      uint32_t rowIndexMaximum = UINT32_MAX;
 
       bool columnIndexField = false; //!< Indicates that the PointRecord @a columnIndex field is active
 
       //! Indicates that the PointRecord @a columnIndex fields should be configured with this maximum value where the
       //! minimum will be set to 0.
-      uint32_t columnIndexMaximum = E57_UINT32_MAX;
+      uint32_t columnIndexMaximum = UINT32_MAX;
 
-      bool returnIndexField = false;         //!< Indicates that the PointRecord @a returnIndex field is active
-      bool returnCountField = false;         //!< Indicates that the PointRecord @a returnCount field is active
-      uint8_t returnMaximum = E57_UINT8_MAX; //!< Indicates that the PointRecord return fields should be configured
-                                             //!< with this maximum value where the minimum will be set to 0.
+      bool returnIndexField = false;     //!< Indicates that the PointRecord @a returnIndex field is active
+      bool returnCountField = false;     //!< Indicates that the PointRecord @a returnCount field is active
+      uint8_t returnMaximum = UINT8_MAX; //!< Indicates that the PointRecord return fields should be configured
+                                         //!< with this maximum value where the minimum will be set to 0.
 
       bool timeStampField = false;          //!< Indicates that the PointRecord @a timeStamp field is active
       bool isTimeStampInvalidField = false; //!< Indicates that the PointRecord @a isTimeStampInvalid field is active
@@ -375,11 +375,11 @@ namespace e57
       //! Indicates that the PointRecord @a timeStamp fields should be configured with this minimum value e.g.
       //! E57_UINT32_MIN, E57_DOUBLE_MIN or E57_DOUBLE_MIN. If using a ScaledIntegerNode then this needs to be a minimum
       //! time value.
-      double timeMinimum = E57_DOUBLE_MIN;
+      double timeMinimum = DOUBLE_MIN;
 
       //! Indicates that the PointRecord @a timeStamp fields should be configured with this maximum value. e.g.
       //! E57_UINT32_MAX, E57_DOUBLE_MAX or E57_DOUBLE_MAX.
-      double timeMaximum = E57_DOUBLE_MAX;
+      double timeMaximum = DOUBLE_MAX;
 
       //! @brief Controls the type of Node used for the PointRecord @a timeStamp fields
       //! @details The value determines which type of Node to use and whether to use floats or doubles.
@@ -433,15 +433,15 @@ namespace e57
                                      //!< data collection.
 
       //! The ambient temperature, measured at the sensor, at the time of data collection (in degrees Celsius).
-      float temperature = E57_FLOAT_MAX;
+      float temperature = FLOAT_MAX;
 
       //! The percentage relative humidity, measured at the sensor, at the time of data collection. Shall be in the
       //! interval [0, 100].
-      float relativeHumidity = E57_FLOAT_MAX;
+      float relativeHumidity = FLOAT_MAX;
 
       //! The atmospheric pressure, measured at the sensor, at the time of data collection (in Pascals). Shall be
       //! positive.
-      float atmosphericPressure = E57_FLOAT_MAX;
+      float atmosphericPressure = FLOAT_MAX;
 
       DateTime acquisitionStart; //!< The start date and time that the data was acquired.
       DateTime acquisitionEnd;   //!< The end date and time that the data was acquired.
@@ -716,19 +716,39 @@ namespace e57
    //! @brief Identifies the format representation for the image data
    enum Image2DType
    {
-      E57_NO_IMAGE = 0,      //!< No image data
-      E57_JPEG_IMAGE = 1,    //!< JPEG format image data.
-      E57_PNG_IMAGE = 2,     //!< PNG format image data.
-      E57_PNG_IMAGE_MASK = 3 //!< PNG format image mask.
+      ImageNone = 0,    //!< No image data
+      ImageJPEG = 1,    //!< JPEG format image data.
+      ImagePNG = 2,     //!< PNG format image data.
+      ImageMaskPNG = 3, //!< PNG format image mask.
+
+      /// @deprecated Will be removed in 4.0. Use e57::ImageNone.
+      E57_NO_IMAGE [[deprecated( "Will be removed in 4.0. Use ImageNone." )]] = ImageNone,
+      /// @deprecated Will be removed in 4.0. Use e57::ImageJPEG.
+      E57_JPEG_IMAGE [[deprecated( "Will be removed in 4.0. Use ImageJPEG." )]] = ImageJPEG,
+      /// @deprecated Will be removed in 4.0. Use e57::ImagePNG.
+      E57_PNG_IMAGE [[deprecated( "Will be removed in 4.0. Use ImagePNG." )]] = ImagePNG,
+      /// @deprecated Will be removed in 4.0. Use e57::ImageMaskPNG.
+      E57_PNG_IMAGE_MASK [[deprecated( "Will be removed in 4.0. Use ImageMaskPNG." )]] = ImageMaskPNG,
    };
 
    //! @brief Identifies the representation for the image data
    enum Image2DProjection
    {
-      E57_NO_PROJECTION = 0, //!< No representation for the image data is present
-      E57_VISUAL = 1,        //!< VisualReferenceRepresentation for the image data
-      E57_PINHOLE = 2,       //!< PinholeRepresentation for the image data
-      E57_SPHERICAL = 3,     //!< SphericalRepresentation for the image data
-      E57_CYLINDRICAL = 4    //!< CylindricalRepresentation for the image data
+      ProjectionNone = 0,        //!< No representation for the image data is present
+      ProjectionVisual = 1,      //!< VisualReferenceRepresentation for the image data
+      ProjectionPinhole = 2,     //!< PinholeRepresentation for the image data
+      ProjectionSpherical = 3,   //!< SphericalRepresentation for the image data
+      ProjectionCylindrical = 4, //!< CylindricalRepresentation for the image data
+
+      /// @deprecated Will be removed in 4.0. Use e57::ProjectionNone.
+      E57_NO_PROJECTION [[deprecated( "Will be removed in 4.0. Use ProjectionNone." )]] = ProjectionNone,
+      /// @deprecated Will be removed in 4.0. Use e57::ProjectionVisual.
+      E57_VISUAL [[deprecated( "Will be removed in 4.0. Use ProjectionVisual." )]] = ProjectionVisual,
+      /// @deprecated Will be removed in 4.0. Use e57::ProjectionPinhole.
+      E57_PINHOLE [[deprecated( "Will be removed in 4.0. Use ProjectionPinhole." )]] = ProjectionPinhole,
+      /// @deprecated Will be removed in 4.0. Use e57::ProjectionSpherical.
+      E57_SPHERICAL [[deprecated( "Will be removed in 4.0. Use ProjectionSpherical." )]] = ProjectionSpherical,
+      /// @deprecated Will be removed in 4.0. Use e57::ProjectionCylindrical.
+      E57_CYLINDRICAL [[deprecated( "Will be removed in 4.0. Use ProjectionCylindrical." )]] = ProjectionCylindrical,
    };
 } // end namespace e57

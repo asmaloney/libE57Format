@@ -42,7 +42,7 @@ namespace e57
       // don't checkImageFileOpen
 
       /// Same node type?
-      if ( ni->type() != E57_STRING )
+      if ( ni->type() != TypeString )
       {
          return ( false );
       }
@@ -74,7 +74,7 @@ namespace e57
       /// We are a leaf node, so verify that we are listed in set.
       if ( pathNames.find( relativePathName( origin ) ) == pathNames.end() )
       {
-         throw E57_EXCEPTION2( E57_ERROR_NO_BUFFER_FOR_ELEMENT, "this->pathName=" + this->pathName() );
+         throw E57_EXCEPTION2( ErrorNoBufferForElement, "this->pathName=" + this->pathName() );
       }
    }
 

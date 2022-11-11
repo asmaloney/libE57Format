@@ -102,7 +102,7 @@ namespace e57
 
       if ( !isWriter_ && ( mode != "r" ) )
       {
-         throw E57_EXCEPTION2( E57_ERROR_BAD_API_ARGUMENT, "mode=" + ustring( mode ) );
+         throw E57_EXCEPTION2( ErrorBadAPIArgument, "mode=" + ustring( mode ) );
       }
 
       file_ = nullptr;
@@ -256,9 +256,8 @@ namespace e57
 #ifdef E57_MAX_DEBUG
       if ( writerCount_ < 0 )
       {
-         throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "fileName=" + fileName_ +
-                                                      " writerCount=" + toString( writerCount_ ) +
-                                                      " readerCount=" + toString( readerCount_ ) );
+         throw E57_EXCEPTION2( ErrorInternal, "fileName=" + fileName_ + " writerCount=" + toString( writerCount_ ) +
+                                                 " readerCount=" + toString( readerCount_ ) );
       }
 #endif
    }
@@ -274,9 +273,8 @@ namespace e57
 #ifdef E57_MAX_DEBUG
       if ( readerCount_ < 0 )
       {
-         throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "fileName=" + fileName_ +
-                                                      " writerCount=" + toString( writerCount_ ) +
-                                                      " readerCount=" + toString( readerCount_ ) );
+         throw E57_EXCEPTION2( ErrorInternal, "fileName=" + fileName_ + " writerCount=" + toString( writerCount_ ) +
+                                                 " readerCount=" + toString( readerCount_ ) );
       }
 #endif
    }
@@ -447,12 +445,12 @@ namespace e57
 
       if ( extensionsLookupPrefix( prefix, dummy ) )
       {
-         throw E57_EXCEPTION2( E57_ERROR_DUPLICATE_NAMESPACE_PREFIX, "prefix=" + prefix + " uri=" + uri );
+         throw E57_EXCEPTION2( ErrorDuplicateNamespacePrefix, "prefix=" + prefix + " uri=" + uri );
       }
 
       if ( extensionsLookupUri( uri, dummy ) )
       {
-         throw E57_EXCEPTION2( E57_ERROR_DUPLICATE_NAMESPACE_URI, "prefix=" + prefix + " uri=" + uri );
+         throw E57_EXCEPTION2( ErrorDuplicateNamespaceURI, "prefix=" + prefix + " uri=" + uri );
          ;
       }
 
@@ -605,7 +603,7 @@ namespace e57
 
       if ( prefix.length() > 0 && !extensionsLookupPrefix( prefix, uri ) )
       {
-         throw E57_EXCEPTION2( E57_ERROR_BAD_PATH_NAME, "elementName=" + elementName + " prefix=" + prefix );
+         throw E57_EXCEPTION2( ErrorBadPathName, "elementName=" + elementName + " prefix=" + prefix );
       }
    }
 
@@ -621,7 +619,7 @@ namespace e57
       /// Empty name is bad
       if ( len == 0 )
       {
-         throw E57_EXCEPTION2( E57_ERROR_BAD_PATH_NAME, "elementName=" + elementName );
+         throw E57_EXCEPTION2( ErrorBadPathName, "elementName=" + elementName );
       }
 
       unsigned char c = elementName[0];
@@ -636,7 +634,7 @@ namespace e57
 
             if ( !( '0' <= c && c <= '9' ) )
             {
-               throw E57_EXCEPTION2( E57_ERROR_BAD_PATH_NAME, "elementName=" + elementName );
+               throw E57_EXCEPTION2( ErrorBadPathName, "elementName=" + elementName );
             }
          }
 
@@ -648,7 +646,7 @@ namespace e57
       /// Don't allow ':' as first char.
       if ( c < 128 && !( ( 'a' <= c && c <= 'z' ) || ( 'A' <= c && c <= 'Z' ) || c == '_' ) )
       {
-         throw E57_EXCEPTION2( E57_ERROR_BAD_PATH_NAME, "elementName=" + elementName );
+         throw E57_EXCEPTION2( ErrorBadPathName, "elementName=" + elementName );
       }
 
       /// If each following char is ASCII (<128), check for legality
@@ -660,7 +658,7 @@ namespace e57
          if ( c < 128 && !( ( 'a' <= c && c <= 'z' ) || ( 'A' <= c && c <= 'Z' ) || c == '_' || c == ':' ||
                             ( '0' <= c && c <= '9' ) || c == '-' || c == '.' ) )
          {
-            throw E57_EXCEPTION2( E57_ERROR_BAD_PATH_NAME, "elementName=" + elementName );
+            throw E57_EXCEPTION2( ErrorBadPathName, "elementName=" + elementName );
          }
       }
 
@@ -672,7 +670,7 @@ namespace e57
          /// Check doesn't have two colons
          if ( elementName.find_first_of( ':', found + 1 ) != std::string::npos )
          {
-            throw E57_EXCEPTION2( E57_ERROR_BAD_PATH_NAME, "elementName=" + elementName );
+            throw E57_EXCEPTION2( ErrorBadPathName, "elementName=" + elementName );
          }
 
          /// Split element name at the colon
@@ -682,7 +680,7 @@ namespace e57
 
          if ( prefix.length() == 0 || localPart.length() == 0 )
          {
-            throw E57_EXCEPTION2( E57_ERROR_BAD_PATH_NAME,
+            throw E57_EXCEPTION2( ErrorBadPathName,
                                   "elementName=" + elementName + " prefix=" + prefix + " localPart=" + localPart );
          }
       }
@@ -743,7 +741,7 @@ namespace e57
 
          if ( !isElementNameLegal( elementName ) )
          {
-            throw E57_EXCEPTION2( E57_ERROR_BAD_PATH_NAME, "pathName=" + pathName + " elementName=" + elementName );
+            throw E57_EXCEPTION2( ErrorBadPathName, "pathName=" + pathName + " elementName=" + elementName );
          }
 
          /// Add to list
@@ -769,7 +767,7 @@ namespace e57
       /// Empty relative path is not allowed
       if ( isRelative && fields.empty() )
       {
-         throw E57_EXCEPTION2( E57_ERROR_BAD_PATH_NAME, "pathName=" + pathName );
+         throw E57_EXCEPTION2( ErrorBadPathName, "pathName=" + pathName );
       }
 
 #ifdef E57_MAX_VERBOSE
@@ -821,16 +819,15 @@ namespace e57
       /// Check signature
       if ( strncmp( header.fileSignature, "ASTM-E57", 8 ) != 0 )
       {
-         throw E57_EXCEPTION2( E57_ERROR_BAD_FILE_SIGNATURE, "fileName=" + file->fileName() );
+         throw E57_EXCEPTION2( ErrorBadFileSignature, "fileName=" + file->fileName() );
       }
 
       /// Check file version compatibility
       if ( header.majorVersion > E57_FORMAT_MAJOR )
       {
-         throw E57_EXCEPTION2( E57_ERROR_UNKNOWN_FILE_VERSION,
-                               "fileName=" + file->fileName() +
-                                  " header.majorVersion=" + toString( header.majorVersion ) +
-                                  " header.minorVersion=" + toString( header.minorVersion ) );
+         throw E57_EXCEPTION2( ErrorUnknownFileVersion, "fileName=" + file->fileName() +
+                                                           " header.majorVersion=" + toString( header.majorVersion ) +
+                                                           " header.minorVersion=" + toString( header.minorVersion ) );
       }
 
       /// If is a prototype version (majorVersion==0), then minorVersion has to
@@ -838,16 +835,15 @@ namespace e57
       /// should be able to handle any minor version.
       if ( header.majorVersion == E57_FORMAT_MAJOR && header.minorVersion > E57_FORMAT_MINOR )
       {
-         throw E57_EXCEPTION2( E57_ERROR_UNKNOWN_FILE_VERSION,
-                               "fileName=" + file->fileName() +
-                                  " header.majorVersion=" + toString( header.majorVersion ) +
-                                  " header.minorVersion=" + toString( header.minorVersion ) );
+         throw E57_EXCEPTION2( ErrorUnknownFileVersion, "fileName=" + file->fileName() +
+                                                           " header.majorVersion=" + toString( header.majorVersion ) +
+                                                           " header.minorVersion=" + toString( header.minorVersion ) );
       }
 
       /// Check if file length matches actual physical length
       if ( header.filePhysicalLength != file->length( CheckedFile::Physical ) )
       {
-         throw E57_EXCEPTION2( E57_ERROR_BAD_FILE_LENGTH,
+         throw E57_EXCEPTION2( ErrorBadFileLength,
                                "fileName=" + file->fileName() +
                                   " header.filePhysicalLength=" + toString( header.filePhysicalLength ) +
                                   " file->length=" + toString( file->length( CheckedFile::Physical ) ) );
@@ -856,7 +852,7 @@ namespace e57
       /// Check that page size is correct constant
       if ( header.majorVersion != 0 && header.pageSize != CheckedFile::physicalPageSize )
       {
-         throw E57_EXCEPTION2( E57_ERROR_BAD_FILE_LENGTH, "fileName=" + file->fileName() );
+         throw E57_EXCEPTION2( ErrorBadFileLength, "fileName=" + file->fileName() );
       }
    }
 
@@ -865,7 +861,7 @@ namespace e57
    {
       if ( !isOpen() )
       {
-         throw E57Exception( E57_ERROR_IMAGEFILE_NOT_OPEN, "fileName=" + fileName(), srcFileName, srcLineNumber,
+         throw E57Exception( ErrorImageFileNotOpen, "fileName=" + fileName(), srcFileName, srcLineNumber,
                              srcFunctionName );
       }
    }

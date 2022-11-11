@@ -142,13 +142,13 @@ destImageFile.isWritable() must be true).
 codecs.isRoot())
 @post    prototype.isAttached()
 @post    codecs.isAttached()
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_FILE_IS_READ_ONLY
-@throw   ::E57_ERROR_BAD_PROTOTYPE
-@throw   ::E57_ERROR_BAD_CODECS
-@throw   ::E57_ERROR_ALREADY_HAS_PARENT
-@throw   ::E57_ERROR_DIFFERENT_DEST_IMAGEFILE
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorFileReadOnly
+@throw   ::ErrorBadPrototype
+@throw   ::ErrorBadCodecs
+@throw   ::ErrorAlreadyHasParent
+@throw   ::ErrorDifferentDestImageFile
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     SourceDestBuffer, Node, CompressedVectorNode::reader, CompressedVectorNode::writer
 */
 CompressedVectorNode::CompressedVectorNode( ImageFile destImageFile, const Node &prototype, const VectorNode &codecs ) :
@@ -211,8 +211,8 @@ number will reflect any writes completed.
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @post    No visible state is modified.
 @return  Current number of records in CompressedVectorNode.
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     CompressedVectorNode::reader, CompressedVectorNode::writer
 */
 int64_t CompressedVectorNode::childCount() const
@@ -225,8 +225,8 @@ int64_t CompressedVectorNode::childCount() const
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @post    No visible state is modified.
 @return  A smart Node handle referencing the root of the prototype tree.
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     CompressedVectorNode::CompressedVectorNode, SourceDestBuffer,
 CompressedVectorNode::reader, CompressedVectorNode::writer
 */
@@ -241,8 +241,8 @@ the CompressedVectorNode.
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @post    No visible state is modified.
 @return  A smart VectorNode handle referencing the root of the codecs tree.
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     CompressedVectorNode::CompressedVectorNode, SourceDestBuffer,
 CompressedVectorNode::reader, CompressedVectorNode::writer
 */
@@ -289,19 +289,19 @@ void CompressedVectorNode::checkInvariant( bool doRecurse, bool doUpcast )
    // prototype attached state not same as this attached state
    if ( prototype().isAttached() != isAttached() )
    {
-      throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+      throw E57_EXCEPTION1( ErrorInvarianceViolation );
    }
 
    // prototype not root
    if ( !prototype().isRoot() )
    {
-      throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+      throw E57_EXCEPTION1( ErrorInvarianceViolation );
    }
 
    // prototype dest ImageFile not same as this dest ImageFile
    if ( prototype().destImageFile() != destImageFile() )
    {
-      throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+      throw E57_EXCEPTION1( ErrorInvarianceViolation );
    }
 
    // Check codecs is good Node
@@ -310,19 +310,19 @@ void CompressedVectorNode::checkInvariant( bool doRecurse, bool doUpcast )
    // codecs attached state not same as this attached state
    if ( codecs().isAttached() != isAttached() )
    {
-      throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+      throw E57_EXCEPTION1( ErrorInvarianceViolation );
    }
 
    // codecs not root
    if ( !codecs().isRoot() )
    {
-      throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+      throw E57_EXCEPTION1( ErrorInvarianceViolation );
    }
 
    // codecs dest ImageFile not same as this dest ImageFile
    if ( codecs().destImageFile() != destImageFile() )
    {
-      throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+      throw E57_EXCEPTION1( ErrorInvarianceViolation );
    }
 }
 // endExample CompressedVectorNode::checkInvariant
@@ -350,14 +350,14 @@ otherwise an exception is thrown. In designs that need to avoid the exception,
 use Node::type() to determine the actual type of the @a n before downcasting.
 This function must be explicitly called (c++ compiler cannot insert it
 automatically).
-@throw   ::E57_ERROR_BAD_NODE_DOWNCAST
+@throw   ::ErrorBadNodeDowncast
 @see     Node::type(), CompressedVectorNode::operator, Node()
 */
 CompressedVectorNode::CompressedVectorNode( const Node &n )
 {
-   if ( n.type() != E57_COMPRESSED_VECTOR )
+   if ( n.type() != TypeCompressedVector )
    {
-      throw E57_EXCEPTION2( E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString( n.type() ) );
+      throw E57_EXCEPTION2( ErrorBadNodeDowncast, "nodeType=" + toString( n.type() ) );
    }
 
    /// Set our shared_ptr to the downcast shared_ptr
@@ -401,18 +401,18 @@ destImageFile.isWritable()).
 0).
 @return  A smart CompressedVectorWriter handle referencing the underlying
 iterator object.
-@throw   ::E57_ERROR_BAD_API_ARGUMENT
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_FILE_IS_READ_ONLY
-@throw   ::E57_ERROR_SET_TWICE
-@throw   ::E57_ERROR_TOO_MANY_WRITERS
-@throw   ::E57_ERROR_TOO_MANY_READERS
-@throw   ::E57_ERROR_NODE_UNATTACHED
-@throw   ::E57_ERROR_PATH_UNDEFINED
-@throw   ::E57_ERROR_BUFFER_SIZE_MISMATCH
-@throw   ::E57_ERROR_BUFFER_DUPLICATE_PATHNAME
-@throw   ::E57_ERROR_NO_BUFFER_FOR_ELEMENT
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorBadAPIArgument
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorFileReadOnly
+@throw   ::ErrorSetTwice
+@throw   ::ErrorTooManyWriters
+@throw   ::ErrorTooManyReaders
+@throw   ::ErrorNodeUnattached
+@throw   ::ErrorPathUndefined
+@throw   ::ErrorBufferSizeMismatch
+@throw   ::ErrorBufferDuplicatePathName
+@throw   ::ErrorNoBufferForElement
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     CompressedVectorWriter, SourceDestBuffer, CompressedVectorNode::CompressedVectorNode,
 CompressedVectorNode::prototype
 */
@@ -440,15 +440,15 @@ create a CompressedVectorReader for an empty CompressedVectorNode.
 @pre     This CompressedVectorNode must be attached (i.e. isAttached()).
 @return  A smart CompressedVectorReader handle referencing the underlying
 iterator object.
-@throw   ::E57_ERROR_BAD_API_ARGUMENT
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_TOO_MANY_WRITERS
-@throw   ::E57_ERROR_NODE_UNATTACHED
-@throw   ::E57_ERROR_PATH_UNDEFINED
-@throw   ::E57_ERROR_BUFFER_SIZE_MISMATCH
-@throw   ::E57_ERROR_BUFFER_DUPLICATE_PATHNAME
-@throw   ::E57_ERROR_BAD_CV_HEADER
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorBadAPIArgument
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorTooManyWriters
+@throw   ::ErrorNodeUnattached
+@throw   ::ErrorPathUndefined
+@throw   ::ErrorBufferSizeMismatch
+@throw   ::ErrorBufferDuplicatePathName
+@throw   ::ErrorBadCVHeader
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     CompressedVectorReader, SourceDestBuffer, CompressedVectorNode::CompressedVectorNode,
 CompressedVectorNode::prototype
 */

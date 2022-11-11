@@ -44,10 +44,10 @@ namespace e57
 
       switch ( imageType )
       {
-         case E57_NO_IMAGE:
+         case ImageNone:
             return 0;
 
-         case E57_JPEG_IMAGE:
+         case ImageJPEG:
             if ( image.isDefined( "jpegImage" ) )
             {
                BlobNode jpegImage( image.get( "jpegImage" ) );
@@ -56,7 +56,7 @@ namespace e57
             }
             break;
 
-         case E57_PNG_IMAGE:
+         case ImagePNG:
             if ( image.isDefined( "pngImage" ) )
             {
                BlobNode pngImage( image.get( "pngImage" ) );
@@ -65,7 +65,7 @@ namespace e57
             }
             break;
 
-         case E57_PNG_IMAGE_MASK:
+         case ImageMaskPNG:
             if ( image.isDefined( "imageMask" ) )
             {
                BlobNode imageMask( image.get( "imageMask" ) );
@@ -92,8 +92,8 @@ namespace e57
       imageWidth = 0;
       imageHeight = 0;
       imageSize = 0;
-      imageType = E57_NO_IMAGE;
-      imageMaskType = E57_NO_IMAGE;
+      imageType = ImageNone;
+      imageMaskType = ImageNone;
 
       if ( image.isDefined( "imageWidth" ) )
       {
@@ -116,23 +116,23 @@ namespace e57
       if ( image.isDefined( "jpegImage" ) )
       {
          imageSize = BlobNode( image.get( "jpegImage" ) ).byteCount();
-         imageType = E57_JPEG_IMAGE;
+         imageType = ImageJPEG;
       }
       else if ( image.isDefined( "pngImage" ) )
       {
          imageSize = BlobNode( image.get( "pngImage" ) ).byteCount();
-         imageType = E57_PNG_IMAGE;
+         imageType = ImagePNG;
       }
 
       if ( image.isDefined( "imageMask" ) )
       {
-         if ( imageType == E57_NO_IMAGE )
+         if ( imageType == ImageNone )
          {
             imageSize = BlobNode( image.get( "imageMask" ) ).byteCount();
-            imageType = E57_PNG_IMAGE_MASK;
+            imageType = ImageMaskPNG;
          }
 
-         imageMaskType = E57_PNG_IMAGE_MASK;
+         imageMaskType = ImageMaskPNG;
       }
 
       return true;
@@ -145,14 +145,14 @@ namespace e57
       {
          const auto colourProto = proto.get( protoName );
 
-         if ( colourProto.type() == E57_INTEGER )
+         if ( colourProto.type() == TypeInteger )
          {
             const IntegerNode integerColour( colourProto );
 
             colourMin = static_cast<uint16_t>( integerColour.minimum() );
             colourMax = static_cast<uint16_t>( integerColour.maximum() );
          }
-         else if ( colourProto.type() == E57_SCALED_INTEGER )
+         else if ( colourProto.type() == TypeScaledInteger )
          {
             const ScaledIntegerNode scaledColour( colourProto );
             const double scale = scaledColour.scale();
@@ -163,7 +163,7 @@ namespace e57
             colourMin = static_cast<uint16_t>( minimum ) * scale + offset;
             colourMax = static_cast<uint16_t>( maximum ) * scale + offset;
          }
-         else if ( colourProto.type() == E57_FLOAT )
+         else if ( colourProto.type() == TypeFloat )
          {
             const FloatNode floatColour( colourProto );
 
@@ -475,10 +475,10 @@ namespace e57
          return false;
       }
 
-      imageProjection = E57_NO_PROJECTION;
-      imageType = E57_NO_IMAGE;
-      imageMaskType = E57_NO_IMAGE;
-      imageVisualType = E57_NO_IMAGE;
+      imageProjection = ProjectionNone;
+      imageType = ImageNone;
+      imageMaskType = ImageNone;
+      imageVisualType = ImageNone;
 
       const StructureNode image( images2D_.get( imageIndex ) );
 
@@ -488,7 +488,7 @@ namespace e57
 
          bool ret = _getImage2DNodeSizes( visualReferenceRepresentation, imageType, imageWidth, imageHeight, imageSize,
                                           imageMaskType );
-         imageProjection = E57_VISUAL;
+         imageProjection = ProjectionVisual;
          imageVisualType = imageType;
 
          return ret;
@@ -498,7 +498,7 @@ namespace e57
       {
          const StructureNode pinholeRepresentation( image.get( "pinholeRepresentation" ) );
 
-         imageProjection = E57_PINHOLE;
+         imageProjection = ProjectionPinhole;
 
          return _getImage2DNodeSizes( pinholeRepresentation, imageType, imageWidth, imageHeight, imageSize,
                                       imageMaskType );
@@ -508,7 +508,7 @@ namespace e57
       {
          const StructureNode sphericalRepresentation( image.get( "sphericalRepresentation" ) );
 
-         imageProjection = E57_SPHERICAL;
+         imageProjection = ProjectionSpherical;
 
          return _getImage2DNodeSizes( sphericalRepresentation, imageType, imageWidth, imageHeight, imageSize,
                                       imageMaskType );
@@ -518,7 +518,7 @@ namespace e57
       {
          const StructureNode cylindricalRepresentation( image.get( "cylindricalRepresentation" ) );
 
-         imageProjection = E57_CYLINDRICAL;
+         imageProjection = ProjectionCylindrical;
 
          return _getImage2DNodeSizes( cylindricalRepresentation, imageType, imageWidth, imageHeight, imageSize,
                                       imageMaskType );
@@ -540,10 +540,10 @@ namespace e57
 
       switch ( imageProjection )
       {
-         case E57_NO_PROJECTION:
+         case ProjectionNone:
             return 0;
 
-         case E57_VISUAL:
+         case ProjectionVisual:
             if ( image.isDefined( "visualReferenceRepresentation" ) )
             {
                const StructureNode visualReferenceRepresentation( image.get( "visualReferenceRepresentation" ) );
@@ -552,7 +552,7 @@ namespace e57
             }
             break;
 
-         case E57_PINHOLE:
+         case ProjectionPinhole:
             if ( image.isDefined( "pinholeRepresentation" ) )
             {
                const StructureNode pinholeRepresentation( image.get( "pinholeRepresentation" ) );
@@ -561,7 +561,7 @@ namespace e57
             }
             break;
 
-         case E57_SPHERICAL:
+         case ProjectionSpherical:
             if ( image.isDefined( "sphericalRepresentation" ) )
             {
                const StructureNode sphericalRepresentation( image.get( "sphericalRepresentation" ) );
@@ -570,7 +570,7 @@ namespace e57
             }
             break;
 
-         case E57_CYLINDRICAL:
+         case ProjectionCylindrical:
             if ( image.isDefined( "cylindricalRepresentation" ) )
             {
                const StructureNode cylindricalRepresentation( image.get( "cylindricalRepresentation" ) );
@@ -716,7 +716,7 @@ namespace e57
       {
          const StructureNode bbox( scan.get( "cartesianBounds" ) );
 
-         if ( bbox.get( "xMinimum" ).type() == E57_SCALED_INTEGER )
+         if ( bbox.get( "xMinimum" ).type() == TypeScaledInteger )
          {
             data3DHeader.cartesianBounds.xMinimum = ScaledIntegerNode( bbox.get( "xMinimum" ) ).scaledValue();
             data3DHeader.cartesianBounds.xMaximum = ScaledIntegerNode( bbox.get( "xMaximum" ) ).scaledValue();
@@ -725,7 +725,7 @@ namespace e57
             data3DHeader.cartesianBounds.zMinimum = ScaledIntegerNode( bbox.get( "zMinimum" ) ).scaledValue();
             data3DHeader.cartesianBounds.zMaximum = ScaledIntegerNode( bbox.get( "zMaximum" ) ).scaledValue();
          }
-         else if ( bbox.get( "xMinimum" ).type() == E57_FLOAT )
+         else if ( bbox.get( "xMinimum" ).type() == TypeFloat )
          {
             data3DHeader.cartesianBounds.xMinimum = FloatNode( bbox.get( "xMinimum" ) ).value();
             data3DHeader.cartesianBounds.xMaximum = FloatNode( bbox.get( "xMaximum" ) ).value();
@@ -740,36 +740,36 @@ namespace e57
       {
          const StructureNode sbox( scan.get( "sphericalBounds" ) );
 
-         if ( sbox.get( "rangeMinimum" ).type() == E57_SCALED_INTEGER )
+         if ( sbox.get( "rangeMinimum" ).type() == TypeScaledInteger )
          {
             data3DHeader.sphericalBounds.rangeMinimum = ScaledIntegerNode( sbox.get( "rangeMinimum" ) ).scaledValue();
             data3DHeader.sphericalBounds.rangeMaximum = ScaledIntegerNode( sbox.get( "rangeMaximum" ) ).scaledValue();
          }
-         else if ( sbox.get( "rangeMinimum" ).type() == E57_FLOAT )
+         else if ( sbox.get( "rangeMinimum" ).type() == TypeFloat )
          {
             data3DHeader.sphericalBounds.rangeMinimum = FloatNode( sbox.get( "rangeMinimum" ) ).value();
             data3DHeader.sphericalBounds.rangeMaximum = FloatNode( sbox.get( "rangeMaximum" ) ).value();
          }
 
-         if ( sbox.get( "elevationMinimum" ).type() == E57_SCALED_INTEGER )
+         if ( sbox.get( "elevationMinimum" ).type() == TypeScaledInteger )
          {
             data3DHeader.sphericalBounds.elevationMinimum =
                ScaledIntegerNode( sbox.get( "elevationMinimum" ) ).scaledValue();
             data3DHeader.sphericalBounds.elevationMaximum =
                ScaledIntegerNode( sbox.get( "elevationMaximum" ) ).scaledValue();
          }
-         else if ( sbox.get( "elevationMinimum" ).type() == E57_FLOAT )
+         else if ( sbox.get( "elevationMinimum" ).type() == TypeFloat )
          {
             data3DHeader.sphericalBounds.elevationMinimum = FloatNode( sbox.get( "elevationMinimum" ) ).value();
             data3DHeader.sphericalBounds.elevationMaximum = FloatNode( sbox.get( "elevationMaximum" ) ).value();
          }
 
-         if ( sbox.get( "azimuthStart" ).type() == E57_SCALED_INTEGER )
+         if ( sbox.get( "azimuthStart" ).type() == TypeScaledInteger )
          {
             data3DHeader.sphericalBounds.azimuthStart = ScaledIntegerNode( sbox.get( "azimuthStart" ) ).scaledValue();
             data3DHeader.sphericalBounds.azimuthEnd = ScaledIntegerNode( sbox.get( "azimuthEnd" ) ).scaledValue();
          }
-         else if ( sbox.get( "azimuthStart" ).type() == E57_FLOAT )
+         else if ( sbox.get( "azimuthStart" ).type() == TypeFloat )
          {
             data3DHeader.sphericalBounds.azimuthStart = FloatNode( sbox.get( "azimuthStart" ) ).value();
             data3DHeader.sphericalBounds.azimuthEnd = FloatNode( sbox.get( "azimuthEnd" ) ).value();
@@ -841,7 +841,7 @@ namespace e57
       {
          const auto cartesianXProto = proto.get( "cartesianX" );
 
-         if ( cartesianXProto.type() == E57_SCALED_INTEGER )
+         if ( cartesianXProto.type() == TypeScaledInteger )
          {
             const ScaledIntegerNode scaledCartesianX( cartesianXProto );
             const double scale = scaledCartesianX.scale();
@@ -853,14 +853,14 @@ namespace e57
             data3DHeader.pointFields.pointRangeMaximum = static_cast<double>( maximum ) * scale + offset;
             data3DHeader.pointFields.pointRangeScaledInteger = scale;
          }
-         else if ( cartesianXProto.type() == E57_FLOAT )
+         else if ( cartesianXProto.type() == TypeFloat )
          {
             const FloatNode floatCartesianX( cartesianXProto );
 
             data3DHeader.pointFields.pointRangeMinimum = floatCartesianX.minimum();
             data3DHeader.pointFields.pointRangeMaximum = floatCartesianX.maximum();
 
-            if ( floatCartesianX.precision() == E57_DOUBLE )
+            if ( floatCartesianX.precision() == PrecisionDouble )
             {
                data3DHeader.pointFields.pointRangeScaledInteger = -1.0;
             }
@@ -870,7 +870,7 @@ namespace e57
       {
          const auto sphericalRangeProto = proto.get( "sphericalRange" );
 
-         if ( sphericalRangeProto.type() == E57_SCALED_INTEGER )
+         if ( sphericalRangeProto.type() == TypeScaledInteger )
          {
             const ScaledIntegerNode scaledSphericalRange( sphericalRangeProto );
             const double scale = scaledSphericalRange.scale();
@@ -882,14 +882,14 @@ namespace e57
             data3DHeader.pointFields.pointRangeMaximum = static_cast<double>( maximum ) * scale + offset;
             data3DHeader.pointFields.pointRangeScaledInteger = scale;
          }
-         else if ( sphericalRangeProto.type() == E57_FLOAT )
+         else if ( sphericalRangeProto.type() == TypeFloat )
          {
             const FloatNode floatSphericalRange( sphericalRangeProto );
 
             data3DHeader.pointFields.pointRangeMinimum = floatSphericalRange.minimum();
             data3DHeader.pointFields.pointRangeMaximum = floatSphericalRange.maximum();
 
-            if ( floatSphericalRange.precision() == E57_DOUBLE )
+            if ( floatSphericalRange.precision() == PrecisionDouble )
             {
                data3DHeader.pointFields.pointRangeScaledInteger = -1.0;
             }
@@ -908,7 +908,7 @@ namespace e57
       {
          const auto sphericalAzimuthProto = proto.get( "sphericalAzimuth" );
 
-         if ( sphericalAzimuthProto.type() == E57_SCALED_INTEGER )
+         if ( sphericalAzimuthProto.type() == TypeScaledInteger )
          {
             const ScaledIntegerNode scaledSphericalAzimuth( sphericalAzimuthProto );
             const double scale = scaledSphericalAzimuth.scale();
@@ -920,14 +920,14 @@ namespace e57
             data3DHeader.pointFields.angleMaximum = static_cast<double>( maximum ) * scale + offset;
             data3DHeader.pointFields.angleScaledInteger = scale;
          }
-         else if ( sphericalAzimuthProto.type() == E57_FLOAT )
+         else if ( sphericalAzimuthProto.type() == TypeFloat )
          {
             const FloatNode floatSphericalAzimuth( sphericalAzimuthProto );
 
             data3DHeader.pointFields.angleMinimum = floatSphericalAzimuth.minimum();
             data3DHeader.pointFields.angleMaximum = floatSphericalAzimuth.maximum();
 
-            if ( floatSphericalAzimuth.precision() == E57_DOUBLE )
+            if ( floatSphericalAzimuth.precision() == PrecisionDouble )
             {
                data3DHeader.pointFields.angleScaledInteger = -1.0;
             }
@@ -970,7 +970,7 @@ namespace e57
       {
          const auto timeStampProto = proto.get( "timeStamp" );
 
-         if ( timeStampProto.type() == E57_INTEGER )
+         if ( timeStampProto.type() == TypeInteger )
          {
             const IntegerNode integerTimeStamp( timeStampProto );
 
@@ -978,7 +978,7 @@ namespace e57
             data3DHeader.pointFields.timeMinimum = static_cast<double>( integerTimeStamp.minimum() );
             data3DHeader.pointFields.timeScaledInteger = -1.0;
          }
-         else if ( timeStampProto.type() == E57_SCALED_INTEGER )
+         else if ( timeStampProto.type() == TypeScaledInteger )
          {
             const ScaledIntegerNode scaledTimeStamp( timeStampProto );
 
@@ -991,7 +991,7 @@ namespace e57
             data3DHeader.pointFields.timeMaximum = static_cast<double>( maximum ) * scale + offset;
             data3DHeader.pointFields.timeScaledInteger = scale;
          }
-         else if ( timeStampProto.type() == E57_FLOAT )
+         else if ( timeStampProto.type() == TypeFloat )
          {
             const FloatNode floatTimeStamp( timeStampProto );
 
@@ -1011,17 +1011,17 @@ namespace e57
          const auto intensityMaximumProto = intbox.get( "intensityMaximum" );
          const auto intensityMinimumProto = intbox.get( "intensityMinimum" );
 
-         if ( intensityMaximumProto.type() == E57_SCALED_INTEGER )
+         if ( intensityMaximumProto.type() == TypeScaledInteger )
          {
             data3DHeader.intensityLimits.intensityMaximum = ScaledIntegerNode( intensityMaximumProto ).scaledValue();
             data3DHeader.intensityLimits.intensityMinimum = ScaledIntegerNode( intensityMinimumProto ).scaledValue();
          }
-         else if ( intensityMaximumProto.type() == E57_FLOAT )
+         else if ( intensityMaximumProto.type() == TypeFloat )
          {
             data3DHeader.intensityLimits.intensityMaximum = FloatNode( intensityMaximumProto ).value();
             data3DHeader.intensityLimits.intensityMinimum = FloatNode( intensityMinimumProto ).value();
          }
-         else if ( intensityMaximumProto.type() == E57_INTEGER )
+         else if ( intensityMaximumProto.type() == TypeInteger )
          {
             data3DHeader.intensityLimits.intensityMaximum =
                static_cast<double>( IntegerNode( intensityMaximumProto ).value() );
@@ -1034,7 +1034,7 @@ namespace e57
       {
          const auto intensityProto = proto.get( "intensity" );
 
-         if ( intensityProto.type() == E57_INTEGER )
+         if ( intensityProto.type() == TypeInteger )
          {
             const IntegerNode integerIntensity( intensityProto );
 
@@ -1046,7 +1046,7 @@ namespace e57
 
             data3DHeader.pointFields.intensityScaledInteger = E57_NOT_SCALED_USE_INTEGER;
          }
-         else if ( intensityProto.type() == E57_SCALED_INTEGER )
+         else if ( intensityProto.type() == TypeScaledInteger )
          {
             const ScaledIntegerNode scaledIntensity( intensityProto );
             double scale = scaledIntensity.scale();
@@ -1063,7 +1063,7 @@ namespace e57
 
             data3DHeader.pointFields.intensityScaledInteger = scale;
          }
-         else if ( proto.get( "intensity" ).type() == E57_FLOAT )
+         else if ( proto.get( "intensity" ).type() == TypeFloat )
          {
             if ( data3DHeader.intensityLimits.intensityMaximum == 0.0 )
             {
@@ -1093,7 +1093,7 @@ namespace e57
       {
          const StructureNode colorbox( scan.get( "colorLimits" ) );
 
-         if ( colorbox.get( "colorRedMaximum" ).type() == E57_SCALED_INTEGER )
+         if ( colorbox.get( "colorRedMaximum" ).type() == TypeScaledInteger )
          {
             data3DHeader.colorLimits.colorRedMaximum =
                ScaledIntegerNode( colorbox.get( "colorRedMaximum" ) ).scaledValue();
@@ -1108,7 +1108,7 @@ namespace e57
             data3DHeader.colorLimits.colorBlueMinimum =
                ScaledIntegerNode( colorbox.get( "colorBlueMinimum" ) ).scaledValue();
          }
-         else if ( colorbox.get( "colorRedMaximum" ).type() == E57_FLOAT )
+         else if ( colorbox.get( "colorRedMaximum" ).type() == TypeFloat )
          {
             data3DHeader.colorLimits.colorRedMaximum = FloatNode( colorbox.get( "colorRedMaximum" ) ).value();
             data3DHeader.colorLimits.colorRedMinimum = FloatNode( colorbox.get( "colorRedMinimum" ) ).value();
@@ -1117,7 +1117,7 @@ namespace e57
             data3DHeader.colorLimits.colorBlueMaximum = FloatNode( colorbox.get( "colorBlueMaximum" ) ).value();
             data3DHeader.colorLimits.colorBlueMinimum = FloatNode( colorbox.get( "colorBlueMinimum" ) ).value();
          }
-         else if ( colorbox.get( "colorRedMaximum" ).type() == E57_INTEGER )
+         else if ( colorbox.get( "colorRedMaximum" ).type() == TypeInteger )
          {
             data3DHeader.colorLimits.colorRedMaximum =
                static_cast<double>( IntegerNode( colorbox.get( "colorRedMaximum" ) ).value() );
@@ -1345,7 +1345,7 @@ namespace e57
       {
          const ustring name = proto.get( protoIndex ).elementName();
          const NodeType type = proto.get( protoIndex ).type();
-         const bool scaled = ( type == E57_SCALED_INTEGER );
+         const bool scaled = ( type == TypeScaledInteger );
 
          // E57_EXT_surface_normals
          ustring norExtUri;

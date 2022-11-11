@@ -107,43 +107,43 @@ CompressedVectorNode will be lost (it will have zero children).
 
 @pre     The associated ImageFile must be open.
 @pre     This CompressedVectorWriter must be open (i.e isOpen())
-@throw   ::E57_ERROR_BAD_API_ARGUMENT
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_WRITER_NOT_OPEN
-@throw   ::E57_ERROR_PATH_UNDEFINED
-@throw   ::E57_ERROR_NO_BUFFER_FOR_ELEMENT
-@throw   ::E57_ERROR_BUFFER_SIZE_MISMATCH
-@throw   ::E57_ERROR_BUFFER_DUPLICATE_PATHNAME
-@throw   ::E57_ERROR_CONVERSION_REQUIRED     This CompressedVectorWriter in
+@throw   ::ErrorBadAPIArgument
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorWriterNotOpen
+@throw   ::ErrorPathUndefined
+@throw   ::ErrorNoBufferForElement
+@throw   ::ErrorBufferSizeMismatch
+@throw   ::ErrorBufferDuplicatePathName
+@throw   ::ErrorConversionRequired     This CompressedVectorWriter in
 undocumented state, associated CompressedVectorNode modified but consistent,
 associated ImageFile modified but consistent.
-@throw   ::E57_ERROR_VALUE_OUT_OF_BOUNDS     This CompressedVectorWriter in
+@throw   ::ErrorValueOutOfBounds     This CompressedVectorWriter in
 undocumented state, associated CompressedVectorNode modified but consistent,
 associated ImageFile modified but consistent.
-@throw   ::E57_ERROR_VALUE_NOT_REPRESENTABLE This CompressedVectorWriter in
+@throw   ::ErrorValueNotRepresentable This CompressedVectorWriter in
 undocumented state, associated CompressedVectorNode modified but consistent,
 associated ImageFile modified but consistent.
-@throw   ::E57_ERROR_SCALED_VALUE_NOT_REPRESENTABLE This CompressedVectorWriter
+@throw   ::ErrorScaledValueNotRepresentable This CompressedVectorWriter
 in undocumented state, associated CompressedVectorNode modified but consistent,
 associated ImageFile modified but consistent.
-@throw   ::E57_ERROR_REAL64_TOO_LARGE   This CompressedVectorWriter in
+@throw   ::ErrorReal64TooLarge   This CompressedVectorWriter in
 undocumented state, associated CompressedVectorNode modified but consistent,
 associated ImageFile modified but consistent.
-@throw   ::E57_ERROR_EXPECTING_NUMERIC  This CompressedVectorWriter in
+@throw   ::ErrorExpectingNumeric  This CompressedVectorWriter in
 undocumented state, associated CompressedVectorNode modified but consistent,
 associated ImageFile modified but consistent.
-@throw   ::E57_ERROR_EXPECTING_USTRING  This CompressedVectorWriter in
+@throw   ::ErrorExpectingUString  This CompressedVectorWriter in
 undocumented state, associated CompressedVectorNode modified but consistent,
 associated ImageFile modified but consistent.
-@throw   ::E57_ERROR_LSEEK_FAILED       This CompressedVectorWriter, associated
+@throw   ::ErrorSeekFailed       This CompressedVectorWriter, associated
 ImageFile in undocumented state
-@throw   ::E57_ERROR_READ_FAILED        This CompressedVectorWriter, associated
+@throw   ::ErrorReadFailed        This CompressedVectorWriter, associated
 ImageFile in undocumented state
-@throw   ::E57_ERROR_WRITE_FAILED       This CompressedVectorWriter, associated
+@throw   ::ErrorWriteFailed       This CompressedVectorWriter, associated
 ImageFile in undocumented state
-@throw   ::E57_ERROR_BAD_CHECKSUM       This CompressedVectorWriter, associated
+@throw   ::ErrorBadChecksum       This CompressedVectorWriter, associated
 ImageFile in undocumented state
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     CompressedVectorWriter::write(std::vector<SourceDestBuffer>&,unsigned),
 CompressedVectorNode::writer, CompressedVectorWriter::close, SourceDestBuffer,
 E57Exception
@@ -185,36 +185,36 @@ CompressedVectorNode will be lost (it will have zero children).
 
 @pre     The associated ImageFile must be open.
 @pre     This CompressedVectorWriter must be open (i.e isOpen())
-@throw   ::E57_ERROR_BAD_API_ARGUMENT
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_WRITER_NOT_OPEN
-@throw   ::E57_ERROR_PATH_UNDEFINED
-@throw   ::E57_ERROR_NO_BUFFER_FOR_ELEMENT
-@throw   ::E57_ERROR_BUFFER_SIZE_MISMATCH
-@throw   ::E57_ERROR_BUFFER_DUPLICATE_PATHNAME
-@throw   ::E57_ERROR_CONVERSION_REQUIRED     This CompressedVectorWriter in
+@throw   ::ErrorBadAPIArgument
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorWriterNotOpen
+@throw   ::ErrorPathUndefined
+@throw   ::ErrorNoBufferForElement
+@throw   ::ErrorBufferSizeMismatch
+@throw   ::ErrorBufferDuplicatePathName
+@throw   ::ErrorConversionRequired     This CompressedVectorWriter in
 undocumented state, associated ImageFile modified but consistent.
-@throw   ::E57_ERROR_VALUE_OUT_OF_BOUNDS     This CompressedVectorWriter in
+@throw   ::ErrorValueOutOfBounds     This CompressedVectorWriter in
 undocumented state, associated ImageFile modified but consistent.
-@throw   ::E57_ERROR_VALUE_NOT_REPRESENTABLE This CompressedVectorWriter in
+@throw   ::ErrorValueNotRepresentable This CompressedVectorWriter in
 undocumented state, associated ImageFile modified but consistent.
-@throw   ::E57_ERROR_SCALED_VALUE_NOT_REPRESENTABLE This CompressedVectorWriter
+@throw   ::ErrorScaledValueNotRepresentable This CompressedVectorWriter
 in undocumented state, associated ImageFile modified but consistent.
-@throw   ::E57_ERROR_REAL64_TOO_LARGE   This CompressedVectorWriter in
+@throw   ::ErrorReal64TooLarge   This CompressedVectorWriter in
 undocumented state, associated ImageFile modified but consistent.
-@throw   ::E57_ERROR_EXPECTING_NUMERIC  This CompressedVectorWriter in
+@throw   ::ErrorExpectingNumeric  This CompressedVectorWriter in
 undocumented state, associated ImageFile modified but consistent.
-@throw   ::E57_ERROR_EXPECTING_USTRING  This CompressedVectorWriter in
+@throw   ::ErrorExpectingUString  This CompressedVectorWriter in
 undocumented state, associated ImageFile modified but consistent.
-@throw   ::E57_ERROR_LSEEK_FAILED       This CompressedVectorWriter, associated
+@throw   ::ErrorSeekFailed       This CompressedVectorWriter, associated
 ImageFile in undocumented state
-@throw   ::E57_ERROR_READ_FAILED        This CompressedVectorWriter, associated
+@throw   ::ErrorReadFailed        This CompressedVectorWriter, associated
 ImageFile in undocumented state
-@throw   ::E57_ERROR_WRITE_FAILED       This CompressedVectorWriter, associated
+@throw   ::ErrorWriteFailed       This CompressedVectorWriter, associated
 ImageFile in undocumented state
-@throw   ::E57_ERROR_BAD_CHECKSUM       This CompressedVectorWriter, associated
+@throw   ::ErrorBadChecksum       This CompressedVectorWriter, associated
 ImageFile in undocumented state
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     CompressedVectorWriter::write(unsigned), CompressedVectorNode::writer,
 CompressedVectorWriter::close, SourceDestBuffer, E57Exception
 */
@@ -239,16 +239,16 @@ destructor is invoked, all writes to the CompressedVectorNode will be lost (it
 will have zero children).
 @pre     The associated ImageFile must be open.
 @post    This CompressedVectorWriter is closed (i.e !isOpen())
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_LSEEK_FAILED       This CompressedVectorWriter, associated
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorSeekFailed       This CompressedVectorWriter, associated
 ImageFile in undocumented state
-@throw   ::E57_ERROR_READ_FAILED        This CompressedVectorWriter, associated
+@throw   ::ErrorReadFailed        This CompressedVectorWriter, associated
 ImageFile in undocumented state
-@throw   ::E57_ERROR_WRITE_FAILED       This CompressedVectorWriter, associated
+@throw   ::ErrorWriteFailed       This CompressedVectorWriter, associated
 ImageFile in undocumented state
-@throw   ::E57_ERROR_BAD_CHECKSUM       This CompressedVectorWriter, associated
+@throw   ::ErrorBadChecksum       This CompressedVectorWriter, associated
 ImageFile in undocumented state
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     CompressedVectorWriter::isOpen
 */
 void CompressedVectorWriter::close()
@@ -259,8 +259,8 @@ void CompressedVectorWriter::close()
 /*!
 @brief   Test whether CompressedVectorWriter is still open for writing.
 @pre     The associated ImageFile must be open.
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     CompressedVectorWriter::close, CompressedVectorNode::writer
 */
 bool CompressedVectorWriter::isOpen()
@@ -273,8 +273,8 @@ bool CompressedVectorWriter::isOpen()
 @pre     The associated ImageFile must be open.
 @return  A smart CompressedVectorNode handle referencing the underlying object
 being written to.
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     CompressedVectorNode::writer
 */
 CompressedVectorNode CompressedVectorWriter::compressedVectorNode() const
@@ -321,25 +321,25 @@ void CompressedVectorWriter::checkInvariant( bool /*doRecurse*/ )
    // Associated CompressedVectorNode must be attached to ImageFile
    if ( !cv.isAttached() )
    {
-      throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+      throw E57_EXCEPTION1( ErrorInvarianceViolation );
    }
 
    // Dest ImageFile must be writable
    if ( !imf.isWritable() )
    {
-      throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+      throw E57_EXCEPTION1( ErrorInvarianceViolation );
    }
 
    // Dest ImageFile must have exactly 1 writer (this one)
    if ( imf.writerCount() != 1 )
    {
-      throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+      throw E57_EXCEPTION1( ErrorInvarianceViolation );
    }
 
    // Dest ImageFile can't have any readers
    if ( imf.readerCount() != 0 )
    {
-      throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+      throw E57_EXCEPTION1( ErrorInvarianceViolation );
    }
 }
 // endExample CompressedVectorWriter::checkInvariant

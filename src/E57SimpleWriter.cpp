@@ -31,7 +31,7 @@
 #include "E57SimpleWriter.h"
 #include "WriterImpl.h"
 
-namespace e57
+namespace
 {
    /// Fill in missing min/max data in the Data3D header for the following:
    ///   - cartesian points
@@ -39,7 +39,7 @@ namespace e57
    ///   - intensity
    ///   - time stamps
    template <typename COORDTYPE>
-   static void _fillMinMaxData( Data3D &ioData3DHeader, const Data3DPointsData_t<COORDTYPE> &inBuffers )
+   static void _fillMinMaxData( e57::Data3D &ioData3DHeader, const e57::Data3DPointsData_t<COORDTYPE> &inBuffers )
    {
       static_assert( std::is_floating_point<COORDTYPE>::value, "Floating point type required." );
 
@@ -73,7 +73,8 @@ namespace e57
       float intensityMinimum = std::numeric_limits<float>::max();
       float intensityMaximum = std::numeric_limits<float>::lowest();
 
-      const bool writeIntensity = pointFields.intensityField && ( ioData3DHeader.intensityLimits == IntensityLimits{} );
+      const bool writeIntensity =
+         pointFields.intensityField && ( ioData3DHeader.intensityLimits == e57::IntensityLimits{} );
 
       // IF we are using scaled ints for timestamps
       // AND we haven't set either min or max
@@ -153,9 +154,12 @@ namespace e57
          pointFields.timeMaximum = timeMaximum;
       }
    }
-   template void _fillMinMaxData( Data3D &ioData3DHeader, const Data3DPointsData &inBuffers );
-   template void _fillMinMaxData( Data3D &ioData3DHeader, const Data3DPointsData_d &inBuffers );
+   template void _fillMinMaxData( e57::Data3D &ioData3DHeader, const e57::Data3DPointsData &inBuffers );
+   template void _fillMinMaxData( e57::Data3D &ioData3DHeader, const e57::Data3DPointsData_d &inBuffers );
+}
 
+namespace e57
+{
    Writer::Writer( const ustring &filePath, const WriterOptions &options ) :
       impl_( new WriterImpl( filePath, options ) )
    {

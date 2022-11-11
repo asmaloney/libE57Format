@@ -125,17 +125,16 @@ namespace e57
       ImageFileImplWeakPtr destImageFile_;
       ustring pathName_;                          /// Pathname from CompressedVectorNode to source/dest
                                                   /// object, e.g. "Indices/0"
-      MemoryRepresentation memoryRepresentation_; /// Type of element (e.g. E57_INT8, E57_UINT64,
-                                                  /// DOUBLE...)
+      MemoryRepresentation memoryRepresentation_; /// Type of element (e.g. ::Int8, ::UIin64, ::Real64...)
       char *base_ = nullptr;                      /// Address of first element, for non-ustring buffers
       size_t capacity_ = 0;                       /// Total number of elements in array
       bool doConversion_ = false;                 /// Convert memory representation to/from disk representation
       bool doScaling_ = false;                    /// Apply scale factor for integer type
-      size_t stride_ = 0;                         /// Distance between each element (different than size_
+      size_t stride_ = 0;                         /// Distance between each element (different from size_
                                                   /// if elements not contiguous)
       unsigned nextIndex_ = 0;                    /// Number of elements that have been set (dest
                                                   /// buffer) or read (source buffer) since rewind().
       StringList *ustrings_ = nullptr;            /// Optional array of ustrings (used if
-                                                  /// memoryRepresentation_==E57_USTRING) ???ownership
+                                                  /// memoryRepresentation_ == ::UString)
    };
 }

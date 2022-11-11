@@ -151,20 +151,20 @@ existing E57 data file.
 
 @post    Resulting ImageFile is in @c open state if constructor succeeds (no
 exception thrown).
-@throw   ::E57_ERROR_BAD_API_ARGUMENT
-@throw   ::E57_ERROR_OPEN_FAILED
-@throw   ::E57_ERROR_LSEEK_FAILED
-@throw   ::E57_ERROR_READ_FAILED
-@throw   ::E57_ERROR_WRITE_FAILED
-@throw   ::E57_ERROR_BAD_CHECKSUM
-@throw   ::E57_ERROR_BAD_FILE_SIGNATURE
-@throw   ::E57_ERROR_UNKNOWN_FILE_VERSION
-@throw   ::E57_ERROR_BAD_FILE_LENGTH
-@throw   ::E57_ERROR_XML_PARSER_INIT
-@throw   ::E57_ERROR_XML_PARSER
-@throw   ::E57_ERROR_BAD_XML_FORMAT
-@throw   ::E57_ERROR_BAD_CONFIGURATION
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorBadAPIArgument
+@throw   ::ErrorOpenFailed
+@throw   ::ErrorSeekFailed
+@throw   ::ErrorReadFailed
+@throw   ::ErrorWriteFailed
+@throw   ::ErrorBadChecksum
+@throw   ::ErrorBadFileSignature
+@throw   ::ErrorUnknownFileVersion
+@throw   ::ErrorBadFileLength
+@throw   ::ErrorXMLParserInit
+@throw   ::ErrorXMLParser
+@throw   ::ErrorBadXMLFormat
+@throw   ::ErrorBadConfiguration
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     IntegerNode, ScaledIntegerNode, FloatNode,
 StringNode, BlobNode, StructureNode, VectorNode, CompressedVectorNode,
 E57Exception, E57Utilities::E57Utilities
@@ -188,8 +188,8 @@ ImageFile::ImageFile( const char *input, const uint64_t size, ReadChecksumPolicy
 StructureNode. The root node is empty in a newly created write mode ImageFile.
 @pre     This ImageFile must be open (i.e. isOpen()).
 @return  A smart StructureNode handle referencing the underlying object.
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     StructureNode.
 */
 StructureNode ImageFile::root() const
@@ -220,12 +220,12 @@ destroyed.
 
 It is not an error if ImageFile is already closed.
 @post    ImageFile is in @c closed state.
-@throw   ::E57_ERROR_LSEEK_FAILED
-@throw   ::E57_ERROR_READ_FAILED
-@throw   ::E57_ERROR_WRITE_FAILED
-@throw   ::E57_ERROR_CLOSE_FAILED
-@throw   ::E57_ERROR_BAD_CHECKSUM
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorSeekFailed
+@throw   ::ErrorReadFailed
+@throw   ::ErrorWriteFailed
+@throw   ::ErrorCloseFailed
+@throw   ::ErrorBadChecksum
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     ImageFile::cancel, ImageFile::isOpen
 */
 void ImageFile::close()
@@ -297,8 +297,8 @@ CompressedVectorNode::writer function.
 @post    No visible state is modified.
 @return  The current number of open CompressedVectorWriter objects writing to
 ImageFile.
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     CompressedVectorNode::writer, CompressedVectorWriter
 */
 int ImageFile::writerCount() const
@@ -317,8 +317,8 @@ CompressedVectorNode::reader function.
 @post    No visible state is modified.
 @return  The current number of open CompressedVectorReader objects reading from
 ImageFile.
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     CompressedVectorNode::reader, CompressedVectorReader
 */
 int ImageFile::readerCount() const
@@ -360,12 +360,12 @@ namespaces.
 @pre     ImageFile must have been opened in write mode (i.e. isWritable()).
 @pre     prefix != ""
 @pre     uri != ""
-@throw   ::E57_ERROR_BAD_API_ARGUMENT
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_FILE_IS_READ_ONLY
-@throw   ::E57_ERROR_DUPLICATE_NAMESPACE_PREFIX
-@throw   ::E57_ERROR_DUPLICATE_NAMESPACE_URI
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorBadAPIArgument
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorFileReadOnly
+@throw   ::ErrorDuplicateNamespacePrefix
+@throw   ::ErrorDuplicateNamespaceURI
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     ImageFile::extensionsCount, ImageFile::extensionsLookupPrefix, ImageFile::extensionsLookupUri
 */
 void ImageFile::extensionsAdd( const ustring &prefix, const ustring &uri )
@@ -382,9 +382,9 @@ contains an illegal character combination for E57 namespace prefixes.
 @pre     This ImageFile must be open (i.e. isOpen()).
 @post    No visible state is modified.
 @return  true if prefix is declared in the ImageFile.
-@throw   ::E57_ERROR_BAD_API_ARGUMENT
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorBadAPIArgument
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     ImageFile::extensionsLookupUri
 */
 bool ImageFile::extensionsLookupPrefix( const ustring &prefix ) const
@@ -407,9 +407,9 @@ is not an error if @a prefix is well-formed, but not defined in the ImageFile
 @pre     This ImageFile must be open (i.e. isOpen()).
 @post    No visible state is modified.
 @return  true if prefix is declared in the ImageFile.
-@throw   ::E57_ERROR_BAD_API_ARGUMENT
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorBadAPIArgument
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     ImageFile::extensionsLookupUri
 */
 bool ImageFile::extensionsLookupPrefix( const ustring &prefix, ustring &uri ) const
@@ -432,9 +432,9 @@ false).
 @pre     uri != ""
 @post    No visible state is modified.
 @return  true if URI is declared in the ImageFile.
-@throw   ::E57_ERROR_BAD_API_ARGUMENT
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorBadAPIArgument
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     ImageFile::extensionsLookupPrefix
 */
 bool ImageFile::extensionsLookupUri( const ustring &uri, ustring &prefix ) const
@@ -449,8 +449,8 @@ The default E57 namespace does not count as an extension.
 @pre     This ImageFile must be open (i.e. isOpen()).
 @post    No visible state is modified.
 @return  The number of E57 extensions defined in the ImageFile.
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     ImageFile::extensionsPrefix, ImageFile::extensionsUri
 */
 size_t ImageFile::extensionsCount() const
@@ -469,9 +469,9 @@ order. The default E57 namespace is not counted as an extension.
 @pre     0 <= index < extensionsCount()
 @post    No visible state is modified.
 @return  The E57 extension prefix at the given index.
-@throw   ::E57_ERROR_BAD_API_ARGUMENT
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorBadAPIArgument
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     ImageFile::extensionsCount, ImageFile::extensionsUri
 */
 ustring ImageFile::extensionsPrefix( const size_t index ) const
@@ -490,9 +490,9 @@ default E57 namespace is not counted as an extension.
 @pre     0 <= index < extensionsCount()
 @post    No visible state is modified.
 @return  The E57 extension URI at the given index.
-@throw   ::E57_ERROR_BAD_API_ARGUMENT
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorBadAPIArgument
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     ImageFile::extensionsCount, ImageFile::extensionsPrefix
 */
 ustring ImageFile::extensionsUri( const size_t index ) const
@@ -528,8 +528,8 @@ where ID is a string whose first character is in {a-z,A-Z,_} followed by zero or
 more characters in {a-z,A-Z,_,0-9,-,.}. If in prefixed form, the prefix does not
 have to be declared in the ImageFile.
 @post    No visible state is modified.
-@throw   ::E57_ERROR_BAD_PATH_NAME
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorBadPathName
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     ImageFile::isElementNameExtended
 */
 void ImageFile::elementNameParse( const ustring &elementName, ustring &prefix, ustring &localPart ) const
@@ -562,12 +562,12 @@ This function checks at least the assertions in the documented class invariant
 description (see class reference page for this object). Other internal
 invariants that are implementation-dependent may also be checked. If any
 invariant clause is violated, an E57Exception with errorCode of
-E57_ERROR_INVARIANCE_VIOLATION is thrown.
+ErrorInvarianceViolation is thrown.
 
 Checking the invariant recursively may be expensive if the tree is large, so
 should be used judiciously, in debug versions of the application.
 @post    No visible state is modified.
-@throw   ::E57_ERROR_INVARIANCE_VIOLATION or any other E57 ErrorCode
+@throw   ::ErrorInvarianceViolation or any other E57 ErrorCode
 @see     Node::checkInvariant
 */
 // beginExample ImageFile::checkInvariant
@@ -583,13 +583,13 @@ void ImageFile::checkInvariant( bool doRecurse ) const
    // root() node must be a root node
    if ( !root().isRoot() )
    {
-      throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+      throw E57_EXCEPTION1( ErrorInvarianceViolation );
    }
 
    // Can't have empty fileName
    if ( fileName().empty() )
    {
-      throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+      throw E57_EXCEPTION1( ErrorInvarianceViolation );
    }
 
    int wCount = writerCount();
@@ -598,19 +598,19 @@ void ImageFile::checkInvariant( bool doRecurse ) const
    // Can't have negative number of readers
    if ( rCount < 0 )
    {
-      throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+      throw E57_EXCEPTION1( ErrorInvarianceViolation );
    }
 
    // Can't have negative number of writers
    if ( wCount < 0 )
    {
-      throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+      throw E57_EXCEPTION1( ErrorInvarianceViolation );
    }
 
    // Can't have more than one writer
    if ( 1 < wCount )
    {
-      throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+      throw E57_EXCEPTION1( ErrorInvarianceViolation );
    }
 
    // If have writer
@@ -619,13 +619,13 @@ void ImageFile::checkInvariant( bool doRecurse ) const
       // Must be in write-mode
       if ( !isWritable() )
       {
-         throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+         throw E57_EXCEPTION1( ErrorInvarianceViolation );
       }
 
       // Can't have any readers
       if ( rCount > 0 )
       {
-         throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+         throw E57_EXCEPTION1( ErrorInvarianceViolation );
       }
    }
 
@@ -637,11 +637,11 @@ void ImageFile::checkInvariant( bool doRecurse ) const
       {
          if ( extensionsPrefix( i ) == extensionsPrefix( j ) )
          {
-            throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+            throw E57_EXCEPTION1( ErrorInvarianceViolation );
          }
          if ( extensionsUri( i ) == extensionsUri( j ) )
          {
-            throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+            throw E57_EXCEPTION1( ErrorInvarianceViolation );
          }
       }
    }
@@ -655,19 +655,19 @@ void ImageFile::checkInvariant( bool doRecurse ) const
       ustring uri;
       if ( !extensionsLookupPrefix( goodPrefix, uri ) )
       {
-         throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+         throw E57_EXCEPTION1( ErrorInvarianceViolation );
       }
       if ( uri != goodUri )
       {
-         throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+         throw E57_EXCEPTION1( ErrorInvarianceViolation );
       }
       if ( !extensionsLookupUri( goodUri, prefix ) )
       {
-         throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+         throw E57_EXCEPTION1( ErrorInvarianceViolation );
       }
       if ( prefix != goodPrefix )
       {
-         throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+         throw E57_EXCEPTION1( ErrorInvarianceViolation );
       }
    }
 

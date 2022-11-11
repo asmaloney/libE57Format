@@ -108,7 +108,7 @@ namespace e57
       void dump( int indent = 0, std::ostream &os = std::cout ) override;
 #endif
    protected:
-      FloatPrecision precision_ = E57_SINGLE;
+      FloatPrecision precision_ = PrecisionSingle;
    };
 
    class BitpackStringDecoder : public BitpackDecoder

@@ -18,7 +18,7 @@ namespace e57
    SphericalBounds::SphericalBounds()
    {
       rangeMinimum = 0.;
-      rangeMaximum = E57_DOUBLE_MAX;
+      rangeMaximum = DOUBLE_MAX;
       azimuthStart = -M_PI;
       azimuthEnd = M_PI;
 
@@ -35,18 +35,18 @@ namespace e57
 
       if ( cPointCount < 1 )
       {
-         throw E57_EXCEPTION2( E57_ERROR_VALUE_OUT_OF_BOUNDS, "pointCount=" + toString( cPointCount ) + " minimum=1" );
+         throw E57_EXCEPTION2( ErrorValueOutOfBounds, "pointCount=" + toString( cPointCount ) + " minimum=1" );
       }
 
       // We need to adjust min/max for floats.
       if ( std::is_same<COORDTYPE, float>::value )
       {
-         data3D.pointFields.pointRangeMinimum = E57_FLOAT_MIN;
-         data3D.pointFields.pointRangeMaximum = E57_FLOAT_MAX;
-         data3D.pointFields.angleMinimum = E57_FLOAT_MIN;
-         data3D.pointFields.angleMaximum = E57_FLOAT_MAX;
-         data3D.pointFields.timeMinimum = E57_FLOAT_MIN;
-         data3D.pointFields.timeMaximum = E57_FLOAT_MAX;
+         data3D.pointFields.pointRangeMinimum = FLOAT_MIN;
+         data3D.pointFields.pointRangeMaximum = FLOAT_MAX;
+         data3D.pointFields.angleMinimum = FLOAT_MIN;
+         data3D.pointFields.angleMaximum = FLOAT_MAX;
+         data3D.pointFields.timeMinimum = FLOAT_MIN;
+         data3D.pointFields.timeMaximum = FLOAT_MAX;
       }
 
       if ( data3D.pointFields.cartesianXField )

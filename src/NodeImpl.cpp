@@ -45,8 +45,8 @@ void NodeImpl::checkImageFileOpen( const char *srcFileName, int srcLineNumber, c
    ImageFileImplSharedPtr destImageFile( destImageFile_ );
    if ( !destImageFile->isOpen() )
    {
-      throw E57Exception( E57_ERROR_IMAGEFILE_NOT_OPEN, "fileName=" + destImageFile->fileName(), srcFileName,
-                          srcLineNumber, srcFunctionName );
+      throw E57Exception( ErrorImageFileNotOpen, "fileName=" + destImageFile->fileName(), srcFileName, srcLineNumber,
+                          srcFunctionName );
    }
 }
 
@@ -102,7 +102,7 @@ ustring NodeImpl::relativePathName( const NodeImplSharedPtr &origin, ustring chi
    if ( isRoot() )
    {
       /// Got to top and didn't find origin, must be error
-      throw E57_EXCEPTION2( E57_ERROR_INTERNAL,
+      throw E57_EXCEPTION2( ErrorInternal,
                             "this->elementName=" + this->elementName() + " childPathName=" + childPathName );
    }
 
@@ -158,7 +158,7 @@ void NodeImpl::setParent( NodeImplSharedPtr parent, const ustring &elementName )
    /// don't checkImageFileOpen
 
    /// First check if our parent_ is already set, throw
-   /// E57_ERROR_ALREADY_HAS_PARENT The isAttached_ condition is to catch two
+   /// ErrorAlreadyHasParent The isAttached_ condition is to catch two
    /// errors:
    ///    1) if user attempts to use the ImageFile root as a child (e.g.
    ///    root.set("x", root)) 2) if user attempts to reuse codecs or prototype
@@ -168,7 +168,7 @@ void NodeImpl::setParent( NodeImplSharedPtr parent, const ustring &elementName )
    {
       /// ??? does caller do setParent first, so state is not messed up when
       /// throw?
-      throw E57_EXCEPTION2( E57_ERROR_ALREADY_HAS_PARENT,
+      throw E57_EXCEPTION2( ErrorAlreadyHasParent,
                             "this->pathName=" + this->pathName() + " newParent->pathName=" + parent->pathName() );
    }
 
@@ -209,7 +209,7 @@ bool NodeImpl::isTypeConstrained()
 
       switch ( p->type() )
       {
-         case E57_VECTOR:
+         case TypeVector:
          {
             /// Downcast to shared_ptr<VectorNodeImpl>
             std::shared_ptr<VectorNodeImpl> ai( std::static_pointer_cast<VectorNodeImpl>( p ) );
@@ -222,7 +222,7 @@ bool NodeImpl::isTypeConstrained()
             }
          }
          break;
-         case E57_COMPRESSED_VECTOR:
+         case TypeCompressedVector:
             /// Can't make any type changes to CompressedVector prototype.  ???
             /// what if hasn't been written to yet
             return ( true );
@@ -274,7 +274,7 @@ void NodeImpl::set( const StringList & /*fields*/, unsigned /*level*/, NodeImplS
 {
    /// If get here, then tried to call set(fields...) on NodeImpl that wasn't a
    /// StructureNodeImpl, so that's an error
-   throw E57_EXCEPTION1( E57_ERROR_BAD_PATH_NAME ); //???
+   throw E57_EXCEPTION1( ErrorBadPathName ); //???
 }
 
 void NodeImpl::checkBuffers( const std::vector<SourceDestBuffer> &sdbufs,
@@ -293,7 +293,7 @@ void NodeImpl::checkBuffers( const std::vector<SourceDestBuffer> &sdbufs,
       /// Check that all buffers are same size
       if ( sdbufs.at( i ).impl()->capacity() != sdbufs.at( 0 ).impl()->capacity() )
       {
-         throw E57_EXCEPTION2( E57_ERROR_BUFFER_SIZE_MISMATCH,
+         throw E57_EXCEPTION2( ErrorBufferSizeMismatch,
                                "this->pathName=" + this->pathName() + " sdbuf.pathName=" + pathName +
                                   " firstCapacity=" + toString( sdbufs.at( 0 ).impl()->capacity() ) +
                                   " secondCapacity=" + toString( sdbufs.at( i ).impl()->capacity() ) );
@@ -303,14 +303,14 @@ void NodeImpl::checkBuffers( const std::vector<SourceDestBuffer> &sdbufs,
       /// pathName in sdbufs)
       if ( !pathNames.insert( pathName ).second )
       {
-         throw E57_EXCEPTION2( E57_ERROR_BUFFER_DUPLICATE_PATHNAME,
+         throw E57_EXCEPTION2( ErrorBufferDuplicatePathName,
                                "this->pathName=" + this->pathName() + " sdbuf.pathName=" + pathName );
       }
 
       /// Check no bad fields in sdbufs
       if ( !isDefined( pathName ) )
       {
-         throw E57_EXCEPTION2( E57_ERROR_PATH_UNDEFINED,
+         throw E57_EXCEPTION2( ErrorPathUndefined,
                                "this->pathName=" + this->pathName() + " sdbuf.pathName=" + pathName );
       }
    }
@@ -334,7 +334,7 @@ bool NodeImpl::findTerminalPosition( const NodeImplSharedPtr &target, uint64_t &
 
    switch ( type() )
    {
-      case E57_STRUCTURE:
+      case TypeStructure:
       {
          auto sni = static_cast<StructureNodeImpl *>( this );
 
@@ -350,7 +350,7 @@ bool NodeImpl::findTerminalPosition( const NodeImplSharedPtr &target, uint64_t &
       }
       break;
 
-      case E57_VECTOR:
+      case TypeVector:
       {
          auto vni = static_cast<VectorNodeImpl *>( this );
 
@@ -366,14 +366,14 @@ bool NodeImpl::findTerminalPosition( const NodeImplSharedPtr &target, uint64_t &
       }
       break;
 
-      case E57_COMPRESSED_VECTOR:
+      case TypeCompressedVector:
          break; //??? for now, don't search into contents of compressed vector
 
-      case E57_INTEGER:
-      case E57_SCALED_INTEGER:
-      case E57_FLOAT:
-      case E57_STRING:
-      case E57_BLOB:
+      case TypeInteger:
+      case TypeScaledInteger:
+      case TypeFloat:
+      case TypeString:
+      case TypeBlob:
          countFromLeft++;
          break;
    }
@@ -405,7 +405,7 @@ bool NodeImpl::_verifyPathNameAbsolute( const ustring &inPathName )
    /// If not an absolute path name, have error
    if ( isRelative )
    {
-      throw E57_EXCEPTION2( E57_ERROR_BAD_PATH_NAME, "this->pathName=" + this->pathName() + " pathName=" + inPathName );
+      throw E57_EXCEPTION2( ErrorBadPathName, "this->pathName=" + this->pathName() + " pathName=" + inPathName );
    }
 
    return isRelative;
@@ -421,11 +421,11 @@ NodeImplSharedPtr NodeImpl::_verifyAndGetRoot()
    /// overflow).
    switch ( root->type() )
    {
-      case E57_STRUCTURE:
-      case E57_VECTOR: //??? COMPRESSED_VECTOR?
+      case TypeStructure:
+      case TypeVector: //??? COMPRESSED_VECTOR?
          break;
       default:
-         throw E57_EXCEPTION2( E57_ERROR_INTERNAL, "root invalid for this->pathName=" + this->pathName() );
+         throw E57_EXCEPTION2( ErrorInternal, "root invalid for this->pathName=" + this->pathName() );
    }
 
    return root;

@@ -83,9 +83,9 @@ recommended to specify a
 true).
 @pre     The @a destImageFile must have been opened in write mode (i.e.
 destImageFile.isWritable() must be true).
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_FILE_IS_READ_ONLY
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorFileReadOnly
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     StringNode::value, Node, CompressedVectorNode, CompressedVectorNode::prototype
 */
 StringNode::StringNode( ImageFile destImageFile, const ustring &value ) :
@@ -141,8 +141,8 @@ bool StringNode::isAttached() const
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @post    No visible state is modified.
 @return  The Unicode character string value stored.
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
 */
 ustring StringNode::value() const
 {
@@ -207,14 +207,14 @@ exception is thrown. In designs that need to avoid the exception, use
 Node::type() to determine the actual type of the @a n before downcasting. This
 function must be explicitly called (c++ compiler cannot insert it
 automatically).
-@throw   ::E57_ERROR_BAD_NODE_DOWNCAST
+@throw   ::ErrorBadNodeDowncast
 @see     Node::type(), StringNode::operator Node()
 */
 StringNode::StringNode( const Node &n )
 {
-   if ( n.type() != E57_STRING )
+   if ( n.type() != TypeString )
    {
-      throw E57_EXCEPTION2( E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString( n.type() ) );
+      throw E57_EXCEPTION2( ErrorBadNodeDowncast, "nodeType=" + toString( n.type() ) );
    }
 
    /// Set our shared_ptr to the downcast shared_ptr

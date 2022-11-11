@@ -170,8 +170,8 @@ TEST( SimpleWriter, ColouredCubeDouble )
    e57::Data3DPointsData_d pointsData( header );
 
    // reset these so we can calculate them using min/max
-   header.pointFields.pointRangeMinimum = e57::E57_DOUBLE_MAX;
-   header.pointFields.pointRangeMaximum = e57::E57_DOUBLE_MIN;
+   header.pointFields.pointRangeMinimum = e57::DOUBLE_MAX;
+   header.pointFields.pointRangeMaximum = e57::DOUBLE_MIN;
 
    int64_t i = 0;
    auto writePointLambda = [&]( uint8_t inFace, const Point &inPoint ) {
@@ -222,8 +222,8 @@ TEST( SimpleWriter, ColouredCubeFloat )
    e57::Data3DPointsData pointsData( header );
 
    // reset these so we can calculate them using min/max
-   header.pointFields.pointRangeMinimum = e57::E57_FLOAT_MAX;
-   header.pointFields.pointRangeMaximum = e57::E57_FLOAT_MIN;
+   header.pointFields.pointRangeMinimum = e57::FLOAT_MAX;
+   header.pointFields.pointRangeMaximum = e57::FLOAT_MIN;
 
    int64_t i = 0;
    auto writePointLambda = [&]( uint8_t inFace, const Point &inPoint ) {
@@ -283,8 +283,8 @@ TEST( SimpleWriter, ColouredCubeScaledInt )
    e57::Data3DPointsData_d pointsData( header );
 
    // reset these so we can calculate them using min/max
-   header.pointFields.pointRangeMinimum = e57::E57_DOUBLE_MAX;
-   header.pointFields.pointRangeMaximum = e57::E57_DOUBLE_MIN;
+   header.pointFields.pointRangeMinimum = e57::DOUBLE_MAX;
+   header.pointFields.pointRangeMaximum = e57::DOUBLE_MIN;
 
    int64_t i = 0;
    auto writePointLambda = [&]( uint8_t inFace, const Point &inPoint ) {
@@ -491,11 +491,11 @@ TEST( SimpleWriter, MinMaxIssuesCartesianFloat )
 
    delete writer;
 
-   EXPECT_NE( header.pointFields.pointRangeMinimum, e57::E57_FLOAT_MIN );
-   EXPECT_NE( header.pointFields.pointRangeMaximum, e57::E57_FLOAT_MAX );
+   EXPECT_NE( header.pointFields.pointRangeMinimum, e57::FLOAT_MIN );
+   EXPECT_NE( header.pointFields.pointRangeMaximum, e57::FLOAT_MAX );
 
-   EXPECT_NE( header.pointFields.timeMinimum, e57::E57_FLOAT_MIN );
-   EXPECT_NE( header.pointFields.timeMaximum, e57::E57_FLOAT_MAX );
+   EXPECT_NE( header.pointFields.timeMinimum, e57::FLOAT_MIN );
+   EXPECT_NE( header.pointFields.timeMaximum, e57::FLOAT_MAX );
 
    EXPECT_NE( header.intensityLimits.intensityMinimum, 0.0 );
    EXPECT_NE( header.intensityLimits.intensityMaximum, 0.0 );
@@ -550,11 +550,11 @@ TEST( SimpleWriter, MinMaxIssuesSpericalDouble )
 
    delete writer;
 
-   EXPECT_NE( header.pointFields.pointRangeMinimum, e57::E57_DOUBLE_MIN );
-   EXPECT_NE( header.pointFields.pointRangeMaximum, e57::E57_DOUBLE_MAX );
+   EXPECT_NE( header.pointFields.pointRangeMinimum, e57::DOUBLE_MIN );
+   EXPECT_NE( header.pointFields.pointRangeMaximum, e57::DOUBLE_MAX );
 
-   EXPECT_NE( header.pointFields.timeMinimum, e57::E57_DOUBLE_MIN );
-   EXPECT_NE( header.pointFields.timeMaximum, e57::E57_DOUBLE_MAX );
+   EXPECT_NE( header.pointFields.timeMinimum, e57::DOUBLE_MIN );
+   EXPECT_NE( header.pointFields.timeMaximum, e57::DOUBLE_MAX );
 
    EXPECT_NE( header.intensityLimits.intensityMinimum, 0.0 );
    EXPECT_NE( header.intensityLimits.intensityMaximum, 0.0 );
@@ -592,7 +592,7 @@ TEST( SimpleWriterData, VisualRefImage )
    image2DHeader.visualReferenceRepresentation.imageHeight = 300;
    image2DHeader.visualReferenceRepresentation.jpegImageSize = cImageSize;
 
-   writer->WriteImage2DData( image2DHeader, e57::E57_JPEG_IMAGE, e57::E57_VISUAL, 0, imageBuffer, cImageSize );
+   writer->WriteImage2DData( image2DHeader, e57::ImageJPEG, e57::ProjectionVisual, 0, imageBuffer, cImageSize );
 
    delete[] imageBuffer;
 

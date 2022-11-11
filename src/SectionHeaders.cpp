@@ -53,36 +53,35 @@ namespace e57
       {
          if ( reserved1[i] != 0 )
          {
-            throw E57_EXCEPTION2( E57_ERROR_BAD_CV_HEADER,
-                                  "i=" + toString( i ) + " reserved=" + toString( reserved1[i] ) );
+            throw E57_EXCEPTION2( ErrorBadCVHeader, "i=" + toString( i ) + " reserved=" + toString( reserved1[i] ) );
          }
       }
 
       /// Check section length is multiple of 4
       if ( sectionLogicalLength % 4 )
       {
-         throw E57_EXCEPTION2( E57_ERROR_BAD_CV_HEADER, "sectionLogicalLength=" + toString( sectionLogicalLength ) );
+         throw E57_EXCEPTION2( ErrorBadCVHeader, "sectionLogicalLength=" + toString( sectionLogicalLength ) );
       }
 
       /// Check sectionLogicalLength is in bounds
       if ( filePhysicalSize > 0 && sectionLogicalLength >= filePhysicalSize )
       {
-         throw E57_EXCEPTION2( E57_ERROR_BAD_CV_HEADER, "sectionLogicalLength=" + toString( sectionLogicalLength ) +
-                                                           " filePhysicalSize=" + toString( filePhysicalSize ) );
+         throw E57_EXCEPTION2( ErrorBadCVHeader, "sectionLogicalLength=" + toString( sectionLogicalLength ) +
+                                                    " filePhysicalSize=" + toString( filePhysicalSize ) );
       }
 
       /// Check dataPhysicalOffset is in bounds
       if ( filePhysicalSize > 0 && dataPhysicalOffset >= filePhysicalSize )
       {
-         throw E57_EXCEPTION2( E57_ERROR_BAD_CV_HEADER, "dataPhysicalOffset=" + toString( dataPhysicalOffset ) +
-                                                           " filePhysicalSize=" + toString( filePhysicalSize ) );
+         throw E57_EXCEPTION2( ErrorBadCVHeader, "dataPhysicalOffset=" + toString( dataPhysicalOffset ) +
+                                                    " filePhysicalSize=" + toString( filePhysicalSize ) );
       }
 
       /// Check indexPhysicalOffset is in bounds
       if ( filePhysicalSize > 0 && indexPhysicalOffset >= filePhysicalSize )
       {
-         throw E57_EXCEPTION2( E57_ERROR_BAD_CV_HEADER, "indexPhysicalOffset=" + toString( indexPhysicalOffset ) +
-                                                           " filePhysicalSize=" + toString( filePhysicalSize ) );
+         throw E57_EXCEPTION2( ErrorBadCVHeader, "indexPhysicalOffset=" + toString( indexPhysicalOffset ) +
+                                                    " filePhysicalSize=" + toString( filePhysicalSize ) );
       }
    }
 

@@ -111,10 +111,10 @@ true).
 @pre     The @a destImageFile must have been opened in write mode (i.e.
 destImageFile.isWritable() must be true).
 @pre     byteCount >= 0
-@throw   ::E57_ERROR_BAD_API_ARGUMENT
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_FILE_IS_READ_ONLY
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorBadAPIArgument
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorFileReadOnly
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     Node, BlobNode::read, BlobNode::write
 */
 BlobNode::BlobNode( ImageFile destImageFile, int64_t byteCount ) :
@@ -170,8 +170,8 @@ bool BlobNode::isAttached() const
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @post    No visible state is modified.
 @return  The declared size of the blob when it was created.
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     BlobNode::read, BlobNode::write
 */
 int64_t BlobNode::byteCount() const
@@ -198,12 +198,12 @@ the Blob data can be read zero or more times.
 @pre     0 <= @a start < byteCount()
 @pre     0 <= count
 @pre     (@a start + @a count) < byteCount()
-@throw   ::E57_ERROR_BAD_API_ARGUMENT
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_LSEEK_FAILED
-@throw   ::E57_ERROR_READ_FAILED
-@throw   ::E57_ERROR_BAD_CHECKSUM
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorBadAPIArgument
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorSeekFailed
+@throw   ::ErrorReadFailed
+@throw   ::ErrorBadChecksum
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     BlobNode::byteCount, BlobNode::write
 */
 void BlobNode::read( uint8_t *buf, int64_t start, size_t count )
@@ -237,15 +237,15 @@ destImageFile().isWritable()).
 @pre     0 <= @a start < byteCount()
 @pre     0 <= count
 @pre     (@a start + @a count) < byteCount()
-@throw   ::E57_ERROR_BAD_API_ARGUMENT
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_FILE_IS_READ_ONLY
-@throw   ::E57_ERROR_NODE_UNATTACHED
-@throw   ::E57_ERROR_LSEEK_FAILED
-@throw   ::E57_ERROR_READ_FAILED
-@throw   ::E57_ERROR_WRITE_FAILED
-@throw   ::E57_ERROR_BAD_CHECKSUM
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@throw   ::ErrorBadAPIArgument
+@throw   ::ErrorImageFileNotOpen
+@throw   ::ErrorFileReadOnly
+@throw   ::ErrorNodeUnattached
+@throw   ::ErrorSeekFailed
+@throw   ::ErrorReadFailed
+@throw   ::ErrorWriteFailed
+@throw   ::ErrorBadChecksum
+@throw   ::ErrorInternal           All objects in undocumented state
 @see     BlobNode::byteCount, BlobNode::read
 */
 void BlobNode::write( uint8_t *buf, int64_t start, size_t count )
@@ -287,7 +287,7 @@ void BlobNode::checkInvariant( bool /*doRecurse*/, bool doUpcast )
 
    if ( byteCount() < 0 )
    {
-      throw E57_EXCEPTION1( E57_ERROR_INVARIANCE_VIOLATION );
+      throw E57_EXCEPTION1( ErrorInvarianceViolation );
    }
 }
 // endExample BlobNode::checkInvariant
@@ -315,14 +315,14 @@ exception is thrown. In designs that need to avoid the exception, use
 Node::type() to determine the actual type of the @a n before downcasting. This
 function must be explicitly called (c++ compiler cannot insert it
 automatically).
-@throw   ::E57_ERROR_BAD_NODE_DOWNCAST
+@throw   ::ErrorBadNodeDowncast
 @see     Node::type(), BlobNode::operator Node()
 */
 BlobNode::BlobNode( const Node &n )
 {
-   if ( n.type() != E57_BLOB )
+   if ( n.type() != TypeBlob )
    {
-      throw E57_EXCEPTION2( E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString( n.type() ) );
+      throw E57_EXCEPTION2( ErrorBadNodeDowncast, "nodeType=" + toString( n.type() ) );
    }
 
    /// Set our shared_ptr to the downcast shared_ptr

@@ -32,15 +32,19 @@
 
 namespace e57
 {
-   //! @brief Reads the data out of a given image node
-   //! @param [in] image 1 of 3 projects or the visual
-   //! @param [in] imageType identifies the image format desired.
-   //! @param [out] pBuffer pointer the buffer
-   //! @param [out] start position in the block to start reading
-   //! @param [out] count size of desired chunk or buffer size
-   //! @return number of bytes read
-   size_t _readImage2DNode( const StructureNode &image, Image2DType imageType, uint8_t *pBuffer, int64_t start,
-                            size_t count )
+   /*!
+   @brief Reads the data out of a given image node
+
+   @param [in] image 1 of 3 projects or the visual
+   @param [in] imageType identifies the image format desired.
+   @param [out] pBuffer pointer the buffer
+   @param [out] start position in the block to start reading
+   @param [out] count size of desired chunk or buffer size
+
+   @return number of bytes read
+   */
+   size_t _readImage2DNode( const StructureNode &image, Image2DType imageType, uint8_t *pBuffer,
+                            int64_t start, size_t count )
    {
       size_t transferred = 0;
 
@@ -80,16 +84,21 @@ namespace e57
       return transferred;
    }
 
-   //! @brief This function reads one of the image blobs
-   //! @param [in] image 1 of 3 projects or the visual
-   //! @param [out] imageType identifies the image format desired.
-   //! @param [out] imageWidth The image width (in pixels).
-   //! @param [out] imageHeight The image height (in pixels).
-   //! @param [out] imageSize This is the total number of bytes for the image blob.
-   //! @param [out] imageMaskType This is E57_PNG_IMAGE_MASK if "imageMask" is defined in the projection
-   //! @return Returns true if successful
-   static bool _getImage2DNodeSizes( const StructureNode &image, Image2DType &imageType, int64_t &imageWidth,
-                                     int64_t &imageHeight, int64_t &imageSize, Image2DType &imageMaskType )
+   /*!
+   @brief This function reads one of the image blobs
+
+   @param [in] image 1 of 3 projects or the visual
+   @param [out] imageType identifies the image format desired.
+   @param [out] imageWidth The image width (in pixels).
+   @param [out] imageHeight The image height (in pixels).
+   @param [out] imageSize This is the total number of bytes for the image blob.
+   @param [out] imageMaskType This is E57_PNG_IMAGE_MASK if "imageMask" is defined in the projection
+
+   @return Returns true if successful
+   */
+   static bool _getImage2DNodeSizes( const StructureNode &image, Image2DType &imageType,
+                                     int64_t &imageWidth, int64_t &imageHeight, int64_t &imageSize,
+                                     Image2DType &imageMaskType )
    {
       imageWidth = 0;
       imageHeight = 0;
@@ -140,9 +149,13 @@ namespace e57
       return true;
    }
 
-   void _readColourRanges( const std::string &protoName, const StructureNode &proto, double &colourMin,
-                           double &colourMax )
+   /// Possibly get min/max from the colour node itself instead of the colorLimits.
+   void _readColourRanges( const std::string &protoName, const StructureNode &proto,
+                           double &colourMin, double &colourMax )
    {
+      // IF the colorLimits are not set
+      // AND our colour node is
+      // THEN get our min/max from the colour node itself.
       if ( ( colourMax == 0.0 ) && proto.isDefined( protoName ) )
       {
          const auto colourProto = proto.get( protoName );
@@ -176,7 +189,8 @@ namespace e57
    }
 
    ReaderImpl::ReaderImpl( const ustring &filePath, const ReaderOptions &options ) :
-      imf_( filePath, "r", options.checksumPolicy ), root_( imf_.root() ), data3D_( root_.get( "/data3D" ) ),
+      imf_( filePath, "r", options.checksumPolicy ), root_( imf_.root() ),
+      data3D_( root_.get( "/data3D" ) ),
       images2D_( root_.isDefined( "/images2D" ) ? root_.get( "/images2D" ) : VectorNode( imf_ ) )
    {
    }
@@ -216,8 +230,10 @@ namespace e57
       fileHeader = {};
 
       fileHeader.formatName = StringNode( root_.get( "formatName" ) ).value();
-      fileHeader.versionMajor = static_cast<uint32_t>( IntegerNode( root_.get( "versionMajor" ) ).value() );
-      fileHeader.versionMinor = static_cast<uint32_t>( IntegerNode( root_.get( "versionMinor" ) ).value() );
+      fileHeader.versionMajor =
+         static_cast<uint32_t>( IntegerNode( root_.get( "versionMajor" ) ).value() );
+      fileHeader.versionMinor =
+         static_cast<uint32_t>( IntegerNode( root_.get( "versionMinor" ) ).value() );
       fileHeader.guid = StringNode( root_.get( "guid" ) ).value();
       if ( root_.isDefined( "e57LibraryVersion" ) )
       {
@@ -233,12 +249,13 @@ namespace e57
       {
          const StructureNode creationDateTime( root_.get( "creationDateTime" ) );
 
-         fileHeader.creationDateTime.dateTimeValue = FloatNode( creationDateTime.get( "dateTimeValue" ) ).value();
+         fileHeader.creationDateTime.dateTimeValue =
+            FloatNode( creationDateTime.get( "dateTimeValue" ) ).value();
 
          if ( creationDateTime.isDefined( "isAtomicClockReferenced" ) )
          {
-            fileHeader.creationDateTime.isAtomicClockReferenced =
-               static_cast<int32_t>( IntegerNode( creationDateTime.get( "isAtomicClockReferenced" ) ).value() );
+            fileHeader.creationDateTime.isAtomicClockReferenced = static_cast<int32_t>(
+               IntegerNode( creationDateTime.get( "isAtomicClockReferenced" ) ).value() );
          }
       }
 
@@ -296,7 +313,8 @@ namespace e57
 
       if ( image.isDefined( "associatedData3DGuid" ) )
       {
-         image2DHeader.associatedData3DGuid = StringNode( image.get( "associatedData3DGuid" ) ).value();
+         image2DHeader.associatedData3DGuid =
+            StringNode( image.get( "associatedData3DGuid" ) ).value();
       }
 
       if ( image.isDefined( "acquisitionDateTime" ) )
@@ -308,8 +326,8 @@ namespace e57
 
          if ( acquisitionDateTime.isDefined( "isAtomicClockReferenced" ) )
          {
-            image2DHeader.acquisitionDateTime.isAtomicClockReferenced =
-               static_cast<int32_t>( IntegerNode( acquisitionDateTime.get( "isAtomicClockReferenced" ) ).value() );
+            image2DHeader.acquisitionDateTime.isAtomicClockReferenced = static_cast<int32_t>(
+               IntegerNode( acquisitionDateTime.get( "isAtomicClockReferenced" ) ).value() );
          }
       }
 
@@ -339,7 +357,8 @@ namespace e57
 
       if ( image.isDefined( "visualReferenceRepresentation" ) )
       {
-         const StructureNode visualReferenceRepresentation( image.get( "visualReferenceRepresentation" ) );
+         const StructureNode visualReferenceRepresentation(
+            image.get( "visualReferenceRepresentation" ) );
 
          if ( visualReferenceRepresentation.isDefined( "jpegImage" ) )
          {
@@ -357,10 +376,10 @@ namespace e57
                BlobNode( visualReferenceRepresentation.get( "imageMask" ) ).byteCount();
          }
 
-         image2DHeader.visualReferenceRepresentation.imageHeight =
-            static_cast<int32_t>( IntegerNode( visualReferenceRepresentation.get( "imageHeight" ) ).value() );
-         image2DHeader.visualReferenceRepresentation.imageWidth =
-            static_cast<int32_t>( IntegerNode( visualReferenceRepresentation.get( "imageWidth" ) ).value() );
+         image2DHeader.visualReferenceRepresentation.imageHeight = static_cast<int32_t>(
+            IntegerNode( visualReferenceRepresentation.get( "imageHeight" ) ).value() );
+         image2DHeader.visualReferenceRepresentation.imageWidth = static_cast<int32_t>(
+            IntegerNode( visualReferenceRepresentation.get( "imageWidth" ) ).value() );
       }
 
       if ( image.isDefined( "pinholeRepresentation" ) )
@@ -385,10 +404,10 @@ namespace e57
 
          image2DHeader.pinholeRepresentation.focalLength =
             FloatNode( pinholeRepresentation.get( "focalLength" ) ).value();
-         image2DHeader.pinholeRepresentation.imageHeight =
-            static_cast<int32_t>( IntegerNode( pinholeRepresentation.get( "imageHeight" ) ).value() );
-         image2DHeader.pinholeRepresentation.imageWidth =
-            static_cast<int32_t>( IntegerNode( pinholeRepresentation.get( "imageWidth" ) ).value() );
+         image2DHeader.pinholeRepresentation.imageHeight = static_cast<int32_t>(
+            IntegerNode( pinholeRepresentation.get( "imageHeight" ) ).value() );
+         image2DHeader.pinholeRepresentation.imageWidth = static_cast<int32_t>(
+            IntegerNode( pinholeRepresentation.get( "imageWidth" ) ).value() );
 
          image2DHeader.pinholeRepresentation.pixelHeight =
             FloatNode( pinholeRepresentation.get( "pixelHeight" ) ).value();
@@ -419,10 +438,10 @@ namespace e57
                BlobNode( sphericalRepresentation.get( "imageMask" ) ).byteCount();
          }
 
-         image2DHeader.sphericalRepresentation.imageHeight =
-            static_cast<int32_t>( IntegerNode( sphericalRepresentation.get( "imageHeight" ) ).value() );
-         image2DHeader.sphericalRepresentation.imageWidth =
-            static_cast<int32_t>( IntegerNode( sphericalRepresentation.get( "imageWidth" ) ).value() );
+         image2DHeader.sphericalRepresentation.imageHeight = static_cast<int32_t>(
+            IntegerNode( sphericalRepresentation.get( "imageHeight" ) ).value() );
+         image2DHeader.sphericalRepresentation.imageWidth = static_cast<int32_t>(
+            IntegerNode( sphericalRepresentation.get( "imageWidth" ) ).value() );
 
          image2DHeader.sphericalRepresentation.pixelHeight =
             FloatNode( sphericalRepresentation.get( "pixelHeight" ) ).value();
@@ -449,10 +468,10 @@ namespace e57
                BlobNode( cylindricalRepresentation.get( "imageMask" ) ).byteCount();
          }
 
-         image2DHeader.cylindricalRepresentation.imageHeight =
-            static_cast<int32_t>( IntegerNode( cylindricalRepresentation.get( "imageHeight" ) ).value() );
-         image2DHeader.cylindricalRepresentation.imageWidth =
-            static_cast<int32_t>( IntegerNode( cylindricalRepresentation.get( "imageWidth" ) ).value() );
+         image2DHeader.cylindricalRepresentation.imageHeight = static_cast<int32_t>(
+            IntegerNode( cylindricalRepresentation.get( "imageHeight" ) ).value() );
+         image2DHeader.cylindricalRepresentation.imageWidth = static_cast<int32_t>(
+            IntegerNode( cylindricalRepresentation.get( "imageWidth" ) ).value() );
 
          image2DHeader.cylindricalRepresentation.pixelHeight =
             FloatNode( cylindricalRepresentation.get( "pixelHeight" ) ).value();
@@ -468,9 +487,11 @@ namespace e57
    }
 
    // Returns the image sizes
-   bool ReaderImpl::GetImage2DSizes( int64_t imageIndex, Image2DProjection &imageProjection, Image2DType &imageType,
-                                     int64_t &imageWidth, int64_t &imageHeight, int64_t &imageSize,
-                                     Image2DType &imageMaskType, Image2DType &imageVisualType ) const
+   bool ReaderImpl::GetImage2DSizes( int64_t imageIndex, Image2DProjection &imageProjection,
+                                     Image2DType &imageType, int64_t &imageWidth,
+                                     int64_t &imageHeight, int64_t &imageSize,
+                                     Image2DType &imageMaskType,
+                                     Image2DType &imageVisualType ) const
    {
       if ( ( imageIndex < 0 ) || ( imageIndex >= images2D_.childCount() ) )
       {
@@ -486,10 +507,11 @@ namespace e57
 
       if ( image.isDefined( "visualReferenceRepresentation" ) )
       {
-         const StructureNode visualReferenceRepresentation( image.get( "visualReferenceRepresentation" ) );
+         const StructureNode visualReferenceRepresentation(
+            image.get( "visualReferenceRepresentation" ) );
 
-         bool ret = _getImage2DNodeSizes( visualReferenceRepresentation, imageType, imageWidth, imageHeight, imageSize,
-                                          imageMaskType );
+         bool ret = _getImage2DNodeSizes( visualReferenceRepresentation, imageType, imageWidth,
+                                          imageHeight, imageSize, imageMaskType );
          imageProjection = ProjectionVisual;
          imageVisualType = imageType;
 
@@ -502,8 +524,8 @@ namespace e57
 
          imageProjection = ProjectionPinhole;
 
-         return _getImage2DNodeSizes( pinholeRepresentation, imageType, imageWidth, imageHeight, imageSize,
-                                      imageMaskType );
+         return _getImage2DNodeSizes( pinholeRepresentation, imageType, imageWidth, imageHeight,
+                                      imageSize, imageMaskType );
       }
 
       if ( image.isDefined( "sphericalRepresentation" ) )
@@ -512,8 +534,8 @@ namespace e57
 
          imageProjection = ProjectionSpherical;
 
-         return _getImage2DNodeSizes( sphericalRepresentation, imageType, imageWidth, imageHeight, imageSize,
-                                      imageMaskType );
+         return _getImage2DNodeSizes( sphericalRepresentation, imageType, imageWidth, imageHeight,
+                                      imageSize, imageMaskType );
       }
 
       if ( image.isDefined( "cylindricalRepresentation" ) )
@@ -522,16 +544,17 @@ namespace e57
 
          imageProjection = ProjectionCylindrical;
 
-         return _getImage2DNodeSizes( cylindricalRepresentation, imageType, imageWidth, imageHeight, imageSize,
-                                      imageMaskType );
+         return _getImage2DNodeSizes( cylindricalRepresentation, imageType, imageWidth, imageHeight,
+                                      imageSize, imageMaskType );
       }
 
       return false;
    }
 
    // Reads the image data block
-   size_t ReaderImpl::ReadImage2DData( int64_t imageIndex, Image2DProjection imageProjection, Image2DType imageType,
-                                       uint8_t *pBuffer, int64_t start, size_t count ) const
+   size_t ReaderImpl::ReadImage2DData( int64_t imageIndex, Image2DProjection imageProjection,
+                                       Image2DType imageType, uint8_t *pBuffer, int64_t start,
+                                       size_t count ) const
    {
       if ( ( imageIndex < 0 ) || ( imageIndex >= images2D_.childCount() ) )
       {
@@ -548,9 +571,11 @@ namespace e57
          case ProjectionVisual:
             if ( image.isDefined( "visualReferenceRepresentation" ) )
             {
-               const StructureNode visualReferenceRepresentation( image.get( "visualReferenceRepresentation" ) );
+               const StructureNode visualReferenceRepresentation(
+                  image.get( "visualReferenceRepresentation" ) );
 
-               return _readImage2DNode( visualReferenceRepresentation, imageType, pBuffer, start, count );
+               return _readImage2DNode( visualReferenceRepresentation, imageType, pBuffer, start,
+                                        count );
             }
             break;
 
@@ -566,7 +591,8 @@ namespace e57
          case ProjectionSpherical:
             if ( image.isDefined( "sphericalRepresentation" ) )
             {
-               const StructureNode sphericalRepresentation( image.get( "sphericalRepresentation" ) );
+               const StructureNode sphericalRepresentation(
+                  image.get( "sphericalRepresentation" ) );
 
                return _readImage2DNode( sphericalRepresentation, imageType, pBuffer, start, count );
             }
@@ -575,9 +601,11 @@ namespace e57
          case ProjectionCylindrical:
             if ( image.isDefined( "cylindricalRepresentation" ) )
             {
-               const StructureNode cylindricalRepresentation( image.get( "cylindricalRepresentation" ) );
+               const StructureNode cylindricalRepresentation(
+                  image.get( "cylindricalRepresentation" ) );
 
-               return _readImage2DNode( cylindricalRepresentation, imageType, pBuffer, start, count );
+               return _readImage2DNode( cylindricalRepresentation, imageType, pBuffer, start,
+                                        count );
             }
             break;
       }
@@ -642,25 +670,30 @@ namespace e57
       }
       if ( scan.isDefined( "sensorHardwareVersion" ) )
       {
-         data3DHeader.sensorHardwareVersion = StringNode( scan.get( "sensorHardwareVersion" ) ).value();
+         data3DHeader.sensorHardwareVersion =
+            StringNode( scan.get( "sensorHardwareVersion" ) ).value();
       }
       if ( scan.isDefined( "sensorSoftwareVersion" ) )
       {
-         data3DHeader.sensorSoftwareVersion = StringNode( scan.get( "sensorSoftwareVersion" ) ).value();
+         data3DHeader.sensorSoftwareVersion =
+            StringNode( scan.get( "sensorSoftwareVersion" ) ).value();
       }
       if ( scan.isDefined( "sensorFirmwareVersion" ) )
       {
-         data3DHeader.sensorFirmwareVersion = StringNode( scan.get( "sensorFirmwareVersion" ) ).value();
+         data3DHeader.sensorFirmwareVersion =
+            StringNode( scan.get( "sensorFirmwareVersion" ) ).value();
       }
 
       // Get temp/humidity from scan.
       if ( scan.isDefined( "temperature" ) )
       {
-         data3DHeader.temperature = static_cast<float>( FloatNode( scan.get( "temperature" ) ).value() );
+         data3DHeader.temperature =
+            static_cast<float>( FloatNode( scan.get( "temperature" ) ).value() );
       }
       if ( scan.isDefined( "relativeHumidity" ) )
       {
-         data3DHeader.relativeHumidity = static_cast<float>( FloatNode( scan.get( "relativeHumidity" ) ).value() );
+         data3DHeader.relativeHumidity =
+            static_cast<float>( FloatNode( scan.get( "relativeHumidity" ) ).value() );
       }
       if ( scan.isDefined( "atmosphericPressure" ) )
       {
@@ -679,13 +712,17 @@ namespace e57
          }
          if ( ibox.isDefined( "columnMaximum" ) )
          {
-            data3DHeader.indexBounds.columnMinimum = IntegerNode( ibox.get( "columnMinimum" ) ).value();
-            data3DHeader.indexBounds.columnMaximum = IntegerNode( ibox.get( "columnMaximum" ) ).value();
+            data3DHeader.indexBounds.columnMinimum =
+               IntegerNode( ibox.get( "columnMinimum" ) ).value();
+            data3DHeader.indexBounds.columnMaximum =
+               IntegerNode( ibox.get( "columnMaximum" ) ).value();
          }
          if ( ibox.isDefined( "returnMaximum" ) )
          {
-            data3DHeader.indexBounds.returnMinimum = IntegerNode( ibox.get( "returnMinimum" ) ).value();
-            data3DHeader.indexBounds.returnMaximum = IntegerNode( ibox.get( "returnMaximum" ) ).value();
+            data3DHeader.indexBounds.returnMinimum =
+               IntegerNode( ibox.get( "returnMinimum" ) ).value();
+            data3DHeader.indexBounds.returnMaximum =
+               IntegerNode( ibox.get( "returnMaximum" ) ).value();
          }
       }
 
@@ -720,12 +757,18 @@ namespace e57
 
          if ( bbox.get( "xMinimum" ).type() == TypeScaledInteger )
          {
-            data3DHeader.cartesianBounds.xMinimum = ScaledIntegerNode( bbox.get( "xMinimum" ) ).scaledValue();
-            data3DHeader.cartesianBounds.xMaximum = ScaledIntegerNode( bbox.get( "xMaximum" ) ).scaledValue();
-            data3DHeader.cartesianBounds.yMinimum = ScaledIntegerNode( bbox.get( "yMinimum" ) ).scaledValue();
-            data3DHeader.cartesianBounds.yMaximum = ScaledIntegerNode( bbox.get( "yMaximum" ) ).scaledValue();
-            data3DHeader.cartesianBounds.zMinimum = ScaledIntegerNode( bbox.get( "zMinimum" ) ).scaledValue();
-            data3DHeader.cartesianBounds.zMaximum = ScaledIntegerNode( bbox.get( "zMaximum" ) ).scaledValue();
+            data3DHeader.cartesianBounds.xMinimum =
+               ScaledIntegerNode( bbox.get( "xMinimum" ) ).scaledValue();
+            data3DHeader.cartesianBounds.xMaximum =
+               ScaledIntegerNode( bbox.get( "xMaximum" ) ).scaledValue();
+            data3DHeader.cartesianBounds.yMinimum =
+               ScaledIntegerNode( bbox.get( "yMinimum" ) ).scaledValue();
+            data3DHeader.cartesianBounds.yMaximum =
+               ScaledIntegerNode( bbox.get( "yMaximum" ) ).scaledValue();
+            data3DHeader.cartesianBounds.zMinimum =
+               ScaledIntegerNode( bbox.get( "zMinimum" ) ).scaledValue();
+            data3DHeader.cartesianBounds.zMaximum =
+               ScaledIntegerNode( bbox.get( "zMaximum" ) ).scaledValue();
          }
          else if ( bbox.get( "xMinimum" ).type() == TypeFloat )
          {
@@ -744,13 +787,17 @@ namespace e57
 
          if ( sbox.get( "rangeMinimum" ).type() == TypeScaledInteger )
          {
-            data3DHeader.sphericalBounds.rangeMinimum = ScaledIntegerNode( sbox.get( "rangeMinimum" ) ).scaledValue();
-            data3DHeader.sphericalBounds.rangeMaximum = ScaledIntegerNode( sbox.get( "rangeMaximum" ) ).scaledValue();
+            data3DHeader.sphericalBounds.rangeMinimum =
+               ScaledIntegerNode( sbox.get( "rangeMinimum" ) ).scaledValue();
+            data3DHeader.sphericalBounds.rangeMaximum =
+               ScaledIntegerNode( sbox.get( "rangeMaximum" ) ).scaledValue();
          }
          else if ( sbox.get( "rangeMinimum" ).type() == TypeFloat )
          {
-            data3DHeader.sphericalBounds.rangeMinimum = FloatNode( sbox.get( "rangeMinimum" ) ).value();
-            data3DHeader.sphericalBounds.rangeMaximum = FloatNode( sbox.get( "rangeMaximum" ) ).value();
+            data3DHeader.sphericalBounds.rangeMinimum =
+               FloatNode( sbox.get( "rangeMinimum" ) ).value();
+            data3DHeader.sphericalBounds.rangeMaximum =
+               FloatNode( sbox.get( "rangeMaximum" ) ).value();
          }
 
          if ( sbox.get( "elevationMinimum" ).type() == TypeScaledInteger )
@@ -762,18 +809,23 @@ namespace e57
          }
          else if ( sbox.get( "elevationMinimum" ).type() == TypeFloat )
          {
-            data3DHeader.sphericalBounds.elevationMinimum = FloatNode( sbox.get( "elevationMinimum" ) ).value();
-            data3DHeader.sphericalBounds.elevationMaximum = FloatNode( sbox.get( "elevationMaximum" ) ).value();
+            data3DHeader.sphericalBounds.elevationMinimum =
+               FloatNode( sbox.get( "elevationMinimum" ) ).value();
+            data3DHeader.sphericalBounds.elevationMaximum =
+               FloatNode( sbox.get( "elevationMaximum" ) ).value();
          }
 
          if ( sbox.get( "azimuthStart" ).type() == TypeScaledInteger )
          {
-            data3DHeader.sphericalBounds.azimuthStart = ScaledIntegerNode( sbox.get( "azimuthStart" ) ).scaledValue();
-            data3DHeader.sphericalBounds.azimuthEnd = ScaledIntegerNode( sbox.get( "azimuthEnd" ) ).scaledValue();
+            data3DHeader.sphericalBounds.azimuthStart =
+               ScaledIntegerNode( sbox.get( "azimuthStart" ) ).scaledValue();
+            data3DHeader.sphericalBounds.azimuthEnd =
+               ScaledIntegerNode( sbox.get( "azimuthEnd" ) ).scaledValue();
          }
          else if ( sbox.get( "azimuthStart" ).type() == TypeFloat )
          {
-            data3DHeader.sphericalBounds.azimuthStart = FloatNode( sbox.get( "azimuthStart" ) ).value();
+            data3DHeader.sphericalBounds.azimuthStart =
+               FloatNode( sbox.get( "azimuthStart" ) ).value();
             data3DHeader.sphericalBounds.azimuthEnd = FloatNode( sbox.get( "azimuthEnd" ) ).value();
          }
       }
@@ -808,12 +860,13 @@ namespace e57
       {
          const StructureNode acquisitionStart( scan.get( "acquisitionStart" ) );
 
-         data3DHeader.acquisitionStart.dateTimeValue = FloatNode( acquisitionStart.get( "dateTimeValue" ) ).value();
+         data3DHeader.acquisitionStart.dateTimeValue =
+            FloatNode( acquisitionStart.get( "dateTimeValue" ) ).value();
 
          if ( acquisitionStart.isDefined( "isAtomicClockReferenced" ) )
          {
-            data3DHeader.acquisitionStart.isAtomicClockReferenced =
-               static_cast<int32_t>( IntegerNode( acquisitionStart.get( "isAtomicClockReferenced" ) ).value() );
+            data3DHeader.acquisitionStart.isAtomicClockReferenced = static_cast<int32_t>(
+               IntegerNode( acquisitionStart.get( "isAtomicClockReferenced" ) ).value() );
          }
       }
 
@@ -821,12 +874,13 @@ namespace e57
       {
          const StructureNode acquisitionEnd( scan.get( "acquisitionEnd" ) );
 
-         data3DHeader.acquisitionEnd.dateTimeValue = FloatNode( acquisitionEnd.get( "dateTimeValue" ) ).value();
+         data3DHeader.acquisitionEnd.dateTimeValue =
+            FloatNode( acquisitionEnd.get( "dateTimeValue" ) ).value();
 
          if ( acquisitionEnd.isDefined( "isAtomicClockReferenced" ) )
          {
-            data3DHeader.acquisitionEnd.isAtomicClockReferenced =
-               static_cast<int32_t>( IntegerNode( acquisitionEnd.get( "isAtomicClockReferenced" ) ).value() );
+            data3DHeader.acquisitionEnd.isAtomicClockReferenced = static_cast<int32_t>(
+               IntegerNode( acquisitionEnd.get( "isAtomicClockReferenced" ) ).value() );
          }
       }
 
@@ -834,7 +888,8 @@ namespace e57
       data3DHeader.pointFields.cartesianXField = proto.isDefined( "cartesianX" );
       data3DHeader.pointFields.cartesianYField = proto.isDefined( "cartesianY" );
       data3DHeader.pointFields.cartesianZField = proto.isDefined( "cartesianZ" );
-      data3DHeader.pointFields.cartesianInvalidStateField = proto.isDefined( "cartesianInvalidState" );
+      data3DHeader.pointFields.cartesianInvalidStateField =
+         proto.isDefined( "cartesianInvalidState" );
 
       data3DHeader.pointFields.pointRangeMinimum = 0.0;
       data3DHeader.pointFields.pointRangeMaximum = 0.0;
@@ -847,7 +902,8 @@ namespace e57
          {
             case TypeInteger:
             {
-               // Should be a warning that we don't handle this type, but we don't have a mechanism for warnings.
+               // Should be a warning that we don't handle this type, but we don't have a mechanism
+               // for warnings.
                break;
             }
 
@@ -859,8 +915,10 @@ namespace e57
                const int64_t minimum = scaledCartesianX.minimum();
                const int64_t maximum = scaledCartesianX.maximum();
 
-               data3DHeader.pointFields.pointRangeMinimum = static_cast<double>( minimum ) * scale + offset;
-               data3DHeader.pointFields.pointRangeMaximum = static_cast<double>( maximum ) * scale + offset;
+               data3DHeader.pointFields.pointRangeMinimum =
+                  static_cast<double>( minimum ) * scale + offset;
+               data3DHeader.pointFields.pointRangeMaximum =
+                  static_cast<double>( maximum ) * scale + offset;
 
                data3DHeader.pointFields.pointRangeNodeType = NumericalNodeType::ScaledInteger;
                data3DHeader.pointFields.pointRangeScale = scale;
@@ -888,8 +946,9 @@ namespace e57
             }
 
             default:
-               throw E57_EXCEPTION2( ErrorInvalidNodeType, "invalid node type reading cartesianX field: " +
-                                                              toString( cartesianXProto.type() ) );
+               throw E57_EXCEPTION2( ErrorInvalidNodeType,
+                                     "invalid node type reading cartesianX field: " +
+                                        toString( cartesianXProto.type() ) );
                break;
          }
       }
@@ -901,7 +960,8 @@ namespace e57
          {
             case TypeInteger:
             {
-               // Should be a warning that we don't handle this type, but we don't have a mechanism for warnings.
+               // Should be a warning that we don't handle this type, but we don't have a mechanism
+               // for warnings.
                break;
             }
 
@@ -913,8 +973,10 @@ namespace e57
                const int64_t minimum = scaledSphericalRange.minimum();
                const int64_t maximum = scaledSphericalRange.maximum();
 
-               data3DHeader.pointFields.pointRangeMinimum = static_cast<double>( minimum ) * scale + offset;
-               data3DHeader.pointFields.pointRangeMaximum = static_cast<double>( maximum ) * scale + offset;
+               data3DHeader.pointFields.pointRangeMinimum =
+                  static_cast<double>( minimum ) * scale + offset;
+               data3DHeader.pointFields.pointRangeMaximum =
+                  static_cast<double>( maximum ) * scale + offset;
 
                data3DHeader.pointFields.pointRangeNodeType = NumericalNodeType::ScaledInteger;
                data3DHeader.pointFields.pointRangeScale = scale;
@@ -942,8 +1004,9 @@ namespace e57
             }
 
             default:
-               throw E57_EXCEPTION2( ErrorInvalidNodeType, "invalid node type reading sphericalRange field: " +
-                                                              toString( sphericalRangeProto.type() ) );
+               throw E57_EXCEPTION2( ErrorInvalidNodeType,
+                                     "invalid node type reading sphericalRange field: " +
+                                        toString( sphericalRangeProto.type() ) );
                break;
          }
       }
@@ -951,7 +1014,8 @@ namespace e57
       data3DHeader.pointFields.sphericalRangeField = proto.isDefined( "sphericalRange" );
       data3DHeader.pointFields.sphericalAzimuthField = proto.isDefined( "sphericalAzimuth" );
       data3DHeader.pointFields.sphericalElevationField = proto.isDefined( "sphericalElevation" );
-      data3DHeader.pointFields.sphericalInvalidStateField = proto.isDefined( "sphericalInvalidState" );
+      data3DHeader.pointFields.sphericalInvalidStateField =
+         proto.isDefined( "sphericalInvalidState" );
 
       data3DHeader.pointFields.angleMinimum = 0.0;
       data3DHeader.pointFields.angleMaximum = 0.0;
@@ -970,8 +1034,10 @@ namespace e57
                const int64_t minimum = scaledSphericalAzimuth.minimum();
                const int64_t maximum = scaledSphericalAzimuth.maximum();
 
-               data3DHeader.pointFields.angleMinimum = static_cast<double>( minimum ) * scale + offset;
-               data3DHeader.pointFields.angleMaximum = static_cast<double>( maximum ) * scale + offset;
+               data3DHeader.pointFields.angleMinimum =
+                  static_cast<double>( minimum ) * scale + offset;
+               data3DHeader.pointFields.angleMaximum =
+                  static_cast<double>( maximum ) * scale + offset;
 
                data3DHeader.pointFields.angleNodeType = NumericalNodeType::ScaledInteger;
                data3DHeader.pointFields.angleScale = scale;
@@ -999,8 +1065,9 @@ namespace e57
             }
 
             default:
-               throw E57_EXCEPTION2( ErrorInvalidNodeType, "invalid node type reading sphericalAzimuth field: " +
-                                                              toString( sphericalAzimuthProto.type() ) );
+               throw E57_EXCEPTION2( ErrorInvalidNodeType,
+                                     "invalid node type reading sphericalAzimuth field: " +
+                                        toString( sphericalAzimuthProto.type() ) );
                break;
          }
       }
@@ -1047,8 +1114,10 @@ namespace e57
             {
                const IntegerNode integerTimeStamp( timeStampProto );
 
-               data3DHeader.pointFields.timeMaximum = static_cast<double>( integerTimeStamp.maximum() );
-               data3DHeader.pointFields.timeMinimum = static_cast<double>( integerTimeStamp.minimum() );
+               data3DHeader.pointFields.timeMaximum =
+                  static_cast<double>( integerTimeStamp.maximum() );
+               data3DHeader.pointFields.timeMinimum =
+                  static_cast<double>( integerTimeStamp.minimum() );
 
                data3DHeader.pointFields.timeNodeType = NumericalNodeType::Integer;
 
@@ -1064,8 +1133,10 @@ namespace e57
                const int64_t minimum = scaledTimeStamp.minimum();
                const int64_t maximum = scaledTimeStamp.maximum();
 
-               data3DHeader.pointFields.timeMinimum = static_cast<double>( minimum ) * scale + offset;
-               data3DHeader.pointFields.timeMaximum = static_cast<double>( maximum ) * scale + offset;
+               data3DHeader.pointFields.timeMinimum =
+                  static_cast<double>( minimum ) * scale + offset;
+               data3DHeader.pointFields.timeMaximum =
+                  static_cast<double>( maximum ) * scale + offset;
 
                data3DHeader.pointFields.timeNodeType = NumericalNodeType::ScaledInteger;
                data3DHeader.pointFields.timeScale = scale;
@@ -1093,8 +1164,9 @@ namespace e57
             }
 
             default:
-               throw E57_EXCEPTION2( ErrorInvalidNodeType, "invalid node type reading timeStamp field: " +
-                                                              toString( timeStampProto.type() ) );
+               throw E57_EXCEPTION2( ErrorInvalidNodeType,
+                                     "invalid node type reading timeStamp field: " +
+                                        toString( timeStampProto.type() ) );
                break;
          }
       }
@@ -1112,13 +1184,17 @@ namespace e57
 
          if ( intensityMaximumProto.type() == TypeScaledInteger )
          {
-            data3DHeader.intensityLimits.intensityMaximum = ScaledIntegerNode( intensityMaximumProto ).scaledValue();
-            data3DHeader.intensityLimits.intensityMinimum = ScaledIntegerNode( intensityMinimumProto ).scaledValue();
+            data3DHeader.intensityLimits.intensityMaximum =
+               ScaledIntegerNode( intensityMaximumProto ).scaledValue();
+            data3DHeader.intensityLimits.intensityMinimum =
+               ScaledIntegerNode( intensityMinimumProto ).scaledValue();
          }
          else if ( intensityMaximumProto.type() == TypeFloat )
          {
-            data3DHeader.intensityLimits.intensityMaximum = FloatNode( intensityMaximumProto ).value();
-            data3DHeader.intensityLimits.intensityMinimum = FloatNode( intensityMinimumProto ).value();
+            data3DHeader.intensityLimits.intensityMaximum =
+               FloatNode( intensityMaximumProto ).value();
+            data3DHeader.intensityLimits.intensityMinimum =
+               FloatNode( intensityMinimumProto ).value();
          }
          else if ( intensityMaximumProto.type() == TypeInteger )
          {
@@ -1141,8 +1217,10 @@ namespace e57
 
                if ( data3DHeader.intensityLimits.intensityMaximum == 0.0 )
                {
-                  data3DHeader.intensityLimits.intensityMinimum = static_cast<double>( integerIntensity.minimum() );
-                  data3DHeader.intensityLimits.intensityMaximum = static_cast<double>( integerIntensity.maximum() );
+                  data3DHeader.intensityLimits.intensityMinimum =
+                     static_cast<double>( integerIntensity.minimum() );
+                  data3DHeader.intensityLimits.intensityMaximum =
+                     static_cast<double>( integerIntensity.maximum() );
                }
 
                data3DHeader.pointFields.intensityNodeType = NumericalNodeType::Integer;
@@ -1161,8 +1239,10 @@ namespace e57
                   const int64_t minimum = scaledIntensity.minimum();
                   const int64_t maximum = scaledIntensity.maximum();
 
-                  data3DHeader.intensityLimits.intensityMinimum = static_cast<double>( minimum ) * scale + offset;
-                  data3DHeader.intensityLimits.intensityMaximum = static_cast<double>( maximum ) * scale + offset;
+                  data3DHeader.intensityLimits.intensityMinimum =
+                     static_cast<double>( minimum ) * scale + offset;
+                  data3DHeader.intensityLimits.intensityMaximum =
+                     static_cast<double>( maximum ) * scale + offset;
                }
 
                data3DHeader.pointFields.intensityNodeType = NumericalNodeType::ScaledInteger;
@@ -1191,8 +1271,9 @@ namespace e57
             }
 
             default:
-               throw E57_EXCEPTION2( ErrorInvalidNodeType, "invalid node type reading intensity field: " +
-                                                              toString( intensityProto.type() ) );
+               throw E57_EXCEPTION2( ErrorInvalidNodeType,
+                                     "invalid node type reading intensity field: " +
+                                        toString( intensityProto.type() ) );
                break;
          }
       }
@@ -1230,12 +1311,18 @@ namespace e57
          }
          else if ( colorbox.get( "colorRedMaximum" ).type() == TypeFloat )
          {
-            data3DHeader.colorLimits.colorRedMaximum = FloatNode( colorbox.get( "colorRedMaximum" ) ).value();
-            data3DHeader.colorLimits.colorRedMinimum = FloatNode( colorbox.get( "colorRedMinimum" ) ).value();
-            data3DHeader.colorLimits.colorGreenMaximum = FloatNode( colorbox.get( "colorGreenMaximum" ) ).value();
-            data3DHeader.colorLimits.colorGreenMinimum = FloatNode( colorbox.get( "colorGreenMinimum" ) ).value();
-            data3DHeader.colorLimits.colorBlueMaximum = FloatNode( colorbox.get( "colorBlueMaximum" ) ).value();
-            data3DHeader.colorLimits.colorBlueMinimum = FloatNode( colorbox.get( "colorBlueMinimum" ) ).value();
+            data3DHeader.colorLimits.colorRedMaximum =
+               FloatNode( colorbox.get( "colorRedMaximum" ) ).value();
+            data3DHeader.colorLimits.colorRedMinimum =
+               FloatNode( colorbox.get( "colorRedMinimum" ) ).value();
+            data3DHeader.colorLimits.colorGreenMaximum =
+               FloatNode( colorbox.get( "colorGreenMaximum" ) ).value();
+            data3DHeader.colorLimits.colorGreenMinimum =
+               FloatNode( colorbox.get( "colorGreenMinimum" ) ).value();
+            data3DHeader.colorLimits.colorBlueMaximum =
+               FloatNode( colorbox.get( "colorBlueMaximum" ) ).value();
+            data3DHeader.colorLimits.colorBlueMinimum =
+               FloatNode( colorbox.get( "colorBlueMinimum" ) ).value();
          }
          else if ( colorbox.get( "colorRedMaximum" ).type() == TypeInteger )
          {
@@ -1274,8 +1361,9 @@ namespace e57
    }
 
    // This function returns the size of the point data
-   bool ReaderImpl::GetData3DSizes( int64_t dataIndex, int64_t &row, int64_t &column, int64_t &pointsSize,
-                                    int64_t &groupsSize, int64_t &countSize, bool &bColumnIndex ) const
+   bool ReaderImpl::GetData3DSizes( int64_t dataIndex, int64_t &row, int64_t &column,
+                                    int64_t &pointsSize, int64_t &groupsSize, int64_t &countSize,
+                                    bool &bColumnIndex ) const
    {
       int64_t elementSize = 0;
 
@@ -1390,8 +1478,9 @@ namespace e57
    }
 
    // Reads the group data
-   bool ReaderImpl::ReadData3DGroupsData( int64_t dataIndex, int64_t groupCount, int64_t *idElementValue,
-                                          int64_t *startPointIndex, int64_t *pointCount ) const
+   bool ReaderImpl::ReadData3DGroupsData( int64_t dataIndex, int64_t groupCount,
+                                          int64_t *idElementValue, int64_t *startPointIndex,
+                                          int64_t *pointCount ) const
    {
       if ( ( dataIndex < 0 ) || ( dataIndex >= data3D_.childCount() ) )
       {
@@ -1432,10 +1521,12 @@ namespace e57
          if ( ( name == "startPointIndex" ) && lineGroupRecord.isDefined( "startPointIndex" ) &&
               ( startPointIndex != nullptr ) )
          {
-            groupSDBuffers.emplace_back( imf_, "startPointIndex", startPointIndex, groupCount, true );
+            groupSDBuffers.emplace_back( imf_, "startPointIndex", startPointIndex, groupCount,
+                                         true );
          }
 
-         if ( ( name == "pointCount" ) && lineGroupRecord.isDefined( "pointCount" ) && ( pointCount != nullptr ) )
+         if ( ( name == "pointCount" ) && lineGroupRecord.isDefined( "pointCount" ) &&
+              ( pointCount != nullptr ) )
          {
             groupSDBuffers.emplace_back( imf_, "pointCount", pointCount, groupCount, true );
          }
@@ -1450,8 +1541,8 @@ namespace e57
    }
 
    template <typename COORDTYPE>
-   CompressedVectorReader ReaderImpl::SetUpData3DPointsData( int64_t dataIndex, size_t count,
-                                                             const Data3DPointsData_t<COORDTYPE> &buffers ) const
+   CompressedVectorReader ReaderImpl::SetUpData3DPointsData(
+      int64_t dataIndex, size_t count, const Data3DPointsData_t<COORDTYPE> &buffers ) const
    {
       static_assert( std::is_floating_point<COORDTYPE>::value, "Floating point type required." );
 
@@ -1471,86 +1562,107 @@ namespace e57
          ustring norExtUri;
          const bool haveNormalsExt = imf_.extensionsLookupPrefix( "nor", norExtUri );
 
-         if ( ( name == "cartesianX" ) && proto.isDefined( "cartesianX" ) && ( buffers.cartesianX != nullptr ) )
+         if ( ( name == "cartesianX" ) && proto.isDefined( "cartesianX" ) &&
+              ( buffers.cartesianX != nullptr ) )
          {
             destBuffers.emplace_back( imf_, "cartesianX", buffers.cartesianX, count, true, scaled );
          }
-         else if ( ( name == "cartesianY" ) && proto.isDefined( "cartesianY" ) && ( buffers.cartesianY != nullptr ) )
+         else if ( ( name == "cartesianY" ) && proto.isDefined( "cartesianY" ) &&
+                   ( buffers.cartesianY != nullptr ) )
          {
             destBuffers.emplace_back( imf_, "cartesianY", buffers.cartesianY, count, true, scaled );
          }
-         else if ( ( name == "cartesianZ" ) && proto.isDefined( "cartesianZ" ) && ( buffers.cartesianZ != nullptr ) )
+         else if ( ( name == "cartesianZ" ) && proto.isDefined( "cartesianZ" ) &&
+                   ( buffers.cartesianZ != nullptr ) )
          {
             destBuffers.emplace_back( imf_, "cartesianZ", buffers.cartesianZ, count, true, scaled );
          }
-         else if ( ( name == "cartesianInvalidState" ) && proto.isDefined( "cartesianInvalidState" ) &&
+         else if ( ( name == "cartesianInvalidState" ) &&
+                   proto.isDefined( "cartesianInvalidState" ) &&
                    ( buffers.cartesianInvalidState != nullptr ) )
          {
-            destBuffers.emplace_back( imf_, "cartesianInvalidState", buffers.cartesianInvalidState, count, true );
+            destBuffers.emplace_back( imf_, "cartesianInvalidState", buffers.cartesianInvalidState,
+                                      count, true );
          }
          else if ( ( name == "sphericalRange" ) && proto.isDefined( "sphericalRange" ) &&
                    ( buffers.sphericalRange != nullptr ) )
          {
-            destBuffers.emplace_back( imf_, "sphericalRange", buffers.sphericalRange, count, true, scaled );
+            destBuffers.emplace_back( imf_, "sphericalRange", buffers.sphericalRange, count, true,
+                                      scaled );
          }
          else if ( ( name == "sphericalAzimuth" ) && proto.isDefined( "sphericalAzimuth" ) &&
                    ( buffers.sphericalAzimuth != nullptr ) )
          {
-            destBuffers.emplace_back( imf_, "sphericalAzimuth", buffers.sphericalAzimuth, count, true, scaled );
+            destBuffers.emplace_back( imf_, "sphericalAzimuth", buffers.sphericalAzimuth, count,
+                                      true, scaled );
          }
          else if ( ( name == "sphericalElevation" ) && proto.isDefined( "sphericalElevation" ) &&
                    ( buffers.sphericalElevation != nullptr ) )
          {
-            destBuffers.emplace_back( imf_, "sphericalElevation", buffers.sphericalElevation, count, true, scaled );
+            destBuffers.emplace_back( imf_, "sphericalElevation", buffers.sphericalElevation, count,
+                                      true, scaled );
          }
-         else if ( ( name == "sphericalInvalidState" ) && proto.isDefined( "sphericalInvalidState" ) &&
+         else if ( ( name == "sphericalInvalidState" ) &&
+                   proto.isDefined( "sphericalInvalidState" ) &&
                    ( buffers.sphericalInvalidState != nullptr ) )
          {
-            destBuffers.emplace_back( imf_, "sphericalInvalidState", buffers.sphericalInvalidState, count, true );
+            destBuffers.emplace_back( imf_, "sphericalInvalidState", buffers.sphericalInvalidState,
+                                      count, true );
          }
-         else if ( ( name == "rowIndex" ) && proto.isDefined( "rowIndex" ) && ( buffers.rowIndex != nullptr ) )
+         else if ( ( name == "rowIndex" ) && proto.isDefined( "rowIndex" ) &&
+                   ( buffers.rowIndex != nullptr ) )
          {
             destBuffers.emplace_back( imf_, "rowIndex", buffers.rowIndex, count, true );
          }
-         else if ( ( name == "columnIndex" ) && proto.isDefined( "columnIndex" ) && ( buffers.columnIndex != nullptr ) )
+         else if ( ( name == "columnIndex" ) && proto.isDefined( "columnIndex" ) &&
+                   ( buffers.columnIndex != nullptr ) )
          {
             destBuffers.emplace_back( imf_, "columnIndex", buffers.columnIndex, count, true );
          }
-         else if ( ( name == "returnIndex" ) && proto.isDefined( "returnIndex" ) && ( buffers.returnIndex != nullptr ) )
+         else if ( ( name == "returnIndex" ) && proto.isDefined( "returnIndex" ) &&
+                   ( buffers.returnIndex != nullptr ) )
          {
             destBuffers.emplace_back( imf_, "returnIndex", buffers.returnIndex, count, true );
          }
-         else if ( ( name == "returnCount" ) && proto.isDefined( "returnCount" ) && ( buffers.returnCount != nullptr ) )
+         else if ( ( name == "returnCount" ) && proto.isDefined( "returnCount" ) &&
+                   ( buffers.returnCount != nullptr ) )
          {
             destBuffers.emplace_back( imf_, "returnCount", buffers.returnCount, count, true );
          }
-         else if ( ( name == "timeStamp" ) && proto.isDefined( "timeStamp" ) && ( buffers.timeStamp != nullptr ) )
+         else if ( ( name == "timeStamp" ) && proto.isDefined( "timeStamp" ) &&
+                   ( buffers.timeStamp != nullptr ) )
          {
             destBuffers.emplace_back( imf_, "timeStamp", buffers.timeStamp, count, true, scaled );
          }
          else if ( ( name == "isTimeStampInvalid" ) && proto.isDefined( "isTimeStampInvalid" ) &&
                    ( buffers.isTimeStampInvalid != nullptr ) )
          {
-            destBuffers.emplace_back( imf_, "isTimeStampInvalid", buffers.isTimeStampInvalid, count, true );
+            destBuffers.emplace_back( imf_, "isTimeStampInvalid", buffers.isTimeStampInvalid, count,
+                                      true );
          }
-         else if ( ( name == "intensity" ) && proto.isDefined( "intensity" ) && ( buffers.intensity != nullptr ) )
+         else if ( ( name == "intensity" ) && proto.isDefined( "intensity" ) &&
+                   ( buffers.intensity != nullptr ) )
          {
             destBuffers.emplace_back( imf_, "intensity", buffers.intensity, count, true, scaled );
          }
          else if ( ( name == "isIntensityInvalid" ) && proto.isDefined( "isIntensityInvalid" ) &&
                    ( buffers.isIntensityInvalid != nullptr ) )
          {
-            destBuffers.emplace_back( imf_, "isIntensityInvalid", buffers.isIntensityInvalid, count, true );
+            destBuffers.emplace_back( imf_, "isIntensityInvalid", buffers.isIntensityInvalid, count,
+                                      true );
          }
-         else if ( ( name == "colorRed" ) && proto.isDefined( "colorRed" ) && ( buffers.colorRed != nullptr ) )
+         else if ( ( name == "colorRed" ) && proto.isDefined( "colorRed" ) &&
+                   ( buffers.colorRed != nullptr ) )
          {
             destBuffers.emplace_back( imf_, "colorRed", buffers.colorRed, count, true, scaled );
          }
-         else if ( ( name == "colorGreen" ) && proto.isDefined( "colorGreen" ) && ( buffers.colorGreen != nullptr ) )
+         else if ( ( name == "colorGreen" ) && proto.isDefined( "colorGreen" ) &&
+                   ( buffers.colorGreen != nullptr ) )
          {
             destBuffers.emplace_back( imf_, "colorGreen", buffers.colorGreen, count, true, scaled );
          }
-         else if ( ( name == "colorBlue" ) && proto.isDefined( "colorBlue" ) && ( buffers.colorBlue != nullptr ) )
+         else if ( ( name == "colorBlue" ) && proto.isDefined( "colorBlue" ) &&
+                   ( buffers.colorBlue != nullptr ) )
          {
             destBuffers.emplace_back( imf_, "colorBlue", buffers.colorBlue, count, true, scaled );
          }
@@ -1559,18 +1671,18 @@ namespace e57
          {
             destBuffers.emplace_back( imf_, "isColorInvalid", buffers.isColorInvalid, count, true );
          }
-         else if ( haveNormalsExt && ( name == "nor:normalX" ) && proto.isDefined( "nor:normalX" ) &&
-                   ( buffers.normalX != nullptr ) )
+         else if ( haveNormalsExt && ( name == "nor:normalX" ) &&
+                   proto.isDefined( "nor:normalX" ) && ( buffers.normalX != nullptr ) )
          {
             destBuffers.emplace_back( imf_, "nor:normalX", buffers.normalX, count, true, scaled );
          }
-         else if ( haveNormalsExt && ( name == "nor:normalY" ) && proto.isDefined( "nor:normalY" ) &&
-                   ( buffers.normalY != nullptr ) )
+         else if ( haveNormalsExt && ( name == "nor:normalY" ) &&
+                   proto.isDefined( "nor:normalY" ) && ( buffers.normalY != nullptr ) )
          {
             destBuffers.emplace_back( imf_, "nor:normalY", buffers.normalY, count, true, scaled );
          }
-         else if ( haveNormalsExt && ( name == "nor:normalZ" ) && proto.isDefined( "nor:normalZ" ) &&
-                   ( buffers.normalZ != nullptr ) )
+         else if ( haveNormalsExt && ( name == "nor:normalZ" ) &&
+                   proto.isDefined( "nor:normalZ" ) && ( buffers.normalZ != nullptr ) )
          {
             destBuffers.emplace_back( imf_, "nor:normalZ", buffers.normalZ, count, true, scaled );
          }
@@ -1607,10 +1719,10 @@ namespace e57
    }
 
    // Explicit template instantiation
-   template CompressedVectorReader ReaderImpl::SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
-                                                                      const Data3DPointsData_t<float> &buffers ) const;
+   template CompressedVectorReader ReaderImpl::SetUpData3DPointsData(
+      int64_t dataIndex, size_t pointCount, const Data3DPointsData_t<float> &buffers ) const;
 
-   template CompressedVectorReader ReaderImpl::SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
-                                                                      const Data3DPointsData_t<double> &buffers ) const;
+   template CompressedVectorReader ReaderImpl::SetUpData3DPointsData(
+      int64_t dataIndex, size_t pointCount, const Data3DPointsData_t<double> &buffers ) const;
 
 } // end namespace e57

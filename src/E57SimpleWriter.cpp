@@ -39,7 +39,8 @@ namespace
    ///   - intensity
    ///   - time stamps
    template <typename COORDTYPE>
-   static void _fillMinMaxData( e57::Data3D &ioData3DHeader, const e57::Data3DPointsData_t<COORDTYPE> &inBuffers )
+   static void _fillMinMaxData( e57::Data3D &ioData3DHeader,
+                                const e57::Data3DPointsData_t<COORDTYPE> &inBuffers )
    {
       static_assert( std::is_floating_point<COORDTYPE>::value, "Floating point type required." );
 
@@ -54,9 +55,9 @@ namespace
       auto pointRangeMinimum = cMax;
       auto pointRangeMaximum = cMin;
 
-      const bool writePointRange = ( pointFields.pointRangeNodeType == e57::NumericalNodeType::ScaledInteger ) &&
-                                   ( pointFields.pointRangeMinimum == cMin ) &&
-                                   ( pointFields.pointRangeMaximum == cMax );
+      const bool writePointRange =
+         ( pointFields.pointRangeNodeType == e57::NumericalNodeType::ScaledInteger ) &&
+         ( pointFields.pointRangeMinimum == cMin ) && ( pointFields.pointRangeMaximum == cMax );
 
       // IF we are using scaled ints for spherical angles
       // AND we haven't set either min or max
@@ -64,8 +65,9 @@ namespace
       auto angleMinimum = cMax;
       auto angleMaximum = cMin;
 
-      const bool writeAngle = ( pointFields.angleNodeType == e57::NumericalNodeType::ScaledInteger ) &&
-                              ( pointFields.angleMinimum == cMin ) && ( pointFields.angleMaximum == cMax );
+      const bool writeAngle =
+         ( pointFields.angleNodeType == e57::NumericalNodeType::ScaledInteger ) &&
+         ( pointFields.angleMinimum == cMin ) && ( pointFields.angleMaximum == cMax );
 
       // IF we are using intesity
       // AND we haven't set either min or max
@@ -82,9 +84,10 @@ namespace
       double timeMinimum = std::numeric_limits<double>::max();
       double timeMaximum = std::numeric_limits<double>::lowest();
 
-      const bool writeTimeStamp = pointFields.timeStampField &&
-                                  ( pointFields.timeNodeType == e57::NumericalNodeType::ScaledInteger ) &&
-                                  ( pointFields.timeMinimum == cMin ) && ( pointFields.timeMaximum == cMax );
+      const bool writeTimeStamp =
+         pointFields.timeStampField &&
+         ( pointFields.timeNodeType == e57::NumericalNodeType::ScaledInteger ) &&
+         ( pointFields.timeMinimum == cMin ) && ( pointFields.timeMaximum == cMax );
 
       // Now run through the points and set the things we need to
       for ( int64_t i = 0; i < ioData3DHeader.pointCount; ++i )
@@ -155,8 +158,10 @@ namespace
          pointFields.timeMaximum = timeMaximum;
       }
    }
-   template void _fillMinMaxData( e57::Data3D &ioData3DHeader, const e57::Data3DPointsData &inBuffers );
-   template void _fillMinMaxData( e57::Data3D &ioData3DHeader, const e57::Data3DPointsData_d &inBuffers );
+   template void _fillMinMaxData( e57::Data3D &ioData3DHeader,
+                                  const e57::Data3DPointsData &inBuffers );
+   template void _fillMinMaxData( e57::Data3D &ioData3DHeader,
+                                  const e57::Data3DPointsData_d &inBuffers );
 }
 
 namespace e57
@@ -182,16 +187,17 @@ namespace e57
       return impl_->Close();
    }
 
-   int64_t Writer::WriteImage2DData( Image2D &image2DHeader, Image2DType imageType, Image2DProjection imageProjection,
-                                     int64_t startPos, void *pBuffer, int64_t byteCount )
+   int64_t Writer::WriteImage2DData( Image2D &image2DHeader, Image2DType imageType,
+                                     Image2DProjection imageProjection, int64_t startPos,
+                                     void *pBuffer, int64_t byteCount )
    {
       auto *buffer = static_cast<uint8_t *>( pBuffer );
       const auto sizeInBytes = static_cast<size_t>( byteCount );
 
       const int64_t imageIndex = impl_->NewImage2D( image2DHeader );
 
-      const size_t written =
-         impl_->WriteImage2DData( imageIndex, imageType, imageProjection, buffer, startPos, sizeInBytes );
+      const size_t written = impl_->WriteImage2DData( imageIndex, imageType, imageProjection,
+                                                      buffer, startPos, sizeInBytes );
 
       return static_cast<int64_t>( written );
    };
@@ -201,13 +207,15 @@ namespace e57
       return impl_->NewImage2D( image2DHeader );
    };
 
-   int64_t Writer::WriteImage2DData( int64_t imageIndex, Image2DType imageType, Image2DProjection imageProjection,
-                                     void *pBuffer, int64_t start, int64_t count )
+   int64_t Writer::WriteImage2DData( int64_t imageIndex, Image2DType imageType,
+                                     Image2DProjection imageProjection, void *pBuffer,
+                                     int64_t start, int64_t count )
    {
       auto *buffer = static_cast<uint8_t *>( pBuffer );
       const auto size = static_cast<size_t>( count );
 
-      const size_t written = impl_->WriteImage2DData( imageIndex, imageType, imageProjection, buffer, start, size );
+      const size_t written =
+         impl_->WriteImage2DData( imageIndex, imageType, imageProjection, buffer, start, size );
 
       return static_cast<int64_t>( written );
    }
@@ -259,10 +267,12 @@ namespace e57
       return impl_->SetUpData3DPointsData( dataIndex, pointCount, buffers );
    }
 
-   bool Writer::WriteData3DGroupsData( int64_t dataIndex, int64_t groupCount, int64_t *idElementValue,
-                                       int64_t *startPointIndex, int64_t *pointCount )
+   bool Writer::WriteData3DGroupsData( int64_t dataIndex, int64_t groupCount,
+                                       int64_t *idElementValue, int64_t *startPointIndex,
+                                       int64_t *pointCount )
    {
-      return impl_->WriteData3DGroupsData( dataIndex, groupCount, idElementValue, startPointIndex, pointCount );
+      return impl_->WriteData3DGroupsData( dataIndex, groupCount, idElementValue, startPointIndex,
+                                           pointCount );
    }
 
    ImageFile Writer::GetRawIMF()

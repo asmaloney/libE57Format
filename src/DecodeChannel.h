@@ -34,7 +34,7 @@ namespace e57
 
    struct DecodeChannel
    {
-      SourceDestBuffer dbuf; //??? for now, one input per channel
+      SourceDestBuffer dbuf;
       std::shared_ptr<Decoder> decoder;
       unsigned bytestreamNumber;
       uint64_t maxRecordCount;
@@ -43,8 +43,8 @@ namespace e57
       size_t currentBytestreamBufferLength;
       bool inputFinished;
 
-      DecodeChannel( SourceDestBuffer dbuf_arg, std::shared_ptr<Decoder> decoder_arg, unsigned bytestreamNumber_arg,
-                     uint64_t maxRecordCount_arg );
+      DecodeChannel( SourceDestBuffer dbuf_arg, std::shared_ptr<Decoder> decoder_arg,
+                     unsigned bytestreamNumber_arg, uint64_t maxRecordCount_arg );
 
       bool isOutputBlocked() const;
       bool isInputBlocked() const; /// has exhausted data in the current packet

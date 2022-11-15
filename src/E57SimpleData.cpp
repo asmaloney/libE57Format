@@ -2,8 +2,8 @@
 // Copyright (c) 2020 PTC Inc.
 // Copyright (c) 2022 Andy Maloney <asmaloney@gmail.com>
 
-// For M_PI. This needs to be first, otherwise we might already include math header
-// without M_PI and we would get nothing because of the header guards.
+// For M_PI. This needs to be first, otherwise we might already include math header without M_PI and
+// we would get nothing because of the header guards.
 #define _USE_MATH_DEFINES
 #include <cmath>
 
@@ -19,7 +19,8 @@ namespace e57
    {
       if ( inData3D.pointCount < 1 )
       {
-         throw E57_EXCEPTION2( ErrorValueOutOfBounds, "pointCount=" + toString( inData3D.pointCount ) + " minimum=1" );
+         throw E57_EXCEPTION2( ErrorValueOutOfBounds,
+                               "pointCount=" + toString( inData3D.pointCount ) + " minimum=1" );
       }
 
       if ( inData3D.pointFields.pointRangeNodeType == NumericalNodeType::Integer )
@@ -33,7 +34,7 @@ namespace e57
       }
    }
 
-   // To avoid exposing M_PI, we define the constructor here.
+   /// To avoid exposing M_PI, we define the constructor here.
    SphericalBounds::SphericalBounds()
    {
       rangeMinimum = 0.;
@@ -69,14 +70,16 @@ namespace e57
       // THEN make sure the proper floating point type is set
       if ( data3D.pointFields.pointRangeNodeType != NumericalNodeType::ScaledInteger )
       {
-         data3D.pointFields.pointRangeNodeType = ( cIsFloat ? NumericalNodeType::Float : NumericalNodeType::Double );
+         data3D.pointFields.pointRangeNodeType =
+            ( cIsFloat ? NumericalNodeType::Float : NumericalNodeType::Double );
       }
 
       // IF angle node type is not ScaledInteger
       // THEN make sure the proper floating point type is set
       if ( data3D.pointFields.angleNodeType != NumericalNodeType::ScaledInteger )
       {
-         data3D.pointFields.angleNodeType = ( cIsFloat ? NumericalNodeType::Float : NumericalNodeType::Double );
+         data3D.pointFields.angleNodeType =
+            ( cIsFloat ? NumericalNodeType::Float : NumericalNodeType::Double );
       }
 
       const auto cPointCount = data3D.pointCount;

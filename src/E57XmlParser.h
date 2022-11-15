@@ -57,9 +57,10 @@ namespace e57
 
    private:
       /// SAX interface
-      void startElement( const XMLCh *const uri, const XMLCh *const localName, const XMLCh *const qName,
-                         const Attributes &attributes ) override;
-      void endElement( const XMLCh *const uri, const XMLCh *const localName, const XMLCh *const qName ) override;
+      void startElement( const XMLCh *const uri, const XMLCh *const localName,
+                         const XMLCh *const qName, const Attributes &attributes ) override;
+      void endElement( const XMLCh *const uri, const XMLCh *const localName,
+                       const XMLCh *const qName ) override;
       void characters( const XMLCh *const chars, XMLSize_t length ) override;
 
       /// SAX error interface
@@ -75,10 +76,10 @@ namespace e57
 
       struct ParseInfo
       {
-         /// All the fields need to remember while parsing the XML
-         /// Not all fields are used at same time, depends on node type
-         /// Needed because not all info is available at one time to create the
-         /// node.
+         // All the fields need to remember while parsing the XML
+         // Not all fields are used at same time, depends on node type
+         // Needed because not all info is available at one time to create the
+         // node.
          NodeType nodeType;               // used by all types
          int64_t minimum;                 // used in Integer, ScaledInteger
          int64_t maximum;                 // used in Integer, ScaledInteger
@@ -91,10 +92,10 @@ namespace e57
          int64_t length;                  // used in Blob
          bool allowHeterogeneousChildren; // used in Vector
          int64_t recordCount;             // used in CompressedVector
-         ustring childText;               // used by all types, accumulates all child text between tags
+         ustring childText; // used by all types, accumulates all child text between tags
 
-         /// Holds node for Structure, Vector, and CompressedVector so can append
-         /// child elements
+         // Holds node for Structure, Vector, and CompressedVector so can append
+         // child elements
          NodeImplSharedPtr container_ni;
 
          ParseInfo(); // default ctor

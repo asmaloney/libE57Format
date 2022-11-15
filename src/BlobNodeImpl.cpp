@@ -33,16 +33,17 @@
 
 namespace e57
 {
-   BlobNodeImpl::BlobNodeImpl( ImageFileImplWeakPtr destImageFile, int64_t byteCount ) : NodeImpl( destImageFile )
+   BlobNodeImpl::BlobNodeImpl( ImageFileImplWeakPtr destImageFile, int64_t byteCount ) :
+      NodeImpl( destImageFile )
    {
       // don't checkImageFileOpen, NodeImpl() will do it
 
       ImageFileImplSharedPtr imf( destImageFile );
 
-      /// This what caller thinks blob length is
+      // This what caller thinks blob length is
       blobLogicalLength_ = byteCount;
 
-      /// Round segment length up to multiple of 4 bytes
+      // Round segment length up to multiple of 4 bytes
       binarySectionLogicalLength_ = sizeof( BlobSectionHeader ) + blobLogicalLength_;
       unsigned remainder = binarySectionLogicalLength_ % 4;
       if ( remainder > 0 )
@@ -50,32 +51,33 @@ namespace e57
          binarySectionLogicalLength_ += 4 - remainder;
       }
 
-      /// Reserve space for blob in file, extend with zeros since writes will
-      /// happen at later time by caller
+      // Reserve space for blob in file, extend with zeros since writes will
+      // happen at later time by caller
       binarySectionLogicalStart_ = imf->allocateSpace( binarySectionLogicalLength_, true );
 
-      /// Prepare BlobSectionHeader
+      // Prepare BlobSectionHeader
       BlobSectionHeader header;
       header.sectionLogicalLength = binarySectionLogicalLength_;
 #ifdef E57_MAX_VERBOSE
       header.dump(); //???
 #endif
 
-      /// Write header at beginning of section
+      // Write header at beginning of section
       imf->file_->seek( binarySectionLogicalStart_ );
       imf->file_->write( reinterpret_cast<char *>( &header ), sizeof( header ) );
    }
 
-   BlobNodeImpl::BlobNodeImpl( ImageFileImplWeakPtr destImageFile, int64_t fileOffset, int64_t length ) :
+   BlobNodeImpl::BlobNodeImpl( ImageFileImplWeakPtr destImageFile, int64_t fileOffset,
+                               int64_t length ) :
       NodeImpl( destImageFile )
    {
-      /// Init blob object that already exists in E57 file currently reading.
+      // Init blob object that already exists in E57 file currently reading.
 
       // don't checkImageFileOpen, NodeImpl() will do it
 
       ImageFileImplSharedPtr imf( destImageFile );
 
-      /// Init state from values read from XML
+      // Init state from values read from XML
       blobLogicalLength_ = length;
       binarySectionLogicalStart_ = imf->file_->physicalToLogical( fileOffset );
       binarySectionLogicalLength_ = sizeof( BlobSectionHeader ) + blobLogicalLength_;
@@ -85,24 +87,24 @@ namespace e57
    {
       // don't checkImageFileOpen, NodeImpl() will do it
 
-      /// Same node type?
+      // Same node type?
       if ( ni->type() != TypeBlob )
       {
          return ( false );
       }
 
-      /// Downcast to shared_ptr<BlobNodeImpl>
+      // Downcast to shared_ptr<BlobNodeImpl>
       std::shared_ptr<BlobNodeImpl> bi( std::static_pointer_cast<BlobNodeImpl>( ni ) );
 
-      /// blob lengths must match
+      // blob lengths must match
       if ( blobLogicalLength_ != bi->blobLogicalLength_ )
       {
          return ( false );
       }
 
-      /// ignore blob contents, doesn't have to match
+      // ignore blob contents, doesn't have to match
 
-      /// Types match
+      // Types match
       return ( true );
    }
 
@@ -110,7 +112,7 @@ namespace e57
    {
       // don't checkImageFileOpen, NodeImpl() will do it
 
-      /// We have no sub-structure, so if path not empty return false
+      // We have no sub-structure, so if path not empty return false
       return pathName.empty();
    }
 
@@ -127,9 +129,10 @@ namespace e57
       checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
       if ( static_cast<uint64_t>( start ) + count > blobLogicalLength_ )
       {
-         throw E57_EXCEPTION2( ErrorBadAPIArgument, "this->pathName=" + this->pathName() +
-                                                       " start=" + toString( start ) + " count=" + toString( count ) +
-                                                       " length=" + toString( blobLogicalLength_ ) );
+         throw E57_EXCEPTION2( ErrorBadAPIArgument,
+                               "this->pathName=" + this->pathName() +
+                                  " start=" + toString( start ) + " count=" + toString( count ) +
+                                  " length=" + toString( blobLogicalLength_ ) );
       }
 
       ImageFileImplSharedPtr imf( destImageFile_ );
@@ -156,9 +159,10 @@ namespace e57
 
       if ( static_cast<uint64_t>( start ) + count > blobLogicalLength_ )
       {
-         throw E57_EXCEPTION2( ErrorBadAPIArgument, "this->pathName=" + this->pathName() +
-                                                       " start=" + toString( start ) + " count=" + toString( count ) +
-                                                       " length=" + toString( blobLogicalLength_ ) );
+         throw E57_EXCEPTION2( ErrorBadAPIArgument,
+                               "this->pathName=" + this->pathName() +
+                                  " start=" + toString( start ) + " count=" + toString( count ) +
+                                  " length=" + toString( blobLogicalLength_ ) );
       }
 
       ImageFileImplSharedPtr imf( destImageFile_ );
@@ -171,8 +175,8 @@ namespace e57
    {
       // don't checkImageFileOpen
 
-      /// We are a leaf node, so verify that we are listed in set. ???true for
-      /// blobs? what exception get if try blob in compressedvector?
+      // We are a leaf node, so verify that we are listed in set. ???true for
+      // blobs? what exception get if try blob in compressedvector?
       if ( pathNames.find( relativePathName( origin ) ) == pathNames.end() )
       {
          throw E57_EXCEPTION2( ErrorNoBufferForElement, "this->pathName=" + this->pathName() );
@@ -198,8 +202,8 @@ namespace e57
       //??? Type --> type
       //??? need to have length?, check same as in section header?
       uint64_t physicalOffset = cf.logicalToPhysical( binarySectionLogicalStart_ );
-      cf << space( indent ) << "<" << fieldName << " type=\"Blob\" fileOffset=\"" << physicalOffset << "\" length=\""
-         << blobLogicalLength_ << "\"/>\n";
+      cf << space( indent ) << "<" << fieldName << " type=\"Blob\" fileOffset=\"" << physicalOffset
+         << "\" length=\"" << blobLogicalLength_ << "\"/>\n";
    }
 
 #ifdef E57_DEBUG
@@ -210,8 +214,10 @@ namespace e57
          << " (" << type() << ")" << std::endl;
       NodeImpl::dump( indent, os );
       os << space( indent ) << "blobLogicalLength_:           " << blobLogicalLength_ << std::endl;
-      os << space( indent ) << "binarySectionLogicalStart:    " << binarySectionLogicalStart_ << std::endl;
-      os << space( indent ) << "binarySectionLogicalLength:   " << binarySectionLogicalLength_ << std::endl;
+      os << space( indent ) << "binarySectionLogicalStart:    " << binarySectionLogicalStart_
+         << std::endl;
+      os << space( indent ) << "binarySectionLogicalLength:   " << binarySectionLogicalLength_
+         << std::endl;
       //    size_t i;
       //    for (i = 0; i < blobLogicalLength_ && i < 10; i++) {
       //        uint8_t b;

@@ -66,21 +66,24 @@ namespace e57
       return impl_->ReadImage2D( imageIndex, image2DHeader );
    };
 
-   bool Reader::GetImage2DSizes( int64_t imageIndex, Image2DProjection &imageProjection, Image2DType &imageType,
-                                 int64_t &imageWidth, int64_t &imageHeight, int64_t &imageSize,
-                                 Image2DType &imageMaskType, Image2DType &imageVisualType ) const
+   bool Reader::GetImage2DSizes( int64_t imageIndex, Image2DProjection &imageProjection,
+                                 Image2DType &imageType, int64_t &imageWidth, int64_t &imageHeight,
+                                 int64_t &imageSize, Image2DType &imageMaskType,
+                                 Image2DType &imageVisualType ) const
    {
-      return impl_->GetImage2DSizes( imageIndex, imageProjection, imageType, imageWidth, imageHeight, imageSize,
-                                     imageMaskType, imageVisualType );
+      return impl_->GetImage2DSizes( imageIndex, imageProjection, imageType, imageWidth,
+                                     imageHeight, imageSize, imageMaskType, imageVisualType );
    };
 
-   int64_t Reader::ReadImage2DData( int64_t imageIndex, Image2DProjection imageProjection, Image2DType imageType,
-                                    void *pBuffer, int64_t start, int64_t count ) const
+   int64_t Reader::ReadImage2DData( int64_t imageIndex, Image2DProjection imageProjection,
+                                    Image2DType imageType, void *pBuffer, int64_t start,
+                                    int64_t count ) const
    {
       auto *buffer = static_cast<uint8_t *>( pBuffer );
       const auto size = static_cast<size_t>( count );
 
-      const size_t read = impl_->ReadImage2DData( imageIndex, imageProjection, imageType, buffer, start, size );
+      const size_t read =
+         impl_->ReadImage2DData( imageIndex, imageProjection, imageType, buffer, start, size );
 
       return static_cast<int64_t>( read );
    };
@@ -115,16 +118,20 @@ namespace e57
       return impl_->ReadData3D( dataIndex, data3DHeader );
    }
 
-   bool Reader::GetData3DSizes( int64_t dataIndex, int64_t &rowMax, int64_t &columnMax, int64_t &pointsSize,
-                                int64_t &groupsSize, int64_t &countSize, bool &bColumnIndex ) const
+   bool Reader::GetData3DSizes( int64_t dataIndex, int64_t &rowMax, int64_t &columnMax,
+                                int64_t &pointsSize, int64_t &groupsSize, int64_t &countSize,
+                                bool &bColumnIndex ) const
    {
-      return impl_->GetData3DSizes( dataIndex, rowMax, columnMax, pointsSize, groupsSize, countSize, bColumnIndex );
+      return impl_->GetData3DSizes( dataIndex, rowMax, columnMax, pointsSize, groupsSize, countSize,
+                                    bColumnIndex );
    }
 
-   bool Reader::ReadData3DGroupsData( int64_t dataIndex, int64_t groupCount, int64_t *idElementValue,
-                                      int64_t *startPointIndex, int64_t *pointCount ) const
+   bool Reader::ReadData3DGroupsData( int64_t dataIndex, int64_t groupCount,
+                                      int64_t *idElementValue, int64_t *startPointIndex,
+                                      int64_t *pointCount ) const
    {
-      return impl_->ReadData3DGroupsData( dataIndex, groupCount, idElementValue, startPointIndex, pointCount );
+      return impl_->ReadData3DGroupsData( dataIndex, groupCount, idElementValue, startPointIndex,
+                                          pointCount );
    }
 
    CompressedVectorReader Reader::SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,

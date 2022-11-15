@@ -58,6 +58,7 @@ namespace e57
       uint64_t indexPhysicalOffset = 0;  // offset of first index packet
 
       CompressedVectorSectionHeader();
+
       void verify( uint64_t filePhysicalSize = 0 );
 
 #ifdef E57_DEBUG

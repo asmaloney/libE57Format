@@ -42,9 +42,12 @@ namespace e57
    {
    public:
       explicit ImageFileImpl( ReadChecksumPolicy policy );
+
       void construct2( const ustring &fileName, const ustring &mode );
       void construct2( const char *input, uint64_t size );
+
       std::shared_ptr<StructureNodeImpl> root();
+
       void close();
       void cancel();
       bool isOpen() const;
@@ -70,7 +73,8 @@ namespace e57
       bool isElementNameLegal( const ustring &elementName, bool allowNumber = true );
       bool isPathNameLegal( const ustring &pathName );
       void checkElementNameLegal( const ustring &elementName, bool allowNumber = true );
-      void elementNameParse( const ustring &elementName, ustring &prefix, ustring &localPart, bool allowNumber = true );
+      void elementNameParse( const ustring &elementName, ustring &prefix, ustring &localPart,
+                             bool allowNumber = true );
 
       void pathNameCheckWellFormed( const ustring &pathName );
       void pathNameParse( const ustring &pathName, bool &isRelative, StringList &fields );
@@ -82,7 +86,6 @@ namespace e57
       void incrReaderCount();
       void decrReaderCount();
 
-      /// Diagnostic functions:
 #ifdef E57_DEBUG
       void dump( int indent = 0, std::ostream &os = std::cout ) const;
 #endif
@@ -91,13 +94,12 @@ namespace e57
       friend class E57XmlParser;
       friend class BlobNodeImpl;
       friend class CompressedVectorWriterImpl;
-      friend class CompressedVectorReaderImpl; //??? add file() instead of
-                                               // accessing file_, others
-                                               // friends too
+      friend class CompressedVectorReaderImpl;
 
       static void readFileHeader( CheckedFile *file, E57FileHeader &header );
 
-      void checkImageFileOpen( const char *srcFileName, int srcLineNumber, const char *srcFunctionName ) const;
+      void checkImageFileOpen( const char *srcFileName, int srcLineNumber,
+                               const char *srcFunctionName ) const;
 
       ustring fileName_;
       bool isWriter_;
@@ -108,11 +110,11 @@ namespace e57
 
       CheckedFile *file_;
 
-      /// Read file attributes
+      // Read file attributes
       uint64_t xmlLogicalOffset_;
       uint64_t xmlLogicalLength_;
 
-      /// Write file attributes
+      // Write file attributes
       uint64_t unusedLogicalStart_;
 
       /// Bidirectional map from namespace prefix to uri

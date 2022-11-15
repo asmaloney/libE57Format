@@ -21,19 +21,23 @@ namespace
    using Cube = std::array<Point, 8>;
 
    constexpr auto cCubeCorners =
-      Cube{ Point{ -0.5f, -0.5f, -0.5f }, { 0.5f, -0.5f, -0.5f }, { 0.5f, 0.5f, -0.5f }, { -0.5f, 0.5f, -0.5f },
-            Point{ -0.5f, 0.5f, 0.5f },   { 0.5f, 0.5f, 0.5f },   { 0.5f, -0.5f, 0.5f }, { -0.5f, -0.5f, 0.5f } };
+      Cube{ Point{ -0.5f, -0.5f, -0.5f }, { 0.5f, -0.5f, -0.5f }, { 0.5f, 0.5f, -0.5f },
+            Point{ -0.5f, 0.5f, -0.5f },  { -0.5f, 0.5f, 0.5f },  { 0.5f, 0.5f, 0.5f },
+            Point{ 0.5f, -0.5f, 0.5f },   { -0.5f, -0.5f, 0.5f } };
 
    constexpr auto cIndexSequence = std::make_index_sequence<3>{};
 
    template <class T, size_t... Is, size_t N>
-   constexpr std::array<T, N> multiply( std::array<T, N> const &src, std::index_sequence<Is...>, T const &mul )
+   constexpr std::array<T, N> multiply( std::array<T, N> const &src, std::index_sequence<Is...>,
+                                        T const &mul )
    {
       return std::array<T, N>{ { ( src[Is] * mul )... } };
    }
 
-   // Call a function for each of the corner points for a cube centred on the origin, sized using cubeSize.
-   void generateCubeCornerPoints( float inCubeSize, const std::function<void( const Point &inPoint )> &lambda )
+   // Call a function for each of the corner points for a cube centred on the origin, sized using
+   // cubeSize.
+   void generateCubeCornerPoints( float inCubeSize,
+                                  const std::function<void( const Point &inPoint )> &lambda )
    {
       for ( const auto &point : cCubeCorners )
       {
@@ -45,9 +49,11 @@ namespace
    // Create "inPointsPerFace" pseudo-random points per face for a cube centred on the origin,
    // sized using cubeSize, and call a function for each of them.
    // This gives us a cube with non-uniform points which can be useful for testing.
-   // (Note that we set a seed in each test so the results will always be the same pseudo-random points.)
-   void generateCubePoints( float inCubeSize, uint16_t inPointsPerFace,
-                            const std::function<void( uint8_t inFace, const Point &inPoint )> &lambda )
+   // (Note that we set a seed in each test so the results will always be the same pseudo-random
+   // points.)
+   void generateCubePoints(
+      float inCubeSize, uint16_t inPointsPerFace,
+      const std::function<void( uint8_t inFace, const Point &inPoint )> &lambda )
    {
       Point point;
 
@@ -87,8 +93,8 @@ namespace
 
    // Fill in a point and its colour given an index, which face it is on, and the data.
    template <typename T>
-   inline void fillColouredCartesianPoint( e57::Data3DPointsData_t<T> &ioPointsData, int64_t inIndex, uint8_t inFace,
-                                           const Point &inPoint )
+   inline void fillColouredCartesianPoint( e57::Data3DPointsData_t<T> &ioPointsData,
+                                           int64_t inIndex, uint8_t inFace, const Point &inPoint )
    {
       static_assert( std::is_floating_point<T>::value, "Floating point type required." );
 
@@ -176,13 +182,19 @@ TEST( SimpleWriter, ColouredCubeDouble )
 
       fillColouredCartesianPoint( pointsData, i, inFace, inPoint );
 
-      header.pointFields.pointRangeMinimum = std::min( pointsData.cartesianX[i], header.pointFields.pointRangeMinimum );
-      header.pointFields.pointRangeMinimum = std::min( pointsData.cartesianY[i], header.pointFields.pointRangeMinimum );
-      header.pointFields.pointRangeMinimum = std::min( pointsData.cartesianZ[i], header.pointFields.pointRangeMinimum );
+      header.pointFields.pointRangeMinimum =
+         std::min( pointsData.cartesianX[i], header.pointFields.pointRangeMinimum );
+      header.pointFields.pointRangeMinimum =
+         std::min( pointsData.cartesianY[i], header.pointFields.pointRangeMinimum );
+      header.pointFields.pointRangeMinimum =
+         std::min( pointsData.cartesianZ[i], header.pointFields.pointRangeMinimum );
 
-      header.pointFields.pointRangeMaximum = std::max( pointsData.cartesianX[i], header.pointFields.pointRangeMaximum );
-      header.pointFields.pointRangeMaximum = std::max( pointsData.cartesianY[i], header.pointFields.pointRangeMaximum );
-      header.pointFields.pointRangeMaximum = std::max( pointsData.cartesianZ[i], header.pointFields.pointRangeMaximum );
+      header.pointFields.pointRangeMaximum =
+         std::max( pointsData.cartesianX[i], header.pointFields.pointRangeMaximum );
+      header.pointFields.pointRangeMaximum =
+         std::max( pointsData.cartesianY[i], header.pointFields.pointRangeMaximum );
+      header.pointFields.pointRangeMaximum =
+         std::max( pointsData.cartesianZ[i], header.pointFields.pointRangeMaximum );
 
       ++i;
    };
@@ -228,19 +240,19 @@ TEST( SimpleWriter, ColouredCubeFloat )
 
       fillColouredCartesianPoint( pointsData, i, inFace, inPoint );
 
-      header.pointFields.pointRangeMinimum =
-         std::min( static_cast<double>( pointsData.cartesianX[i] ), header.pointFields.pointRangeMinimum );
-      header.pointFields.pointRangeMinimum =
-         std::min( static_cast<double>( pointsData.cartesianY[i] ), header.pointFields.pointRangeMinimum );
-      header.pointFields.pointRangeMinimum =
-         std::min( static_cast<double>( pointsData.cartesianZ[i] ), header.pointFields.pointRangeMinimum );
+      header.pointFields.pointRangeMinimum = std::min(
+         static_cast<double>( pointsData.cartesianX[i] ), header.pointFields.pointRangeMinimum );
+      header.pointFields.pointRangeMinimum = std::min(
+         static_cast<double>( pointsData.cartesianY[i] ), header.pointFields.pointRangeMinimum );
+      header.pointFields.pointRangeMinimum = std::min(
+         static_cast<double>( pointsData.cartesianZ[i] ), header.pointFields.pointRangeMinimum );
 
-      header.pointFields.pointRangeMaximum =
-         std::max( static_cast<double>( pointsData.cartesianX[i] ), header.pointFields.pointRangeMaximum );
-      header.pointFields.pointRangeMaximum =
-         std::max( static_cast<double>( pointsData.cartesianY[i] ), header.pointFields.pointRangeMaximum );
-      header.pointFields.pointRangeMaximum =
-         std::max( static_cast<double>( pointsData.cartesianZ[i] ), header.pointFields.pointRangeMaximum );
+      header.pointFields.pointRangeMaximum = std::max(
+         static_cast<double>( pointsData.cartesianX[i] ), header.pointFields.pointRangeMaximum );
+      header.pointFields.pointRangeMaximum = std::max(
+         static_cast<double>( pointsData.cartesianY[i] ), header.pointFields.pointRangeMaximum );
+      header.pointFields.pointRangeMaximum = std::max(
+         static_cast<double>( pointsData.cartesianZ[i] ), header.pointFields.pointRangeMaximum );
 
       ++i;
    };
@@ -289,13 +301,19 @@ TEST( SimpleWriter, ColouredCubeScaledInt )
 
       fillColouredCartesianPoint( pointsData, i, inFace, inPoint );
 
-      header.pointFields.pointRangeMinimum = std::min( pointsData.cartesianX[i], header.pointFields.pointRangeMinimum );
-      header.pointFields.pointRangeMinimum = std::min( pointsData.cartesianY[i], header.pointFields.pointRangeMinimum );
-      header.pointFields.pointRangeMinimum = std::min( pointsData.cartesianZ[i], header.pointFields.pointRangeMinimum );
+      header.pointFields.pointRangeMinimum =
+         std::min( pointsData.cartesianX[i], header.pointFields.pointRangeMinimum );
+      header.pointFields.pointRangeMinimum =
+         std::min( pointsData.cartesianY[i], header.pointFields.pointRangeMinimum );
+      header.pointFields.pointRangeMinimum =
+         std::min( pointsData.cartesianZ[i], header.pointFields.pointRangeMinimum );
 
-      header.pointFields.pointRangeMaximum = std::max( pointsData.cartesianX[i], header.pointFields.pointRangeMaximum );
-      header.pointFields.pointRangeMaximum = std::max( pointsData.cartesianY[i], header.pointFields.pointRangeMaximum );
-      header.pointFields.pointRangeMaximum = std::max( pointsData.cartesianZ[i], header.pointFields.pointRangeMaximum );
+      header.pointFields.pointRangeMaximum =
+         std::max( pointsData.cartesianX[i], header.pointFields.pointRangeMaximum );
+      header.pointFields.pointRangeMaximum =
+         std::max( pointsData.cartesianY[i], header.pointFields.pointRangeMaximum );
+      header.pointFields.pointRangeMaximum =
+         std::max( pointsData.cartesianZ[i], header.pointFields.pointRangeMaximum );
 
       ++i;
    };
@@ -572,7 +590,8 @@ TEST( SimpleWriterData, VisualRefImage )
 
    E57_ASSERT_NO_THROW( writer = new e57::Writer( "./VisualRefImage.e57", options ) );
 
-   std::ifstream image( TestData::Path() + "/images/image.jpg", std::ifstream::ate | std::ifstream::binary );
+   std::ifstream image( TestData::Path() + "/images/image.jpg",
+                        std::ifstream::ate | std::ifstream::binary );
 
    ASSERT_EQ( image.rdstate(), std::ios_base::goodbit );
 
@@ -595,7 +614,8 @@ TEST( SimpleWriterData, VisualRefImage )
    image2DHeader.visualReferenceRepresentation.imageHeight = 300;
    image2DHeader.visualReferenceRepresentation.jpegImageSize = cImageSize;
 
-   writer->WriteImage2DData( image2DHeader, e57::ImageJPEG, e57::ProjectionVisual, 0, imageBuffer, cImageSize );
+   writer->WriteImage2DData( image2DHeader, e57::ImageJPEG, e57::ProjectionVisual, 0, imageBuffer,
+                             cImageSize );
 
    delete[] imageBuffer;
 

@@ -36,7 +36,8 @@ namespace e57
    public:
       static std::shared_ptr<Decoder> DecoderFactory( unsigned bytestreamNumber,
                                                       const CompressedVectorNodeImpl *cVector,
-                                                      std::vector<SourceDestBuffer> &dbufs, const ustring &codecPath );
+                                                      std::vector<SourceDestBuffer> &dbufs,
+                                                      const ustring &codecPath );
       Decoder() = delete;
       virtual ~Decoder() = default;
 
@@ -49,6 +50,7 @@ namespace e57
       {
          return bytestreamNumber_;
       }
+
 #ifdef E57_DEBUG
       virtual void dump( int indent = 0, std::ostream &os = std::cout ) = 0;
 #endif
@@ -77,6 +79,7 @@ namespace e57
 #ifdef E57_DEBUG
       void dump( int indent = 0, std::ostream &os = std::cout ) override;
 #endif
+
    protected:
       BitpackDecoder( unsigned bytestreamNumber, SourceDestBuffer &dbuf, unsigned alignmentSize,
                       uint64_t maxRecordCount );
@@ -99,14 +102,15 @@ namespace e57
    class BitpackFloatDecoder : public BitpackDecoder
    {
    public:
-      BitpackFloatDecoder( unsigned bytestreamNumber, SourceDestBuffer &dbuf, FloatPrecision precision,
-                           uint64_t maxRecordCount );
+      BitpackFloatDecoder( unsigned bytestreamNumber, SourceDestBuffer &dbuf,
+                           FloatPrecision precision, uint64_t maxRecordCount );
 
       size_t inputProcessAligned( const char *inbuf, size_t firstBit, size_t endBit ) override;
 
 #ifdef E57_DEBUG
       void dump( int indent = 0, std::ostream &os = std::cout ) override;
 #endif
+
    protected:
       FloatPrecision precision_ = PrecisionSingle;
    };
@@ -114,13 +118,15 @@ namespace e57
    class BitpackStringDecoder : public BitpackDecoder
    {
    public:
-      BitpackStringDecoder( unsigned bytestreamNumber, SourceDestBuffer &dbuf, uint64_t maxRecordCount );
+      BitpackStringDecoder( unsigned bytestreamNumber, SourceDestBuffer &dbuf,
+                            uint64_t maxRecordCount );
 
       size_t inputProcessAligned( const char *inbuf, size_t firstBit, size_t endBit ) override;
 
 #ifdef E57_DEBUG
       void dump( int indent = 0, std::ostream &os = std::cout ) override;
 #endif
+
    protected:
       bool readingPrefix_ = true;
       int prefixLength_ = 1;
@@ -134,14 +140,16 @@ namespace e57
    template <typename RegisterT> class BitpackIntegerDecoder : public BitpackDecoder
    {
    public:
-      BitpackIntegerDecoder( bool isScaledInteger, unsigned bytestreamNumber, SourceDestBuffer &dbuf, int64_t minimum,
-                             int64_t maximum, double scale, double offset, uint64_t maxRecordCount );
+      BitpackIntegerDecoder( bool isScaledInteger, unsigned bytestreamNumber,
+                             SourceDestBuffer &dbuf, int64_t minimum, int64_t maximum, double scale,
+                             double offset, uint64_t maxRecordCount );
 
       size_t inputProcessAligned( const char *inbuf, size_t firstBit, size_t endBit ) override;
 
 #ifdef E57_DEBUG
       void dump( int indent = 0, std::ostream &os = std::cout ) override;
 #endif
+
    protected:
       bool isScaledInteger_;
       int64_t minimum_;
@@ -156,8 +164,9 @@ namespace e57
    class ConstantIntegerDecoder : public Decoder
    {
    public:
-      ConstantIntegerDecoder( bool isScaledInteger, unsigned bytestreamNumber, SourceDestBuffer &dbuf, int64_t minimum,
-                              double scale, double offset, uint64_t maxRecordCount );
+      ConstantIntegerDecoder( bool isScaledInteger, unsigned bytestreamNumber,
+                              SourceDestBuffer &dbuf, int64_t minimum, double scale, double offset,
+                              uint64_t maxRecordCount );
       void destBufferSetNew( std::vector<SourceDestBuffer> &dbufs ) override;
 
       uint64_t totalRecordsCompleted() override
@@ -167,9 +176,11 @@ namespace e57
 
       size_t inputProcess( const char *source, size_t availableByteCount ) override;
       void stateReset() override;
+
 #ifdef E57_DEBUG
       void dump( int indent = 0, std::ostream &os = std::cout ) override;
 #endif
+
    protected:
       uint64_t currentRecordIndex_ = 0;
       uint64_t maxRecordCount_;

@@ -31,16 +31,15 @@
 
 namespace e57
 {
-   FloatNodeImpl::FloatNodeImpl( ImageFileImplWeakPtr destImageFile, double value, FloatPrecision precision,
-                                 double minimum, double maximum ) :
+   FloatNodeImpl::FloatNodeImpl( ImageFileImplWeakPtr destImageFile, double value,
+                                 FloatPrecision precision, double minimum, double maximum ) :
       NodeImpl( destImageFile ),
       value_( value ), precision_( precision ), minimum_( minimum ), maximum_( maximum )
    {
       // don't checkImageFileOpen, NodeImpl() will do it
 
-      /// Since this ctor also used to construct single precision, and defaults for
-      /// minimum/maximum are for double precision, adjust bounds smaller if
-      /// single.
+      // Since this ctor also used to construct single precision, and defaults for minimum/maximum
+      // are for double precision, adjust bounds smaller if single.
       if ( precision_ == PrecisionSingle )
       {
          if ( minimum_ < FLOAT_MIN )
@@ -53,12 +52,13 @@ namespace e57
          }
       }
 
-      /// Enforce the given bounds on raw value
+      // Enforce the given bounds on raw value
       if ( value < minimum || maximum < value )
       {
-         throw E57_EXCEPTION2( ErrorValueOutOfBounds,
-                               "this->pathName=" + this->pathName() + " value=" + toString( value ) +
-                                  " minimum=" + toString( minimum ) + " maximum=" + toString( maximum ) );
+         throw E57_EXCEPTION2( ErrorValueOutOfBounds, "this->pathName=" + this->pathName() +
+                                                         " value=" + toString( value ) +
+                                                         " minimum=" + toString( minimum ) +
+                                                         " maximum=" + toString( maximum ) );
       }
    }
 
@@ -66,36 +66,36 @@ namespace e57
    {
       // don't checkImageFileOpen
 
-      /// Same node type?
+      // Same node type?
       if ( ni->type() != TypeFloat )
       {
          return ( false );
       }
 
-      /// Downcast to shared_ptr<FloatNodeImpl>
+      // Downcast to shared_ptr<FloatNodeImpl>
       std::shared_ptr<FloatNodeImpl> fi( std::static_pointer_cast<FloatNodeImpl>( ni ) );
 
-      /// precision must match
+      // precision must match
       if ( precision_ != fi->precision_ )
       {
          return ( false );
       }
 
-      /// minimum must match
+      // minimum must match
       if ( minimum_ != fi->minimum_ )
       {
          return ( false );
       }
 
-      /// maximum must match
+      // maximum must match
       if ( maximum_ != fi->maximum_ )
       {
          return ( false );
       }
 
-      /// ignore value_, doesn't have to match
+      // ignore value_, doesn't have to match
 
-      /// Types match
+      // Types match
       return ( true );
    }
 
@@ -103,7 +103,7 @@ namespace e57
    {
       // don't checkImageFileOpen
 
-      /// We have no sub-structure, so if path not empty return false
+      // We have no sub-structure, so if path not empty return false
       return pathName.empty();
    }
 
@@ -135,8 +135,7 @@ namespace e57
    {
       // don't checkImageFileOpen
 
-      /// We are a leaf node, so verify that we are listed in set (either relative
-      /// or absolute form)
+      // We are a leaf node, so verify that we are listed in set (either relative or absolute form)
       if ( pathNames.find( relativePathName( origin ) ) == pathNames.end() &&
            pathNames.find( pathName() ) == pathNames.end() )
       {
@@ -164,7 +163,7 @@ namespace e57
       {
          cf << " precision=\"single\"";
 
-         /// Don't need to write if are default values
+         // Don't need to write if are default values
          if ( minimum_ > FLOAT_MIN )
          {
             cf << " minimum=\"" << static_cast<float>( minimum_ ) << "\"";
@@ -174,7 +173,7 @@ namespace e57
             cf << " maximum=\"" << static_cast<float>( maximum_ ) << "\"";
          }
 
-         /// Write value as child text, unless it is the default value
+         // Write value as child text, unless it is the default value
          if ( value_ != 0.0 )
          {
             cf << ">" << static_cast<float>( value_ ) << "</" << fieldName << ">\n";
@@ -186,9 +185,9 @@ namespace e57
       }
       else
       {
-         /// Don't need to write precision="double", because that's the default
+         // Don't need to write precision="double", because that's the default
 
-         /// Don't need to write if are default values
+         // Don't need to write if are default values
          if ( minimum_ > DOUBLE_MIN )
          {
             cf << " minimum=\"" << minimum_ << "\"";
@@ -198,7 +197,7 @@ namespace e57
             cf << " maximum=\"" << maximum_ << "\"";
          }
 
-         /// Write value as child text, unless it is the default value
+         // Write value as child text, unless it is the default value
          if ( value_ != 0.0 )
          {
             cf << ">" << value_ << "</" << fieldName << ">\n";
@@ -227,15 +226,16 @@ namespace e57
          os << "double" << std::endl;
       }
 
-      /// Save old stream config
+      // Save old stream config
       const std::streamsize oldPrecision = os.precision();
       const std::ios_base::fmtflags oldFlags = os.flags();
 
-      os << space( indent ) << std::scientific << std::setprecision( 17 ) << "value:       " << value_ << std::endl;
+      os << space( indent ) << std::scientific << std::setprecision( 17 )
+         << "value:       " << value_ << std::endl;
       os << space( indent ) << "minimum:     " << minimum_ << std::endl;
       os << space( indent ) << "maximum:     " << maximum_ << std::endl;
 
-      /// Restore old stream config
+      // Restore old stream config
       os.precision( oldPrecision );
       os.flags( oldFlags );
    }

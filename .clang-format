@@ -49,8 +49,8 @@ BreakBeforeTernaryOperators: true
 BreakConstructorInitializersBeforeComma: false
 BreakConstructorInitializers: AfterColon
 BreakStringLiterals: true
-ColumnLimit: 120
-CommentPragmas: '^ IWYU pragma:'
+ColumnLimit: 100
+CommentPragmas: '@copydetails '
 CompactNamespaces: false
 ConstructorInitializerAllOnOneLineOrOnePerLine: false
 ConstructorInitializerIndentWidth: 3

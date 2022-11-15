@@ -34,9 +34,9 @@ namespace e57
    class Encoder
    {
    public:
-      static std::shared_ptr<Encoder> EncoderFactory( unsigned bytestreamNumber,
-                                                      std::shared_ptr<CompressedVectorNodeImpl> cVector,
-                                                      std::vector<SourceDestBuffer> &sbuf, ustring &codecPath );
+      static std::shared_ptr<Encoder> EncoderFactory(
+         unsigned bytestreamNumber, std::shared_ptr<CompressedVectorNodeImpl> cVector,
+         std::vector<SourceDestBuffer> &sbuf, ustring &codecPath );
 
       virtual ~Encoder() = default;
 
@@ -46,7 +46,7 @@ namespace e57
       virtual float bitsPerRecord() = 0;
       virtual bool registerFlushToOutput() = 0;
 
-      virtual size_t outputAvailable() const = 0;                  /// number of bytes that can be read
+      virtual size_t outputAvailable() const = 0; /// number of bytes that can be read
       virtual void outputRead( char *dest, size_t byteCount ) = 0; /// get data from encoder
       virtual void outputClear() = 0;
 
@@ -62,6 +62,7 @@ namespace e57
 #ifdef E57_DEBUG
       virtual void dump( int indent = 0, std::ostream &os = std::cout ) const;
 #endif
+
    protected:
       explicit Encoder( unsigned bytestreamNumber );
 
@@ -88,6 +89,7 @@ namespace e57
 #ifdef E57_DEBUG
       void dump( int indent = 0, std::ostream &os = std::cout ) const override;
 #endif
+
    protected:
       BitpackEncoder( unsigned bytestreamNumber, SourceDestBuffer &sbuf, unsigned outputMaxSize,
                       unsigned alignmentSize );
@@ -107,8 +109,8 @@ namespace e57
    class BitpackFloatEncoder : public BitpackEncoder
    {
    public:
-      BitpackFloatEncoder( unsigned bytestreamNumber, SourceDestBuffer &sbuf, unsigned outputMaxSize,
-                           FloatPrecision precision );
+      BitpackFloatEncoder( unsigned bytestreamNumber, SourceDestBuffer &sbuf,
+                           unsigned outputMaxSize, FloatPrecision precision );
 
       uint64_t processRecords( size_t recordCount ) override;
       bool registerFlushToOutput() override;
@@ -117,6 +119,7 @@ namespace e57
 #ifdef E57_DEBUG
       void dump( int indent = 0, std::ostream &os = std::cout ) const override;
 #endif
+
    protected:
       FloatPrecision precision_;
    };
@@ -124,7 +127,8 @@ namespace e57
    class BitpackStringEncoder : public BitpackEncoder
    {
    public:
-      BitpackStringEncoder( unsigned bytestreamNumber, SourceDestBuffer &sbuf, unsigned outputMaxSize );
+      BitpackStringEncoder( unsigned bytestreamNumber, SourceDestBuffer &sbuf,
+                            unsigned outputMaxSize );
 
       uint64_t processRecords( size_t recordCount ) override;
       bool registerFlushToOutput() override;
@@ -133,6 +137,7 @@ namespace e57
 #ifdef E57_DEBUG
       void dump( int indent = 0, std::ostream &os = std::cout ) const override;
 #endif
+
    protected:
       uint64_t totalBytesProcessed_;
       bool isStringActive_;
@@ -144,8 +149,9 @@ namespace e57
    template <typename RegisterT> class BitpackIntegerEncoder : public BitpackEncoder
    {
    public:
-      BitpackIntegerEncoder( bool isScaledInteger, unsigned bytestreamNumber, SourceDestBuffer &sbuf,
-                             unsigned outputMaxSize, int64_t minimum, int64_t maximum, double scale, double offset );
+      BitpackIntegerEncoder( bool isScaledInteger, unsigned bytestreamNumber,
+                             SourceDestBuffer &sbuf, unsigned outputMaxSize, int64_t minimum,
+                             int64_t maximum, double scale, double offset );
 
       uint64_t processRecords( size_t recordCount ) override;
       bool registerFlushToOutput() override;
@@ -154,6 +160,7 @@ namespace e57
 #ifdef E57_DEBUG
       void dump( int indent = 0, std::ostream &os = std::cout ) const override;
 #endif
+
    protected:
       bool isScaledInteger_;
       int64_t minimum_;
@@ -187,6 +194,7 @@ namespace e57
 #ifdef E57_DEBUG
       void dump( int indent = 0, std::ostream &os = std::cout ) const override;
 #endif
+
    protected:
       std::shared_ptr<SourceDestBufferImpl> sourceBuffer_;
       uint64_t currentRecordIndex_;

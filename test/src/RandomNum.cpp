@@ -15,7 +15,8 @@ namespace
    // Use a uniform distribution [0, 1].
    // For explanation of second param, see:
    //    https://en.cppreference.com/w/cpp/numeric/random/uniform_real_distribution
-   static std::uniform_real_distribution<> dis( 0, std::nextafter( 1, std::numeric_limits<float>::max() ) );
+   static std::uniform_real_distribution<> dis(
+      0, std::nextafter( 1, std::numeric_limits<float>::max() ) );
 }
 
 namespace Random

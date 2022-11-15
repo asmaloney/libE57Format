@@ -33,7 +33,6 @@
 
 namespace e57
 {
-   //! most of the functions follows Writer
    class WriterImpl
    {
    public:
@@ -52,8 +51,9 @@ namespace e57
 
       int64_t NewImage2D( Image2D &image2DHeader );
 
-      size_t WriteImage2DData( int64_t imageIndex, Image2DType imageType, Image2DProjection imageProjection,
-                               uint8_t *pBuffer, int64_t start, size_t count );
+      size_t WriteImage2DData( int64_t imageIndex, Image2DType imageType,
+                               Image2DProjection imageProjection, uint8_t *pBuffer, int64_t start,
+                               size_t count );
 
       int64_t NewData3D( Data3D &data3DHeader );
 

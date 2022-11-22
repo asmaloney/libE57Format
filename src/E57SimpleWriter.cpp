@@ -54,7 +54,7 @@ namespace
       auto pointRangeMinimum = cMax;
       auto pointRangeMaximum = cMin;
 
-      const bool writePointRange = ( pointFields.pointRangeScaledInteger != 0.0 ) &&
+      const bool writePointRange = ( pointFields.pointRangeNodeType == e57::NumericalNodeType::ScaledInteger ) &&
                                    ( pointFields.pointRangeMinimum == cMin ) &&
                                    ( pointFields.pointRangeMaximum == cMax );
 
@@ -64,14 +64,14 @@ namespace
       auto angleMinimum = cMax;
       auto angleMaximum = cMin;
 
-      const bool writeAngle = ( pointFields.angleScaledInteger != 0.0 ) && ( pointFields.angleMinimum == cMin ) &&
-                              ( pointFields.angleMaximum == cMax );
+      const bool writeAngle = ( pointFields.angleNodeType == e57::NumericalNodeType::ScaledInteger ) &&
+                              ( pointFields.angleMinimum == cMin ) && ( pointFields.angleMaximum == cMax );
 
       // IF we are using intesity
       // AND we haven't set either min or max
       // THEN calculate them from the points
-      float intensityMinimum = std::numeric_limits<float>::max();
-      float intensityMaximum = std::numeric_limits<float>::lowest();
+      double intensityMinimum = std::numeric_limits<double>::max();
+      double intensityMaximum = std::numeric_limits<double>::lowest();
 
       const bool writeIntensity =
          pointFields.intensityField && ( ioData3DHeader.intensityLimits == e57::IntensityLimits{} );
@@ -82,7 +82,8 @@ namespace
       double timeMinimum = std::numeric_limits<double>::max();
       double timeMaximum = std::numeric_limits<double>::lowest();
 
-      const bool writeTimeStamp = pointFields.timeStampField && ( pointFields.timeScaledInteger != 0.0 ) &&
+      const bool writeTimeStamp = pointFields.timeStampField &&
+                                  ( pointFields.timeNodeType == e57::NumericalNodeType::ScaledInteger ) &&
                                   ( pointFields.timeMinimum == cMin ) && ( pointFields.timeMaximum == cMax );
 
       // Now run through the points and set the things we need to

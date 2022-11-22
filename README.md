@@ -10,6 +10,14 @@ This version also removes the dependency on [Boost](http://www.boost.org/) and -
 
 Many, many other changes were made prior to the first release of this fork. See the [CHANGELOG](CHANGELOG.md) and git history for details.
 
+## 🚨 Version 3.0 Note 🚨
+
+There have been many changes (especially to the "Simple API") in the upcoming version 3.0 - some of which will require code changes on your end. Please see the [CHANGELOG](CHANGELOG.md) for details.
+
+Since this version is breaking the API, I am happy to discuss any other API-breaking changes which might be useful. Please raise them in [this issue](https://github.com/asmaloney/libE57Format/issues/177).
+
+I plan to let 3.0 sit in the master branch until the end of 2022. If I don't hear any feedback I will go ahead and release it as-is.
+
 ## Documentation
 
 The doxygen-generated documentation may be [found here](https://asmaloney.github.io/libE57Format-docs/). These docs are generated and saved in the [libE57Format-docs](https://github.com/asmaloney/libE57Format-docs) repo.
@@ -32,7 +40,7 @@ Versions of **libE57Format** started at 2.0.
 
 Since the original fork, [Jiri Hörner](https://github.com/ptc-jhoerner) has added the E57Simple API from the old reference implementation and updated it.
 
-This `Simple API` has evolved since this original port to fix some problems and to make it more foolproof & easier to use.
+This `Simple API` has evolved since this original port to fix some problems and to make it more foolproof & easier to use. Please see the [CHANGELOG](CHANGELOG.md) for version 3.
 
 ### Tools
 
@@ -44,10 +52,10 @@ This `Simple API` has evolved since this original port to fix some problems and 
 
 ### Dependencies
 
-[Xerces-C++](https://xerces.apache.org/xerces-c/) validating XML parser is needed at runtime and
-[clang-format](https://clang.llvm.org/docs/ClangFormat.html) for checking C++ formatting.
+- [Xerces-C++](https://xerces.apache.org/xerces-c/) validating XML parser for building libE57Format
+- [clang-format](https://clang.llvm.org/docs/ClangFormat.html) for C++ formatting
 
-Linux (Ubuntu):
+#### Installing Dependencies On Linux (Ubuntu)
 
 ```sh
 $ sudo apt install libxerces-c-dev clang-format
@@ -61,7 +69,7 @@ Individual source files may contain the following tag instead of the full licens
 
     SPDX-License-Identifier: BSL-1.0
 
-Some CMake files are licensed under the **MIT** license - see the [LICENSE-MIT](LICENSE-MIT.txt) file for details.
+Some files are licensed under the **MIT** license - see the [LICENSE-MIT](LICENSE-MIT.txt) file for details.
 
 These files contain the following tag instead of the full license text:
 

@@ -14,7 +14,7 @@ TEST( SimpleDataHeader, InvalidPointCount )
 {
    e57::Data3D dataHeader;
 
-   E57_ASSERT_THROW( e57::Data3DPointsData pointsData( dataHeader ) );
+   E57_ASSERT_THROW( e57::Data3DPointsFloat pointsData( dataHeader ) );
 }
 
 TEST( SimpleDataHeader, InvalidPointRangeNodeType )
@@ -24,7 +24,7 @@ TEST( SimpleDataHeader, InvalidPointRangeNodeType )
    dataHeader.pointCount = 1;
    dataHeader.pointFields.pointRangeNodeType = e57::NumericalNodeType::Integer;
 
-   E57_ASSERT_THROW( e57::Data3DPointsData pointsData( dataHeader ) );
+   E57_ASSERT_THROW( e57::Data3DPointsFloat pointsData( dataHeader ) );
 }
 
 TEST( SimpleDataHeader, InvalidAngleNodeType )
@@ -34,7 +34,7 @@ TEST( SimpleDataHeader, InvalidAngleNodeType )
    dataHeader.pointCount = 1;
    dataHeader.pointFields.angleNodeType = e57::NumericalNodeType::Integer;
 
-   E57_ASSERT_THROW( e57::Data3DPointsData pointsData( dataHeader ) );
+   E57_ASSERT_THROW( e57::Data3DPointsFloat pointsData( dataHeader ) );
 }
 
 TEST( SimpleDataHeader, AutoSetNodeTypes )
@@ -46,7 +46,7 @@ TEST( SimpleDataHeader, AutoSetNodeTypes )
    // dataHeader.pointFields.pointRangeNodeType and dataHeader.pointFields.angleNodeType default to
    // Float but we are using a double structure. The constructor should correct these and set them
    // to Double.
-   e57::Data3DPointsData_d pointsData( dataHeader );
+   e57::Data3DPointsDouble pointsData( dataHeader );
 
    EXPECT_EQ( dataHeader.pointFields.pointRangeNodeType, e57::NumericalNodeType::Double );
    EXPECT_EQ( dataHeader.pointFields.angleNodeType, e57::NumericalNodeType::Double );
@@ -66,7 +66,7 @@ TEST( SimpleDataHeader, HeaderMinMaxFloat )
    EXPECT_EQ( dataHeader.pointFields.timeMaximum, e57::DOUBLE_MAX );
 
    // This call should adjust our min/max for a variety of fields since we are using floats.
-   e57::Data3DPointsData pointsData( dataHeader );
+   e57::Data3DPointsFloat pointsData( dataHeader );
 
    EXPECT_EQ( dataHeader.pointFields.pointRangeMinimum, e57::FLOAT_MIN );
    EXPECT_EQ( dataHeader.pointFields.pointRangeMaximum, e57::FLOAT_MAX );
@@ -90,7 +90,7 @@ TEST( SimpleDataHeader, HeaderMinMaxDouble )
    EXPECT_EQ( dataHeader.pointFields.timeMaximum, e57::DOUBLE_MAX );
 
    // This call should NOT adjust our min/max for a variety of fields since we are using doubles.
-   e57::Data3DPointsData_d pointsData( dataHeader );
+   e57::Data3DPointsDouble pointsData( dataHeader );
 
    EXPECT_EQ( dataHeader.pointFields.pointRangeMinimum, e57::DOUBLE_MIN );
    EXPECT_EQ( dataHeader.pointFields.pointRangeMaximum, e57::DOUBLE_MAX );
@@ -107,7 +107,7 @@ TEST( SimpleData, ReadWrite )
    e57::Reader *originalReader = nullptr;
    e57::E57Root originalFileHeader;
    e57::Data3D originalData3DHeader;
-   e57::Data3DPointsData_d *originalPointsData = nullptr;
+   e57::Data3DPointsDouble *originalPointsData = nullptr;
 
    // 1. Read in original file
    {
@@ -119,7 +119,7 @@ TEST( SimpleData, ReadWrite )
 
       const uint64_t cNumPoints = originalData3DHeader.pointCount;
 
-      originalPointsData = new e57::Data3DPointsData_d( originalData3DHeader );
+      originalPointsData = new e57::Data3DPointsDouble( originalData3DHeader );
 
       auto vectorReader =
          originalReader->SetUpData3DPointsData( 0, cNumPoints, *originalPointsData );
@@ -157,7 +157,7 @@ TEST( SimpleData, ReadWrite )
 
       const uint64_t cNumPoints = copyData3DHeader.pointCount;
 
-      e57::Data3DPointsData_d copyPointsData( copyData3DHeader );
+      e57::Data3DPointsDouble copyPointsData( copyData3DHeader );
 
       auto vectorReader = copyReader->SetUpData3DPointsData( 0, cNumPoints, copyPointsData );
 

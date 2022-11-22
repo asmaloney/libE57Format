@@ -220,7 +220,7 @@ namespace e57
       return static_cast<int64_t>( written );
    }
 
-   int64_t Writer::WriteData3DData( Data3D &data3DHeader, const Data3DPointsData &buffers )
+   int64_t Writer::WriteData3DData( Data3D &data3DHeader, const Data3DPointsFloat &buffers )
    {
       _fillMinMaxData( data3DHeader, buffers );
 
@@ -235,7 +235,7 @@ namespace e57
       return scanIndex;
    }
 
-   int64_t Writer::WriteData3DData( Data3D &data3DHeader, const Data3DPointsData_d &buffers )
+   int64_t Writer::WriteData3DData( Data3D &data3DHeader, const Data3DPointsDouble &buffers )
    {
       _fillMinMaxData( data3DHeader, buffers );
 

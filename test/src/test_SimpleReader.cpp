@@ -93,7 +93,7 @@ TEST( SimpleReaderData, ColouredCubeFloat )
 
    const uint64_t cNumPoints = data3DHeader.pointCount;
 
-   e57::Data3DPointsData pointsData( data3DHeader );
+   e57::Data3DPointsFloat pointsData( data3DHeader );
 
    auto vectorReader = reader->SetUpData3DPointsData( 0, cNumPoints, pointsData );
 
@@ -131,7 +131,7 @@ TEST( SimpleReaderData, ColouredCubeFloatToDouble )
 
    const uint64_t cNumPoints = data3DHeader.pointCount;
 
-   e57::Data3DPointsData_d pointsData( data3DHeader );
+   e57::Data3DPointsDouble pointsData( data3DHeader );
 
    auto vectorReader = reader->SetUpData3DPointsData( 0, cNumPoints, pointsData );
 
@@ -169,7 +169,7 @@ TEST( SimpleReaderData, BunnyDouble )
 
    const uint64_t cNumPoints = data3DHeader.pointCount;
 
-   e57::Data3DPointsData pointsData( data3DHeader );
+   e57::Data3DPointsFloat pointsData( data3DHeader );
 
    auto vectorReader = reader->SetUpData3DPointsData( 0, cNumPoints, pointsData );
 
@@ -207,7 +207,7 @@ TEST( SimpleReaderData, BunnyInt32 )
 
    const uint64_t cNumPoints = data3DHeader.pointCount;
 
-   e57::Data3DPointsData pointsData( data3DHeader );
+   e57::Data3DPointsFloat pointsData( data3DHeader );
 
    auto vectorReader = reader->SetUpData3DPointsData( 0, cNumPoints, pointsData );
 
@@ -245,7 +245,7 @@ TEST( SimpleReaderData, ColourRepresentation )
 
    const uint64_t cNumPoints = data3DHeader.pointCount;
 
-   e57::Data3DPointsData pointsData( data3DHeader );
+   e57::Data3DPointsFloat pointsData( data3DHeader );
 
    auto vectorReader = reader->SetUpData3DPointsData( 0, cNumPoints, pointsData );
 

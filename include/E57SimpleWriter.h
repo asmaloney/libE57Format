@@ -138,10 +138,10 @@ namespace e57
       /// @param [in,out] data3DHeader metadata about what is included in the buffers
       /// @param [in] buffers pointers to user-provided buffers containing the actual data
       /// @return Returns the index of the new scan's data3D block.
-      int64_t WriteData3DData( Data3D &data3DHeader, const Data3DPointsData &buffers );
+      int64_t WriteData3DData( Data3D &data3DHeader, const Data3DPointsFloat &buffers );
 
       /// @overload
-      int64_t WriteData3DData( Data3D &data3DHeader, const Data3DPointsData_d &buffers );
+      int64_t WriteData3DData( Data3D &data3DHeader, const Data3DPointsDouble &buffers );
 
       /// @brief Writes a new Data3D header
       /// @details The user needs to config a Data3D structure with all the scanning information

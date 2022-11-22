@@ -135,13 +135,13 @@ namespace e57
    }
 
    CompressedVectorReader Reader::SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
-                                                         const Data3DPointsData &buffers ) const
+                                                         const Data3DPointsFloat &buffers ) const
    {
       return impl_->SetUpData3DPointsData( dataIndex, pointCount, buffers );
    }
 
    CompressedVectorReader Reader::SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
-                                                         const Data3DPointsData_d &buffers ) const
+                                                         const Data3DPointsDouble &buffers ) const
    {
       return impl_->SetUpData3DPointsData( dataIndex, pointCount, buffers );
    }

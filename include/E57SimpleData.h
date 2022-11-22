@@ -732,14 +732,19 @@ namespace e57
       bool _selfAllocated = false;
    };
 
-   using Data3DPointsData = Data3DPointsData_t<float>;
-   using Data3DPointsData_d = Data3DPointsData_t<double>;
+   using Data3DPointsFloat = Data3DPointsData_t<float>;
+   using Data3DPointsDouble = Data3DPointsData_t<double>;
 
-   extern template Data3DPointsData_t<float>::Data3DPointsData_t( Data3D &data3D );
-   extern template Data3DPointsData_t<double>::Data3DPointsData_t( Data3D &data3D );
+   using Data3DPointsData [[deprecated( "Will be removed in 4.0. Use Data3DPointsFloat." )]] =
+      Data3DPointsData_t<float>;
+   using Data3DPointsData_d [[deprecated( "Will be removed in 4.0. Use Data3DPointsDouble." )]] =
+      Data3DPointsData_t<double>;
 
-   extern template Data3DPointsData_t<float>::~Data3DPointsData_t();
-   extern template Data3DPointsData_t<double>::~Data3DPointsData_t();
+   extern template Data3DPointsFloat::Data3DPointsData_t( Data3D &data3D );
+   extern template Data3DPointsDouble::Data3DPointsData_t( Data3D &data3D );
+
+   extern template Data3DPointsFloat::~Data3DPointsData_t();
+   extern template Data3DPointsDouble::~Data3DPointsData_t();
 
    /// @brief Stores an image that is to be used only as a visual reference.
    struct E57_DLL VisualReferenceRepresentation

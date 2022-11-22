@@ -170,7 +170,7 @@ TEST( SimpleWriter, ColouredCubeDouble )
 
    setUsingColouredCartesianPoints( header );
 
-   e57::Data3DPointsData_d pointsData( header );
+   e57::Data3DPointsDouble pointsData( header );
 
    // reset these so we can calculate them using min/max
    header.pointFields.pointRangeMinimum = e57::DOUBLE_MAX;
@@ -228,7 +228,7 @@ TEST( SimpleWriter, ColouredCubeFloat )
 
    setUsingColouredCartesianPoints( header );
 
-   e57::Data3DPointsData pointsData( header );
+   e57::Data3DPointsFloat pointsData( header );
 
    // reset these so we can calculate them using min/max
    header.pointFields.pointRangeMinimum = e57::FLOAT_MAX;
@@ -289,7 +289,7 @@ TEST( SimpleWriter, ColouredCubeScaledInt )
 
    setUsingColouredCartesianPoints( header );
 
-   e57::Data3DPointsData_d pointsData( header );
+   e57::Data3DPointsDouble pointsData( header );
 
    // reset these so we can calculate them using min/max
    header.pointFields.pointRangeMinimum = e57::DOUBLE_MAX;
@@ -342,7 +342,7 @@ TEST( SimpleWriter, MultipleScans )
    header.pointFields.cartesianYField = true;
    header.pointFields.cartesianZField = true;
 
-   e57::Data3DPointsData pointsData( header );
+   e57::Data3DPointsFloat pointsData( header );
 
    // scan 1
    header.guid = "Multiple Scans Scan 1 Header GUID";
@@ -406,7 +406,7 @@ TEST( SimpleWriter, CartesianPoints )
    header.pointFields.cartesianYField = true;
    header.pointFields.cartesianZField = true;
 
-   e57::Data3DPointsData pointsData( header );
+   e57::Data3DPointsFloat pointsData( header );
 
    for ( int64_t i = 0; i < cNumPoints; ++i )
    {
@@ -438,7 +438,7 @@ TEST( SimpleWriter, ColouredCartesianPoints )
 
    setUsingColouredCartesianPoints( header );
 
-   e57::Data3DPointsData pointsData( header );
+   e57::Data3DPointsFloat pointsData( header );
 
    for ( int64_t i = 0; i < cNumPoints; ++i )
    {
@@ -486,7 +486,7 @@ TEST( SimpleWriter, MinMaxIssuesCartesianFloat )
    header.pointFields.intensityNodeType = e57::NumericalNodeType::ScaledInteger;
    header.pointFields.intensityScale = 0.1;
 
-   e57::Data3DPointsData pointsData( header );
+   e57::Data3DPointsFloat pointsData( header );
 
    for ( int64_t i = 0; i < cNumPoints; ++i )
    {
@@ -548,7 +548,7 @@ TEST( SimpleWriter, MinMaxIssuesSpericalDouble )
    header.pointFields.intensityNodeType = e57::NumericalNodeType::ScaledInteger;
    header.pointFields.intensityScale = 0.1;
 
-   e57::Data3DPointsData_d pointsData( header );
+   e57::Data3DPointsDouble pointsData( header );
 
    for ( int64_t i = 0; i < cNumPoints; ++i )
    {

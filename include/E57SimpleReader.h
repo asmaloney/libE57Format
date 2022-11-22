@@ -175,11 +175,11 @@ namespace e57
       /// @param [in] buffers pointers to user-provided buffers
       /// @return vector reader setup to read the selected data into the provided buffers
       CompressedVectorReader SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
-                                                    const Data3DPointsData &buffers ) const;
+                                                    const Data3DPointsFloat &buffers ) const;
 
       /// @overload
       CompressedVectorReader SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
-                                                    const Data3DPointsData_d &buffers ) const;
+                                                    const Data3DPointsDouble &buffers ) const;
 
       ///@}
 

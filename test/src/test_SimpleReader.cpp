@@ -52,7 +52,8 @@ TEST( SimpleReaderData, BadCRC )
 
 TEST( SimpleReaderData, DoNotCheckCRC )
 {
-   E57_ASSERT_NO_THROW( e57::Reader( TestData::Path() + "/self/bad-crc.e57", { e57::ChecksumNone } ) );
+   E57_ASSERT_NO_THROW(
+      e57::Reader( TestData::Path() + "/self/bad-crc.e57", { e57::ChecksumNone } ) );
 }
 
 // https://github.com/asmaloney/libE57Format/issues/26
@@ -71,7 +72,8 @@ TEST( SimpleReaderData, ColouredCubeFloat )
 {
    e57::Reader *reader = nullptr;
 
-   E57_ASSERT_NO_THROW( reader = new e57::Reader( TestData::Path() + "/self/ColouredCubeFloat.e57", {} ) );
+   E57_ASSERT_NO_THROW(
+      reader = new e57::Reader( TestData::Path() + "/self/ColouredCubeFloat.e57", {} ) );
 
    ASSERT_TRUE( reader->IsOpen() );
    EXPECT_EQ( reader->GetImage2DCount(), 0 );
@@ -108,7 +110,8 @@ TEST( SimpleReaderData, ColouredCubeFloatToDouble )
 {
    e57::Reader *reader = nullptr;
 
-   E57_ASSERT_NO_THROW( reader = new e57::Reader( TestData::Path() + "/self/ColouredCubeFloat.e57", {} ) );
+   E57_ASSERT_NO_THROW(
+      reader = new e57::Reader( TestData::Path() + "/self/ColouredCubeFloat.e57", {} ) );
 
    ASSERT_TRUE( reader->IsOpen() );
    EXPECT_EQ( reader->GetImage2DCount(), 0 );
@@ -145,7 +148,8 @@ TEST( SimpleReaderData, BunnyDouble )
 {
    e57::Reader *reader = nullptr;
 
-   E57_ASSERT_NO_THROW( reader = new e57::Reader( TestData::Path() + "/reference/bunnyDouble.e57", {} ) );
+   E57_ASSERT_NO_THROW( reader =
+                           new e57::Reader( TestData::Path() + "/reference/bunnyDouble.e57", {} ) );
 
    ASSERT_TRUE( reader->IsOpen() );
    EXPECT_EQ( reader->GetImage2DCount(), 0 );
@@ -182,7 +186,8 @@ TEST( SimpleReaderData, BunnyInt32 )
 {
    e57::Reader *reader = nullptr;
 
-   E57_ASSERT_NO_THROW( reader = new e57::Reader( TestData::Path() + "/reference/bunnyInt32.e57", {} ) );
+   E57_ASSERT_NO_THROW( reader =
+                           new e57::Reader( TestData::Path() + "/reference/bunnyInt32.e57", {} ) );
 
    ASSERT_TRUE( reader->IsOpen() );
    EXPECT_EQ( reader->GetImage2DCount(), 0 );
@@ -219,8 +224,8 @@ TEST( SimpleReaderData, ColourRepresentation )
 {
    e57::Reader *reader = nullptr;
 
-   E57_ASSERT_NO_THROW( reader =
-                           new e57::Reader( TestData::Path() + "/3rdParty/las2e57/ColourRepresentation.e57", {} ) );
+   E57_ASSERT_NO_THROW( reader = new e57::Reader(
+                           TestData::Path() + "/3rdParty/las2e57/ColourRepresentation.e57", {} ) );
 
    ASSERT_TRUE( reader->IsOpen() );
    EXPECT_EQ( reader->GetImage2DCount(), 0 );

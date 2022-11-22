@@ -37,7 +37,7 @@ namespace e57
    class CheckedFile;
    class PacketLock;
 
-   /// Packet types (in a compressed vector section)
+   // Packet types (in a compressed vector section)
    enum
    {
       INDEX_PACKET = 0,
@@ -45,7 +45,7 @@ namespace e57
       EMPTY_PACKET,
    };
 
-   /// maximum size of CompressedVector binary data packet
+   // Maximum size of CompressedVector binary data packet
    constexpr int DATA_PACKET_MAX = ( 64 * 1024 );
 
    class PacketReadCache
@@ -61,8 +61,9 @@ namespace e57
 #endif
 
    protected:
-      /// Only PacketLock can unlock the cache
       friend class PacketLock;
+
+      // Only PacketLock can unlock the cache
       void unlock( unsigned cacheIndex );
 
       void readPacket( unsigned oldestEntry, uint64_t packetLogicalOffset );
@@ -70,7 +71,7 @@ namespace e57
       struct CacheEntry
       {
          uint64_t logicalOffset_ = 0;
-         char buffer_[DATA_PACKET_MAX]; //! No need to init since it's a data buffer
+         char buffer_[DATA_PACKET_MAX]; // No need to init since it's a data buffer
          unsigned lastUsed_ = 0;
       };
 
@@ -86,13 +87,12 @@ namespace e57
    public:
       ~PacketLock();
 
-   private:
-      /// Can't be copied or assigned
-      PacketLock( const PacketLock &plock );
-      PacketLock &operator=( const PacketLock &plock );
+      PacketLock( const PacketLock &plock ) = delete;
+      PacketLock &operator=( const PacketLock &plock ) = delete;
 
    protected:
       friend class PacketReadCache;
+
       /// Only PacketReadCache can construct
       PacketLock( PacketReadCache *cache, unsigned cacheIndex );
 
@@ -112,6 +112,7 @@ namespace e57
 #ifdef E57_DEBUG
       void dump( int indent = 0, std::ostream &os = std::cout ) const;
 #endif
+
       const uint8_t packetType = DATA_PACKET;
 
       uint8_t packetFlags = 0;
@@ -136,6 +137,6 @@ namespace e57
 
       DataPacketHeader header;
 
-      uint8_t payload[PayloadSize]; //! No need to init since it's a data buffer
+      uint8_t payload[PayloadSize]; // No need to init since it's a data buffer
    };
 }

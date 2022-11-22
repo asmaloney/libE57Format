@@ -49,8 +49,10 @@ namespace e57
       NodeImplSharedPtr get( const ustring &pathName ) override;
 
       virtual void set( int64_t index, NodeImplSharedPtr ni );
-      void set( const ustring &pathName, NodeImplSharedPtr ni, bool autoPathCreate = false ) override;
-      void set( const StringList &fields, unsigned level, NodeImplSharedPtr ni, bool autoPathCreate = false ) override;
+      void set( const ustring &pathName, NodeImplSharedPtr ni,
+                bool autoPathCreate = false ) override;
+      void set( const StringList &fields, unsigned level, NodeImplSharedPtr ni,
+                bool autoPathCreate = false ) override;
       virtual void append( NodeImplSharedPtr ni );
 
       void checkLeavesInSet( const StringSet &pathNames, NodeImplSharedPtr origin ) override;
@@ -64,6 +66,7 @@ namespace e57
 
    protected:
       friend class CompressedVectorReaderImpl;
+
       NodeImplSharedPtr lookup( const ustring &pathName ) override;
 
       std::vector<NodeImplSharedPtr> children_;

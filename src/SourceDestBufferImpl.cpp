@@ -33,11 +33,12 @@
 
 using namespace e57;
 
-SourceDestBufferImpl::SourceDestBufferImpl( ImageFileImplWeakPtr destImageFile, const ustring &pathName,
-                                            const size_t capacity, bool doConversion, bool doScaling ) :
+SourceDestBufferImpl::SourceDestBufferImpl( ImageFileImplWeakPtr destImageFile,
+                                            const ustring &pathName, const size_t capacity,
+                                            bool doConversion, bool doScaling ) :
    destImageFile_( destImageFile ),
-   pathName_( pathName ), memoryRepresentation_( Int32 ), capacity_( capacity ), doConversion_( doConversion ),
-   doScaling_( doScaling )
+   pathName_( pathName ), memoryRepresentation_( Int32 ), capacity_( capacity ),
+   doConversion_( doConversion ), doScaling_( doScaling )
 {
 }
 
@@ -106,8 +107,8 @@ template void SourceDestBufferImpl::setTypeInfo<bool>( bool *base, size_t stride
 template void SourceDestBufferImpl::setTypeInfo<float>( float *base, size_t stride );
 template void SourceDestBufferImpl::setTypeInfo<double>( double *base, size_t stride );
 
-SourceDestBufferImpl::SourceDestBufferImpl( ImageFileImplWeakPtr destImageFile, const ustring &pathName,
-                                            std::vector<ustring> *b ) :
+SourceDestBufferImpl::SourceDestBufferImpl( ImageFileImplWeakPtr destImageFile,
+                                            const ustring &pathName, std::vector<ustring> *b ) :
    destImageFile_( destImageFile ),
    pathName_( pathName ), memoryRepresentation_( UString ), ustrings_( b )
 {
@@ -256,7 +257,8 @@ template <typename T> void SourceDestBufferImpl::_setNextReal( T inValue )
          else
          {
 #ifdef _MSC_VER
-            // MSVC is not smart enough to realize 'inValue' cannot be a double here, so disable warning
+            // MSVC is not smart enough to realize 'inValue' cannot be a double here, so disable
+            // warning
 #pragma warning( disable : 4244 )
             *reinterpret_cast<float *>( p ) = inValue;
 #pragma warning( default : 4244 )
@@ -588,7 +590,8 @@ float SourceDestBufferImpl::getNextFloat()
          ///??? silently limit here?
          if ( d < DOUBLE_MIN || DOUBLE_MAX < d )
          {
-            throw E57_EXCEPTION2( ErrorReal64TooLarge, "pathName=" + pathName_ + " value=" + toString( d ) );
+            throw E57_EXCEPTION2( ErrorReal64TooLarge,
+                                  "pathName=" + pathName_ + " value=" + toString( d ) );
          }
          value = static_cast<float>( d );
          break;
@@ -729,42 +732,48 @@ void SourceDestBufferImpl::setNextInt64( int64_t value )
       case Int8:
          if ( value < INT8_MIN || INT8_MAX < value )
          {
-            throw E57_EXCEPTION2( ErrorValueNotRepresentable, "pathName=" + pathName_ + " value=" + toString( value ) );
+            throw E57_EXCEPTION2( ErrorValueNotRepresentable,
+                                  "pathName=" + pathName_ + " value=" + toString( value ) );
          }
          *reinterpret_cast<int8_t *>( p ) = static_cast<int8_t>( value );
          break;
       case UInt8:
          if ( value < UINT8_MIN || UINT8_MAX < value )
          {
-            throw E57_EXCEPTION2( ErrorValueNotRepresentable, "pathName=" + pathName_ + " value=" + toString( value ) );
+            throw E57_EXCEPTION2( ErrorValueNotRepresentable,
+                                  "pathName=" + pathName_ + " value=" + toString( value ) );
          }
          *reinterpret_cast<uint8_t *>( p ) = static_cast<uint8_t>( value );
          break;
       case Int16:
          if ( value < INT16_MIN || INT16_MAX < value )
          {
-            throw E57_EXCEPTION2( ErrorValueNotRepresentable, "pathName=" + pathName_ + " value=" + toString( value ) );
+            throw E57_EXCEPTION2( ErrorValueNotRepresentable,
+                                  "pathName=" + pathName_ + " value=" + toString( value ) );
          }
          *reinterpret_cast<int16_t *>( p ) = static_cast<int16_t>( value );
          break;
       case UInt16:
          if ( value < UINT16_MIN || UINT16_MAX < value )
          {
-            throw E57_EXCEPTION2( ErrorValueNotRepresentable, "pathName=" + pathName_ + " value=" + toString( value ) );
+            throw E57_EXCEPTION2( ErrorValueNotRepresentable,
+                                  "pathName=" + pathName_ + " value=" + toString( value ) );
          }
          *reinterpret_cast<uint16_t *>( p ) = static_cast<uint16_t>( value );
          break;
       case Int32:
          if ( value < INT32_MIN || INT32_MAX < value )
          {
-            throw E57_EXCEPTION2( ErrorValueNotRepresentable, "pathName=" + pathName_ + " value=" + toString( value ) );
+            throw E57_EXCEPTION2( ErrorValueNotRepresentable,
+                                  "pathName=" + pathName_ + " value=" + toString( value ) );
          }
          *reinterpret_cast<int32_t *>( p ) = static_cast<int32_t>( value );
          break;
       case UInt32:
          if ( value < UINT32_MIN || UINT32_MAX < value )
          {
-            throw E57_EXCEPTION2( ErrorValueNotRepresentable, "pathName=" + pathName_ + " value=" + toString( value ) );
+            throw E57_EXCEPTION2( ErrorValueNotRepresentable,
+                                  "pathName=" + pathName_ + " value=" + toString( value ) );
          }
          *reinterpret_cast<uint32_t *>( p ) = static_cast<uint32_t>( value );
          break;
@@ -845,7 +854,8 @@ void SourceDestBufferImpl::setNextInt64( int64_t value, double scale, double off
          if ( scaledValue < INT8_MIN || INT8_MAX < scaledValue )
          {
             throw E57_EXCEPTION2( ErrorScaledValueNotRepresentable,
-                                  "pathName=" + pathName_ + " scaledValue=" + toString( scaledValue ) );
+                                  "pathName=" + pathName_ +
+                                     " scaledValue=" + toString( scaledValue ) );
          }
          *reinterpret_cast<int8_t *>( p ) = static_cast<int8_t>( scaledValue );
          break;
@@ -853,7 +863,8 @@ void SourceDestBufferImpl::setNextInt64( int64_t value, double scale, double off
          if ( scaledValue < UINT8_MIN || UINT8_MAX < scaledValue )
          {
             throw E57_EXCEPTION2( ErrorScaledValueNotRepresentable,
-                                  "pathName=" + pathName_ + " scaledValue=" + toString( scaledValue ) );
+                                  "pathName=" + pathName_ +
+                                     " scaledValue=" + toString( scaledValue ) );
          }
          *reinterpret_cast<uint8_t *>( p ) = static_cast<uint8_t>( scaledValue );
          break;
@@ -861,7 +872,8 @@ void SourceDestBufferImpl::setNextInt64( int64_t value, double scale, double off
          if ( scaledValue < INT16_MIN || INT16_MAX < scaledValue )
          {
             throw E57_EXCEPTION2( ErrorScaledValueNotRepresentable,
-                                  "pathName=" + pathName_ + " scaledValue=" + toString( scaledValue ) );
+                                  "pathName=" + pathName_ +
+                                     " scaledValue=" + toString( scaledValue ) );
          }
          *reinterpret_cast<int16_t *>( p ) = static_cast<int16_t>( scaledValue );
          break;
@@ -869,7 +881,8 @@ void SourceDestBufferImpl::setNextInt64( int64_t value, double scale, double off
          if ( scaledValue < UINT16_MIN || UINT16_MAX < scaledValue )
          {
             throw E57_EXCEPTION2( ErrorScaledValueNotRepresentable,
-                                  "pathName=" + pathName_ + " scaledValue=" + toString( scaledValue ) );
+                                  "pathName=" + pathName_ +
+                                     " scaledValue=" + toString( scaledValue ) );
          }
          *reinterpret_cast<uint16_t *>( p ) = static_cast<uint16_t>( scaledValue );
          break;
@@ -877,7 +890,8 @@ void SourceDestBufferImpl::setNextInt64( int64_t value, double scale, double off
          if ( scaledValue < INT32_MIN || INT32_MAX < scaledValue )
          {
             throw E57_EXCEPTION2( ErrorScaledValueNotRepresentable,
-                                  "pathName=" + pathName_ + " scaledValue=" + toString( scaledValue ) );
+                                  "pathName=" + pathName_ +
+                                     " scaledValue=" + toString( scaledValue ) );
          }
          *reinterpret_cast<int32_t *>( p ) = static_cast<int32_t>( scaledValue );
          break;
@@ -885,7 +899,8 @@ void SourceDestBufferImpl::setNextInt64( int64_t value, double scale, double off
          if ( scaledValue < UINT32_MIN || UINT32_MAX < scaledValue )
          {
             throw E57_EXCEPTION2( ErrorScaledValueNotRepresentable,
-                                  "pathName=" + pathName_ + " scaledValue=" + toString( scaledValue ) );
+                                  "pathName=" + pathName_ +
+                                     " scaledValue=" + toString( scaledValue ) );
          }
          *reinterpret_cast<uint32_t *>( p ) = static_cast<uint32_t>( scaledValue );
          break;
@@ -905,7 +920,8 @@ void SourceDestBufferImpl::setNextInt64( int64_t value, double scale, double off
          if ( scaledValue < DOUBLE_MIN || DOUBLE_MAX < scaledValue )
          {
             throw E57_EXCEPTION2( ErrorScaledValueNotRepresentable,
-                                  "pathName=" + pathName_ + " scaledValue=" + toString( scaledValue ) );
+                                  "pathName=" + pathName_ +
+                                     " scaledValue=" + toString( scaledValue ) );
          }
          *reinterpret_cast<float *>( p ) = static_cast<float>( scaledValue );
          break;
@@ -953,11 +969,13 @@ void SourceDestBufferImpl::setNextString( const ustring &value )
    nextIndex_++;
 }
 
-void SourceDestBufferImpl::checkCompatible( const std::shared_ptr<SourceDestBufferImpl> &newBuf ) const
+void SourceDestBufferImpl::checkCompatible(
+   const std::shared_ptr<SourceDestBufferImpl> &newBuf ) const
 {
    if ( pathName_ != newBuf->pathName() )
    {
-      throw E57_EXCEPTION2( ErrorBuffersNotCompatible, "pathName=" + pathName_ + " newPathName=" + newBuf->pathName() );
+      throw E57_EXCEPTION2( ErrorBuffersNotCompatible,
+                            "pathName=" + pathName_ + " newPathName=" + newBuf->pathName() );
    }
    if ( memoryRepresentation_ != newBuf->memoryRepresentation() )
    {
@@ -968,17 +986,20 @@ void SourceDestBufferImpl::checkCompatible( const std::shared_ptr<SourceDestBuff
    if ( capacity_ != newBuf->capacity() )
    {
       throw E57_EXCEPTION2( ErrorBuffersNotCompatible,
-                            "capacity=" + toString( capacity_ ) + " newCapacity=" + toString( newBuf->capacity() ) );
+                            "capacity=" + toString( capacity_ ) +
+                               " newCapacity=" + toString( newBuf->capacity() ) );
    }
    if ( doConversion_ != newBuf->doConversion() )
    {
-      throw E57_EXCEPTION2( ErrorBuffersNotCompatible, "doConversion=" + toString( doConversion_ ) +
-                                                          "newDoConversion=" + toString( newBuf->doConversion() ) );
+      throw E57_EXCEPTION2( ErrorBuffersNotCompatible,
+                            "doConversion=" + toString( doConversion_ ) +
+                               "newDoConversion=" + toString( newBuf->doConversion() ) );
    }
    if ( stride_ != newBuf->stride() )
    {
       throw E57_EXCEPTION2( ErrorBuffersNotCompatible,
-                            "stride=" + toString( stride_ ) + " newStride=" + toString( newBuf->stride() ) );
+                            "stride=" + toString( stride_ ) +
+                               " newStride=" + toString( newBuf->stride() ) );
    }
 }
 
@@ -1028,8 +1049,10 @@ void SourceDestBufferImpl::dump( int indent, std::ostream &os )
          os << "<unknown>" << std::endl;
          break;
    }
-   os << space( indent ) << "base:                 " << static_cast<const void *>( base_ ) << std::endl;
-   os << space( indent ) << "ustrings:             " << static_cast<const void *>( ustrings_ ) << std::endl;
+   os << space( indent ) << "base:                 " << static_cast<const void *>( base_ )
+      << std::endl;
+   os << space( indent ) << "ustrings:             " << static_cast<const void *>( ustrings_ )
+      << std::endl;
    os << space( indent ) << "capacity:             " << capacity_ << std::endl;
    os << space( indent ) << "doConversion:         " << doConversion_ << std::endl;
    os << space( indent ) << "doScaling:            " << doScaling_ << std::endl;

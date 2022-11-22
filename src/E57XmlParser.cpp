@@ -51,28 +51,34 @@ using namespace e57;
 using namespace XERCES_CPP_NAMESPACE;
 
 // define convenient constants for the attribute names
-static const XMLCh att_minimum[] = {
-   chLatin_m, chLatin_i, chLatin_n, chLatin_i, chLatin_m, chLatin_u, chLatin_m, chNull
-};
-static const XMLCh att_maximum[] = {
-   chLatin_m, chLatin_a, chLatin_x, chLatin_i, chLatin_m, chLatin_u, chLatin_m, chNull
-};
+static const XMLCh att_minimum[] = { chLatin_m, chLatin_i, chLatin_n, chLatin_i,
+                                     chLatin_m, chLatin_u, chLatin_m, chNull };
+static const XMLCh att_maximum[] = { chLatin_m, chLatin_a, chLatin_x, chLatin_i,
+                                     chLatin_m, chLatin_u, chLatin_m, chNull };
 static const XMLCh att_scale[] = { chLatin_s, chLatin_c, chLatin_a, chLatin_l, chLatin_e, chNull };
-static const XMLCh att_offset[] = { chLatin_o, chLatin_f, chLatin_f, chLatin_s, chLatin_e, chLatin_t, chNull };
+static const XMLCh att_offset[] = { chLatin_o, chLatin_f, chLatin_f, chLatin_s,
+                                    chLatin_e, chLatin_t, chNull };
 static const XMLCh att_precision[] = { chLatin_p, chLatin_r, chLatin_e, chLatin_c, chLatin_i,
                                        chLatin_s, chLatin_i, chLatin_o, chLatin_n, chNull };
 static const XMLCh att_allowHeterogeneousChildren[] = {
-   chLatin_a, chLatin_l, chLatin_l, chLatin_o, chLatin_w, chLatin_H, chLatin_e, chLatin_t, chLatin_e,
-   chLatin_r, chLatin_o, chLatin_g, chLatin_e, chLatin_n, chLatin_e, chLatin_o, chLatin_u, chLatin_s,
-   chLatin_C, chLatin_h, chLatin_i, chLatin_l, chLatin_d, chLatin_r, chLatin_e, chLatin_n, chNull
+   chLatin_a, chLatin_l, chLatin_l, chLatin_o, chLatin_w, chLatin_H, chLatin_e,
+   chLatin_t, chLatin_e, chLatin_r, chLatin_o, chLatin_g, chLatin_e, chLatin_n,
+   chLatin_e, chLatin_o, chLatin_u, chLatin_s, chLatin_C, chLatin_h, chLatin_i,
+   chLatin_l, chLatin_d, chLatin_r, chLatin_e, chLatin_n, chNull
 };
-static const XMLCh att_fileOffset[] = { chLatin_f, chLatin_i, chLatin_l, chLatin_e, chLatin_O, chLatin_f,
-                                        chLatin_f, chLatin_s, chLatin_e, chLatin_t, chNull };
+static const XMLCh att_fileOffset[] = { chLatin_f, chLatin_i, chLatin_l, chLatin_e,
+                                        chLatin_O, chLatin_f, chLatin_f, chLatin_s,
+                                        chLatin_e, chLatin_t, chNull };
 
 static const XMLCh att_type[] = { chLatin_t, chLatin_y, chLatin_p, chLatin_e, chNull };
-static const XMLCh att_length[] = { chLatin_l, chLatin_e, chLatin_n, chLatin_g, chLatin_t, chLatin_h, chNull };
-static const XMLCh att_recordCount[] = { chLatin_r, chLatin_e, chLatin_c, chLatin_o, chLatin_r, chLatin_d,
-                                         chLatin_C, chLatin_o, chLatin_u, chLatin_n, chLatin_t, chNull };
+static const XMLCh att_length[] = { chLatin_l, chLatin_e, chLatin_n, chLatin_g,
+                                    chLatin_t, chLatin_h, chNull };
+static const XMLCh att_recordCount[] = { chLatin_r, chLatin_e, chLatin_c, chLatin_o,
+                                         chLatin_r, chLatin_d, chLatin_C, chLatin_o,
+                                         chLatin_u, chLatin_n, chLatin_t, chNull };
+
+static_assert( std::is_same<size_t, XMLSize_t>::value,
+               "size_t and XMLSize_t should be the same type" );
 
 inline int64_t convertStrToLL( const std::string &inStr )
 {
@@ -117,8 +123,10 @@ private:
    uint64_t logicalPosition_;
 };
 
-E57FileInputStream::E57FileInputStream( CheckedFile *cf, uint64_t logicalStart, uint64_t logicalLength ) :
-   cf_( cf ), logicalStart_( logicalStart ), logicalLength_( logicalLength ), logicalPosition_( logicalStart )
+E57FileInputStream::E57FileInputStream( CheckedFile *cf, uint64_t logicalStart,
+                                        uint64_t logicalLength ) :
+   cf_( cf ),
+   logicalStart_( logicalStart ), logicalLength_( logicalLength ), logicalPosition_( logicalStart )
 {
 }
 
@@ -135,24 +143,22 @@ XMLSize_t E57FileInputStream::readBytes( XMLByte *const toFill, const XMLSize_t 
       return ( 0 );
    }
 
-   /// size_t and XMLSize_t should be compatible, should get compiler warning
-   /// here if not
    size_t maxToRead_size = maxToRead;
 
-   /// Be careful if size_t is smaller than int64_t
+   // Be careful if size_t is smaller than int64_t
    size_t available_size;
    if ( sizeof( size_t ) >= sizeof( int64_t ) )
    {
-      /// size_t is at least as big as int64_t
+      // size_t is at least as big as int64_t
       available_size = static_cast<size_t>( available );
    }
    else
    {
-      /// size_t is smaller than int64_t, Calc max that size_t can hold
+      // size_t is smaller than int64_t, Calc max that size_t can hold
       const int64_t size_max = std::numeric_limits<size_t>::max();
 
-      /// read smaller of size_max, available
-      ///??? redo
+      // read smaller of size_max, available
+      //??? redo
       if ( size_max < available )
       {
          available_size = static_cast<size_t>( size_max );
@@ -174,10 +180,10 @@ XMLSize_t E57FileInputStream::readBytes( XMLByte *const toFill, const XMLSize_t 
 //=============================================================================
 // E57XmlFileInputSource
 
-E57XmlFileInputSource::E57XmlFileInputSource( CheckedFile *cf, uint64_t logicalStart, uint64_t logicalLength ) :
+E57XmlFileInputSource::E57XmlFileInputSource( CheckedFile *cf, uint64_t logicalStart,
+                                              uint64_t logicalLength ) :
    InputSource( "E57File",
-                XMLPlatformUtils::fgMemoryManager ), //??? what if want to use our own
-                                                     // memory
+                XMLPlatformUtils::fgMemoryManager ), //??? what if want to use our own memory
                                                      // manager?, what bufid is good?
    cf_( cf ), logicalStart_( logicalStart ), logicalLength_( logicalLength )
 {
@@ -193,8 +199,8 @@ BinInputStream *E57XmlFileInputSource::makeStream() const
 
 E57XmlParser::ParseInfo::ParseInfo() :
    nodeType( static_cast<NodeType>( 0 ) ), minimum( 0 ), maximum( 0 ), scale( 0 ), offset( 0 ),
-   precision( static_cast<FloatPrecision>( 0 ) ), floatMinimum( 0 ), floatMaximum( 0 ), fileOffset( 0 ), length( 0 ),
-   allowHeterogeneousChildren( false ), recordCount( 0 )
+   precision( static_cast<FloatPrecision>( 0 ) ), floatMinimum( 0 ), floatMaximum( 0 ),
+   fileOffset( 0 ), length( 0 ), allowHeterogeneousChildren( false ), recordCount( 0 )
 {
 }
 
@@ -210,7 +216,8 @@ void E57XmlParser::ParseInfo::dump( int indent, std::ostream &os ) const
    os << space( indent ) << "floatMaximum:   " << floatMaximum << std::endl;
    os << space( indent ) << "fileOffset:     " << fileOffset << std::endl;
    os << space( indent ) << "length:         " << length << std::endl;
-   os << space( indent ) << "allowHeterogeneousChildren: " << allowHeterogeneousChildren << std::endl;
+   os << space( indent ) << "allowHeterogeneousChildren: " << allowHeterogeneousChildren
+      << std::endl;
    os << space( indent ) << "recordCount:    " << recordCount << std::endl;
    if ( container_ni )
    {
@@ -248,8 +255,9 @@ void E57XmlParser::init()
    }
    catch ( const XMLException &ex )
    {
-      /// Turn parser exception into E57Exception
-      throw E57_EXCEPTION2( ErrorXMLParserInit, "parserMessage=" + ustring( XMLString::transcode( ex.getMessage() ) ) );
+      // Turn parser exception into E57Exception
+      throw E57_EXCEPTION2( ErrorXMLParserInit,
+                            "parserMessage=" + ustring( XMLString::transcode( ex.getMessage() ) ) );
    }
 
    xmlReader = XMLReaderFactory::createXMLReader(); //??? auto_ptr?
@@ -276,8 +284,8 @@ void E57XmlParser::parse( InputSource &inputSource )
    xmlReader->parse( inputSource );
 }
 
-void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const localName, const XMLCh *const qName,
-                                 const Attributes &attributes )
+void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const localName,
+                                 const XMLCh *const qName, const Attributes &attributes )
 {
 #ifdef E57_MAX_VERBOSE
    std::cout << "startElement" << std::endl;
@@ -289,16 +297,18 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
    {
       std::cout << space( 2 ) << "Attribute[" << i << "]" << std::endl;
       std::cout << space( 4 ) << "URI:       " << toUString( attributes.getURI( i ) ) << std::endl;
-      std::cout << space( 4 ) << "localName: " << toUString( attributes.getLocalName( i ) ) << std::endl;
-      std::cout << space( 4 ) << "qName:     " << toUString( attributes.getQName( i ) ) << std::endl;
-      std::cout << space( 4 ) << "value:     " << toUString( attributes.getValue( i ) ) << std::endl;
+      std::cout << space( 4 ) << "localName: " << toUString( attributes.getLocalName( i ) )
+                << std::endl;
+      std::cout << space( 4 ) << "qName:     " << toUString( attributes.getQName( i ) )
+                << std::endl;
+      std::cout << space( 4 ) << "value:     " << toUString( attributes.getValue( i ) )
+                << std::endl;
    }
 #endif
-   /// Get Type attribute
+   // Get Type attribute
    ustring node_type = lookupAttribute( attributes, att_type );
 
-   //??? check to make sure not in primitive type (can only nest inside compound
-   // types).
+   //??? check to make sure not in primitive type (can only nest inside compound types).
 
    ParseInfo pi;
 
@@ -318,7 +328,7 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
       }
       else
       {
-         /// Not defined defined in XML, so defaults to E57_INT64_MIN
+         // Not defined defined in XML, so defaults to E57_INT64_MIN
          pi.minimum = INT64_MIN;
       }
 
@@ -330,11 +340,10 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
       }
       else
       {
-         /// Not defined defined in XML, so defaults to E57_INT64_MAX
+         // Not defined defined in XML, so defaults to E57_INT64_MAX
          pi.maximum = INT64_MAX;
       }
 
-      /// Push info so far onto stack
       stack_.push( pi );
    }
    else if ( node_type == "ScaledInteger" )
@@ -353,7 +362,7 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
       }
       else
       {
-         /// Not defined defined in XML, so defaults to E57_INT64_MIN
+         // Not defined defined in XML, so defaults to E57_INT64_MIN
          pi.minimum = INT64_MIN;
       }
 
@@ -365,7 +374,7 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
       }
       else
       {
-         /// Not defined defined in XML, so defaults to E57_INT64_MAX
+         // Not defined defined in XML, so defaults to E57_INT64_MAX
          pi.maximum = INT64_MAX;
       }
 
@@ -376,7 +385,7 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
       }
       else
       {
-         /// Not defined defined in XML, so defaults to 1.0
+         // Not defined defined in XML, so defaults to 1.0
          pi.scale = 1.0;
       }
 
@@ -387,11 +396,10 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
       }
       else
       {
-         /// Not defined defined in XML, so defaults to 0.0
+         // Not defined defined in XML, so defaults to 0.0
          pi.offset = 0.0;
       }
 
-      /// Push info so far onto stack
       stack_.push( pi );
    }
    else if ( node_type == "Float" )
@@ -415,14 +423,15 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
          else
          {
             throw E57_EXCEPTION2( ErrorBadXMLFormat, "precisionString=" + precision_str +
-                                                        " fileName=" + imf_->fileName() + " uri=" + toUString( uri ) +
+                                                        " fileName=" + imf_->fileName() +
+                                                        " uri=" + toUString( uri ) +
                                                         " localName=" + toUString( localName ) +
                                                         " qName=" + toUString( qName ) );
          }
       }
       else
       {
-         /// Not defined defined in XML, so defaults to double
+         // Not defined defined in XML, so defaults to double
          pi.precision = PrecisionDouble;
       }
 
@@ -433,8 +442,7 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
       }
       else
       {
-         /// Not defined defined in XML, so defaults to E57_FLOAT_MIN or
-         /// E57_DOUBLE_MIN
+         // Not defined defined in XML, so defaults to E57_FLOAT_MIN or E57_DOUBLE_MIN
          if ( pi.precision == PrecisionSingle )
          {
             pi.floatMinimum = FLOAT_MIN;
@@ -452,7 +460,7 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
       }
       else
       {
-         /// Not defined defined in XML, so defaults to FLOAT_MAX or DOUBLE_MAX
+         // Not defined defined in XML, so defaults to FLOAT_MAX or DOUBLE_MAX
          if ( pi.precision == PrecisionSingle )
          {
             pi.floatMaximum = FLOAT_MAX;
@@ -463,7 +471,6 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
          }
       }
 
-      /// Push info so far onto stack
       stack_.push( pi );
    }
    else if ( node_type == "String" )
@@ -473,7 +480,6 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
 #endif
       pi.nodeType = TypeString;
 
-      /// Push info so far onto stack
       stack_.push( pi );
    }
    else if ( node_type == "Blob" )
@@ -485,17 +491,16 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
 
       //??? check validity of numeric strings
 
-      /// fileOffset is required to be defined
+      // fileOffset is required to be defined
       ustring fileOffset_str = lookupAttribute( attributes, att_fileOffset );
 
       pi.fileOffset = convertStrToLL( fileOffset_str );
 
-      /// length is required to be defined
+      // length is required to be defined
       ustring length_str = lookupAttribute( attributes, att_length );
 
       pi.length = convertStrToLL( length_str );
 
-      /// Push info so far onto stack
       stack_.push( pi );
    }
    else if ( node_type == "Structure" )
@@ -505,56 +510,58 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
 #endif
       pi.nodeType = TypeStructure;
 
-      /// Read name space decls, if e57Root element
+      // Read name space decls, if e57Root element
       if ( toUString( localName ) == "e57Root" )
       {
-         /// Search attributes for namespace declarations (only allowed in
-         /// E57Root structure)
+         // Search attributes for namespace declarations (only allowed in E57Root structure)
          bool gotDefault = false;
          for ( size_t i = 0; i < attributes.getLength(); i++ )
          {
-            /// Check if declaring the default namespace
+            // Check if declaring the default namespace
             if ( toUString( attributes.getQName( i ) ) == "xmlns" )
             {
 #ifdef E57_VERBOSE
-               std::cout << "declared default namespace, URI=" << toUString( attributes.getValue( i ) ) << std::endl;
+               std::cout << "declared default namespace, URI="
+                         << toUString( attributes.getValue( i ) ) << std::endl;
 #endif
                imf_->extensionsAdd( "", toUString( attributes.getValue( i ) ) );
                gotDefault = true;
             }
 
-            /// Check if declaring a namespace
+            // Check if declaring a namespace
             if ( toUString( attributes.getURI( i ) ) == "http://www.w3.org/2000/xmlns/" )
             {
 #ifdef E57_VERBOSE
-               std::cout << "declared extension, prefix=" << toUString( attributes.getLocalName( i ) )
+               std::cout << "declared extension, prefix="
+                         << toUString( attributes.getLocalName( i ) )
                          << " URI=" << toUString( attributes.getValue( i ) ) << std::endl;
 #endif
-               imf_->extensionsAdd( toUString( attributes.getLocalName( i ) ), toUString( attributes.getValue( i ) ) );
+               imf_->extensionsAdd( toUString( attributes.getLocalName( i ) ),
+                                    toUString( attributes.getValue( i ) ) );
             }
          }
 
-         /// If didn't declare a default namespace, have error
+         // If didn't declare a default namespace, have error
          if ( !gotDefault )
          {
-            throw E57_EXCEPTION2( ErrorBadXMLFormat, "fileName=" + imf_->fileName() + " uri=" + toUString( uri ) +
+            throw E57_EXCEPTION2( ErrorBadXMLFormat, "fileName=" + imf_->fileName() +
+                                                        " uri=" + toUString( uri ) +
                                                         " localName=" + toUString( localName ) +
                                                         " qName=" + toUString( qName ) );
          }
       }
 
-      /// Create container now, so can hold children
+      // Create container now, so can hold children
       std::shared_ptr<StructureNodeImpl> s_ni( new StructureNodeImpl( imf_ ) );
       pi.container_ni = s_ni;
 
-      /// After have Structure, check again if E57Root, if so mark attached so
-      /// all children will be attached when added
+      // After have Structure, check again if E57Root, if so mark attached so all children will be
+      // attached when added
       if ( toUString( localName ) == "e57Root" )
       {
          s_ni->setAttachedRecursive();
       }
 
-      /// Push info so far onto stack
       stack_.push( pi );
    }
    else if ( node_type == "Vector" )
@@ -580,23 +587,24 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
          }
          else
          {
-            throw E57_EXCEPTION2( ErrorBadXMLFormat, "allowHeterogeneousChildren=" + toString( i64 ) +
-                                                        "fileName=" + imf_->fileName() + " uri=" + toUString( uri ) +
-                                                        " localName=" + toUString( localName ) +
-                                                        " qName=" + toUString( qName ) );
+            throw E57_EXCEPTION2( ErrorBadXMLFormat,
+                                  "allowHeterogeneousChildren=" + toString( i64 ) +
+                                     "fileName=" + imf_->fileName() + " uri=" + toUString( uri ) +
+                                     " localName=" + toUString( localName ) +
+                                     " qName=" + toUString( qName ) );
          }
       }
       else
       {
-         /// Not defined defined in XML, so defaults to false
+         // Not defined defined in XML, so defaults to false
          pi.allowHeterogeneousChildren = false;
       }
 
-      /// Create container now, so can hold children
-      std::shared_ptr<VectorNodeImpl> v_ni( new VectorNodeImpl( imf_, pi.allowHeterogeneousChildren ) );
+      // Create container now, so can hold children
+      std::shared_ptr<VectorNodeImpl> v_ni(
+         new VectorNodeImpl( imf_, pi.allowHeterogeneousChildren ) );
       pi.container_ni = v_ni;
 
-      /// Push info so far onto stack
       stack_.push( pi );
    }
    else if ( node_type == "CompressedVector" )
@@ -606,51 +614,52 @@ void E57XmlParser::startElement( const XMLCh *const uri, const XMLCh *const loca
 #endif
       pi.nodeType = TypeCompressedVector;
 
-      /// fileOffset is required to be defined
+      // fileOffset is required to be defined
       ustring fileOffset_str = lookupAttribute( attributes, att_fileOffset );
 
       pi.fileOffset = convertStrToLL( fileOffset_str );
 
-      /// recordCount is required to be defined
+      // recordCount is required to be defined
       ustring recordCount_str = lookupAttribute( attributes, att_recordCount );
 
       pi.recordCount = convertStrToLL( recordCount_str );
 
-      /// Create container now, so can hold children
+      // Create container now, so can hold children
       std::shared_ptr<CompressedVectorNodeImpl> cv_ni( new CompressedVectorNodeImpl( imf_ ) );
       cv_ni->setRecordCount( pi.recordCount );
       cv_ni->setBinarySectionLogicalStart(
          imf_->file_->physicalToLogical( pi.fileOffset ) ); //??? what if file_ is NULL?
       pi.container_ni = cv_ni;
 
-      /// Push info so far onto stack
       stack_.push( pi );
    }
    else
    {
-      throw E57_EXCEPTION2( ErrorBadXMLFormat, "nodeType=" + node_type + " fileName=" + imf_->fileName() +
-                                                  " uri=" + toUString( uri ) + " localName=" + toUString( localName ) +
-                                                  " qName=" + toUString( qName ) );
+      throw E57_EXCEPTION2( ErrorBadXMLFormat,
+                            "nodeType=" + node_type + " fileName=" + imf_->fileName() +
+                               " uri=" + toUString( uri ) + " localName=" + toUString( localName ) +
+                               " qName=" + toUString( qName ) );
    }
 #ifdef E57_MAX_VERBOSE
    pi.dump( 4 );
 #endif
 }
 
-void E57XmlParser::endElement( const XMLCh *const uri, const XMLCh *const localName, const XMLCh *const qName )
+void E57XmlParser::endElement( const XMLCh *const uri, const XMLCh *const localName,
+                               const XMLCh *const qName )
 {
 #ifdef E57_MAX_VERBOSE
    std::cout << "endElement" << std::endl;
 #endif
 
-   /// Pop the node that just ended
+   // Pop the node that just ended
    ParseInfo pi = stack_.top(); //??? really want to make a copy here?
    stack_.pop();
 #ifdef E57_MAX_VERBOSE
    pi.dump( 4 );
 #endif
 
-   /// We should now have all the info we need to create the node
+   // We should now have all the info we need to create the node
    NodeImplSharedPtr current_ni;
 
    switch ( pi.nodeType )
@@ -661,14 +670,14 @@ void E57XmlParser::endElement( const XMLCh *const uri, const XMLCh *const localN
          break;
       case TypeCompressedVector:
       {
-         /// Verify that both prototype and codecs child elements were defined
-         /// ???
+         // Verify that both prototype and codecs child elements were defined
+         // ???
          current_ni = pi.container_ni;
       }
       break;
       case TypeInteger:
       {
-         /// Convert child text (if any) to value, else default to 0.0
+         // Convert child text (if any) to value, else default to 0.0
          int64_t intValue;
          if ( pi.childText.length() > 0 )
          {
@@ -678,13 +687,14 @@ void E57XmlParser::endElement( const XMLCh *const uri, const XMLCh *const localN
          {
             intValue = 0;
          }
-         std::shared_ptr<IntegerNodeImpl> i_ni( new IntegerNodeImpl( imf_, intValue, pi.minimum, pi.maximum ) );
+         std::shared_ptr<IntegerNodeImpl> i_ni(
+            new IntegerNodeImpl( imf_, intValue, pi.minimum, pi.maximum ) );
          current_ni = i_ni;
       }
       break;
       case TypeScaledInteger:
       {
-         /// Convert child text (if any) to value, else default to 0.0
+         // Convert child text (if any) to value, else default to 0.0
          int64_t intValue;
          if ( pi.childText.length() > 0 )
          {
@@ -694,14 +704,14 @@ void E57XmlParser::endElement( const XMLCh *const uri, const XMLCh *const localN
          {
             intValue = 0;
          }
-         std::shared_ptr<ScaledIntegerNodeImpl> si_ni(
-            new ScaledIntegerNodeImpl( imf_, intValue, pi.minimum, pi.maximum, pi.scale, pi.offset ) );
+         std::shared_ptr<ScaledIntegerNodeImpl> si_ni( new ScaledIntegerNodeImpl(
+            imf_, intValue, pi.minimum, pi.maximum, pi.scale, pi.offset ) );
          current_ni = si_ni;
       }
       break;
       case TypeFloat:
       {
-         /// Convert child text (if any) to value, else default to 0.0
+         // Convert child text (if any) to value, else default to 0.0
          double floatValue;
          if ( pi.childText.length() > 0 )
          {
@@ -729,22 +739,24 @@ void E57XmlParser::endElement( const XMLCh *const uri, const XMLCh *const localN
       }
       break;
       default:
-         throw E57_EXCEPTION2( ErrorInternal, "nodeType=" + toString( pi.nodeType ) + " fileName=" + imf_->fileName() +
-                                                 " uri=" + toUString( uri ) + " localName=" + toUString( localName ) +
-                                                 " qName=" + toUString( qName ) );
+         throw E57_EXCEPTION2(
+            ErrorInternal, "nodeType=" + toString( pi.nodeType ) + " fileName=" + imf_->fileName() +
+                              " uri=" + toUString( uri ) + " localName=" + toUString( localName ) +
+                              " qName=" + toUString( qName ) );
    }
 #ifdef E57_MAX_VERBOSE
    current_ni->dump( 4 );
 #endif
 
-   /// If first node in file ended, we are all done
+   // If first node in file ended, we are all done
    if ( stack_.empty() )
    {
-      /// Top level should be Structure
+      // Top level should be Structure
       if ( current_ni->type() != TypeStructure )
       {
          throw E57_EXCEPTION2( ErrorBadXMLFormat, "currentType=" + toString( current_ni->type() ) +
-                                                     " fileName=" + imf_->fileName() + " uri=" + toUString( uri ) +
+                                                     " fileName=" + imf_->fileName() +
+                                                     " uri=" + toUString( uri ) +
                                                      " localName=" + toUString( localName ) +
                                                      " qName=" + toUString( qName ) );
       }
@@ -752,33 +764,35 @@ void E57XmlParser::endElement( const XMLCh *const uri, const XMLCh *const localN
       return;
    }
 
-   /// Get next level up node (when entered function), which should be a
-   /// container.
+   // Get next level up node (when entered function), which should be a container.
    NodeImplSharedPtr parent_ni = stack_.top().container_ni;
 
    if ( !parent_ni )
    {
-      throw E57_EXCEPTION2( ErrorBadXMLFormat, "fileName=" + imf_->fileName() + " uri=" + toUString( uri ) +
+      throw E57_EXCEPTION2( ErrorBadXMLFormat, "fileName=" + imf_->fileName() +
+                                                  " uri=" + toUString( uri ) +
                                                   " localName=" + toUString( localName ) +
                                                   " qName=" + toUString( qName ) );
    }
 
-   /// Add current node into parent at top of stack
+   // Add current node into parent at top of stack
    switch ( parent_ni->type() )
    {
       case TypeStructure:
       {
-         std::shared_ptr<StructureNodeImpl> struct_ni = std::static_pointer_cast<StructureNodeImpl>( parent_ni );
+         std::shared_ptr<StructureNodeImpl> struct_ni =
+            std::static_pointer_cast<StructureNodeImpl>( parent_ni );
 
-         /// Add named child to structure
+         // Add named child to structure
          struct_ni->set( toUString( qName ), current_ni );
       }
       break;
       case TypeVector:
       {
-         std::shared_ptr<VectorNodeImpl> vector_ni = std::static_pointer_cast<VectorNodeImpl>( parent_ni );
+         std::shared_ptr<VectorNodeImpl> vector_ni =
+            std::static_pointer_cast<VectorNodeImpl>( parent_ni );
 
-         /// Add unnamed child to vector
+         // Add unnamed child to vector
          vector_ni->append( current_ni );
       }
       break;
@@ -788,7 +802,7 @@ void E57XmlParser::endElement( const XMLCh *const uri, const XMLCh *const localN
             std::static_pointer_cast<CompressedVectorNodeImpl>( parent_ni );
          ustring uQName = toUString( qName );
 
-         /// n can be either prototype or codecs
+         // n can be either prototype or codecs
          if ( uQName == "prototype" )
          {
             cv_ni->setPrototype( current_ni );
@@ -797,38 +811,42 @@ void E57XmlParser::endElement( const XMLCh *const uri, const XMLCh *const localN
          {
             if ( current_ni->type() != TypeVector )
             {
-               throw E57_EXCEPTION2( ErrorBadXMLFormat,
-                                     "currentType=" + toString( current_ni->type() ) + " fileName=" + imf_->fileName() +
-                                        " uri=" + toUString( uri ) + " localName=" + toUString( localName ) +
-                                        " qName=" + toUString( qName ) );
+               throw E57_EXCEPTION2(
+                  ErrorBadXMLFormat,
+                  "currentType=" + toString( current_ni->type() ) +
+                     " fileName=" + imf_->fileName() + " uri=" + toUString( uri ) +
+                     " localName=" + toUString( localName ) + " qName=" + toUString( qName ) );
             }
-            std::shared_ptr<VectorNodeImpl> vi = std::static_pointer_cast<VectorNodeImpl>( current_ni );
+            std::shared_ptr<VectorNodeImpl> vi =
+               std::static_pointer_cast<VectorNodeImpl>( current_ni );
 
-            /// Check VectorNode is hetero
+            // Check VectorNode is hetero
             if ( !vi->allowHeteroChildren() )
             {
-               throw E57_EXCEPTION2( ErrorBadXMLFormat,
-                                     "currentType=" + toString( current_ni->type() ) + " fileName=" + imf_->fileName() +
-                                        " uri=" + toUString( uri ) + " localName=" + toUString( localName ) +
-                                        " qName=" + toUString( qName ) );
+               throw E57_EXCEPTION2(
+                  ErrorBadXMLFormat,
+                  "currentType=" + toString( current_ni->type() ) +
+                     " fileName=" + imf_->fileName() + " uri=" + toUString( uri ) +
+                     " localName=" + toUString( localName ) + " qName=" + toUString( qName ) );
             }
 
             cv_ni->setCodecs( vi );
          }
          else
          {
-            /// Found unknown XML child element of CompressedVector, not
-            /// prototype or codecs
-            throw E57_EXCEPTION2( ErrorBadXMLFormat, +"fileName=" + imf_->fileName() + " uri=" + toUString( uri ) +
+            // Found unknown XML child element of CompressedVector, not prototype or codecs
+            throw E57_EXCEPTION2( ErrorBadXMLFormat, +"fileName=" + imf_->fileName() +
+                                                        " uri=" + toUString( uri ) +
                                                         " localName=" + toUString( localName ) +
                                                         " qName=" + toUString( qName ) );
          }
       }
       break;
       default:
-         /// Have bad XML nesting, parent should have been a container.
+         // Have bad XML nesting, parent should have been a container.
          throw E57_EXCEPTION2( ErrorBadXMLFormat, "parentType=" + toString( parent_ni->type() ) +
-                                                     " fileName=" + imf_->fileName() + " uri=" + toUString( uri ) +
+                                                     " fileName=" + imf_->fileName() +
+                                                     " uri=" + toUString( uri ) +
                                                      " localName=" + toUString( localName ) +
                                                      " qName=" + toUString( qName ) );
    }
@@ -840,10 +858,10 @@ void E57XmlParser::characters( const XMLCh *const chars, const XMLSize_t length 
 #ifdef E57_MAX_VERBOSE
    std::cout << "characters, chars=\"" << toUString( chars ) << "\" length=" << length << std::endl;
 #endif
-   /// Get active element
+   // Get active element
    ParseInfo &pi = stack_.top();
 
-   /// Check if child text is allowed for current E57 element type
+   // Check if child text is allowed for current E57 element type
    switch ( pi.nodeType )
    {
       case TypeStructure:
@@ -851,7 +869,7 @@ void E57XmlParser::characters( const XMLCh *const chars, const XMLSize_t length 
       case TypeCompressedVector:
       case TypeBlob:
       {
-         /// If characters aren't whitespace, have an error, else ignore
+         // If characters aren't whitespace, have an error, else ignore
          ustring s = toUString( chars );
          if ( s.find_first_not_of( " \t\n\r" ) != std::string::npos )
          {
@@ -860,31 +878,34 @@ void E57XmlParser::characters( const XMLCh *const chars, const XMLSize_t length 
       }
       break;
       default:
-         /// Append to any previous characters
+         // Append to any previous characters
          pi.childText += toUString( chars );
    }
 }
 
 void E57XmlParser::error( const SAXParseException &ex )
 {
-   throw E57_EXCEPTION2( ErrorXMLParser, "systemId=" + ustring( XMLString::transcode( ex.getSystemId() ) ) +
-                                            " xmlLine=" + toString( ex.getLineNumber() ) +
-                                            " xmlColumn=" + toString( ex.getColumnNumber() ) +
-                                            " parserMessage=" + ustring( XMLString::transcode( ex.getMessage() ) ) );
+   throw E57_EXCEPTION2(
+      ErrorXMLParser, "systemId=" + ustring( XMLString::transcode( ex.getSystemId() ) ) +
+                         " xmlLine=" + toString( ex.getLineNumber() ) +
+                         " xmlColumn=" + toString( ex.getColumnNumber() ) +
+                         " parserMessage=" + ustring( XMLString::transcode( ex.getMessage() ) ) );
 }
 
 void E57XmlParser::fatalError( const SAXParseException &ex )
 {
-   throw E57_EXCEPTION2( ErrorXMLParser, "systemId=" + ustring( XMLString::transcode( ex.getSystemId() ) ) +
-                                            " xmlLine=" + toString( ex.getLineNumber() ) +
-                                            " xmlColumn=" + toString( ex.getColumnNumber() ) +
-                                            " parserMessage=" + ustring( XMLString::transcode( ex.getMessage() ) ) );
+   throw E57_EXCEPTION2(
+      ErrorXMLParser, "systemId=" + ustring( XMLString::transcode( ex.getSystemId() ) ) +
+                         " xmlLine=" + toString( ex.getLineNumber() ) +
+                         " xmlColumn=" + toString( ex.getColumnNumber() ) +
+                         " parserMessage=" + ustring( XMLString::transcode( ex.getMessage() ) ) );
 }
 
 void E57XmlParser::warning( const SAXParseException &ex )
 {
-   /// Don't take any action on warning from parser, just report
-   std::cerr << "**** XML parser warning: " << ustring( XMLString::transcode( ex.getMessage() ) ) << std::endl;
+   // Don't take any action on warning from parser, just report
+   std::cerr << "**** XML parser warning: " << ustring( XMLString::transcode( ex.getMessage() ) )
+             << std::endl;
    std::cerr << "  Debug info:" << std::endl;
    std::cerr << "    systemId=" << XMLString::transcode( ex.getSystemId() ) << std::endl;
    std::cerr << ",   xmlLine=" << ex.getLineNumber() << std::endl;

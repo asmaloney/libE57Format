@@ -33,16 +33,17 @@
 
 namespace e57
 {
-   /// Tool class to read buffer efficiently without
-   /// multiplying copy operations.
-   ///
-   /// WARNING: pointer input is handled by user!
+   // Tool class to read buffer efficiently without
+   // multiplying copy operations.
+   //
+   // WARNING: pointer input is handled by user!
    class BufferView;
 
    class CheckedFile
    {
    public:
-      static constexpr size_t physicalPageSizeLog2 = 10; // physical page size is 2 raised to this power
+      // physical page size is 2 raised to this power
+      static constexpr size_t physicalPageSizeLog2 = 10;
       static constexpr size_t physicalPageSize = 1 << physicalPageSizeLog2;
       static constexpr uint64_t physicalPageSizeMask = physicalPageSize - 1;
       static constexpr size_t logicalPageSize = physicalPageSize - 4;
@@ -94,7 +95,8 @@ namespace e57
 
       template <class FTYPE> CheckedFile &writeFloatingPoint( FTYPE value, int precision );
 
-      void getCurrentPageAndOffset( uint64_t &page, size_t &pageOffset, OffsetMode omode = Logical );
+      void getCurrentPageAndOffset( uint64_t &page, size_t &pageOffset,
+                                    OffsetMode omode = Logical );
       void readPhysicalPage( char *page_buffer, uint64_t page );
       void writePhysicalPage( char *page_buffer, uint64_t page );
       int open64( const e57::ustring &fileName, int flags, int mode );

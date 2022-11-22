@@ -30,172 +30,182 @@
 
 #pragma once
 
-//! @file
-//! @brief E57 Simple API for reading E57.
-//! @details This includes support for the [E57_EXT_surface_normals](http://www.libe57.org/E57_EXT_surface_normals.txt)
-//! extension.
+/// @file
+/// @brief E57 Simple API for reading E57.
+/// @details This includes support for the
+/// [E57_EXT_surface_normals](http://www.libe57.org/E57_EXT_surface_normals.txt) extension.
 
 #include "E57SimpleData.h"
 
 namespace e57
 {
-   //! Options to the Reader constructor
+   /// Options to the Reader constructor
    struct E57_DLL ReaderOptions
    {
-      //! Set how frequently to verify the checksums (see ReadChecksumPolicy).
+      /// Set how frequently to verify the checksums (see ReadChecksumPolicy).
       ReadChecksumPolicy checksumPolicy = ChecksumAll;
    };
 
-   //! @brief Used for reading an E57 file using E57 Simple API.
-   //!
-   //! The Reader includes support for the [E57_EXT_surface_normals](http://www.libe57.org/E57_EXT_surface_normals.txt)
-   //! extension.
+   /// @brief Used for reading an E57 file using E57 Simple API.
+   ///
+   /// The Reader includes support for the
+   /// [E57_EXT_surface_normals](http://www.libe57.org/E57_EXT_surface_normals.txt) extension.
    class E57_DLL Reader
    {
    public:
-      //! @brief Reader constructor
-      //! @param [in] filePath Path to E57 file
-      //! @param [in] options Options to be used for the file
+      /// @brief Reader constructor
+      /// @param [in] filePath Path to E57 file
+      /// @param [in] options Options to be used for the file
       Reader( const ustring &filePath, const ReaderOptions &options );
 
-      //! @brief Reader constructor (deprecated)
-      //! @param [in] filePath Path to E57 file
-      //! @deprecated Will be removed in 4.0. Use Reader( const ustring &, const ReaderOptions & ) instead.
-      [[deprecated(
-         "Will be removed in 4.0. Use Reader( const ustring, const ReaderOptions & )." )]] // TODO Remove in 4.0
+      /// @brief Reader constructor (deprecated)
+      /// @param [in] filePath Path to E57 file
+      /// @deprecated Will be removed in 4.0. Use Reader( const ustring &, const ReaderOptions & )
+      /// instead.
+      [[deprecated( "Will be removed in 4.0. Use Reader( const ustring, const ReaderOptions & "
+                    ")." )]] // TODO Remove in 4.0
       explicit Reader( const ustring &filePath );
 
-      //! @brief Returns true if the file is open
+      /// @brief Returns true if the file is open
       bool IsOpen() const;
 
-      //! @brief Closes the file
+      /// @brief Closes the file
       bool Close();
 
-      //! @name File information
-      //!@{
+      /// @name File information
+      ///@{
 
-      //! @brief Returns the file header information
-      //! @param [out] fileHeader is the main header information
-      //! @return Returns true if successful
+      /// @brief Returns the file header information
+      /// @param [out] fileHeader is the main header information
+      /// @return Returns true if successful
       bool GetE57Root( E57Root &fileHeader ) const;
 
-      //!@}
+      ///@}
 
-      //! @name Image2D
-      //!@{
+      /// @name Image2D
+      ///@{
 
-      //! @brief Returns the total number of Picture Blocks
-      //! @return Returns the number of Image2D blocks
+      /// @brief Returns the total number of Picture Blocks
+      /// @return Returns the number of Image2D blocks
       int64_t GetImage2DCount() const;
 
-      //! @brief Returns the image2D header and positions the cursor
-      //! @param [in] imageIndex This in the index into the image2D vector
-      //! @param [out] image2DHeader pointer to the Image2D structure to receive the picture information
-      //! @return Returns true if successful
+      /// @brief Returns the image2D header and positions the cursor
+      /// @param [in] imageIndex This in the index into the image2D vector
+      /// @param [out] image2DHeader pointer to the Image2D structure to receive the picture
+      /// information
+      /// @return Returns true if successful
       bool ReadImage2D( int64_t imageIndex, Image2D &image2DHeader ) const;
 
-      //! @brief Returns the size of the image data
-      //! @param [in] imageIndex This in the index into the image2D vector
-      //! @param [out] imageProjection identifies the projection in the image2D.
-      //! @param [out] imageType identifies the image format of the projection.
-      //! @param [out] imageWidth The image width (in pixels).
-      //! @param [out] imageHeight The image height (in pixels).
-      //! @param [out] imageSize This is the total number of bytes for the image blob.
-      //! @param [out] imageMaskType This is E57_PNG_IMAGE_MASK if "imageMask" is defined in the projection
-      //! @param [out] imageVisualType This is image type of the VisualReferenceRepresentation if given.
-      //! @return Returns true if successful
-      bool GetImage2DSizes( int64_t imageIndex, Image2DProjection &imageProjection, Image2DType &imageType,
-                            int64_t &imageWidth, int64_t &imageHeight, int64_t &imageSize, Image2DType &imageMaskType,
+      /// @brief Returns the size of the image data
+      /// @param [in] imageIndex This in the index into the image2D vector
+      /// @param [out] imageProjection identifies the projection in the image2D.
+      /// @param [out] imageType identifies the image format of the projection.
+      /// @param [out] imageWidth The image width (in pixels).
+      /// @param [out] imageHeight The image height (in pixels).
+      /// @param [out] imageSize This is the total number of bytes for the image blob.
+      /// @param [out] imageMaskType This is E57_PNG_IMAGE_MASK if "imageMask" is defined in the
+      /// projection
+      /// @param [out] imageVisualType This is image type of the VisualReferenceRepresentation if
+      /// given.
+      /// @return Returns true if successful
+      bool GetImage2DSizes( int64_t imageIndex, Image2DProjection &imageProjection,
+                            Image2DType &imageType, int64_t &imageWidth, int64_t &imageHeight,
+                            int64_t &imageSize, Image2DType &imageMaskType,
                             Image2DType &imageVisualType ) const;
 
-      //! @brief Reads an image
-      //! @param [in] imageIndex index of the image. Must be less than GetImage2DCount()
-      //! @param [in] imageProjection identifies the projection desired.
-      //! @param [in] imageType identifies the image format desired.
-      //! @param [out] buffer pointer the raw image buffer
-      //! @param [in] start position in the block to start reading
-      //! @param [in] count size of desired chuck or buffer size
-      //! @return Returns the number of bytes transferred.
-      int64_t ReadImage2DData( int64_t imageIndex, Image2DProjection imageProjection, Image2DType imageType,
-                               void *buffer, int64_t start, int64_t count ) const;
+      /// @brief Reads an image
+      /// @param [in] imageIndex index of the image. Must be less than GetImage2DCount()
+      /// @param [in] imageProjection identifies the projection desired.
+      /// @param [in] imageType identifies the image format desired.
+      /// @param [out] buffer pointer the raw image buffer
+      /// @param [in] start position in the block to start reading
+      /// @param [in] count size of desired chuck or buffer size
+      /// @return Returns the number of bytes transferred.
+      int64_t ReadImage2DData( int64_t imageIndex, Image2DProjection imageProjection,
+                               Image2DType imageType, void *buffer, int64_t start,
+                               int64_t count ) const;
 
-      //!@}
+      ///@}
 
-      //! @name Data3D
-      //!@{
+      /// @name Data3D
+      ///@{
 
-      //! @brief Returns the total number of Data3D Blocks
-      //! @return Returns number of Data3D blocks.
+      /// @brief Returns the total number of Data3D Blocks
+      /// @return Returns number of Data3D blocks.
       int64_t GetData3DCount() const;
 
-      //! @brief Returns the Data3D header
-      //! @param [in] dataIndex This in the index into the images3D vector. Must be less than GetData3DCount().
-      //! @param [out] data3DHeader Data3D header
-      //! @return Returns true if successful
+      /// @brief Returns the Data3D header
+      /// @param [in] dataIndex This in the index into the images3D vector. Must be less than
+      /// GetData3DCount().
+      /// @param [out] data3DHeader Data3D header
+      /// @return Returns true if successful
       bool ReadData3D( int64_t dataIndex, Data3D &data3DHeader ) const;
 
-      //! @brief Returns the size of the point data
-      //! @param [in] dataIndex This in the index into the images3D vector. Must be less than GetData3DCount().
-      //! @param [out] rowMax This is the maximum row size
-      //! @param [out] columnMax This is the maximum column size
-      //! @param [out] pointsSize This is the total number of point records
-      //! @param [out] groupsSize This is the total number of group records
-      //! @param [out] countSize This is the maximum point count per group
-      //! @param [out] columnIndex This indicates that the idElementName is "columnIndex"
-      //! @return Return true if successful, false otherwise
-      bool GetData3DSizes( int64_t dataIndex, int64_t &rowMax, int64_t &columnMax, int64_t &pointsSize,
-                           int64_t &groupsSize, int64_t &countSize, bool &columnIndex ) const;
+      /// @brief Returns the size of the point data
+      /// @param [in] dataIndex This in the index into the images3D vector. Must be less than
+      /// GetData3DCount().
+      /// @param [out] rowMax This is the maximum row size
+      /// @param [out] columnMax This is the maximum column size
+      /// @param [out] pointsSize This is the total number of point records
+      /// @param [out] groupsSize This is the total number of group records
+      /// @param [out] countSize This is the maximum point count per group
+      /// @param [out] columnIndex This indicates that the idElementName is "columnIndex"
+      /// @return Return true if successful, false otherwise
+      bool GetData3DSizes( int64_t dataIndex, int64_t &rowMax, int64_t &columnMax,
+                           int64_t &pointsSize, int64_t &groupsSize, int64_t &countSize,
+                           bool &columnIndex ) const;
 
-      //! @brief Reads the group data into the provided buffers.
-      //! @param [in] dataIndex This in the index into the images3D vector. Must be less than GetData3DCount().
-      //! @param [in] groupCount size of each of the buffers given
-      //! @param [out] idElementValue pointer to the buffer holding indices index for this group
-      //! @param [out] startPointIndex pointer to the buffer holding Starting index in to the "points" data vector for
-      //! the groups
-      //! @param [out] pointCount pointer to the buffer holding size of the groups given
-      //! @return Return true if successful, false otherwise
+      /// @brief Reads the group data into the provided buffers.
+      /// @param [in] dataIndex This in the index into the images3D vector. Must be less than
+      /// GetData3DCount().
+      /// @param [in] groupCount size of each of the buffers given
+      /// @param [out] idElementValue pointer to the buffer holding indices index for this group
+      /// @param [out] startPointIndex pointer to the buffer holding Starting index in to the
+      /// "points" data vector for the groups
+      /// @param [out] pointCount pointer to the buffer holding size of the groups given
+      /// @return Return true if successful, false otherwise
       bool ReadData3DGroupsData( int64_t dataIndex, int64_t groupCount, int64_t *idElementValue,
                                  int64_t *startPointIndex, int64_t *pointCount ) const;
 
-      //! @brief Use this to read the actual 3D data
-      //! @details All the non-NULL buffers in buffers have number of elements = pointCount.
-      //!          Call the CompressedVectorReader::read() until all data is read.
-      //! @param [in] dataIndex data block index
-      //! @param [in] pointCount size of each element buffer.
-      //! @param [in] buffers pointers to user-provided buffers
-      //! @return vector reader setup to read the selected data into the provided buffers
+      /// @brief Use this to read the actual 3D data
+      /// @details All the non-NULL buffers in buffers have number of elements = pointCount.
+      ///          Call the CompressedVectorReader::read() until all data is read.
+      /// @param [in] dataIndex data block index
+      /// @param [in] pointCount size of each element buffer.
+      /// @param [in] buffers pointers to user-provided buffers
+      /// @return vector reader setup to read the selected data into the provided buffers
       CompressedVectorReader SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
                                                     const Data3DPointsData &buffers ) const;
 
-      //! @overload
+      /// @overload
       CompressedVectorReader SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
                                                     const Data3DPointsData_d &buffers ) const;
 
-      //!@}
+      ///@}
 
-      //! @name Foundation API file information
-      //!@{
+      /// @name File information
+      ///@{
 
-      //! @brief Returns the file raw E57Root Structure Node
+      /// @brief Returns the file raw E57Root Structure Node
       StructureNode GetRawE57Root() const;
 
-      //! @brief Returns the raw Data3D Vector Node
+      /// @brief Returns the raw Data3D Vector Node
       VectorNode GetRawData3D() const;
 
-      //! @brief Returns the raw Image2D Vector Node
+      /// @brief Returns the raw Image2D Vector Node
       VectorNode GetRawImages2D() const;
 
-      //! @brief Returns the ram ImageFile Node which is need to add enhancements
+      /// @brief Returns the ram ImageFile Node which is need to add enhancements
       ImageFile GetRawIMF() const;
 
-      //!@}
+      ///@}
 
-      //! @cond documentNonPublic   The following isn't part of the API, and isn't documented.
    protected:
+      /// @cond documentNonPublic   The following isn't part of the API, and isn't documented.
       friend class ReaderImpl;
 
-      E57_OBJECT_IMPLEMENTATION( Reader ) // Internal implementation details, not part of API, must be last in object
-      //! @endcond
+      E57_OBJECT_IMPLEMENTATION( Reader ) // must be last in object
+      /// @endcond
    }; // end Reader class
 
 } // end namespace e57

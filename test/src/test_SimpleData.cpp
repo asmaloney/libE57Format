@@ -43,8 +43,9 @@ TEST( SimpleDataHeader, AutoSetNodeTypes )
 
    dataHeader.pointCount = 1;
 
-   // dataHeader.pointFields.pointRangeNodeType and dataHeader.pointFields.angleNodeType default to Float but we are
-   // using a double structure. The constructor should correct these and set them to Double.
+   // dataHeader.pointFields.pointRangeNodeType and dataHeader.pointFields.angleNodeType default to
+   // Float but we are using a double structure. The constructor should correct these and set them
+   // to Double.
    e57::Data3DPointsData_d pointsData( dataHeader );
 
    EXPECT_EQ( dataHeader.pointFields.pointRangeNodeType, e57::NumericalNodeType::Double );
@@ -99,8 +100,8 @@ TEST( SimpleDataHeader, HeaderMinMaxDouble )
    EXPECT_EQ( dataHeader.pointFields.timeMaximum, e57::DOUBLE_MAX );
 }
 
-// Checks that the Data3D header and the the cartesianX FloatNode data are the same when read, written, and read again.
-// https://github.com/asmaloney/libE57Format/issues/126
+// Checks that the Data3D header and the the cartesianX FloatNode data are the same when read,
+// written, and read again. https://github.com/asmaloney/libE57Format/issues/126
 TEST( SimpleData, ReadWrite )
 {
    e57::Reader *originalReader = nullptr;
@@ -110,7 +111,8 @@ TEST( SimpleData, ReadWrite )
 
    // 1. Read in original file
    {
-      E57_ASSERT_NO_THROW( originalReader = new e57::Reader( TestData::Path() + "/self/ColouredCubeDouble.e57", {} ) );
+      E57_ASSERT_NO_THROW( originalReader = new e57::Reader(
+                              TestData::Path() + "/self/ColouredCubeDouble.e57", {} ) );
 
       ASSERT_TRUE( originalReader->GetE57Root( originalFileHeader ) );
       ASSERT_TRUE( originalReader->ReadData3D( 0, originalData3DHeader ) );
@@ -119,7 +121,8 @@ TEST( SimpleData, ReadWrite )
 
       originalPointsData = new e57::Data3DPointsData_d( originalData3DHeader );
 
-      auto vectorReader = originalReader->SetUpData3DPointsData( 0, cNumPoints, *originalPointsData );
+      auto vectorReader =
+         originalReader->SetUpData3DPointsData( 0, cNumPoints, *originalPointsData );
 
       const uint64_t cNumRead = vectorReader.read();
 
@@ -173,13 +176,17 @@ TEST( SimpleData, ReadWrite )
 
    EXPECT_EQ( originalData3DHeader.colorLimits, copyData3DHeader.colorLimits );
 
-   EXPECT_EQ( originalData3DHeader.pointFields.cartesianXField, copyData3DHeader.pointFields.cartesianXField );
-   EXPECT_EQ( originalData3DHeader.pointFields.cartesianYField, copyData3DHeader.pointFields.cartesianYField );
-   EXPECT_EQ( originalData3DHeader.pointFields.cartesianZField, copyData3DHeader.pointFields.cartesianZField );
+   EXPECT_EQ( originalData3DHeader.pointFields.cartesianXField,
+              copyData3DHeader.pointFields.cartesianXField );
+   EXPECT_EQ( originalData3DHeader.pointFields.cartesianYField,
+              copyData3DHeader.pointFields.cartesianYField );
+   EXPECT_EQ( originalData3DHeader.pointFields.cartesianZField,
+              copyData3DHeader.pointFields.cartesianZField );
    EXPECT_EQ( originalData3DHeader.pointFields.cartesianInvalidStateField,
               copyData3DHeader.pointFields.cartesianInvalidStateField );
 
-   EXPECT_EQ( originalData3DHeader.pointFields.sphericalRangeField, copyData3DHeader.pointFields.sphericalRangeField );
+   EXPECT_EQ( originalData3DHeader.pointFields.sphericalRangeField,
+              copyData3DHeader.pointFields.sphericalRangeField );
    EXPECT_EQ( originalData3DHeader.pointFields.sphericalAzimuthField,
               copyData3DHeader.pointFields.sphericalAzimuthField );
    EXPECT_EQ( originalData3DHeader.pointFields.sphericalElevationField,
@@ -187,51 +194,79 @@ TEST( SimpleData, ReadWrite )
    EXPECT_EQ( originalData3DHeader.pointFields.sphericalInvalidStateField,
               copyData3DHeader.pointFields.sphericalInvalidStateField );
 
-   EXPECT_EQ( originalData3DHeader.pointFields.pointRangeMinimum, copyData3DHeader.pointFields.pointRangeMinimum );
-   EXPECT_EQ( originalData3DHeader.pointFields.pointRangeMaximum, copyData3DHeader.pointFields.pointRangeMaximum );
+   EXPECT_EQ( originalData3DHeader.pointFields.pointRangeMinimum,
+              copyData3DHeader.pointFields.pointRangeMinimum );
+   EXPECT_EQ( originalData3DHeader.pointFields.pointRangeMaximum,
+              copyData3DHeader.pointFields.pointRangeMaximum );
 
-   EXPECT_EQ( originalData3DHeader.pointFields.pointRangeNodeType, copyData3DHeader.pointFields.pointRangeNodeType );
-   EXPECT_EQ( originalData3DHeader.pointFields.pointRangeScale, copyData3DHeader.pointFields.pointRangeScale );
+   EXPECT_EQ( originalData3DHeader.pointFields.pointRangeNodeType,
+              copyData3DHeader.pointFields.pointRangeNodeType );
+   EXPECT_EQ( originalData3DHeader.pointFields.pointRangeScale,
+              copyData3DHeader.pointFields.pointRangeScale );
 
-   EXPECT_EQ( originalData3DHeader.pointFields.angleMinimum, copyData3DHeader.pointFields.angleMinimum );
-   EXPECT_EQ( originalData3DHeader.pointFields.angleMaximum, copyData3DHeader.pointFields.angleMaximum );
-   EXPECT_EQ( originalData3DHeader.pointFields.angleScale, copyData3DHeader.pointFields.angleScale );
+   EXPECT_EQ( originalData3DHeader.pointFields.angleMinimum,
+              copyData3DHeader.pointFields.angleMinimum );
+   EXPECT_EQ( originalData3DHeader.pointFields.angleMaximum,
+              copyData3DHeader.pointFields.angleMaximum );
+   EXPECT_EQ( originalData3DHeader.pointFields.angleScale,
+              copyData3DHeader.pointFields.angleScale );
 
-   EXPECT_EQ( originalData3DHeader.pointFields.rowIndexField, copyData3DHeader.pointFields.rowIndexField );
-   EXPECT_EQ( originalData3DHeader.pointFields.rowIndexMaximum, copyData3DHeader.pointFields.rowIndexMaximum );
+   EXPECT_EQ( originalData3DHeader.pointFields.rowIndexField,
+              copyData3DHeader.pointFields.rowIndexField );
+   EXPECT_EQ( originalData3DHeader.pointFields.rowIndexMaximum,
+              copyData3DHeader.pointFields.rowIndexMaximum );
 
-   EXPECT_EQ( originalData3DHeader.pointFields.columnIndexField, copyData3DHeader.pointFields.columnIndexField );
-   EXPECT_EQ( originalData3DHeader.pointFields.columnIndexMaximum, copyData3DHeader.pointFields.columnIndexMaximum );
+   EXPECT_EQ( originalData3DHeader.pointFields.columnIndexField,
+              copyData3DHeader.pointFields.columnIndexField );
+   EXPECT_EQ( originalData3DHeader.pointFields.columnIndexMaximum,
+              copyData3DHeader.pointFields.columnIndexMaximum );
 
-   EXPECT_EQ( originalData3DHeader.pointFields.returnIndexField, copyData3DHeader.pointFields.returnIndexField );
-   EXPECT_EQ( originalData3DHeader.pointFields.returnCountField, copyData3DHeader.pointFields.returnCountField );
-   EXPECT_EQ( originalData3DHeader.pointFields.returnMaximum, copyData3DHeader.pointFields.returnMaximum );
+   EXPECT_EQ( originalData3DHeader.pointFields.returnIndexField,
+              copyData3DHeader.pointFields.returnIndexField );
+   EXPECT_EQ( originalData3DHeader.pointFields.returnCountField,
+              copyData3DHeader.pointFields.returnCountField );
+   EXPECT_EQ( originalData3DHeader.pointFields.returnMaximum,
+              copyData3DHeader.pointFields.returnMaximum );
 
-   EXPECT_EQ( originalData3DHeader.pointFields.timeStampField, copyData3DHeader.pointFields.timeStampField );
+   EXPECT_EQ( originalData3DHeader.pointFields.timeStampField,
+              copyData3DHeader.pointFields.timeStampField );
    EXPECT_EQ( originalData3DHeader.pointFields.isTimeStampInvalidField,
               copyData3DHeader.pointFields.isTimeStampInvalidField );
-   EXPECT_EQ( originalData3DHeader.pointFields.timeMinimum, copyData3DHeader.pointFields.timeMinimum );
-   EXPECT_EQ( originalData3DHeader.pointFields.timeMaximum, copyData3DHeader.pointFields.timeMaximum );
+   EXPECT_EQ( originalData3DHeader.pointFields.timeMinimum,
+              copyData3DHeader.pointFields.timeMinimum );
+   EXPECT_EQ( originalData3DHeader.pointFields.timeMaximum,
+              copyData3DHeader.pointFields.timeMaximum );
 
-   EXPECT_EQ( originalData3DHeader.pointFields.intensityField, copyData3DHeader.pointFields.intensityField );
+   EXPECT_EQ( originalData3DHeader.pointFields.intensityField,
+              copyData3DHeader.pointFields.intensityField );
    EXPECT_EQ( originalData3DHeader.pointFields.isIntensityInvalidField,
               copyData3DHeader.pointFields.isIntensityInvalidField );
-   EXPECT_EQ( originalData3DHeader.pointFields.intensityScale, copyData3DHeader.pointFields.intensityScale );
+   EXPECT_EQ( originalData3DHeader.pointFields.intensityScale,
+              copyData3DHeader.pointFields.intensityScale );
 
-   EXPECT_EQ( originalData3DHeader.pointFields.colorRedField, copyData3DHeader.pointFields.colorRedField );
-   EXPECT_EQ( originalData3DHeader.pointFields.colorGreenField, copyData3DHeader.pointFields.colorGreenField );
-   EXPECT_EQ( originalData3DHeader.pointFields.colorBlueField, copyData3DHeader.pointFields.colorBlueField );
-   EXPECT_EQ( originalData3DHeader.pointFields.isColorInvalidField, copyData3DHeader.pointFields.isColorInvalidField );
+   EXPECT_EQ( originalData3DHeader.pointFields.colorRedField,
+              copyData3DHeader.pointFields.colorRedField );
+   EXPECT_EQ( originalData3DHeader.pointFields.colorGreenField,
+              copyData3DHeader.pointFields.colorGreenField );
+   EXPECT_EQ( originalData3DHeader.pointFields.colorBlueField,
+              copyData3DHeader.pointFields.colorBlueField );
+   EXPECT_EQ( originalData3DHeader.pointFields.isColorInvalidField,
+              copyData3DHeader.pointFields.isColorInvalidField );
 
-   EXPECT_EQ( originalData3DHeader.pointFields.normalXField, copyData3DHeader.pointFields.normalXField );
-   EXPECT_EQ( originalData3DHeader.pointFields.normalYField, copyData3DHeader.pointFields.normalYField );
-   EXPECT_EQ( originalData3DHeader.pointFields.normalZField, copyData3DHeader.pointFields.normalZField );
+   EXPECT_EQ( originalData3DHeader.pointFields.normalXField,
+              copyData3DHeader.pointFields.normalXField );
+   EXPECT_EQ( originalData3DHeader.pointFields.normalYField,
+              copyData3DHeader.pointFields.normalYField );
+   EXPECT_EQ( originalData3DHeader.pointFields.normalZField,
+              copyData3DHeader.pointFields.normalZField );
 
    EXPECT_EQ( originalData3DHeader.pointCount, copyData3DHeader.pointCount );
 
    // 5. Compare the cartesianX FloatNode data
-   e57::CompressedVectorNode originalPointsStructureNode( originalReader->GetRawData3D().get( "/data3D/0/points" ) );
-   e57::CompressedVectorNode copyPointsStructureNode( copyReader->GetRawData3D().get( "/data3D/0/points" ) );
+   e57::CompressedVectorNode originalPointsStructureNode(
+      originalReader->GetRawData3D().get( "/data3D/0/points" ) );
+   e57::CompressedVectorNode copyPointsStructureNode(
+      copyReader->GetRawData3D().get( "/data3D/0/points" ) );
 
    const e57::StructureNode originalProto( originalPointsStructureNode.prototype() );
    const e57::StructureNode copyProto( copyPointsStructureNode.prototype() );

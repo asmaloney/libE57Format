@@ -43,7 +43,8 @@ namespace e57
    /// @brief Convert number to decimal string
    template <class T> std::string toString( T x )
    {
-      static_assert( std::is_integral<T>::value || std::is_enum<T>::value || std::is_floating_point<T>::value,
+      static_assert( std::is_integral<T>::value || std::is_enum<T>::value ||
+                        std::is_floating_point<T>::value,
                      "Numeric type required." );
 
       std::ostringstream ss;
@@ -51,8 +52,7 @@ namespace e57
       return ss.str();
    }
 
-   /// @brief Convert number to a hexadecimal strings
-   /// @note Hex strings don't have leading zeros.
+   /// @overload
    inline std::string hexString( uint8_t x )
    {
       std::ostringstream ss;
@@ -90,7 +90,8 @@ namespace e57
       return hexString( static_cast<uint8_t>( x ) );
    }
 
-   /// @overload
+   /// @brief Convert number to a hexadecimal strings
+   /// @note Hex strings don't have leading zeros.
    inline std::string hexString( int16_t x )
    {
       return hexString( static_cast<uint16_t>( x ) );

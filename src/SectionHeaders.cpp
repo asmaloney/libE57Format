@@ -40,55 +40,60 @@ namespace e57
 
    CompressedVectorSectionHeader::CompressedVectorSectionHeader()
    {
-      /// Double check that header is correct length.  Watch out for RTTI
-      /// increasing the size.
+      // Double check that header is correct length.  Watch out for RTTI increasing the size.
       static_assert( sizeof( CompressedVectorSectionHeader ) == 32,
                      "Unexpected size of CompressedVectorSectionHeader" );
    }
 
    void CompressedVectorSectionHeader::verify( uint64_t filePhysicalSize )
    {
-      /// Verify reserved fields are zero. ???  if fileversion==1.0 ???
+      // Verify reserved fields are zero. ???  if fileversion==1.0 ???
       for ( unsigned i = 0; i < sizeof( reserved1 ); i++ )
       {
          if ( reserved1[i] != 0 )
          {
-            throw E57_EXCEPTION2( ErrorBadCVHeader, "i=" + toString( i ) + " reserved=" + toString( reserved1[i] ) );
+            throw E57_EXCEPTION2( ErrorBadCVHeader,
+                                  "i=" + toString( i ) + " reserved=" + toString( reserved1[i] ) );
          }
       }
 
-      /// Check section length is multiple of 4
+      // Check section length is multiple of 4
       if ( sectionLogicalLength % 4 )
       {
-         throw E57_EXCEPTION2( ErrorBadCVHeader, "sectionLogicalLength=" + toString( sectionLogicalLength ) );
+         throw E57_EXCEPTION2( ErrorBadCVHeader,
+                               "sectionLogicalLength=" + toString( sectionLogicalLength ) );
       }
 
-      /// Check sectionLogicalLength is in bounds
+      // Check sectionLogicalLength is in bounds
       if ( filePhysicalSize > 0 && sectionLogicalLength >= filePhysicalSize )
       {
-         throw E57_EXCEPTION2( ErrorBadCVHeader, "sectionLogicalLength=" + toString( sectionLogicalLength ) +
-                                                    " filePhysicalSize=" + toString( filePhysicalSize ) );
+         throw E57_EXCEPTION2( ErrorBadCVHeader,
+                               "sectionLogicalLength=" + toString( sectionLogicalLength ) +
+                                  " filePhysicalSize=" + toString( filePhysicalSize ) );
       }
 
-      /// Check dataPhysicalOffset is in bounds
+      // Check dataPhysicalOffset is in bounds
       if ( filePhysicalSize > 0 && dataPhysicalOffset >= filePhysicalSize )
       {
-         throw E57_EXCEPTION2( ErrorBadCVHeader, "dataPhysicalOffset=" + toString( dataPhysicalOffset ) +
-                                                    " filePhysicalSize=" + toString( filePhysicalSize ) );
+         throw E57_EXCEPTION2( ErrorBadCVHeader,
+                               "dataPhysicalOffset=" + toString( dataPhysicalOffset ) +
+                                  " filePhysicalSize=" + toString( filePhysicalSize ) );
       }
 
-      /// Check indexPhysicalOffset is in bounds
+      // Check indexPhysicalOffset is in bounds
       if ( filePhysicalSize > 0 && indexPhysicalOffset >= filePhysicalSize )
       {
-         throw E57_EXCEPTION2( ErrorBadCVHeader, "indexPhysicalOffset=" + toString( indexPhysicalOffset ) +
-                                                    " filePhysicalSize=" + toString( filePhysicalSize ) );
+         throw E57_EXCEPTION2( ErrorBadCVHeader,
+                               "indexPhysicalOffset=" + toString( indexPhysicalOffset ) +
+                                  " filePhysicalSize=" + toString( filePhysicalSize ) );
       }
    }
 
 #ifdef E57_DEBUG
    void CompressedVectorSectionHeader::dump( int indent, std::ostream &os ) const
    {
-      os << space( indent ) << "sectionId:            " << static_cast<unsigned>( sectionId ) << std::endl;
+      os << space( indent ) << "sectionId:            " << static_cast<unsigned>( sectionId )
+         << std::endl;
       os << space( indent ) << "sectionLogicalLength: " << sectionLogicalLength << std::endl;
       os << space( indent ) << "dataPhysicalOffset:   " << dataPhysicalOffset << std::endl;
       os << space( indent ) << "indexPhysicalOffset:  " << indexPhysicalOffset << std::endl;

@@ -34,8 +34,10 @@ namespace e57
    class CompressedVectorWriterImpl
    {
    public:
-      CompressedVectorWriterImpl( std::shared_ptr<CompressedVectorNodeImpl> ni, std::vector<SourceDestBuffer> &sbufs );
+      CompressedVectorWriterImpl( std::shared_ptr<CompressedVectorNodeImpl> ni,
+                                  std::vector<SourceDestBuffer> &sbufs );
       ~CompressedVectorWriterImpl();
+
       void write( size_t requestedRecordCount );
       void write( std::vector<SourceDestBuffer> &sbufs, size_t requestedRecordCount );
       bool isOpen() const;
@@ -47,15 +49,15 @@ namespace e57
 #endif
 
    private:
-      void checkImageFileOpen( const char *srcFileName, int srcLineNumber, const char *srcFunctionName ) const;
-      void checkWriterOpen( const char *srcFileName, int srcLineNumber, const char *srcFunctionName ) const;
+      void checkImageFileOpen( const char *srcFileName, int srcLineNumber,
+                               const char *srcFunctionName ) const;
+      void checkWriterOpen( const char *srcFileName, int srcLineNumber,
+                            const char *srcFunctionName ) const;
       void setBuffers( std::vector<SourceDestBuffer> &sbufs ); //???needed?
       size_t totalOutputAvailable() const;
       size_t currentPacketSize() const;
       uint64_t packetWrite();
       void flush();
-
-      //??? no default ctor, copy, assignment?
 
       std::vector<SourceDestBuffer> sbufs_;
       std::shared_ptr<CompressedVectorNodeImpl> cVector_;

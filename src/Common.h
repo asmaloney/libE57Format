@@ -44,11 +44,12 @@
 
 namespace e57
 {
-//!!! inline these rather than macros?
-#define E57_EXCEPTION1( ecode )                                                                                        \
-   ( E57Exception( ( ecode ), ustring(), __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) ) )
-#define E57_EXCEPTION2( ecode, context )                                                                               \
-   ( E57Exception( ( ecode ), ( context ), __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) ) )
+#define E57_EXCEPTION1( ecode )                                                                    \
+   ( E57Exception( ( ecode ), ustring(), __FILE__, __LINE__,                                       \
+                   static_cast<const char *>( __FUNCTION__ ) ) )
+#define E57_EXCEPTION2( ecode, context )                                                           \
+   ( E57Exception( ( ecode ), ( context ), __FILE__, __LINE__,                                     \
+                   static_cast<const char *>( __FUNCTION__ ) ) )
 
    using ImageFileImplSharedPtr = std::shared_ptr<class ImageFileImpl>;
    using ImageFileImplWeakPtr = std::weak_ptr<class ImageFileImpl>;
@@ -58,6 +59,6 @@ namespace e57
    using StringList = std::vector<std::string>;
    using StringSet = std::set<std::string>;
 
-   //! generates a new random GUID
+   /// generates a new random GUID
    std::string generateRandomGUID();
 }

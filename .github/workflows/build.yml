@@ -28,17 +28,6 @@ jobs:
           repository: 'asmaloney/libE57Format-test-data'
           path: libE57Format-test-data
 
-      - name: List Test Data Files (macOS/Linux)
-        if: matrix.config.os != 'windows-latest'
-        run: |
-          pwd
-
-          ls -laR libE57Format-test-data/images
-
-          ls -laR libE57Format-test-data/reference
-
-          ls -laR libE57Format-test-data/self
-
       - name: Install Dependencies (macOS)
         if: matrix.config.os == 'macos-latest'
         run: |
@@ -48,9 +37,7 @@ jobs:
         if: matrix.config.os == 'ubuntu-latest'
         run: |
           sudo apt-get update
-
           sudo apt-get install -y libxerces-c-dev ninja-build
-
           sudo locale-gen fr_FR
 
       - name: Cache miniconda (Windows)

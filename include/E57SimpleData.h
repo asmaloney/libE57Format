@@ -735,8 +735,10 @@ namespace e57
    using Data3DPointsFloat = Data3DPointsData_t<float>;
    using Data3DPointsDouble = Data3DPointsData_t<double>;
 
+   /// @deprecated Will be removed in 4.0. Use e57::Data3DPointsFloat.
    using Data3DPointsData [[deprecated( "Will be removed in 4.0. Use Data3DPointsFloat." )]] =
       Data3DPointsData_t<float>;
+   /// @deprecated Will be removed in 4.0. Use e57::Data3DPointsDouble.
    using Data3DPointsData_d [[deprecated( "Will be removed in 4.0. Use Data3DPointsDouble." )]] =
       Data3DPointsData_t<double>;
 

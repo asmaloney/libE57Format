@@ -27,6 +27,7 @@
 
 #pragma once
 
+#include <cstdint>
 #include <iomanip>
 #include <iostream>
 #include <sstream>

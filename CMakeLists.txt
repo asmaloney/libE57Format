@@ -80,21 +80,19 @@ endif()
 # Various levels of cross checking and verification in the code.
 # The extra code does not change the file contents.
 # Recommend that E57_DEBUG remain defined even for production versions.
-
 option( E57_DEBUG      "Compile library with minimal debug checking" ON )
 option( E57_MAX_DEBUG  "Compile library with maximum debug checking" OFF )
 
 # Various levels of printing to the console of what is going on in the code.
 # Optional
-
 option( E57_VERBOSE      "Compile library with verbose logging" OFF )
 option( E57_MAX_VERBOSE  "Compile library with maximum verbose logging" OFF )
 
 # Enable writing packets that are correct but will stress the reader.
-
 option( E57_WRITE_CRAZY_PACKET_MODE "Compile library to enable reader-stressing packets" OFF )
 
-option( E57_VISIBILITY_HIDDEN       "Compile library with hidden symbol visibility" ON )
+# Other compile options
+option( E57_VISIBILITY_HIDDEN "Compile library with hidden symbol visibility" ON )
 
 #########################################################################################
 
@@ -138,6 +136,7 @@ set_target_properties( E57Format
 		CXX_EXTENSIONS NO
 		DEBUG_POSTFIX "-d"
 		POSITION_INDEPENDENT_CODE ON
+		INTERPROCEDURAL_OPTIMIZATION ON
 )
 
 # Target definitions

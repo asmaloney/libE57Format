@@ -39,8 +39,8 @@ namespace
    ///   - intensity
    ///   - time stamps
    template <typename COORDTYPE>
-   static void _fillMinMaxData( e57::Data3D &ioData3DHeader,
-                                const e57::Data3DPointsData_t<COORDTYPE> &inBuffers )
+   void _fillMinMaxData( e57::Data3D &ioData3DHeader,
+                         const e57::Data3DPointsData_t<COORDTYPE> &inBuffers )
    {
       static_assert( std::is_floating_point<COORDTYPE>::value, "Floating point type required." );
 

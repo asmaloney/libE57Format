@@ -149,7 +149,7 @@ be true).
 
 @see FloatPrecision, FloatNode::value, Node, CompressedVectorNode, CompressedVectorNode::prototype
 */
-FloatNode::FloatNode( ImageFile destImageFile, double value, FloatPrecision precision,
+FloatNode::FloatNode( const ImageFile &destImageFile, double value, FloatPrecision precision,
                       double minimum, double maximum ) :
    impl_( new FloatNodeImpl( destImageFile.impl(), value, precision, minimum, maximum ) )
 {

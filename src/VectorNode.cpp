@@ -151,7 +151,7 @@ be true).
 
 @see Node, VectorNode::allowHeteroChildren, ::ErrorHomogeneousViolation
 */
-VectorNode::VectorNode( ImageFile destImageFile, bool allowHeteroChildren ) :
+VectorNode::VectorNode( const ImageFile &destImageFile, bool allowHeteroChildren ) :
    impl_( new VectorNodeImpl( destImageFile.impl(), allowHeteroChildren ) )
 {
 }

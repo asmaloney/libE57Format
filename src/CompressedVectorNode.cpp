@@ -207,7 +207,7 @@ prototype.isRoot())
 
 @see SourceDestBuffer, Node, CompressedVectorNode::reader, CompressedVectorNode::writer
 */
-CompressedVectorNode::CompressedVectorNode( ImageFile destImageFile, const Node &prototype,
+CompressedVectorNode::CompressedVectorNode( const ImageFile &destImageFile, const Node &prototype,
                                             const VectorNode &codecs ) :
    impl_( new CompressedVectorNodeImpl( destImageFile.impl() ) )
 {

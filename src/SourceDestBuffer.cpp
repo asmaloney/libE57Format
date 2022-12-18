@@ -171,9 +171,9 @@ transfer with a CompressedVectorNode.
 CompressedVectorReader::read(std::vector<SourceDestBuffer>&),
 CompressedVectorWriter::write(std::vector<SourceDestBuffer>&)
 */
-SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, int8_t *b,
-                                    const size_t capacity, bool doConversion, bool doScaling,
-                                    size_t stride ) :
+SourceDestBuffer::SourceDestBuffer( const ImageFile &destImageFile, const ustring &pathName,
+                                    int8_t *b, const size_t capacity, bool doConversion,
+                                    bool doScaling, size_t stride ) :
    impl_( new SourceDestBufferImpl( destImageFile.impl(), pathName, capacity, doConversion,
                                     doScaling ) )
 {
@@ -181,9 +181,9 @@ SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &path
 }
 
 /// @overload
-SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, uint8_t *b,
-                                    const size_t capacity, bool doConversion, bool doScaling,
-                                    size_t stride ) :
+SourceDestBuffer::SourceDestBuffer( const ImageFile &destImageFile, const ustring &pathName,
+                                    uint8_t *b, const size_t capacity, bool doConversion,
+                                    bool doScaling, size_t stride ) :
    impl_( new SourceDestBufferImpl( destImageFile.impl(), pathName, capacity, doConversion,
                                     doScaling ) )
 {
@@ -191,9 +191,9 @@ SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &path
 }
 
 /// @overload
-SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, int16_t *b,
-                                    const size_t capacity, bool doConversion, bool doScaling,
-                                    size_t stride ) :
+SourceDestBuffer::SourceDestBuffer( const ImageFile &destImageFile, const ustring &pathName,
+                                    int16_t *b, const size_t capacity, bool doConversion,
+                                    bool doScaling, size_t stride ) :
    impl_( new SourceDestBufferImpl( destImageFile.impl(), pathName, capacity, doConversion,
                                     doScaling ) )
 {
@@ -201,9 +201,9 @@ SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &path
 }
 
 /// @overload
-SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, uint16_t *b,
-                                    const size_t capacity, bool doConversion, bool doScaling,
-                                    size_t stride ) :
+SourceDestBuffer::SourceDestBuffer( const ImageFile &destImageFile, const ustring &pathName,
+                                    uint16_t *b, const size_t capacity, bool doConversion,
+                                    bool doScaling, size_t stride ) :
    impl_( new SourceDestBufferImpl( destImageFile.impl(), pathName, capacity, doConversion,
                                     doScaling ) )
 {
@@ -211,9 +211,9 @@ SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &path
 }
 
 /// @overload
-SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, int32_t *b,
-                                    const size_t capacity, bool doConversion, bool doScaling,
-                                    size_t stride ) :
+SourceDestBuffer::SourceDestBuffer( const ImageFile &destImageFile, const ustring &pathName,
+                                    int32_t *b, const size_t capacity, bool doConversion,
+                                    bool doScaling, size_t stride ) :
    impl_( new SourceDestBufferImpl( destImageFile.impl(), pathName, capacity, doConversion,
                                     doScaling ) )
 {
@@ -221,9 +221,9 @@ SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &path
 }
 
 /// @overload
-SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, uint32_t *b,
-                                    const size_t capacity, bool doConversion, bool doScaling,
-                                    size_t stride ) :
+SourceDestBuffer::SourceDestBuffer( const ImageFile &destImageFile, const ustring &pathName,
+                                    uint32_t *b, const size_t capacity, bool doConversion,
+                                    bool doScaling, size_t stride ) :
    impl_( new SourceDestBufferImpl( destImageFile.impl(), pathName, capacity, doConversion,
                                     doScaling ) )
 {
@@ -231,9 +231,9 @@ SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &path
 }
 
 /// @overload
-SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, int64_t *b,
-                                    const size_t capacity, bool doConversion, bool doScaling,
-                                    size_t stride ) :
+SourceDestBuffer::SourceDestBuffer( const ImageFile &destImageFile, const ustring &pathName,
+                                    int64_t *b, const size_t capacity, bool doConversion,
+                                    bool doScaling, size_t stride ) :
    impl_( new SourceDestBufferImpl( destImageFile.impl(), pathName, capacity, doConversion,
                                     doScaling ) )
 {
@@ -241,9 +241,9 @@ SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &path
 }
 
 /// @overload
-SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, bool *b,
-                                    const size_t capacity, bool doConversion, bool doScaling,
-                                    size_t stride ) :
+SourceDestBuffer::SourceDestBuffer( const ImageFile &destImageFile, const ustring &pathName,
+                                    bool *b, const size_t capacity, bool doConversion,
+                                    bool doScaling, size_t stride ) :
    impl_( new SourceDestBufferImpl( destImageFile.impl(), pathName, capacity, doConversion,
                                     doScaling ) )
 {
@@ -251,9 +251,9 @@ SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &path
 }
 
 /// @overload
-SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, float *b,
-                                    const size_t capacity, bool doConversion, bool doScaling,
-                                    size_t stride ) :
+SourceDestBuffer::SourceDestBuffer( const ImageFile &destImageFile, const ustring &pathName,
+                                    float *b, const size_t capacity, bool doConversion,
+                                    bool doScaling, size_t stride ) :
    impl_( new SourceDestBufferImpl( destImageFile.impl(), pathName, capacity, doConversion,
                                     doScaling ) )
 {
@@ -261,9 +261,9 @@ SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &path
 }
 
 /// @overload
-SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, double *b,
-                                    const size_t capacity, bool doConversion, bool doScaling,
-                                    size_t stride ) :
+SourceDestBuffer::SourceDestBuffer( const ImageFile &destImageFile, const ustring &pathName,
+                                    double *b, const size_t capacity, bool doConversion,
+                                    bool doScaling, size_t stride ) :
    impl_( new SourceDestBufferImpl( destImageFile.impl(), pathName, capacity, doConversion,
                                     doScaling ) )
 {
@@ -308,7 +308,7 @@ destroyed).
 @see SourceDestBuffer::doConversion for discussion on representations compatible with string
 SourceDestBuffers.
 */
-SourceDestBuffer::SourceDestBuffer( ImageFile destImageFile, const ustring &pathName,
+SourceDestBuffer::SourceDestBuffer( const ImageFile &destImageFile, const ustring &pathName,
                                     std::vector<ustring> *b ) :
    impl_( new SourceDestBufferImpl( destImageFile.impl(), pathName, b ) )
 {

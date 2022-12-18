@@ -109,7 +109,7 @@ be true).
 
 @see StringNode::value, Node, CompressedVectorNode, CompressedVectorNode::prototype
 */
-StringNode::StringNode( ImageFile destImageFile, const ustring &value ) :
+StringNode::StringNode( const ImageFile &destImageFile, const ustring &value ) :
    impl_( new StringNodeImpl( destImageFile.impl(), value ) )
 {
 }

@@ -132,7 +132,7 @@ be true).
 
 @see Node
 */
-StructureNode::StructureNode( ImageFile destImageFile ) :
+StructureNode::StructureNode( const ImageFile &destImageFile ) :
    impl_( new StructureNodeImpl( destImageFile.impl() ) )
 {
 }

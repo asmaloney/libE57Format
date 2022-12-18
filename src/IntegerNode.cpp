@@ -54,7 +54,7 @@ judiciously, in debug versions of the application.
 
 @throw ::ErrorInvarianceViolation or any other E57 ErrorCode
 */
-void IntegerNode::checkInvariant( bool /*doRecurse*/, bool doUpcast )
+void IntegerNode::checkInvariant( bool /*doRecurse*/, bool doUpcast ) const
 {
    // If destImageFile not open, can't test invariant (almost every call would throw)
    if ( !destImageFile().isOpen() )

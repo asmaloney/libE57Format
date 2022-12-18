@@ -31,7 +31,7 @@
 namespace e57
 {
 #ifdef E57_DEBUG
-   void BlobSectionHeader::dump( int indent, std::ostream &os )
+   void BlobSectionHeader::dump( int indent, std::ostream &os ) const
    {
       os << space( indent ) << "sectionId:            " << sectionId << std::endl;
       os << space( indent ) << "sectionLogicalLength: " << sectionLogicalLength << std::endl;

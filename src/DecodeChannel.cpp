@@ -68,7 +68,7 @@ namespace e57
    }
 
 #ifdef E57_DEBUG
-   void DecodeChannel::dump( int indent, std::ostream &os )
+   void DecodeChannel::dump( int indent, std::ostream &os ) const
    {
       os << space( indent ) << "dbuf" << std::endl;
       dbuf.dump( indent + 4, os );

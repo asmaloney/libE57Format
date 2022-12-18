@@ -37,7 +37,7 @@ using namespace e57;
 // Putting this function first so we can reference the code in doxygen using @skip
 /// @brief Check whether FloatNode class invariant is true
 /// @copydetails IntegerNode::checkInvariant()
-void FloatNode::checkInvariant( bool /*doRecurse*/, bool doUpcast )
+void FloatNode::checkInvariant( bool /*doRecurse*/, bool doUpcast ) const
 {
    // If destImageFile not open, can't test invariant (almost every call would throw)
    if ( !destImageFile().isOpen() )

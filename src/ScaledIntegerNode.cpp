@@ -39,7 +39,7 @@ using namespace e57;
 @brief Check whether ScaledIntegerNode class invariant is true
 @copydetails IntegerNode::checkInvariant()
 */
-void ScaledIntegerNode::checkInvariant( bool /*doRecurse*/, bool doUpcast )
+void ScaledIntegerNode::checkInvariant( bool /*doRecurse*/, bool doUpcast ) const
 {
    // If destImageFile not open, can't test invariant (almost every call would throw)
    if ( !destImageFile().isOpen() )

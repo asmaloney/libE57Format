@@ -44,7 +44,7 @@ namespace e57
       uint64_t sectionLogicalLength = 0; // byte length of whole section
 
 #ifdef E57_DEBUG
-      void dump( int indent = 0, std::ostream &os = std::cout );
+      void dump( int indent = 0, std::ostream &os = std::cout ) const;
 #endif
    };
 

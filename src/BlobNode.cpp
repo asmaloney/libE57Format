@@ -133,7 +133,7 @@ must be true).
 
 @see Node, BlobNode::read, BlobNode::write
 */
-BlobNode::BlobNode( ImageFile destImageFile, int64_t byteCount ) :
+BlobNode::BlobNode( const ImageFile &destImageFile, int64_t byteCount ) :
    impl_( new BlobNodeImpl( destImageFile.impl(), byteCount ) )
 {
 }
@@ -354,7 +354,7 @@ BlobNode::BlobNode( const Node &n )
 }
 
 /// @cond documentNonPublic The following isn't part of the API, and isn't documented.
-BlobNode::BlobNode( ImageFile destImageFile, int64_t fileOffset, int64_t length ) :
+BlobNode::BlobNode( const ImageFile &destImageFile, int64_t fileOffset, int64_t length ) :
    impl_( new BlobNodeImpl( destImageFile.impl(), fileOffset, length ) )
 {
 }

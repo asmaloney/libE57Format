@@ -147,21 +147,22 @@ be true).
 
 @see ScaledIntegerNode::rawValue, Node, CompressedVectorNode, CompressedVectorNode::prototype
 */
-ScaledIntegerNode::ScaledIntegerNode( ImageFile destImageFile, int64_t rawValue, int64_t minimum,
-                                      int64_t maximum, double scale, double offset ) :
+ScaledIntegerNode::ScaledIntegerNode( const ImageFile &destImageFile, int64_t rawValue,
+                                      int64_t minimum, int64_t maximum, double scale,
+                                      double offset ) :
    impl_(
       new ScaledIntegerNodeImpl( destImageFile.impl(), rawValue, minimum, maximum, scale, offset ) )
 {
 }
 
-ScaledIntegerNode::ScaledIntegerNode( ImageFile destImageFile, int rawValue, int64_t minimum,
+ScaledIntegerNode::ScaledIntegerNode( const ImageFile &destImageFile, int rawValue, int64_t minimum,
                                       int64_t maximum, double scale, double offset ) :
    impl_( new ScaledIntegerNodeImpl( destImageFile.impl(), static_cast<int64_t>( rawValue ),
                                      minimum, maximum, scale, offset ) )
 {
 }
 
-ScaledIntegerNode::ScaledIntegerNode( ImageFile destImageFile, int rawValue, int minimum,
+ScaledIntegerNode::ScaledIntegerNode( const ImageFile &destImageFile, int rawValue, int minimum,
                                       int maximum, double scale, double offset ) :
    impl_( new ScaledIntegerNodeImpl( destImageFile.impl(), static_cast<int64_t>( rawValue ),
                                      static_cast<int64_t>( minimum ),
@@ -205,7 +206,7 @@ be true).
 
 @see ScaledIntegerNode::scaledValue, Node, CompressedVectorNode, CompressedVectorNode::prototype
 */
-ScaledIntegerNode::ScaledIntegerNode( ImageFile destImageFile, double scaledValue,
+ScaledIntegerNode::ScaledIntegerNode( const ImageFile &destImageFile, double scaledValue,
                                       double scaledMinimum, double scaledMaximum, double scale,
                                       double offset ) :
    impl_( new ScaledIntegerNodeImpl( destImageFile.impl(), scaledValue, scaledMinimum,

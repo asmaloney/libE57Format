@@ -742,7 +742,7 @@ void ImageFile::dump( int indent, std::ostream &os ) const
 
 @throw No E57Exceptions
 */
-bool ImageFile::operator==( ImageFile imf2 ) const
+bool ImageFile::operator==( const ImageFile &imf2 ) const
 {
    return ( impl_ == imf2.impl_ );
 }
@@ -758,7 +758,7 @@ bool ImageFile::operator==( ImageFile imf2 ) const
 
 @throw No E57Exceptions
 */
-bool ImageFile::operator!=( ImageFile imf2 ) const
+bool ImageFile::operator!=( const ImageFile &imf2 ) const
 {
    return ( impl_ != imf2.impl_ );
 }

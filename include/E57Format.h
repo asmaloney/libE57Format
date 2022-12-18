@@ -262,8 +262,8 @@ protected:                                                                      
       bool isAttached() const;
       void dump( int indent = 0, std::ostream &os = std::cout ) const;
       void checkInvariant( bool doRecurse = true, bool doDowncast = true );
-      bool operator==( Node n2 ) const;
-      bool operator!=( Node n2 ) const;
+      bool operator==( const Node &n2 ) const;
+      bool operator!=( const Node &n2 ) const;
 
       /// @cond documentNonPublic   The following isn't part of the API, and isn't documented.
 #ifdef E57_INTERNAL_IMPLEMENTATION_ENABLE
@@ -283,7 +283,7 @@ protected:                                                                      
    {
    public:
       StructureNode() = delete;
-      explicit StructureNode( ImageFile destImageFile );
+      explicit StructureNode( const ImageFile &destImageFile );
 
       int64_t childCount() const;
       bool isDefined( const ustring &pathName ) const;
@@ -322,7 +322,7 @@ protected:                                                                      
    {
    public:
       VectorNode() = delete;
-      explicit VectorNode( ImageFile destImageFile, bool allowHeteroChildren = false );
+      explicit VectorNode( const ImageFile &destImageFile, bool allowHeteroChildren = false );
 
       bool allowHeteroChildren() const;
 
@@ -363,37 +363,38 @@ protected:                                                                      
    {
    public:
       SourceDestBuffer() = delete;
-      SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, int8_t *b,
+      SourceDestBuffer( const ImageFile &destImageFile, const ustring &pathName, int8_t *b,
                         size_t capacity, bool doConversion = false, bool doScaling = false,
                         size_t stride = sizeof( int8_t ) );
-      SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, uint8_t *b,
+      SourceDestBuffer( const ImageFile &destImageFile, const ustring &pathName, uint8_t *b,
                         size_t capacity, bool doConversion = false, bool doScaling = false,
                         size_t stride = sizeof( uint8_t ) );
-      SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, int16_t *b,
+      SourceDestBuffer( const ImageFile &destImageFile, const ustring &pathName, int16_t *b,
                         size_t capacity, bool doConversion = false, bool doScaling = false,
                         size_t stride = sizeof( int16_t ) );
-      SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, uint16_t *b,
+      SourceDestBuffer( const ImageFile &destImageFile, const ustring &pathName, uint16_t *b,
                         size_t capacity, bool doConversion = false, bool doScaling = false,
                         size_t stride = sizeof( uint16_t ) );
-      SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, int32_t *b,
+      SourceDestBuffer( const ImageFile &destImageFile, const ustring &pathName, int32_t *b,
                         size_t capacity, bool doConversion = false, bool doScaling = false,
                         size_t stride = sizeof( int32_t ) );
-      SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, uint32_t *b,
+      SourceDestBuffer( const ImageFile &destImageFile, const ustring &pathName, uint32_t *b,
                         size_t capacity, bool doConversion = false, bool doScaling = false,
                         size_t stride = sizeof( uint32_t ) );
-      SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, int64_t *b,
+      SourceDestBuffer( const ImageFile &destImageFile, const ustring &pathName, int64_t *b,
                         size_t capacity, bool doConversion = false, bool doScaling = false,
                         size_t stride = sizeof( int64_t ) );
-      SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, bool *b, size_t capacity,
-                        bool doConversion = false, bool doScaling = false,
+      SourceDestBuffer( const ImageFile &destImageFile, const ustring &pathName, bool *b,
+                        size_t capacity, bool doConversion = false, bool doScaling = false,
                         size_t stride = sizeof( bool ) );
-      SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, float *b, size_t capacity,
-                        bool doConversion = false, bool doScaling = false,
+      SourceDestBuffer( const ImageFile &destImageFile, const ustring &pathName, float *b,
+                        size_t capacity, bool doConversion = false, bool doScaling = false,
                         size_t stride = sizeof( float ) );
-      SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, double *b,
+      SourceDestBuffer( const ImageFile &destImageFile, const ustring &pathName, double *b,
                         size_t capacity, bool doConversion = false, bool doScaling = false,
                         size_t stride = sizeof( double ) );
-      SourceDestBuffer( ImageFile destImageFile, const ustring &pathName, std::vector<ustring> *b );
+      SourceDestBuffer( const ImageFile &destImageFile, const ustring &pathName,
+                        std::vector<ustring> *b );
 
       ustring pathName() const;
       enum MemoryRepresentation memoryRepresentation() const;
@@ -465,7 +466,7 @@ protected:                                                                      
    {
    public:
       CompressedVectorNode() = delete;
-      explicit CompressedVectorNode( ImageFile destImageFile, const Node &prototype,
+      explicit CompressedVectorNode( const ImageFile &destImageFile, const Node &prototype,
                                      const VectorNode &codecs );
 
       int64_t childCount() const;
@@ -508,8 +509,8 @@ protected:                                                                      
    {
    public:
       IntegerNode() = delete;
-      explicit IntegerNode( ImageFile destImageFile, int64_t value = 0, int64_t minimum = INT64_MIN,
-                            int64_t maximum = INT64_MAX );
+      explicit IntegerNode( const ImageFile &destImageFile, int64_t value = 0,
+                            int64_t minimum = INT64_MIN, int64_t maximum = INT64_MAX );
 
       int64_t value() const;
       int64_t minimum() const;
@@ -543,14 +544,15 @@ protected:                                                                      
    {
    public:
       ScaledIntegerNode() = delete;
-      explicit ScaledIntegerNode( ImageFile destImageFile, int64_t rawValue, int64_t minimum,
+      explicit ScaledIntegerNode( const ImageFile &destImageFile, int64_t rawValue, int64_t minimum,
                                   int64_t maximum, double scale = 1.0, double offset = 0.0 );
-      explicit ScaledIntegerNode( ImageFile destImageFile, int rawValue, int64_t minimum,
+      explicit ScaledIntegerNode( const ImageFile &destImageFile, int rawValue, int64_t minimum,
                                   int64_t maximum, double scale = 1.0, double offset = 0.0 );
-      explicit ScaledIntegerNode( ImageFile destImageFile, int rawValue, int minimum, int maximum,
-                                  double scale = 1.0, double offset = 0.0 );
-      explicit ScaledIntegerNode( ImageFile destImageFile, double scaledValue, double scaledMinimum,
-                                  double scaledMaximum, double scale = 1.0, double offset = 0.0 );
+      explicit ScaledIntegerNode( const ImageFile &destImageFile, int rawValue, int minimum,
+                                  int maximum, double scale = 1.0, double offset = 0.0 );
+      explicit ScaledIntegerNode( const ImageFile &destImageFile, double scaledValue,
+                                  double scaledMinimum, double scaledMaximum, double scale = 1.0,
+                                  double offset = 0.0 );
 
       int64_t rawValue() const;
       double scaledValue() const;
@@ -589,7 +591,7 @@ protected:                                                                      
    {
    public:
       FloatNode() = delete;
-      explicit FloatNode( ImageFile destImageFile, double value = 0.0,
+      explicit FloatNode( const ImageFile &destImageFile, double value = 0.0,
                           FloatPrecision precision = PrecisionDouble, double minimum = DOUBLE_MIN,
                           double maximum = DOUBLE_MAX );
 
@@ -626,7 +628,7 @@ protected:                                                                      
    {
    public:
       StringNode() = delete;
-      explicit StringNode( ImageFile destImageFile, const ustring &value = "" );
+      explicit StringNode( const ImageFile &destImageFile, const ustring &value = "" );
 
       ustring value() const;
 
@@ -660,7 +662,7 @@ protected:                                                                      
    {
    public:
       BlobNode() = delete;
-      explicit BlobNode( ImageFile destImageFile, int64_t byteCount );
+      explicit BlobNode( const ImageFile &destImageFile, int64_t byteCount );
 
       int64_t byteCount() const;
       void read( uint8_t *buf, int64_t start, size_t count );
@@ -689,7 +691,7 @@ protected:                                                                      
       explicit BlobNode( std::shared_ptr<BlobNodeImpl> ni );
 
       // create blob already in a file
-      BlobNode( ImageFile destImageFile, int64_t fileOffset, int64_t length );
+      BlobNode( const ImageFile &destImageFile, int64_t fileOffset, int64_t length );
 
       E57_OBJECT_IMPLEMENTATION( BlobNode ) // must be last in object
       /// @endcond
@@ -730,8 +732,8 @@ protected:                                                                      
       // Diagnostic functions:
       void dump( int indent = 0, std::ostream &os = std::cout ) const;
       void checkInvariant( bool doRecurse = true ) const;
-      bool operator==( ImageFile imf2 ) const;
-      bool operator!=( ImageFile imf2 ) const;
+      bool operator==( const ImageFile &imf2 ) const;
+      bool operator!=( const ImageFile &imf2 ) const;
 
    private:
       /// @cond documentNonPublic   The following isn't part of the API, and isn't documented.

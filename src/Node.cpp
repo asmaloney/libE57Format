@@ -574,7 +574,7 @@ void Node::dump( int indent, std::ostream &os ) const
 
 @throw No E57Exceptions
 */
-bool Node::operator==( Node n2 ) const
+bool Node::operator==( const Node &n2 ) const
 {
    return ( impl_ == n2.impl_ );
 }
@@ -590,7 +590,7 @@ bool Node::operator==( Node n2 ) const
 
 @throw No E57Exceptions
 */
-bool Node::operator!=( Node n2 ) const
+bool Node::operator!=( const Node &n2 ) const
 {
    return ( impl_ != n2.impl_ );
 }

@@ -39,7 +39,7 @@ using namespace e57;
 @brief Check whether StructureNode class invariant is true
 @copydetails IntegerNode::checkInvariant()
 */
-void StructureNode::checkInvariant( bool doRecurse, bool doUpcast )
+void StructureNode::checkInvariant( bool doRecurse, bool doUpcast ) const
 {
    // If destImageFile not open, can't test invariant (almost every call would throw)
    if ( !destImageFile().isOpen() )

@@ -305,7 +305,7 @@ protected:                                                                      
 
       // Diagnostic functions:
       void dump( int indent = 0, std::ostream &os = std::cout ) const;
-      void checkInvariant( bool doRecurse = true, bool doUpcast = true );
+      void checkInvariant( bool doRecurse = true, bool doUpcast = true ) const;
 
    private:
       /// @cond documentNonPublic   The following isn't part of the API, and isn't documented.
@@ -346,7 +346,7 @@ protected:                                                                      
 
       // Diagnostic functions:
       void dump( int indent = 0, std::ostream &os = std::cout ) const;
-      void checkInvariant( bool doRecurse = true, bool doUpcast = true );
+      void checkInvariant( bool doRecurse = true, bool doUpcast = true ) const;
 
    private:
       /// @cond documentNonPublic   The following isn't part of the API, and isn't documented.
@@ -491,7 +491,7 @@ protected:                                                                      
 
       // Diagnostic functions:
       void dump( int indent = 0, std::ostream &os = std::cout ) const;
-      void checkInvariant( bool doRecurse = true, bool doUpcast = true );
+      void checkInvariant( bool doRecurse = true, bool doUpcast = true ) const;
 
    private:
       /// @cond documentNonPublic   The following isn't part of the API, and isn't documented.
@@ -530,7 +530,7 @@ protected:                                                                      
 
       // Diagnostic functions:
       void dump( int indent = 0, std::ostream &os = std::cout ) const;
-      void checkInvariant( bool doRecurse = true, bool doUpcast = true );
+      void checkInvariant( bool doRecurse = true, bool doUpcast = true ) const;
 
    private:
       /// @cond documentNonPublic   The following isn't part of the API, and isn't documented.
@@ -577,7 +577,7 @@ protected:                                                                      
 
       // Diagnostic functions:
       void dump( int indent = 0, std::ostream &os = std::cout ) const;
-      void checkInvariant( bool doRecurse = true, bool doUpcast = true );
+      void checkInvariant( bool doRecurse = true, bool doUpcast = true ) const;
 
    private:
       /// @cond documentNonPublic   The following isn't part of the API, and isn't documented.
@@ -614,7 +614,7 @@ protected:                                                                      
 
       // Diagnostic functions:
       void dump( int indent = 0, std::ostream &os = std::cout ) const;
-      void checkInvariant( bool doRecurse = true, bool doUpcast = true );
+      void checkInvariant( bool doRecurse = true, bool doUpcast = true ) const;
 
    private:
       /// @cond documentNonPublic   The following isn't part of the API, and isn't documented.
@@ -646,7 +646,7 @@ protected:                                                                      
 
       // Diagnostic functions:
       void dump( int indent = 0, std::ostream &os = std::cout ) const;
-      void checkInvariant( bool doRecurse = true, bool doUpcast = true );
+      void checkInvariant( bool doRecurse = true, bool doUpcast = true ) const;
 
    private:
       /// @cond documentNonPublic   The following isn't part of the API, and isn't documented.
@@ -682,7 +682,7 @@ protected:                                                                      
 
       // Diagnostic functions:
       void dump( int indent = 0, std::ostream &os = std::cout ) const;
-      void checkInvariant( bool doRecurse = true, bool doUpcast = true );
+      void checkInvariant( bool doRecurse = true, bool doUpcast = true ) const;
 
    private:
       /// @cond documentNonPublic   The following isn't part of the API, and isn't documented.

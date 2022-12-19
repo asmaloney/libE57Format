@@ -1,26 +1,30 @@
 name: Build
 
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+    branches:
+    - master
 
 jobs:
   build:
-    name: ${{ matrix.config.name }} (${{ matrix.build_type }})
-    runs-on: ${{ matrix.config.os }}
-
     strategy:
       fail-fast: false
       matrix:
         build_type: ['Debug', 'Release']
         config:
-          - { name: 'macOS Clang', os: macos-latest }
-          - { name: 'Ubuntu GCC', os: ubuntu-latest }
-          - { name: 'Windows MSVC', os: windows-latest }
+          - { name: '🍏 macOS Clang', os: macos-latest }
+          - { name: '🐧 Linux GCC', os: ubuntu-latest }
+          - { name: '🪟 Windows MSVC', os: windows-latest }
+
+    name: ${{ matrix.config.name }} (${{ matrix.build_type }})
+    runs-on: ${{ matrix.config.os }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          submodules: 'true'
+          submodules: recursive
 
       - name: Checkout Test Data
         uses: actions/checkout@v3
@@ -33,14 +37,14 @@ jobs:
         run: |
           brew install ninja xerces-c
 
-      - name: Install Dependencies (Ubuntu)
+      - name: Install Dependencies (Linux)
         if: matrix.config.os == 'ubuntu-latest'
         run: |
           sudo apt-get update
           sudo apt-get install -y libxerces-c-dev ninja-build
           sudo locale-gen fr_FR
 
-      - name: Cache miniconda (Windows)
+      - name: Dependencies Cache (Windows)
         if: matrix.config.os == 'windows-latest'
         uses: actions/cache@v3
         env:
@@ -49,7 +53,7 @@ jobs:
           path: ~/conda_pkgs_dir
           key: ${{ runner.os }}-conda-${{ env.CACHE_NUMBER }}-${{ hashFiles('.github/conda/environment.yml') }}
 
-      - name: Setup miniconda (Windows)
+      - name: Install Dependencies (Windows)
         if: matrix.config.os == 'windows-latest'
         uses: conda-incubator/setup-miniconda@v2
         with:

@@ -1,6 +1,10 @@
 name: C++ Code Format
 
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+    branches:
+    - master
 
 jobs:
   formatting-check:

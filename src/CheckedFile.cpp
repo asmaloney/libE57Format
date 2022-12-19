@@ -480,20 +480,7 @@ uint64_t CheckedFile::lseek64( int64_t offset, int whence )
    }
 
 #if defined( _WIN32 )
-#if defined( _MSC_VER ) || defined( __MINGW32__ ) //<rs 2010-06-16> mingw _is_ WIN32!
    __int64 result = _lseeki64( fd_, offset, whence );
-#elif defined( __GNUC__ ) //<rs 2010-06-16> this most likely will not get
-                          // triggered (cygwin != WIN32)?
-#ifdef E57_MAX_DEBUG
-   if ( sizeof( off_t ) != sizeof( offset ) )
-   {
-      throw E57_EXCEPTION2( ErrorInternal, "sizeof(off_t)=" + toString( sizeof( off_t ) ) );
-   }
-#endif
-   int64_t result = ::lseek( fd_, offset, whence );
-#else
-#error "no supported compiler defined"
-#endif
 #elif defined( __linux__ )
    int64_t result = ::lseek64( fd_, offset, whence );
 #elif defined( __APPLE__ ) || defined( __BSD )

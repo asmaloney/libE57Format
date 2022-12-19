@@ -325,7 +325,7 @@ void BitpackDecoder::inBufferShiftDown()
    size_t byteCount = inBufferEndByte_ - firstNaturalByte;
    if ( byteCount > 0 )
    {
-      memmove( &inBuffer_[0], &inBuffer_[firstNaturalByte],
+      memmove( inBuffer_.data(), &inBuffer_[firstNaturalByte],
                byteCount ); // Overlapping regions ok with memmove().
    }
 

@@ -84,6 +84,32 @@ constexpr size_t CheckedFile::physicalPageSize;
 constexpr uint64_t CheckedFile::physicalPageSizeMask;
 constexpr size_t CheckedFile::logicalPageSize;
 
+namespace
+{
+   inline uint32_t swap_uint32( uint32_t val )
+   {
+      val = ( ( val << 8 ) & 0xFF00FF00 ) | ( ( val >> 8 ) & 0xFF00FF );
+
+      return ( val << 16 ) | ( val >> 16 );
+   }
+
+   /// Calc CRC32C of given data
+   uint32_t checksum( char *buf, size_t size )
+   {
+      static const CRC::Parameters<crcpp_uint32, 32> sCRCParams{ 0x1EDC6F41, 0xFFFFFFFF, 0xFFFFFFFF,
+                                                                 true, true };
+
+      static const CRC::Table<crcpp_uint32, 32> sCRCTable = sCRCParams.MakeTable();
+
+      auto crc = CRC::Calculate<crcpp_uint32, 32>( buf, size, sCRCTable );
+
+      // (Andy) I don't understand why we need to swap bytes here
+      crc = swap_uint32( crc );
+
+      return crc;
+   }
+}
+
 /// Tool class to read buffer efficiently without multiplying copy operations.
 ///
 /// @warning Pointer input is handled by user!
@@ -280,7 +306,7 @@ void CheckedFile::read( char *buf, size_t nRead, size_t /*bufSize*/ )
 
    // Allocate temp page buffer
    std::vector<char> page_buffer_v( physicalPageSize );
-   char *page_buffer = &page_buffer_v[0];
+   char *page_buffer = page_buffer_v.data();
 
    auto checksumMod = static_cast<const unsigned int>( std::nearbyint( 100.0 / checkSumPolicy_ ) );
 
@@ -341,7 +367,7 @@ void CheckedFile::write( const char *buf, size_t nWrite )
 
    // Allocate temp page buffer
    std::vector<char> page_buffer_v( physicalPageSize );
-   char *page_buffer = &page_buffer_v[0];
+   char *page_buffer = page_buffer_v.data();
 
    while ( nWrite > 0 )
    {
@@ -581,7 +607,7 @@ void CheckedFile::extend( uint64_t newLength, OffsetMode omode )
 
    // Allocate temp page buffer
    std::vector<char> page_buffer_v( physicalPageSize );
-   char *page_buffer = &page_buffer_v[0];
+   char *page_buffer = page_buffer_v.data();
 
    while ( nWrite > 0 )
    {
@@ -664,29 +690,6 @@ void CheckedFile::unlink()
       std::cout << "std::remove() failed, result=" << result << std::endl;
    }
 #endif
-}
-
-inline uint32_t swap_uint32( uint32_t val )
-{
-   val = ( ( val << 8 ) & 0xFF00FF00 ) | ( ( val >> 8 ) & 0xFF00FF );
-
-   return ( val << 16 ) | ( val >> 16 );
-}
-
-/// Calc CRC32C of given data
-uint32_t CheckedFile::checksum( char *buf, size_t size ) const
-{
-   static const CRC::Parameters<crcpp_uint32, 32> sCRCParams{ 0x1EDC6F41, 0xFFFFFFFF, 0xFFFFFFFF,
-                                                              true, true };
-
-   static const CRC::Table<crcpp_uint32, 32> sCRCTable = sCRCParams.MakeTable();
-
-   auto crc = CRC::Calculate<crcpp_uint32, 32>( buf, size, sCRCTable );
-
-   // (Andy) I don't understand why we need to swap bytes here
-   crc = swap_uint32( crc );
-
-   return crc;
 }
 
 void CheckedFile::verifyChecksum( char *page_buffer, size_t page )

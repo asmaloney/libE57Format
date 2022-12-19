@@ -80,15 +80,45 @@ static const XMLCh att_recordCount[] = { chLatin_r, chLatin_e, chLatin_c, chLati
 static_assert( std::is_same<size_t, XMLSize_t>::value,
                "size_t and XMLSize_t should be the same type" );
 
-inline int64_t convertStrToLL( const std::string &inStr )
+namespace
 {
+   inline int64_t convertStrToLL( const std::string &inStr )
+   {
 #if defined( _MSC_VER )
-   return _atoi64( inStr.c_str() );
+      return _atoi64( inStr.c_str() );
 #elif defined( __GNUC__ )
-   return strtoll( inStr.c_str(), nullptr, 10 );
+      return strtoll( inStr.c_str(), nullptr, 10 );
 #else
 #error "Need to define string to long long conversion for this compiler"
 #endif
+   }
+
+   ustring toUString( const XMLCh *const xml_str )
+   {
+      ustring u_str;
+      if ( xml_str && *xml_str )
+      {
+         TranscodeToStr UTF8Transcoder( xml_str, "UTF-8" );
+         u_str = ustring( reinterpret_cast<const char *>( UTF8Transcoder.str() ) );
+      }
+      return ( u_str );
+   }
+
+   ustring lookupAttribute( const Attributes &attributes, const XMLCh *attribute_name )
+   {
+      XMLSize_t attr_index;
+      if ( !attributes.getIndex( attribute_name, attr_index ) )
+      {
+         throw E57_EXCEPTION2( ErrorBadXMLFormat, "attributeName=" + toUString( attribute_name ) );
+      }
+      return ( toUString( attributes.getValue( attr_index ) ) );
+   }
+
+   bool isAttributeDefined( const Attributes &attributes, const XMLCh *attribute_name )
+   {
+      XMLSize_t attr_index;
+      return ( attributes.getIndex( attribute_name, attr_index ) );
+   }
 }
 
 //=============================================================================
@@ -108,7 +138,7 @@ public:
       return ( logicalPosition_ );
    }
 
-   XMLSize_t readBytes( XMLByte *const toFill, XMLSize_t maxToRead ) override;
+   XMLSize_t readBytes( XMLByte *toFill, XMLSize_t maxToRead ) override;
 
    const XMLCh *getContentType() const override
    {
@@ -910,31 +940,4 @@ void E57XmlParser::warning( const SAXParseException &ex )
    std::cerr << "    systemId=" << XMLString::transcode( ex.getSystemId() ) << std::endl;
    std::cerr << ",   xmlLine=" << ex.getLineNumber() << std::endl;
    std::cerr << ",   xmlColumn=" << ex.getColumnNumber() << std::endl;
-}
-
-ustring E57XmlParser::toUString( const XMLCh *const xml_str )
-{
-   ustring u_str;
-   if ( xml_str && *xml_str )
-   {
-      TranscodeToStr UTF8Transcoder( xml_str, "UTF-8" );
-      u_str = ustring( reinterpret_cast<const char *>( UTF8Transcoder.str() ) );
-   }
-   return ( u_str );
-}
-
-ustring E57XmlParser::lookupAttribute( const Attributes &attributes, const XMLCh *attribute_name )
-{
-   XMLSize_t attr_index;
-   if ( !attributes.getIndex( attribute_name, attr_index ) )
-   {
-      throw E57_EXCEPTION2( ErrorBadXMLFormat, "attributeName=" + toUString( attribute_name ) );
-   }
-   return ( toUString( attributes.getValue( attr_index ) ) );
-}
-
-bool E57XmlParser::isAttributeDefined( const Attributes &attributes, const XMLCh *attribute_name )
-{
-   XMLSize_t attr_index;
-   return ( attributes.getIndex( attribute_name, attr_index ) );
 }

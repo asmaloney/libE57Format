@@ -38,46 +38,34 @@ using namespace e57;
 void SourceDestBuffer::checkInvariant( bool /*doRecurse*/ ) const
 {
    // Stride must be >= a memory type dependent value
-   size_t min_stride = 0;
+   const size_t min_stride = []( MemoryRepresentation inRep ) -> size_t {
+      switch ( inRep )
+      {
+         case Bool:
+         case Int8:
+         case UInt8:
+            return 1;
 
-   switch ( memoryRepresentation() )
-   {
-      case Int8:
-         min_stride = 1;
-         break;
-      case UInt8:
-         min_stride = 1;
-         break;
-      case Int16:
-         min_stride = 2;
-         break;
-      case UInt16:
-         min_stride = 2;
-         break;
-      case Int32:
-         min_stride = 4;
-         break;
-      case UInt32:
-         min_stride = 4;
-         break;
-      case Int64:
-         min_stride = 8;
-         break;
-      case Bool:
-         min_stride = 1;
-         break;
-      case Real32:
-         min_stride = 4;
-         break;
-      case Real64:
-         min_stride = 8;
-         break;
-      case UString:
-         min_stride = sizeof( ustring );
-         break;
-      default:
-         throw E57_EXCEPTION1( ErrorInvarianceViolation );
-   }
+         case Int16:
+         case UInt16:
+            return 2;
+
+         case Int32:
+         case UInt32:
+         case Real32:
+            return 4;
+
+         case Int64:
+         case Real64:
+            return 8;
+
+         case UString:
+            return sizeof( ustring );
+
+         default:
+            throw E57_EXCEPTION1( ErrorInvarianceViolation );
+      }
+   }( memoryRepresentation() );
 
    if ( stride() < min_stride )
    {

@@ -57,20 +57,15 @@ namespace e57
 
    private:
       /// SAX interface
-      void startElement( const XMLCh *const uri, const XMLCh *const localName,
-                         const XMLCh *const qName, const Attributes &attributes ) override;
-      void endElement( const XMLCh *const uri, const XMLCh *const localName,
-                       const XMLCh *const qName ) override;
-      void characters( const XMLCh *const chars, XMLSize_t length ) override;
+      void startElement( const XMLCh *uri, const XMLCh *localName, const XMLCh *qName,
+                         const Attributes &attributes ) override;
+      void endElement( const XMLCh *uri, const XMLCh *localName, const XMLCh *qName ) override;
+      void characters( const XMLCh *chars, XMLSize_t length ) override;
 
       /// SAX error interface
       void warning( const SAXParseException &ex ) override;
       void error( const SAXParseException &ex ) override;
       void fatalError( const SAXParseException &ex ) override;
-
-      ustring toUString( const XMLCh *const xml_str );
-      ustring lookupAttribute( const Attributes &attributes, const XMLCh *attribute_name );
-      bool isAttributeDefined( const Attributes &attributes, const XMLCh *attribute_name );
 
       ImageFileImplSharedPtr imf_; /// Image file we are reading
 

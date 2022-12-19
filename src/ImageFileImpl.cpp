@@ -525,7 +525,8 @@ namespace e57
          return false;
       }
 
-      ustring prefix, localPart;
+      ustring prefix;
+      ustring localPart;
 
       try
       {
@@ -629,7 +630,7 @@ namespace e57
          {
             c = elementName[i];
 
-            if ( !( '0' <= c && c <= '9' ) )
+            if ( c < '0' || c > '9' )
             {
                throw E57_EXCEPTION2( ErrorBadPathName, "elementName=" + elementName );
             }

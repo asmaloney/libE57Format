@@ -112,7 +112,7 @@ namespace e57
          try
          {
             // Open file for writing, truncate if already exists.
-            file_ = new CheckedFile( fileName_, CheckedFile::WriteCreate, checksumPolicy );
+            file_ = new CheckedFile( fileName_, CheckedFile::Write, checksumPolicy );
 
             std::shared_ptr<StructureNodeImpl> root( new StructureNodeImpl( imf ) );
             root_ = root;
@@ -137,7 +137,7 @@ namespace e57
       try
       {
          // Open file for reading.
-         file_ = new CheckedFile( fileName_, CheckedFile::ReadOnly, checksumPolicy );
+         file_ = new CheckedFile( fileName_, CheckedFile::Read, checksumPolicy );
 
          std::shared_ptr<StructureNodeImpl> root( new StructureNodeImpl( imf ) );
          root_ = root;

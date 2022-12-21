@@ -51,9 +51,8 @@ namespace e57
    public:
       enum Mode
       {
-         ReadOnly,
-         WriteCreate,
-         WriteExisting
+         Read,
+         Write,
       };
 
       enum OffsetMode
@@ -127,5 +126,4 @@ namespace e57
 
       return page * logicalPageSize + std::min( remainder, logicalPageSize );
    }
-
 }

@@ -172,7 +172,7 @@ CheckedFile::CheckedFile( const ustring &fileName, Mode mode, ReadChecksumPolicy
 {
    switch ( mode )
    {
-      case ReadOnly:
+      case Read:
       {
 #if defined( _MSC_VER )
          constexpr int readFlags = O_RDONLY | O_BINARY;
@@ -191,7 +191,7 @@ CheckedFile::CheckedFile( const ustring &fileName, Mode mode, ReadChecksumPolicy
       }
       break;
 
-      case WriteCreate:
+      case Write:
       {
          // File truncated to zero length if already exists
 
@@ -204,20 +204,6 @@ CheckedFile::CheckedFile( const ustring &fileName, Mode mode, ReadChecksumPolicy
 #endif
 
          fd_ = open64( fileName_, writeFlags, writeMode );
-      }
-      break;
-
-      case WriteExisting:
-      {
-#if defined( _MSC_VER )
-         constexpr int writeFlags = O_RDWR | O_BINARY;
-#else
-         constexpr int writeFlags = O_RDWR;
-#endif
-
-         fd_ = open64( fileName_, writeFlags, 0 );
-
-         logicalLength_ = physicalToLogical( length( Physical ) ); //???
       }
       break;
    }

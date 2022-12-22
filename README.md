@@ -50,17 +50,22 @@ $ ./test/testE57
 
 ### Dependencies
 
-- [ccache](https://ccache.dev/) (optional): speed up rebuilds using caching
-- [clang-format](https://clang.llvm.org/docs/ClangFormat.html): for code formatting
+Libraries:
+
 - [Xerces-C++](https://xerces.apache.org/xerces-c/): a validating XML parser
 
-#### Installing Dependencies On Linux (Ubuntu)
+Tools:
+
+- [ccache](https://ccache.dev/) (optional): speed up rebuilds using caching
+- [clang-format](https://clang.llvm.org/docs/ClangFormat.html): for code formatting
+
+#### Installing On Linux (Ubuntu)
 
 ```sh
 $ sudo apt install libxerces-c-dev clang-format
 ```
 
-#### Installing Dependencies On macOS (homebrew)
+#### Installing On macOS (homebrew)
 
 ```sh
 $ brew install ccache clang-format xerces-c
@@ -70,7 +75,7 @@ $ brew install ccache clang-format xerces-c
 
 This is a fork of [E57RefImpl](https://sourceforge.net/projects/e57-3d-imgfmt/). The original source is from [E57RefImpl 1.1.332](https://sourceforge.net/projects/e57-3d-imgfmt/files/E57Refimpl-src/).
 
-The original code had not been touched in years and I wanted to make changes to compile it on macOS. Forking it gave me a bit more freedom to update the code and make changes as required. Everything was stripped out except the main implementation for reading & writing E57.
+The original code had not been touched in years and I wanted to make changes to compile it on macOS. Forking it gave me a bit more freedom to update the code and make changes as required. Everything was stripped out except the main implementation for reading & writing E57 files.
 
 Notes:
 
@@ -85,7 +90,7 @@ Many, many other changes were made prior to the first release of this fork. See 
 
 ### E57Simple API
 
-Since the original fork, [Jiri Hörner](https://github.com/ptc-jhoerner) added the E57Simple API from the old reference implementation and updated it.
+[Jiri Hörner](https://github.com/ptc-jhoerner) added the E57Simple API from the old reference implementation and updated it.
 
 This _Simple API_ has evolved since this original port to fix some problems and to make it more foolproof & easier to use. Please see the [CHANGELOG](CHANGELOG.md) for version 3.
 
@@ -99,7 +104,7 @@ These are some of the things you can do to contribute to the project:
 
 ### ✍ Write About The Project
 
-If you find the project useful, spread the word! Articles, mastodon posts, tweets, blog posts, instagram photos - whatever you're into. Please include a referral back to the repository page: https://github.com/asmaloney/libE57Format
+If you find the project useful, spread the word! Articles, mastodon posts, tweets, blog posts, instagram photos - whatever you're into.
 
 ### ⭐️ Add a Star
 

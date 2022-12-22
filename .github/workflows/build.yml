@@ -1,10 +1,6 @@
 name: Build
 
-on:
-  push:
-  pull_request:
-    branches:
-    - master
+on: [push, pull_request]
 
 jobs:
   build:
@@ -35,13 +31,13 @@ jobs:
       - name: Install Dependencies (macOS)
         if: matrix.config.os == 'macos-latest'
         run: |
-          brew install ninja xerces-c
+          brew install ccache ninja xerces-c
 
       - name: Install Dependencies (Linux)
         if: matrix.config.os == 'ubuntu-latest'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libxerces-c-dev ninja-build
+          sudo apt-get install -y ccache libxerces-c-dev ninja-build
           sudo locale-gen fr_FR
 
       - name: Dependencies Cache (Windows)
@@ -61,6 +57,12 @@ jobs:
           activate-environment: win-build-env
           environment-file: .github/conda/environment.yml
           use-only-tar-bz2: true # IMPORTANT: Needs to be set for caching to work properly
+
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          max-size: '5G'
+          key: ${{ matrix.config.os }}-${{ matrix.build_type }}
 
       - name: Configure MSVC console (Windows)
         if: matrix.config.os == 'windows-latest'

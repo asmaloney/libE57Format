@@ -28,7 +28,7 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-cmake_minimum_required( VERSION 3.10.0 )
+cmake_minimum_required( VERSION 3.13 )
 
 # Set a private module find path
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/" )
@@ -96,28 +96,16 @@ option( E57_VISIBILITY_HIDDEN "Compile library with hidden symbol visibility" ON
 
 #########################################################################################
 
-set( revision_id "${PROJECT_NAME}-${PROJECT_VERSION}-${${PROJECT_NAME}_BUILD_TAG}" )
-message( STATUS "[E57] Revision ID: ${revision_id}" )
+set( REVISION_ID "${PROJECT_NAME}-${PROJECT_VERSION}-${${PROJECT_NAME}_BUILD_TAG}" )
+message( STATUS "[${PROJECT_NAME}] Revision ID: ${REVISION_ID}" )
 
 # Target
 if ( E57_BUILD_SHARED )
-	message( STATUS "[E57] Building shared library" )
+	message( STATUS "[${PROJECT_NAME}] Building shared library" )
 	add_library( E57Format SHARED )
 else()
-	message( STATUS "[E57] Building static library" )
+	message( STATUS "[${PROJECT_NAME}] Building static library" )
 	add_library( E57Format STATIC )
-endif()
-
-# ccache
-# https://crascit.com/2016/04/09/using-ccache-with-cmake/
-find_program( CCACHE_PROGRAM ccache )
-if ( CCACHE_PROGRAM )
-    message( STATUS "[E57] Using ccache" )
-    set_target_properties( E57Format
-        PROPERTIES
-            CXX_COMPILER_LAUNCHER "${CCACHE_PROGRAM}"
-            C_COMPILER_LAUNCHER "${CCACHE_PROGRAM}"
-    )
 endif()
 
 include( E57ExportHeader )
@@ -131,12 +119,15 @@ add_subdirectory( src )
 # Target properties
 set_target_properties( E57Format
 	PROPERTIES
-	    CXX_STANDARD 14
-		CXX_STANDARD_REQUIRED YES
-		CXX_EXTENSIONS NO
+	    CXX_EXTENSIONS NO
 		DEBUG_POSTFIX "-d"
 		POSITION_INDEPENDENT_CODE ON
 		INTERPROCEDURAL_OPTIMIZATION ON
+)
+
+target_compile_features( ${PROJECT_NAME}
+    PRIVATE
+        cxx_std_14
 )
 
 # Target definitions
@@ -197,6 +188,13 @@ install(
     RUNTIME DESTINATION bin
 )
 
+# ccache
+# Turns on ccache if found
+include( ccache )
+
+# Formatting
+include( ClangFormat )
+
 # Testing
 option( E57_BUILD_TEST
     "Build tests"
@@ -204,6 +202,8 @@ option( E57_BUILD_TEST
 )
 
 if ( E57_BUILD_TEST )
+    message( STATUS "[${PROJECT_NAME}] Testing enabled" )
+
     # If we are building tests, we need access to all the symbols, so override visibility
     set_target_properties( E57Format
         PROPERTIES
@@ -215,9 +215,6 @@ if ( E57_BUILD_TEST )
 
     add_subdirectory( test )
 endif()
-
-# Formatting
-include( ClangFormat )
 
 # CMake package files
 install(

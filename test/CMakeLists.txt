@@ -8,16 +8,18 @@ project( testE57
 
 add_executable( testE57 )
 
-add_subdirectory( include )
-add_subdirectory( src )
+target_compile_features( ${PROJECT_NAME}
+    PRIVATE
+        cxx_std_14
+)
 
 set_target_properties( testE57
 	PROPERTIES
-	    CXX_STANDARD 14
-		CXX_STANDARD_REQUIRED YES
-		CXX_EXTENSIONS NO
-		POSITION_INDEPENDENT_CODE ON
+	    CXX_EXTENSIONS NO
 )
+
+add_subdirectory( include )
+add_subdirectory( src )
 
 target_compile_options( testE57
 	PUBLIC
@@ -25,18 +27,6 @@ target_compile_options( testE57
 		$<$<C_COMPILER_ID:MSVC>:/utf-8>
 		$<$<CXX_COMPILER_ID:MSVC>:/utf-8>
 )
-
-# ccache
-# https://crascit.com/2016/04/09/using-ccache-with-cmake/
-find_program( CCACHE_PROGRAM ccache )
-if ( CCACHE_PROGRAM )
-    message( STATUS "[E57 Test] Using ccache" )
-    set_target_properties( testE57
-        PROPERTIES
-            CXX_COMPILER_LAUNCHER "${CCACHE_PROGRAM}"
-            C_COMPILER_LAUNCHER "${CCACHE_PROGRAM}"
-    )
-endif()
 
 target_include_directories( testE57
     PRIVATE
@@ -54,6 +44,18 @@ target_link_libraries( testE57
         $<$<CONFIG:DEBUG>:-fno-omit-frame-pointer>
         $<$<CONFIG:DEBUG>:-fsanitize=address>
 )
+
+# ccache
+# Turns on ccache if found
+if ( CCACHE_PROGRAM )
+    message( STATUS "[${PROJECT_NAME}] Using ccache: ${CCACHE_PROGRAM}" )
+
+    set_target_properties( ${PROJECT_NAME}
+        PROPERTIES
+            CXX_COMPILER_LAUNCHER "${CCACHE_PROGRAM}"
+            C_COMPILER_LAUNCHER "${CCACHE_PROGRAM}"
+    )
+endif()
 
 # Test data
 # Find our test data and offer an option to set the path to it

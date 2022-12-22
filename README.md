@@ -4,12 +4,6 @@
 
 libE57Format is a library which provides read & write support for the E57 file format.
 
-This is a fork of [E57RefImpl](https://sourceforge.net/projects/e57-3d-imgfmt/) v1.1.332. The original source is from [E57RefImpl 1.1.332](https://sourceforge.net/projects/e57-3d-imgfmt/files/E57Refimpl-src/) and then everything was stripped out except the main implementation for reading and writing E57.
-
-This version also removes the dependency on [Boost](http://www.boost.org/) and - as of version 3.0 - requires [C++14](https://en.cppreference.com/w/cpp/14). (libE57Format version 2.x required [C++11](https://en.cppreference.com/w/cpp/11).)
-
-Many, many other changes were made prior to the first release of this fork. See the [CHANGELOG](CHANGELOG.md) and git history for details.
-
 ## 🚨 Version 3.0 Note 🚨
 
 There have been many changes (especially to the "Simple API") in the upcoming version 3.0 - some of which will require code changes on your end. Please see the [CHANGELOG](CHANGELOG.md) for details.
@@ -72,25 +66,32 @@ $ sudo apt install libxerces-c-dev clang-format
 $ brew install ccache clang-format xerces-c
 ```
 
-## Why Fork?
+## 🍴 Fork
 
-The E57RefImpl code hadn't been touched in years and I wanted to make changes to compile it with macOS. Forking it gave me a bit more freedom to update the code and make changes as required.
+This is a fork of [E57RefImpl](https://sourceforge.net/projects/e57-3d-imgfmt/). The original source is from [E57RefImpl 1.1.332](https://sourceforge.net/projects/e57-3d-imgfmt/files/E57Refimpl-src/).
 
-I changed the name of the project so that it is not confused with the **E57RefImpl** project.
+The original code had not been touched in years and I wanted to make changes to compile it on macOS. Forking it gave me a bit more freedom to update the code and make changes as required. Everything was stripped out except the main implementation for reading & writing E57.
 
-I have also changed the main include file's name from `E57Foundation.h` to `E57Format.h` to make sure there is no inclusion confusion.
+Notes:
 
-Versions of **libE57Format** started at 2.0.
+- I changed the name of the project so that it is not confused with the **E57RefImpl** project.
+- I changed the main include file's name from `E57Foundation.h` to `E57Format.h` to make sure there is no inclusion confusion.
+- Versions of **libE57Format** started at 2.0.
+- I made changes for it to compile and run on macOS.
+- It no longer depends on [Boost](http://www.boost.org/).
+- It now requires [C++14](https://en.cppreference.com/w/cpp/14). (Version 2.x required [C++11](https://en.cppreference.com/w/cpp/11).)
+
+Many, many other changes were made prior to the first release of this fork. See the [CHANGELOG](CHANGELOG.md) and git history for details.
 
 ### E57Simple API
 
-Since the original fork, [Jiri Hörner](https://github.com/ptc-jhoerner) has added the E57Simple API from the old reference implementation and updated it.
+Since the original fork, [Jiri Hörner](https://github.com/ptc-jhoerner) added the E57Simple API from the old reference implementation and updated it.
 
-This `Simple API` has evolved since this original port to fix some problems and to make it more foolproof & easier to use. Please see the [CHANGELOG](CHANGELOG.md) for version 3.
+This _Simple API_ has evolved since this original port to fix some problems and to make it more foolproof & easier to use. Please see the [CHANGELOG](CHANGELOG.md) for version 3.
 
 ### Tools
 
-[Ryan Baumann](https://github.com/ryanfb) has updated the `e57unpack` and `e57validate` tools to work with **libE57Format**. You can find them in the [e57tools](https://github.com/ryanfb/e57tools) repo.
+[Ryan Baumann](https://github.com/ryanfb) updated the `e57unpack` and `e57validate` tools to work with **libE57Format**. You can find them in the [e57tools](https://github.com/ryanfb/e57tools) repo.
 
 ## How To Contribute
 

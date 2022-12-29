@@ -40,23 +40,20 @@ jobs:
           sudo apt-get install -y ccache libxerces-c-dev ninja-build
           sudo locale-gen fr_FR
 
-      - name: Dependencies Cache (Windows)
-        if: matrix.config.os == 'windows-latest'
-        uses: actions/cache@v3
-        env:
-          CACHE_NUMBER: 0 # Increase this value to reset cache if environment.yml has not changed
-        with:
-          path: ~/conda_pkgs_dir
-          key: ${{ runner.os }}-conda-${{ env.CACHE_NUMBER }}-${{ hashFiles('.github/conda/environment.yml') }}
-
       - name: Install Dependencies (Windows)
         if: matrix.config.os == 'windows-latest'
         uses: conda-incubator/setup-miniconda@v2
         with:
           channels: conda-forge
-          activate-environment: win-build-env
-          environment-file: .github/conda/environment.yml
-          use-only-tar-bz2: true # IMPORTANT: Needs to be set for caching to work properly
+
+      - name: Install More Dependencies (Windows)
+        if: matrix.config.os == 'windows-latest'
+        shell: bash -el {0}
+        run: |
+          conda install xerces-c=3.2.4
+          choco upgrade ccache ninja
+          ccache --version | head -n 1
+          echo "ninja $(ninja --version)"
 
       - name: ccache
         uses: hendrikmuhs/ccache-action@v1.2

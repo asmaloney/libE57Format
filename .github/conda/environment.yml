@@ -1,5 +1,0 @@
-name: win-build-env
-dependencies:
-  - ccache=4.7.3
-  - ninja=1.11.0
-  - xerces-c=3.2.4

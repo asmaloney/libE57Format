@@ -11,10 +11,10 @@ target_compile_definitions( ${PROJECT_NAME}
 
 target_sources( ${PROJECT_NAME}
 	PRIVATE
-	    ${CMAKE_CURRENT_LIST_DIR}/inc/CRC.h
+	    inc/CRC.h
 )
 
 target_include_directories( ${PROJECT_NAME}
 	PRIVATE
-	    ${CMAKE_CURRENT_LIST_DIR}/inc
+	    inc
 )

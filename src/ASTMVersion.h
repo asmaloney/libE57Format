@@ -1,6 +1,6 @@
 #pragma once
+// Copyright © 2022 Andy Maloney <asmaloney@gmail.com>
 // SPDX-License-Identifier: MIT
-// Copyright 2020 Andy Maloney <asmaloney@gmail.com>
 
 #include <cstdint>
 

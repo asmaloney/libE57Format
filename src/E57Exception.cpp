@@ -277,34 +277,6 @@ namespace e57
    //=====================================================================================
 
    /*!
-   @brief Get the version of ASTM E57 standard that the API implementation supports, and library id
-   string.
-
-   @param [out] astmMajor The major version number of the ASTM E57 standard supported.
-   @param [out] astmMinor The minor version number of the ASTM E57 standard supported.
-   @param [out] libraryId A string identifying the implementation of the API.
-
-   @details
-   Since the E57 implementation may be dynamically linked underneath the API, the version string for
-   the implementation and the ASTM version that it supports can't be determined at compile-time.
-   This function returns these identifiers from the underlying implementation.
-
-   @throw No E57Exceptions.
-   */
-   void Utilities::getVersions( int &astmMajor, int &astmMinor, std::string &libraryId )
-   {
-      // REVISION_ID should be passed from compiler command line
-
-#ifndef REVISION_ID
-#error "Need to specify REVISION_ID on command line"
-#endif
-
-      astmMajor = E57_FORMAT_MAJOR;
-      astmMinor = E57_FORMAT_MINOR;
-      libraryId = REVISION_ID;
-   }
-
-   /*!
    @brief Get short string description of an E57 ErrorCode.
 
    @param [in] ecode The numeric errorCode from an E57Exception.

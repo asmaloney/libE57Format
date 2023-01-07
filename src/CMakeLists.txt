@@ -3,6 +3,7 @@
 
 target_sources( E57Format
     PRIVATE
+        ASTMVersion.h
         ${CMAKE_CURRENT_LIST_DIR}/BlobNode.cpp
         ${CMAKE_CURRENT_LIST_DIR}/BlobNodeImpl.h
         ${CMAKE_CURRENT_LIST_DIR}/BlobNodeImpl.cpp
@@ -66,7 +67,7 @@ target_sources( E57Format
         ${CMAKE_CURRENT_LIST_DIR}/E57SimpleData.cpp
         ${CMAKE_CURRENT_LIST_DIR}/E57SimpleReader.cpp
         ${CMAKE_CURRENT_LIST_DIR}/E57SimpleWriter.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/E57Version.h
+        E57Version.cpp
         ${CMAKE_CURRENT_LIST_DIR}/E57XmlParser.cpp
         ${CMAKE_CURRENT_LIST_DIR}/E57XmlParser.h
 )

@@ -8,6 +8,7 @@ target_sources( ${PROJECT_NAME}
 		${CMAKE_CURRENT_LIST_DIR}/E57SimpleData.h
 		${CMAKE_CURRENT_LIST_DIR}/E57SimpleReader.h
 		${CMAKE_CURRENT_LIST_DIR}/E57SimpleWriter.h
+		E57Version.h
 )
 
 install(

@@ -26,10 +26,12 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
+#include <cmath>
+
 #include "WriterImpl.h"
 
 #include "Common.h"
-#include <cmath>
+#include "E57Version.h"
 
 namespace e57
 {
@@ -105,15 +107,9 @@ namespace e57
          root_.set( "guid", StringNode( imf_, generateRandomGUID() ) );
       }
 
-      // Get ASTM version number supported by library, so can write it into file
-      int astmMajor;
-      int astmMinor;
-      ustring libraryId;
-      Utilities::getVersions( astmMajor, astmMinor, libraryId );
-
-      root_.set( "versionMajor", IntegerNode( imf_, astmMajor ) );
-      root_.set( "versionMinor", IntegerNode( imf_, astmMinor ) );
-      root_.set( "e57LibraryVersion", StringNode( imf_, libraryId ) );
+      root_.set( "versionMajor", IntegerNode( imf_, Version::astmMajor() ) );
+      root_.set( "versionMinor", IntegerNode( imf_, Version::astmMinor() ) );
+      root_.set( "e57LibraryVersion", StringNode( imf_, Version::library() ) );
 
       // Save a dummy string for coordinate system.
       // Really should be a valid WKT string identifying the coordinate reference system (CRS).

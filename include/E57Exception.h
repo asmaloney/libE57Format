@@ -332,9 +332,6 @@ namespace e57
 
    namespace Utilities
    {
-      // Get latest version of ASTM standard supported, and library id string
-      E57_DLL void getVersions( int &astmMajor, int &astmMinor, std::string &libraryId );
-
       E57_DLL std::string errorCodeToString( ErrorCode ecode ) noexcept;
    }
 }

@@ -26,8 +26,8 @@
  */
 
 #include "ImageFileImpl.h"
+#include "ASTMVersion.h"
 #include "CheckedFile.h"
-#include "E57Version.h"
 #include "E57XmlParser.h"
 #include "StringFunctions.h"
 #include "StructureNodeImpl.h"

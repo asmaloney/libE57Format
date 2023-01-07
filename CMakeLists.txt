@@ -133,7 +133,7 @@ target_compile_features( ${PROJECT_NAME}
 # Target definitions
 target_compile_definitions( E57Format
     PRIVATE
-        REVISION_ID="${revision_id}"
+        REVISION_ID="${REVISION_ID}"
 )
 
 if ( E57_DEBUG )

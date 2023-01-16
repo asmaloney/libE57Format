@@ -336,6 +336,8 @@ void CompressedVectorNode::dump( int indent, std::ostream &os ) const
 #else
 void CompressedVectorNode::dump( int indent, std::ostream &os ) const
 {
+   UNUSED( indent );
+   UNUSED( os );
 }
 #endif
 

@@ -33,6 +33,46 @@
 #include "Common.h"
 #include "E57Version.h"
 
+namespace
+{
+   /*!
+   @brief Convert e57::NumericalNodeType into human-readable string.
+
+   @param inNodeType node type to convert
+
+   @return human-readable representation of node type or "Unknown: <node type int>".
+   */
+   std::string _numericalNodeTypeStr( e57::NumericalNodeType inNodeType )
+   {
+      switch ( inNodeType )
+      {
+         case e57::NumericalNodeType::Integer:
+         {
+            return "Integer";
+         }
+
+         case e57::NumericalNodeType::ScaledInteger:
+         {
+            return "ScaledInteger";
+         }
+
+         case e57::NumericalNodeType::Float:
+         {
+            return "Float";
+         }
+
+         case e57::NumericalNodeType::Double:
+         {
+            return "Double";
+         }
+
+         default:
+            return std::string( "Unknown: " )
+               .append( std::to_string( static_cast<int>( inNodeType ) ) );
+      }
+   }
+}
+
 namespace e57
 {
    /*!
@@ -829,6 +869,11 @@ namespace e57
                return FloatNode( imf_, 0.0, PrecisionDouble, pointRangeMin, pointRangeMax );
             }
          }
+
+         throw E57_EXCEPTION2(
+            ErrorInvalidNodeType,
+            std::string( "Invalid pointRangeNodeType type: " )
+               .append( _numericalNodeTypeStr( data3DHeader.pointFields.pointRangeNodeType ) ) );
       };
 
       if ( data3DHeader.pointFields.cartesianXField )
@@ -885,6 +930,11 @@ namespace e57
                return FloatNode( imf_, 0.0, PrecisionDouble, angleMin, angleMax );
             }
          }
+
+         throw E57_EXCEPTION2(
+            ErrorInvalidNodeType,
+            std::string( "Invalid angleNodeType type: " )
+               .append( _numericalNodeTypeStr( data3DHeader.pointFields.angleNodeType ) ) );
       };
 
       if ( data3DHeader.pointFields.sphericalAzimuthField )

@@ -163,13 +163,13 @@ namespace e57
       [[deprecated( "Will be removed in 4.0. Use WriteData3DData()." )]] // TODO Remove in 4.0
       CompressedVectorWriter
          SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
-                                const Data3DPointsData &buffers );
+                                const Data3DPointsFloat &buffers );
 
       /// @overload
       [[deprecated( "Will be removed in 4.0. Use WriteData3DData()." )]] // TODO Remove in 4.0
       CompressedVectorWriter
          SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
-                                const Data3DPointsData_d &buffers );
+                                const Data3DPointsDouble &buffers );
 
       /// @brief Writes out the group data
       /// @param [in] dataIndex data block index given by the NewData3D

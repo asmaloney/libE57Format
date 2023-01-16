@@ -159,9 +159,9 @@ namespace
       }
    }
    template void _fillMinMaxData( e57::Data3D &ioData3DHeader,
-                                  const e57::Data3DPointsData &inBuffers );
+                                  const e57::Data3DPointsFloat &inBuffers );
    template void _fillMinMaxData( e57::Data3D &ioData3DHeader,
-                                  const e57::Data3DPointsData_d &inBuffers );
+                                  const e57::Data3DPointsDouble &inBuffers );
 }
 
 namespace e57
@@ -256,13 +256,13 @@ namespace e57
    };
 
    CompressedVectorWriter Writer::SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
-                                                         const Data3DPointsData &buffers )
+                                                         const Data3DPointsFloat &buffers )
    {
       return impl_->SetUpData3DPointsData( dataIndex, pointCount, buffers );
    }
 
    CompressedVectorWriter Writer::SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
-                                                         const Data3DPointsData_d &buffers )
+                                                         const Data3DPointsDouble &buffers )
    {
       return impl_->SetUpData3DPointsData( dataIndex, pointCount, buffers );
    }

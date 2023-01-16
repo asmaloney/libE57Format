@@ -177,7 +177,11 @@ XMLSize_t E57FileInputStream::readBytes( XMLByte *const toFill, const XMLSize_t 
 
    // Be careful if size_t is smaller than int64_t
    size_t available_size;
-   if ( sizeof( size_t ) >= sizeof( int64_t ) )
+
+   // Assign to var to avoid MSVC warning
+   // This section can be simplified in C++17 using a "constexpr if".
+   constexpr bool cSizeCheck = ( sizeof( size_t ) >= sizeof( int64_t ) );
+   if ( cSizeCheck )
    {
       // size_t is at least as big as int64_t
       available_size = static_cast<size_t>( available );

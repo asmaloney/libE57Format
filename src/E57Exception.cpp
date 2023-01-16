@@ -26,7 +26,8 @@
  */
 
 #include "E57Exception.h"
-#include "E57Version.h"
+
+#include "Common.h"
 
 namespace e57
 {
@@ -167,6 +168,10 @@ namespace e57
          os << reportingFileName << "(" << reportingLineNumber << ") : error C0:  <--- reported on"
             << std::endl;
       }
+#else
+      UNUSED( reportingFileName );
+      UNUSED( reportingLineNumber );
+      UNUSED( reportingFunctionName );
 #endif
    }
 

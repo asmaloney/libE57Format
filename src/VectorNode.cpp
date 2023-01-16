@@ -378,6 +378,8 @@ void VectorNode::dump( int indent, std::ostream &os ) const
 #else
 void VectorNode::dump( int indent, std::ostream &os ) const
 {
+   UNUSED( indent );
+   UNUSED( os );
 }
 #endif
 

@@ -560,6 +560,8 @@ void Node::dump( int indent, std::ostream &os ) const
 #else
 void Node::dump( int indent, std::ostream &os ) const
 {
+   UNUSED( indent );
+   UNUSED( os );
 }
 #endif
 

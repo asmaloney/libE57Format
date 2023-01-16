@@ -48,6 +48,8 @@ $ ./test/testE57
 ...
 ```
 
+See [test/README](test/README.md) for details about testing and the test data.
+
 ### Dependencies
 
 Libraries:
@@ -56,8 +58,8 @@ Libraries:
 
 Tools:
 
-- [ccache](https://ccache.dev/) (optional): speed up rebuilds using caching
 - [clang-format](https://clang.llvm.org/docs/ClangFormat.html): for code formatting
+- (optional) [ccache](https://ccache.dev/): speed up rebuilds using caching
 
 #### Installing On Linux (Ubuntu)
 

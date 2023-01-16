@@ -28,10 +28,12 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-cmake_minimum_required( VERSION 3.13 )
+cmake_minimum_required( VERSION 3.15 )
 
 # Set a private module find path
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/" )
+
+message( STATUS "Using CMake ${CMAKE_VERSION}" )
 
 project( E57Format
 	DESCRIPTION
@@ -121,6 +123,7 @@ set_target_properties( E57Format
 	PROPERTIES
 	    CXX_EXTENSIONS NO
 		DEBUG_POSTFIX "-d"
+		EXPORT_COMPILE_COMMANDS ON
 		POSITION_INDEPENDENT_CODE ON
 		INTERPROCEDURAL_OPTIMIZATION ON
 )
@@ -129,6 +132,30 @@ target_compile_features( ${PROJECT_NAME}
     PRIVATE
         cxx_std_14
 )
+
+# Turn on All The Warnings
+target_compile_options( E57Format
+    PRIVATE
+        $<$<CXX_COMPILER_ID:MSVC>:/W4>
+        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic>
+)
+
+# Treat warnings as errors if we are building ourself.
+if ( E57_BUILDING_SELF )
+    if ( CMAKE_VERSION VERSION_GREATER_EQUAL "3.24" )
+        set_target_properties( E57Format
+            PROPERTIES
+                COMPILE_WARNING_AS_ERROR ON
+        )
+    else()
+        # This might fail on compilers other than MSVC, gcc (and related), & clang?
+        target_compile_options( E57Format
+            PRIVATE
+                $<$<CXX_COMPILER_ID:MSVC>:/WX>
+                $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Werror>
+        )
+    endif()
+endif()
 
 # Target definitions
 target_compile_definitions( E57Format

@@ -65,7 +65,15 @@
 #include <cstring>
 #include <fcntl.h>
 
+#if defined( WIN32 ) || defined( _WIN32 ) || defined( WINCE )
+// Disable warning about "conditional expression is constant".
+#pragma warning( push )
+#pragma warning( disable : 4127 )
+#endif
 #include "CRC.h"
+#if defined( WIN32 ) || defined( _WIN32 ) || defined( WINCE )
+#pragma warning( pop )
+#endif
 
 #include "CheckedFile.h"
 #include "StringFunctions.h"

@@ -306,6 +306,8 @@ void FloatNode::dump( int indent, std::ostream &os ) const
 #else
 void FloatNode::dump( int indent, std::ostream &os ) const
 {
+   UNUSED( indent );
+   UNUSED( os );
 }
 #endif
 

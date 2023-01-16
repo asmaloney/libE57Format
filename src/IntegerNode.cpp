@@ -266,6 +266,8 @@ void IntegerNode::dump( int indent, std::ostream &os ) const
 #else
 void IntegerNode::dump( int indent, std::ostream &os ) const
 {
+   UNUSED( indent );
+   UNUSED( os );
 }
 #endif
 

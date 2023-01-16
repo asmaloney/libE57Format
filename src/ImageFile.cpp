@@ -728,6 +728,8 @@ void ImageFile::dump( int indent, std::ostream &os ) const
 #else
 void ImageFile::dump( int indent, std::ostream &os ) const
 {
+   UNUSED( indent );
+   UNUSED( os );
 }
 #endif
 

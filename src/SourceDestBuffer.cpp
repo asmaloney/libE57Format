@@ -472,5 +472,7 @@ void SourceDestBuffer::dump( int indent, std::ostream &os ) const
 #else
 void SourceDestBuffer::dump( int indent, std::ostream &os ) const
 {
+   UNUSED( indent );
+   UNUSED( os );
 }
 #endif

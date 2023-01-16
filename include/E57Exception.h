@@ -35,6 +35,14 @@
 
 #include "E57Export.h"
 
+// C++14 does not support the [[deprecated]] attribute on enumerators.
+// Turn on enumerator deprecation notices if we are compiling with C++17 or later.
+#if ( ( defined( _MSVC_LANG ) && _MSVC_LANG >= 201703L ) || __cplusplus >= 201703L )
+#define DEPRECATED_ENUM( str ) [[deprecated( str )]]
+#else
+#define DEPRECATED_ENUM( str )
+#endif
+
 namespace e57
 {
    /// @brief Numeric error identifiers used in E57Exception
@@ -123,178 +131,160 @@ namespace e57
       ErrorInvalidNodeType = 51,
 
       /// @deprecated Will be removed in 4.0. Use e57::Success.
-      E57_SUCCESS [[deprecated( "Will be removed in 4.0. Use Success." )]] = Success,
+      E57_SUCCESS DEPRECATED_ENUM( "Will be removed in 4.0. Use Success." ) = Success,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorBadCVHeader.
-      E57_ERROR_BAD_CV_HEADER [[deprecated( "Will be removed in 4.0. Use ErrorBadCVHeader." )]] =
+      E57_ERROR_BAD_CV_HEADER DEPRECATED_ENUM( "Will be removed in 4.0. Use ErrorBadCVHeader." ) =
          ErrorBadCVHeader,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorBadCVPacket.
-      E57_ERROR_BAD_CV_PACKET [[deprecated( "Will be removed in 4.0. Use ErrorBadCVPacket." )]] =
+      E57_ERROR_BAD_CV_PACKET DEPRECATED_ENUM( "Will be removed in 4.0. Use ErrorBadCVPacket." ) =
          ErrorBadCVPacket,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorChildIndexOutOfBounds.
-      E57_ERROR_CHILD_INDEX_OUT_OF_BOUNDS
-      [[deprecated( "Will be removed in 4.0. Use ErrorChildIndexOutOfBounds." )]] =
-         ErrorChildIndexOutOfBounds,
+      E57_ERROR_CHILD_INDEX_OUT_OF_BOUNDS DEPRECATED_ENUM(
+         "Will be removed in 4.0. Use ErrorChildIndexOutOfBounds." ) = ErrorChildIndexOutOfBounds,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorSetTwice.
-      E57_ERROR_SET_TWICE [[deprecated( "Will be removed in 4.0. Use ErrorSetTwice." )]] =
+      E57_ERROR_SET_TWICE DEPRECATED_ENUM( "Will be removed in 4.0. Use ErrorSetTwice." ) =
          ErrorSetTwice,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorHomogeneousViolation.
-      E57_ERROR_HOMOGENEOUS_VIOLATION
-      [[deprecated( "Will be removed in 4.0. Use ErrorHomogeneousViolation." )]] =
-         ErrorHomogeneousViolation,
+      E57_ERROR_HOMOGENEOUS_VIOLATION DEPRECATED_ENUM(
+         "Will be removed in 4.0. Use ErrorHomogeneousViolation." ) = ErrorHomogeneousViolation,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorValueNotRepresentable.
-      E57_ERROR_VALUE_NOT_REPRESENTABLE
-      [[deprecated( "Will be removed in 4.0. Use ErrorValueNotRepresentable." )]] =
-         ErrorValueNotRepresentable,
+      E57_ERROR_VALUE_NOT_REPRESENTABLE DEPRECATED_ENUM(
+         "Will be removed in 4.0. Use ErrorValueNotRepresentable." ) = ErrorValueNotRepresentable,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorScaledValueNotRepresentable.
-      E57_ERROR_SCALED_VALUE_NOT_REPRESENTABLE
-      [[deprecated( "Will be removed in 4.0. Use ErrorScaledValueNotRepresentable." )]] =
+      E57_ERROR_SCALED_VALUE_NOT_REPRESENTABLE DEPRECATED_ENUM(
+         "Will be removed in 4.0. Use ErrorScaledValueNotRepresentable." ) =
          ErrorScaledValueNotRepresentable,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorReal64TooLarge.
-      E57_ERROR_REAL64_TOO_LARGE
-      [[deprecated( "Will be removed in 4.0. Use ErrorReal64TooLarge." )]] = ErrorReal64TooLarge,
+      E57_ERROR_REAL64_TOO_LARGE DEPRECATED_ENUM(
+         "Will be removed in 4.0. Use ErrorReal64TooLarge." ) = ErrorReal64TooLarge,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorExpectingNumeric.
-      E57_ERROR_EXPECTING_NUMERIC
-      [[deprecated( "Will be removed in 4.0. Use ErrorExpectingNumeric." )]] =
-         ErrorExpectingNumeric,
+      E57_ERROR_EXPECTING_NUMERIC DEPRECATED_ENUM(
+         "Will be removed in 4.0. Use ErrorExpectingNumeric." ) = ErrorExpectingNumeric,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorExpectingUString.
-      E57_ERROR_EXPECTING_USTRING
-      [[deprecated( "Will be removed in 4.0. Use ErrorExpectingUString." )]] =
-         ErrorExpectingUString,
+      E57_ERROR_EXPECTING_USTRING DEPRECATED_ENUM(
+         "Will be removed in 4.0. Use ErrorExpectingUString." ) = ErrorExpectingUString,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorInternal.
-      E57_ERROR_INTERNAL [[deprecated( "Will be removed in 4.0. Use ErrorInternal." )]] =
+      E57_ERROR_INTERNAL DEPRECATED_ENUM( "Will be removed in 4.0. Use ErrorInternal." ) =
          ErrorInternal,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorBadXMLFormat.
-      E57_ERROR_BAD_XML_FORMAT [[deprecated( "Will be removed in 4.0. Use ErrorBadXMLFormat." )]] =
+      E57_ERROR_BAD_XML_FORMAT DEPRECATED_ENUM( "Will be removed in 4.0. Use ErrorBadXMLFormat." ) =
          ErrorBadXMLFormat,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorXMLParser.
-      E57_ERROR_XML_PARSER [[deprecated( "Will be removed in 4.0. Use ErrorXMLParser." )]] =
+      E57_ERROR_XML_PARSER DEPRECATED_ENUM( "Will be removed in 4.0. Use ErrorXMLParser." ) =
          ErrorXMLParser,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorBadAPIArgument.
-      E57_ERROR_BAD_API_ARGUMENT
-      [[deprecated( "Will be removed in 4.0. Use ErrorBadAPIArgument." )]] = ErrorBadAPIArgument,
+      E57_ERROR_BAD_API_ARGUMENT DEPRECATED_ENUM(
+         "Will be removed in 4.0. Use ErrorBadAPIArgument." ) = ErrorBadAPIArgument,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorFileReadOnly.
-      E57_ERROR_FILE_IS_READ_ONLY
-      [[deprecated( "Will be removed in 4.0. Use ErrorFileReadOnly." )]] = ErrorFileReadOnly,
+      E57_ERROR_FILE_IS_READ_ONLY DEPRECATED_ENUM(
+         "Will be removed in 4.0. Use ErrorFileReadOnly." ) = ErrorFileReadOnly,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorBadChecksum.
-      E57_ERROR_BAD_CHECKSUM [[deprecated( "Will be removed in 4.0. Use ErrorBadChecksum." )]] =
+      E57_ERROR_BAD_CHECKSUM DEPRECATED_ENUM( "Will be removed in 4.0. Use ErrorBadChecksum." ) =
          ErrorBadChecksum,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorOpenFailed.
-      E57_ERROR_OPEN_FAILED [[deprecated( "Will be removed in 4.0. Use ErrorOpenFailed." )]] =
+      E57_ERROR_OPEN_FAILED DEPRECATED_ENUM( "Will be removed in 4.0. Use ErrorOpenFailed." ) =
          ErrorOpenFailed,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorCloseFailed.
-      E57_ERROR_CLOSE_FAILED [[deprecated( "Will be removed in 4.0. Use ErrorCloseFailed." )]] =
+      E57_ERROR_CLOSE_FAILED DEPRECATED_ENUM( "Will be removed in 4.0. Use ErrorCloseFailed." ) =
          ErrorCloseFailed,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorReadFailed.
-      E57_ERROR_READ_FAILED [[deprecated( "Will be removed in 4.0. Use ErrorReadFailed." )]] =
+      E57_ERROR_READ_FAILED DEPRECATED_ENUM( "Will be removed in 4.0. Use ErrorReadFailed." ) =
          ErrorReadFailed,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorWriteFailed.
-      E57_ERROR_WRITE_FAILED [[deprecated( "Will be removed in 4.0. Use ErrorWriteFailed." )]] =
+      E57_ERROR_WRITE_FAILED DEPRECATED_ENUM( "Will be removed in 4.0. Use ErrorWriteFailed." ) =
          ErrorWriteFailed,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorSeekFailed.
-      E57_ERROR_LSEEK_FAILED [[deprecated( "Will be removed in 4.0. Use ErrorSeekFailed." )]] =
+      E57_ERROR_LSEEK_FAILED DEPRECATED_ENUM( "Will be removed in 4.0. Use ErrorSeekFailed." ) =
          ErrorSeekFailed,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorPathUndefined.
-      E57_ERROR_PATH_UNDEFINED [[deprecated( "Will be removed in 4.0. Use ErrorPathUndefined." )]] =
-         ErrorPathUndefined,
+      E57_ERROR_PATH_UNDEFINED DEPRECATED_ENUM(
+         "Will be removed in 4.0. Use ErrorPathUndefined." ) = ErrorPathUndefined,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorBadBuffer.
-      E57_ERROR_BAD_BUFFER [[deprecated( "Will be removed in 4.0. Use ErrorBadBuffer." )]] =
+      E57_ERROR_BAD_BUFFER DEPRECATED_ENUM( "Will be removed in 4.0. Use ErrorBadBuffer." ) =
          ErrorBadBuffer,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorNoBufferForElement.
-      E57_ERROR_NO_BUFFER_FOR_ELEMENT
-      [[deprecated( "Will be removed in 4.0. Use ErrorNoBufferForElement." )]] =
-         ErrorNoBufferForElement,
+      E57_ERROR_NO_BUFFER_FOR_ELEMENT DEPRECATED_ENUM(
+         "Will be removed in 4.0. Use ErrorNoBufferForElement." ) = ErrorNoBufferForElement,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorBufferSizeMismatch.
-      E57_ERROR_BUFFER_SIZE_MISMATCH
-      [[deprecated( "Will be removed in 4.0. Use ErrorBufferSizeMismatch." )]] =
-         ErrorBufferSizeMismatch,
+      E57_ERROR_BUFFER_SIZE_MISMATCH DEPRECATED_ENUM(
+         "Will be removed in 4.0. Use ErrorBufferSizeMismatch." ) = ErrorBufferSizeMismatch,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorBufferDuplicatePathName.
-      E57_ERROR_BUFFER_DUPLICATE_PATHNAME
-      [[deprecated( "Will be removed in 4.0. Use ErrorBufferDuplicatePathName." )]] =
+      E57_ERROR_BUFFER_DUPLICATE_PATHNAME DEPRECATED_ENUM(
+         "Will be removed in 4.0. Use ErrorBufferDuplicatePathName." ) =
          ErrorBufferDuplicatePathName,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorBadFileSignature.
-      E57_ERROR_BAD_FILE_SIGNATURE
-      [[deprecated( "Will be removed in 4.0. Use ErrorBadFileSignature." )]] =
-         ErrorBadFileSignature,
+      E57_ERROR_BAD_FILE_SIGNATURE DEPRECATED_ENUM(
+         "Will be removed in 4.0. Use ErrorBadFileSignature." ) = ErrorBadFileSignature,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorUnknownFileVersion.
-      E57_ERROR_UNKNOWN_FILE_VERSION
-      [[deprecated( "Will be removed in 4.0. Use ErrorUnknownFileVersion." )]] =
-         ErrorUnknownFileVersion,
+      E57_ERROR_UNKNOWN_FILE_VERSION DEPRECATED_ENUM(
+         "Will be removed in 4.0. Use ErrorUnknownFileVersion." ) = ErrorUnknownFileVersion,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorBadFileLength.
-      E57_ERROR_BAD_FILE_LENGTH
-      [[deprecated( "Will be removed in 4.0. Use ErrorBadFileLength." )]] = ErrorBadFileLength,
+      E57_ERROR_BAD_FILE_LENGTH DEPRECATED_ENUM(
+         "Will be removed in 4.0. Use ErrorBadFileLength." ) = ErrorBadFileLength,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorXMLParserInit.
-      E57_ERROR_XML_PARSER_INIT
-      [[deprecated( "Will be removed in 4.0. Use ErrorXMLParserInit." )]] = ErrorXMLParserInit,
+      E57_ERROR_XML_PARSER_INIT DEPRECATED_ENUM(
+         "Will be removed in 4.0. Use ErrorXMLParserInit." ) = ErrorXMLParserInit,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorDuplicateNamespacePrefix.
-      E57_ERROR_DUPLICATE_NAMESPACE_PREFIX
-      [[deprecated( "Will be removed in 4.0. Use ErrorDuplicateNamespacePrefix." )]] =
+      E57_ERROR_DUPLICATE_NAMESPACE_PREFIX DEPRECATED_ENUM(
+         "Will be removed in 4.0. Use ErrorDuplicateNamespacePrefix." ) =
          ErrorDuplicateNamespacePrefix,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorDuplicateNamespaceURI.
-      E57_ERROR_DUPLICATE_NAMESPACE_URI
-      [[deprecated( "Will be removed in 4.0. Use ErrorDuplicateNamespaceURI." )]] =
-         ErrorDuplicateNamespaceURI,
+      E57_ERROR_DUPLICATE_NAMESPACE_URI DEPRECATED_ENUM(
+         "Will be removed in 4.0. Use ErrorDuplicateNamespaceURI." ) = ErrorDuplicateNamespaceURI,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorBadPrototype.
-      E57_ERROR_BAD_PROTOTYPE [[deprecated( "Will be removed in 4.0. Use ErrorBadPrototype." )]] =
+      E57_ERROR_BAD_PROTOTYPE DEPRECATED_ENUM( "Will be removed in 4.0. Use ErrorBadPrototype." ) =
          ErrorBadPrototype,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorBadCodecs.
-      E57_ERROR_BAD_CODECS [[deprecated( "Will be removed in 4.0. Use ErrorBadCodecs." )]] =
+      E57_ERROR_BAD_CODECS DEPRECATED_ENUM( "Will be removed in 4.0. Use ErrorBadCodecs." ) =
          ErrorBadCodecs,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorValueOutOfBounds.
-      E57_ERROR_VALUE_OUT_OF_BOUNDS
-      [[deprecated( "Will be removed in 4.0. Use ErrorValueOutOfBounds." )]] =
-         ErrorValueOutOfBounds,
+      E57_ERROR_VALUE_OUT_OF_BOUNDS DEPRECATED_ENUM(
+         "Will be removed in 4.0. Use ErrorValueOutOfBounds." ) = ErrorValueOutOfBounds,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorConversionRequired.
-      E57_ERROR_CONVERSION_REQUIRED
-      [[deprecated( "Will be removed in 4.0. Use ErrorConversionRequired." )]] =
-         ErrorConversionRequired,
+      E57_ERROR_CONVERSION_REQUIRED DEPRECATED_ENUM(
+         "Will be removed in 4.0. Use ErrorConversionRequired." ) = ErrorConversionRequired,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorBadPathName.
-      E57_ERROR_BAD_PATH_NAME [[deprecated( "Will be removed in 4.0. Use ErrorBadPathName." )]] =
+      E57_ERROR_BAD_PATH_NAME DEPRECATED_ENUM( "Will be removed in 4.0. Use ErrorBadPathName." ) =
          ErrorBadPathName,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorNotImplemented.
-      E57_ERROR_NOT_IMPLEMENTED
-      [[deprecated( "Will be removed in 4.0. Use ErrorNotImplemented." )]] = ErrorNotImplemented,
+      E57_ERROR_NOT_IMPLEMENTED DEPRECATED_ENUM(
+         "Will be removed in 4.0. Use ErrorNotImplemented." ) = ErrorNotImplemented,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorBadNodeDowncast.
-      E57_ERROR_BAD_NODE_DOWNCAST
-      [[deprecated( "Will be removed in 4.0. Use ErrorBadNodeDowncast." )]] = ErrorBadNodeDowncast,
+      E57_ERROR_BAD_NODE_DOWNCAST DEPRECATED_ENUM(
+         "Will be removed in 4.0. Use ErrorBadNodeDowncast." ) = ErrorBadNodeDowncast,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorWriterNotOpen.
-      E57_ERROR_WRITER_NOT_OPEN
-      [[deprecated( "Will be removed in 4.0. Use ErrorWriterNotOpen." )]] = ErrorWriterNotOpen,
+      E57_ERROR_WRITER_NOT_OPEN DEPRECATED_ENUM(
+         "Will be removed in 4.0. Use ErrorWriterNotOpen." ) = ErrorWriterNotOpen,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorReaderNotOpen.
-      E57_ERROR_READER_NOT_OPEN
-      [[deprecated( "Will be removed in 4.0. Use ErrorReaderNotOpen." )]] = ErrorReaderNotOpen,
+      E57_ERROR_READER_NOT_OPEN DEPRECATED_ENUM(
+         "Will be removed in 4.0. Use ErrorReaderNotOpen." ) = ErrorReaderNotOpen,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorNodeUnattached.
-      E57_ERROR_NODE_UNATTACHED
-      [[deprecated( "Will be removed in 4.0. Use ErrorNodeUnattached." )]] = ErrorNodeUnattached,
+      E57_ERROR_NODE_UNATTACHED DEPRECATED_ENUM(
+         "Will be removed in 4.0. Use ErrorNodeUnattached." ) = ErrorNodeUnattached,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorAlreadyHasParent.
-      E57_ERROR_ALREADY_HAS_PARENT
-      [[deprecated( "Will be removed in 4.0. Use ErrorAlreadyHasParent." )]] =
-         ErrorAlreadyHasParent,
+      E57_ERROR_ALREADY_HAS_PARENT DEPRECATED_ENUM(
+         "Will be removed in 4.0. Use ErrorAlreadyHasParent." ) = ErrorAlreadyHasParent,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorDifferentDestImageFile.
-      E57_ERROR_DIFFERENT_DEST_IMAGEFILE
-      [[deprecated( "Will be removed in 4.0. Use ErrorDifferentDestImageFile." )]] =
-         ErrorDifferentDestImageFile,
+      E57_ERROR_DIFFERENT_DEST_IMAGEFILE DEPRECATED_ENUM(
+         "Will be removed in 4.0. Use ErrorDifferentDestImageFile." ) = ErrorDifferentDestImageFile,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorImageFileNotOpen.
-      E57_ERROR_IMAGEFILE_NOT_OPEN
-      [[deprecated( "Will be removed in 4.0. Use ErrorImageFileNotOpen." )]] =
-         ErrorImageFileNotOpen,
+      E57_ERROR_IMAGEFILE_NOT_OPEN DEPRECATED_ENUM(
+         "Will be removed in 4.0. Use ErrorImageFileNotOpen." ) = ErrorImageFileNotOpen,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorBuffersNotCompatible.
-      E57_ERROR_BUFFERS_NOT_COMPATIBLE
-      [[deprecated( "Will be removed in 4.0. Use ErrorBuffersNotCompatible." )]] =
-         ErrorBuffersNotCompatible,
+      E57_ERROR_BUFFERS_NOT_COMPATIBLE DEPRECATED_ENUM(
+         "Will be removed in 4.0. Use ErrorBuffersNotCompatible." ) = ErrorBuffersNotCompatible,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorTooManyWriters.
-      E57_ERROR_TOO_MANY_WRITERS
-      [[deprecated( "Will be removed in 4.0. Use ErrorTooManyWriters." )]] = ErrorTooManyWriters,
+      E57_ERROR_TOO_MANY_WRITERS DEPRECATED_ENUM(
+         "Will be removed in 4.0. Use ErrorTooManyWriters." ) = ErrorTooManyWriters,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorTooManyReaders.
-      E57_ERROR_TOO_MANY_READERS
-      [[deprecated( "Will be removed in 4.0. Use ErrorTooManyReaders." )]] = ErrorTooManyReaders,
+      E57_ERROR_TOO_MANY_READERS DEPRECATED_ENUM(
+         "Will be removed in 4.0. Use ErrorTooManyReaders." ) = ErrorTooManyReaders,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorBadConfiguration.
-      E57_ERROR_BAD_CONFIGURATION
-      [[deprecated( "Will be removed in 4.0. Use ErrorBadConfiguration." )]] =
-         ErrorBadConfiguration,
+      E57_ERROR_BAD_CONFIGURATION DEPRECATED_ENUM(
+         "Will be removed in 4.0. Use ErrorBadConfiguration." ) = ErrorBadConfiguration,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorInvarianceViolation.
-      E57_ERROR_INVARIANCE_VIOLATION
-      [[deprecated( "Will be removed in 4.0. Use ErrorInvarianceViolation." )]] =
-         ErrorInvarianceViolation,
+      E57_ERROR_INVARIANCE_VIOLATION DEPRECATED_ENUM(
+         "Will be removed in 4.0. Use ErrorInvarianceViolation." ) = ErrorInvarianceViolation,
    };
 
    class E57_DLL E57Exception : public std::exception

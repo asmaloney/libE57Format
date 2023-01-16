@@ -235,10 +235,16 @@ int CheckedFile::open64( const ustring &fileName, int flags, int mode )
    errno_t err = _wsopen_s( &handle, widePath.c_str(), flags, _SH_DENYNO, mode );
    if ( err != 0 )
    {
+// MSVC doesn't implement strerrorlen_s for some unknown reason, so just disable the warning
+#pragma warning( push )
+#pragma warning( disable : 4996 )
+
       throw E57_EXCEPTION2( ErrorOpenFailed, "errno=" + toString( errno ) + " error='" +
                                                 strerror( errno ) + "' fileName=" + fileName +
                                                 " flags=" + toString( flags ) +
                                                 " mode=" + toString( mode ) );
+
+#pragma warning( pop )
    }
    return handle;
 #elif defined( __GNUC__ )

@@ -577,6 +577,9 @@ namespace e57
                                                         const char *srcFunctionName ) const
    {
       // unimplemented...
+      UNUSED( srcFileName );
+      UNUSED( srcLineNumber );
+      UNUSED( srcFunctionName );
    }
 
    void CompressedVectorReaderImpl::checkReaderOpen( const char *srcFileName, int srcLineNumber,

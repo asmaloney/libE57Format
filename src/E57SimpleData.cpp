@@ -247,9 +247,9 @@ namespace e57
       *this = Data3DPointsData_t<COORDTYPE>();
    }
 
-   template Data3DPointsFloat::Data3DPointsData_t( Data3D &data3D );
-   template Data3DPointsDouble::Data3DPointsData_t( Data3D &data3D );
+   template Data3DPointsData_t<float>::Data3DPointsData_t( Data3D &data3D );
+   template Data3DPointsData_t<double>::Data3DPointsData_t( Data3D &data3D );
 
-   template Data3DPointsFloat::~Data3DPointsData_t();
-   template Data3DPointsDouble::~Data3DPointsData_t();
+   template Data3DPointsData_t<float>::~Data3DPointsData_t();
+   template Data3DPointsData_t<double>::~Data3DPointsData_t();
 } // end namespace e57

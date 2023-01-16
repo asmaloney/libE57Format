@@ -4,6 +4,7 @@
 
 // For M_PI. This needs to be first, otherwise we might already include math header without M_PI and
 // we would get nothing because of the header guards.
+// NOLINTNEXTLINE(bugprone-reserved-identifier,cert-dcl37-c)
 #define _USE_MATH_DEFINES
 #include <cmath>
 

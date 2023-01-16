@@ -96,7 +96,7 @@ namespace
    ustring toUString( const XMLCh *const xml_str )
    {
       ustring u_str;
-      if ( xml_str && *xml_str )
+      if ( ( xml_str != nullptr ) && *xml_str )
       {
          TranscodeToStr UTF8Transcoder( xml_str, "UTF-8" );
          u_str = ustring( reinterpret_cast<const char *>( UTF8Transcoder.str() ) );
@@ -887,7 +887,10 @@ void E57XmlParser::characters( const XMLCh *const chars, const XMLSize_t length 
 //??? use length to make ustring
 #ifdef E57_MAX_VERBOSE
    std::cout << "characters, chars=\"" << toUString( chars ) << "\" length=" << length << std::endl;
+#else
+   UNUSED( length );
 #endif
+
    // Get active element
    ParseInfo &pi = stack_.top();
 

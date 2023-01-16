@@ -122,7 +122,7 @@ namespace e57
    inline uint64_t CheckedFile::physicalToLogical( uint64_t physicalOffset )
    {
       const uint64_t page = physicalOffset >> physicalPageSizeLog2;
-      const size_t remainder = static_cast<size_t>( physicalOffset & physicalPageSizeMask );
+      const auto remainder = static_cast<size_t>( physicalOffset & physicalPageSizeMask );
 
       return page * logicalPageSize + std::min( remainder, logicalPageSize );
    }

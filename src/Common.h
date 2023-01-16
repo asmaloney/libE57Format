@@ -42,6 +42,9 @@
 #pragma warning( disable : 4224 )
 #endif
 
+// Used to mark unused parameters to indicate intent and supress warnings.
+#define UNUSED( expr ) (void)( expr )
+
 namespace e57
 {
 #define E57_EXCEPTION1( ecode )                                                                    \

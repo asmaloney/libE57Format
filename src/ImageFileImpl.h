@@ -73,18 +73,21 @@ namespace e57
       bool isElementNameLegal( const ustring &elementName, bool allowNumber = true );
       bool isPathNameLegal( const ustring &pathName );
       void checkElementNameLegal( const ustring &elementName, bool allowNumber = true );
-      void elementNameParse( const ustring &elementName, ustring &prefix, ustring &localPart,
-                             bool allowNumber = true );
 
       void pathNameCheckWellFormed( const ustring &pathName );
       void pathNameParse( const ustring &pathName, bool &isRelative, StringList &fields );
-      ustring pathNameUnparse( bool isRelative, const StringList &fields );
 
-      unsigned bitsNeeded( int64_t minimum, int64_t maximum );
       void incrWriterCount();
       void decrWriterCount();
       void incrReaderCount();
       void decrReaderCount();
+
+      static void elementNameParse( const ustring &elementName, ustring &prefix, ustring &localPart,
+                                    bool allowNumber = true );
+
+      static ustring pathNameUnparse( bool isRelative, const StringList &fields );
+
+      static unsigned bitsNeeded( int64_t minimum, int64_t maximum );
 
 #ifdef E57_DEBUG
       void dump( int indent = 0, std::ostream &os = std::cout ) const;

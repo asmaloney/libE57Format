@@ -162,7 +162,7 @@ NodeImplSharedPtr StructureNodeImpl::lookup( const ustring &pathName )
       {
          if ( isRelative )
          {
-            return NodeImplSharedPtr(); // empty pointer
+            return {}; // empty pointer
          }
 
          NodeImplSharedPtr root( getRoot() );
@@ -180,7 +180,7 @@ NodeImplSharedPtr StructureNodeImpl::lookup( const ustring &pathName )
       }
       if ( i == children_.size() )
       {
-         return NodeImplSharedPtr(); // empty pointer
+         return {}; // empty pointer
       }
 
       if ( fields.size() == 1 )

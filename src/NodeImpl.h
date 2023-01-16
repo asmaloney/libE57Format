@@ -90,11 +90,10 @@ namespace e57
       friend class Encoder;
 
       explicit NodeImpl( ImageFileImplWeakPtr destImageFile );
-      NodeImpl &operator=( NodeImpl &n );
 
       virtual NodeImplSharedPtr lookup( const ustring & /*pathName*/ )
       {
-         return NodeImplSharedPtr();
+         return {};
       }
 
       NodeImplSharedPtr getRoot();

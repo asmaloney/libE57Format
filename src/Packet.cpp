@@ -170,6 +170,8 @@ void PacketReadCache::unlock( unsigned cacheIndex )
    //??? why lockedEntry not used?
 #ifdef E57_MAX_VERBOSE
    std::cout << "PacketReadCache::unlock() called, cacheIndex=" << cacheIndex << std::endl;
+#else
+   UNUSED( cacheIndex );
 #endif
 
    if ( lockCount_ != 1 )
@@ -382,7 +384,7 @@ void DataPacketHeader::verify( unsigned bufferLength ) const
    }
 
    // Check packet is at least long enough to hold bytestreamBufferLength array
-   if ( sizeof( DataPacketHeader ) + 2 * bytestreamCount > packetLength )
+   if ( ( sizeof( DataPacketHeader ) + 2 * bytestreamCount ) > packetLength )
    {
       throw E57_EXCEPTION2( ErrorBadCVPacket,
                             "packetLength=" + toString( packetLength ) +
@@ -408,7 +410,7 @@ void DataPacketHeader::dump( int indent, std::ostream &os ) const
 DataPacket::DataPacket()
 {
    // Double check that packet struct is correct length.  Watch out for RTTI increasing the size.
-   static_assert( sizeof( DataPacket ) == 64 * 1024, "Unexpected size of DataPacket" );
+   static_assert( sizeof( DataPacket ) == ( 64 * 1024 ), "Unexpected size of DataPacket" );
 }
 
 void DataPacket::verify( unsigned bufferLength ) const
@@ -490,7 +492,7 @@ char *DataPacket::getBytestream( unsigned bytestreamNumber, unsigned &byteCount 
    byteCount = bsbLength[bytestreamNumber];
 
    // Double check buffer is completely within packet
-   if ( sizeof( DataPacketHeader ) + 2 * header.bytestreamCount + totalPreceeding + byteCount >
+   if ( ( sizeof( DataPacketHeader ) + 2 * header.bytestreamCount + totalPreceeding + byteCount ) >
         header.packetLogicalLengthMinus1 + 1U )
    {
       throw E57_EXCEPTION2( ErrorInternal, "bytestreamCount=" + toString( header.bytestreamCount ) +
@@ -508,7 +510,7 @@ unsigned DataPacket::getBytestreamBufferLength( unsigned bytestreamNumber )
 {
    //??? for now:
    unsigned byteCount;
-   (void)getBytestream( bytestreamNumber, byteCount );
+   getBytestream( bytestreamNumber, byteCount );
    return ( byteCount );
 }
 
@@ -552,6 +554,11 @@ void DataPacket::dump( int indent, std::ostream &os ) const
 void IndexPacket::verify( unsigned bufferLength, uint64_t totalRecordCount,
                           uint64_t fileSize ) const
 {
+#ifndef E57_MAX_DEBUG
+   UNUSED( totalRecordCount );
+   UNUSED( fileSize );
+#endif
+
    //??? do all packets need versions?  how extend without breaking older
    // checking?  need to check
    // file version#?

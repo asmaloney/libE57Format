@@ -244,42 +244,6 @@ namespace e57
       }
    }
 
-   void ImageFileImpl::incrWriterCount()
-   {
-      writerCount_++;
-   }
-
-   void ImageFileImpl::decrWriterCount()
-   {
-      writerCount_--;
-#ifdef E57_MAX_DEBUG
-      if ( writerCount_ < 0 )
-      {
-         throw E57_EXCEPTION2( ErrorInternal, "fileName=" + fileName_ +
-                                                 " writerCount=" + toString( writerCount_ ) +
-                                                 " readerCount=" + toString( readerCount_ ) );
-      }
-#endif
-   }
-
-   void ImageFileImpl::incrReaderCount()
-   {
-      readerCount_++;
-   }
-
-   void ImageFileImpl::decrReaderCount()
-   {
-      readerCount_--;
-#ifdef E57_MAX_DEBUG
-      if ( readerCount_ < 0 )
-      {
-         throw E57_EXCEPTION2( ErrorInternal, "fileName=" + fileName_ +
-                                                 " writerCount=" + toString( writerCount_ ) +
-                                                 " readerCount=" + toString( readerCount_ ) );
-      }
-#endif
-   }
-
    std::shared_ptr<StructureNodeImpl> ImageFileImpl::root()
    {
       checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
@@ -605,6 +569,135 @@ namespace e57
       }
    }
 
+   void ImageFileImpl::pathNameCheckWellFormed( const ustring &pathName )
+   {
+      // no checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__)
+
+      // Just call pathNameParse() which throws if not well formed
+      bool isRelative = false;
+      StringList fields;
+
+      pathNameParse( pathName, isRelative, fields );
+   }
+
+   void ImageFileImpl::pathNameParse( const ustring &pathName, bool &isRelative,
+                                      StringList &fields )
+   {
+#ifdef E57_MAX_VERBOSE
+      std::cout << "pathNameParse pathname="
+                   ""
+                << pathName
+                << ""
+                   ""
+                << std::endl;
+#endif
+      // no checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__)
+
+      // Clear previous contents of fields vector
+      fields.clear();
+
+      size_t start = 0;
+
+      // Check if absolute path
+      if ( pathName[start] == '/' )
+      {
+         isRelative = false;
+         start = 1;
+      }
+      else
+      {
+         isRelative = true;
+      }
+
+      // Save strings in between each forward slash '/'
+      // Don't ignore whitespace
+      while ( start < pathName.size() )
+      {
+         size_t slash = pathName.find_first_of( '/', start );
+
+         // Get element name from in between '/', check valid
+         ustring elementName = pathName.substr( start, slash - start );
+
+         if ( !isElementNameLegal( elementName ) )
+         {
+            throw E57_EXCEPTION2( ErrorBadPathName, std::string( "pathName=" )
+                                                       .append( pathName )
+                                                       .append( " elementName=" )
+                                                       .append( elementName ) );
+         }
+
+         // Add to list
+         fields.push_back( elementName );
+
+         if ( slash == std::string::npos )
+         {
+            break;
+         }
+
+         // Handle case when pathname ends in /, e.g. "/foo/", add empty field at end of list
+         if ( slash == pathName.size() - 1 )
+         {
+            fields.emplace_back( "" );
+            break;
+         }
+
+         // Skip over the slash and keep going
+         start = slash + 1;
+      }
+
+      // Empty relative path is not allowed
+      if ( isRelative && fields.empty() )
+      {
+         throw E57_EXCEPTION2( ErrorBadPathName, "pathName=" + pathName );
+      }
+
+#ifdef E57_MAX_VERBOSE
+      std::cout << "pathNameParse returning: isRelative=" << isRelative
+                << " fields.size()=" << fields.size() << " fields=";
+      for ( auto &field : fields )
+      {
+         std::cout << field << ",";
+      }
+      std::cout << std::endl;
+#endif
+   }
+
+   void ImageFileImpl::incrWriterCount()
+   {
+      writerCount_++;
+   }
+
+   void ImageFileImpl::decrWriterCount()
+   {
+      writerCount_--;
+#ifdef E57_MAX_DEBUG
+      if ( writerCount_ < 0 )
+      {
+         throw E57_EXCEPTION2( ErrorInternal, "fileName=" + fileName_ +
+                                                 " writerCount=" + toString( writerCount_ ) +
+                                                 " readerCount=" + toString( readerCount_ ) );
+      }
+#endif
+   }
+
+   void ImageFileImpl::incrReaderCount()
+   {
+      readerCount_++;
+   }
+
+   void ImageFileImpl::decrReaderCount()
+   {
+      readerCount_--;
+#ifdef E57_MAX_DEBUG
+      if ( readerCount_ < 0 )
+      {
+         throw E57_EXCEPTION2( ErrorInternal, "fileName=" + fileName_ +
+                                                 " writerCount=" + toString( writerCount_ ) +
+                                                 " readerCount=" + toString( readerCount_ ) );
+      }
+#endif
+   }
+
    void ImageFileImpl::elementNameParse( const ustring &elementName, ustring &prefix,
                                          ustring &localPart, bool allowNumber )
    {
@@ -689,97 +782,6 @@ namespace e57
       }
    }
 
-   void ImageFileImpl::pathNameCheckWellFormed( const ustring &pathName )
-   {
-      // no checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__)
-
-      // Just call pathNameParse() which throws if not well formed
-      bool isRelative = false;
-      StringList fields;
-
-      pathNameParse( pathName, isRelative, fields );
-   }
-
-   void ImageFileImpl::pathNameParse( const ustring &pathName, bool &isRelative,
-                                      StringList &fields )
-   {
-#ifdef E57_MAX_VERBOSE
-      std::cout << "pathNameParse pathname="
-                   ""
-                << pathName
-                << ""
-                   ""
-                << std::endl;
-#endif
-      // no checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__)
-
-      // Clear previous contents of fields vector
-      fields.clear();
-
-      size_t start = 0;
-
-      // Check if absolute path
-      if ( pathName[start] == '/' )
-      {
-         isRelative = false;
-         start = 1;
-      }
-      else
-      {
-         isRelative = true;
-      }
-
-      // Save strings in between each forward slash '/'
-      // Don't ignore whitespace
-      while ( start < pathName.size() )
-      {
-         size_t slash = pathName.find_first_of( '/', start );
-
-         // Get element name from in between '/', check valid
-         ustring elementName = pathName.substr( start, slash - start );
-
-         if ( !isElementNameLegal( elementName ) )
-         {
-            throw E57_EXCEPTION2( ErrorBadPathName,
-                                  "pathName=" + pathName + " elementName=" + elementName );
-         }
-
-         // Add to list
-         fields.push_back( elementName );
-
-         if ( slash == std::string::npos )
-         {
-            break;
-         }
-
-         // Handle case when pathname ends in /, e.g. "/foo/", add empty field at end of list
-         if ( slash == pathName.size() - 1 )
-         {
-            fields.emplace_back( "" );
-            break;
-         }
-
-         // Skip over the slash and keep going
-         start = slash + 1;
-      }
-
-      // Empty relative path is not allowed
-      if ( isRelative && fields.empty() )
-      {
-         throw E57_EXCEPTION2( ErrorBadPathName, "pathName=" + pathName );
-      }
-
-#ifdef E57_MAX_VERBOSE
-      std::cout << "pathNameParse returning: isRelative=" << isRelative
-                << " fields.size()=" << fields.size() << " fields=";
-      for ( auto &field : fields )
-      {
-         std::cout << field << ",";
-      }
-      std::cout << std::endl;
-#endif
-   }
-
    ustring ImageFileImpl::pathNameUnparse( bool isRelative, const std::vector<ustring> &fields )
    {
       ustring path;
@@ -801,6 +803,79 @@ namespace e57
 
       return path;
    }
+
+   unsigned ImageFileImpl::bitsNeeded( int64_t minimum, int64_t maximum )
+   {
+      // Relatively quick way to compute ceil(log2(maximum - minimum + 1)));
+      // Uses only integer operations and is machine independent (no assembly code). Find the bit
+      // position of the first 1 (from left) in the binary form of stateCountMinus1.
+      //??? move to E57Utility?
+
+      uint64_t stateCountMinus1 = maximum - minimum;
+
+      unsigned log2 = 0;
+
+      if ( stateCountMinus1 & 0xFFFFFFFF00000000LL )
+      {
+         stateCountMinus1 >>= 32;
+         log2 += 32;
+      }
+
+      if ( stateCountMinus1 & 0xFFFF0000LL )
+      {
+         stateCountMinus1 >>= 16;
+         log2 += 16;
+      }
+
+      if ( stateCountMinus1 & 0xFF00LL )
+      {
+         stateCountMinus1 >>= 8;
+         log2 += 8;
+      }
+
+      if ( stateCountMinus1 & 0xF0LL )
+      {
+         stateCountMinus1 >>= 4;
+         log2 += 4;
+      }
+
+      if ( stateCountMinus1 & 0xCLL )
+      {
+         stateCountMinus1 >>= 2;
+         log2 += 2;
+      }
+
+      if ( stateCountMinus1 & 0x2LL )
+      {
+         stateCountMinus1 >>= 1;
+         log2 += 1;
+      }
+
+      if ( stateCountMinus1 & 1LL )
+      {
+         log2++;
+      }
+
+      return log2;
+   }
+
+#ifdef E57_DEBUG
+   void ImageFileImpl::dump( int indent, std::ostream &os ) const
+   {
+      // no checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__)
+      os << space( indent ) << "fileName:    " << fileName_ << std::endl;
+      os << space( indent ) << "writerCount: " << writerCount_ << std::endl;
+      os << space( indent ) << "readerCount: " << readerCount_ << std::endl;
+      os << space( indent ) << "isWriter:    " << isWriter_ << std::endl;
+      for ( size_t i = 0; i < extensionsCount(); i++ )
+      {
+         os << space( indent ) << "nameSpace[" << i << "]: prefix=" << extensionsPrefix( i )
+            << " uri=" << extensionsUri( i ) << std::endl;
+      }
+      os << space( indent ) << "root:      " << std::endl;
+      root_->dump( indent + 2, os );
+   }
+#endif
 
    void ImageFileImpl::readFileHeader( CheckedFile *file, E57FileHeader &header )
    {
@@ -864,78 +939,5 @@ namespace e57
          throw E57Exception( ErrorImageFileNotOpen, "fileName=" + fileName(), srcFileName,
                              srcLineNumber, srcFunctionName );
       }
-   }
-
-#ifdef E57_DEBUG
-   void ImageFileImpl::dump( int indent, std::ostream &os ) const
-   {
-      // no checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__)
-      os << space( indent ) << "fileName:    " << fileName_ << std::endl;
-      os << space( indent ) << "writerCount: " << writerCount_ << std::endl;
-      os << space( indent ) << "readerCount: " << readerCount_ << std::endl;
-      os << space( indent ) << "isWriter:    " << isWriter_ << std::endl;
-      for ( size_t i = 0; i < extensionsCount(); i++ )
-      {
-         os << space( indent ) << "nameSpace[" << i << "]: prefix=" << extensionsPrefix( i )
-            << " uri=" << extensionsUri( i ) << std::endl;
-      }
-      os << space( indent ) << "root:      " << std::endl;
-      root_->dump( indent + 2, os );
-   }
-#endif
-
-   unsigned ImageFileImpl::bitsNeeded( int64_t minimum, int64_t maximum )
-   {
-      // Relatively quick way to compute ceil(log2(maximum - minimum + 1)));
-      // Uses only integer operations and is machine independent (no assembly code). Find the bit
-      // position of the first 1 (from left) in the binary form of stateCountMinus1.
-      //??? move to E57Utility?
-
-      uint64_t stateCountMinus1 = maximum - minimum;
-
-      unsigned log2 = 0;
-
-      if ( stateCountMinus1 & 0xFFFFFFFF00000000LL )
-      {
-         stateCountMinus1 >>= 32;
-         log2 += 32;
-      }
-
-      if ( stateCountMinus1 & 0xFFFF0000LL )
-      {
-         stateCountMinus1 >>= 16;
-         log2 += 16;
-      }
-
-      if ( stateCountMinus1 & 0xFF00LL )
-      {
-         stateCountMinus1 >>= 8;
-         log2 += 8;
-      }
-
-      if ( stateCountMinus1 & 0xF0LL )
-      {
-         stateCountMinus1 >>= 4;
-         log2 += 4;
-      }
-
-      if ( stateCountMinus1 & 0xCLL )
-      {
-         stateCountMinus1 >>= 2;
-         log2 += 2;
-      }
-
-      if ( stateCountMinus1 & 0x2LL )
-      {
-         stateCountMinus1 >>= 1;
-         log2 += 1;
-      }
-
-      if ( stateCountMinus1 & 1LL )
-      {
-         log2++;
-      }
-
-      return log2;
    }
 }

@@ -31,7 +31,7 @@
 cmake_minimum_required( VERSION 3.15 )
 
 # Set a private module find path
-set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/" )
+set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/" )
 
 message( STATUS "Using CMake ${CMAKE_VERSION}" )
 

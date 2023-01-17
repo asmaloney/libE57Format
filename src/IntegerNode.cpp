@@ -38,7 +38,6 @@ using namespace e57;
 /*!
 @brief Check whether IntegerNode class invariant is true
 
-@param [in] doRecurse If true, also check invariants of all children or sub-objects recursively.
 @param [in] doUpcast If true, also check invariants of the generic Node class.
 
 @details

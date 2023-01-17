@@ -124,8 +124,8 @@ namespace
 class e57::BufferView
 {
 public:
-   /// @param[IN] input: filled buffer owned by caller.
-   /// @param[IN] size: size of input
+   /// @param [in] input filled buffer owned by caller
+   /// @param [in] size size of input
    BufferView( const char *input, uint64_t size ) : streamSize_( size ), stream_( input )
    {
    }

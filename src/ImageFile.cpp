@@ -250,7 +250,6 @@ have all the required element names required by ASTM E57 file format standard us
 @param [in] checksumPolicy The percentage of checksums we compute and verify as an int. Clamped to
 0-100.
 
-@details
 @par Write Mode
 In write mode, the file cannot be already open.
 A file with name given by @a fname is immediately created on the disk.

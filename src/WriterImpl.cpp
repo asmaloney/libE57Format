@@ -635,20 +635,16 @@ namespace e57
 
             case NumericalNodeType::Float:
             {
-               intbox.set( "intensityMinimum",
-                           FloatNode( imf_, 0.0, PrecisionSingle, intensityMin ) );
-               intbox.set( "intensityMaximum",
-                           FloatNode( imf_, 0.0, PrecisionSingle, intensityMax ) );
+               intbox.set( "intensityMinimum", FloatNode( imf_, intensityMin, PrecisionSingle ) );
+               intbox.set( "intensityMaximum", FloatNode( imf_, intensityMax, PrecisionSingle ) );
 
                break;
             }
 
             case NumericalNodeType::Double:
             {
-               intbox.set( "intensityMinimum",
-                           FloatNode( imf_, 0.0, PrecisionDouble, intensityMin ) );
-               intbox.set( "intensityMaximum",
-                           FloatNode( imf_, 0.0, PrecisionDouble, intensityMax ) );
+               intbox.set( "intensityMinimum", FloatNode( imf_, intensityMin, PrecisionDouble ) );
+               intbox.set( "intensityMaximum", FloatNode( imf_, intensityMax, PrecisionDouble ) );
 
                break;
             }

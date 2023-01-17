@@ -38,8 +38,6 @@ using namespace e57;
 /*!
 @brief Check whether CompressedVectorReader class invariant is true
 
-@param [in] doRecurse If true, also check invariants of all children or sub-objects recursively.
-
 @details
 This function checks at least the assertions in the documented class invariant description (see
 class reference page for this object). Other internal invariants that are implementation-dependent

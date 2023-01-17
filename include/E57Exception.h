@@ -306,18 +306,20 @@ namespace e57
       const char *sourceFunctionName() const noexcept;
       int sourceLineNumber() const noexcept;
 
-      /// \cond documentNonPublic   The following isn't part of the API, and isn't documented.
+      /// @cond documentNonPublic   The following isn't part of the API, and isn't documented.
       E57Exception() = delete;
       E57Exception( ErrorCode ecode, std::string context, const char *srcFileName = nullptr,
                     int srcLineNumber = 0, const char *srcFunctionName = nullptr );
+      /// @endcond
 
    private:
+      /// @cond documentNonPublic   The following isn't part of the API, and isn't documented.
       ErrorCode errorCode_;
       std::string context_;
       std::string sourceFileName_;
       const char *sourceFunctionName_;
       int sourceLineNumber_;
-      /// \endcond
+      /// @endcond
    };
 
    namespace Utilities

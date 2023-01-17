@@ -44,6 +44,8 @@ project( E57Format
 	    3.0.0
 )
 
+string( TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPERCASE )
+
 include( Tags )
 
 # Check if we are building ourself or being included and use this to set some defaults
@@ -133,29 +135,14 @@ target_compile_features( ${PROJECT_NAME}
         cxx_std_14
 )
 
-# Turn on All The Warnings
-target_compile_options( E57Format
-    PRIVATE
-        $<$<CXX_COMPILER_ID:MSVC>:/W4>
-        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic>
-)
+# Warnings
 
 # Treat warnings as errors if we are building ourself.
 if ( E57_BUILDING_SELF )
-    if ( CMAKE_VERSION VERSION_GREATER_EQUAL "3.24" )
-        set_target_properties( E57Format
-            PROPERTIES
-                COMPILE_WARNING_AS_ERROR ON
-        )
-    else()
-        # This might fail on compilers other than MSVC, gcc (and related), & clang?
-        target_compile_options( E57Format
-            PRIVATE
-                $<$<CXX_COMPILER_ID:MSVC>:/WX>
-                $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Werror>
-        )
-    endif()
+    set( ${PROJECT_NAME_UPPERCASE}_WARNING_AS_ERROR ON CACHE STRING "" FORCE )
 endif()
+
+include( CompilerWarnings )
 
 # Target definitions
 target_compile_definitions( E57Format

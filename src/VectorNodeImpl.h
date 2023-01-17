@@ -54,6 +54,11 @@ namespace e57
 #endif
 
    private:
+      // Because we are overriding set(), it is hiding the other overrides in StructureNodeImpl.
+      // This will pull them in.
+      // Fixes the "overloaded-virtual" warning in gcc.
+      using StructureNodeImpl::set;
+
       bool allowHeteroChildren_;
    };
 }

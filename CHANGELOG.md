@@ -8,7 +8,8 @@ There have been _many_ changes around the `Simple API` in this release to fix so
 
 ### Added
 
-- Add `ImageFile::extensionsLookupPrefix()` overload for more concise user code ([#161](https://github.com/asmaloney/libE57Format/pull/161)).
+- Add new `E57Version.h` header for more convenient access to version information. Deprecates `e57::Utilities::getVersions()`. ([#197](https://github.com/asmaloney/libE57Format/pull/197)).
+- Add `ImageFile::extensionsLookupPrefix()` overload for more concise user code. ([#161](https://github.com/asmaloney/libE57Format/pull/161))
 - Added a constructor & destructor for **E57SimpleData**'s `Data3DPointsData_t`. This will create all the required buffers based on an `e57::Data3D` struct and handle their cleanup. See the `SimpleWriter` tests for examples. ([#149](https://github.com/asmaloney/libE57Format/pull/149))
 
   > **Note:** I strongly recommend these new constructors be used to simplify your code and help prevent errors.
@@ -25,7 +26,9 @@ There have been _many_ changes around the `Simple API` in this release to fix so
 
 ### Changed
 
-- Now requires a [C++14](https://en.cppreference.com/w/cpp/14) compatible compiler.
+- Now requires a **[C++14](https://en.cppreference.com/w/cpp/14)** compatible compiler.
+- Now requires **[CMake](https://cmake.org/) >= 3.15**. ([#205](https://github.com/asmaloney/libE57Format/pull/205))
+- When building itself, warnings are now treated as errors. ([#205](https://github.com/asmaloney/libE57Format/pull/205), [#211](https://github.com/asmaloney/libE57Format/pull/211))
 - Rename **E57Simple**'s `Data3DPointsData` and `Data3DPointsData_d` structs to `Data3DPointsFloat` and `Data3DPointsDouble` respectively. ([#180](https://github.com/asmaloney/libE57Format/pull/180))
 - 🚧 **E57Simple:** Specifying the node type for cartesian & spherical points, time stamp, and intensity is now explicit using new fields (`pointRangeNodeType`, `angleNodeType`, `timeNodeType`, and `intensityNodeType`) and a new enum (`NumericalNodeType`). ([#178](https://github.com/asmaloney/libE57Format/pull/178))
   - For examples, please see _test/src/testSimpleWriter.cpp_.
@@ -61,6 +64,7 @@ There have been _many_ changes around the `Simple API` in this release to fix so
 
 ### Fixed
 
+- Turned on a lot of compiler warnings and fixed them. ([#201](https://github.com/asmaloney/libE57Format/pull/201), [#202](https://github.com/asmaloney/libE57Format/pull/202), [#203](https://github.com/asmaloney/libE57Format/pull/203), [#204](https://github.com/asmaloney/libE57Format/pull/204), [#205](https://github.com/asmaloney/libE57Format/pull/205), [#207](https://github.com/asmaloney/libE57Format/pull/207), [#209](https://github.com/asmaloney/libE57Format/pull/209))
 - Fix writing floating point numbers when `std::locale::global` is set. ([#174](https://github.com/asmaloney/libE57Format/pull/174))
 - E57XmlParser: Parse doubles in a locale-independent way. ([#173](https://github.com/asmaloney/libE57Format/pull/173)) (Thanks Hugal31!)
 - E57SimpleReader: Ensure scaled integer fields are set as best we can when reading. ([#158](https://github.com/asmaloney/libE57Format/pull/158))

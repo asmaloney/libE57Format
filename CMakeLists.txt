@@ -136,13 +136,13 @@ target_compile_features( ${PROJECT_NAME}
 )
 
 # Warnings
+include( CompilerWarnings )
 
 # Treat warnings as errors if we are building ourself.
 if ( E57_BUILDING_SELF )
-    set( ${PROJECT_NAME_UPPERCASE}_WARNING_AS_ERROR ON CACHE STRING "" FORCE )
+    unset( ${PROJECT_NAME_UPPERCASE}_WARNING_AS_ERROR CACHE )
+    set_warning_as_error()
 endif()
-
-include( CompilerWarnings )
 
 # Target definitions
 target_compile_definitions( E57Format

@@ -54,7 +54,7 @@ target_compile_options( ${PROJECT_NAME}
 
 # Turn on (almost) all warnings on Clang, Apple Clang, and GNU.
 # Useful for internal development, but too noisy for general development.
-if ( NOT MSVC AND ${PROJECT_NAME_UPPERCASE}_WARN_EVERYTHING )
+function( set_warn_everything )
     message( STATUS "[${PROJECT_NAME}] Turning on (almost) all warnings")
 
     target_compile_options( ${PROJECT_NAME}
@@ -71,10 +71,14 @@ if ( NOT MSVC AND ${PROJECT_NAME_UPPERCASE}_WARN_EVERYTHING )
                 -Wno-documentation-deprecated-sync  # because enumerator [[deprecated]] attribute is C++17
             >
     )
+endfunction()
+
+if ( NOT MSVC AND ${PROJECT_NAME_UPPERCASE}_WARN_EVERYTHING )
+    set_warn_everything()
 endif()
 
 # Treat warnings as errors
-if ( ${PROJECT_NAME_UPPERCASE}_WARNING_AS_ERROR )
+function( set_warning_as_error )
     message( STATUS "[${PROJECT_NAME}] Treating warnings as errors")
 
     if ( CMAKE_VERSION VERSION_GREATER_EQUAL "3.24" )
@@ -90,4 +94,8 @@ if ( ${PROJECT_NAME_UPPERCASE}_WARNING_AS_ERROR )
                 $<$<OR:$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>:-Werror>
         )
     endif()
+endfunction()
+
+if ( ${PROJECT_NAME_UPPERCASE}_WARNING_AS_ERROR )
+    set_warning_as_error()
 endif()

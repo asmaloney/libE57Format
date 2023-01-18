@@ -65,6 +65,9 @@
 #include <cstring>
 #include <fcntl.h>
 
+// This is fixed in a newer version of CRCpp.
+//    https://github.com/d-bahr/CRCpp/issues/17
+// TODO: Remove when new CRCpp is released.
 #if defined( WIN32 ) || defined( _WIN32 ) || defined( WINCE )
 // Disable warning about "conditional expression is constant".
 #pragma warning( push )

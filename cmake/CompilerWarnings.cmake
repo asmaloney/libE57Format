@@ -7,12 +7,17 @@ if ( NOT MSVC )
     option( ${PROJECT_NAME_UPPERCASE}_WARN_EVERYTHING "Turn on all warnings (not recommended - used for lib development)" OFF )
 endif()
 
-option( ${PROJECT_NAME_UPPERCASE}_WARNING_AS_ERROR "Treat warnings as errors" ON )
+option( ${PROJECT_NAME_UPPERCASE}_WARNING_AS_ERROR "Treat warnings as errors" OFF )
+
+# Set some helper variables for readability
+set( compiler_is_clang "$<OR:$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:Clang>>" )
+set( compiler_is_gnu "$<CXX_COMPILER_ID:GNU>" )
+set( compiler_is_msvc "$<CXX_COMPILER_ID:MSVC>" )
 
 target_compile_options( ${PROJECT_NAME}
     PRIVATE
         # MSVC only
-        $<$<CXX_COMPILER_ID:MSVC>:
+        $<${compiler_is_msvc}:
             /W4
             /w14263 # 'function': member function does not override any base class virtual member function
             /w14296 # 'operator': expression is always 'boolean_value'
@@ -26,8 +31,8 @@ target_compile_options( ${PROJECT_NAME}
             /w14905 # wide string literal cast to 'LPSTR'
             /w14906 # string literal cast to 'LPWSTR'
         >
-        # Clang, Apple Clang, and GNU
-        $<$<OR:$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>:
+        # Clang and GNU common options
+        $<$<OR:${compiler_is_clang},${compiler_is_gnu}>:
             -Wall
             -Wcast-align
             -Wextra
@@ -39,13 +44,13 @@ target_compile_options( ${PROJECT_NAME}
             -Wshadow
             -Wunused
         >
-        # Clang & Apple Clang only
-        $<$<OR:$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:Clang>>:
+        # Clang only
+        $<${compiler_is_clang}:
             -Wdocumentation
             -Wno-documentation-deprecated-sync  # because enumerator [[deprecated]] attribute is C++17
         >
         # GNU only
-        $<$<CXX_COMPILER_ID:GNU>:
+        $<${compiler_is_gnu}:
             -Wduplicated-branches
             -Wduplicated-cond
             -Wlogical-op
@@ -59,15 +64,15 @@ function( set_warn_everything )
 
     target_compile_options( ${PROJECT_NAME}
         PRIVATE
-            # Clang, Apple Clang, and GNU
-            $<$<OR:$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>:
+            # Clang and GNU
+            $<$<OR:${compiler_is_clang},${compiler_is_gnu}>:
                 -Weverything
                 -Wno-c++98-compat
                 -Wno-c++98-compat-pedantic
                 -Wno-padded
             >
-            # Clang & Apple Clang only
-            $<$<OR:$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:Clang>>:
+            # Clang only
+            $<${compiler_is_clang}:
                 -Wno-documentation-deprecated-sync  # because enumerator [[deprecated]] attribute is C++17
             >
     )
@@ -90,8 +95,12 @@ function( set_warning_as_error )
         # This will do nothing on compilers other than MSVC, Clang, Apple Clang, and GNU compilers.
         target_compile_options( ${PROJECT_NAME}
             PRIVATE
-                $<$<CXX_COMPILER_ID:MSVC>:/WX>
-                $<$<OR:$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>:-Werror>
+                $<${compiler_is_msvc}:
+                    /WX
+                >
+                $<$<OR:${compiler_is_clang},${compiler_is_gnu}>:
+                    -Werror
+                >
         )
     endif()
 endfunction()

@@ -21,11 +21,17 @@ set_target_properties( testE57
 add_subdirectory( include )
 add_subdirectory( src )
 
+# Set helper variables for readability
+set( compiler_is_clang "$<OR:$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:Clang>>" )
+set( compiler_is_gnu "$<CXX_COMPILER_ID:GNU>" )
+set( compiler_is_msvc "$<CXX_COMPILER_ID:MSVC>" )
+set( compiler_is_not_msvc "$<NOT:${compiler_is_msvc}>" )
+set( is_debug "$<CONFIG:DEBUG>" )
+
 target_compile_options( testE57
 	PUBLIC
 	    # add switches to MSVC for UTF-8 handling in our test files
-		$<$<C_COMPILER_ID:MSVC>:/utf-8>
-		$<$<CXX_COMPILER_ID:MSVC>:/utf-8>
+		$<${compiler_is_msvc}:/utf-8>
 )
 
 target_include_directories( testE57
@@ -39,10 +45,19 @@ target_link_libraries( testE57
 )
 
 # Turn on ASAN
-target_link_libraries( testE57
+target_compile_options( testE57
     PRIVATE
-        $<$<CONFIG:DEBUG>:-fno-omit-frame-pointer>
-        $<$<CONFIG:DEBUG>:-fsanitize=address>
+        $<$<AND:${is_debug},${compiler_is_not_msvc}>:
+            -fno-omit-frame-pointer
+            -fsanitize=address
+        >
+)
+target_link_options( testE57
+    PRIVATE
+        $<$<AND:${is_debug},${compiler_is_not_msvc}>:
+            -fno-omit-frame-pointer
+            -fsanitize=address
+        >
 )
 
 # ccache

@@ -5,7 +5,16 @@
 
 include( GenerateExportHeader )
 
-set( comment "// NOTE: This is a generated file. Any changes will be overwritten." )
+set( comment "\r
+// Windows DLLs can't include the extern keyword when declaring templates \r
+#ifdef _WIN32                   \r
+#define TEMPLATE_EXTERN         \r
+#else                           \r
+#define TEMPLATE_EXTERN extern  \r
+#endif                          \r
+                                \r
+// NOTE: This is a generated file. Any changes will be overwritten."
+)
 
 generate_export_header( E57Format
 	EXPORT_FILE_NAME E57Export.h

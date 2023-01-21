@@ -615,7 +615,7 @@ namespace e57
    };
 
    /// @brief Stores pointers to user-provided buffers
-   template <typename COORDTYPE = float> struct E57_DLL Data3DPointsData_t
+   template <typename COORDTYPE = float> struct Data3DPointsData_t
    {
       static_assert( std::is_floating_point<COORDTYPE>::value, "Floating point type required." );
 
@@ -742,11 +742,8 @@ namespace e57
    using Data3DPointsData_d [[deprecated( "Will be removed in 4.0. Use Data3DPointsDouble." )]] =
       Data3DPointsData_t<double>;
 
-   extern template Data3DPointsData_t<float>::Data3DPointsData_t( Data3D &data3D );
-   extern template Data3DPointsData_t<double>::Data3DPointsData_t( Data3D &data3D );
-
-   extern template Data3DPointsData_t<float>::~Data3DPointsData_t();
-   extern template Data3DPointsData_t<double>::~Data3DPointsData_t();
+   extern template struct Data3DPointsData_t<float>;
+   extern template struct Data3DPointsData_t<double>;
 
    /// @brief Stores an image that is to be used only as a visual reference.
    struct E57_DLL VisualReferenceRepresentation

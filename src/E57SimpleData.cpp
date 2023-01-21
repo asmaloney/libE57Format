@@ -247,9 +247,11 @@ namespace e57
       *this = Data3DPointsData_t<COORDTYPE>();
    }
 
-   template Data3DPointsData_t<float>::Data3DPointsData_t( Data3D &data3D );
-   template Data3DPointsData_t<double>::Data3DPointsData_t( Data3D &data3D );
-
-   template Data3DPointsData_t<float>::~Data3DPointsData_t();
-   template Data3DPointsData_t<double>::~Data3DPointsData_t();
+#if defined( WIN32 ) || defined( _WIN32 ) || defined( WINCE )
+   template struct E57_DLL Data3DPointsData_t<float>;
+   template struct E57_DLL Data3DPointsData_t<double>;
+#else
+   template struct Data3DPointsData_t<float>;
+   template struct Data3DPointsData_t<double>;
+#endif
 } // end namespace e57

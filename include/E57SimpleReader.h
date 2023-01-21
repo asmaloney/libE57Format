@@ -200,11 +200,14 @@ namespace e57
 
       ///@}
 
+      /// @cond documentNonPublic The following isn't part of the API, and isn't documented.
    protected:
-      /// @cond documentNonPublic   The following isn't part of the API, and isn't documented.
       friend class ReaderImpl;
 
-      E57_OBJECT_IMPLEMENTATION( Reader ) // must be last in object
+      E57_INTERNAL_ACCESS( Reader )
+
+   protected:
+      std::shared_ptr<ReaderImpl> impl_;
       /// @endcond
    }; // end Reader class
 

@@ -198,11 +198,14 @@ namespace e57
 
       ///@}
 
+      /// @cond documentNonPublic The following isn't part of the API, and isn't documented.
    protected:
-      /// @cond documentNonPublic   The following isn't part of the API, and isn't documented.
       friend class WriterImpl;
 
-      E57_OBJECT_IMPLEMENTATION( Writer ) //  must be last in object
+      E57_INTERNAL_ACCESS( Writer )
+
+   protected:
+      std::shared_ptr<WriterImpl> impl_;
       /// @endcond
    }; // end Writer class
 

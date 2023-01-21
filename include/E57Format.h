@@ -206,19 +206,14 @@ namespace e57
    // E57_INTERNAL_IMPLEMENTATION_ENABLE. Normal API users should not define this symbol.
    // Basically the internal version allows access to the pointer to the implementation (impl_)
 #ifdef E57_INTERNAL_IMPLEMENTATION_ENABLE
-#define E57_OBJECT_IMPLEMENTATION( T )                                                             \
+#define E57_INTERNAL_ACCESS( T )                                                                   \
 public:                                                                                            \
    std::shared_ptr<T##Impl> impl() const                                                           \
    {                                                                                               \
       return ( impl_ );                                                                            \
-   }                                                                                               \
-                                                                                                   \
-protected:                                                                                         \
-   std::shared_ptr<T##Impl> impl_;
+   }
 #else
-#define E57_OBJECT_IMPLEMENTATION( T )                                                             \
-protected:                                                                                         \
-   std::shared_ptr<T##Impl> impl_;
+#define E57_INTERNAL_ACCESS( T )
 #endif
    /// @endcond
 
@@ -266,17 +261,18 @@ protected:                                                                      
       bool operator==( const Node &n2 ) const;
       bool operator!=( const Node &n2 ) const;
 
-      /// @cond documentNonPublic   The following isn't part of the API, and isn't documented.
+      /// @cond documentNonPublic The following isn't part of the API, and isn't documented.
 #ifdef E57_INTERNAL_IMPLEMENTATION_ENABLE
       explicit Node( std::shared_ptr<NodeImpl> ); // internal use only
 #endif
-      /// @endcond
 
    private:
-      /// @cond documentNonPublic   The following isn't part of the API, and isn't documented.
       friend class NodeImpl;
 
-      E57_OBJECT_IMPLEMENTATION( Node ) // must be last in object
+      E57_INTERNAL_ACCESS( Node )
+
+   protected:
+      std::shared_ptr<NodeImpl> impl_;
       /// @endcond
    };
 
@@ -308,14 +304,17 @@ protected:                                                                      
       void dump( int indent = 0, std::ostream &os = std::cout ) const;
       void checkInvariant( bool doRecurse = true, bool doUpcast = true ) const;
 
+      /// @cond documentNonPublic The following isn't part of the API, and isn't documented.
    private:
-      /// @cond documentNonPublic   The following isn't part of the API, and isn't documented.
       friend class ImageFile;
 
       explicit StructureNode( std::shared_ptr<StructureNodeImpl> ni );
       explicit StructureNode( std::weak_ptr<ImageFileImpl> fileParent );
 
-      E57_OBJECT_IMPLEMENTATION( StructureNode ) // must be last in object
+      E57_INTERNAL_ACCESS( StructureNode )
+
+   protected:
+      std::shared_ptr<StructureNodeImpl> impl_;
       /// @endcond
    };
 
@@ -349,14 +348,16 @@ protected:                                                                      
       void dump( int indent = 0, std::ostream &os = std::cout ) const;
       void checkInvariant( bool doRecurse = true, bool doUpcast = true ) const;
 
+      /// @cond documentNonPublic The following isn't part of the API, and isn't documented.
    private:
-      /// @cond documentNonPublic   The following isn't part of the API, and isn't documented.
       friend class CompressedVectorNode;
 
       explicit VectorNode( std::shared_ptr<VectorNodeImpl> ni ); // internal use only
 
-      E57_OBJECT_IMPLEMENTATION(
-         VectorNode ) // Internal implementation details - must be last in object
+      E57_INTERNAL_ACCESS( VectorNode )
+
+   protected:
+      std::shared_ptr<VectorNodeImpl> impl_;
       /// @endcond
    };
 
@@ -408,9 +409,11 @@ protected:                                                                      
       void dump( int indent = 0, std::ostream &os = std::cout ) const;
       void checkInvariant( bool doRecurse = true ) const;
 
-   private:
-      /// @cond documentNonPublic   The following isn't part of the API, and isn't documented.
-      E57_OBJECT_IMPLEMENTATION( SourceDestBuffer ) // must be last in object
+      /// @cond documentNonPublic The following isn't part of the API, and isn't documented.
+      E57_INTERNAL_ACCESS( SourceDestBuffer )
+
+   protected:
+      std::shared_ptr<SourceDestBufferImpl> impl_;
       /// @endcond
    };
 
@@ -429,13 +432,16 @@ protected:                                                                      
       void dump( int indent = 0, std::ostream &os = std::cout ) const;
       void checkInvariant( bool doRecurse = true );
 
+      /// @cond documentNonPublic The following isn't part of the API, and isn't documented.
    private:
-      /// @cond documentNonPublic   The following isn't part of the API, and isn't  documented.
       friend class CompressedVectorNode;
 
       explicit CompressedVectorReader( std::shared_ptr<CompressedVectorReaderImpl> ni );
 
-      E57_OBJECT_IMPLEMENTATION( CompressedVectorReader ) // must be last in object
+      E57_INTERNAL_ACCESS( CompressedVectorReader )
+
+   protected:
+      std::shared_ptr<CompressedVectorReaderImpl> impl_;
       /// @endcond
    };
 
@@ -453,13 +459,16 @@ protected:                                                                      
       void dump( int indent = 0, std::ostream &os = std::cout ) const;
       void checkInvariant( bool doRecurse = true );
 
+      /// @cond documentNonPublic The following isn't part of the API, and isn't documented.
    private:
-      /// @cond documentNonPublic   The following isn't part of the API, and isn't documented.
       friend class CompressedVectorNode;
 
       explicit CompressedVectorWriter( std::shared_ptr<CompressedVectorWriterImpl> ni );
 
-      E57_OBJECT_IMPLEMENTATION( CompressedVectorWriter ) // must be last in object
+      E57_INTERNAL_ACCESS( CompressedVectorWriter )
+
+   protected:
+      std::shared_ptr<CompressedVectorWriterImpl> impl_;
       /// @endcond
    };
 
@@ -494,15 +503,18 @@ protected:                                                                      
       void dump( int indent = 0, std::ostream &os = std::cout ) const;
       void checkInvariant( bool doRecurse = true, bool doUpcast = true ) const;
 
+      /// @cond documentNonPublic The following isn't part of the API, and isn't documented.
    private:
-      /// @cond documentNonPublic   The following isn't part of the API, and isn't documented.
       friend class CompressedVectorReader;
       friend class CompressedVectorWriter;
       friend class E57XmlParser;
 
       CompressedVectorNode( std::shared_ptr<CompressedVectorNodeImpl> ni );
 
-      E57_OBJECT_IMPLEMENTATION( CompressedVectorNode ) // must be last in object
+      E57_INTERNAL_ACCESS( CompressedVectorNode )
+
+   protected:
+      std::shared_ptr<CompressedVectorNodeImpl> impl_;
       /// @endcond
    };
 
@@ -533,11 +545,14 @@ protected:                                                                      
       void dump( int indent = 0, std::ostream &os = std::cout ) const;
       void checkInvariant( bool doRecurse = true, bool doUpcast = true ) const;
 
+      /// @cond documentNonPublic The following isn't part of the API, and isn't documented.
    private:
-      /// @cond documentNonPublic   The following isn't part of the API, and isn't documented.
       explicit IntegerNode( std::shared_ptr<IntegerNodeImpl> ni );
 
-      E57_OBJECT_IMPLEMENTATION( IntegerNode ) // must be last in object
+      E57_INTERNAL_ACCESS( IntegerNode )
+
+   protected:
+      std::shared_ptr<IntegerNodeImpl> impl_;
       /// @endcond
    };
 
@@ -580,11 +595,14 @@ protected:                                                                      
       void dump( int indent = 0, std::ostream &os = std::cout ) const;
       void checkInvariant( bool doRecurse = true, bool doUpcast = true ) const;
 
+      /// @cond documentNonPublic The following isn't part of the API, and isn't documented.
    private:
-      /// @cond documentNonPublic   The following isn't part of the API, and isn't documented.
       explicit ScaledIntegerNode( std::shared_ptr<ScaledIntegerNodeImpl> ni );
 
-      E57_OBJECT_IMPLEMENTATION( ScaledIntegerNode ) // must be last in object
+      E57_INTERNAL_ACCESS( ScaledIntegerNode )
+
+   protected:
+      std::shared_ptr<ScaledIntegerNodeImpl> impl_;
       /// @endcond
    };
 
@@ -617,11 +635,14 @@ protected:                                                                      
       void dump( int indent = 0, std::ostream &os = std::cout ) const;
       void checkInvariant( bool doRecurse = true, bool doUpcast = true ) const;
 
+      /// @cond documentNonPublic The following isn't part of the API, and isn't documented.
    private:
-      /// @cond documentNonPublic   The following isn't part of the API, and isn't documented.
       explicit FloatNode( std::shared_ptr<FloatNodeImpl> ni );
 
-      E57_OBJECT_IMPLEMENTATION( FloatNode ) // must be last in object
+      E57_INTERNAL_ACCESS( FloatNode )
+
+   protected:
+      std::shared_ptr<FloatNodeImpl> impl_;
       /// @endcond
    };
 
@@ -649,13 +670,16 @@ protected:                                                                      
       void dump( int indent = 0, std::ostream &os = std::cout ) const;
       void checkInvariant( bool doRecurse = true, bool doUpcast = true ) const;
 
+      /// @cond documentNonPublic The following isn't part of the API, and isn't documented.
    private:
-      /// @cond documentNonPublic   The following isn't part of the API, and isn't documented.
       friend class StringNodeImpl;
 
       explicit StringNode( std::shared_ptr<StringNodeImpl> ni );
 
-      E57_OBJECT_IMPLEMENTATION( StringNode ) // must be last in object
+      E57_INTERNAL_ACCESS( StringNode )
+
+   protected:
+      std::shared_ptr<StringNodeImpl> impl_;
       /// @endcond
    };
 
@@ -685,8 +709,8 @@ protected:                                                                      
       void dump( int indent = 0, std::ostream &os = std::cout ) const;
       void checkInvariant( bool doRecurse = true, bool doUpcast = true ) const;
 
+      /// @cond documentNonPublic The following isn't part of the API, and isn't documented.
    private:
-      /// @cond documentNonPublic   The following isn't part of the API, and isn't documented.
       friend class E57XmlParser;
 
       explicit BlobNode( std::shared_ptr<BlobNodeImpl> ni );
@@ -694,7 +718,10 @@ protected:                                                                      
       // create blob already in a file
       BlobNode( const ImageFile &destImageFile, int64_t fileOffset, int64_t length );
 
-      E57_OBJECT_IMPLEMENTATION( BlobNode ) // must be last in object
+      E57_INTERNAL_ACCESS( BlobNode )
+
+   protected:
+      std::shared_ptr<BlobNodeImpl> impl_;
       /// @endcond
    };
 
@@ -736,8 +763,8 @@ protected:                                                                      
       bool operator==( const ImageFile &imf2 ) const;
       bool operator!=( const ImageFile &imf2 ) const;
 
+      /// @cond documentNonPublic The following isn't part of the API, and isn't documented.
    private:
-      /// @cond documentNonPublic   The following isn't part of the API, and isn't documented.
       explicit ImageFile( double ); // Dummy constructor for better error msg for: ImageFile(0)
 
       friend class Node;
@@ -752,7 +779,10 @@ protected:                                                                      
 
       explicit ImageFile( std::shared_ptr<ImageFileImpl> imfi );
 
-      E57_OBJECT_IMPLEMENTATION( ImageFile ) //  must be last in object
+      E57_INTERNAL_ACCESS( ImageFile )
+
+   protected:
+      std::shared_ptr<ImageFileImpl> impl_;
       /// @endcond
    };
 }

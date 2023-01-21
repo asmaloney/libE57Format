@@ -30,6 +30,8 @@ target_compile_options( ${PROJECT_NAME}
             /w14640 # thread un-safe static member initialization
             /w14905 # wide string literal cast to 'LPSTR'
             /w14906 # string literal cast to 'LPWSTR'
+
+            /wd4251  # 'type' : class 'type1' needs to have dll-interface to be used by clients of class 'type2'
         >
         # Clang and GNU common options
         $<$<OR:${compiler_is_clang},${compiler_is_gnu}>:

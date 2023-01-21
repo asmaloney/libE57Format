@@ -27,8 +27,6 @@
 
 #include "E57Exception.h"
 
-#include "Common.h"
-
 namespace e57
 {
    /*!
@@ -96,17 +94,8 @@ namespace e57
    Production code will likely have catch handlers for these exceptions as well.
    */
 
-   /// @cond documentNonPublic   The following isn't part of the API, and isn't documented.
-   E57Exception::E57Exception( ErrorCode ecode, std::string context, const char *srcFileName,
-                               int srcLineNumber, const char *srcFunctionName ) :
-      errorCode_( ecode ),
-      context_( std::move( context ) ), sourceFileName_( srcFileName ),
-      sourceFunctionName_( srcFunctionName ), sourceLineNumber_( srcLineNumber )
-   {
-   }
-   /// @endcond
-
    /*!
+   @fn const char *E57Exception::what()
    @brief Get string description of exception category.
 
    @details
@@ -118,12 +107,10 @@ namespace e57
 
    @throw No E57Exceptions.
    */
-   const char *E57Exception::what() const noexcept
-   {
-      return "E57 exception";
-   }
 
    /*!
+   @fn    void E57Exception::report( const char *reportingFileName, int reportingLineNumber,
+                              const char *reportingFunctionName, std::ostream &os )
    @brief Print error information on a given output stream.
 
    @param [in] reportingFileName Name of file where catch statement caught the exception. NULL if
@@ -145,37 +132,9 @@ namespace e57
 
    @see ErrorCode
    */
-   void E57Exception::report( const char *reportingFileName, int reportingLineNumber,
-                              const char *reportingFunctionName, std::ostream &os ) const noexcept
-   {
-      os << "**** Got an e57 exception: " << errorStr() << std::endl;
-
-#ifdef E57_DEBUG
-      os << "  Debug info: " << std::endl;
-      os << "    context: " << context_ << std::endl;
-      os << "    sourceFunctionName: " << sourceFunctionName_ << std::endl;
-      if ( reportingFunctionName != nullptr )
-      {
-         os << "    reportingFunctionName: " << reportingFunctionName << std::endl;
-      }
-
-      /*** Add a line in error message that a smart editor (gnu emacs) can
-       * interpret as a link to the source code: */
-      os << sourceFileName_ << "(" << sourceLineNumber_ << ") : error C" << errorCode_
-         << ":  <--- occurred on" << std::endl;
-      if ( reportingFileName != nullptr )
-      {
-         os << reportingFileName << "(" << reportingLineNumber << ") : error C0:  <--- reported on"
-            << std::endl;
-      }
-#else
-      UNUSED( reportingFileName );
-      UNUSED( reportingLineNumber );
-      UNUSED( reportingFunctionName );
-#endif
-   }
 
    /*!
+   @fn ErrorCode E57Exception::errorCode()
    @brief Get numeric ::ErrorCode associated with the exception.
 
    @post No visible state is modified.
@@ -186,12 +145,9 @@ namespace e57
 
    @see E57Exception::errorStr, Utilities::errorCodeToString, ErrorCode
    */
-   ErrorCode E57Exception::errorCode() const noexcept
-   {
-      return errorCode_;
-   }
 
    /*!
+   @fn std::string E57Exception::errorStr()
    @brief Get error string associated with the exception.
 
    @post No visible state is modified.
@@ -200,12 +156,9 @@ namespace e57
 
    @throw No E57Exceptions.
    */
-   std::string E57Exception::errorStr() const noexcept
-   {
-      return Utilities::errorCodeToString( errorCode_ );
-   }
 
    /*!
+   @fn std::string E57Exception::context()
    @brief Get human-readable string that describes the context of the error.
 
    @details
@@ -219,12 +172,9 @@ namespace e57
 
    @throw No E57Exceptions.
    */
-   std::string E57Exception::context() const noexcept
-   {
-      return context_;
-   }
 
    /*!
+   @fn const char *E57Exception::sourceFileName()
    @brief Get name of source file where exception occurred, for debugging.
 
    @details
@@ -237,12 +187,9 @@ namespace e57
 
    @throw No E57Exceptions.
    */
-   const char *E57Exception::sourceFileName() const noexcept
-   {
-      return sourceFileName_.c_str();
-   }
 
    /*!
+   @fn const char *E57Exception::sourceFunctionName()
    @brief Get name of function in source code where the error occurred , for
    debugging.
 
@@ -256,12 +203,9 @@ namespace e57
 
    @throw No E57Exceptions.
    */
-   const char *E57Exception::sourceFunctionName() const noexcept
-   {
-      return sourceFunctionName_;
-   }
 
    /*!
+   @fn int E57Exception::sourceLineNumber()
    @brief Get line number in source code file where exception occurred, for debugging.
 
    @details
@@ -274,10 +218,6 @@ namespace e57
 
    @throw No E57Exceptions.
    */
-   int E57Exception::sourceLineNumber() const noexcept
-   {
-      return sourceLineNumber_;
-   }
 
    //=====================================================================================
 

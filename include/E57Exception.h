@@ -35,6 +35,11 @@
 
 #include "E57Export.h"
 
+#ifndef E57_DEBUG
+// Used to mark unused parameters to indicate intent and supress warnings.
+#define UNUSED( expr ) (void)( expr )
+#endif
+
 // C++14 does not support the [[deprecated]] attribute on enumerators.
 // Turn on enumerator deprecation notices if we are compiling with C++17 or later.
 #if ( ( defined( _MSVC_LANG ) && _MSVC_LANG >= 201703L ) || __cplusplus >= 201703L )
@@ -287,33 +292,94 @@ namespace e57
          "Will be removed in 4.0. Use ErrorInvarianceViolation." ) = ErrorInvarianceViolation,
    };
 
-   class E57_DLL E57Exception : public std::exception
+   namespace Utilities
+   {
+      E57_DLL std::string errorCodeToString( ErrorCode ecode ) noexcept;
+   }
+
+   class E57Exception : public std::exception
    {
    public:
-      const char *what() const noexcept override;
+      const char *what() const noexcept override
+      {
+         return "E57 exception";
+      }
 
       void report( const char *reportingFileName = nullptr, int reportingLineNumber = 0,
                    const char *reportingFunctionName = nullptr,
-                   std::ostream &os = std::cout ) const noexcept;
+                   std::ostream &os = std::cout ) const noexcept
+      {
+         os << "**** Got an e57 exception: " << errorStr() << std::endl;
 
-      ErrorCode errorCode() const noexcept;
-      std::string errorStr() const noexcept;
+#ifdef E57_DEBUG
+         os << "  Debug info: " << std::endl;
+         os << "    context: " << context_ << std::endl;
+         os << "    sourceFunctionName: " << sourceFunctionName_ << std::endl;
+         if ( reportingFunctionName != nullptr )
+         {
+            os << "    reportingFunctionName: " << reportingFunctionName << std::endl;
+         }
 
-      std::string context() const noexcept;
+         /*** Add a line in error message that a smart editor (gnu emacs) can
+          * interpret as a link to the source code: */
+         os << sourceFileName_ << "(" << sourceLineNumber_ << ") : error C" << errorCode_
+            << ":  <--- occurred on" << std::endl;
+         if ( reportingFileName != nullptr )
+         {
+            os << reportingFileName << "(" << reportingLineNumber
+               << ") : error C0:  <--- reported on" << std::endl;
+         }
+#else
+         UNUSED( reportingFileName );
+         UNUSED( reportingLineNumber );
+         UNUSED( reportingFunctionName );
+#endif
+      }
+
+      ErrorCode errorCode() const noexcept
+      {
+         return errorCode_;
+      }
+
+      std::string errorStr() const noexcept
+      {
+         return Utilities::errorCodeToString( errorCode_ );
+      }
+
+      std::string context() const noexcept
+      {
+         return context_;
+      }
 
       // For debugging purposes:
-      const char *sourceFileName() const noexcept;
-      const char *sourceFunctionName() const noexcept;
-      int sourceLineNumber() const noexcept;
+      const char *sourceFileName() const noexcept
+      {
+         return sourceFileName_.c_str();
+      }
 
-      /// @cond documentNonPublic   The following isn't part of the API, and isn't documented.
+      const char *sourceFunctionName() const noexcept
+      {
+         return sourceFunctionName_;
+      }
+
+      int sourceLineNumber() const noexcept
+      {
+         return sourceLineNumber_;
+      }
+
+      /// @cond documentNonPublic The following isn't part of the API, and isn't documented.
       E57Exception() = delete;
       E57Exception( ErrorCode ecode, std::string context, const char *srcFileName = nullptr,
-                    int srcLineNumber = 0, const char *srcFunctionName = nullptr );
+                    int srcLineNumber = 0, const char *srcFunctionName = nullptr ) :
+         errorCode_( ecode ),
+         context_( std::move( context ) ), sourceFileName_( srcFileName ),
+         sourceFunctionName_( srcFunctionName ), sourceLineNumber_( srcLineNumber )
+      {
+      }
       /// @endcond
 
    private:
-      /// @cond documentNonPublic   The following isn't part of the API, and isn't documented.
+      /// @cond documentNonPublic The following isn't part of the API, and isn't documented.
       ErrorCode errorCode_;
       std::string context_;
       std::string sourceFileName_;
@@ -321,9 +387,4 @@ namespace e57
       int sourceLineNumber_;
       /// @endcond
    };
-
-   namespace Utilities
-   {
-      E57_DLL std::string errorCodeToString( ErrorCode ecode ) noexcept;
-   }
 }

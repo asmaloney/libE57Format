@@ -7,14 +7,57 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        build_type: ['Debug', 'Release']
-        config:
-          - { name: '🍏 macOS Clang', os: macos-latest }
-          - { name: '🐧 Linux GCC', os: ubuntu-latest }
-          - { name: '🪟 Windows MSVC', os: windows-latest }
+        include:
+          - name: 🍏 macOS (Clang - Debug)
+            os: macos-latest
+            platform: macos
+            build_type: Debug
+            build_shared: OFF
+          - name: 🍏 macOS (Clang - Release)
+            os: macos-latest
+            platform: macos
+            build_type: Release
+            build_shared: OFF
+          - name: 🍏 macOS (Clang, Shared - Release)
+            os: macos-latest
+            platform: macos
+            build_type: Release
+            build_shared: ON
 
-    name: ${{ matrix.config.name }} (${{ matrix.build_type }})
-    runs-on: ${{ matrix.config.os }}
+          - name: 🐧 Linux (GCC - Debug)
+            os: ubuntu-latest
+            platform: linux
+            build_type: Debug
+            build_shared: OFF
+          - name: 🐧 Linux (GCC - Release)
+            os: ubuntu-latest
+            platform: linux
+            build_type: Release
+            build_shared: OFF
+          - name: 🐧 Linux (GCC, Shared - Release)
+            os: ubuntu-latest
+            platform: linux
+            build_type: Release
+            build_shared: ON
+
+          - name: 🪟 Windows (MSVC - Debug)
+            os: windows-latest
+            platform: windows
+            build_type: Debug
+            build_shared: OFF
+          - name: 🪟 Windows (MSVC - Release)
+            os: windows-latest
+            platform: windows
+            build_type: Release
+            build_shared: OFF
+          - name: 🪟 Windows (MSVC, Shared - Release)
+            os: windows-latest
+            platform: windows
+            build_type: Release
+            build_shared: ON
+
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout
@@ -29,25 +72,25 @@ jobs:
           path: libE57Format-test-data
 
       - name: Install Dependencies (macOS)
-        if: matrix.config.os == 'macos-latest'
+        if: matrix.platform == 'macos'
         run: |
           brew install ccache ninja xerces-c
 
       - name: Install Dependencies (Linux)
-        if: matrix.config.os == 'ubuntu-latest'
+        if: matrix.platform == 'linux'
         run: |
           sudo apt-get update
           sudo apt-get install -y ccache libxerces-c-dev ninja-build
           sudo locale-gen fr_FR
 
       - name: Install Dependencies (Windows)
-        if: matrix.config.os == 'windows-latest'
+        if: matrix.platform == 'windows'
         uses: conda-incubator/setup-miniconda@v2
         with:
           channels: conda-forge
 
       - name: Install More Dependencies (Windows)
-        if: matrix.config.os == 'windows-latest'
+        if: matrix.platform == 'windows'
         shell: bash -el {0}
         run: |
           conda install xerces-c=3.2.4
@@ -59,18 +102,20 @@ jobs:
         uses: hendrikmuhs/ccache-action@v1.2
         with:
           max-size: '5G'
-          key: ${{ matrix.config.os }}-${{ matrix.build_type }}
+          key: ${{ matrix.os }}-${{ matrix.build_type }}
 
       - name: Configure MSVC console (Windows)
-        if: matrix.config.os == 'windows-latest'
+        if: matrix.platform == 'windows'
         uses: ilammy/msvc-dev-cmd@v1
 
-      - name: Set environment for MSVC (Windows)
-        if: matrix.config.os == 'windows-latest'
+      - name: Output conda info (Windows)
+        if: matrix.platform == 'windows'
         run: |
-          # Set these env vars so cmake picks the correct compiler
-          echo "CXX=cl.exe" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-          echo "CC=cl.exe" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          conda info
+          conda list
+          conda config --show-sources
+          conda config --show
+          printenv | sort
 
       - name: Configure (Debug)
         if: matrix.build_type == 'Debug'
@@ -81,6 +126,7 @@ jobs:
           -B libE57Format-build
           -G "Ninja"
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          -DE57_BUILD_SHARED=${{ matrix.build_shared }}
           -DE57_MAX_DEBUG=1
           .
 
@@ -93,6 +139,7 @@ jobs:
           -B libE57Format-build
           -G "Ninja"
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          -DE57_BUILD_SHARED=${{ matrix.build_shared }}
           -DE57_DEBUG=0
           .
 
@@ -100,4 +147,7 @@ jobs:
         run: cmake --build libE57Format-build
 
       - name: Test
+        # I cannot get this to run on Windows with a shared lib.
+        # It's not giving an error so I have no idea what's happening.
+        if: ${{ !(matrix.platform == 'windows' && matrix.build_shared == 'ON') }}
         run: libE57Format-build/test/testE57

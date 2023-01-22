@@ -8,6 +8,15 @@
 #include "RandomNum.h"
 #include "TestData.h"
 
+// Address Sanitizer
+// There seems to be a false positive with std::vector, so turn off container overflow detection.
+//   https://github.com/google/sanitizers/wiki/AddressSanitizerContainerOverflow#false-positives
+//   https://github.com/google/sanitizers/wiki/AddressSanitizerFlags#run-time-flags
+extern "C" const char *__asan_default_options()
+{
+   return "detect_container_overflow=false";
+}
+
 int main( int argc, char **argv )
 {
    Random::seed( 42 );

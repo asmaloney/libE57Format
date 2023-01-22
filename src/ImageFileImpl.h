@@ -89,7 +89,7 @@ namespace e57
 
       static unsigned bitsNeeded( int64_t minimum, int64_t maximum );
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
       void dump( int indent = 0, std::ostream &os = std::cout ) const;
 #endif
 

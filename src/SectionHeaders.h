@@ -43,7 +43,7 @@ namespace e57
       uint8_t reserved1[7] = {};         // must be zero
       uint64_t sectionLogicalLength = 0; // byte length of whole section
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
       void dump( int indent = 0, std::ostream &os = std::cout ) const;
 #endif
    };
@@ -61,7 +61,7 @@ namespace e57
 
       void verify( uint64_t filePhysicalSize = 0 );
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
       void dump( int indent = 0, std::ostream &os = std::cout ) const;
 #endif
    };

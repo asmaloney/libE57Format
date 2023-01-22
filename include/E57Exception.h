@@ -35,7 +35,7 @@
 
 #include "E57Export.h"
 
-#ifndef E57_DEBUG
+#ifndef E57_ENABLE_DIAGNOSTIC_OUTPUT
 // Used to mark unused parameters to indicate intent and supress warnings.
 #define UNUSED( expr ) (void)( expr )
 #endif
@@ -311,7 +311,7 @@ namespace e57
       {
          os << "**** Got an e57 exception: " << errorStr() << std::endl;
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
          os << "  Debug info: " << std::endl;
          os << "    context: " << context_ << std::endl;
          os << "    sourceFunctionName: " << sourceFunctionName_ << std::endl;

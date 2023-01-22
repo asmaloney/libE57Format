@@ -381,7 +381,7 @@ bool NodeImpl::findTerminalPosition( const NodeImplSharedPtr &target, uint64_t &
    return ( false );
 }
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
 void NodeImpl::dump( int indent, std::ostream &os ) const
 {
    // don't checkImageFileOpen
@@ -389,7 +389,9 @@ void NodeImpl::dump( int indent, std::ostream &os ) const
    os << space( indent ) << "isAttached:  " << isAttached_ << std::endl;
    os << space( indent ) << "path:        " << pathName() << std::endl;
 }
+#endif
 
+#ifdef E57_DEBUG
 bool NodeImpl::_verifyPathNameAbsolute( const ustring &inPathName )
 {
    checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );

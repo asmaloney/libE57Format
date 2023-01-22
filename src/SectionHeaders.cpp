@@ -30,7 +30,7 @@
 
 namespace e57
 {
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
    void BlobSectionHeader::dump( int indent, std::ostream &os ) const
    {
       os << space( indent ) << "sectionId:            " << sectionId << std::endl;
@@ -89,7 +89,7 @@ namespace e57
       }
    }
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
    void CompressedVectorSectionHeader::dump( int indent, std::ostream &os ) const
    {
       os << space( indent ) << "sectionId:            " << static_cast<unsigned>( sectionId )

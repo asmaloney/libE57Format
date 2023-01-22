@@ -54,12 +54,12 @@ namespace e57
       uint64_t xmlLogicalLength = 0;
       uint64_t pageSize = 0;
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
       void dump( int indent = 0, std::ostream &os = std::cout ) const;
 #endif
    };
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
    void E57FileHeader::dump( int indent, std::ostream &os ) const
    {
       os << space( indent ) << "fileSignature:      ";
@@ -859,7 +859,7 @@ namespace e57
       return log2;
    }
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
    void ImageFileImpl::dump( int indent, std::ostream &os ) const
    {
       // no checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__)

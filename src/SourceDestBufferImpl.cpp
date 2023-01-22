@@ -1003,7 +1003,7 @@ void SourceDestBufferImpl::checkCompatible(
    }
 }
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
 void SourceDestBufferImpl::dump( int indent, std::ostream &os )
 {
    /// don't checkImageFileOpen

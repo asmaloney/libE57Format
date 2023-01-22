@@ -206,7 +206,7 @@ namespace e57
          << "\" length=\"" << blobLogicalLength_ << "\"/>\n";
    }
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
    void BlobNodeImpl::dump( int indent, std::ostream &os ) const
    {
       // don't checkImageFileOpen

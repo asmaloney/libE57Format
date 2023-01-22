@@ -54,7 +54,7 @@ struct IndexPacket
    void verify( unsigned bufferLength = 0, uint64_t totalRecordCount = 0,
                 uint64_t fileSize = 0 ) const;
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
    void dump( int indent = 0, std::ostream &os = std::cout ) const;
 #endif
 };
@@ -68,7 +68,7 @@ struct EmptyPacketHeader
 
    void verify( unsigned bufferLength = 0 ) const; //???use
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
    void dump( int indent = 0, std::ostream &os = std::cout ) const;
 #endif
 };
@@ -258,7 +258,7 @@ void PacketReadCache::readPacket( unsigned oldestEntry, uint64_t packetLogicalOf
    entry.lastUsed_ = ++useCount_;
 }
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
 void PacketReadCache::dump( int indent, std::ostream &os )
 {
    os << space( indent ) << "lockCount: " << lockCount_ << std::endl;
@@ -392,7 +392,7 @@ void DataPacketHeader::verify( unsigned bufferLength ) const
    }
 }
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
 void DataPacketHeader::dump( int indent, std::ostream &os ) const
 {
    os << space( indent ) << "packetType:                " << static_cast<unsigned>( packetType )
@@ -514,7 +514,7 @@ unsigned DataPacket::getBytestreamBufferLength( unsigned bytestreamNumber )
    return ( byteCount );
 }
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
 void DataPacket::dump( int indent, std::ostream &os ) const
 {
    if ( header.packetType != DATA_PACKET )
@@ -688,7 +688,7 @@ void IndexPacket::verify( unsigned bufferLength, uint64_t totalRecordCount,
 #endif
 }
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
 void IndexPacket::dump( int indent, std::ostream &os ) const
 {
    os << space( indent ) << "packetType:                " << static_cast<unsigned>( packetType )
@@ -746,7 +746,7 @@ void EmptyPacketHeader::verify( unsigned bufferLength ) const
    }
 }
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
 void EmptyPacketHeader::dump( int indent, std::ostream &os ) const
 {
    os << space( indent ) << "packetType:                " << static_cast<unsigned>( packetType )

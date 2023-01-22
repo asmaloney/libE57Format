@@ -209,7 +209,7 @@ namespace e57
       }
    }
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
    void FloatNodeImpl::dump( int indent, std::ostream &os ) const
    {
       // don't checkImageFileOpen

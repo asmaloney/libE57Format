@@ -67,7 +67,7 @@ namespace e57
       return ( currentBytestreamBufferIndex == currentBytestreamBufferLength );
    }
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
    void DecodeChannel::dump( int indent, std::ostream &os ) const
    {
       os << space( indent ) << "dbuf" << std::endl;

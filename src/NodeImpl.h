@@ -72,7 +72,7 @@ namespace e57
 
       virtual ~NodeImpl() = default;
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
       virtual void dump( int indent = 0, std::ostream &os = std::cout ) const;
 #endif
 

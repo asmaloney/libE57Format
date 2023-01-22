@@ -59,7 +59,7 @@ namespace e57
          return bytestreamNumber_;
       }
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
       virtual void dump( int indent = 0, std::ostream &os = std::cout ) const;
 #endif
 
@@ -86,7 +86,7 @@ namespace e57
       size_t outputGetMaxSize() override;
       void outputSetMaxSize( unsigned byteCount ) override;
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
       void dump( int indent = 0, std::ostream &os = std::cout ) const override;
 #endif
 
@@ -116,7 +116,7 @@ namespace e57
       bool registerFlushToOutput() override;
       float bitsPerRecord() override;
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
       void dump( int indent = 0, std::ostream &os = std::cout ) const override;
 #endif
 
@@ -134,7 +134,7 @@ namespace e57
       bool registerFlushToOutput() override;
       float bitsPerRecord() override;
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
       void dump( int indent = 0, std::ostream &os = std::cout ) const override;
 #endif
 
@@ -157,7 +157,7 @@ namespace e57
       bool registerFlushToOutput() override;
       float bitsPerRecord() override;
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
       void dump( int indent = 0, std::ostream &os = std::cout ) const override;
 #endif
 
@@ -191,7 +191,7 @@ namespace e57
       size_t outputGetMaxSize() override;
       void outputSetMaxSize( unsigned byteCount ) override;
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
       void dump( int indent = 0, std::ostream &os = std::cout ) const override;
 #endif
 

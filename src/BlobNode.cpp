@@ -297,7 +297,7 @@ void BlobNode::write( uint8_t *buf, int64_t start, size_t count )
 @brief Diagnostic function to print internal state of object to output stream in an indented format.
 @copydetails Node::dump()
 */
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
 void BlobNode::dump( int indent, std::ostream &os ) const
 {
    impl_->dump( indent, os );

@@ -56,7 +56,7 @@ namespace e57
       std::unique_ptr<PacketLock> lock( uint64_t packetLogicalOffset,
                                         char *&pkt ); //??? pkt could be const
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
       void dump( int indent = 0, std::ostream &os = std::cout );
 #endif
 
@@ -109,7 +109,7 @@ namespace e57
 
       void verify( unsigned bufferLength = 0 ) const; //???use
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
       void dump( int indent = 0, std::ostream &os = std::cout ) const;
 #endif
 
@@ -129,7 +129,7 @@ namespace e57
       char *getBytestream( unsigned bytestreamNumber, unsigned &byteCount );
       unsigned getBytestreamBufferLength( unsigned bytestreamNumber );
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
       void dump( int indent = 0, std::ostream &os = std::cout ) const;
 #endif
 

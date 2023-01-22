@@ -203,7 +203,7 @@ Encoder::Encoder( unsigned bytestreamNumber ) : bytestreamNumber_( bytestreamNum
 {
 }
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
 void Encoder::dump( int indent, std::ostream &os ) const
 {
    os << space( indent ) << "bytestreamNumber:       " << bytestreamNumber_ << std::endl;
@@ -359,7 +359,7 @@ void BitpackEncoder::outBufferShiftDown()
    outBufferEnd_ = newEnd;
 }
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
 void BitpackEncoder::dump( int indent, std::ostream &os ) const
 {
    Encoder::dump( indent, os );
@@ -477,7 +477,7 @@ float BitpackFloatEncoder::bitsPerRecord()
    return ( ( precision_ == PrecisionSingle ) ? 32.0F : 64.0F );
 }
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
 void BitpackFloatEncoder::dump( int indent, std::ostream &os ) const
 {
    BitpackEncoder::dump( indent, os );
@@ -639,7 +639,7 @@ float BitpackStringEncoder::bitsPerRecord()
    return 100 * 8.0f;
 }
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
 void BitpackStringEncoder::dump( int indent, std::ostream &os ) const
 {
    BitpackEncoder::dump( indent, os );
@@ -872,7 +872,7 @@ template <typename RegisterT> float BitpackIntegerEncoder<RegisterT>::bitsPerRec
    return ( static_cast<float>( bitsPerRecord_ ) );
 }
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
 template <typename RegisterT>
 void BitpackIntegerEncoder<RegisterT>::dump( int indent, std::ostream &os ) const
 {
@@ -987,7 +987,7 @@ void ConstantIntegerEncoder::outputSetMaxSize( unsigned /*byteCount*/ )
    // Ignore, since don't produce any output
 }
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
 void ConstantIntegerEncoder::dump( int indent, std::ostream &os ) const
 {
    Encoder::dump( indent, os );

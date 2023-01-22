@@ -450,7 +450,7 @@ void StructureNodeImpl::writeXml( ImageFileImplSharedPtr imf, CheckedFile &cf, i
 }
 
 //??? use visitor?
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
 void StructureNodeImpl::dump( int indent, std::ostream &os ) const
 {
    // don't checkImageFileOpen

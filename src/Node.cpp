@@ -552,7 +552,7 @@ still be defined). The output format may change from version to version.
 
 @throw No E57Exceptions
 */
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
 void Node::dump( int indent, std::ostream &os ) const
 {
    impl_->dump( indent, os );

@@ -334,7 +334,7 @@ void BitpackDecoder::inBufferShiftDown()
    inBufferFirstBit_ = inBufferFirstBit_ % bitsPerWord_;
 }
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
 void BitpackDecoder::dump( int indent, std::ostream &os )
 {
    os << space( indent ) << "bytestreamNumber:         " << bytestreamNumber_ << std::endl;
@@ -466,7 +466,7 @@ size_t BitpackFloatDecoder::inputProcessAligned( const char *inbuf, const size_t
    return ( n * 8 * typeSize );
 }
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
 void BitpackFloatDecoder::dump( int indent, std::ostream &os )
 {
    BitpackDecoder::dump( indent, os );
@@ -634,7 +634,7 @@ size_t BitpackStringDecoder::inputProcessAligned( const char *inbuf, const size_
    return ( nBytesRead * 8 );
 }
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
 void BitpackStringDecoder::dump( int indent, std::ostream &os )
 {
    BitpackDecoder::dump( indent, os );
@@ -832,7 +832,7 @@ size_t BitpackIntegerDecoder<RegisterT>::inputProcessAligned( const char *inbuf,
    return ( recordCount * bitsPerRecord_ );
 }
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
 template <typename RegisterT>
 void BitpackIntegerDecoder<RegisterT>::dump( int indent, std::ostream &os )
 {
@@ -913,7 +913,7 @@ void ConstantIntegerDecoder::stateReset()
 {
 }
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
 void ConstantIntegerDecoder::dump( int indent, std::ostream &os )
 {
    os << space( indent ) << "bytestreamNumber:   " << bytestreamNumber_ << std::endl;

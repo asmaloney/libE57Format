@@ -51,7 +51,7 @@ namespace e57
          return bytestreamNumber_;
       }
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
       virtual void dump( int indent = 0, std::ostream &os = std::cout ) = 0;
 #endif
 
@@ -76,7 +76,7 @@ namespace e57
 
       void stateReset() override;
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
       void dump( int indent = 0, std::ostream &os = std::cout ) override;
 #endif
 
@@ -107,7 +107,7 @@ namespace e57
 
       size_t inputProcessAligned( const char *inbuf, size_t firstBit, size_t endBit ) override;
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
       void dump( int indent = 0, std::ostream &os = std::cout ) override;
 #endif
 
@@ -123,7 +123,7 @@ namespace e57
 
       size_t inputProcessAligned( const char *inbuf, size_t firstBit, size_t endBit ) override;
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
       void dump( int indent = 0, std::ostream &os = std::cout ) override;
 #endif
 
@@ -146,7 +146,7 @@ namespace e57
 
       size_t inputProcessAligned( const char *inbuf, size_t firstBit, size_t endBit ) override;
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
       void dump( int indent = 0, std::ostream &os = std::cout ) override;
 #endif
 
@@ -177,7 +177,7 @@ namespace e57
       size_t inputProcess( const char *source, size_t availableByteCount ) override;
       void stateReset() override;
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
       void dump( int indent = 0, std::ostream &os = std::cout ) override;
 #endif
 

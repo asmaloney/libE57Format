@@ -235,7 +235,7 @@ namespace e57
       cf << space( indent ) << "</" << fieldName << ">\n";
    }
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
    void CompressedVectorNodeImpl::dump( int indent, std::ostream &os ) const
    {
       os << space( indent ) << "type:        CompressedVector"

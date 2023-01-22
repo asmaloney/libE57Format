@@ -48,7 +48,8 @@ namespace e57
 
       bool isOutputBlocked() const;
       bool isInputBlocked() const; /// has exhausted data in the current packet
-#ifdef E57_DEBUG
+
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
       void dump( int indent = 0, std::ostream &os = std::cout ) const;
 #endif
    };

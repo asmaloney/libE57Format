@@ -257,7 +257,7 @@ int64_t IntegerNode::maximum() const
 @brief Diagnostic function to print internal state of object to output stream in an indented format.
 @copydetails Node::dump()
 */
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
 void IntegerNode::dump( int indent, std::ostream &os ) const
 {
    impl_->dump( indent, os );

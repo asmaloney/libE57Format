@@ -124,7 +124,7 @@ namespace e57
       cf << space( indent ) << "</" << fieldName << ">\n";
    }
 
-#ifdef E57_DEBUG
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
    void VectorNodeImpl::dump( int indent, std::ostream &os ) const
    {
       // don't checkImageFileOpen

@@ -828,18 +828,8 @@ namespace e57
       //      "/data3D/0/points/0/cartesianX"
       StructureNode proto( imf_ );
 
-      // Because ScaledInteger min/max are the raw integer min/max, we must calculate them from the
-      // data min/max
-      const double pointRangeScale = data3DHeader.pointFields.pointRangeScale;
-      const double pointRangeOffset = 0.0;
-
       const double pointRangeMin = data3DHeader.pointFields.pointRangeMinimum;
       const double pointRangeMax = data3DHeader.pointFields.pointRangeMaximum;
-
-      const auto pointRangeMinimum = static_cast<int64_t>(
-         std::floor( ( pointRangeMin - pointRangeOffset ) / pointRangeScale + .5 ) );
-      const auto pointRangeMaximum = static_cast<int64_t>(
-         std::floor( ( pointRangeMax - pointRangeOffset ) / pointRangeScale + .5 ) );
 
       const auto getPointProto = [=]() -> Node {
          switch ( data3DHeader.pointFields.pointRangeNodeType )
@@ -851,6 +841,21 @@ namespace e57
 
             case NumericalNodeType::ScaledInteger:
             {
+               // Because ScaledInteger min/max are the raw integer min/max, we must calculate them
+               // from the data min/max
+               const double pointRangeOffset = 0.0;
+               const double pointRangeScale = data3DHeader.pointFields.pointRangeScale;
+
+               if ( pointRangeScale == 0.0 )
+               {
+                  throw E57_EXCEPTION2( ErrorInvalidData3DValue, "pointRangeScale cannot be 0" );
+               }
+
+               const auto pointRangeMinimum = static_cast<int64_t>(
+                  std::floor( ( pointRangeMin - pointRangeOffset ) / pointRangeScale + .5 ) );
+               const auto pointRangeMaximum = static_cast<int64_t>(
+                  std::floor( ( pointRangeMax - pointRangeOffset ) / pointRangeScale + .5 ) );
+
                return ScaledIntegerNode( imf_, 0, pointRangeMinimum, pointRangeMaximum,
                                          pointRangeScale, pointRangeOffset );
             }
@@ -876,6 +881,7 @@ namespace e57
       {
          proto.set( "cartesianX", getPointProto() );
       }
+
       if ( data3DHeader.pointFields.cartesianYField )
       {
          proto.set( "cartesianY", getPointProto() );
@@ -894,14 +900,6 @@ namespace e57
       const double angleMin = data3DHeader.pointFields.angleMinimum;
       const double angleMax = data3DHeader.pointFields.angleMaximum;
 
-      const double angleScale = data3DHeader.pointFields.angleScale;
-      const double angleOffset = 0.0;
-
-      const auto angleMinimum =
-         static_cast<int64_t>( std::floor( ( angleMin - angleOffset ) / angleScale + .5 ) );
-      const auto angleMaximum =
-         static_cast<int64_t>( std::floor( ( angleMax - angleOffset ) / angleScale + .5 ) );
-
       const auto getAngleProto = [=]() -> Node {
          switch ( data3DHeader.pointFields.angleNodeType )
          {
@@ -912,6 +910,19 @@ namespace e57
 
             case NumericalNodeType::ScaledInteger:
             {
+               const double angleOffset = 0.0;
+               const double angleScale = data3DHeader.pointFields.angleScale;
+
+               if ( angleScale == 0.0 )
+               {
+                  throw E57_EXCEPTION2( ErrorInvalidData3DValue, "angleScale cannot be 0" );
+               }
+
+               const auto angleMinimum = static_cast<int64_t>(
+                  std::floor( ( angleMin - angleOffset ) / angleScale + .5 ) );
+               const auto angleMaximum = static_cast<int64_t>(
+                  std::floor( ( angleMax - angleOffset ) / angleScale + .5 ) );
+
                return ScaledIntegerNode( imf_, 0, angleMinimum, angleMaximum, angleScale,
                                          angleOffset );
             }

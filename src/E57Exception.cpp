@@ -356,6 +356,8 @@ namespace e57
             return "class invariance constraint violation in debug mode (ErrorInvarianceViolation)";
          case ErrorInvalidNodeType:
             return "an invalid node type was passed in Data3D pointFields";
+         case ErrorInvalidData3DValue:
+            return "an invalid value was passed in Data3D pointFields";
 
          default:
             return "unknown error (" + std::to_string( ecode ) + ")";

@@ -311,8 +311,6 @@ void CheckedFile::read( char *buf, size_t nRead, size_t /*bufSize*/ )
    std::vector<char> page_buffer_v( physicalPageSize );
    char *page_buffer = page_buffer_v.data();
 
-   const auto checksumMod = static_cast<unsigned int>( std::nearbyint( 100.0 / checkSumPolicy_ ) );
-
    while ( nRead > 0 )
    {
       readPhysicalPage( page_buffer, page );
@@ -327,11 +325,16 @@ void CheckedFile::read( char *buf, size_t nRead, size_t /*bufSize*/ )
             break;
 
          default:
+         {
+            const auto checksumMod =
+               static_cast<unsigned int>( std::nearbyint( 100.0 / checkSumPolicy_ ) );
+
             if ( !( page % checksumMod ) || ( nRead < physicalPageSize ) )
             {
                verifyChecksum( page_buffer, page );
             }
-            break;
+         }
+         break;
       }
 
       memcpy( buf, page_buffer + pageOffset, n );

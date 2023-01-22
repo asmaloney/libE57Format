@@ -135,6 +135,9 @@ namespace e57
       /// an invalid node type was passed in Data3D pointFields
       ErrorInvalidNodeType = 51,
 
+      /// passed an invalid value in Data3D pointFields
+      ErrorInvalidData3DValue = 52,
+
       /// @deprecated Will be removed in 4.0. Use e57::Success.
       E57_SUCCESS DEPRECATED_ENUM( "Will be removed in 4.0. Use Success." ) = Success,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorBadCVHeader.

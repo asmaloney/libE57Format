@@ -354,7 +354,7 @@ namespace e57
 
       // Get pointer to me (really shared_ptr<CompressedVectorNodeImpl>)
       NodeImplSharedPtr ni( shared_from_this() );
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
       // cout << "constructing CAReader, ni:" << std::endl;
       // ni->dump(4);
 #endif
@@ -362,7 +362,7 @@ namespace e57
       // Downcast pointer to right type
       std::shared_ptr<CompressedVectorNodeImpl> cai(
          std::static_pointer_cast<CompressedVectorNodeImpl>( ni ) );
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
       // cout<<"constructing CAReader, cai:"<<endl;
       // cai->dump(4);
 #endif

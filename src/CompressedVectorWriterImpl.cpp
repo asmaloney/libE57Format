@@ -96,7 +96,7 @@ namespace e57
       // The bytestreams_ vector must be ordered by bytestreamNumber, not by order
       // called specified sbufs, so sort it.
       sort( bytestreams_.begin(), bytestreams_.end(), SortByBytestreamNumber() );
-#ifdef E57_MAX_DEBUG
+#if ( E57_VALIDATION_LEVEL == VALIDATION_DEEP )
       // Double check that all bytestreams are specified
       for ( unsigned i = 0; i < bytestreams_.size(); i++ )
       {
@@ -134,7 +134,7 @@ namespace e57
 
    CompressedVectorWriterImpl::~CompressedVectorWriterImpl()
    {
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
       std::cout << "~CompressedVectorWriterImpl() called" << std::endl; //???
 #endif
 
@@ -153,7 +153,7 @@ namespace e57
 
    void CompressedVectorWriterImpl::close()
    {
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
       std::cout << "CompressedVectorWriterImpl::close() called" << std::endl; //???
 #endif
       ImageFileImplSharedPtr imf( cVector_->destImageFile_ );
@@ -187,7 +187,7 @@ namespace e57
       // Compute length of whole section we just wrote (from section start to
       // current start of free space).
       sectionLogicalLength_ = imf->unusedLogicalStart_ - sectionHeaderLogicalStart_;
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
       std::cout << "  sectionLogicalLength_=" << sectionLogicalLength_ << std::endl; //???
 #endif
 
@@ -199,11 +199,12 @@ namespace e57
       header.indexPhysicalOffset =
          topIndexPhysicalOffset_; //??? can be zero, if no data written ???not set
                                   // yet
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
       std::cout << "  CompressedVectorSectionHeader:" << std::endl;
       header.dump( 4 ); //???
 #endif
-#ifdef E57_DEBUG
+
+#if VALIDATE_BASIC
       // Verify OK before write it.
       header.verify( imf->file_->length( CheckedFile::Physical ) );
 #endif
@@ -219,7 +220,7 @@ namespace e57
       // Free channels
       bytestreams_.clear();
 
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
       std::cout << "  CompressedVectorWriter:" << std::endl;
       dump( 4 );
 #endif
@@ -283,7 +284,7 @@ namespace e57
 
    void CompressedVectorWriterImpl::write( const size_t requestedRecordCount )
    {
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
       std::cout << "CompressedVectorWriterImpl::write() called" << std::endl; //???
 #endif
       checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
@@ -315,7 +316,7 @@ namespace e57
          {
             totalRecordCount += endRecordIndex - bytestream->currentRecordIndex();
          }
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
          std::cout << "  totalRecordCount=" << totalRecordCount << std::endl; //???
 #endif
 
@@ -334,7 +335,7 @@ namespace e57
          // synchronization "close enough" (so a reader that can cache only two
          // packets is efficient).
 
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
          std::cout << "  currentPacketSize()=" << currentPacketSize() << std::endl; //???
 #endif
 
@@ -352,7 +353,7 @@ namespace e57
                       // zero after write, if have too much data)
          }
 
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
          //??? useful?
          // Get approximation of number of bytes per record of CompressedVector
          // and total of bytes used
@@ -413,7 +414,7 @@ namespace e57
 
    uint64_t CompressedVectorWriterImpl::packetWrite()
    {
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
       std::cout << "CompressedVectorWriterImpl::packetWrite() called" << std::endl; //???
 #endif
 
@@ -423,14 +424,14 @@ namespace e57
       {
          return ( 0 );
       }
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
       std::cout << "  totalOutput=" << totalOutput << std::endl; //???
 #endif
 
       // Calc maximum number of bytestream values can put in data packet.
       const size_t packetMaxPayloadBytes =
          DATA_PACKET_MAX - sizeof( DataPacketHeader ) - bytestreams_.size() * sizeof( uint16_t );
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
       std::cout << "  packetMaxPayloadBytes=" << packetMaxPayloadBytes << std::endl; //???
 #endif
 
@@ -460,14 +461,14 @@ namespace e57
                std::floor( fractionToSend * bytestreams_.at( i )->outputAvailable() ) );
          }
       }
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
       for ( unsigned i = 0; i < bytestreams_.size(); i++ )
       {
          std::cout << "  count[" << i << "]=" << count.at( i ) << std::endl; //???
       }
 #endif
 
-#ifdef E57_DEBUG
+#if VALIDATE_BASIC
       // Double check sum of count is <= packetMaxPayloadBytes
       const size_t totalByteCount =
          std::accumulate( count.begin(), count.end(), static_cast<size_t>( 0 ) );
@@ -486,7 +487,7 @@ namespace e57
       // Use temp buf in object (is 64KBytes long) instead of allocating each time
       // here
       char *packet = reinterpret_cast<char *>( &dataPacket_ );
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
       std::cout << "  packet=" << packet << std::endl; //???
 #endif
 
@@ -496,13 +497,13 @@ namespace e57
       // Write bytestreamBufferLength[bytestreamCount] after header, in
       // dataPacket_
       auto bsbLength = reinterpret_cast<uint16_t *>( &packet[sizeof( DataPacketHeader )] );
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
       std::cout << "  bsbLength=" << bsbLength << std::endl; //???
 #endif
       for ( unsigned i = 0; i < bytestreams_.size(); i++ )
       {
          bsbLength[i] = static_cast<uint16_t>( count.at( i ) ); // %%% Truncation
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
          std::cout << "  Writing " << bsbLength[i] << " bytes into bytestream " << i
                    << std::endl; //???
 #endif
@@ -510,7 +511,7 @@ namespace e57
 
       // Get pointer to end of data so far
       char *p = reinterpret_cast<char *>( &bsbLength[bytestreams_.size()] );
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
       std::cout << "  after bsbLength, p=" << p << std::endl; //???
 #endif
 
@@ -519,7 +520,7 @@ namespace e57
       {
          size_t n = count.at( i );
 
-#ifdef E57_DEBUG
+#if VALIDATE_BASIC
          // Double check we aren't accidentally going to write off end of
          // vector<char>
          if ( &p[n] > &packet[DATA_PACKET_MAX] )
@@ -537,11 +538,11 @@ namespace e57
 
       // Length of packet is difference in beginning pointer and ending pointer
       auto packetLength = static_cast<unsigned>( p - packet ); //??? pointer diff portable?
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
       std::cout << "  packetLength=" << packetLength << std::endl; //???
 #endif
 
-#ifdef E57_DEBUG
+#if VALIDATE_BASIC
       // Double check that packetLength is what we expect
       if ( packetLength !=
            sizeof( DataPacketHeader ) + bytestreams_.size() * sizeof( uint16_t ) + totalByteCount )
@@ -564,7 +565,7 @@ namespace e57
          }
          *p++ = 0;
          packetLength++;
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
          std::cout << "  padding with zero byte, new packetLength=" << packetLength
                    << std::endl; //???
 #endif
@@ -586,7 +587,7 @@ namespace e57
                                                // more explicit
       imf->file_->write( packet, packetLength );
 
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
 //  std::cout << "data packet:" << std::endl;
 //  dataPacket_.dump(4);
 #endif

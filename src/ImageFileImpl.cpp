@@ -87,7 +87,7 @@ namespace e57
    {
       // Second phase of construction, now we have a well-formed ImageFile object.
 
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
       std::cout << "ImageFileImpl() called, fileName=" << fileName << " mode=" << mode << std::endl;
 #endif
       unusedLogicalStart_ = sizeof( E57FileHeader );
@@ -185,7 +185,7 @@ namespace e57
    {
       // Second phase of construction, now we have a well-formed ImageFile object.
 
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
       std::cout << "ImageFileImpl() called, fileName=<StreamBuffer> mode=r" << std::endl;
 #endif
       unusedLogicalStart_ = sizeof( E57FileHeader );
@@ -290,7 +290,7 @@ namespace e57
          header.xmlPhysicalOffset = xmlPhysicalOffset;
          header.xmlLogicalLength = xmlLogicalLength_;
          header.pageSize = CheckedFile::physicalPageSize;
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
          header.dump();
 #endif
 
@@ -508,7 +508,7 @@ namespace e57
 
    bool ImageFileImpl::isElementNameLegal( const ustring &elementName, bool allowNumber )
    {
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
       // cout << "isElementNameLegal elementName=""" << elementName << """" <<
       // std::endl;
 #endif
@@ -530,7 +530,7 @@ namespace e57
 
    bool ImageFileImpl::isPathNameLegal( const ustring &pathName )
    {
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
       // cout << "isPathNameLegal elementName=""" << pathName << """" << std::endl;
 #endif
       try
@@ -583,7 +583,7 @@ namespace e57
    void ImageFileImpl::pathNameParse( const ustring &pathName, bool &isRelative,
                                       StringList &fields )
    {
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
       std::cout << "pathNameParse pathname="
                    ""
                 << pathName
@@ -651,7 +651,7 @@ namespace e57
          throw E57_EXCEPTION2( ErrorBadPathName, "pathName=" + pathName );
       }
 
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
       std::cout << "pathNameParse returning: isRelative=" << isRelative
                 << " fields.size()=" << fields.size() << " fields=";
       for ( auto &field : fields )
@@ -670,7 +670,8 @@ namespace e57
    void ImageFileImpl::decrWriterCount()
    {
       writerCount_--;
-#ifdef E57_MAX_DEBUG
+
+#if ( E57_VALIDATION_LEVEL == VALIDATION_DEEP )
       if ( writerCount_ < 0 )
       {
          throw E57_EXCEPTION2( ErrorInternal, "fileName=" + fileName_ +
@@ -688,7 +689,8 @@ namespace e57
    void ImageFileImpl::decrReaderCount()
    {
       readerCount_--;
-#ifdef E57_MAX_DEBUG
+
+#if ( E57_VALIDATION_LEVEL == VALIDATION_DEEP )
       if ( readerCount_ < 0 )
       {
          throw E57_EXCEPTION2( ErrorInternal, "fileName=" + fileName_ +
@@ -885,7 +887,7 @@ namespace e57
       // Fetch the file header
       file->read( reinterpret_cast<char *>( &header ), sizeof( header ) );
 
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
       header.dump();
 #endif
 

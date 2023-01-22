@@ -350,7 +350,7 @@ void CheckedFile::read( char *buf, size_t nRead, size_t /*bufSize*/ )
 
 void CheckedFile::write( const char *buf, size_t nWrite )
 {
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
    // cout << "write nWrite=" << nWrite << " position()="<< position() << std::endl;
    // //???
 #endif
@@ -381,7 +381,7 @@ void CheckedFile::write( const char *buf, size_t nWrite )
          readPhysicalPage( page_buffer, page );
       }
 
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
       // cout << "  page_buffer[0] read: '" << page_buffer[0] << "'" << std::endl;
       // cout << "copy " << n << "bytes to page=" << page << " pageOffset=" <<
       // pageOffset << " buf='"; //??? for (size_t i=0; i < n; i++) cout <<
@@ -389,7 +389,7 @@ void CheckedFile::write( const char *buf, size_t nWrite )
 #endif
       memcpy( page_buffer + pageOffset, buf, n );
       writePhysicalPage( page_buffer, page );
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
       // cout << "  page_buffer[0] after write: '" << page_buffer[0] << "'" <<
       // std::endl; //???
 #endif
@@ -445,7 +445,7 @@ template <class FTYPE> CheckedFile &CheckedFile::writeFloatingPoint( FTYPE value
 {
    static_assert( std::is_floating_point<FTYPE>::value, "Floating point type required." );
 
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
    std::cout << "CheckedFile::writeFloatingPoint, value=" << value << " precision=" << precision
              << std::endl;
 #endif
@@ -459,7 +459,7 @@ void CheckedFile::seek( uint64_t offset, OffsetMode omode )
    const auto pos =
       static_cast<int64_t>( omode == Physical ? offset : logicalToPhysical( offset ) );
 
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
    // cout << "seek offset=" << offset << " omode=" << omode << " pos=" << pos
    // << std::endl; //???
 #endif
@@ -541,7 +541,7 @@ uint64_t CheckedFile::length( OffsetMode omode )
 
 void CheckedFile::extend( uint64_t newLength, OffsetMode omode )
 {
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
    // cout << "extend newLength=" << newLength << " omode="<< omode << std::endl;
    // //???
 #endif
@@ -608,7 +608,7 @@ void CheckedFile::extend( uint64_t newLength, OffsetMode omode )
          readPhysicalPage( page_buffer, page );
       }
 
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
       // cout << "extend " << n << "bytes on page=" << page << " pageOffset=" <<
       // pageOffset << std::endl;
       // //???
@@ -673,7 +673,7 @@ void CheckedFile::unlink()
 
    // Try to remove the file, don't report a failure
    int result = std::remove( fileName_.c_str() ); //??? unicode support here
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
    if ( result < 0 )
    {
       std::cout << "std::remove() failed, result=" << result << std::endl;
@@ -718,7 +718,7 @@ void CheckedFile::getCurrentPageAndOffset( uint64_t &page, size_t &pageOffset, O
 
 void CheckedFile::readPhysicalPage( char *page_buffer, uint64_t page )
 {
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
    // cout << "readPhysicalPage, page:" << page << std::endl;
 #endif
 
@@ -754,7 +754,7 @@ void CheckedFile::readPhysicalPage( char *page_buffer, uint64_t page )
 
 void CheckedFile::writePhysicalPage( char *page_buffer, uint64_t page )
 {
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
    // cout << "writePhysicalPage, page:" << page << std::endl;
 #endif
 

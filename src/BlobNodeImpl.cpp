@@ -58,7 +58,7 @@ namespace e57
       // Prepare BlobSectionHeader
       BlobSectionHeader header;
       header.sectionLogicalLength = binarySectionLogicalLength_;
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
       header.dump(); //???
 #endif
 

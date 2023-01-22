@@ -313,7 +313,7 @@ namespace e57
          }
       }
 #ifdef E57_MAX_VERBOSE
-      if ( earliestPacketLogicalOffset == E57_UINT64_MAX )
+      if ( earliestPacketLogicalOffset == UINT64_MAX )
       {
          std::cout << "earliestPacketNeededForInput returning none found" << std::endl;
       }

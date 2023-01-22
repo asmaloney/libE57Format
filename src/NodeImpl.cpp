@@ -243,7 +243,7 @@ NodeImplSharedPtr NodeImpl::get( const ustring &pathName )
    // Blob. The non-terminal types override this virtual function. Only absolute pathNames make any
    // sense here, because the terminal types can't have children, so relative pathNames are illegal.
 
-#ifdef E57_DEBUG
+#ifdef VALIDATE_BASIC
    _verifyPathNameAbsolute( pathName );
 #endif
 
@@ -260,7 +260,7 @@ void NodeImpl::set( const ustring &pathName, NodeImplSharedPtr ni, bool autoPath
    // make any sense here, because the terminal types can't have children, so relative pathNames are
    // illegal.
 
-#ifdef E57_DEBUG
+#ifdef VALIDATE_BASIC
    _verifyPathNameAbsolute( pathName );
 #endif
 
@@ -391,7 +391,7 @@ void NodeImpl::dump( int indent, std::ostream &os ) const
 }
 #endif
 
-#ifdef E57_DEBUG
+#ifdef VALIDATE_BASIC
 bool NodeImpl::_verifyPathNameAbsolute( const ustring &inPathName )
 {
    checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
@@ -411,7 +411,7 @@ bool NodeImpl::_verifyPathNameAbsolute( const ustring &inPathName )
                             "this->pathName=" + this->pathName() + " pathName=" + inPathName );
    }
 
-   return isRelative;
+   return false;
 }
 #endif
 

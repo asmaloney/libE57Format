@@ -257,7 +257,7 @@ void StructureNodeImpl::set( const ustring &pathName, NodeImplSharedPtr ni, bool
    // types for VECTOR,
    // COMPRESSED_VECTOR
 
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
    std::cout << "StructureNodeImpl::set(pathName=" << pathName
              << ", ni, autoPathCreate=" << autoPathCreate << std::endl;
 #endif
@@ -283,7 +283,7 @@ void StructureNodeImpl::set( const ustring &pathName, NodeImplSharedPtr ni, bool
 void StructureNodeImpl::set( const std::vector<ustring> &fields, unsigned level,
                              NodeImplSharedPtr ni, bool autoPathCreate )
 {
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
    std::cout << "StructureNodeImpl::set: level=" << level << std::endl;
    for ( unsigned i = 0; i < fields.size(); i++ )
    {

@@ -45,6 +45,14 @@
 // Used to mark unused parameters to indicate intent and supress warnings.
 #define UNUSED( expr ) (void)( expr )
 
+// For readability of preprocessor using E57_VALIDATION_LEVEL
+#define VALIDATION_OFF 0
+#define VALIDATION_BASIC 1
+#define VALIDATION_DEEP 2
+
+#define VALIDATE_BASIC ( E57_VALIDATION_LEVEL > VALIDATION_OFF )
+#define VALIDATE_DEEP ( E57_VALIDATION_LEVEL > VALIDATION_BASIC )
+
 namespace e57
 {
 #define E57_EXCEPTION1( ecode )                                                                    \

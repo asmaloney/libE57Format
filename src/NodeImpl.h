@@ -77,7 +77,7 @@ namespace e57
 #endif
 
    private:
-#ifdef E57_DEBUG
+#ifdef VALIDATE_BASIC
       bool _verifyPathNameAbsolute( const ustring &inPathName );
 #endif
 

@@ -87,7 +87,7 @@ PacketReadCache::PacketReadCache( CheckedFile *cFile, unsigned packetCount ) :
 
 std::unique_ptr<PacketLock> PacketReadCache::lock( uint64_t packetLogicalOffset, char *&pkt )
 {
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
    std::cout << "PacketReadCache::lock() called, packetLogicalOffset=" << packetLogicalOffset
              << std::endl;
 #endif
@@ -113,7 +113,7 @@ std::unique_ptr<PacketLock> PacketReadCache::lock( uint64_t packetLogicalOffset,
       if ( packetLogicalOffset == entry.logicalOffset_ )
       {
          // Found a match, so don't have to read anything
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
          std::cout << "  Found matching cache entry, index=" << i << std::endl;
 #endif
          // Mark entry with current useCount (keeps track of age of entry).
@@ -147,7 +147,7 @@ std::unique_ptr<PacketLock> PacketReadCache::lock( uint64_t packetLogicalOffset,
          oldestUsed = entry.lastUsed_;
       }
    }
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
    std::cout << "  Oldest entry=" << oldestEntry << " lastUsed=" << oldestUsed << std::endl;
 #endif
 
@@ -168,7 +168,7 @@ std::unique_ptr<PacketLock> PacketReadCache::lock( uint64_t packetLogicalOffset,
 void PacketReadCache::unlock( unsigned cacheIndex )
 {
    //??? why lockedEntry not used?
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
    std::cout << "PacketReadCache::unlock() called, cacheIndex=" << cacheIndex << std::endl;
 #else
    UNUSED( cacheIndex );
@@ -184,7 +184,7 @@ void PacketReadCache::unlock( unsigned cacheIndex )
 
 void PacketReadCache::readPacket( unsigned oldestEntry, uint64_t packetLogicalOffset )
 {
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
    std::cout << "PacketReadCache::readPacket() called, oldestEntry=" << oldestEntry
              << " packetLogicalOffset=" << packetLogicalOffset << std::endl;
 #endif
@@ -219,7 +219,7 @@ void PacketReadCache::readPacket( unsigned oldestEntry, uint64_t packetLogicalOf
          auto dpkt = reinterpret_cast<DataPacket *>( entry.buffer_ );
 
          dpkt->verify( packetLength );
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
          std::cout << "  data packet:" << std::endl;
          dpkt->dump( 4 ); //???
 #endif
@@ -230,7 +230,7 @@ void PacketReadCache::readPacket( unsigned oldestEntry, uint64_t packetLogicalOf
          auto ipkt = reinterpret_cast<IndexPacket *>( entry.buffer_ );
 
          ipkt->verify( packetLength );
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
          std::cout << "  index packet:" << std::endl;
          ipkt->dump( 4 ); //???
 #endif
@@ -241,7 +241,7 @@ void PacketReadCache::readPacket( unsigned oldestEntry, uint64_t packetLogicalOf
          auto hp = reinterpret_cast<EmptyPacketHeader *>( entry.buffer_ );
 
          hp->verify( packetLength );
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
          std::cout << "  empty packet:" << std::endl;
          hp->dump( 4 ); //???
 #endif
@@ -309,14 +309,14 @@ void PacketReadCache::dump( int indent, std::ostream &os )
 PacketLock::PacketLock( PacketReadCache *cache, unsigned cacheIndex ) :
    cache_( cache ), cacheIndex_( cacheIndex )
 {
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
    std::cout << "PacketLock() called" << std::endl;
 #endif
 }
 
 PacketLock::~PacketLock()
 {
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
    std::cout << "~PacketLock() called" << std::endl;
 #endif
    try
@@ -437,7 +437,7 @@ void DataPacket::verify( unsigned bufferLength ) const
    const unsigned packetLength = header.packetLogicalLengthMinus1 + 1;
    const unsigned needed =
       sizeof( DataPacketHeader ) + 2 * header.bytestreamCount + totalStreamByteCount;
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
    std::cout << "needed=" << needed << " actual=" << packetLength << std::endl; //???
 #endif
 
@@ -460,7 +460,7 @@ void DataPacket::verify( unsigned bufferLength ) const
 
 char *DataPacket::getBytestream( unsigned bytestreamNumber, unsigned &byteCount )
 {
-#ifdef E57_MAX_VERBOSE
+#ifdef E57_VERBOSE
    std::cout << "getBytestream called, bytestreamNumber=" << bytestreamNumber << std::endl;
 #endif
 
@@ -554,7 +554,7 @@ void DataPacket::dump( int indent, std::ostream &os ) const
 void IndexPacket::verify( unsigned bufferLength, uint64_t totalRecordCount,
                           uint64_t fileSize ) const
 {
-#ifndef E57_MAX_DEBUG
+#if ( E57_VALIDATION_LEVEL < VALIDATION_DEEP )
    UNUSED( totalRecordCount );
    UNUSED( fileSize );
 #endif
@@ -635,7 +635,7 @@ void IndexPacket::verify( unsigned bufferLength, uint64_t totalRecordCount,
                                                  " neededLength=" + toString( neededLength ) );
    }
 
-#ifdef E57_MAX_DEBUG
+#if VALIDATE_DEEP
    // Verify padding at end is zero.
    const char *p = reinterpret_cast<const char *>( this );
    for ( unsigned i = neededLength; i < packetLength; i++ )

@@ -81,21 +81,20 @@ if( BUILD_SHARED_LIBS )
 endif()
 
 #########################################################################################
-# Various levels of cross checking and verification in the code.
+# Cross checking and runtime verification in the code.
 # The extra code does not change the file contents.
-# Recommend that E57_DEBUG remain defined even for production versions.
-option( E57_DEBUG      "Compile library with minimal debug checking" ON )
-option( E57_MAX_DEBUG  "Compile library with maximum debug checking" OFF )
+#	E57_VALIDATION_LEVEL=0	off
+#	E57_VALIDATION_LEVEL=1	basic
+#	E57_VALIDATION_LEVEL=2	deep (implies basic) - checks at the packet level, so it might be slower
+set( E57_VALIDATION_LEVEL "1" CACHE STRING "Runtime validation level (0 = OFF, 1 = basic, 2 = deep)" )
+
+# Output detailed logging while processing.
+option( E57_VERBOSE "Compile library with verbose logging" OFF )
 
 # Enable/disable code which dumps detailed node info to std::ostream. (See NodeImpl::dump())
 # Instead of always including this code, it is an option for backwards compatibility.
 # The only real reason to turn this off would be for slightly smaller binaries.
-option( E57_ENABLE_DIAGNOSTIC_OUTPUT  "Include code for diagnostic output using dump() on nodes" ON )
-
-# Various levels of printing to the console of what is going on in the code.
-# Optional
-option( E57_VERBOSE      "Compile library with verbose logging" OFF )
-option( E57_MAX_VERBOSE  "Compile library with maximum verbose logging" OFF )
+option( E57_ENABLE_DIAGNOSTIC_OUTPUT "Include code for diagnostic output using dump() on nodes" ON )
 
 # Enable writing packets that are correct but will stress the reader.
 option( E57_WRITE_CRAZY_PACKET_MODE "Compile library to enable reader-stressing packets" OFF )
@@ -149,15 +148,21 @@ if ( E57_BUILDING_SELF )
     set_warning_as_error()
 endif()
 
+# Check our validation level
+string( STRIP "${E57_VALIDATION_LEVEL}" E57_VALIDATION_LEVEL )
+if ( NOT E57_VALIDATION_LEVEL MATCHES "^[0-2]$" )
+    message( FATAL_ERROR "[${PROJECT_NAME}] E57_VALIDATION_LEVEL should be 0-2: '${E57_VALIDATION_LEVEL}'" )
+else()
+    message( STATUS "[${PROJECT_NAME}] Setting validation level to ${E57_VALIDATION_LEVEL}" )
+endif ()
+
 # Target definitions
 target_compile_definitions( E57Format
     PRIVATE
         REVISION_ID="${REVISION_ID}"
-        $<$<BOOL:${E57_DEBUG}>:E57_DEBUG>
-        $<$<BOOL:${E57_MAX_DEBUG}>:E57_MAX_DEBUG>
+        E57_VALIDATION_LEVEL=${E57_VALIDATION_LEVEL}
         $<$<BOOL:${E57_ENABLE_DIAGNOSTIC_OUTPUT}>:E57_ENABLE_DIAGNOSTIC_OUTPUT>
         $<$<BOOL:${E57_VERBOSE}>:E57_VERBOSE>
-        $<$<BOOL:${E57_MAX_VERBOSE}>:E57_MAX_VERBOSE>
         $<$<BOOL:${E57_WRITE_CRAZY_PACKET_MODE}>:E57_WRITE_CRAZY_PACKET_MODE>
 )
 

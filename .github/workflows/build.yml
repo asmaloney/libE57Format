@@ -13,48 +13,58 @@ jobs:
             platform: macos
             build_type: Debug
             build_shared: OFF
-          - name: 🍏 macOS (Clang - Release)
+            validation_level: 1
+          - name: 🍏 macOS (Clang, no validation - Release)
             os: macos-latest
             platform: macos
             build_type: Release
             build_shared: OFF
+            validation_level: 0 # build one with no validation
           - name: 🍏 macOS (Clang, Shared - Release)
             os: macos-latest
             platform: macos
             build_type: Release
             build_shared: ON
+            validation_level: 1
 
           - name: 🐧 Linux (GCC - Debug)
             os: ubuntu-latest
             platform: linux
             build_type: Debug
             build_shared: OFF
-          - name: 🐧 Linux (GCC - Release)
+            validation_level: 1
+          - name: 🐧 Linux (GCC, extra validation - Release)
             os: ubuntu-latest
             platform: linux
             build_type: Release
             build_shared: OFF
+            validation_level: 2 # build one with extra validation
           - name: 🐧 Linux (GCC, Shared - Release)
             os: ubuntu-latest
             platform: linux
             build_type: Release
             build_shared: ON
+            validation_level: 1
 
           - name: 🪟 Windows (MSVC - Debug)
             os: windows-latest
             platform: windows
             build_type: Debug
+            build_debug: ON
             build_shared: OFF
+            validation_level: 1
           - name: 🪟 Windows (MSVC - Release)
             os: windows-latest
             platform: windows
             build_type: Release
             build_shared: OFF
+            validation_level: 1
           - name: 🪟 Windows (MSVC, Shared - Release)
             os: windows-latest
             platform: windows
             build_type: Release
             build_shared: ON
+            validation_level: 1
 
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
@@ -117,8 +127,7 @@ jobs:
           conda config --show
           printenv | sort
 
-      - name: Configure (Debug)
-        if: matrix.build_type == 'Debug'
+      - name: Configure
         run: >
           mkdir libE57Format-build
 
@@ -127,20 +136,7 @@ jobs:
           -G "Ninja"
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
           -DE57_BUILD_SHARED=${{ matrix.build_shared }}
-          -DE57_MAX_DEBUG=1
-          .
-
-      - name: Configure (Release)
-        if: matrix.build_type == 'Release'
-        run: >
-          mkdir libE57Format-build
-
-          cmake
-          -B libE57Format-build
-          -G "Ninja"
-          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
-          -DE57_BUILD_SHARED=${{ matrix.build_shared }}
-          -DE57_DEBUG=0
+          -DE57_VALIDATION_LEVEL=${{ matrix.validation_level }}
           .
 
       - name: Build

@@ -16,6 +16,8 @@ target_compile_features( ${PROJECT_NAME}
 set_target_properties( testE57
 	PROPERTIES
 	    CXX_EXTENSIONS NO
+		EXPORT_COMPILE_COMMANDS ON
+		RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
 )
 
 add_subdirectory( include )

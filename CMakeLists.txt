@@ -174,6 +174,10 @@ if ( E57_VISIBILITY_HIDDEN )
 	)
 endif()
 
+# sanitizers
+include( Sanitizers )
+
+# xerces
 if ( WIN32 )
     option( USING_STATIC_XERCES "Turn on if you are linking with Xerces as a static lib" OFF )
     if ( USING_STATIC_XERCES )
@@ -220,6 +224,9 @@ if ( E57_BUILD_TEST )
             CXX_VISIBILITY_PRESET default
             CMAKE_VISIBILITY_INLINES_HIDDEN OFF
         )
+
+    # Turn on all available sanitizers for E57Format
+    enable_all_sanitizers( ${PROJECT_NAME} )
 
     enable_testing()
 

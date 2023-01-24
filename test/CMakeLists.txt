@@ -23,12 +23,12 @@ set_target_properties( testE57
 add_subdirectory( include )
 add_subdirectory( src )
 
+# Turn on sanitizers
+include( Sanitizers )
+enable_all_sanitizers( ${PROJECT_NAME} )
+
 # Set helper variables for readability
-set( compiler_is_clang "$<OR:$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:Clang>>" )
-set( compiler_is_gnu "$<CXX_COMPILER_ID:GNU>" )
 set( compiler_is_msvc "$<CXX_COMPILER_ID:MSVC>" )
-set( compiler_is_not_msvc "$<NOT:${compiler_is_msvc}>" )
-set( is_debug "$<CONFIG:DEBUG>" )
 
 target_compile_options( testE57
 	PUBLIC
@@ -44,22 +44,6 @@ target_include_directories( testE57
 target_link_libraries( testE57
     PRIVATE
         E57Format
-)
-
-# Turn on ASAN
-target_compile_options( testE57
-    PRIVATE
-        $<$<AND:${is_debug},${compiler_is_not_msvc}>:
-            -fno-omit-frame-pointer
-            -fsanitize=address
-        >
-)
-target_link_options( testE57
-    PRIVATE
-        $<$<AND:${is_debug},${compiler_is_not_msvc}>:
-            -fno-omit-frame-pointer
-            -fsanitize=address
-        >
 )
 
 # ccache
@@ -103,8 +87,8 @@ if ( NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/extern/googletest/CMakeLists.txt" )
     message( FATAL_ERROR "[E57 Test] The GoogleTest submodule was not downloaded. E57_GIT_SUBMODULE_UPDATE was turned off or failed. Please update submodules and try again." )
 endif()
 
-set( BUILD_GMOCK OFF CACHE BOOL "Builds the googlemock subproject" )
-set( INSTALL_GTEST OFF CACHE BOOL "Enable installation of googletest. (Projects embedding googletest may want to turn this OFF.)" )
+set( BUILD_GMOCK OFF CACHE BOOL "" FORCE )
+set( INSTALL_GTEST OFF CACHE BOOL "" FORCE )
 
 if ( MSVC )
     # Prevent overriding the parent project's compiler/linker settings on Windows
@@ -113,7 +97,15 @@ endif()
 
 add_subdirectory( extern/googletest )
 
+set_target_properties( gtest_main
+	PROPERTIES
+	    EXPORT_COMPILE_COMMANDS ON
+)
+
+enable_all_sanitizers( gtest_main )
+
 unset( BUILD_GMOCK CACHE )
+unset( GTEST_HAS_ABSL CACHE )
 unset( INSTALL_GTEST CACHE )
 
 target_include_directories( testE57

@@ -8,6 +8,7 @@ There have been _many_ changes around the `Simple API` in this release to fix so
 
 ### Added
 
+- Add proper address (ASan) and undefined behaviour (UBSan) sanitizers. These are on when building with tests (`E57_BUILD_TEST`), otherwise they are controlled by `E57FORMAT_SANITIZE_ADDRESS` and `E57FORMAT_SANITIZE_ADDRESS`. They are not included when building with MSVC.
 - Add new `E57Version.h` header for more convenient access to version information. Deprecates `e57::Utilities::getVersions()`. ([#197](https://github.com/asmaloney/libE57Format/pull/197)).
 - Add `ImageFile::extensionsLookupPrefix()` overload for more concise user code. ([#161](https://github.com/asmaloney/libE57Format/pull/161))
 - Added a constructor & destructor for **E57SimpleData**'s `Data3DPointsData_t`. This will create all the required buffers based on an `e57::Data3D` struct and handle their cleanup. See the `SimpleWriter` tests for examples. ([#149](https://github.com/asmaloney/libE57Format/pull/149))
@@ -28,18 +29,15 @@ There have been _many_ changes around the `Simple API` in this release to fix so
 
 - Now requires a **[C++14](https://en.cppreference.com/w/cpp/14)** compatible compiler.
 - Now requires **[CMake](https://cmake.org/) >= 3.15**. ([#205](https://github.com/asmaloney/libE57Format/pull/205))
+- 🚧 **DEBUG** and **VERBOSE** macros were changed to simplify and clarify:
+  - New `E57_ENABLE_DIAGNOSTIC_OUTPUT` controls the inclusion of the code for the `dump()` functions on nodes. I don't see any real reason to turn this off, but I left the capability in for compatibility.
+  - New `E57_VALIDATION_LEVEL=N` replaces `E57_DEBUG` (N=1) and `E57_MAX_DEBUG` (N=2).
+  - `E57_MAX_VERBOSE` was consolidated with `E57_VERBOSE` since they were essentially the same.
 - When building itself, warnings are now treated as errors. ([#205](https://github.com/asmaloney/libE57Format/pull/205), [#211](https://github.com/asmaloney/libE57Format/pull/211))
-- Rename **E57Simple**'s `Data3DPointsData` and `Data3DPointsData_d` structs to `Data3DPointsFloat` and `Data3DPointsDouble` respectively. ([#180](https://github.com/asmaloney/libE57Format/pull/180))
-- 🚧 **E57Simple:** Specifying the node type for cartesian & spherical points, time stamp, and intensity is now explicit using new fields (`pointRangeNodeType`, `angleNodeType`, `timeNodeType`, and `intensityNodeType`) and a new enum (`NumericalNodeType`). ([#178](https://github.com/asmaloney/libE57Format/pull/178))
-  - For examples, please see _test/src/testSimpleWriter.cpp_.
 - Clean up global const and enum names to use the `e57` namespace and avoid repetition. ([#176](https://github.com/asmaloney/libE57Format/pull/176))
   - i.e. instead of `e57::E57_STRUCTURE`, we now use `e57::TypeStructure`
-  - These have all been marked `deprecated` so the compiler will produce warnings including the replacement symbols.
-- Simplify the **E57SimpleWriter** API with `WriteImage2DData()` for images and `WriteData3DData()` for 3D data. This reduces code, hides complexity, and avoids potential errors. ([#171](https://github.com/asmaloney/libE57Format/pull/171))
-  - As part of this simplification, `WriteData3DData()` will now fill in any missing min/max values for cartesian & spherical points, intensity, and time stamps by looking at the data.([#175](https://github.com/asmaloney/libE57Format/pull/175))
+  - These have all been marked `deprecated` so the compiler will produce warnings including the replacement symbols (note that enumerators will not produce warnings on C++14, but they will on C++17).
 - {format} Update clang-format rules for clang-format 15. ([#168](https://github.com/asmaloney/libE57Format/pull/168), [#179](https://github.com/asmaloney/libE57Format/pull/179))
-- 🚧 **E57Simple:** Intensity now uses `double` instead of `float`. ([#178](https://github.com/asmaloney/libE57Format/pull/178))
-- 🚧 **E57Simple:** Colours now use `uint16_t` instead of `uint8_t`. ([#167](https://github.com/asmaloney/libE57Format/pull/167))
 - Change default checksum policies to an enum. ([#166](https://github.com/asmaloney/libE57Format/pull/166))
   Old | New
   --|--
@@ -47,7 +45,19 @@ There have been _many_ changes around the `Simple API` in this release to fix so
   CHECKSUM_POLICY_SPARSE | ChecksumPolicy::Sparse
   CHECKSUM_POLICY_HALF | ChecksumPolicy::Half
   CHECKSUM_POLICY_ALL | ChecksumPolicy::All
-
+- Avoid implicit conversion in constructors. ([#135](https://github.com/asmaloney/libE57Format/pull/135))
+- Update [CRCpp](https://github.com/d-bahr/CRCpp) to 1.2. ([#130](https://github.com/asmaloney/libE57Format/pull/130))
+- **E57Exception** changes ([#118](https://github.com/asmaloney/libE57Format/pull/118)):
+  - mark methods as `noexcept`
+  - use `private` instead of `protected`
+- Old `e57::Writer` constructor marked as deprecated. ([#117](https://github.com/asmaloney/libE57Format/pull/117))
+- Rename **E57Simple**'s `Data3DPointsData` and `Data3DPointsData_d` structs to `Data3DPointsFloat` and `Data3DPointsDouble` respectively. ([#180](https://github.com/asmaloney/libE57Format/pull/180))
+- 🚧 **E57Simple:** Specifying the node type for cartesian & spherical points, time stamp, and intensity is now explicit using new fields (`pointRangeNodeType`, `angleNodeType`, `timeNodeType`, and `intensityNodeType`) and a new enum (`NumericalNodeType`). ([#178](https://github.com/asmaloney/libE57Format/pull/178))
+  - For examples, please see _test/src/testSimpleWriter.cpp_.
+- Simplify the **E57SimpleWriter** API with `WriteImage2DData()` for images and `WriteData3DData()` for 3D data. This reduces code, hides complexity, and avoids potential errors. ([#171](https://github.com/asmaloney/libE57Format/pull/171))
+  - As part of this simplification, `WriteData3DData()` will now fill in any missing min/max values for cartesian & spherical points, intensity, and time stamps by looking at the data.([#175](https://github.com/asmaloney/libE57Format/pull/175))
+- 🚧 **E57Simple:** Intensity now uses `double` instead of `float`. ([#178](https://github.com/asmaloney/libE57Format/pull/178))
+- 🚧 **E57Simple:** Colours now use `uint16_t` instead of `uint8_t`. ([#167](https://github.com/asmaloney/libE57Format/pull/167))
 - 🚧 Change **E57SimpleData**'s Data3D field name from `pointsSize` to `pointCount`. ([#164](https://github.com/asmaloney/libE57Format/pull/164))
 - 🚧 Min/max fields in **E57SimpleData**'s Data3D's point fields were a mix of floats and doubles. Since the fields are doubles, set them all to doubles and use the new `Data3DPointsData_t` constructor to set them properly for floats. ([#153](https://github.com/asmaloney/libE57Format/pull/153))
   > **Note:** If you were previously relying on these to be floats and are not using the new `Data3DPointsData_t` constructor, you will need to set these.
@@ -55,15 +65,13 @@ There have been _many_ changes around the `Simple API` in this release to fix so
   - `normalX` renamed to `normalXField`
   - `normalY` renamed to `normalYField`
   - `normalZ` renamed to `normalZField`
-- Avoid implicit conversion in constructors. ([#135](https://github.com/asmaloney/libE57Format/pull/135))
-- Update [CRCpp](https://github.com/d-bahr/CRCpp) to 1.2. ([#130](https://github.com/asmaloney/libE57Format/pull/130))
-- **E57Exception** changes ([#118](https://github.com/asmaloney/libE57Format/pull/118)):
-  - mark methods as `noexcept`
-  - use `private` instead of `protected`
-- Old `e57::Writer` constructor marked as deprecated. ([#117](https://github.com/asmaloney/libE57Format/pull/117))
 
 ### Fixed
 
+- Fix several potential divide-by-zero cases. ([#224](https://github.com/asmaloney/libE57Format/pull/224))
+- {ci} Now builds shared library versions as well. ([#219](https://github.com/asmaloney/libE57Format/pull/219))
+- {win} Fixes shared library build warnings. ([#215](https://github.com/asmaloney/libE57Format/pull/215), [#216](https://github.com/asmaloney/libE57Format/pull/216), [#217](https://github.com/asmaloney/libE57Format/pull/217))
+- Fix the code which shortens floating point numbers when converted to strings. The impact of it being incorrect was negligible since it's just the floating point representation in the XML portion of the file. ([#214](https://github.com/asmaloney/libE57Format/pull/214))
 - Turned on a lot of compiler warnings and fixed them. ([#201](https://github.com/asmaloney/libE57Format/pull/201), [#202](https://github.com/asmaloney/libE57Format/pull/202), [#203](https://github.com/asmaloney/libE57Format/pull/203), [#204](https://github.com/asmaloney/libE57Format/pull/204), [#205](https://github.com/asmaloney/libE57Format/pull/205), [#207](https://github.com/asmaloney/libE57Format/pull/207), [#209](https://github.com/asmaloney/libE57Format/pull/209))
 - Fix writing floating point numbers when `std::locale::global` is set. ([#174](https://github.com/asmaloney/libE57Format/pull/174))
 - E57XmlParser: Parse doubles in a locale-independent way. ([#173](https://github.com/asmaloney/libE57Format/pull/173)) (Thanks Hugal31!)

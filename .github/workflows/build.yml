@@ -13,7 +13,7 @@ jobs:
             platform: macos
             build_type: Debug
             build_shared: OFF
-            validation_level: 1
+            validation_level: 2
           - name: 🍏 macOS (Clang, no validation - Release)
             os: macos-latest
             platform: macos
@@ -25,26 +25,26 @@ jobs:
             platform: macos
             build_type: Release
             build_shared: ON
-            validation_level: 1
+            validation_level: 2
 
           - name: 🐧 Linux (GCC - Debug)
             os: ubuntu-latest
             platform: linux
             build_type: Debug
             build_shared: OFF
-            validation_level: 1
+            validation_level: 2
           - name: 🐧 Linux (GCC, extra validation - Release)
             os: ubuntu-latest
             platform: linux
             build_type: Release
             build_shared: OFF
-            validation_level: 2 # build one with extra validation
+            validation_level: 1 # build one with basic validation
           - name: 🐧 Linux (GCC, Shared - Release)
             os: ubuntu-latest
             platform: linux
             build_type: Release
             build_shared: ON
-            validation_level: 1
+            validation_level: 2
 
           - name: 🪟 Windows (MSVC - Debug)
             os: windows-latest
@@ -52,19 +52,19 @@ jobs:
             build_type: Debug
             build_debug: ON
             build_shared: OFF
-            validation_level: 1
+            validation_level: 2
           - name: 🪟 Windows (MSVC - Release)
             os: windows-latest
             platform: windows
             build_type: Release
             build_shared: OFF
-            validation_level: 1
+            validation_level: 2
           - name: 🪟 Windows (MSVC, Shared - Release)
             os: windows-latest
             platform: windows
             build_type: Release
             build_shared: ON
-            validation_level: 1
+            validation_level: 2
 
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
@@ -143,7 +143,4 @@ jobs:
         run: cmake --build libE57Format-build
 
       - name: Test
-        # I cannot get this to run on Windows with a shared lib.
-        # It's not giving an error so I have no idea what's happening.
-        if: ${{ !(matrix.platform == 'windows' && matrix.build_shared == 'ON') }}
-        run: libE57Format-build/test/testE57
+        run: libE57Format-build/testE57

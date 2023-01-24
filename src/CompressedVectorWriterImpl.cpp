@@ -419,33 +419,36 @@ namespace e57
 #endif
 
       // Double check that we have work to do
-      size_t totalOutput = totalOutputAvailable();
-      if ( totalOutput == 0 )
+      const size_t cTotalOutput = totalOutputAvailable();
+      if ( cTotalOutput == 0 )
       {
          return ( 0 );
       }
-#ifdef E57_VERBOSE
-      std::cout << "  totalOutput=" << totalOutput << std::endl; //???
-#endif
+
+      // const bytestreams_ so it's clear it isn't modified in this function
+      const auto &cStreams = bytestreams_;
+      const auto cNumByteStreams = cStreams.size();
 
       // Calc maximum number of bytestream values can put in data packet.
-      const size_t packetMaxPayloadBytes =
-         DATA_PACKET_MAX - sizeof( DataPacketHeader ) - bytestreams_.size() * sizeof( uint16_t );
+      const size_t cPacketMaxPayloadBytes =
+         DATA_PACKET_MAX - sizeof( DataPacketHeader ) - cNumByteStreams * sizeof( uint16_t );
+
 #ifdef E57_VERBOSE
-      std::cout << "  packetMaxPayloadBytes=" << packetMaxPayloadBytes << std::endl; //???
+      std::cout << "  totalOutput=" << totalOutput << std::endl;
+      std::cout << "  cNumByteStreams=" << cNumByteStreams << std::endl;
+      std::cout << "  packetMaxPayloadBytes=" << packetMaxPayloadBytes << std::endl;
 #endif
 
-      // Allocate vector for number of bytes that each bytestream will write to
-      // file.
-      std::vector<size_t> count( bytestreams_.size() );
+      // Allocate vector for number of bytes that each bytestream will write to file.
+      std::vector<size_t> count( cNumByteStreams );
 
       // See if we can fit into a single data packet
-      if ( totalOutput < packetMaxPayloadBytes )
+      if ( cTotalOutput < cPacketMaxPayloadBytes )
       {
          // We can fit everything in one packet
-         for ( unsigned i = 0; i < bytestreams_.size(); i++ )
+         for ( unsigned i = 0; i < cNumByteStreams; ++i )
          {
-            count.at( i ) = bytestreams_.at( i )->outputAvailable();
+            count.at( i ) = cStreams.at( i )->outputAvailable();
          }
       }
       else
@@ -453,54 +456,52 @@ namespace e57
          // We have too much data for one packet.  Send proportional amounts from
          // each bytestream. Adjust packetMaxPayloadBytes down by one so have a
          // little slack for floating point weirdness.
-         float fractionToSend = ( packetMaxPayloadBytes - 1 ) / static_cast<float>( totalOutput );
-         for ( unsigned i = 0; i < bytestreams_.size(); i++ )
+         const float cFractionToSend =
+            ( cPacketMaxPayloadBytes - 1 ) / static_cast<float>( cTotalOutput );
+         for ( unsigned i = 0; i < cNumByteStreams; ++i )
          {
             // Round down here so sum <= packetMaxPayloadBytes
             count.at( i ) = static_cast<unsigned>(
-               std::floor( fractionToSend * bytestreams_.at( i )->outputAvailable() ) );
+               std::floor( cFractionToSend * cStreams.at( i )->outputAvailable() ) );
          }
       }
+
 #ifdef E57_VERBOSE
-      for ( unsigned i = 0; i < bytestreams_.size(); i++ )
+      for ( unsigned i = 0; i < cNumByteStreams; ++i )
       {
-         std::cout << "  count[" << i << "]=" << count.at( i ) << std::endl; //???
+         std::cout << "  count[" << i << "]=" << count.at( i ) << std::endl;
       }
 #endif
 
 #if VALIDATE_BASIC
       // Double check sum of count is <= packetMaxPayloadBytes
-      const size_t totalByteCount =
+      const size_t cTotalByteCount =
          std::accumulate( count.begin(), count.end(), static_cast<size_t>( 0 ) );
 
-      if ( totalByteCount > packetMaxPayloadBytes )
+      if ( cTotalByteCount > cPacketMaxPayloadBytes )
       {
          throw E57_EXCEPTION2( ErrorInternal,
-                               "totalByteCount=" + toString( totalByteCount ) +
-                                  " packetMaxPayloadBytes=" + toString( packetMaxPayloadBytes ) );
+                               "totalByteCount=" + toString( cTotalByteCount ) +
+                                  " packetMaxPayloadBytes=" + toString( cPacketMaxPayloadBytes ) );
       }
 #endif
 
       // Get smart pointer to ImageFileImpl from associated CompressedVector
       ImageFileImplSharedPtr imf( cVector_->destImageFile_ );
 
-      // Use temp buf in object (is 64KBytes long) instead of allocating each time
-      // here
+      // Use temp buf in object (is 64KBytes long) instead of allocating each time here
       char *packet = reinterpret_cast<char *>( &dataPacket_ );
-#ifdef E57_VERBOSE
-      std::cout << "  packet=" << packet << std::endl; //???
-#endif
 
       // To be safe, clear header part of packet
       dataPacket_.header.reset();
 
-      // Write bytestreamBufferLength[bytestreamCount] after header, in
-      // dataPacket_
+      // Write bytestreamBufferLength[bytestreamCount] after header, in dataPacket_
       auto bsbLength = reinterpret_cast<uint16_t *>( &packet[sizeof( DataPacketHeader )] );
 #ifdef E57_VERBOSE
-      std::cout << "  bsbLength=" << bsbLength << std::endl; //???
+      std::cout << "  packet=" << static_cast<void *>( packet ) << std::endl; //???
+      std::cout << "  bsbLength=" << bsbLength << std::endl;                  //???
 #endif
-      for ( unsigned i = 0; i < bytestreams_.size(); i++ )
+      for ( unsigned i = 0; i < cNumByteStreams; ++i )
       {
          bsbLength[i] = static_cast<uint16_t>( count.at( i ) ); // %%% Truncation
 #ifdef E57_VERBOSE
@@ -510,19 +511,18 @@ namespace e57
       }
 
       // Get pointer to end of data so far
-      char *p = reinterpret_cast<char *>( &bsbLength[bytestreams_.size()] );
+      auto *p = reinterpret_cast<char *>( &bsbLength[cNumByteStreams] );
 #ifdef E57_VERBOSE
-      std::cout << "  after bsbLength, p=" << p << std::endl; //???
+      std::cout << "  after bsbLength, p=" << static_cast<void *>( p ) << std::endl; //???
 #endif
 
       // Write contents of each bytestream in dataPacket_
-      for ( size_t i = 0; i < bytestreams_.size(); i++ )
+      for ( size_t i = 0; i < cNumByteStreams; ++i )
       {
          size_t n = count.at( i );
 
 #if VALIDATE_BASIC
-         // Double check we aren't accidentally going to write off end of
-         // vector<char>
+         // Double check we aren't accidentally going to write off end of vector<char>
          if ( &p[n] > &packet[DATA_PACKET_MAX] )
          {
             throw E57_EXCEPTION2( ErrorInternal, "n=" + toString( n ) );
@@ -530,7 +530,7 @@ namespace e57
 #endif
 
          // Read from encoder output into packet
-         bytestreams_.at( i )->outputRead( p, n );
+         cStreams.at( i )->outputRead( p, n );
 
          // Move pointer to end of current data
          p += n;
@@ -545,12 +545,12 @@ namespace e57
 #if VALIDATE_BASIC
       // Double check that packetLength is what we expect
       if ( packetLength !=
-           sizeof( DataPacketHeader ) + bytestreams_.size() * sizeof( uint16_t ) + totalByteCount )
+           sizeof( DataPacketHeader ) + cNumByteStreams * sizeof( uint16_t ) + cTotalByteCount )
       {
-         throw E57_EXCEPTION2( ErrorInternal,
-                               "packetLength=" + toString( packetLength ) + " bytestreamSize=" +
-                                  toString( bytestreams_.size() * sizeof( uint16_t ) ) +
-                                  " totalByteCount=" + toString( totalByteCount ) );
+         throw E57_EXCEPTION2( ErrorInternal, "packetLength=" + toString( packetLength ) +
+                                                 " bytestreamSize=" +
+                                                 toString( cNumByteStreams * sizeof( uint16_t ) ) +
+                                                 " totalByteCount=" + toString( cTotalByteCount ) );
       }
 #endif
 
@@ -575,7 +575,7 @@ namespace e57
       dataPacket_.header.packetLogicalLengthMinus1 =
          static_cast<uint16_t>( packetLength - 1 ); // %%% Truncation
       dataPacket_.header.bytestreamCount =
-         static_cast<uint16_t>( bytestreams_.size() ); // %%% Truncation
+         static_cast<uint16_t>( cNumByteStreams ); // %%% Truncation
 
       // Double check that data packet is well formed
       dataPacket_.verify( packetLength );

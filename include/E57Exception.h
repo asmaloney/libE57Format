@@ -36,7 +36,7 @@
 #include "E57Export.h"
 
 #ifndef E57_ENABLE_DIAGNOSTIC_OUTPUT
-// Used to mark unused parameters to indicate intent and supress warnings.
+// Used to mark unused parameters to indicate intent and suppress warnings.
 #define UNUSED( expr ) (void)( expr )
 #endif
 

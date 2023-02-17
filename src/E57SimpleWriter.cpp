@@ -69,7 +69,7 @@ namespace
          ( pointFields.angleNodeType == e57::NumericalNodeType::ScaledInteger ) &&
          ( pointFields.angleMinimum == cMin ) && ( pointFields.angleMaximum == cMax );
 
-      // IF we are using intesity
+      // IF we are using intensity
       // AND we haven't set either min or max
       // THEN calculate them from the points
       double intensityMinimum = std::numeric_limits<double>::max();

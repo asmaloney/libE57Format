@@ -576,7 +576,7 @@ TEST( SimpleWriter, MinMaxIssuesCartesianFloat )
 }
 
 // https://github.com/asmaloney/libE57Format/issues/160
-TEST( SimpleWriter, MinMaxIssuesSpericalDouble )
+TEST( SimpleWriter, MinMaxIssuesSphericalDouble )
 {
    e57::WriterOptions options;
    options.guid = "Spherical Points Min/Max Double File GUID";

@@ -483,27 +483,27 @@ char *DataPacket::getBytestream( unsigned bytestreamNumber, unsigned &byteCount 
    auto streamBase = reinterpret_cast<char *>( &bsbLength[header.bytestreamCount] );
 
    // Sum size of preceding stream buffers to get position
-   unsigned totalPreceeding = 0;
+   unsigned totalPreceding = 0;
    for ( unsigned i = 0; i < bytestreamNumber; i++ )
    {
-      totalPreceeding += bsbLength[i];
+      totalPreceding += bsbLength[i];
    }
 
    byteCount = bsbLength[bytestreamNumber];
 
    // Double check buffer is completely within packet
-   if ( ( sizeof( DataPacketHeader ) + 2 * header.bytestreamCount + totalPreceeding + byteCount ) >
+   if ( ( sizeof( DataPacketHeader ) + 2 * header.bytestreamCount + totalPreceding + byteCount ) >
         header.packetLogicalLengthMinus1 + 1U )
    {
       throw E57_EXCEPTION2( ErrorInternal, "bytestreamCount=" + toString( header.bytestreamCount ) +
-                                              " totalPreceeding=" + toString( totalPreceeding ) +
+                                              " totalPreceding=" + toString( totalPreceding ) +
                                               " byteCount=" + toString( byteCount ) +
                                               " packetLogicalLengthMinus1=" +
                                               toString( header.packetLogicalLengthMinus1 ) );
    }
 
    // Return start of buffer
-   return ( &streamBase[totalPreceeding] );
+   return ( &streamBase[totalPreceding] );
 }
 
 unsigned DataPacket::getBytestreamBufferLength( unsigned bytestreamNumber )

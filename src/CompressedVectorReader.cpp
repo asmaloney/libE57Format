@@ -1,6 +1,6 @@
 /*
  * CompressedVectorReader.cpp - implementation of public functions of the
- *   CompressedVectorReader clas.
+ *   CompressedVectorReader class.
  *
  * Original work Copyright 2009 - 2010 Kevin Ackley (kackley@gwi.net)
  * Modified work Copyright 2018 - 2020 Andy Maloney <asmaloney@gmail.com>

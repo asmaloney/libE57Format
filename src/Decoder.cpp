@@ -128,7 +128,7 @@ std::shared_ptr<Decoder> Decoder::DecoderFactory( unsigned bytestreamNumber, //!
          unsigned bitsPerRecord = imf->bitsNeeded( sini->minimum(), sini->maximum() );
 
          // !!! need to pick smarter channel buffer sizes, here and elsewhere
-         // Construct ScaledInteger dencoder with appropriate register size,
+         // Construct ScaledInteger decoder with appropriate register size,
          // based on number of bits stored.
          if ( bitsPerRecord == 0 )
          {

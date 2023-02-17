@@ -424,7 +424,7 @@ numbers in memory.
 
 It is also possible (and perhaps safest of all) to never request that scaling be performed, and
 always deal with rawValues outside the API. Note this does not mean that ScaledIntegerNodes should
-be avoided. ScaledIntgerNodes are essential for encoding numeric data with fractional parts in
+be avoided. ScaledIntegerNodes are essential for encoding numeric data with fractional parts in
 CompressedVectorNodes. Because the ASTM E57 format recommends that SI units without prefix be used
 (i.e. meters, not milli-meters or micro-furlongs), almost every measured value will have a
 fractional part.

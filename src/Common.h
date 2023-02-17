@@ -42,7 +42,7 @@
 #pragma warning( disable : 4224 )
 #endif
 
-// Used to mark unused parameters to indicate intent and supress warnings.
+// Used to mark unused parameters to indicate intent and suppress warnings.
 #define UNUSED( expr ) (void)( expr )
 
 // For readability of preprocessor using E57_VALIDATION_LEVEL

@@ -38,6 +38,7 @@ using namespace e57;
 /*!
 @brief Check whether IntegerNode class invariant is true
 
+@param [in] doRecurse If true, also check invariants of all children or sub-objects recursively.
 @param [in] doUpcast If true, also check invariants of the generic Node class.
 
 @details
@@ -53,8 +54,10 @@ judiciously, in debug versions of the application.
 
 @throw ::ErrorInvarianceViolation or any other E57 ErrorCode
 */
-void IntegerNode::checkInvariant( bool /*doRecurse*/, bool doUpcast ) const
+void IntegerNode::checkInvariant( bool doRecurse, bool doUpcast ) const
 {
+   UNUSED( doRecurse );
+
    // If destImageFile not open, can't test invariant (almost every call would throw)
    if ( !destImageFile().isOpen() )
    {

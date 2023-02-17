@@ -8,6 +8,11 @@
 #include "RandomNum.h"
 #include "TestData.h"
 
+// Handle non-clang compilers
+#if !defined( __has_feature )
+#define __has_feature( feature ) 0
+#endif
+
 // Address Sanitizer
 // There seems to be a false positive with std::vector, so turn off container overflow detection.
 //   https://github.com/google/sanitizers/wiki/AddressSanitizerContainerOverflow#false-positives
@@ -32,6 +37,15 @@ int main( int argc, char **argv )
 
    std::cout << "e57Format version: " << e57::Version::library() << std::endl;
    std::cout << "ASTM version: " << e57::Version::astm() << std::endl;
+
+#if __has_feature( address_sanitizer ) || defined( __SANITIZE_ADDRESS__ )
+   std::cout << " - Address Sanitizer (ASan) is active" << std::endl;
+#endif
+
+   // Note: There is currently no way to check for UBSan on gcc...
+#if __has_feature( undefined_behavior_sanitizer )
+   std::cout << " - Undefined Behaviour Sanitizer (UBSan) is active" << std::endl;
+#endif
 
    int result = RUN_ALL_TESTS();
 

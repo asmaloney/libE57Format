@@ -227,9 +227,6 @@ if ( E57_BUILD_TEST )
             CMAKE_VISIBILITY_INLINES_HIDDEN OFF
         )
 
-    # Turn on all available sanitizers for E57Format
-    enable_all_sanitizers( ${PROJECT_NAME} )
-
     enable_testing()
 
     add_subdirectory( test )

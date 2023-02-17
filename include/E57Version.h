@@ -36,7 +36,7 @@ namespace e57
       /*!
       @brief Get the version of libE57Format library.
 
-      @returns The version as a string (e.g. "E57Format-3.0.0-x86_64-darwin").
+      @returns The version as a string (e.g. "E57Format-3.0.0-x86_64-darwin-AppleClang140").
       */
       E57_DLL std::string library();
 

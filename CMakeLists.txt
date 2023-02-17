@@ -3,8 +3,8 @@
 #
 # Use git blame to see all the changes and who has contributed.
 #
+# Copyright 2018-2023 Andy Maloney <asmaloney@gmail.com>
 # Original work Copyright 2010-2012 Roland Schwarz, Riegl LMS GmbH
-# Modified work Copyright 2018-2020 Andy Maloney <asmaloney@gmail.com>
 #
 # Permission is hereby granted, free of charge, to any person or organization
 # obtaining a copy of the software and accompanying documentation covered by
@@ -46,6 +46,8 @@ project( E57Format
 
 string( TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPERCASE )
 
+# Creates a build tag which is used in the REVISION_ID
+#	e.g. "x86_64-darwin-AppleClang140"
 include( Tags )
 
 # Check if we are building ourself or being included and use this to set some defaults
@@ -85,7 +87,7 @@ endif()
 # The extra code does not change the file contents.
 #	E57_VALIDATION_LEVEL=0	off
 #	E57_VALIDATION_LEVEL=1	basic
-#	E57_VALIDATION_LEVEL=2	deep (implies basic) - checks at the packet level, so it might be slower
+#	E57_VALIDATION_LEVEL=2	deep (implies basic) - checks at the packet level, so it will be slower
 set( E57_VALIDATION_LEVEL "1" CACHE STRING "Runtime validation level (0 = OFF, 1 = basic, 2 = deep)" )
 
 # Output detailed logging while processing.
@@ -237,7 +239,8 @@ endif()
 install(
     EXPORT
         E57Format-export
-    DESTINATION lib/cmake/E57Format
+    DESTINATION
+        lib/cmake/E57Format
 )
 
 install(

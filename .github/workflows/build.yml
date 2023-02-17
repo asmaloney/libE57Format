@@ -137,6 +137,7 @@ jobs:
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
           -DE57_BUILD_SHARED=${{ matrix.build_shared }}
           -DE57_VALIDATION_LEVEL=${{ matrix.validation_level }}
+          -DE57FORMAT_SANITIZE_ALL:BOOL=ON
           .
 
       - name: Build

@@ -81,8 +81,6 @@ namespace e57
       ///@{
 
       /// @brief This function writes the Image2D data to the file
-      /// @details The user needs to config a Image2D structure with all the camera information
-      /// before making this call.
       /// @note @p image2DHeader may be modified (adding a guid or adding missing, required fields).
       /// @param [in,out] image2DHeader header metadata
       /// @param [in] imageType identifies the image format

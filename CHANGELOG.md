@@ -1,15 +1,15 @@
 # Changelog
 
-All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## 3.0.0 (in progress)
 
-There have been _many_ changes around the `Simple API` in this release to fix some problems, avoid potential errors, and simplify the use of the API. Where possible these changes are marked as deprecated to be removed later. The compiler will produce warnings for these indicating what needs to change. Other changes could not be deprecated and break the API, requiring code changes. The notable ones are marked with 🚧 below.
+There have been _many_ changes around the `Simple API` in this release to fix some problems, avoid potential errors, and simplify the use of the API. Where possible these changes are marked as `deprecated` to be removed later. The compiler will produce warnings for these indicating what needs to change. Other changes could not be marked deprecated but will break the API, requiring code changes. The notable ones are marked with 🚧 below.
 
 ### Added
 
-- Add proper address (ASan) and undefined behaviour (UBSan) sanitizers. These are on when building with tests (`E57_BUILD_TEST`), otherwise they are controlled by `E57FORMAT_SANITIZE_ADDRESS` and `E57FORMAT_SANITIZE_ADDRESS`. They are not included when building with MSVC.
-- Add new `E57Version.h` header for more convenient access to version information. Deprecates `e57::Utilities::getVersions()`. ([#197](https://github.com/asmaloney/libE57Format/pull/197)).
+- Add address (ASan) and undefined behaviour (UBSan) sanitizers. These are controlled by `E57FORMAT_SANITIZE_ALL`, `E57FORMAT_SANITIZE_ADDRESS` and `E57FORMAT_SANITIZE_ADDRESS`. They are not included when building with MSVC.
+- Add new `E57Version.h` header for more convenient access to version information. ([#197](https://github.com/asmaloney/libE57Format/pull/197)).
 - Add `ImageFile::extensionsLookupPrefix()` overload for more concise user code. ([#161](https://github.com/asmaloney/libE57Format/pull/161))
 - Added a constructor & destructor for **E57SimpleData**'s `Data3DPointsData_t`. This will create all the required buffers based on an `e57::Data3D` struct and handle their cleanup. See the `SimpleWriter` tests for examples. ([#149](https://github.com/asmaloney/libE57Format/pull/149))
 
@@ -19,7 +19,6 @@ There have been _many_ changes around the `Simple API` in this release to fix so
   ```cpp
   Reader( const ustring &filePath, const ReaderOptions &options );
   ```
-  The old constructor taking only `filePath` is deprecated and will be removed in the future. ([#139](https://github.com/asmaloney/libE57Format/pull/139))
 - {test} Added testing using [GoogleTest](https://github.com/google/googletest). For details, please see [test/README.md](test/README.md) ([#121](https://github.com/asmaloney/libE57Format/pull/121))
 - Added `E57Exception::errorStr()` to get the error string directly. ([#128](https://github.com/asmaloney/libE57Format/pull/128))
 - {cmake} Use [ccache](https://ccache.dev/) if available. ([#129](https://github.com/asmaloney/libE57Format/pull/129))
@@ -36,7 +35,6 @@ There have been _many_ changes around the `Simple API` in this release to fix so
 - When building itself, warnings are now treated as errors. ([#205](https://github.com/asmaloney/libE57Format/pull/205), [#211](https://github.com/asmaloney/libE57Format/pull/211))
 - Clean up global const and enum names to use the `e57` namespace and avoid repetition. ([#176](https://github.com/asmaloney/libE57Format/pull/176))
   - i.e. instead of `e57::E57_STRUCTURE`, we now use `e57::TypeStructure`
-  - These have all been marked `deprecated` so the compiler will produce warnings including the replacement symbols (note that enumerators will not produce warnings on C++14, but they will on C++17).
 - {format} Update clang-format rules for clang-format 15. ([#168](https://github.com/asmaloney/libE57Format/pull/168), [#179](https://github.com/asmaloney/libE57Format/pull/179))
 - Change default checksum policies to an enum. ([#166](https://github.com/asmaloney/libE57Format/pull/166))
   Old | New
@@ -50,7 +48,6 @@ There have been _many_ changes around the `Simple API` in this release to fix so
 - **E57Exception** changes ([#118](https://github.com/asmaloney/libE57Format/pull/118)):
   - mark methods as `noexcept`
   - use `private` instead of `protected`
-- Old `e57::Writer` constructor marked as deprecated. ([#117](https://github.com/asmaloney/libE57Format/pull/117))
 - Rename **E57Simple**'s `Data3DPointsData` and `Data3DPointsData_d` structs to `Data3DPointsFloat` and `Data3DPointsDouble` respectively. ([#180](https://github.com/asmaloney/libE57Format/pull/180))
 - 🚧 **E57Simple:** Specifying the node type for cartesian & spherical points, time stamp, and intensity is now explicit using new fields (`pointRangeNodeType`, `angleNodeType`, `timeNodeType`, and `intensityNodeType`) and a new enum (`NumericalNodeType`). ([#178](https://github.com/asmaloney/libE57Format/pull/178))
   - For examples, please see _test/src/testSimpleWriter.cpp_.
@@ -65,6 +62,16 @@ There have been _many_ changes around the `Simple API` in this release to fix so
   - `normalX` renamed to `normalXField`
   - `normalY` renamed to `normalYField`
   - `normalZ` renamed to `normalZField`
+
+### Deprecated
+
+- `e57::Utilities::getVersions()`. ([#197](https://github.com/asmaloney/libE57Format/pull/197))
+- `e57::Data3DPointsData` and `e57::Data3DPointsData_d` types. ([#180](https://github.com/asmaloney/libE57Format/pull/180))
+- Many global const and enum names. The compiler will produce warnings including the replacement symbols (note that enumerators will not produce warnings on C++14, but they will on C++17). ([#176](https://github.com/asmaloney/libE57Format/pull/176))
+- `e57::Writer::NewImage2D`and `e57::Writer::SetUpData3DPointsData`. ([#171](https://github.com/asmaloney/libE57Format/pull/171))
+- Old default checksum policies (`CHECKSUM_POLICY_NONE`, `CHECKSUM_POLICY_SPARSE`, `CHECKSUM_POLICY_HALF`, and `CHECKSUM_POLICY_ALL`). ([#166](https://github.com/asmaloney/libE57Format/pull/166))
+- The old `e57::Reader` constructor taking only `filePath`. ([#139](https://github.com/asmaloney/libE57Format/pull/139))
+- The old `e57::Writer` constructor taking only `filePath`. ([#117](https://github.com/asmaloney/libE57Format/pull/117))
 
 ### Fixed
 

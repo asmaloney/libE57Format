@@ -4,14 +4,6 @@
 
 libE57Format is a library which provides read & write support for the E57 file format.
 
-## 🚨 Version 3.0 Note 🚨
-
-There have been many changes (especially to the "Simple API") in the upcoming version 3.0 - some of which will require code changes on your end. Please see the [CHANGELOG](CHANGELOG.md) for details.
-
-Since this version is breaking the API, I am happy to discuss any other API-breaking changes which might be useful. Please raise them in [this issue](https://github.com/asmaloney/libE57Format/issues/177).
-
-I plan to let 3.0 sit in the master branch until the end of 2022. If I don't hear any feedback I will go ahead and release it as-is.
-
 ## Documentation
 
 The doxygen-generated documentation may be [found here](https://asmaloney.github.io/libE57Format-docs/). These docs are generated and saved in the [libE57Format-docs](https://github.com/asmaloney/libE57Format-docs) repo.

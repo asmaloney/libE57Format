@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 3.0.0 (in progress)
+## [3.0.0](https://github.com/asmaloney/libE57Format/releases/tag/v3.0.0) - 2023-02-23
 
 There have been _many_ changes around the `Simple API` in this release to fix some problems, avoid potential errors, and simplify the use of the API. Where possible these changes are marked as `deprecated` to be removed later. The compiler will produce warnings for these indicating what needs to change. Other changes could not be marked deprecated but will break the API, requiring code changes. The notable ones are marked with 🚧 below.
 

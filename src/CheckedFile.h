@@ -89,7 +89,7 @@ namespace e57
       static inline uint64_t physicalToLogical( uint64_t physicalOffset );
 
    private:
-      void verifyChecksum( char *page_buffer, size_t page );
+      void verifyChecksum( char *page_buffer, uint64_t page );
 
       template <class FTYPE> CheckedFile &writeFloatingPoint( FTYPE value, int precision );
 

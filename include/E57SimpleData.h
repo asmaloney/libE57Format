@@ -611,7 +611,9 @@ namespace e57
       PointStandardizedFieldsAvailable pointFields;
 
       /// The number of points in the Data3D.
-      int64_t pointCount = 0;
+      /// On 32-bit systems size_t will allow for 4,294,967,295 points per scan which seems
+      /// reasonable...
+      size_t pointCount = 0;
    };
 
    /// @brief Stores pointers to user-provided buffers

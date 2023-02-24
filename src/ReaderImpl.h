@@ -72,7 +72,7 @@ namespace e57
                            int64_t &pointsSize, int64_t &groupsSize, int64_t &countSize,
                            bool &bColumnIndex ) const;
 
-      bool ReadData3DGroupsData( int64_t dataIndex, int64_t groupCount, int64_t *idElementValue,
+      bool ReadData3DGroupsData( int64_t dataIndex, size_t groupCount, int64_t *idElementValue,
                                  int64_t *startPointIndex, int64_t *pointCount ) const;
 
       template <typename COORDTYPE>

@@ -53,6 +53,13 @@
 #define VALIDATE_BASIC ( E57_VALIDATION_LEVEL > VALIDATION_OFF )
 #define VALIDATE_DEEP ( E57_VALIDATION_LEVEL > VALIDATION_BASIC )
 
+// Determine if we are building 32 or 64 bit
+#if SIZE_MAX == UINT32_MAX
+#define E57_32_BIT
+#elif SIZE_MAX == UINT64_MAX
+#define E57_64_BIT
+#endif
+
 namespace e57
 {
 #define E57_EXCEPTION1( ecode )                                                                    \

@@ -164,7 +164,7 @@ namespace e57
       /// "points" data vector for the groups
       /// @param [out] pointCount pointer to the buffer holding size of the groups given
       /// @return Return true if successful, false otherwise
-      bool ReadData3DGroupsData( int64_t dataIndex, int64_t groupCount, int64_t *idElementValue,
+      bool ReadData3DGroupsData( int64_t dataIndex, size_t groupCount, int64_t *idElementValue,
                                  int64_t *startPointIndex, int64_t *pointCount ) const;
 
       /// @brief Use this to read the actual 3D data

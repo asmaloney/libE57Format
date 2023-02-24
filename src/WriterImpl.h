@@ -61,7 +61,7 @@ namespace e57
       CompressedVectorWriter SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
                                                     const Data3DPointsData_t<COORDTYPE> &buffers );
 
-      bool WriteData3DGroupsData( int64_t dataIndex, int64_t groupCount, int64_t *idElementValue,
+      bool WriteData3DGroupsData( int64_t dataIndex, size_t groupCount, int64_t *idElementValue,
                                   int64_t *startPointIndex, int64_t *pointCount );
 
       StructureNode GetRawE57Root();

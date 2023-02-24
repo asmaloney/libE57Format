@@ -177,7 +177,7 @@ namespace e57
       /// for the groups
       /// @param [in] pointCount buffer with sizes of the groups given
       /// @return Return true if successful, false otherwise
-      bool WriteData3DGroupsData( int64_t dataIndex, int64_t groupCount, int64_t *idElementValue,
+      bool WriteData3DGroupsData( int64_t dataIndex, size_t groupCount, int64_t *idElementValue,
                                   int64_t *startPointIndex, int64_t *pointCount );
 
       ///@}

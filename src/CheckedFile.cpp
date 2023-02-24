@@ -686,7 +686,7 @@ void CheckedFile::unlink()
 #endif
 }
 
-void CheckedFile::verifyChecksum( char *page_buffer, size_t page )
+void CheckedFile::verifyChecksum( char *page_buffer, uint64_t page )
 {
    const uint32_t check_sum = checksum( page_buffer, logicalPageSize );
    const uint32_t check_sum_in_page =

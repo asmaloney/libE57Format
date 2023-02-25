@@ -199,9 +199,6 @@ install(
         E57Format
     EXPORT
         E57Format-export
-    ARCHIVE DESTINATION lib
-    LIBRARY DESTINATION lib
-    RUNTIME DESTINATION bin
 )
 
 # ccache

@@ -94,6 +94,19 @@ This _Simple API_ has evolved since this original port to fix some problems and 
 
 [Ryan Baumann](https://github.com/ryanfb) updated the `e57unpack` and `e57validate` tools to work with **libE57Format**. You can find them in the [e57tools](https://github.com/ryanfb/e57tools) repo.
 
+## Projects Using libE57Format
+
+- [CloudCompare](https://github.com/CloudCompare/CloudCompare)
+- [MeshLab](https://github.com/cnr-isti-vclab/meshlab)
+- [pye57](https://github.com/davidcaron/pye57)
+
+These projects use hard forks of libE57Format:
+
+- [FreeCAD](https://github.com/FreeCAD/FreeCAD)
+- [PDAL](https://github.com/PDAL/PDAL)
+
+There are also some commercial products using libE57Format. If any of them would like to sponsor the project and be listed here, please contact Andy (asmaloney).
+
 ## How To Contribute
 
 These are some of the things you can do to contribute to the project:

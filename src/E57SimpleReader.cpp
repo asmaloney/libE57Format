@@ -126,9 +126,8 @@ namespace e57
                                     bColumnIndex );
    }
 
-   bool Reader::ReadData3DGroupsData( int64_t dataIndex, int64_t groupCount,
-                                      int64_t *idElementValue, int64_t *startPointIndex,
-                                      int64_t *pointCount ) const
+   bool Reader::ReadData3DGroupsData( int64_t dataIndex, size_t groupCount, int64_t *idElementValue,
+                                      int64_t *startPointIndex, int64_t *pointCount ) const
    {
       return impl_->ReadData3DGroupsData( dataIndex, groupCount, idElementValue, startPointIndex,
                                           pointCount );

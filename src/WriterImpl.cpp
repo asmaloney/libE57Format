@@ -1308,7 +1308,7 @@ namespace e57
       int64_t dataIndex, size_t pointCount, const Data3DPointsData_t<double> &buffers );
 
    // This function writes out the group data
-   bool WriterImpl::WriteData3DGroupsData( int64_t dataIndex, int64_t groupCount,
+   bool WriterImpl::WriteData3DGroupsData( int64_t dataIndex, size_t groupCount,
                                            int64_t *idElementValue, int64_t *startPointIndex,
                                            int64_t *pointCount )
    {

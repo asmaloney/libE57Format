@@ -627,7 +627,25 @@ namespace e57
       const StructureNode proto( points.prototype() );
 
       data3DHeader.guid = StringNode( scan.get( "guid" ) ).value();
+
+#ifdef E57_32_BIT
+      // If we exceed the size_t max, only process the max (4,294,967,295 points).
+      if ( points.childCount() > static_cast<int64_t>( std::numeric_limits<size_t>::max() ) )
+      {
+         data3DHeader.pointCount = std::numeric_limits<size_t>::max();
+
+         std::cout << "Warning (32-bit): Point count (" << points.childCount()
+                   << ") exceeds storage capacity (" << std::numeric_limits<size_t>::max()
+                   << "). Dropping " << points.childCount() - std::numeric_limits<size_t>::max()
+                   << " points from scan." << std::endl;
+      }
+      else
+      {
+         data3DHeader.pointCount = static_cast<size_t>( points.childCount() );
+      }
+#else
       data3DHeader.pointCount = points.childCount();
+#endif
 
       if ( scan.isDefined( "name" ) )
       {
@@ -1478,7 +1496,7 @@ namespace e57
    }
 
    // Reads the group data
-   bool ReaderImpl::ReadData3DGroupsData( int64_t dataIndex, int64_t groupCount,
+   bool ReaderImpl::ReadData3DGroupsData( int64_t dataIndex, size_t groupCount,
                                           int64_t *idElementValue, int64_t *startPointIndex,
                                           int64_t *pointCount ) const
    {

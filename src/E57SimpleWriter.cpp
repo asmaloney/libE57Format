@@ -90,7 +90,7 @@ namespace
          ( pointFields.timeMinimum == cMin ) && ( pointFields.timeMaximum == cMax );
 
       // Now run through the points and set the things we need to
-      for ( int64_t i = 0; i < ioData3DHeader.pointCount; ++i )
+      for ( size_t i = 0; i < ioData3DHeader.pointCount; ++i )
       {
          if ( writePointRange && pointFields.cartesianXField )
          {
@@ -267,7 +267,7 @@ namespace e57
       return impl_->SetUpData3DPointsData( dataIndex, pointCount, buffers );
    }
 
-   bool Writer::WriteData3DGroupsData( int64_t dataIndex, int64_t groupCount,
+   bool Writer::WriteData3DGroupsData( int64_t dataIndex, size_t groupCount,
                                        int64_t *idElementValue, int64_t *startPointIndex,
                                        int64_t *pointCount )
    {

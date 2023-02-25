@@ -13,18 +13,21 @@ jobs:
             platform: macos
             build_type: Debug
             build_shared: OFF
+            build_test: ON
             validation_level: 2
           - name: 🍏 macOS (Clang, no validation - Release)
             os: macos-latest
             platform: macos
             build_type: Release
             build_shared: OFF
+            build_test: ON
             validation_level: 0 # build one with no validation
           - name: 🍏 macOS (Clang, Shared - Release)
             os: macos-latest
             platform: macos
             build_type: Release
             build_shared: ON
+            build_test: ON
             validation_level: 2
 
           - name: 🐧 Linux (GCC - Debug)
@@ -32,38 +35,56 @@ jobs:
             platform: linux
             build_type: Debug
             build_shared: OFF
+            build_test: ON
             validation_level: 2
           - name: 🐧 Linux (GCC, extra validation - Release)
             os: ubuntu-latest
             platform: linux
             build_type: Release
             build_shared: OFF
+            build_test: ON
             validation_level: 1 # build one with basic validation
           - name: 🐧 Linux (GCC, Shared - Release)
             os: ubuntu-latest
             platform: linux
             build_type: Release
             build_shared: ON
+            build_test: ON
             validation_level: 2
 
           - name: 🪟 Windows (MSVC - Debug)
             os: windows-latest
             platform: windows
+            arch: x86_64
             build_type: Debug
             build_debug: ON
             build_shared: OFF
+            build_test: ON
+            validation_level: 2
+          - name: 🪟 Windows (MSVC [32-bit] - Debug)
+            os: windows-latest
+            platform: windows
+            arch: x86
+            build_type: Debug
+            build_debug: ON
+            build_shared: OFF
+            build_test: OFF
             validation_level: 2
           - name: 🪟 Windows (MSVC - Release)
             os: windows-latest
             platform: windows
+            arch: x86_64
             build_type: Release
             build_shared: OFF
+            build_test: ON
             validation_level: 2
           - name: 🪟 Windows (MSVC, Shared - Release)
             os: windows-latest
             platform: windows
+            arch: x86_64
             build_type: Release
             build_shared: ON
+            build_test: ON
             validation_level: 2
 
     name: ${{ matrix.name }}
@@ -117,6 +138,8 @@ jobs:
       - name: Configure MSVC console (Windows)
         if: matrix.platform == 'windows'
         uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: ${{ matrix.arch }}
 
       - name: Output conda info (Windows)
         if: matrix.platform == 'windows'
@@ -136,6 +159,7 @@ jobs:
           -G "Ninja"
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
           -DE57_BUILD_SHARED=${{ matrix.build_shared }}
+          -DE57_BUILD_TEST=${{ matrix.build_test }}
           -DE57_VALIDATION_LEVEL=${{ matrix.validation_level }}
           -DE57FORMAT_SANITIZE_ALL:BOOL=ON
           .
@@ -144,4 +168,5 @@ jobs:
         run: cmake --build libE57Format-build
 
       - name: Test
+        if: matrix.build_test == 'ON'
         run: libE57Format-build/testE57

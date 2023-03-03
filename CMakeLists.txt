@@ -130,11 +130,17 @@ add_subdirectory( src )
 set_target_properties( E57Format
 	PROPERTIES
 	    CXX_EXTENSIONS NO
-		DEBUG_POSTFIX "-d"
 		EXPORT_COMPILE_COMMANDS ON
 		POSITION_INDEPENDENT_CODE ON
 		INTERPROCEDURAL_OPTIMIZATION ON
 )
+
+if( NOT DEFINED CMAKE_DEBUG_POSTFIX )
+	set_target_properties( E57Format
+		PROPERTIES
+		    DEBUG_POSTFIX "-d"
+	)
+endif()
 
 target_compile_features( ${PROJECT_NAME}
     PRIVATE

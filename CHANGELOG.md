@@ -10,6 +10,8 @@ All notable changes to this project will be documented in this file. The format 
 
 ### Fixed
 
+- {cmake} Turn off inter-procedural optimization in debug builds. Link-time optimization can make debugging more difficult. ([#240](https://github.com/asmaloney/libE57Format/pull/240))
+- {cmake} Don't force a debug postfix if `CMAKE_DEBUG_POSTFIX` is defined.([#239](https://github.com/asmaloney/libE57Format/pull/239))
 - {cmake} Don't force install locations. This prevents overriding them using `CMAKE_INSTALL_BINDIR` & `CMAKE_INSTALL_LIBDIR`.([#237](https://github.com/asmaloney/libE57Format/pull/237))
 - Fix warnings which prevented building on 32-bit systems. ([#233](https://github.com/asmaloney/libE57Format/pull/233), [#234](https://github.com/asmaloney/libE57Format/pull/234))
 

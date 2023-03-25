@@ -58,7 +58,7 @@ bool NodeImpl::isRoot() const
    checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
 
    return parent_.expired();
-};
+}
 
 NodeImplSharedPtr NodeImpl::parent()
 {

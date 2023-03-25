@@ -180,7 +180,7 @@ namespace e57
    bool Writer::IsOpen() const
    {
       return impl_->IsOpen();
-   };
+   }
 
    bool Writer::Close()
    {
@@ -200,12 +200,12 @@ namespace e57
                                                       buffer, startPos, sizeInBytes );
 
       return static_cast<int64_t>( written );
-   };
+   }
 
    int64_t Writer::NewImage2D( Image2D &image2DHeader )
    {
       return impl_->NewImage2D( image2DHeader );
-   };
+   }
 
    int64_t Writer::WriteImage2DData( int64_t imageIndex, Image2DType imageType,
                                      Image2DProjection imageProjection, void *pBuffer,
@@ -253,7 +253,7 @@ namespace e57
    int64_t Writer::NewData3D( Data3D &data3DHeader )
    {
       return impl_->NewData3D( data3DHeader );
-   };
+   }
 
    CompressedVectorWriter Writer::SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
                                                          const Data3DPointsFloat &buffers )
@@ -283,15 +283,15 @@ namespace e57
    StructureNode Writer::GetRawE57Root()
    {
       return impl_->GetRawE57Root();
-   };
+   }
 
    VectorNode Writer::GetRawData3D()
    {
       return impl_->GetRawData3D();
-   };
+   }
 
    VectorNode Writer::GetRawImages2D()
    {
       return impl_->GetRawImages2D();
-   };
+   }
 } // end namespace e57

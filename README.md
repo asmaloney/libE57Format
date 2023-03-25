@@ -2,7 +2,7 @@
 
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/asmaloney/libE57Format)](https://github.com/asmaloney/libE57Format/releases/latest) [![Docs](https://img.shields.io/badge/docs-online-orange)](https://asmaloney.github.io/libE57Format-docs/) [![GitHub](https://img.shields.io/github/license/asmaloney/libE57Format)](LICENSE) ![Build](https://github.com/asmaloney/libE57Format/actions/workflows/build.yml/badge.svg)
 
-libE57Format is a C++ library which provides read & write support for the ASTM-standard [E57 file format](https://www.astm.org/e2807-11r19e01.html). E57 files store 3D point cloud data (produced by 3D imaging systems such as laser scanners), attributes associated with 3D point data (color & intensity), and 2D images (photos taken using a 3D imaging system).
+libE57Format is a C++ library which provides read & write support for the ASTM-standard [E57 file format](https://www.astm.org/e2807-11r19e01.html) on Linux, macOS, and Windows. E57 files store 3D point cloud data (produced by 3D imaging systems such as laser scanners), attributes associated with 3D point data (color & intensity), and 2D images (photos taken using a 3D imaging system).
 
 ## Documentation
 

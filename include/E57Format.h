@@ -34,6 +34,7 @@
 #include <cfloat>
 #include <cstdint>
 #include <memory>
+#include <cstdint>
 #include <vector>
 
 #include "E57Exception.h"

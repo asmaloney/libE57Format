@@ -33,10 +33,8 @@
 
 using namespace e57;
 
-struct IndexPacket
+struct IndexPacketHeader
 {
-   static constexpr unsigned MAX_ENTRIES = 2048;
-
    const uint8_t packetType = INDEX_PACKET;
 
    uint8_t packetFlags = 0; // flag bitfields
@@ -44,6 +42,13 @@ struct IndexPacket
    uint16_t entryCount = 0;
    uint8_t indexLevel = 0;
    uint8_t reserved1[9] = {}; // must be zero
+};
+
+struct IndexPacket
+{
+   IndexPacketHeader header;
+
+   static constexpr unsigned MAX_ENTRIES = 2048;
 
    struct IndexPacketEntry
    {
@@ -351,7 +356,8 @@ void DataPacketHeader::verify( unsigned bufferLength ) const
    // Verify that packet is correct type
    if ( packetType != DATA_PACKET )
    {
-      throw E57_EXCEPTION2( ErrorBadCVPacket, "packetType=" + toString( packetType ) );
+      throw E57_EXCEPTION2( ErrorBadCVPacket,
+                            "expected Data; packetType=" + toString( packetType ) );
    }
 
    // ??? check reserved flags zero?
@@ -360,19 +366,19 @@ void DataPacketHeader::verify( unsigned bufferLength ) const
    unsigned packetLength = packetLogicalLengthMinus1 + 1;
    if ( packetLength < sizeof( *this ) )
    {
-      throw E57_EXCEPTION2( ErrorBadCVPacket, "packetLength=" + toString( packetLength ) );
+      throw E57_EXCEPTION2( ErrorBadCVPacket, "DATA; packetLength=" + toString( packetLength ) );
    }
 
    // Check packet length is multiple of 4
    if ( packetLength % 4 )
    {
-      throw E57_EXCEPTION2( ErrorBadCVPacket, "packetLength=" + toString( packetLength ) );
+      throw E57_EXCEPTION2( ErrorBadCVPacket, "DATA; packetLength=" + toString( packetLength ) );
    }
 
    // Check actual packet length is large enough.
    if ( bufferLength > 0 && packetLength > bufferLength )
    {
-      throw E57_EXCEPTION2( ErrorBadCVPacket, "packetLength=" + toString( packetLength ) +
+      throw E57_EXCEPTION2( ErrorBadCVPacket, "DATA; packetLength=" + toString( packetLength ) +
                                                  " bufferLength=" + toString( bufferLength ) );
    }
 
@@ -380,14 +386,15 @@ void DataPacketHeader::verify( unsigned bufferLength ) const
    // allowed?
    if ( bytestreamCount == 0 )
    {
-      throw E57_EXCEPTION2( ErrorBadCVPacket, "bytestreamCount=" + toString( bytestreamCount ) );
+      throw E57_EXCEPTION2( ErrorBadCVPacket,
+                            "DATA; bytestreamCount=" + toString( bytestreamCount ) );
    }
 
    // Check packet is at least long enough to hold bytestreamBufferLength array
    if ( ( sizeof( DataPacketHeader ) + 2 * bytestreamCount ) > packetLength )
    {
       throw E57_EXCEPTION2( ErrorBadCVPacket,
-                            "packetLength=" + toString( packetLength ) +
+                            "DATA; packetLength=" + toString( packetLength ) +
                                " bytestreamCount=" + toString( bytestreamCount ) );
    }
 }
@@ -444,8 +451,8 @@ void DataPacket::verify( unsigned bufferLength ) const
    // If needed is not with 3 bytes of actual packet size, have an error
    if ( needed > packetLength || needed + 3 < packetLength )
    {
-      throw E57_EXCEPTION2( ErrorBadCVPacket, "needed=" + toString( needed ) +
-                                                 "packetLength=" + toString( packetLength ) );
+      throw E57_EXCEPTION2( ErrorBadCVPacket, "DATA; needed=" + toString( needed ) +
+                                                 " packetLength=" + toString( packetLength ) );
    }
 
    // Verify that padding at end of packet is zero
@@ -453,7 +460,7 @@ void DataPacket::verify( unsigned bufferLength ) const
    {
       if ( reinterpret_cast<const char *>( this )[i] != 0 )
       {
-         throw E57_EXCEPTION2( ErrorBadCVPacket, "i=" + toString( i ) );
+         throw E57_EXCEPTION2( ErrorBadCVPacket, "DATA; i=" + toString( i ) );
       }
    }
 }
@@ -564,57 +571,64 @@ void IndexPacket::verify( unsigned bufferLength, uint64_t totalRecordCount,
    // file version#?
 
    // Verify that packet is correct type
-   if ( packetType != INDEX_PACKET )
+   if ( header.packetType != INDEX_PACKET )
    {
-      throw E57_EXCEPTION2( ErrorBadCVPacket, "packetType=" + toString( packetType ) );
+      throw E57_EXCEPTION2( ErrorBadCVPacket,
+                            "expected Index; packetType=" + toString( header.packetType ) );
    }
 
    // Check packetLength is at least large enough to hold header
-   unsigned packetLength = packetLogicalLengthMinus1 + 1;
-   if ( packetLength < sizeof( *this ) )
+   unsigned packetLength = header.packetLogicalLengthMinus1 + 1;
+   if ( packetLength < sizeof( IndexPacketHeader ) )
    {
-      throw E57_EXCEPTION2( ErrorBadCVPacket, "packetLength=" + toString( packetLength ) );
+      throw E57_EXCEPTION2( ErrorBadCVPacket,
+                            "INDEX; less than size of IndexPacketHeader; packetLength=" +
+                               toString( packetLength ) );
    }
 
    // Check packet length is multiple of 4
    if ( packetLength % 4 )
    {
-      throw E57_EXCEPTION2( ErrorBadCVPacket, "packetLength=" + toString( packetLength ) );
+      throw E57_EXCEPTION2( ErrorBadCVPacket, "INDEX; length not multiple of 4; packetLength=" +
+                                                 toString( packetLength ) );
    }
 
    // Make sure there is at least one entry in packet  ??? 0 record cvect
    // allowed?
-   if ( entryCount == 0 )
+   if ( header.entryCount == 0 )
    {
-      throw E57_EXCEPTION2( ErrorBadCVPacket, "entryCount=" + toString( entryCount ) );
+      throw E57_EXCEPTION2( ErrorBadCVPacket,
+                            "INDEX; entryCount=" + toString( header.entryCount ) );
    }
 
    // Have to have <= 2048 entries
-   if ( entryCount > MAX_ENTRIES )
+   if ( header.entryCount > MAX_ENTRIES )
    {
-      throw E57_EXCEPTION2( ErrorBadCVPacket, "entryCount=" + toString( entryCount ) );
+      throw E57_EXCEPTION2( ErrorBadCVPacket,
+                            "INDEX; entryCount=" + toString( header.entryCount ) );
    }
 
    // Index level should be <= 5.  Because (5+1)* 11 bits = 66 bits, which will cover largest number
    // of chunks possible.
-   if ( indexLevel > 5 )
+   if ( header.indexLevel > 5 )
    {
-      throw E57_EXCEPTION2( ErrorBadCVPacket, "indexLevel=" + toString( indexLevel ) );
+      throw E57_EXCEPTION2( ErrorBadCVPacket,
+                            "INDEX; indexLevel=" + toString( header.indexLevel ) );
    }
 
    // Index packets above level 0 must have at least two entries (otherwise no point to existing).
    //??? check that this is in spec
-   if ( indexLevel > 0 && entryCount < 2 )
+   if ( header.indexLevel > 0 && header.entryCount < 2 )
    {
-      throw E57_EXCEPTION2( ErrorBadCVPacket, "indexLevel=" + toString( indexLevel ) +
-                                                 " entryCount=" + toString( entryCount ) );
+      throw E57_EXCEPTION2( ErrorBadCVPacket, "INDEX; indexLevel=" + toString( header.indexLevel ) +
+                                                 " entryCount=" + toString( header.entryCount ) );
    }
 
    // If not later version, verify reserved fields are zero. ??? test file
    // version if (version <= E57_FORMAT_MAJOR) { //???
-   for ( unsigned i = 0; i < sizeof( reserved1 ); i++ )
+   for ( unsigned i = 0; i < sizeof( header.reserved1 ); i++ )
    {
-      if ( reserved1[i] != 0 )
+      if ( header.reserved1[i] != 0 )
       {
          throw E57_EXCEPTION2( ErrorBadCVPacket, "i=" + toString( i ) );
       }
@@ -623,37 +637,38 @@ void IndexPacket::verify( unsigned bufferLength, uint64_t totalRecordCount,
    // Check actual packet length is large enough.
    if ( bufferLength > 0 && packetLength > bufferLength )
    {
-      throw E57_EXCEPTION2( ErrorBadCVPacket, "packetLength=" + toString( packetLength ) +
+      throw E57_EXCEPTION2( ErrorBadCVPacket, "INDEX; packetLength=" + toString( packetLength ) +
                                                  " bufferLength=" + toString( bufferLength ) );
    }
 
    // Check if entries will fit in space provided
-   unsigned neededLength = 16 + 8 * entryCount;
-   if ( packetLength < neededLength )
+   const unsigned cNeededLength =
+      sizeof( IndexPacketHeader ) + sizeof( IndexPacketEntry ) * header.entryCount;
+   if ( packetLength < cNeededLength )
    {
-      throw E57_EXCEPTION2( ErrorBadCVPacket, "packetLength=" + toString( packetLength ) +
-                                                 " neededLength=" + toString( neededLength ) );
+      throw E57_EXCEPTION2( ErrorBadCVPacket, "INDEX; packetLength=" + toString( packetLength ) +
+                                                 " neededLength=" + toString( cNeededLength ) );
    }
 
 #if VALIDATE_DEEP
    // Verify padding at end is zero.
    const char *p = reinterpret_cast<const char *>( this );
-   for ( unsigned i = neededLength; i < packetLength; i++ )
+   for ( unsigned i = cNeededLength; i < packetLength; i++ )
    {
       if ( p[i] != 0 )
       {
-         throw E57_EXCEPTION2( ErrorBadCVPacket, "i=" + toString( i ) );
+         throw E57_EXCEPTION2( ErrorBadCVPacket, "INDEX; padding; i=" + toString( i ) );
       }
    }
 
    // Verify records and offsets are in sorted order
-   for ( unsigned i = 0; i < entryCount; i++ )
+   for ( unsigned i = 0; i < header.entryCount; i++ )
    {
       // Check chunkRecordNumber is in bounds
       if ( totalRecordCount > 0 && entries[i].chunkRecordNumber >= totalRecordCount )
       {
          throw E57_EXCEPTION2( ErrorBadCVPacket,
-                               "i=" + toString( i ) +
+                               "INDEX; record# in bounds; i=" + toString( i ) +
                                   " chunkRecordNumber=" + toString( entries[i].chunkRecordNumber ) +
                                   " totalRecordCount=" + toString( totalRecordCount ) );
       }
@@ -661,18 +676,20 @@ void IndexPacket::verify( unsigned bufferLength, uint64_t totalRecordCount,
       // Check record numbers are strictly increasing
       if ( i > 0 && entries[i - 1].chunkRecordNumber >= entries[i].chunkRecordNumber )
       {
-         throw E57_EXCEPTION2( ErrorBadCVPacket, "i=" + toString( i ) + " prevChunkRecordNumber=" +
-                                                    toString( entries[i - 1].chunkRecordNumber ) +
-                                                    " currentChunkRecordNumber=" +
-                                                    toString( entries[i].chunkRecordNumber ) );
+         throw E57_EXCEPTION2(
+            ErrorBadCVPacket,
+            "INDEX; record numbers increasing; i=" + toString( i ) +
+               " prevChunkRecordNumber=" + toString( entries[i - 1].chunkRecordNumber ) +
+               " currentChunkRecordNumber=" + toString( entries[i].chunkRecordNumber ) );
       }
 
       // Check chunkPhysicalOffset is in bounds
       if ( fileSize > 0 && entries[i].chunkPhysicalOffset >= fileSize )
       {
-         throw E57_EXCEPTION2( ErrorBadCVPacket, "i=" + toString( i ) + " chunkPhysicalOffset=" +
-                                                    toString( entries[i].chunkPhysicalOffset ) +
-                                                    " fileSize=" + toString( fileSize ) );
+         throw E57_EXCEPTION2(
+            ErrorBadCVPacket,
+            "INDEX; physical offset in bounds; i=" + toString( i ) + " chunkPhysicalOffset=" +
+               toString( entries[i].chunkPhysicalOffset ) + " fileSize=" + toString( fileSize ) );
       }
 
       // Check chunk offsets are strictly increasing
@@ -680,7 +697,7 @@ void IndexPacket::verify( unsigned bufferLength, uint64_t totalRecordCount,
       {
          throw E57_EXCEPTION2(
             ErrorBadCVPacket,
-            "i=" + toString( i ) +
+            "INDEX; chunk offsets increasing; i=" + toString( i ) +
                " prevChunkPhysicalOffset=" + toString( entries[i - 1].chunkPhysicalOffset ) +
                " currentChunkPhysicalOffset=" + toString( entries[i].chunkPhysicalOffset ) );
       }
@@ -691,15 +708,16 @@ void IndexPacket::verify( unsigned bufferLength, uint64_t totalRecordCount,
 #ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
 void IndexPacket::dump( int indent, std::ostream &os ) const
 {
-   os << space( indent ) << "packetType:                " << static_cast<unsigned>( packetType )
+   os << space( indent )
+      << "packetType:                " << static_cast<unsigned>( header.packetType ) << std::endl;
+   os << space( indent )
+      << "packetFlags:               " << static_cast<unsigned>( header.packetFlags ) << std::endl;
+   os << space( indent ) << "packetLogicalLengthMinus1: " << header.packetLogicalLengthMinus1
       << std::endl;
-   os << space( indent ) << "packetFlags:               " << static_cast<unsigned>( packetFlags )
-      << std::endl;
-   os << space( indent ) << "packetLogicalLengthMinus1: " << packetLogicalLengthMinus1 << std::endl;
-   os << space( indent ) << "entryCount:                " << entryCount << std::endl;
-   os << space( indent ) << "indexLevel:                " << indexLevel << std::endl;
+   os << space( indent ) << "entryCount:                " << header.entryCount << std::endl;
+   os << space( indent ) << "indexLevel:                " << header.indexLevel << std::endl;
    unsigned i;
-   for ( i = 0; i < entryCount && i < 10; i++ )
+   for ( i = 0; i < header.entryCount && i < 10; i++ )
    {
       os << space( indent ) << "entry[" << i << "]:" << std::endl;
       os << space( indent + 4 ) << "chunkRecordNumber:    " << entries[i].chunkRecordNumber
@@ -707,9 +725,9 @@ void IndexPacket::dump( int indent, std::ostream &os ) const
       os << space( indent + 4 ) << "chunkPhysicalOffset:  " << entries[i].chunkPhysicalOffset
          << std::endl;
    }
-   if ( i < entryCount )
+   if ( i < header.entryCount )
    {
-      os << space( indent ) << entryCount - i << "more entries unprinted..." << std::endl;
+      os << space( indent ) << header.entryCount - i << "more entries unprinted..." << std::endl;
    }
 }
 #endif

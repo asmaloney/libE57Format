@@ -745,18 +745,18 @@ void E57XmlParser::endElement( const XMLCh *const uri, const XMLCh *const localN
       break;
       case TypeFloat:
       {
-         // Convert child text (if any) to value, else default to 0.0
-         double floatValue;
+         // Convert child text (if any) to value
+         double floatValue = 0.0;
+         bool validValue = false;
+
          if ( pi.childText.length() > 0 )
          {
             floatValue = strToDouble( pi.childText );
+            validValue = true;
          }
-         else
-         {
-            floatValue = 0.0;
-         }
-         std::shared_ptr<FloatNodeImpl> f_ni(
-            new FloatNodeImpl( imf_, floatValue, pi.precision, pi.floatMinimum, pi.floatMaximum ) );
+
+         std::shared_ptr<FloatNodeImpl> f_ni( new FloatNodeImpl(
+            imf_, floatValue, validValue, pi.precision, pi.floatMinimum, pi.floatMaximum ) );
          current_ni = f_ni;
       }
       break;

@@ -151,7 +151,7 @@ be true).
 */
 FloatNode::FloatNode( const ImageFile &destImageFile, double value, FloatPrecision precision,
                       double minimum, double maximum ) :
-   impl_( new FloatNodeImpl( destImageFile.impl(), value, precision, minimum, maximum ) )
+   impl_( new FloatNodeImpl( destImageFile.impl(), value, true, precision, minimum, maximum ) )
 {
 }
 

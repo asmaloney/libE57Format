@@ -31,7 +31,7 @@
 
 namespace e57
 {
-   FloatNodeImpl::FloatNodeImpl( ImageFileImplWeakPtr destImageFile, double value,
+   FloatNodeImpl::FloatNodeImpl( ImageFileImplWeakPtr destImageFile, double value, bool validValue,
                                  FloatPrecision precision, double minimum, double maximum ) :
       NodeImpl( destImageFile ),
       value_( value ), precision_( precision ), minimum_( minimum ), maximum_( maximum )
@@ -52,8 +52,8 @@ namespace e57
          }
       }
 
-      // Enforce the given bounds on raw value
-      if ( value < minimum || maximum < value )
+      // Enforce the given bounds on raw value if it is valid
+      if ( validValue && ( value < minimum || value > maximum ) )
       {
          throw E57_EXCEPTION2( ErrorValueOutOfBounds, "this->pathName=" + this->pathName() +
                                                          " value=" + toString( value ) +

@@ -434,9 +434,9 @@ namespace e57
          DATA_PACKET_MAX - sizeof( DataPacketHeader ) - cNumByteStreams * sizeof( uint16_t );
 
 #ifdef E57_VERBOSE
-      std::cout << "  totalOutput=" << totalOutput << std::endl;
+      std::cout << "  totalOutput=" << cTotalOutput << std::endl;
       std::cout << "  cNumByteStreams=" << cNumByteStreams << std::endl;
-      std::cout << "  packetMaxPayloadBytes=" << packetMaxPayloadBytes << std::endl;
+      std::cout << "  packetMaxPayloadBytes=" << cPacketMaxPayloadBytes << std::endl;
 #endif
 
       // Allocate vector for number of bytes that each bytestream will write to file.

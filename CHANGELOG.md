@@ -2,10 +2,13 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [3.0.2] (in progress)
+## [3.0.2](https://github.com/asmaloney/libE57Format/releases/tag/v3.0.2) - 2023-07-22
 
 ### Fixed
-
+- Fix `E57_VERBOSE` build. ([#251](https://github.com/asmaloney/libE57Format/pull/251)) (Thanks Jia!)
+- {standard conformance} Fix invalid range exception in FloatNode implementation. ([#250](https://github.com/asmaloney/libE57Format/pull/250))
+- Fix reading of index packets. ([#249](https://github.com/asmaloney/libE57Format/pull/249))
+- Fix several places where we should be checking for MSVC, not WIN32. ([#248](https://github.com/asmaloney/libE57Format/pull/248))
 - Fix "unnecessary semicolons" warnings which prevented building with GCC <= 10. ([#241](https://github.com/asmaloney/libE57Format/pull/241)) (Thanks Andre!)
 
 ## [3.0.1](https://github.com/asmaloney/libE57Format/releases/tag/v3.0.1) - 2023-03-15

@@ -744,9 +744,6 @@ namespace e57
    using Data3DPointsData_d [[deprecated( "Will be removed in 4.0. Use Data3DPointsDouble." )]] =
       Data3DPointsData_t<double>;
 
-   extern template struct Data3DPointsData_t<float>;
-   extern template struct Data3DPointsData_t<double>;
-
    /// @brief Stores an image that is to be used only as a visual reference.
    struct E57_DLL VisualReferenceRepresentation
    {

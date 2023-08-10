@@ -104,6 +104,12 @@ option( E57_WRITE_CRAZY_PACKET_MODE "Compile library to enable reader-stressing 
 # Other compile options
 option( E57_VISIBILITY_HIDDEN "Compile library with hidden symbol visibility" ON )
 
+# Link-time optiomization
+# CMake forces "thin" LTO (see https://gitlab.kitware.com/cmake/cmake/-/issues/23136)
+# which is a problem if compiling statically for distribution (e.g. in a package manager).
+# Generally you will only want to turn this off for distributing static release builds.
+option( E57_RELEASE_LTO "Compile release library with link-time optimization" ON )
+
 #########################################################################################
 
 set( REVISION_ID "${PROJECT_NAME}-${PROJECT_VERSION}-${${PROJECT_NAME}_BUILD_TAG}" )
@@ -132,7 +138,7 @@ set_target_properties( E57Format
 	    CXX_EXTENSIONS NO
 		EXPORT_COMPILE_COMMANDS ON
 		POSITION_INDEPENDENT_CODE ON
-		INTERPROCEDURAL_OPTIMIZATION ON
+		INTERPROCEDURAL_OPTIMIZATION ${E57_RELEASE_LTO}
 		INTERPROCEDURAL_OPTIMIZATION_DEBUG OFF
 )
 

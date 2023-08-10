@@ -6,13 +6,6 @@
 include( GenerateExportHeader )
 
 set( comment "\r
-// Windows DLLs can't include the extern keyword when declaring templates \r
-#ifdef _MSC_VER                 \r
-#define TEMPLATE_EXTERN         \r
-#else                           \r
-#define TEMPLATE_EXTERN extern  \r
-#endif                          \r
-                                \r
 // NOTE: This is a generated file. Any changes will be overwritten."
 )
 

@@ -11,9 +11,9 @@ target_sources( ${PROJECT_NAME}
         test_SimpleWriter.cpp
 )
 
-# Include internal tests if not building shared lib on Windows.
-# The functions aren't exported in the Windows DLLs.
-if ( (NOT WIN32) OR (WIN32 AND NOT E57_BUILD_SHARED) )
+# Include internal tests if not building shared lib.
+# The functions are not exported.
+if ( NOT E57_BUILD_SHARED )
     target_sources( ${PROJECT_NAME}
         PRIVATE
            test_StringFunctions.cpp

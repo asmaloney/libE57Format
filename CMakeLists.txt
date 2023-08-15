@@ -102,7 +102,6 @@ option( E57_ENABLE_DIAGNOSTIC_OUTPUT "Include code for diagnostic output using d
 option( E57_WRITE_CRAZY_PACKET_MODE "Compile library to enable reader-stressing packets" OFF )
 
 # Other compile options
-option( E57_VISIBILITY_HIDDEN "Compile library with hidden symbol visibility" ON )
 
 # Link-time optiomization
 # CMake forces "thin" LTO (see https://gitlab.kitware.com/cmake/cmake/-/issues/23136)
@@ -181,14 +180,6 @@ target_compile_definitions( E57Format
         $<$<BOOL:${E57_WRITE_CRAZY_PACKET_MODE}>:E57_WRITE_CRAZY_PACKET_MODE>
 )
 
-if ( E57_VISIBILITY_HIDDEN )
-	set_target_properties( E57Format
-		PROPERTIES
-		    CXX_VISIBILITY_PRESET hidden
-			CMAKE_VISIBILITY_INLINES_HIDDEN ON
-	)
-endif()
-
 # sanitizers
 include( Sanitizers )
 
@@ -229,13 +220,6 @@ option( E57_BUILD_TEST
 
 if ( E57_BUILD_TEST )
     message( STATUS "[${PROJECT_NAME}] Testing enabled" )
-
-    # If we are building tests, we need access to all the symbols, so override visibility
-    set_target_properties( E57Format
-        PROPERTIES
-            CXX_VISIBILITY_PRESET default
-            CMAKE_VISIBILITY_INLINES_HIDDEN OFF
-        )
 
     enable_testing()
 

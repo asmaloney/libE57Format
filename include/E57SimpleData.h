@@ -617,7 +617,7 @@ namespace e57
    };
 
    /// @brief Stores pointers to user-provided buffers
-   template <typename COORDTYPE = float> struct Data3DPointsData_t
+   template <typename COORDTYPE> struct Data3DPointsData_t
    {
       static_assert( std::is_floating_point<COORDTYPE>::value, "Floating point type required." );
 

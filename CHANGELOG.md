@@ -2,9 +2,28 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 3.1.0 - (in progress)
+
+### Added
+
+- {cmake} New option `E57_RELEASE_LTO` controls whether link-time optimization is on for release builds. It defaults to `ON`. ([#254](https://github.com/asmaloney/libE57Format/pull/254))
+
+  CMake forces "thin" LTO (see [this issue](https://gitlab.kitware.com/cmake/cmake/-/issues/23136)) which is a problem if compiling statically for distribution (e.g. in a package manager). Generally you will only want to turn this off for distributing static release builds.
+
+### Changed
+
+- {cmake} Remove `E57_VISIBILITY_HIDDEN` option. ([#259](https://github.com/asmaloney/libE57Format/pull/259))
+
+  I cannot get extern templates to work across all of gcc, clang, apple clang, and MSVC when using "hidden" visibility with shared libraries.
+
+### Fixed
+
+- Fix clang warnings about implicit conversions in _SourceDestBufferImpl.cpp_. Apple's clang doesn't warn about these, but it looks like the official clang releases do. ([#257](https://github.com/asmaloney/libE57Format/pull/257)) (Thanks Martin!)
+
 ## [3.0.2](https://github.com/asmaloney/libE57Format/releases/tag/v3.0.2) - 2023-07-22
 
 ### Fixed
+
 - Fix `E57_VERBOSE` build. ([#251](https://github.com/asmaloney/libE57Format/pull/251)) (Thanks Jia!)
 - {standard conformance} Fix invalid range exception in FloatNode implementation. ([#250](https://github.com/asmaloney/libE57Format/pull/250))
 - Fix reading of index packets. ([#249](https://github.com/asmaloney/libE57Format/pull/249))

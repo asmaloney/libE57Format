@@ -485,7 +485,7 @@ public:                                                                         
 
       // Iterators
       CompressedVectorWriter writer( std::vector<SourceDestBuffer> &sbufs );
-      CompressedVectorReader reader( const std::vector<SourceDestBuffer> &dbufs );
+      CompressedVectorReader reader( const std::vector<SourceDestBuffer> &dbufs, bool allowParallel = false );
 
       // Up/Down cast conversion
       operator Node() const;

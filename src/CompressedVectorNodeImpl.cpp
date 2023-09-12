@@ -318,7 +318,8 @@ namespace e57
    }
 
    std::shared_ptr<CompressedVectorReaderImpl> CompressedVectorNodeImpl::reader(
-      std::vector<SourceDestBuffer> dbufs )
+      std::vector<SourceDestBuffer> dbufs,
+      bool allowParallel )
    {
       checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
 
@@ -332,7 +333,7 @@ namespace e57
                                   " writerCount=" + toString( destImageFile->writerCount() ) +
                                   " readerCount=" + toString( destImageFile->readerCount() ) );
       }
-      if ( destImageFile->readerCount() > 0 )
+      if ( !allowParallel && destImageFile->readerCount() > 0 )
       {
          throw E57_EXCEPTION2( ErrorTooManyReaders,
                                "fileName=" + destImageFile->fileName() +

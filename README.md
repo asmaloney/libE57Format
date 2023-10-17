@@ -147,13 +147,13 @@ Given that I'm an independent developer without funding, financial support is al
 
 ## License
 
-This project as a whole is licensed under the [**BSL-1.0**](https://opensource.org/licenses/BSL-1.0) license - see the [LICENSE](LICENSE.md) file for details.
+This project as a whole is licensed under the [**BSL-1.0** license](https://opensource.org/licenses/BSL-1.0) - see the [LICENSE](LICENSE.md) file for details.
 
 Individual source files may contain the following tag instead of the full license text:
 
     SPDX-License-Identifier: BSL-1.0
 
-Some files are licensed under the **MIT** license - see the [LICENSE-MIT](LICENSE-MIT.txt) file for details.
+Most of the CMake files, all of the testing files, and a couple of the source files are licensed under the [**MIT** license](https://opensource.org/license/mit/) - see the [LICENSE-MIT](LICENSE-MIT.md) file for details.
 
 These files contain the following tag instead of the full license text:
 

@@ -18,12 +18,6 @@ namespace e57
    /// Validates a Data3D and throws on error.
    void _validateData3D( const Data3D &inData3D )
    {
-      if ( inData3D.pointCount < 1 )
-      {
-         throw E57_EXCEPTION2( ErrorValueOutOfBounds,
-                               "pointCount=" + toString( inData3D.pointCount ) + " minimum=1" );
-      }
-
       if ( inData3D.pointFields.pointRangeNodeType == NumericalNodeType::Integer )
       {
          throw E57_EXCEPTION2( ErrorInvalidNodeType, "pointRangeNodeType cannot be Integer" );

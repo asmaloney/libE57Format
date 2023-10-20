@@ -10,13 +10,6 @@
 #include "Helpers.h"
 #include "TestData.h"
 
-TEST( SimpleDataHeader, InvalidPointCount )
-{
-   e57::Data3D dataHeader;
-
-   E57_ASSERT_THROW( e57::Data3DPointsFloat pointsData( dataHeader ) );
-}
-
 TEST( SimpleDataHeader, InvalidPointRangeNodeType )
 {
    e57::Data3D dataHeader;

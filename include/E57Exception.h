@@ -138,6 +138,10 @@ namespace e57
       /// passed an invalid value in Data3D pointFields
       ErrorInvalidData3DValue = 52,
 
+      /// Older versions of this library (and E57RefImpl) incorrectly set the "fileOffset" to 0
+      /// when "recordCount" is 0. "fileOffset" must be greater than 0 (Table 9 in the standard).
+      ErrorData3DReadInvalidZeroRecords = 53,
+
       /// @deprecated Will be removed in 4.0. Use e57::Success.
       E57_SUCCESS DEPRECATED_ENUM( "Will be removed in 4.0. Use Success." ) = Success,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorBadCVHeader.

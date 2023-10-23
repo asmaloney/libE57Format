@@ -290,6 +290,12 @@ namespace e57
       checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
       checkWriterOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
 
+      if ( requestedRecordCount == 0 )
+      {
+         packetWriteZeroRecords();
+         return;
+      }
+
       // Check that requestedRecordCount is not larger than the sbufs
       if ( requestedRecordCount > sbufs_.at( 0 ).impl()->capacity() )
       {
@@ -608,6 +614,51 @@ namespace e57
 
       // Return physical offset of data packet for potential use in seekIndex
       return ( packetPhysicalOffset ); //??? needed
+   }
+
+   // If we don't have any records, write a packet which is only the header + zero padding.
+   // Code is a simplified version of packetWrite().
+   void CompressedVectorWriterImpl::packetWriteZeroRecords()
+   {
+      ImageFileImplSharedPtr imf( cVector_->destImageFile_ );
+
+      dataPacket_.header.reset();
+
+      // Use temp buf in object (is 64KBytes long) instead of allocating each time here
+      char *packet = reinterpret_cast<char *>( &dataPacket_ );
+
+      auto packetLength = static_cast<unsigned int>( sizeof( DataPacketHeader ) );
+
+      // packetLength must be multiple of 4, add zero padding
+      auto data = reinterpret_cast<char *>( &packet[sizeof( DataPacketHeader )] );
+      while ( packetLength % 4 )
+      {
+         *data++ = 0;
+
+         packetLength++;
+      }
+
+      // Prepare header in dataPacket_, now that we are sure of packetLength
+      dataPacket_.header.packetLogicalLengthMinus1 = static_cast<uint16_t>( packetLength - 1 );
+
+      // Double check that data packet is well formed
+      dataPacket_.verify( packetLength );
+
+      // Write packet at beginning of free space in file
+      uint64_t packetLogicalOffset = imf->allocateSpace( packetLength, false );
+      uint64_t packetPhysicalOffset = imf->file_->logicalToPhysical( packetLogicalOffset );
+
+      imf->file_->seek( packetLogicalOffset );
+      imf->file_->write( packet, packetLength );
+
+      // If first data packet written for this CompressedVector binary section,
+      // save address to put in section header
+      if ( dataPacketsCount_ == 0 )
+      {
+         dataPhysicalOffset_ = packetPhysicalOffset;
+      }
+
+      dataPacketsCount_++;
    }
 
    void CompressedVectorWriterImpl::flush()

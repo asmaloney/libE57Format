@@ -57,6 +57,8 @@ namespace e57
       size_t totalOutputAvailable() const;
       size_t currentPacketSize() const;
       uint64_t packetWrite();
+      void packetWriteZeroRecords();
+
       void flush();
 
       std::vector<SourceDestBuffer> sbufs_;

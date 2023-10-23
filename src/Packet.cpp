@@ -354,6 +354,8 @@ void DataPacketHeader::reset()
 void DataPacketHeader::verify( unsigned bufferLength ) const
 {
    // Verify that packet is correct type
+   // cppcheck-suppress knownConditionTrueFalse; (data is read as a blob, so the const might not
+   // be valid)
    if ( packetType != DATA_PACKET )
    {
       throw E57_EXCEPTION2( ErrorBadCVPacket,
@@ -382,9 +384,8 @@ void DataPacketHeader::verify( unsigned bufferLength ) const
                                                  " bufferLength=" + toString( bufferLength ) );
    }
 
-   // Make sure there is at least one entry in packet  ??? 0 record cvect
-   // allowed?
-   if ( bytestreamCount == 0 )
+   // Make sure there is at least one entry in packet
+   if ( hasRecords() && ( bytestreamCount == 0 ) )
    {
       throw E57_EXCEPTION2( ErrorBadCVPacket,
                             "DATA; bytestreamCount=" + toString( bytestreamCount ) );
@@ -482,7 +483,7 @@ char *DataPacket::getBytestream( unsigned bytestreamNumber, unsigned &byteCount 
    {
       throw E57_EXCEPTION2( ErrorInternal,
                             "bytestreamNumber=" + toString( bytestreamNumber ) +
-                               "bytestreamCount=" + toString( header.bytestreamCount ) );
+                               " bytestreamCount=" + toString( header.bytestreamCount ) );
    }
 
    // Calc positions in packet

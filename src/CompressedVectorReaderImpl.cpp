@@ -150,13 +150,16 @@ namespace e57
                                   "packetType=" + toString( dpkt->header.packetType ) );
          }
 
-         // Have good packet, initialize channels
-         for ( auto &channel : channels_ )
+         // Have good packet, initialize channels if we have records
+         if ( maxRecordCount_ > 0 )
          {
-            channel.currentPacketLogicalOffset = dataLogicalOffset;
-            channel.currentBytestreamBufferIndex = 0;
-            channel.currentBytestreamBufferLength =
-               dpkt->getBytestreamBufferLength( channel.bytestreamNumber );
+            for ( auto &channel : channels_ )
+            {
+               channel.currentPacketLogicalOffset = dataLogicalOffset;
+               channel.currentBytestreamBufferIndex = 0;
+               channel.currentBytestreamBufferLength =
+                  dpkt->getBytestreamBufferLength( channel.bytestreamNumber );
+            }
          }
       }
 

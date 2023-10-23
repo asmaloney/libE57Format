@@ -36,6 +36,11 @@ target_compile_options( testE57
 		$<${compiler_is_msvc}:/utf-8>
 )
 
+target_compile_definitions( testE57
+    PRIVATE
+        E57_VALIDATION_LEVEL=${E57_VALIDATION_LEVEL}
+)
+
 target_include_directories( testE57
     PRIVATE
         ../src

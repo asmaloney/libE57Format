@@ -47,6 +47,16 @@ namespace e57
 
    void CompressedVectorSectionHeader::verify( uint64_t filePhysicalSize )
    {
+      // Verify section ID is 1
+      // cppcheck-suppress knownConditionTrueFalse; (data is read as a blob, so the const might not
+      // be valid)
+      if ( sectionId != COMPRESSED_VECTOR_SECTION )
+      {
+         throw E57_EXCEPTION2( ErrorBadCVHeader,
+                               "sectionId=" + toString( static_cast<int>( sectionId ) ) +
+                                  " (expected 1)" );
+      }
+
       // Verify reserved fields are zero. ???  if fileversion==1.0 ???
       for ( unsigned i = 0; i < sizeof( reserved1 ); i++ )
       {

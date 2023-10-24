@@ -45,6 +45,38 @@ TEST( SimpleReaderData, Empty )
    delete reader;
 }
 
+TEST( SimpleReaderData, ZeroPointsInvalid )
+{
+   e57::Reader *reader = nullptr;
+
+   E57_ASSERT_NO_THROW(
+      reader = new e57::Reader( TestData::Path() + "/self/ZeroPointsInvalid.e57", {} ) );
+
+   ASSERT_TRUE( reader->IsOpen() );
+   EXPECT_EQ( reader->GetImage2DCount(), 0 );
+   EXPECT_EQ( reader->GetData3DCount(), 1 );
+
+   e57::E57Root fileHeader;
+   ASSERT_TRUE( reader->GetE57Root( fileHeader ) );
+
+   CheckFileHeader( fileHeader );
+   EXPECT_EQ( fileHeader.guid, "{EC1A0DE4-F76F-44CE-E527-789EEB818347}" );
+
+   e57::Data3D data3DHeader;
+   ASSERT_TRUE( reader->ReadData3D( 0, data3DHeader ) );
+
+   ASSERT_EQ( data3DHeader.pointCount, 0 );
+
+   const uint64_t cNumPoints = data3DHeader.pointCount;
+
+   e57::Data3DPointsFloat pointsData( data3DHeader );
+
+   E57_ASSERT_THROW( auto vectorReader =
+                        reader->SetUpData3DPointsData( 0, cNumPoints, pointsData ); );
+
+   delete reader;
+}
+
 TEST( SimpleReaderData, BadCRC )
 {
    E57_ASSERT_THROW( e57::Reader( TestData::Path() + "/self/bad-crc.e57", {} ) );

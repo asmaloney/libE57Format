@@ -97,20 +97,27 @@ namespace e57
 
       ImageFileImplSharedPtr imf( cVector_->destImageFile_ );
 
-      //??? what if fault in this constructor?
-      cache_ = new PacketReadCache( imf->file_, 32 );
-
-      // Read CompressedVector section header
-      CompressedVectorSectionHeader sectionHeader;
+      // Check the file offset of this vector - it must be positive
       uint64_t sectionLogicalStart = cVector_->getBinarySectionLogicalStart();
       if ( sectionLogicalStart == 0 )
       {
-         //??? should have caught this before got here, in XML read, get this if CV
-         // wasn't written to
-         // by writer.
+         // Older versions of this library (and E57RefImpl) incorrectly set the "fileOffset" to 0
+         // when "recordCount" is 0. "fileOffset" must be greater than 0 (Table 9 in the standard).
+         if ( maxRecordCount_ == 0 )
+         {
+            throw E57_EXCEPTION2( ErrorData3DReadInvalidZeroRecords,
+                                  "fileOffset cannot be 0; cvPathName=" + cVector_->pathName() +
+                                     " imageFileName=" + cVector_->imageFileName() );
+         }
+
+         //??? should have caught this before got here, in XML read, get this if CV wasn't written
+         // to by writer.
          throw E57_EXCEPTION2( ErrorInternal, "imageFileName=" + cVector_->imageFileName() +
                                                  " cvPathName=" + cVector_->pathName() );
       }
+
+      // Read CompressedVector section header
+      CompressedVectorSectionHeader sectionHeader;
       imf->file_->seek( sectionLogicalStart, CheckedFile::Logical );
       imf->file_->read( reinterpret_cast<char *>( &sectionHeader ), sizeof( sectionHeader ) );
 
@@ -124,6 +131,9 @@ namespace e57
       // Convert physical offset to first data packet to logical
       uint64_t dataLogicalOffset =
          imf->file_->physicalToLogical( sectionHeader.dataPhysicalOffset );
+
+      //??? what if fault in this constructor?
+      cache_ = new PacketReadCache( imf->file_, 32 );
 
       // Verify that packet given by dataPhysicalOffset is actually a data packet,
       // init channels

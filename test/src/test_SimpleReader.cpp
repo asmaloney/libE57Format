@@ -45,6 +45,42 @@ TEST( SimpleReaderData, Empty )
    delete reader;
 }
 
+TEST( SimpleReaderData, ZeroPoints )
+{
+   e57::Reader *reader = nullptr;
+
+   E57_ASSERT_NO_THROW( reader = new e57::Reader( TestData::Path() + "/self/ZeroPoints.e57", {} ) );
+
+   ASSERT_TRUE( reader->IsOpen() );
+   EXPECT_EQ( reader->GetImage2DCount(), 0 );
+   EXPECT_EQ( reader->GetData3DCount(), 1 );
+
+   e57::E57Root fileHeader;
+   ASSERT_TRUE( reader->GetE57Root( fileHeader ) );
+
+   CheckFileHeader( fileHeader );
+   EXPECT_EQ( fileHeader.guid, "Zero Points GUID" );
+
+   e57::Data3D data3DHeader;
+   ASSERT_TRUE( reader->ReadData3D( 0, data3DHeader ) );
+
+   ASSERT_EQ( data3DHeader.pointCount, 0 );
+
+   const uint64_t cNumPoints = data3DHeader.pointCount;
+
+   e57::Data3DPointsFloat pointsData( data3DHeader );
+
+   auto vectorReader = reader->SetUpData3DPointsData( 0, cNumPoints, pointsData );
+
+   const uint64_t cNumRead = vectorReader.read();
+
+   vectorReader.close();
+
+   EXPECT_EQ( cNumRead, cNumPoints );
+
+   delete reader;
+}
+
 TEST( SimpleReaderData, ZeroPointsInvalid )
 {
    e57::Reader *reader = nullptr;
@@ -101,11 +137,20 @@ TEST( SimpleReaderData, InvalidCVHeader )
 
    e57::Data3DPointsFloat pointsData( data3DHeader );
 
+// This test should fail if validation is ON, but pass if it is OFF
+#if VALIDATE_BASIC
    E57_ASSERT_THROW( {
       auto vectorReader = reader->SetUpData3DPointsData( 0, cNumPoints, pointsData );
 
       vectorReader.close();
    } );
+#else
+   E57_ASSERT_NO_THROW( {
+      auto vectorReader = reader->SetUpData3DPointsData( 0, cNumPoints, pointsData );
+
+      vectorReader.close();
+   } );
+#endif
 
    delete reader;
 }

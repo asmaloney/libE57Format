@@ -15,3 +15,11 @@
    }
 
 #define E57_ASSERT_THROW( code ) ASSERT_THROW( code, e57::E57Exception )
+
+// For readability of preprocessor using E57_VALIDATION_LEVEL
+#define VALIDATION_OFF 0
+#define VALIDATION_BASIC 1
+#define VALIDATION_DEEP 2
+
+#define VALIDATE_BASIC ( E57_VALIDATION_LEVEL > VALIDATION_OFF )
+#define VALIDATE_DEEP ( E57_VALIDATION_LEVEL > VALIDATION_BASIC )

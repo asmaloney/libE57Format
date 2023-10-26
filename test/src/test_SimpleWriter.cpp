@@ -148,6 +148,34 @@ TEST( SimpleWriter, Empty )
    E57_ASSERT_NO_THROW( e57::Writer writer( "./empty.e57", options ) );
 }
 
+TEST( SimpleWriter, ZeroPoints )
+{
+   e57::WriterOptions options;
+   options.guid = "Zero Points GUID";
+
+   e57::Writer *writer = nullptr;
+
+   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./ZeroPoints.e57", options ) );
+
+   constexpr uint16_t cNumPoints = 0;
+
+   e57::Data3D header;
+   header.guid = "Zero Points Header GUID";
+   header.pointCount = cNumPoints;
+
+   // For a valid file, we need to specify cartesian or spherical.
+   header.pointFields.cartesianXField = true;
+   header.pointFields.cartesianYField = true;
+   header.pointFields.cartesianZField = true;
+   header.cartesianBounds.xMinimum = 0.0;
+
+   e57::Data3DPointsDouble pointsData( header );
+
+   E57_ASSERT_NO_THROW( writer->WriteData3DData( header, pointsData ) );
+
+   delete writer;
+}
+
 TEST( SimpleWriter, InvalidData3DValueCartesian )
 {
    e57::WriterOptions options;

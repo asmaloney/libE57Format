@@ -107,7 +107,15 @@ namespace e57
 
       void reset();
 
-      void verify( unsigned bufferLength = 0 ) const; //???use
+      void verify( unsigned bufferLength = 0 ) const;
+
+      // Does this packet have any records?
+      bool hasRecords() const
+      {
+         // If the packet does not have records, the logical length will be 8 bytes (the length of
+         // the header padded to 8-byte boundary).
+         return packetLogicalLengthMinus1 > 7;
+      }
 
 #ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
       void dump( int indent = 0, std::ostream &os = std::cout ) const;

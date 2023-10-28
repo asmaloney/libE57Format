@@ -12,12 +12,17 @@ All notable changes to this project will be documented in this file. The format 
 
 ### Changed
 
+- Trying to read a Data3D with zero records which has an ill-formed header will now throw an `ErrorData3DReadInvalidZeroRecords` exception instead of `ErrorInternal`. ([#264](https://github.com/asmaloney/libE57Format/pull/264))
+  > Note that previous versions of this library (and E57RefImpl itself) could write these headers incorrectly. This was also fixed in this release (see below).
 - {cmake} Remove `E57_VISIBILITY_HIDDEN` option. ([#259](https://github.com/asmaloney/libE57Format/pull/259))
 
   I cannot get extern templates to work across all of gcc, clang, apple clang, and MSVC when using "hidden" visibility with shared libraries.
 
 ### Fixed
 
+- {standard conformance} A compressed vector with 0 records must still write a data packet. ([#266](https://github.com/asmaloney/libE57Format/pull/266))
+- {standard conformance} Fix reading a compressed vector with 0 points which has an empty data packet. ([#267](https://github.com/asmaloney/libE57Format/pull/267))
+- {standard conformance} Compressed vectors with an invalid section ID now throw an `ErrorBadCVPacket` exception if `E57_VALIDATION_LEVEL` > 0. ([#265](https://github.com/asmaloney/libE57Format/pull/265))
 - Fix clang warnings about implicit conversions in _SourceDestBufferImpl.cpp_. Apple's clang doesn't warn about these, but it looks like the official clang releases do. ([#257](https://github.com/asmaloney/libE57Format/pull/257)) (Thanks Martin!)
 
 ## [3.0.2](https://github.com/asmaloney/libE57Format/releases/tag/v3.0.2) - 2023-07-22

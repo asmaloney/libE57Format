@@ -26,6 +26,7 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
+#include <algorithm>
 #include <limits>
 
 #include "E57SimpleWriter.h"

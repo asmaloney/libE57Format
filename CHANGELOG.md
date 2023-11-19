@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file. The format 
 
 ### Fixed
 
+- Fix #include to avoid MSVC compilation error with Visual Studio 2017 ([#268](https://github.com/asmaloney/libE57Format/pull/268)) (Thanks Thomas!)
 - {standard conformance} A compressed vector with 0 records must still write a data packet. ([#266](https://github.com/asmaloney/libE57Format/pull/266))
 - {standard conformance} Fix reading a compressed vector with 0 points which has an empty data packet. ([#267](https://github.com/asmaloney/libE57Format/pull/267))
 - {standard conformance} Compressed vectors with an invalid section ID now throw an `ErrorBadCVPacket` exception if `E57_VALIDATION_LEVEL` > 0. ([#265](https://github.com/asmaloney/libE57Format/pull/265))

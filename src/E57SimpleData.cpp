@@ -15,8 +15,9 @@
 
 namespace e57
 {
+   /// @private
    /// Validates a Data3D and throws on error.
-   void _validateData3D( const Data3D &inData3D )
+   constexpr void _validateData3D( const Data3D &inData3D )
    {
       if ( inData3D.pointFields.pointRangeNodeType == NumericalNodeType::Integer )
       {

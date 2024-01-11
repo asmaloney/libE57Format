@@ -52,29 +52,6 @@ namespace e57
       }
    }
 
-   ScaledIntegerNodeImpl::ScaledIntegerNodeImpl( ImageFileImplWeakPtr destImageFile,
-                                                 double scaledValue, double scaledMinimum,
-                                                 double scaledMaximum, double scale,
-                                                 double offset ) :
-      NodeImpl( destImageFile ),
-      value_( static_cast<int64_t>( std::floor( ( scaledValue - offset ) / scale + .5 ) ) ),
-      minimum_( static_cast<int64_t>( std::floor( ( scaledMinimum - offset ) / scale + .5 ) ) ),
-      maximum_( static_cast<int64_t>( std::floor( ( scaledMaximum - offset ) / scale + .5 ) ) ),
-      scale_( scale ), offset_( offset )
-   {
-      // don't checkImageFileOpen, NodeImpl() will do it
-
-      // Enforce the given bounds on raw value
-      if ( scaledValue < scaledMinimum || scaledMaximum < scaledValue )
-      {
-         throw E57_EXCEPTION2( ErrorValueOutOfBounds,
-                               "this->pathName=" + this->pathName() +
-                                  " scaledValue=" + toString( scaledValue ) +
-                                  " scaledMinimum=" + toString( scaledMinimum ) +
-                                  " scaledMaximum=" + toString( scaledMaximum ) );
-      }
-   }
-
    bool ScaledIntegerNodeImpl::isTypeEquivalent( NodeImplSharedPtr ni )
    {
       // don't checkImageFileOpen

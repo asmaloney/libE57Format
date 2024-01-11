@@ -36,10 +36,6 @@ namespace e57
       ScaledIntegerNodeImpl( ImageFileImplWeakPtr destImageFile, int64_t value, int64_t minimum,
                              int64_t maximum, double scale, double offset );
 
-      ScaledIntegerNodeImpl( ImageFileImplWeakPtr destImageFile, double scaledValue,
-                             double scaledMinimum, double scaledMaximum, double scale,
-                             double offset );
-
       ~ScaledIntegerNodeImpl() override = default;
 
       NodeType type() const override

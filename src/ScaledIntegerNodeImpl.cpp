@@ -40,16 +40,6 @@ namespace e57
       value_( rawValue ), minimum_( minimum ), maximum_( maximum ), scale_( scale ),
       offset_( offset )
    {
-      // don't checkImageFileOpen, NodeImpl() will do it
-
-      // Enforce the given bounds on raw value
-      if ( rawValue < minimum || maximum < rawValue )
-      {
-         throw E57_EXCEPTION2( ErrorValueOutOfBounds, "this->pathName=" + this->pathName() +
-                                                         " rawValue=" + toString( rawValue ) +
-                                                         " minimum=" + toString( minimum ) +
-                                                         " maximum=" + toString( maximum ) );
-      }
    }
 
    ScaledIntegerNodeImpl::ScaledIntegerNodeImpl( ImageFileImplWeakPtr destImageFile,
@@ -62,16 +52,17 @@ namespace e57
       maximum_( static_cast<int64_t>( std::floor( ( scaledMaximum - offset ) / scale + .5 ) ) ),
       scale_( scale ), offset_( offset )
    {
-      // don't checkImageFileOpen, NodeImpl() will do it
+   }
 
-      // Enforce the given bounds on raw value
-      if ( scaledValue < scaledMinimum || scaledMaximum < scaledValue )
+   // Throw an exception if the value is not within bounds.
+   void ScaledIntegerNodeImpl::validateValue() const
+   {
+      if ( value_ < minimum_ || value_ > maximum_ )
       {
-         throw E57_EXCEPTION2( ErrorValueOutOfBounds,
-                               "this->pathName=" + this->pathName() +
-                                  " scaledValue=" + toString( scaledValue ) +
-                                  " scaledMinimum=" + toString( scaledMinimum ) +
-                                  " scaledMaximum=" + toString( scaledMaximum ) );
+         throw E57_EXCEPTION2( ErrorValueOutOfBounds, "this->pathName=" + this->pathName() +
+                                                         " value=" + toString( value_ ) +
+                                                         " minimum=" + toString( minimum_ ) +
+                                                         " maximum=" + toString( maximum_ ) );
       }
    }
 

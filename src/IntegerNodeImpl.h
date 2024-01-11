@@ -42,6 +42,8 @@ namespace e57
          return TypeInteger;
       }
 
+      void validateValue() const;
+
       bool isTypeEquivalent( NodeImplSharedPtr ni ) override;
       bool isDefined( const ustring &pathName ) override;
 

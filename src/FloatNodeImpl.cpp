@@ -31,13 +31,11 @@
 
 namespace e57
 {
-   FloatNodeImpl::FloatNodeImpl( ImageFileImplWeakPtr destImageFile, double value, bool validValue,
+   FloatNodeImpl::FloatNodeImpl( ImageFileImplWeakPtr destImageFile, double value,
                                  FloatPrecision precision, double minimum, double maximum ) :
       NodeImpl( destImageFile ),
       value_( value ), precision_( precision ), minimum_( minimum ), maximum_( maximum )
    {
-      // don't checkImageFileOpen, NodeImpl() will do it
-
       // Since this ctor also used to construct single precision, and defaults for minimum/maximum
       // are for double precision, adjust bounds smaller if single.
       if ( precision_ == PrecisionSingle )
@@ -51,14 +49,17 @@ namespace e57
             maximum_ = FLOAT_MAX;
          }
       }
+   }
 
-      // Enforce the given bounds on raw value if it is valid
-      if ( validValue && ( value < minimum || value > maximum ) )
+   // Throw an exception if the value is not within bounds.
+   void FloatNodeImpl::validateValue() const
+   {
+      if ( value_ < minimum_ || value_ > maximum_ )
       {
          throw E57_EXCEPTION2( ErrorValueOutOfBounds, "this->pathName=" + this->pathName() +
-                                                         " value=" + toString( value ) +
-                                                         " minimum=" + toString( minimum ) +
-                                                         " maximum=" + toString( maximum ) );
+                                                         " value=" + toString( value_ ) +
+                                                         " minimum=" + toString( minimum_ ) +
+                                                         " maximum=" + toString( maximum_ ) );
       }
    }
 

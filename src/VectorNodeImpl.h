@@ -33,7 +33,7 @@ namespace e57
    class VectorNodeImpl : public StructureNodeImpl
    {
    public:
-      explicit VectorNodeImpl( ImageFileImplWeakPtr destImageFile, bool allowHeteroChildren );
+      VectorNodeImpl( ImageFileImplWeakPtr destImageFile, bool allowHeteroChildren );
       ~VectorNodeImpl() override = default;
 
       NodeType type() const override

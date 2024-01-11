@@ -33,13 +33,12 @@ namespace e57
    class ScaledIntegerNodeImpl : public NodeImpl
    {
    public:
-      explicit ScaledIntegerNodeImpl( ImageFileImplWeakPtr destImageFile, int64_t value = 0,
-                                      int64_t minimum = 0, int64_t maximum = 0, double scale = 1.0,
-                                      double offset = 0.0 );
+      ScaledIntegerNodeImpl( ImageFileImplWeakPtr destImageFile, int64_t value, int64_t minimum,
+                             int64_t maximum, double scale, double offset );
 
-      explicit ScaledIntegerNodeImpl( ImageFileImplWeakPtr destImageFile, double scaledValue = 0.,
-                                      double scaledMinimum = 0., double scaledMaximum = 0.,
-                                      double scale = 1.0, double offset = 0.0 );
+      ScaledIntegerNodeImpl( ImageFileImplWeakPtr destImageFile, double scaledValue,
+                             double scaledMinimum, double scaledMaximum, double scale,
+                             double offset );
 
       ~ScaledIntegerNodeImpl() override = default;
 

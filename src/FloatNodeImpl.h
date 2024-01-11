@@ -33,9 +33,8 @@ namespace e57
    class FloatNodeImpl : public NodeImpl
    {
    public:
-      explicit FloatNodeImpl( ImageFileImplWeakPtr destImageFile, double value = 0,
-                              bool validValue = true, FloatPrecision precision = PrecisionDouble,
-                              double minimum = DOUBLE_MIN, double maximum = DOUBLE_MAX );
+      FloatNodeImpl( ImageFileImplWeakPtr destImageFile, double value, bool validValue,
+                     FloatPrecision precision, double minimum, double maximum );
       ~FloatNodeImpl() override = default;
 
       NodeType type() const override

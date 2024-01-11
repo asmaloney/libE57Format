@@ -146,6 +146,7 @@ IntegerNode::IntegerNode( const ImageFile &destImageFile, int64_t value, int64_t
                           int64_t maximum ) :
    impl_( new IntegerNodeImpl( destImageFile.impl(), value, minimum, maximum ) )
 {
+   impl_->validateValue();
 }
 
 /*!

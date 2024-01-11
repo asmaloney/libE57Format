@@ -713,52 +713,70 @@ void E57XmlParser::endElement( const XMLCh *const uri, const XMLCh *const localN
       break;
       case TypeInteger:
       {
-         // Convert child text (if any) to value, else default to 0.0
-         int64_t intValue;
+         // Convert child text (if any) to value, else default to 0
+         int64_t intValue = 0;
+         bool foundValue = false;
+
          if ( pi.childText.length() > 0 )
          {
             intValue = convertStrToLL( pi.childText );
+            foundValue = true;
          }
-         else
-         {
-            intValue = 0;
-         }
+
          std::shared_ptr<IntegerNodeImpl> i_ni(
             new IntegerNodeImpl( imf_, intValue, pi.minimum, pi.maximum ) );
+
+         if ( foundValue )
+         {
+            i_ni->validateValue();
+         }
+
          current_ni = i_ni;
       }
       break;
       case TypeScaledInteger:
       {
-         // Convert child text (if any) to value, else default to 0.0
-         int64_t intValue;
+         // Convert child text (if any) to value, else default to 0
+         int64_t intValue = 0;
+         bool foundValue = false;
+
          if ( pi.childText.length() > 0 )
          {
             intValue = convertStrToLL( pi.childText );
+            foundValue = true;
          }
-         else
-         {
-            intValue = 0;
-         }
+
          std::shared_ptr<ScaledIntegerNodeImpl> si_ni( new ScaledIntegerNodeImpl(
             imf_, intValue, pi.minimum, pi.maximum, pi.scale, pi.offset ) );
+
+         if ( foundValue )
+         {
+            si_ni->validateValue();
+         }
+
          current_ni = si_ni;
       }
       break;
       case TypeFloat:
       {
-         // Convert child text (if any) to value
+         // Convert child text (if any) to value, else default to 0.0
          double floatValue = 0.0;
-         bool validValue = false;
+         bool foundValue = false;
 
          if ( pi.childText.length() > 0 )
          {
             floatValue = strToDouble( pi.childText );
-            validValue = true;
+            foundValue = true;
          }
 
-         std::shared_ptr<FloatNodeImpl> f_ni( new FloatNodeImpl(
-            imf_, floatValue, validValue, pi.precision, pi.floatMinimum, pi.floatMaximum ) );
+         std::shared_ptr<FloatNodeImpl> f_ni(
+            new FloatNodeImpl( imf_, floatValue, pi.precision, pi.floatMinimum, pi.floatMaximum ) );
+
+         if ( foundValue )
+         {
+            f_ni->validateValue();
+         }
+
          current_ni = f_ni;
       }
       break;

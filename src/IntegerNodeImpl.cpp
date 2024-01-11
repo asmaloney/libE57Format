@@ -36,15 +36,17 @@ namespace e57
       NodeImpl( destImageFile ),
       value_( value ), minimum_( minimum ), maximum_( maximum )
    {
-      // don't checkImageFileOpen, NodeImpl() will do it
+   }
 
-      // Enforce the given bounds
-      if ( value < minimum || maximum < value )
+   // Throw an exception if the value is not within bounds.
+   void IntegerNodeImpl::validateValue() const
+   {
+      if ( value_ < minimum_ || value_ > maximum_ )
       {
          throw E57_EXCEPTION2( ErrorValueOutOfBounds, "this->pathName=" + this->pathName() +
-                                                         " value=" + toString( value ) +
-                                                         " minimum=" + toString( minimum ) +
-                                                         " maximum=" + toString( maximum ) );
+                                                         " value=" + toString( value_ ) +
+                                                         " minimum=" + toString( minimum_ ) +
+                                                         " maximum=" + toString( maximum_ ) );
       }
    }
 

@@ -153,6 +153,7 @@ ScaledIntegerNode::ScaledIntegerNode( const ImageFile &destImageFile, int64_t ra
    impl_(
       new ScaledIntegerNodeImpl( destImageFile.impl(), rawValue, minimum, maximum, scale, offset ) )
 {
+   impl_->validateValue();
 }
 
 ScaledIntegerNode::ScaledIntegerNode( const ImageFile &destImageFile, int rawValue, int64_t minimum,
@@ -160,6 +161,7 @@ ScaledIntegerNode::ScaledIntegerNode( const ImageFile &destImageFile, int rawVal
    impl_( new ScaledIntegerNodeImpl( destImageFile.impl(), static_cast<int64_t>( rawValue ),
                                      minimum, maximum, scale, offset ) )
 {
+   impl_->validateValue();
 }
 
 ScaledIntegerNode::ScaledIntegerNode( const ImageFile &destImageFile, int rawValue, int minimum,
@@ -168,6 +170,7 @@ ScaledIntegerNode::ScaledIntegerNode( const ImageFile &destImageFile, int rawVal
                                      static_cast<int64_t>( minimum ),
                                      static_cast<int64_t>( maximum ), scale, offset ) )
 {
+   impl_->validateValue();
 }
 
 /*!
@@ -212,6 +215,7 @@ ScaledIntegerNode::ScaledIntegerNode( const ImageFile &destImageFile, double sca
    impl_( new ScaledIntegerNodeImpl( destImageFile.impl(), scaledValue, scaledMinimum,
                                      scaledMaximum, scale, offset ) )
 {
+   impl_->validateValue();
 }
 
 /*!

@@ -33,7 +33,7 @@ namespace e57
    class StringNodeImpl : public NodeImpl
    {
    public:
-      explicit StringNodeImpl( ImageFileImplWeakPtr destImageFile, const ustring &value = "" );
+      StringNodeImpl( ImageFileImplWeakPtr destImageFile, const ustring &value );
       ~StringNodeImpl() override = default;
 
       NodeType type() const override

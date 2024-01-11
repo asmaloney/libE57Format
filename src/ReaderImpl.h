@@ -36,7 +36,7 @@ namespace e57
    class ReaderImpl
    {
    public:
-      explicit ReaderImpl( const ustring &filePath, const ReaderOptions &options );
+      ReaderImpl( const ustring &filePath, const ReaderOptions &options );
       ~ReaderImpl();
 
       // disallow copying a ReaderImpl

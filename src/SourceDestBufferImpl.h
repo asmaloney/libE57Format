@@ -37,7 +37,7 @@ namespace e57
    {
    public:
       SourceDestBufferImpl( ImageFileImplWeakPtr destImageFile, const ustring &pathName,
-                            size_t capacity, bool doConversion = false, bool doScaling = false );
+                            size_t capacity, bool doConversion, bool doScaling );
 
       template <typename T> void setTypeInfo( T *base, size_t stride = sizeof( T ) );
 

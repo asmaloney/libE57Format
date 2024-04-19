@@ -90,6 +90,10 @@ jobs:
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
 
+    defaults:
+      run:
+        shell: bash -el {0}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -122,7 +126,6 @@ jobs:
 
       - name: Install More Dependencies (Windows)
         if: matrix.platform == 'windows'
-        shell: bash -el {0}
         run: |
           conda install conda-forge::xerces-c
           choco upgrade ccache ninja

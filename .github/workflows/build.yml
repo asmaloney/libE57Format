@@ -106,6 +106,12 @@ jobs:
           repository: 'asmaloney/libE57Format-test-data'
           path: libE57Format-test-data
 
+      - name: Configure MSVC console (Windows)
+        if: matrix.platform == 'windows'
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: ${{ matrix.arch }}
+
       - name: Install Dependencies (macOS)
         if: matrix.platform == 'macos'
         run: |
@@ -132,18 +138,6 @@ jobs:
           ccache --version | head -n 1
           echo "ninja $(ninja --version)"
 
-      - name: ccache
-        uses: hendrikmuhs/ccache-action@v1
-        with:
-          max-size: '5G'
-          key: ${{ matrix.os }}-${{ matrix.build_type }}
-
-      - name: Configure MSVC console (Windows)
-        if: matrix.platform == 'windows'
-        uses: ilammy/msvc-dev-cmd@v1
-        with:
-          arch: ${{ matrix.arch }}
-
       - name: Output conda info (Windows)
         if: matrix.platform == 'windows'
         run: |
@@ -152,6 +146,12 @@ jobs:
           conda config --show-sources
           conda config --show
           printenv | sort
+
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@v1
+        with:
+          max-size: '5G'
+          key: ${{ matrix.os }}-${{ matrix.build_type }}
 
       - name: Configure
         run: >

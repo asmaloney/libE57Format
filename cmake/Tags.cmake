@@ -6,8 +6,8 @@ set( T_ ${CMAKE_SYSTEM_PROCESSOR} )
 string( TOLOWER ${CMAKE_SYSTEM_NAME} T1_ )
 
 function( add_compiler_version )
-    exec_program( ${CMAKE_CXX_COMPILER}
-        ARGS ${CMAKE_CXX_COMPILER_ARG1} -dumpversion
+    execute_process(
+        COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_COMPILER_ARG1} -dumpversion
         OUTPUT_VARIABLE T2_
     )
     string( REGEX REPLACE "([0-9])\\.([0-9])(\\.[0-9])?" "\\1\\2" T2_ ${T2_} )

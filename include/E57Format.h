@@ -66,23 +66,24 @@ namespace e57
       TypeBlob = 8,             ///< BlobNode class
 
       /// @deprecated Will be removed in 4.0. Use e57::TypeStructure.
-      E57_STRUCTURE DEPRECATED_ENUM( "Will be removed in 4.0. Use TypeStructure." ) = TypeStructure,
+      E57_STRUCTURE E57_DEPRECATED_ENUM( "Will be removed in 4.0. Use TypeStructure." ) =
+         TypeStructure,
       /// @deprecated Will be removed in 4.0. Use e57::TypeVector.
-      E57_VECTOR DEPRECATED_ENUM( "Will be removed in 4.0. Use TypeVector." ) = TypeVector,
+      E57_VECTOR E57_DEPRECATED_ENUM( "Will be removed in 4.0. Use TypeVector." ) = TypeVector,
       /// @deprecated Will be removed in 4.0. Use e57::TypeCompressedVector.
-      E57_COMPRESSED_VECTOR DEPRECATED_ENUM( "Will be removed in 4.0. Use TypeCompressedVector." ) =
-         TypeCompressedVector,
+      E57_COMPRESSED_VECTOR E57_DEPRECATED_ENUM(
+         "Will be removed in 4.0. Use TypeCompressedVector." ) = TypeCompressedVector,
       /// @deprecated Will be removed in 4.0. Use e57::TypeInteger.
-      E57_INTEGER DEPRECATED_ENUM( "Will be removed in 4.0. Use TypeInteger." ) = TypeInteger,
+      E57_INTEGER E57_DEPRECATED_ENUM( "Will be removed in 4.0. Use TypeInteger." ) = TypeInteger,
       /// @deprecated Will be removed in 4.0. Use e57::TypeScaledInteger.
-      E57_SCALED_INTEGER DEPRECATED_ENUM( "Will be removed in 4.0. Use TypeScaledInteger." ) =
+      E57_SCALED_INTEGER E57_DEPRECATED_ENUM( "Will be removed in 4.0. Use TypeScaledInteger." ) =
          TypeScaledInteger,
       /// @deprecated Will be removed in 4.0. Use e57::TypeFloat.
-      E57_FLOAT DEPRECATED_ENUM( "Will be removed in 4.0. Use TypeFloat." ) = TypeFloat,
+      E57_FLOAT E57_DEPRECATED_ENUM( "Will be removed in 4.0. Use TypeFloat." ) = TypeFloat,
       /// @deprecated Will be removed in 4.0. Use e57::TypeString.
-      E57_STRING DEPRECATED_ENUM( "Will be removed in 4.0. Use TypeString." ) = TypeString,
+      E57_STRING E57_DEPRECATED_ENUM( "Will be removed in 4.0. Use TypeString." ) = TypeString,
       /// @deprecated Will be removed in 4.0. Use e57::TypeBlob.
-      E57_BLOB DEPRECATED_ENUM( "Will be removed in 4.0. Use TypeBlob." ) = TypeBlob
+      E57_BLOB E57_DEPRECATED_ENUM( "Will be removed in 4.0. Use TypeBlob." ) = TypeBlob
    };
 
    /// @brief The IEEE floating point number precisions supported
@@ -92,10 +93,11 @@ namespace e57
       PrecisionDouble = 2, ///< 64 bit IEEE floating point number format
 
       /// @deprecated Will be removed in 4.0. Use e57::PrecisionSingle.
-      E57_SINGLE DEPRECATED_ENUM( "Will be removed in 4.0. Use PrecisionSingle." ) =
+      E57_SINGLE E57_DEPRECATED_ENUM( "Will be removed in 4.0. Use PrecisionSingle." ) =
          PrecisionSingle,
       /// @deprecated Will be removed in 4.0. Use e57::PrecisionDouble.
-      E57_DOUBLE DEPRECATED_ENUM( "Will be removed in 4.0. Use PrecisionDouble." ) = PrecisionDouble
+      E57_DOUBLE E57_DEPRECATED_ENUM( "Will be removed in 4.0. Use PrecisionDouble." ) =
+         PrecisionDouble
    };
 
    /// @brief Identifies the representations of memory elements API can transfer data to/from
@@ -114,27 +116,27 @@ namespace e57
       UString = 11, ///< Unicode UTF-8 std::string
 
       /// @deprecated Will be removed in 4.0. Use e57::Int8.
-      E57_INT8 DEPRECATED_ENUM( "Will be removed in 4.0. Use Int8." ) = Int8,
+      E57_INT8 E57_DEPRECATED_ENUM( "Will be removed in 4.0. Use Int8." ) = Int8,
       /// @deprecated Will be removed in 4.0. Use e57::UInt8.
-      E57_UINT8 DEPRECATED_ENUM( "Will be removed in 4.0. Use UInt8." ) = UInt8,
+      E57_UINT8 E57_DEPRECATED_ENUM( "Will be removed in 4.0. Use UInt8." ) = UInt8,
       /// @deprecated Will be removed in 4.0. Use e57::Int16.
-      E57_INT16 DEPRECATED_ENUM( "Will be removed in 4.0. Use Int16." ) = Int16,
+      E57_INT16 E57_DEPRECATED_ENUM( "Will be removed in 4.0. Use Int16." ) = Int16,
       /// @deprecated Will be removed in 4.0. Use e57::UInt16.
-      E57_UINT16 DEPRECATED_ENUM( "Will be removed in 4.0. Use UInt16." ) = UInt16,
+      E57_UINT16 E57_DEPRECATED_ENUM( "Will be removed in 4.0. Use UInt16." ) = UInt16,
       /// @deprecated Will be removed in 4.0. Use e57::Int32.
-      E57_INT32 DEPRECATED_ENUM( "Will be removed in 4.0. Use Int32." ) = Int32,
+      E57_INT32 E57_DEPRECATED_ENUM( "Will be removed in 4.0. Use Int32." ) = Int32,
       /// @deprecated Will be removed in 4.0. Use e57::UInt32.
-      E57_UINT32 DEPRECATED_ENUM( "Will be removed in 4.0. Use UInt32." ) = UInt32,
+      E57_UINT32 E57_DEPRECATED_ENUM( "Will be removed in 4.0. Use UInt32." ) = UInt32,
       /// @deprecated Will be removed in 4.0. Use e57::Int64.
-      E57_INT64 DEPRECATED_ENUM( "Will be removed in 4.0. Use Int64." ) = Int64,
+      E57_INT64 E57_DEPRECATED_ENUM( "Will be removed in 4.0. Use Int64." ) = Int64,
       /// @deprecated Will be removed in 4.0. Use e57::Bool.
-      E57_BOOL DEPRECATED_ENUM( "Will be removed in 4.0. Use Bool." ) = Bool,
+      E57_BOOL E57_DEPRECATED_ENUM( "Will be removed in 4.0. Use Bool." ) = Bool,
       /// @deprecated Will be removed in 4.0. Use e57::Real32.
-      E57_REAL32 DEPRECATED_ENUM( "Will be removed in 4.0. Use Real32." ) = Real32,
+      E57_REAL32 E57_DEPRECATED_ENUM( "Will be removed in 4.0. Use Real32." ) = Real32,
       /// @deprecated Will be removed in 4.0. Use e57::Real64.
-      E57_REAL64 DEPRECATED_ENUM( "Will be removed in 4.0. Use Real64." ) = Real64,
+      E57_REAL64 E57_DEPRECATED_ENUM( "Will be removed in 4.0. Use Real64." ) = Real64,
       /// @deprecated Will be removed in 4.0. Use e57::UString.
-      E57_USTRING DEPRECATED_ENUM( "Will be removed in 4.0. Use UString." ) = UString
+      E57_USTRING E57_DEPRECATED_ENUM( "Will be removed in 4.0. Use UString." ) = UString
    };
 
    /// @brief Default checksum policies for e57::ReadChecksumPolicy

@@ -176,7 +176,7 @@ void PacketReadCache::unlock( unsigned cacheIndex )
 #ifdef E57_VERBOSE
    std::cout << "PacketReadCache::unlock() called, cacheIndex=" << cacheIndex << std::endl;
 #else
-   UNUSED( cacheIndex );
+   E57_UNUSED( cacheIndex );
 #endif
 
    if ( lockCount_ != 1 )
@@ -563,8 +563,8 @@ void IndexPacket::verify( unsigned bufferLength, uint64_t totalRecordCount,
                           uint64_t fileSize ) const
 {
 #if ( E57_VALIDATION_LEVEL < VALIDATION_DEEP )
-   UNUSED( totalRecordCount );
-   UNUSED( fileSize );
+   E57_UNUSED( totalRecordCount );
+   E57_UNUSED( fileSize );
 #endif
 
    //??? do all packets need versions?  how extend without breaking older

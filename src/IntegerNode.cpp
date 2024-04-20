@@ -56,7 +56,7 @@ judiciously, in debug versions of the application.
 */
 void IntegerNode::checkInvariant( bool doRecurse, bool doUpcast ) const
 {
-   UNUSED( doRecurse );
+   E57_UNUSED( doRecurse );
 
    // If destImageFile not open, can't test invariant (almost every call would throw)
    if ( !destImageFile().isOpen() )
@@ -269,8 +269,8 @@ void IntegerNode::dump( int indent, std::ostream &os ) const
 #else
 void IntegerNode::dump( int indent, std::ostream &os ) const
 {
-   UNUSED( indent );
-   UNUSED( os );
+   E57_UNUSED( indent );
+   E57_UNUSED( os );
 }
 #endif
 

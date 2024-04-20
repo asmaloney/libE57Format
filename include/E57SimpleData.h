@@ -961,13 +961,13 @@ namespace e57
       ImageMaskPNG = 3, ///< PNG format image mask.
 
       /// @deprecated Will be removed in 4.0. Use e57::ImageNone.
-      E57_NO_IMAGE DEPRECATED_ENUM( "Will be removed in 4.0. Use ImageNone." ) = ImageNone,
+      E57_NO_IMAGE E57_DEPRECATED_ENUM( "Will be removed in 4.0. Use ImageNone." ) = ImageNone,
       /// @deprecated Will be removed in 4.0. Use e57::ImageJPEG.
-      E57_JPEG_IMAGE DEPRECATED_ENUM( "Will be removed in 4.0. Use ImageJPEG." ) = ImageJPEG,
+      E57_JPEG_IMAGE E57_DEPRECATED_ENUM( "Will be removed in 4.0. Use ImageJPEG." ) = ImageJPEG,
       /// @deprecated Will be removed in 4.0. Use e57::ImagePNG.
-      E57_PNG_IMAGE DEPRECATED_ENUM( "Will be removed in 4.0. Use ImagePNG." ) = ImagePNG,
+      E57_PNG_IMAGE E57_DEPRECATED_ENUM( "Will be removed in 4.0. Use ImagePNG." ) = ImagePNG,
       /// @deprecated Will be removed in 4.0. Use e57::ImageMaskPNG.
-      E57_PNG_IMAGE_MASK DEPRECATED_ENUM( "Will be removed in 4.0. Use ImageMaskPNG." ) =
+      E57_PNG_IMAGE_MASK E57_DEPRECATED_ENUM( "Will be removed in 4.0. Use ImageMaskPNG." ) =
          ImageMaskPNG,
    };
 
@@ -981,19 +981,19 @@ namespace e57
       ProjectionCylindrical = 4, ///< CylindricalRepresentation for the image data
 
       /// @deprecated Will be removed in 4.0. Use e57::ProjectionNone.
-      E57_NO_PROJECTION DEPRECATED_ENUM( "Will be removed in 4.0. Use ProjectionNone." ) =
+      E57_NO_PROJECTION E57_DEPRECATED_ENUM( "Will be removed in 4.0. Use ProjectionNone." ) =
          ProjectionNone,
       /// @deprecated Will be removed in 4.0. Use e57::ProjectionVisual.
-      E57_VISUAL DEPRECATED_ENUM( "Will be removed in 4.0. Use ProjectionVisual." ) =
+      E57_VISUAL E57_DEPRECATED_ENUM( "Will be removed in 4.0. Use ProjectionVisual." ) =
          ProjectionVisual,
       /// @deprecated Will be removed in 4.0. Use e57::ProjectionPinhole.
-      E57_PINHOLE DEPRECATED_ENUM( "Will be removed in 4.0. Use ProjectionPinhole." ) =
+      E57_PINHOLE E57_DEPRECATED_ENUM( "Will be removed in 4.0. Use ProjectionPinhole." ) =
          ProjectionPinhole,
       /// @deprecated Will be removed in 4.0. Use e57::ProjectionSpherical.
-      E57_SPHERICAL DEPRECATED_ENUM( "Will be removed in 4.0. Use ProjectionSpherical." ) =
+      E57_SPHERICAL E57_DEPRECATED_ENUM( "Will be removed in 4.0. Use ProjectionSpherical." ) =
          ProjectionSpherical,
       /// @deprecated Will be removed in 4.0. Use e57::ProjectionCylindrical.
-      E57_CYLINDRICAL DEPRECATED_ENUM( "Will be removed in 4.0. Use ProjectionCylindrical." ) =
+      E57_CYLINDRICAL E57_DEPRECATED_ENUM( "Will be removed in 4.0. Use ProjectionCylindrical." ) =
          ProjectionCylindrical,
    };
 } // end namespace e57

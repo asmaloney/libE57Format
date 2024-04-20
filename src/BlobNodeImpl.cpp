@@ -68,8 +68,7 @@ namespace e57
    }
 
    BlobNodeImpl::BlobNodeImpl( ImageFileImplWeakPtr destImageFile, int64_t fileOffset,
-                               int64_t length ) :
-      NodeImpl( destImageFile )
+                               int64_t length ) : NodeImpl( destImageFile )
    {
       // Init blob object that already exists in E57 file currently reading.
 
@@ -210,8 +209,7 @@ namespace e57
    void BlobNodeImpl::dump( int indent, std::ostream &os ) const
    {
       // don't checkImageFileOpen
-      os << space( indent ) << "type:        Blob"
-         << " (" << type() << ")" << std::endl;
+      os << space( indent ) << "type:        Blob" << " (" << type() << ")" << std::endl;
       NodeImpl::dump( indent, os );
       os << space( indent ) << "blobLogicalLength_:           " << blobLogicalLength_ << std::endl;
       os << space( indent ) << "binarySectionLogicalStart:    " << binarySectionLogicalStart_

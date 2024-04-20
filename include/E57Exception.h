@@ -378,8 +378,7 @@ namespace e57
       E57Exception() = delete;
       E57Exception( ErrorCode ecode, std::string context, const char *srcFileName = nullptr,
                     int srcLineNumber = 0, const char *srcFunctionName = nullptr ) :
-         errorCode_( ecode ),
-         context_( std::move( context ) ), sourceFileName_( srcFileName ),
+         errorCode_( ecode ), context_( std::move( context ) ), sourceFileName_( srcFileName ),
          sourceFunctionName_( srcFunctionName ), sourceLineNumber_( srcLineNumber )
       {
       }

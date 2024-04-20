@@ -214,9 +214,9 @@ void Encoder::dump( int indent, std::ostream &os ) const
 
 BitpackEncoder::BitpackEncoder( unsigned bytestreamNumber, SourceDestBuffer &sbuf,
                                 unsigned outputMaxSize, unsigned alignmentSize ) :
-   Encoder( bytestreamNumber ),
-   sourceBuffer_( sbuf.impl() ), outBuffer_( outputMaxSize ), outBufferFirst_( 0 ),
-   outBufferEnd_( 0 ), outBufferAlignmentSize_( alignmentSize ), currentRecordIndex_( 0 )
+   Encoder( bytestreamNumber ), sourceBuffer_( sbuf.impl() ), outBuffer_( outputMaxSize ),
+   outBufferFirst_( 0 ), outBufferEnd_( 0 ), outBufferAlignmentSize_( alignmentSize ),
+   currentRecordIndex_( 0 )
 {
 }
 
@@ -496,9 +496,8 @@ void BitpackFloatEncoder::dump( int indent, std::ostream &os ) const
 
 BitpackStringEncoder::BitpackStringEncoder( unsigned bytestreamNumber, SourceDestBuffer &sbuf,
                                             unsigned outputMaxSize ) :
-   BitpackEncoder( bytestreamNumber, sbuf, outputMaxSize, 1 ),
-   totalBytesProcessed_( 0 ), isStringActive_( false ), prefixComplete_( false ),
-   currentCharPosition_( 0 )
+   BitpackEncoder( bytestreamNumber, sbuf, outputMaxSize, 1 ), totalBytesProcessed_( 0 ),
+   isStringActive_( false ), prefixComplete_( false ), currentCharPosition_( 0 )
 {
 }
 
@@ -896,8 +895,8 @@ void BitpackIntegerEncoder<RegisterT>::dump( int indent, std::ostream &os ) cons
 
 ConstantIntegerEncoder::ConstantIntegerEncoder( unsigned bytestreamNumber, SourceDestBuffer &sbuf,
                                                 int64_t minimum ) :
-   Encoder( bytestreamNumber ),
-   sourceBuffer_( sbuf.impl() ), currentRecordIndex_( 0 ), minimum_( minimum )
+   Encoder( bytestreamNumber ), sourceBuffer_( sbuf.impl() ), currentRecordIndex_( 0 ),
+   minimum_( minimum )
 {
 }
 

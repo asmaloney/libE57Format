@@ -454,8 +454,7 @@ void StructureNodeImpl::writeXml( ImageFileImplSharedPtr imf, CheckedFile &cf, i
 void StructureNodeImpl::dump( int indent, std::ostream &os ) const
 {
    // don't checkImageFileOpen
-   os << space( indent ) << "type:        Structure"
-      << " (" << type() << ")" << std::endl;
+   os << space( indent ) << "type:        Structure" << " (" << type() << ")" << std::endl;
    NodeImpl::dump( indent, os );
    for ( unsigned i = 0; i < children_.size(); i++ )
    {

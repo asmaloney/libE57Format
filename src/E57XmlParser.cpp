@@ -155,8 +155,8 @@ private:
 
 E57FileInputStream::E57FileInputStream( CheckedFile *cf, uint64_t logicalStart,
                                         uint64_t logicalLength ) :
-   cf_( cf ),
-   logicalStart_( logicalStart ), logicalLength_( logicalLength ), logicalPosition_( logicalStart )
+   cf_( cf ), logicalStart_( logicalStart ), logicalLength_( logicalLength ),
+   logicalPosition_( logicalStart )
 {
 }
 

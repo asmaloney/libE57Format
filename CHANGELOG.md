@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 3.2.0 - (in progress)
+
+### Changed
+
+- {format} Update to clang-format 18 & reformat code. ([#286](https://github.com/asmaloney/libE57Format/pull/286))
+- Add "E57\_" to macros in E57Exception.h. ([#285](https://github.com/asmaloney/libE57Format/pull/285))
+- "De-deprecate" methods in **E57SimpleWriter**. These methods can be useful when writing batches. ([#284](https://github.com/asmaloney/libE57Format/pull/284))
+
+### Fixed
+
+- {standard conformance} **E57SimpleReader** accepts files containing zero scans. ([#283](https://github.com/asmaloney/libE57Format/pull/283))
+- {cmake} Replace deprecated "exec_program" with "execute_process". ([#282](https://github.com/asmaloney/libE57Format/pull/282))
+- Fix potential invalid range exceptions when reading integer nodes. ([#278](https://github.com/asmaloney/libE57Format/pull/278))
+
 ## [3.1.1](https://github.com/asmaloney/libE57Format/releases/tag/v3.1.1) - 2023-11-28
 
 ### Fixed

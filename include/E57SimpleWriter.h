@@ -98,12 +98,7 @@ namespace e57
       /// before making this call.
       /// @param [in,out] image2DHeader header metadata
       /// @return Returns the image2D index
-      /// @deprecated Will be removed in 4.0. Use WriteImage2DData(Image2D
-      /// &,Image2DType,Image2DProjection,int64_t,void
-      /// *,int64_t) instead.
-      [[deprecated( "Will be removed in 4.0. Use WriteImage2DData()." )]] // TODO Remove in 4.0
-      int64_t
-         NewImage2D( Image2D &image2DHeader );
+      int64_t NewImage2D( Image2D &image2DHeader );
 
       /// @brief Writes the actual image data
       /// @param [in] imageIndex picture block index given by the NewImage2D
@@ -113,16 +108,9 @@ namespace e57
       /// @param [in] start position in the block to start writing
       /// @param [in] count size of desired chunk or buffer size
       /// @return Returns the number of bytes written
-      /// @deprecated Will be removed in 4.0. Use WriteImage2DData(Image2D
-      /// &,Image2DType,Image2DProjection,int64_t,void
-      /// *,int64_t) instead.
-      [[deprecated( "Will be removed in 4.0. Use WriteImage2DData(Image2D "
-                    "&,Image2DType,Image2DProjection,int64_t,void "
-                    "*,int64_t)." )]] // TODO Remove in 4.0
-      int64_t
-         WriteImage2DData( int64_t imageIndex, Image2DType imageType,
-                           Image2DProjection imageProjection, void *buffer, int64_t start,
-                           int64_t count );
+      int64_t WriteImage2DData( int64_t imageIndex, Image2DType imageType,
+                                Image2DProjection imageProjection, void *buffer, int64_t start,
+                                int64_t count );
 
       ///@}
 
@@ -146,10 +134,7 @@ namespace e57
       /// before making this call.
       /// @param [in,out] data3DHeader scan metadata
       /// @return Returns the index of the new scan's data3D block.
-      /// @deprecated Will be removed in 4.0. Use WriteData3DData() instead.
-      [[deprecated( "Will be removed in 4.0. Use WriteData3DData()." )]] // TODO Remove in 4.0
-      int64_t
-         NewData3D( Data3D &data3DHeader );
+      int64_t NewData3D( Data3D &data3DHeader );
 
       /// @brief Sets up a writer to write the actual scan data
       /// @param [in] dataIndex index returned by NewData3D
@@ -157,17 +142,12 @@ namespace e57
       /// buffers)
       /// @param [in] buffers pointers to user-provided buffers
       /// @return returns a vector writer setup to write the selected scan data
-      /// @deprecated Will be removed in 4.0. Use WriteData3DData() instead.
-      [[deprecated( "Will be removed in 4.0. Use WriteData3DData()." )]] // TODO Remove in 4.0
-      CompressedVectorWriter
-         SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
-                                const Data3DPointsFloat &buffers );
+      CompressedVectorWriter SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
+                                                    const Data3DPointsFloat &buffers );
 
       /// @overload
-      [[deprecated( "Will be removed in 4.0. Use WriteData3DData()." )]] // TODO Remove in 4.0
-      CompressedVectorWriter
-         SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
-                                const Data3DPointsDouble &buffers );
+      CompressedVectorWriter SetUpData3DPointsData( int64_t dataIndex, size_t pointCount,
+                                                    const Data3DPointsDouble &buffers );
 
       /// @brief Writes out the group data
       /// @param [in] dataIndex data block index given by the NewData3D

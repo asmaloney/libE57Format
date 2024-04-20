@@ -190,7 +190,7 @@ namespace e57
 
    ReaderImpl::ReaderImpl( const ustring &filePath, const ReaderOptions &options ) :
       imf_( filePath, "r", options.checksumPolicy ), root_( imf_.root() ),
-      data3D_( root_.get( "/data3D" ) ),
+      data3D_( root_.isDefined( "/data3D" ) ? root_.get( "/data3D" ) : VectorNode( imf_ ) ),
       images2D_( root_.isDefined( "/images2D" ) ? root_.get( "/images2D" ) : VectorNode( imf_ ) )
    {
    }

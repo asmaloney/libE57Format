@@ -36,9 +36,8 @@ namespace e57
    ScaledIntegerNodeImpl::ScaledIntegerNodeImpl( ImageFileImplWeakPtr destImageFile,
                                                  int64_t rawValue, int64_t minimum, int64_t maximum,
                                                  double scale, double offset ) :
-      NodeImpl( destImageFile ),
-      value_( rawValue ), minimum_( minimum ), maximum_( maximum ), scale_( scale ),
-      offset_( offset )
+      NodeImpl( destImageFile ), value_( rawValue ), minimum_( minimum ), maximum_( maximum ),
+      scale_( scale ), offset_( offset )
    {
    }
 
@@ -228,8 +227,7 @@ namespace e57
    void ScaledIntegerNodeImpl::dump( int indent, std::ostream &os ) const
    {
       // don't checkImageFileOpen
-      os << space( indent ) << "type:        ScaledInteger"
-         << " (" << type() << ")" << std::endl;
+      os << space( indent ) << "type:        ScaledInteger" << " (" << type() << ")" << std::endl;
       NodeImpl::dump( indent, os );
       os << space( indent ) << "rawValue:    " << value_ << std::endl;
       os << space( indent ) << "minimum:     " << minimum_ << std::endl;

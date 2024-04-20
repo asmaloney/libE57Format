@@ -33,8 +33,7 @@ namespace e57
 {
    IntegerNodeImpl::IntegerNodeImpl( ImageFileImplWeakPtr destImageFile, int64_t value,
                                      int64_t minimum, int64_t maximum ) :
-      NodeImpl( destImageFile ),
-      value_( value ), minimum_( minimum ), maximum_( maximum )
+      NodeImpl( destImageFile ), value_( value ), minimum_( minimum ), maximum_( maximum )
    {
    }
 
@@ -160,8 +159,7 @@ namespace e57
    void IntegerNodeImpl::dump( int indent, std::ostream &os ) const
    {
       // don't checkImageFileOpen
-      os << space( indent ) << "type:        Integer"
-         << " (" << type() << ")" << std::endl;
+      os << space( indent ) << "type:        Integer" << " (" << type() << ")" << std::endl;
       NodeImpl::dump( indent, os );
       os << space( indent ) << "value:       " << value_ << std::endl;
       os << space( indent ) << "minimum:     " << minimum_ << std::endl;

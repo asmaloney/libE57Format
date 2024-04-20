@@ -199,8 +199,7 @@ Decoder::Decoder( unsigned bytestreamNumber ) : bytestreamNumber_( bytestreamNum
 
 BitpackDecoder::BitpackDecoder( unsigned bytestreamNumber, SourceDestBuffer &dbuf,
                                 unsigned alignmentSize, uint64_t maxRecordCount ) :
-   Decoder( bytestreamNumber ),
-   maxRecordCount_( maxRecordCount ), destBuffer_( dbuf.impl() ),
+   Decoder( bytestreamNumber ), maxRecordCount_( maxRecordCount ), destBuffer_( dbuf.impl() ),
    inBuffer_( 1024 ), // !!! need to pick smarter channel buffer sizes
    inBufferAlignmentSize_( alignmentSize ), bitsPerWord_( 8 * alignmentSize ),
    bytesPerWord_( alignmentSize )
@@ -856,8 +855,7 @@ ConstantIntegerDecoder::ConstantIntegerDecoder( bool isScaledInteger, unsigned b
                                                 SourceDestBuffer &dbuf, int64_t minimum,
                                                 double scale, double offset,
                                                 uint64_t maxRecordCount ) :
-   Decoder( bytestreamNumber ),
-   maxRecordCount_( maxRecordCount ), destBuffer_( dbuf.impl() ),
+   Decoder( bytestreamNumber ), maxRecordCount_( maxRecordCount ), destBuffer_( dbuf.impl() ),
    isScaledInteger_( isScaledInteger ), minimum_( minimum ), scale_( scale ), offset_( offset )
 {
 }

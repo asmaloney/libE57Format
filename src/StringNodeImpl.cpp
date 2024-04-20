@@ -137,8 +137,7 @@ namespace e57
 #ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
    void StringNodeImpl::dump( int indent, std::ostream &os ) const
    {
-      os << space( indent ) << "type:        String"
-         << " (" << type() << ")" << std::endl;
+      os << space( indent ) << "type:        String" << " (" << type() << ")" << std::endl;
       NodeImpl::dump( indent, os );
       os << space( indent ) << "value:       '" << value_ << "'" << std::endl;
    }

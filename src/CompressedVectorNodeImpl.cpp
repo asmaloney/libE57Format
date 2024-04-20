@@ -238,8 +238,8 @@ namespace e57
 #ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
    void CompressedVectorNodeImpl::dump( int indent, std::ostream &os ) const
    {
-      os << space( indent ) << "type:        CompressedVector"
-         << " (" << type() << ")" << std::endl;
+      os << space( indent ) << "type:        CompressedVector" << " (" << type() << ")"
+         << std::endl;
       NodeImpl::dump( indent, os );
       if ( prototype_ )
       {

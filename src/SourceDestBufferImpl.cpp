@@ -36,9 +36,8 @@ using namespace e57;
 SourceDestBufferImpl::SourceDestBufferImpl( ImageFileImplWeakPtr destImageFile,
                                             const ustring &pathName, const size_t capacity,
                                             bool doConversion, bool doScaling ) :
-   destImageFile_( destImageFile ),
-   pathName_( pathName ), memoryRepresentation_( Int32 ), capacity_( capacity ),
-   doConversion_( doConversion ), doScaling_( doScaling )
+   destImageFile_( destImageFile ), pathName_( pathName ), memoryRepresentation_( Int32 ),
+   capacity_( capacity ), doConversion_( doConversion ), doScaling_( doScaling )
 {
 }
 
@@ -109,8 +108,8 @@ template void SourceDestBufferImpl::setTypeInfo<double>( double *base, size_t st
 
 SourceDestBufferImpl::SourceDestBufferImpl( ImageFileImplWeakPtr destImageFile,
                                             const ustring &pathName, std::vector<ustring> *b ) :
-   destImageFile_( destImageFile ),
-   pathName_( pathName ), memoryRepresentation_( UString ), ustrings_( b )
+   destImageFile_( destImageFile ), pathName_( pathName ), memoryRepresentation_( UString ),
+   ustrings_( b )
 {
    /// don't checkImageFileOpen, checkState_ will do it
 

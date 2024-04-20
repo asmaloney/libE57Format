@@ -33,8 +33,7 @@ namespace e57
 {
    DecodeChannel::DecodeChannel( SourceDestBuffer dbuf_arg, std::shared_ptr<Decoder> decoder_arg,
                                  unsigned bytestreamNumber_arg, uint64_t maxRecordCount_arg ) :
-      dbuf( dbuf_arg ),
-      decoder( decoder_arg ), bytestreamNumber( bytestreamNumber_arg )
+      dbuf( dbuf_arg ), decoder( decoder_arg ), bytestreamNumber( bytestreamNumber_arg )
    {
       maxRecordCount = maxRecordCount_arg;
       currentPacketLogicalOffset = 0;

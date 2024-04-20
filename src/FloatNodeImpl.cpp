@@ -33,8 +33,8 @@ namespace e57
 {
    FloatNodeImpl::FloatNodeImpl( ImageFileImplWeakPtr destImageFile, double value,
                                  FloatPrecision precision, double minimum, double maximum ) :
-      NodeImpl( destImageFile ),
-      value_( value ), precision_( precision ), minimum_( minimum ), maximum_( maximum )
+      NodeImpl( destImageFile ), value_( value ), precision_( precision ), minimum_( minimum ),
+      maximum_( maximum )
    {
       // Since this ctor also used to construct single precision, and defaults for minimum/maximum
       // are for double precision, adjust bounds smaller if single.
@@ -214,8 +214,7 @@ namespace e57
    void FloatNodeImpl::dump( int indent, std::ostream &os ) const
    {
       // don't checkImageFileOpen
-      os << space( indent ) << "type:        Float"
-         << " (" << type() << ")" << std::endl;
+      os << space( indent ) << "type:        Float" << " (" << type() << ")" << std::endl;
       NodeImpl::dump( indent, os );
       os << space( indent ) << "precision:   ";
       if ( precision() == PrecisionSingle )

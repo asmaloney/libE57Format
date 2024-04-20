@@ -2,6 +2,10 @@ name: Build
 
 on: [push, pull_request]
 
+defaults:
+  run:
+    shell: bash -leo pipefail {0}
+
 jobs:
   build:
     strategy:
@@ -90,10 +94,6 @@ jobs:
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
 
-    defaults:
-      run:
-        shell: bash -el {0}
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -126,26 +126,21 @@ jobs:
 
       - name: Install Dependencies (Windows)
         if: matrix.platform == 'windows'
-        uses: conda-incubator/setup-miniconda@v3
+        uses: mamba-org/setup-micromamba@v1
         with:
-          channels: conda-forge
+          environment-name: ci
+          cache-environment: true
+          init-shell: bash
+          create-args: xerces-c
+          log-level: info
 
       - name: Install More Dependencies (Windows)
         if: matrix.platform == 'windows'
         run: |
-          conda install conda-forge::xerces-c
           choco upgrade ccache ninja
           ccache --version | head -n 1
           echo "ninja $(ninja --version)"
-
-      - name: Output conda info (Windows)
-        if: matrix.platform == 'windows'
-        run: |
-          conda info
-          conda list
-          conda config --show-sources
-          conda config --show
-          printenv | sort
+          echo "CMAKE_MODULE_PATH=/c/Users/runneradmin/micromamba/envs/ci/cmake" >> "$GITHUB_ENV"
 
       - name: ccache
         uses: hendrikmuhs/ccache-action@v1
@@ -153,14 +148,18 @@ jobs:
           max-size: '5G'
           key: ${{ matrix.os }}-${{ matrix.build_type }}
 
-      - name: Configure
-        run: >
+      - name: Setup
+        run: |
           mkdir libE57Format-build
+          env | sort
 
+      - name: CMake Configure
+        run: >
           cmake
           -B libE57Format-build
           -G "Ninja"
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          -DCMAKE_MODULE_PATH="$CMAKE_MODULE_PATH"
           -DE57_BUILD_SHARED=${{ matrix.build_shared }}
           -DE57_BUILD_TEST=${{ matrix.build_test }}
           -DE57_VALIDATION_LEVEL=${{ matrix.validation_level }}

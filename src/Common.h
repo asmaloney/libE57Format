@@ -43,7 +43,7 @@
 #endif
 
 // Used to mark unused parameters to indicate intent and suppress warnings.
-#define UNUSED( expr ) (void)( expr )
+#define E57_UNUSED( expr ) (void)( expr )
 
 // For readability of preprocessor using E57_VALIDATION_LEVEL
 #define VALIDATION_OFF 0

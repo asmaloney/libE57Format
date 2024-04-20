@@ -876,8 +876,8 @@ size_t ConstantIntegerDecoder::inputProcess( const char *source, const size_t av
    std::cout << "ConstantIntegerDecoder::inputprocess() called, source=" << (void *)( source )
              << " availableByteCount=" << availableByteCount << std::endl;
 #else
-   UNUSED( source );
-   UNUSED( availableByteCount );
+   E57_UNUSED( source );
+   E57_UNUSED( availableByteCount );
 #endif
 
    // We don't need any input bytes to produce output, so ignore source and

@@ -682,7 +682,7 @@ void CheckedFile::unlink()
       std::cout << "std::remove() failed, result=" << result << std::endl;
    }
 #else
-   UNUSED( result );
+   E57_UNUSED( result );
 #endif
 }
 

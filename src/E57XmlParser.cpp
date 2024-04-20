@@ -912,7 +912,7 @@ void E57XmlParser::characters( const XMLCh *const chars, const XMLSize_t length 
 #ifdef E57_VERBOSE
    std::cout << "characters, chars=\"" << toUString( chars ) << "\" length=" << length << std::endl;
 #else
-   UNUSED( length );
+   E57_UNUSED( length );
 #endif
 
    // Get active element

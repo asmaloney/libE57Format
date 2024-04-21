@@ -11,6 +11,7 @@ function( add_compiler_version )
         OUTPUT_VARIABLE T2_
     )
     string( REGEX REPLACE "([0-9])\\.([0-9])(\\.[0-9])?" "\\1\\2" T2_ ${T2_} )
+    string( STRIP ${T2_} T2_ )
     set( T1_ ${T1_}${T2_} PARENT_SCOPE )
 endfunction()
 

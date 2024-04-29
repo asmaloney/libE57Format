@@ -267,6 +267,10 @@ void E57XmlParser::ParseInfo::dump( int indent, std::ostream &os ) const
 //=============================================================================
 // E57XmlParser
 
+int E57XmlParser::ref_counter_ = 0; // init global ref count
+
+std::mutex E57XmlParser::mtx_ = std::mutex();
+
 E57XmlParser::E57XmlParser( ImageFileImplSharedPtr imf ) : imf_( imf ), xmlReader( nullptr )
 {
 }
@@ -277,24 +281,32 @@ E57XmlParser::~E57XmlParser()
 
    xmlReader = nullptr;
 
-   XMLPlatformUtils::Terminate();
+   std::lock_guard<std::mutex> lock(E57XmlParser::mtx_);
+   E57XmlParser::ref_counter_ -= 1;
+   if(E57XmlParser::ref_counter_ == 0) {
+      XMLPlatformUtils::Terminate();
+   }
 }
 
 void E57XmlParser::init()
 {
    // Initialize the XML4C2 system
-   try
-   {
-      // NOTE: This is not thread safe for multiple simulaneous E57 readers.
-      //       Ideally we'd do this once, not once per reader
-      XMLPlatformUtils::Initialize();
-   }
-   catch ( const XMLException &ex )
-   {
-      // Turn parser exception into E57Exception
-      throw E57_EXCEPTION2( ErrorXMLParserInit,
-                            "parserMessage=" + ustring( XMLString::transcode( ex.getMessage() ) ) );
-   }
+  std::lock_guard<std::mutex> lock(E57XmlParser::mtx_);
+  if(E57XmlParser::ref_counter_ == 0) {
+      try
+      {
+         // NOTE: This is not thread safe for multiple simulaneous E57 readers.
+         //       Ideally we'd do this once, not once per reader
+         XMLPlatformUtils::Initialize();
+      }
+      catch ( const XMLException &ex )
+      {
+         // Turn parser exception into E57Exception
+         throw E57_EXCEPTION2( ErrorXMLParserInit,
+                              "parserMessage=" + ustring( XMLString::transcode( ex.getMessage() ) ) );
+      }
+   } 
+   E57XmlParser::ref_counter_ += 1;
 
    xmlReader = XMLReaderFactory::createXMLReader(); //??? auto_ptr?
 

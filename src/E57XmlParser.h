@@ -27,6 +27,7 @@
 
 #pragma once
 
+#include <mutex>
 #include <stack>
 
 #include <xercesc/sax/InputSource.hpp>
@@ -100,6 +101,9 @@ namespace e57
       std::stack<ParseInfo> stack_; /// Stores the current path in tree we are reading
 
       SAX2XMLReader *xmlReader;
+
+      static int ref_counter_;
+      static std::mutex mtx_;
    };
 
    class E57XmlFileInputSource : public InputSource

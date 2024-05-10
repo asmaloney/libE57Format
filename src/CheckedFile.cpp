@@ -43,7 +43,7 @@
 #else
 #error "no supported compiler defined"
 #endif
-#elif defined( __linux__ )
+#elif defined( __linux__ ) || defined( __EMSCRIPTEN__ )
 #define _LARGEFILE64_SOURCE
 #define __LARGE64_FILES
 #include <sys/stat.h>
@@ -487,7 +487,7 @@ uint64_t CheckedFile::lseek64( int64_t offset, int whence )
 
 #if defined( _WIN32 )
    __int64 result = _lseeki64( fd_, offset, whence );
-#elif defined( __linux__ )
+#elif defined( __linux__ ) || defined( __EMSCRIPTEN__ )
    int64_t result = ::lseek64( fd_, offset, whence );
 #elif defined( __APPLE__ ) || defined( __BSD )
    int64_t result = ::lseek( fd_, offset, whence );

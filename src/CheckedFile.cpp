@@ -43,7 +43,7 @@
 #else
 #error "no supported compiler defined"
 #endif
-#elif defined( __linux__ )
+#elif defined( __linux__ ) || defined( __EMSCRIPTEN__ )
 #define _LARGEFILE64_SOURCE
 #define __LARGE64_FILES
 #include <sys/stat.h>
@@ -53,12 +53,6 @@
 #include <sys/types.h>
 #include <unistd.h>
 #elif defined( __BSD )
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <unistd.h>
-#elif defined( __EMSCRIPTEN__ )
-#define _LARGEFILE64_SOURCE
-#define __LARGE64_FILES
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>

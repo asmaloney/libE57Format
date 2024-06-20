@@ -183,6 +183,9 @@ namespace e57
          flush();
       }
 
+      // Write one index packet (required by standard).
+      packetWriteIndex();
+
       // Compute length of whole section we just wrote (from section start to
       // current start of free space).
       sectionLogicalLength_ = imf->unusedLogicalStart_ - sectionHeaderLogicalStart_;
@@ -658,6 +661,31 @@ namespace e57
       }
 
       dataPacketsCount_++;
+   }
+
+   // Write one index packet.
+   // We don't have an interface to work with index packets, but one is required by the standard, so
+   // write one index packet with one entry pointing to the first data packet.
+   void e57::CompressedVectorWriterImpl::packetWriteIndex()
+   {
+      ImageFileImplSharedPtr imf( cVector_->destImageFile_ );
+
+      IndexPacket indexPacket;
+
+      indexPacket.entries[0].chunkPhysicalOffset = dataPhysicalOffset_;
+
+      const auto cPacketLength = sizeof( IndexPacketHeader ) + sizeof( IndexPacket::Entry );
+
+      indexPacket.header.packetLogicalLengthMinus1 = cPacketLength - 1;
+      indexPacket.header.entryCount = 1;
+
+      uint64_t packetLogicalOffset = imf->allocateSpace( cPacketLength, false );
+      topIndexPhysicalOffset_ = imf->file_->logicalToPhysical( packetLogicalOffset );
+
+      imf->file_->seek( packetLogicalOffset );
+      imf->file_->write( reinterpret_cast<const char *>( &indexPacket ), cPacketLength );
+
+      indexPacketsCount_++;
    }
 
    void CompressedVectorWriterImpl::flush()

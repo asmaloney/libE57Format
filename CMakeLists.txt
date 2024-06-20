@@ -41,7 +41,7 @@ project( E57Format
 	LANGUAGES
 	    CXX
 	VERSION
-	    3.1.1
+	    3.2.0
 )
 
 string( TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPERCASE )

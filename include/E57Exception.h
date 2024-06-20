@@ -353,7 +353,7 @@ namespace e57
          return Utilities::errorCodeToString( errorCode_ );
       }
 
-      std::string context() const noexcept
+      const std::string &context() const noexcept
       {
          return context_;
       }

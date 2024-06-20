@@ -58,6 +58,7 @@ namespace e57
       size_t currentPacketSize() const;
       uint64_t packetWrite();
       void packetWriteZeroRecords();
+      void packetWriteIndex();
 
       void flush();
 

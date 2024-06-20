@@ -147,4 +147,39 @@ namespace e57
 
       uint8_t payload[PayloadSize]; // No need to init since it's a data buffer
    };
+
+   class IndexPacketHeader
+   {
+   public:
+      const uint8_t packetType = INDEX_PACKET;
+
+      uint8_t packetFlags = 0; // flag bitfields
+      uint16_t packetLogicalLengthMinus1 = 0;
+      uint16_t entryCount = 0;
+      uint8_t indexLevel = 0;
+      uint8_t reserved1[9] = {}; // must be zero
+   };
+
+   class IndexPacket
+   {
+   public:
+      IndexPacket();
+
+      void verify( unsigned bufferLength = 0, uint64_t totalRecordCount = 0,
+                   uint64_t fileSize = 0 ) const;
+
+#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
+      void dump( int indent = 0, std::ostream &os = std::cout ) const;
+#endif
+
+      IndexPacketHeader header;
+
+      static constexpr unsigned MAX_ENTRIES = 2048;
+
+      struct Entry
+      {
+         uint64_t chunkRecordNumber = 0;
+         uint64_t chunkPhysicalOffset = 0;
+      } entries[MAX_ENTRIES];
+   };
 }

@@ -33,37 +33,6 @@
 
 using namespace e57;
 
-struct IndexPacketHeader
-{
-   const uint8_t packetType = INDEX_PACKET;
-
-   uint8_t packetFlags = 0; // flag bitfields
-   uint16_t packetLogicalLengthMinus1 = 0;
-   uint16_t entryCount = 0;
-   uint8_t indexLevel = 0;
-   uint8_t reserved1[9] = {}; // must be zero
-};
-
-struct IndexPacket
-{
-   IndexPacketHeader header;
-
-   static constexpr unsigned MAX_ENTRIES = 2048;
-
-   struct IndexPacketEntry
-   {
-      uint64_t chunkRecordNumber = 0;
-      uint64_t chunkPhysicalOffset = 0;
-   } entries[MAX_ENTRIES];
-
-   void verify( unsigned bufferLength = 0, uint64_t totalRecordCount = 0,
-                uint64_t fileSize = 0 ) const;
-
-#ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
-   void dump( int indent = 0, std::ostream &os = std::cout ) const;
-#endif
-};
-
 struct EmptyPacketHeader
 {
    const uint8_t packetType = EMPTY_PACKET;
@@ -558,6 +527,13 @@ void DataPacket::dump( int indent, std::ostream &os ) const
 
 //=============================================================================
 // IndexPacket
+IndexPacket::IndexPacket()
+{
+   // Double check that packet struct is correct length.  Watch out for RTTI increasing the size.
+   //    sizeof( IndexPacketHeader ) + ( MAX_ENTRIES * sizeof( IndexPacket::Entry ) )
+   static_assert( sizeof( IndexPacket ) == ( 16 + ( 2048 * 16 ) ),
+                  "Unexpected size of IndexPacket" );
+}
 
 void IndexPacket::verify( unsigned bufferLength, uint64_t totalRecordCount,
                           uint64_t fileSize ) const
@@ -643,8 +619,7 @@ void IndexPacket::verify( unsigned bufferLength, uint64_t totalRecordCount,
    }
 
    // Check if entries will fit in space provided
-   const unsigned cNeededLength =
-      sizeof( IndexPacketHeader ) + sizeof( IndexPacketEntry ) * header.entryCount;
+   const unsigned cNeededLength = sizeof( IndexPacketHeader ) + sizeof( Entry ) * header.entryCount;
    if ( packetLength < cNeededLength )
    {
       throw E57_EXCEPTION2( ErrorBadCVPacket, "INDEX; packetLength=" + toString( packetLength ) +

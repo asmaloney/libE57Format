@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: MIT
+# SPDX-License-Identifier: BSL-1.0
 # Copyright 2020 Andy Maloney <asmaloney@gmail.com>
 
 find_program( E57_CLANG_FORMAT_PROGRAM NAMES clang-format )

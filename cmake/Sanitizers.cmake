@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: MIT
+# SPDX-License-Identifier: BSL-1.0
 # Copyright 2023 Andy Maloney <asmaloney@gmail.com>
 
 # Note: In theory address sanitization should work on MSVC, but I could not get it working.

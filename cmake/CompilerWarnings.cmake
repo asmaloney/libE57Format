@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: MIT
+# SPDX-License-Identifier: BSL-1.0
 # Copyright 2022 Andy Maloney <asmaloney@gmail.com>
 
 string( TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPERCASE )

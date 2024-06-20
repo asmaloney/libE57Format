@@ -49,6 +49,12 @@ string( TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPERCASE )
 # Creates a build tag which is used in the REVISION_ID
 #	e.g. "x86_64-darwin-AppleClang140"
 include( Tags )
+include( GitInfo )
+
+# Collect all our current git info using:
+#  https://github.com/cppmf/GitInfo.cmake
+GitInfo( ${CMAKE_CURRENT_SOURCE_DIR} )
+# GitInfoReport()
 
 # Check if we are building ourself or being included and use this to set some defaults
 if ( ${PROJECT_NAME} STREQUAL ${CMAKE_PROJECT_NAME} )
@@ -111,7 +117,7 @@ option( E57_RELEASE_LTO "Compile release library with link-time optimization" ON
 
 #########################################################################################
 
-set( REVISION_ID "${PROJECT_NAME}-${PROJECT_VERSION}-${${PROJECT_NAME}_BUILD_TAG}" )
+set( REVISION_ID "${PROJECT_NAME}-${GIT_LATEST_TAG}-${${PROJECT_NAME}_BUILD_TAG}" )
 message( STATUS "[${PROJECT_NAME}] Revision ID: ${REVISION_ID}" )
 
 # Target

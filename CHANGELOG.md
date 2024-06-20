@@ -6,12 +6,17 @@ All notable changes to this project will be documented in this file. The format 
 
 ### Changed
 
+- {cmake} Don't force warnings as errors when building self. ([#299](https://github.com/asmaloney/libE57Format/pull/299))
+- {cmake} Use git tag in library version for more precision. ([#298](https://github.com/asmaloney/libE57Format/pull/298))
+- {license} Re-license all my (asmaloney) MIT files to BSL-1.0. It is just easier to have it all under one license. ([#296](https://github.com/asmaloney/libE57Format/pull/296))
 - {format} Update to clang-format 18 & reformat code. ([#286](https://github.com/asmaloney/libE57Format/pull/286))
 - Add "E57\_" to macros in E57Exception.h. ([#285](https://github.com/asmaloney/libE57Format/pull/285))
 - "De-deprecate" methods in **E57SimpleWriter**. These methods can be useful when writing batches. ([#284](https://github.com/asmaloney/libE57Format/pull/284))
 
 ### Fixed
 
+- Fix building with emscripten. (Note that the project doesn't officially support emscripten.) ([#288](https://github.com/asmaloney/libE57Format/pull/288))
+- {standard conformance} CompressedVectors always write an index packet. This is required by the standard (9.3.5). ([#295](https://github.com/asmaloney/libE57Format/pull/295))
 - {standard conformance} **E57SimpleReader** accepts files containing zero scans. ([#283](https://github.com/asmaloney/libE57Format/pull/283))
 - {cmake} Replace deprecated "exec_program" with "execute_process". ([#282](https://github.com/asmaloney/libE57Format/pull/282))
 - Fix potential invalid range exceptions when reading integer nodes. ([#278](https://github.com/asmaloney/libE57Format/pull/278))

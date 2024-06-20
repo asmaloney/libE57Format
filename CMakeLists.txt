@@ -162,12 +162,6 @@ target_compile_features( ${PROJECT_NAME}
 # Warnings
 include( CompilerWarnings )
 
-# Treat warnings as errors if we are building ourself.
-if ( E57_BUILDING_SELF )
-    unset( ${PROJECT_NAME_UPPERCASE}_WARNING_AS_ERROR CACHE )
-    set_warning_as_error()
-endif()
-
 # Check our validation level
 string( STRIP "${E57_VALIDATION_LEVEL}" E57_VALIDATION_LEVEL )
 if ( NOT E57_VALIDATION_LEVEL MATCHES "^[0-2]$" )

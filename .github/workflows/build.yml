@@ -161,6 +161,7 @@ jobs:
           -DE57_BUILD_SHARED=${{ matrix.build_shared }}
           -DE57_BUILD_TEST=${{ matrix.build_test }}
           -DE57_VALIDATION_LEVEL=${{ matrix.validation_level }}
+          -DE57FORMAT_WARNING_AS_ERROR:BOOL=ON
           -DE57FORMAT_SANITIZE_ALL:BOOL=ON
           .
 

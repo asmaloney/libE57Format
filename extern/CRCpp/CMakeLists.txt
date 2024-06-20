@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: MIT
+# SPDX-License-Identifier: BSL-1.0
 # Copyright © Andy Maloney <asmaloney@gmail.com>
 
 # CRCpp from here: https://github.com/d-bahr/CRCpp

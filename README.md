@@ -153,10 +153,4 @@ Individual source files may contain the following tag instead of the full licens
 
     SPDX-License-Identifier: BSL-1.0
 
-Most of the CMake files, all of the testing files, and a couple of the source files are licensed under the [**MIT** license](https://opensource.org/license/mit/) - see the [LICENSE-MIT](LICENSE-MIT.md) file for details.
-
-These files contain the following tag instead of the full license text:
-
-    SPDX-License-Identifier: MIT
-
 Using SPDX enables machine processing of license information based on the [SPDX License Identifiers](https://spdx.org/ids) and makes it easier for developers to see at a glance which license they are dealing with.

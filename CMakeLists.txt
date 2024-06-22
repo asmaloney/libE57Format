@@ -117,7 +117,10 @@ option( E57_RELEASE_LTO "Compile release library with link-time optimization" ON
 
 #########################################################################################
 
-set( REVISION_ID "${PROJECT_NAME}-${GIT_LATEST_TAG}-${${PROJECT_NAME}_BUILD_TAG}" )
+set( REVISION_ID "${PROJECT_NAME}-${PROJECT_VERSION}-${${PROJECT_NAME}_BUILD_TAG}" )
+if ( GIT_LATEST_TAG )
+	set( REVISION_ID "${REVISION_ID} (git ${GIT_LATEST_TAG})" )
+endif()
 message( STATUS "[${PROJECT_NAME}] Revision ID: ${REVISION_ID}" )
 
 # Target

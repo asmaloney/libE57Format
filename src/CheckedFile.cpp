@@ -35,8 +35,12 @@
 #include <codecvt>
 #include <io.h>
 #elif defined( __GNUC__ )
+#ifndef _LARGEFILE64_SOURCE
 #define _LARGEFILE64_SOURCE
+#endif
+#ifndef __LARGE64_FILES
 #define __LARGE64_FILES
+#endif
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -44,8 +48,12 @@
 #error "no supported compiler defined"
 #endif
 #elif defined( __linux__ ) || defined( __EMSCRIPTEN__ )
+#ifndef _LARGEFILE64_SOURCE
 #define _LARGEFILE64_SOURCE
+#endif
+#ifndef __LARGE64_FILES
 #define __LARGE64_FILES
+#endif
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>

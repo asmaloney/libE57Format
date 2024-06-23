@@ -8,6 +8,16 @@ libE57Format is a C++ library which provides read & write support for the ASTM-s
 
 The doxygen-generated documentation may be [found here](https://asmaloney.github.io/libE57Format-docs/). These docs are generated and saved in the [libE57Format-docs](https://github.com/asmaloney/libE57Format-docs) repo.
 
+## Commercial Use
+
+If you are using this library in commercial software, please [contribute to the project](#how-to-contribute).
+
+Of course the open source license allows you to just take and not give anything back. It is perfectly Legal, but it is not Right and it's not good for the project.
+
+Over the may years I've worked on this library, I have received precisely _zero_ contributions (PRs, documentation updates, improved testing, financial support) from the many million/billion-dollar companies who use it in their software.
+
+The more companies that leech on Open Source instead of nurturing it, the less healthy & viable the ecosystem is.
+
 ## Dependencies/Requirements
 
 Tools:
@@ -90,10 +100,6 @@ Many, many other changes were made prior to the first release of this fork. See 
 
 This _Simple API_ has evolved since this original port to fix some problems and to make it more foolproof & easier to use. Please see the [CHANGELOG](CHANGELOG.md) for version 3.
 
-### Tools
-
-[Ryan Baumann](https://github.com/ryanfb) updated the `e57unpack` and `e57validate` tools to work with **libE57Format**. You can find them in the [e57tools](https://github.com/ryanfb/e57tools) repo.
-
 ## Projects Using libE57Format
 
 - [CloudCompare](https://github.com/CloudCompare/CloudCompare)
@@ -105,11 +111,15 @@ These projects use hard forks of libE57Format:
 - [FreeCAD](https://github.com/FreeCAD/FreeCAD)
 - [PDAL](https://github.com/PDAL/PDAL)
 
-There are also some commercial products using libE57Format. If any of them would like to sponsor the project and be listed here, please contact Andy (asmaloney).
+There are also many commercial products using libE57Format. If any of them would like to sponsor the project and be listed here, please <a href="mailto:asmaloney@gmail.com?subject=libE57Format Sponsorship">contact Andy</a>.
 
 ## How To Contribute
 
 These are some of the things you can do to contribute to the project:
+
+### 💰 Financial
+
+Given that I'm an independent developer without funding, financial support is appreciated. If you would like to support the project financially (especially if you sell a product which uses this library), you can use the [sponsors page](https://github.com/sponsors/asmaloney) for one-off or recurring support, or we can arrange <a href="mailto:asmaloney@gmail.com?subject=libE57Format B2B Sponsorship">B2B invoicing</a> of some kind. Thank you!
 
 ### ✍ Write About The Project
 
@@ -141,13 +151,9 @@ cmake --build . --target e57-clang-format
 
 The [documentation](https://github.com/asmaloney/libE57Format) is a bit old and could use some lovin'. You can submit changes over in the [libE57Format-docs](https://github.com/asmaloney/libE57Format-docs) repository.
 
-### 💰 Financial
-
-Given that I'm an independent developer without funding, financial support is always appreciated. If you would like to support the project financially (especially if you sell a product which uses this library), you can use the [sponsors page](https://github.com/sponsors/asmaloney) for one-off or recurring support. Thank you!
-
 ## License
 
-This project as a whole is licensed under the [**BSL-1.0** license](https://opensource.org/licenses/BSL-1.0) - see the [LICENSE](LICENSE.md) file for details.
+This project is licensed under the [**BSL-1.0** license](https://opensource.org/licenses/BSL-1.0) - see the [LICENSE](LICENSE.md) file for details.
 
 Individual source files may contain the following tag instead of the full license text:
 

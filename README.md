@@ -10,11 +10,11 @@ The doxygen-generated documentation may be [found here](https://asmaloney.github
 
 ## Commercial Use
 
-If you are using this library in commercial software, please [contribute to the project](#how-to-contribute).
+If you are using this library in commercial software, please [contribute to the project](/CONTRIBUTING.md).
 
 Of course the open source license allows you to just take and not give anything back. It is perfectly Legal, but it is not Right and it's not good for the project.
 
-Over the may years I've worked on this library, I have received precisely _zero_ contributions (PRs, documentation updates, improved testing, financial support) from the many million/billion-dollar companies who use it in their software.
+Over the many years I've worked on this library, I have received precisely _zero_ contributions (PRs, documentation updates, improved testing, financial support) from the many million/billion-dollar companies who use it in their software.
 
 The more companies that leech on Open Source instead of nurturing it, the less healthy & viable the ecosystem is.
 
@@ -89,7 +89,7 @@ Notes:
 - I changed the main include file's name from `E57Foundation.h` to `E57Format.h` to make sure there is no inclusion confusion.
 - Versions of **libE57Format** started at 2.0.
 - I made changes for it to compile and run on macOS.
-- It no longer depends on [Boost](http://www.boost.org/).
+- It no longer depends on [Boost](https://www.boost.org/).
 - It now requires [C++14](https://en.cppreference.com/w/cpp/14). (Version 2.x required [C++11](https://en.cppreference.com/w/cpp/11).)
 
 Many, many other changes were made prior to the first release of this fork. See the [CHANGELOG](CHANGELOG.md) and git history for details.
@@ -123,7 +123,7 @@ Given that I'm an independent developer without funding, financial support is ap
 
 ### ✍ Write About The Project
 
-If you find the project useful, spread the word! Articles, mastodon posts, tweets, blog posts, instagram photos - whatever you're into.
+If you find the project useful, spread the word! Articles, mastodon posts, tweets, blog posts, instagram photos - whatever you're into. Please include a referral back to the repository page: https://github.com/asmaloney/libE57Format
 
 ### ⭐️ Add a Star
 

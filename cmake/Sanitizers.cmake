@@ -50,7 +50,7 @@ endfunction()
 
 function( enable_undefined_sanitizer target )
     if ( MSVC )
-        message( WARNING "[${target}] Undefined behaviour sanitizer (UBSan) not avaiable for MSVC" )
+        message( WARNING "[${target}] Undefined behaviour sanitizer (UBSan) not available for MSVC" )
         return()
     endif()
 

@@ -2,6 +2,10 @@
 
 These are some of the things you can do to contribute to the project:
 
+## 💰 Financial
+
+Given that I'm an independent developer without funding, financial support is appreciated. If you would like to support the project financially (especially if you sell a product which uses this library), you can use the [sponsors page](https://github.com/sponsors/asmaloney) for one-off or recurring support, or we can arrange <a href="mailto:asmaloney@gmail.com?subject=libE57Format B2B Sponsorship">B2B invoicing</a> of some kind. Thank you!
+
 ## ✍ Write About The Project
 
 If you find the project useful, spread the word! Articles, mastodon posts, tweets, blog posts, instagram photos - whatever you're into. Please include a referral back to the repository page: https://github.com/asmaloney/libE57Format
@@ -31,7 +35,3 @@ cmake --build . --target e57-clang-format
 ## 📖 Documentation
 
 The [documentation](https://github.com/asmaloney/libE57Format) is a bit old and could use some lovin'. You can submit changes over in the [libE57Format-docs](https://github.com/asmaloney/libE57Format-docs) repository.
-
-## 💰 Financial
-
-Given that I'm an independent developer without funding, financial support is always appreciated. If you would like to support the project financially (especially if you sell a product which uses this library), you can use the [sponsors page](https://github.com/sponsors/asmaloney) for one-off or recurring support. Thank you!

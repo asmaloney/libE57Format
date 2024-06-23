@@ -285,8 +285,8 @@ void E57XmlParser::init()
    // Initialize the XML4C2 system
    try
    {
-      // NOTE: This is not thread safe for multiple simulaneous E57 readers.
-      //       Ideally we'd do this once, not once per reader
+      // NOTE: This is not thread safe for multiple simultaneous E57 readers.
+      //       Ideally we'd do this once, not once per reader.
       XMLPlatformUtils::Initialize();
    }
    catch ( const XMLException &ex )

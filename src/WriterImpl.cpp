@@ -128,8 +128,8 @@ namespace e57
    WriterImpl::WriterImpl( const ustring &filePath, const WriterOptions &options ) :
       imf_( filePath, "w" ), root_( imf_.root() ), data3D_( imf_, true ), images2D_( imf_, true )
    {
-      // We are using the E57 v1.0 data format standard fieldnames.
-      // The standard fieldnames are used without an extension prefix (in the default namespace).
+      // We are using the E57 v1.0 data format standard field names.
+      // The standard field names are used without an extension prefix (in the default namespace).
       // We explicitly register it for completeness (the reference implementation would do it for
       // us, if we didn't).
       imf_.extensionsAdd( "", e57::VERSION_1_0_URI );

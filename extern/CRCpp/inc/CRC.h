@@ -127,6 +127,12 @@
 #   define crcpp_constexpr const
 #endif
 
+#if defined(_MSC_VER) && !defined(__clang__) && !defined(__INTEL_COMPILER)
+/* Disable warning C4127: conditional expression is constant. */
+#pragma warning(push)
+#pragma warning(disable : 4127)
+#endif
+
 #ifdef CRCPP_USE_NAMESPACE
 namespace CRCPP
 {
@@ -230,6 +236,7 @@ public:
     static const Parameters< crcpp_uint8,  8> & CRC_8();
 #ifdef CRCPP_INCLUDE_ESOTERIC_CRC_DEFINITIONS
     static const Parameters< crcpp_uint8,  8> & CRC_8_EBU();
+    static const Parameters< crcpp_uint8,  8> & CRC_8_HDLC();
     static const Parameters< crcpp_uint8,  8> & CRC_8_MAXIM();
     static const Parameters< crcpp_uint8,  8> & CRC_8_WCDMA();
     static const Parameters< crcpp_uint8,  8> & CRC_8_LTE();
@@ -888,7 +895,7 @@ inline CRCType CRC::CalculateRemainder(const void * data, crcpp_size size, const
     {
         while (size--)
         {
-#if defined(WIN32) || defined(_WIN32) || defined(WINCE)
+#if defined(_MSC_VER) && !defined(__clang__) && !defined(__INTEL_COMPILER)
     // Disable warning about data loss when doing (remainder >> CHAR_BIT) when
     // remainder is one byte long. The algorithm is still correct in this case,
     // though it's possible that one additional machine instruction will be executed.
@@ -896,7 +903,7 @@ inline CRCType CRC::CalculateRemainder(const void * data, crcpp_size size, const
 #   pragma warning (disable : 4333)
 #endif
             remainder = static_cast<CRCType>((remainder >> CHAR_BIT) ^ lookupTable[static_cast<unsigned char>(remainder ^ *current++)]);
-#if defined(WIN32) || defined(_WIN32) || defined(WINCE)
+#if defined(_MSC_VER) && !defined(__clang__) && !defined(__INTEL_COMPILER)
 #   pragma warning (pop)
 #endif
         }
@@ -1213,6 +1220,24 @@ inline const CRC::Parameters<crcpp_uint8, 8> & CRC::CRC_8()
 inline const CRC::Parameters<crcpp_uint8, 8> & CRC::CRC_8_EBU()
 {
     static const Parameters<crcpp_uint8, 8> parameters = { 0x1D, 0xFF, 0x00, true, true };
+    return parameters;
+}
+
+/**
+    @brief Returns a set of parameters for CRC-8 HDLC (ISO/IEC 13239:2002).
+    @note The parameters are static and are delayed-constructed to reduce memory footprint.
+    @note CRC-8 HDLC has the following parameters and check value:
+        - polynomial     = 0x07
+        - initial value  = 0xFF
+        - final XOR      = 0xFF
+        - reflect input  = true
+        - reflect output = true
+        - check value    = 0x2F
+    @return CRC-8 HDLC parameters
+*/
+inline const CRC::Parameters<crcpp_uint8, 8> & CRC::CRC_8_HDLC()
+{
+    static const Parameters<crcpp_uint8, 8> parameters = { 0x07, 0xFF, 0xFF, true, true };
     return parameters;
 }
 
@@ -2080,6 +2105,10 @@ inline const CRC::Parameters<crcpp_uint64, 64> & CRC::CRC_64()
 
 #ifdef CRCPP_USE_NAMESPACE
 }
+#endif
+
+#if defined(_MSC_VER) && !defined(__clang__) && !defined(__INTEL_COMPILER)
+#pragma warning(pop)
 #endif
 
 #endif // CRCPP_CRC_H_

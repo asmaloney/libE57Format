@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file. The format 
 
 ### Fixed
 
+- Fix warnings about redefinition of `_LARGEFILE64_SOURCE` and `__LARGE64_FILES` ([#301](https://github.com/asmaloney/libE57Format/pull/301)) (Thanks Niklas!)
 - Fix building with emscripten. (Note that the project doesn't officially support emscripten.) ([#288](https://github.com/asmaloney/libE57Format/pull/288))
 - {standard conformance} CompressedVectors always write an index packet. This is required by the standard (9.3.5). ([#295](https://github.com/asmaloney/libE57Format/pull/295))
 - {standard conformance} **E57SimpleReader** accepts files containing zero scans. ([#283](https://github.com/asmaloney/libE57Format/pull/283))

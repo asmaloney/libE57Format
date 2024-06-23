@@ -73,18 +73,7 @@
 #include <cstring>
 #include <fcntl.h>
 
-// This is fixed in a newer version of CRCpp.
-//    https://github.com/d-bahr/CRCpp/issues/17
-// TODO: Remove when new CRCpp is released.
-#if defined( _MSC_VER )
-// Disable warning about "conditional expression is constant".
-#pragma warning( push )
-#pragma warning( disable : 4127 )
-#endif
 #include "CRC.h"
-#if defined( _MSC_VER )
-#pragma warning( pop )
-#endif
 
 #include "CheckedFile.h"
 #include "StringFunctions.h"

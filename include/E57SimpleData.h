@@ -177,9 +177,9 @@ namespace e57
       /// The maximum extent of the bounding region from the horizontal plane
       double elevationMaximum;
 
-      ///< The starting azimuth angle defining the extent of the bounding region around the z axis
+      /// The starting azimuth angle defining the extent of the bounding region around the z axis
       double azimuthStart;
-      ///< The ending azimuth angle defining the extent of the bounding region  around the z axis
+      /// The ending azimuth angle defining the extent of the bounding region  around the z axis
       double azimuthEnd;
 
       bool operator==( const SphericalBounds &rhs ) const

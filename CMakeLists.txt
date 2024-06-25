@@ -150,10 +150,18 @@ set_target_properties( E57Format
 		INTERPROCEDURAL_OPTIMIZATION_DEBUG OFF
 )
 
-if( NOT DEFINED CMAKE_DEBUG_POSTFIX )
+if ( NOT DEFINED CMAKE_DEBUG_POSTFIX )
 	set_target_properties( E57Format
 		PROPERTIES
 		    DEBUG_POSTFIX "-d"
+	)
+endif()
+
+if ( E57_BUILD_SHARED )
+	set_target_properties( E57Format
+		PROPERTIES
+		    VERSION   ${PROJECT_VERSION}
+			SOVERSION ${PROJECT_VERSION_MAJOR}
 	)
 endif()
 

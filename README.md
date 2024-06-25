@@ -18,16 +18,14 @@ Over the many years I've worked on this library, I have received precisely _zero
 
 The more companies that leech on Open Source instead of nurturing it, the less healthy & viable the ecosystem is.
 
-## Dependencies/Requirements
-
-Tools:
+## Requirements
 
 - a [C++14](https://en.cppreference.com/w/cpp/14) compatible compiler
 - [CMake](https://cmake.org/) >= 3.15
 - [clang-format](https://clang.llvm.org/docs/ClangFormat.html) for code formatting
 - (_optional_) [ccache](https://ccache.dev/) to speed up rebuilds
 
-Libraries:
+## Dependencies
 
 - [Xerces-C++](https://xerces.apache.org/xerces-c/) (for parsing XML)
 
@@ -77,22 +75,20 @@ $ ./test/testE57
 
 See [test/README](test/README.md) for details about testing and the test data.
 
-## 🍴 Fork
+## 🍴 Fork (2018)
 
 This is a fork of [E57RefImpl](https://sourceforge.net/projects/e57-3d-imgfmt/). The original source is from [E57RefImpl 1.1.332](https://sourceforge.net/projects/e57-3d-imgfmt/files/E57Refimpl-src/).
 
-The original code had not been touched in years and I wanted to make changes to compile it on macOS. Forking it gave me a bit more freedom to update the code and make changes as required. Everything was stripped out except the main implementation for reading & writing E57 files.
-
-Notes:
+The original code had not been touched in several years and I wanted to make changes to compile it on macOS. Forking it gave me more freedom to update the code and make changes as required. Everything was stripped out except the main implementation for reading & writing E57 files.
 
 - I changed the name of the project so that it is not confused with the **E57RefImpl** project.
 - I changed the main include file's name from `E57Foundation.h` to `E57Format.h` to make sure there is no inclusion confusion.
 - Versions of **libE57Format** started at 2.0.
-- I made changes for it to compile and run on macOS.
+- I fixed it to compile and run on macOS.
 - It no longer depends on [Boost](https://www.boost.org/).
 - It now requires [C++14](https://en.cppreference.com/w/cpp/14). (Version 2.x required [C++11](https://en.cppreference.com/w/cpp/11).)
 
-Many, many other changes were made prior to the first release of this fork. See the [CHANGELOG](CHANGELOG.md) and git history for details.
+Many, many other changes were made prior to the first release of this fork, and it has diverged significantly since. See the [CHANGELOG](CHANGELOG.md) and git history for details.
 
 ### E57Simple API
 
@@ -102,6 +98,7 @@ This _Simple API_ has evolved since this original port to fix some problems and 
 
 ## Projects Using libE57Format
 
+- [AliceVision](https://github.com/alicevision/AliceVision)
 - [CloudCompare](https://github.com/CloudCompare/CloudCompare)
 - [MeshLab](https://github.com/cnr-isti-vclab/meshlab)
 - [pye57](https://github.com/davidcaron/pye57)

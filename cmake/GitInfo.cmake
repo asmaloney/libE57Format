@@ -53,21 +53,6 @@ function(GitInfo source)
       return()
     endif()
 
-    # whether or not the working tree is dirty
-    execute_process(COMMAND ${GIT_EXECUTABLE} status --porcelain
-            WORKING_DIRECTORY ${source}
-            RESULT_VARIABLE exit_code
-            OUTPUT_VARIABLE GIT_IS_DIRTY OUTPUT_STRIP_TRAILING_WHITESPACE)
-    # the working tree is dirty when the error code is different from 0
-    # or if the output is not empty
-    if(NOT exit_code EQUAL 0 OR NOT ${GIT_IS_DIRTY} STREQUAL "")
-      unset(GIT_IS_DIRTY)
-      set(GIT_IS_DIRTY ON CACHE BOOL "Indicate if current branch is dirty")
-    else()
-      unset(GIT_IS_DIRTY)
-      set(GIT_IS_DIRTY OFF CACHE BOOL "Indicate if current branch is dirty")
-    endif()
-
     # name of the branch associated to HEAD
     execute_process(COMMAND ${GIT_EXECUTABLE} rev-parse --abbrev-ref HEAD
             WORKING_DIRECTORY ${source}
@@ -123,7 +108,6 @@ function(GitInfoReport)
   message(STATUS "")
   message(STATUS "GIT_DIR : ${GIT_DIR}")
   message(STATUS "")
-  message(STATUS "GIT_IS_DIRTY : ${GIT_IS_DIRTY}")
   message(STATUS "GIT_HEAD_BRANCH : ${GIT_HEAD_BRANCH}")
   message(STATUS "GIT_REVISION : ${GIT_REVISION}")
   message(STATUS "GIT_REVISION_HASH : ${GIT_REVISION_HASH}")

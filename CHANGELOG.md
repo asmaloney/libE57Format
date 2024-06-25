@@ -4,8 +4,15 @@ All notable changes to this project will be documented in this file. The format 
 
 ## 3.2.0 - (in progress)
 
+### Added
+
+- {cmake} Added `E57_INSTALL_CMAKEDIR` option to override where the cmake files are installed. ([#305](https://github.com/asmaloney/libE57Format/pull/305))
+
+  This defaults to `lib/cmake/E57Format` and the path is relative to `CMAKE_INSTALL_PREFIX`.
+
 ### Changed
 
+- {cmake} If building as a shared library, set [VERSION](https://cmake.org/cmake/help/v3.15/prop_tgt/VERSION.html) & [SOVERSION](https://cmake.org/cmake/help/v3.15/prop_tgt/SOVERSION.html). ([#304](https://github.com/asmaloney/libE57Format/pull/304))
 - {cmake} Don't force warnings as errors when building self. ([#299](https://github.com/asmaloney/libE57Format/pull/299))
 - {cmake} Use git tag in library version for more precision. ([#298](https://github.com/asmaloney/libE57Format/pull/298))
 - {license} Re-license all my (asmaloney) MIT files to BSL-1.0. It is just easier to have it all under one license. ([#296](https://github.com/asmaloney/libE57Format/pull/296))

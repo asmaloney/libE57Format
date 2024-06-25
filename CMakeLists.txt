@@ -238,16 +238,24 @@ if ( E57_BUILD_TEST )
 endif()
 
 # CMake package files
+set( E57_INSTALL_CMAKEDIR
+    "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
+     CACHE STRING
+     "Install path for ${PROJECT_NAME} CMake files"
+)
+
+message( STATUS "[${PROJECT_NAME}] CMake files install to ${CMAKE_INSTALL_PREFIX}/${E57_INSTALL_CMAKEDIR}" )
+
 install(
     EXPORT
         E57Format-export
     DESTINATION
-        lib/cmake/E57Format
+        "${E57_INSTALL_CMAKEDIR}"
 )
 
 install(
     FILES
         ${CMAKE_CURRENT_SOURCE_DIR}/cmake/e57format-config.cmake
     DESTINATION
-        lib/cmake/E57Format
+        "${E57_INSTALL_CMAKEDIR}"
 )

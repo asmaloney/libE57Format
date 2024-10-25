@@ -49,7 +49,7 @@ function(GitInfo source)
       find_package(Git QUIET)
     endif()
     if(NOT GIT_FOUND)
-      message(AUTHOR_WARNING "Git not found, cannot get git informations")
+      message(AUTHOR_WARNING "Git not found, cannot get git information")
       return()
     endif()
 

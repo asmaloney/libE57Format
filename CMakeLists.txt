@@ -238,6 +238,7 @@ if ( E57_BUILD_TEST )
 endif()
 
 # CMake package files
+include( GNUInstallDirs )
 set( E57_INSTALL_CMAKEDIR
     "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
      CACHE STRING

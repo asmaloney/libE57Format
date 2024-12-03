@@ -254,9 +254,17 @@ install(
         "${E57_INSTALL_CMAKEDIR}"
 )
 
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file (
+    e57format-config-version.cmake
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY SameMajorVersion
+)
+
 install(
     FILES
         ${CMAKE_CURRENT_SOURCE_DIR}/cmake/e57format-config.cmake
+        ${CMAKE_CURRENT_BINARY_DIR}/e57format-config-version.cmake
     DESTINATION
         "${E57_INSTALL_CMAKEDIR}"
 )

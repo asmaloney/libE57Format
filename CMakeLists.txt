@@ -77,7 +77,7 @@ if ( E57_BUILDING_SELF )
 endif()
 
 find_package( Threads REQUIRED )
-find_package( XercesC REQUIRED )
+find_package( XercesC 3.2 REQUIRED )
 
 option( E57_BUILD_SHARED
 	"Compile E57Format as a shared library"
@@ -193,17 +193,6 @@ target_compile_definitions( E57Format
 
 # sanitizers
 include( Sanitizers )
-
-# xerces
-if ( WIN32 )
-    option( USING_STATIC_XERCES "Turn on if you are linking with Xerces as a static lib" OFF )
-    if ( USING_STATIC_XERCES )
-        target_compile_definitions( E57Format
-            PUBLIC
-                XERCES_STATIC_LIBRARY
-        )
-    endif()
-endif()
 
 # Target Libraries
 target_link_libraries( E57Format PRIVATE XercesC::XercesC )

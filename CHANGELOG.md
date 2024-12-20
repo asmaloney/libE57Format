@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 3.3.0 - (in progress)
+
+### Added
+
+- {cmake} Generate a package version file ([#316](https://github.com/asmaloney/libE57Format/pull/316)) (Thanks SunBlack!)
+
+### Changed
+
+- {cmake} Require XercesC 3.2 and remove `USING_STATIC_XERCES` ([#317](https://github.com/asmaloney/libE57Format/pull/317)) (Thanks SunBlack!)
+
+### Fixed
+
+- {cmake} Added missing include for GNUInstallDirs ([#315](https://github.com/asmaloney/libE57Format/pull/315)) (Thanks Adrian!)
+
+  If you built without testing on, the cmake files were not installed to the correct location.
+
 ## [3.2.0](https://github.com/asmaloney/libE57Format/releases/tag/v3.2.0) - 2024-06-27
 
 ### Added

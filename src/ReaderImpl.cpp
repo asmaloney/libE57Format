@@ -483,6 +483,44 @@ namespace e57
             FloatNode( cylindricalRepresentation.get( "radius" ) ).value();
       }
 
+      // E57_LEICA_Camera_Distortion
+      // See: http://www.libe57.org/E57_LEICA_Camera_Distortion.txt
+      if ( imf_.extensionsLookupPrefix( "dist" ) && image.isDefined( "dist:distortion" ) )
+      {
+         const StructureNode distortion( image.get( "dist:distortion" ) );
+
+         auto &pcd = image2DHeader.pinholeCameraDistortion;
+         pcd.initialized = true;
+
+         if ( distortion.isDefined( "dist:CameraNumber" ) )
+         {
+            pcd.cameraNumber = IntegerNode( distortion.get( "dist:CameraNumber" ) ).value();
+         }
+
+         pcd.type = StringNode( distortion.get( "dist:Type" ) ).value();
+
+         pcd.CV_K1 = FloatNode( distortion.get( "dist:CV_K1" ) ).value();
+         pcd.CV_K2 = FloatNode( distortion.get( "dist:CV_K2" ) ).value();
+         pcd.CV_K3 = FloatNode( distortion.get( "dist:CV_K3" ) ).value();
+         pcd.CV_K4 = FloatNode( distortion.get( "dist:CV_K4" ) ).value();
+         pcd.CV_K5 = FloatNode( distortion.get( "dist:CV_K5" ) ).value();
+         pcd.CV_K6 = FloatNode( distortion.get( "dist:CV_K6" ) ).value();
+
+         pcd.CV_P1 = FloatNode( distortion.get( "dist:CV_P1" ) ).value();
+         pcd.CV_P2 = FloatNode( distortion.get( "dist:CV_P2" ) ).value();
+
+         pcd.CV_CX = FloatNode( distortion.get( "dist:CV_CX" ) ).value();
+         pcd.CV_CY = FloatNode( distortion.get( "dist:CV_CY" ) ).value();
+
+         pcd.CV_FX = FloatNode( distortion.get( "dist:CV_FX" ) ).value();
+         pcd.CV_FY = FloatNode( distortion.get( "dist:CV_FY" ) ).value();
+
+         pcd.CV_HEIGHT =
+            static_cast<int32_t>( IntegerNode( distortion.get( "dist:CV_HEIGHT" ) ).value() );
+         pcd.CV_WIDTH =
+            static_cast<int32_t>( IntegerNode( distortion.get( "dist:CV_WIDTH" ) ).value() );
+      }
+
       return true;
    }
 

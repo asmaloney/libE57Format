@@ -48,8 +48,9 @@ namespace e57
    };
 
    CompressedVectorWriterImpl::CompressedVectorWriterImpl(
-      std::shared_ptr<CompressedVectorNodeImpl> ni, std::vector<SourceDestBuffer> &sbufs ) :
-      cVector_( ni ), isOpen_( false ) // set to true when succeed below
+      std::shared_ptr<CompressedVectorNodeImpl> ni, std::vector<SourceDestBuffer> &sbufs,
+      bool skipPacketWriteIndex ) :
+      cVector_( ni ), skipPacketWriteIndex_(skipPacketWriteIndex), isOpen_( false ) // set to true when succeed below
    {
       //???  check if cvector already been written (can't write twice)
 
@@ -183,8 +184,11 @@ namespace e57
          flush();
       }
 
-      // Write one index packet (required by standard).
-      packetWriteIndex();
+      if (!skipPacketWriteIndex_)
+      {
+         // Write one index packet (required by standard).
+         packetWriteIndex();
+      }
 
       // Compute length of whole section we just wrote (from section start to
       // current start of free space).

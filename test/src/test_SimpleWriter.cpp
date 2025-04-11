@@ -705,3 +705,44 @@ TEST( SimpleWriterData, VisualRefImage )
 
    delete writer;
 }
+
+TEST( SimpleWriter, SkipPacketWriteIndexFlag )
+{
+   e57::WriterOptions options;
+   options.guid = "Skip Packet Write Index Test GUID";
+   options.skipPacketWriteIndex = true;
+
+   e57::Writer *writer = nullptr;
+
+   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./SkipPacketWriteIndexFalse.e57", options ) );
+
+   constexpr int64_t cNumPoints = 10;
+
+   e57::Data3D header;
+   header.guid = "SkipPacketWriteIndexFalse Header GUID";
+   header.pointCount = cNumPoints;
+   header.pointFields.cartesianXField = true;
+   header.pointFields.cartesianYField = true;
+   header.pointFields.cartesianZField = true;
+
+   e57::Data3DPointsFloat pointsData( header );
+
+   for ( int64_t i = 0; i < cNumPoints; ++i )
+   {
+      auto floati = static_cast<float>( i );
+      pointsData.cartesianX[i] = floati;
+      pointsData.cartesianY[i] = floati;
+      pointsData.cartesianZ[i] = floati;
+   }
+
+   try
+   {
+      writer->WriteData3DData( header, pointsData );
+   }
+   catch ( e57::E57Exception &err )
+   {
+      FAIL() << err.errorStr() << ": " << err.context();
+   }
+
+   delete writer;
+}

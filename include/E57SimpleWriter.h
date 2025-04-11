@@ -47,6 +47,9 @@ namespace e57
 
       /// Information describing the Coordinate Reference System to be used for the file
       ustring coordinateMetadata;
+
+      /// Skip writing the index packet (this is not standards compliant)
+      bool skipPacketWriteIndex = false;
    };
 
    /// @brief Used for writing an E57 file using the E57 Simple API.

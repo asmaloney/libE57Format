@@ -486,7 +486,8 @@ public:                                                                         
       VectorNode codecs() const;
 
       // Iterators
-      CompressedVectorWriter writer( std::vector<SourceDestBuffer> &sbufs );
+      CompressedVectorWriter writer( std::vector<SourceDestBuffer> &sbufs, 
+                                     bool skipPacketWriteIndex = false );
       CompressedVectorReader reader( const std::vector<SourceDestBuffer> &dbufs );
 
       // Up/Down cast conversion

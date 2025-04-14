@@ -80,6 +80,6 @@ namespace e57
 
       VectorNode images2D_;
 
-      bool skipPacketWriteIndex_ = false;
+      bool writeIndexPackets_;
    }; // end Writer class
 } // end namespace e57

@@ -49,8 +49,8 @@ namespace e57
 
    CompressedVectorWriterImpl::CompressedVectorWriterImpl(
       std::shared_ptr<CompressedVectorNodeImpl> ni, std::vector<SourceDestBuffer> &sbufs,
-      bool skipPacketWriteIndex ) :
-      cVector_( ni ), skipPacketWriteIndex_(skipPacketWriteIndex), isOpen_( false ) // set to true when succeed below
+      bool writeIndexPackets ) :
+      cVector_( ni ), writeIndexPackets_(writeIndexPackets), isOpen_( false ) // set to true when succeed below
    {
       //???  check if cvector already been written (can't write twice)
 
@@ -184,7 +184,7 @@ namespace e57
          flush();
       }
 
-      if (!skipPacketWriteIndex_)
+      if (writeIndexPackets_)
       {
          // Write one index packet (required by standard).
          packetWriteIndex();

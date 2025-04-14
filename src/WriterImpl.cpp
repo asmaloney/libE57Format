@@ -127,7 +127,7 @@ namespace e57
 
    WriterImpl::WriterImpl( const ustring &filePath, const WriterOptions &options ) :
       imf_( filePath, "w" ), root_( imf_.root() ), data3D_( imf_, true ), images2D_( imf_, true ),
-      skipPacketWriteIndex_(options.skipPacketWriteIndex)
+      writeIndexPackets_(options.writeIndexPackets)
    {
       // We are using the E57 v1.0 data format standard field names.
       // The standard field names are used without an extension prefix (in the default namespace).
@@ -1296,7 +1296,7 @@ namespace e57
       }
 
       // create the writer, all buffers must be setup before this call
-      CompressedVectorWriter writer = points.writer( sourceBuffers, skipPacketWriteIndex_ );
+      CompressedVectorWriter writer = points.writer( sourceBuffers, writeIndexPackets_ );
 
       return writer;
    }
@@ -1346,7 +1346,7 @@ namespace e57
       groupSDBuffers.emplace_back( imf_, "startPointIndex", startPointIndex, groupCount, true );
       groupSDBuffers.emplace_back( imf_, "pointCount", pointCount, groupCount, true );
 
-      CompressedVectorWriter writer = groups.writer( groupSDBuffers, skipPacketWriteIndex_ );
+      CompressedVectorWriter writer = groups.writer( groupSDBuffers, writeIndexPackets_ );
       writer.write( groupCount );
       writer.close();
 

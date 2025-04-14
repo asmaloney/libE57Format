@@ -706,20 +706,27 @@ TEST( SimpleWriterData, VisualRefImage )
    delete writer;
 }
 
-TEST( SimpleWriter, SkipPacketWriteIndexFlag )
+TEST( SimpleWriter, WritePacketIsTrueByDefault)
 {
    e57::WriterOptions options;
-   options.guid = "Skip Packet Write Index Test GUID";
-   options.skipPacketWriteIndex = true;
+
+   EXPECT_TRUE( options.writeIndexPackets );
+}
+
+TEST( SimpleWriter, PacketWriteIndexFlag )
+{
+   e57::WriterOptions options;
+   options.guid = "Packet Write Index Test GUID";
+   options.writeIndexPackets = false;
 
    e57::Writer *writer = nullptr;
 
-   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./SkipPacketWriteIndexFalse.e57", options ) );
+   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./PacketWriteIndexFalse.e57", options ) );
 
    constexpr int64_t cNumPoints = 10;
 
    e57::Data3D header;
-   header.guid = "SkipPacketWriteIndexFalse Header GUID";
+   header.guid = "PacketWriteIndexFalse Header GUID";
    header.pointCount = cNumPoints;
    header.pointFields.cartesianXField = true;
    header.pointFields.cartesianYField = true;

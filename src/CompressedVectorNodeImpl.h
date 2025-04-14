@@ -59,7 +59,7 @@ namespace e57
 
       /// Iterator constructors
       std::shared_ptr<CompressedVectorWriterImpl> writer( std::vector<SourceDestBuffer> sbufs, 
-                                                          bool skipPacketWriteIndex = false );
+                                                          bool writeIndexPackets = true );
       std::shared_ptr<CompressedVectorReaderImpl> reader( std::vector<SourceDestBuffer> dbufs );
 
       int64_t getRecordCount() const

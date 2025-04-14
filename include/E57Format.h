@@ -487,7 +487,7 @@ public:                                                                         
 
       // Iterators
       CompressedVectorWriter writer( std::vector<SourceDestBuffer> &sbufs, 
-                                     bool skipPacketWriteIndex = false );
+                                     bool writeIndexPackets = true );
       CompressedVectorReader reader( const std::vector<SourceDestBuffer> &dbufs );
 
       // Up/Down cast conversion

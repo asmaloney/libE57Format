@@ -439,9 +439,9 @@ CompressedVectorNode cannot be set twice).
 CompressedVectorNode::prototype
 */
 CompressedVectorWriter CompressedVectorNode::writer( std::vector<SourceDestBuffer> &sbufs,
-                                                     bool skipPacketWriteIndex )
+                                                     bool writeIndexPackets )
 {
-   return CompressedVectorWriter( impl_->writer( sbufs, skipPacketWriteIndex ) );
+   return CompressedVectorWriter( impl_->writer( sbufs, writeIndexPackets ) );
 }
 
 /*!

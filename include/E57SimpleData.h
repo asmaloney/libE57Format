@@ -914,7 +914,7 @@ namespace e57
       /// A user-defined name for the Image2D.
       ustring name;
 
-      /// A globally unique identification string for the current version of the  Image2D object
+      /// A globally unique identification string for the current version of the Image2D object
       ustring guid;
 
       /// A user-defined description of the Image2D

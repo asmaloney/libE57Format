@@ -566,9 +566,6 @@ TEST( SimpleWriter, MinMaxIssuesCartesianFloat )
    header.pointFields.timeStampField = true;
    header.pointFields.timeNodeType = e57::NumericalNodeType::ScaledInteger;
    header.pointFields.timeScale = 0.1;
-   header.pointFields.intensityField = true;
-   header.pointFields.intensityNodeType = e57::NumericalNodeType::ScaledInteger;
-   header.pointFields.intensityScale = 0.1;
 
    e57::Data3DPointsFloat pointsData( header );
 
@@ -579,7 +576,6 @@ TEST( SimpleWriter, MinMaxIssuesCartesianFloat )
       pointsData.cartesianY[i] = floati;
       pointsData.cartesianZ[i] = floati;
       pointsData.timeStamp[i] = floati;
-      pointsData.intensity[i] = floati + 0.01f;
    }
 
    try
@@ -598,9 +594,6 @@ TEST( SimpleWriter, MinMaxIssuesCartesianFloat )
 
    EXPECT_NE( header.pointFields.timeMinimum, e57::FLOAT_MIN );
    EXPECT_NE( header.pointFields.timeMaximum, e57::FLOAT_MAX );
-
-   EXPECT_NE( header.intensityLimits.intensityMinimum, 0.0 );
-   EXPECT_NE( header.intensityLimits.intensityMaximum, 0.0 );
 }
 
 // https://github.com/asmaloney/libE57Format/issues/160
@@ -628,9 +621,6 @@ TEST( SimpleWriter, MinMaxIssuesSphericalDouble )
    header.pointFields.timeStampField = true;
    header.pointFields.timeNodeType = e57::NumericalNodeType::ScaledInteger;
    header.pointFields.timeScale = 0.1;
-   header.pointFields.intensityField = true;
-   header.pointFields.intensityNodeType = e57::NumericalNodeType::ScaledInteger;
-   header.pointFields.intensityScale = 0.1;
 
    e57::Data3DPointsDouble pointsData( header );
 
@@ -641,7 +631,6 @@ TEST( SimpleWriter, MinMaxIssuesSphericalDouble )
       pointsData.sphericalAzimuth[i] = floati;
       pointsData.sphericalElevation[i] = floati;
       pointsData.timeStamp[i] = floati;
-      pointsData.intensity[i] = floati + 0.01f;
    }
 
    try
@@ -660,9 +649,6 @@ TEST( SimpleWriter, MinMaxIssuesSphericalDouble )
 
    EXPECT_NE( header.pointFields.timeMinimum, e57::DOUBLE_MIN );
    EXPECT_NE( header.pointFields.timeMaximum, e57::DOUBLE_MAX );
-
-   EXPECT_NE( header.intensityLimits.intensityMinimum, 0.0 );
-   EXPECT_NE( header.intensityLimits.intensityMaximum, 0.0 );
 }
 
 TEST( SimpleWriterData, VisualRefImage )

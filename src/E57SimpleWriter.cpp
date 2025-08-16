@@ -37,7 +37,6 @@ namespace
    /// Fill in missing min/max data in the Data3D header for the following:
    ///   - cartesian points
    ///   - spherical points
-   ///   - intensity
    ///   - time stamps
    template <typename COORDTYPE>
    void _fillMinMaxData( e57::Data3D &ioData3DHeader,
@@ -69,15 +68,6 @@ namespace
       const bool writeAngle =
          ( pointFields.angleNodeType == e57::NumericalNodeType::ScaledInteger ) &&
          ( pointFields.angleMinimum == cMin ) && ( pointFields.angleMaximum == cMax );
-
-      // IF we are using intensity
-      // AND we haven't set either min or max
-      // THEN calculate them from the points
-      double intensityMinimum = std::numeric_limits<double>::max();
-      double intensityMaximum = std::numeric_limits<double>::lowest();
-
-      const bool writeIntensity =
-         pointFields.intensityField && ( ioData3DHeader.intensityLimits == e57::IntensityLimits{} );
 
       // IF we are using scaled ints for timestamps
       // AND we haven't set either min or max
@@ -122,12 +112,6 @@ namespace
             angleMaximum = std::max( inBuffers.sphericalElevation[i], angleMaximum );
          }
 
-         if ( writeIntensity )
-         {
-            intensityMinimum = std::min( inBuffers.intensity[i], intensityMinimum );
-            intensityMaximum = std::max( inBuffers.intensity[i], intensityMaximum );
-         }
-
          if ( writeTimeStamp )
          {
             timeMinimum = std::min( inBuffers.timeStamp[i], timeMinimum );
@@ -145,12 +129,6 @@ namespace
       {
          pointFields.angleMinimum = angleMinimum;
          pointFields.angleMaximum = angleMaximum;
-      }
-
-      if ( writeIntensity )
-      {
-         ioData3DHeader.intensityLimits.intensityMinimum = intensityMinimum;
-         ioData3DHeader.intensityLimits.intensityMaximum = intensityMaximum;
       }
 
       if ( writeTimeStamp )

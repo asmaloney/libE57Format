@@ -18,6 +18,8 @@ All notable changes to this project will be documented in this file. The format 
 
   If you built without testing on, the cmake files were not installed to the correct location.
 
+- {standard conformance} Don't try to fill in intensity limits when using the simple API. They are for the limits that the sensor can produce, not the limits of the data (8.4.19).
+
 ## [3.2.0](https://github.com/asmaloney/libE57Format/releases/tag/v3.2.0) - 2024-06-27
 
 ### Added

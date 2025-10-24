@@ -14,7 +14,15 @@ All notable changes to this project will be documented in this file. The format 
 
 ### Fixed
 
-- {cmake} Added missing include for GNUInstallDirs ([#315](https://github.com/asmaloney/libE57Format/pull/315)) (Thanks Adrian!)
+- Fix clang 17 warnings about `@throw` documentation. ([#327](https://github.com/asmaloney/libE57Format/pull/327))
+
+- Fix MSVC C++17 deprecation of `codecvt_utf8_utf16`; replaced with `MultiByteToWideChar` if compiling with C++ &gt;= 17. ([#326](https://github.com/asmaloney/libE57Format/pull/326)) (Thanks Christophe!)
+
+- {ci} Fix some CI warnings and update actions. ([#328](https://github.com/asmaloney/libE57Format/pull/328))
+
+- {ci} Fix GitHub CI for Windows. ([#325](https://github.com/asmaloney/libE57Format/pull/325)) (Thanks Christophe!)
+
+- {cmake} Add missing include for GNUInstallDirs ([#315](https://github.com/asmaloney/libE57Format/pull/315)) (Thanks Adrian!)
 
   If you built without testing on, the cmake files were not installed to the correct location.
 

@@ -125,6 +125,7 @@ jobs:
         shell: bash -el {0}
         run: |
           conda install conda-forge::xerces-c
+          echo "CMAKE_PREFIX_PATH=${CONDA_PREFIX}/Library" >> "$GITHUB_ENV"
           choco upgrade ccache ninja
           ccache --version | head -n 1
           echo "ninja $(ninja --version)"

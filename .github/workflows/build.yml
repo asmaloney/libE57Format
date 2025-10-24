@@ -92,12 +92,12 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           submodules: recursive
 
       - name: Checkout Test Data
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: 'asmaloney/libE57Format-test-data'
           path: libE57Format-test-data

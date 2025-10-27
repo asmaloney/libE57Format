@@ -368,3 +368,89 @@ TEST( SimpleReaderData, ColourRepresentation )
 
    delete reader;
 }
+
+
+TEST( SimpleReaderData, PinholeImageWithDistortionParameters )
+{
+   e57::Reader *reader = nullptr;
+
+   E57_ASSERT_NO_THROW( reader = new e57::Reader(
+                           TestData::Path() + "/self/PinholeImageWithDistortionParameters.e57", {} ) );
+
+   ASSERT_TRUE( reader->IsOpen() );
+   EXPECT_EQ( reader->GetImage2DCount(), 3 );
+   EXPECT_EQ( reader->GetData3DCount(), 0 );
+
+   e57::E57Root fileHeader;
+   ASSERT_TRUE( reader->GetE57Root( fileHeader ) );
+
+   CheckFileHeader( fileHeader );
+   EXPECT_EQ( fileHeader.guid, "Pinhole image with distortion parameters GUID" );
+
+   {
+      // test reading image with distortion parameters set
+      e57::Image2D image2Dheader;
+      ASSERT_TRUE( reader->ReadImage2D( 0, image2Dheader ) );
+
+      EXPECT_EQ( image2Dheader.pinholeRepresentation.imageWidth, 225 );
+      EXPECT_EQ( image2Dheader.pinholeRepresentation.imageHeight, 300 );
+
+      EXPECT_EQ( image2Dheader.pinholeCameraDistortion.initialized, true );
+      EXPECT_EQ( image2Dheader.pinholeCameraDistortion.cameraNumber, 1 );
+      EXPECT_EQ( image2Dheader.pinholeCameraDistortion.type, "Testing type" );
+      EXPECT_FLOAT_EQ( image2Dheader.pinholeCameraDistortion.CV_K1, 1.01 );
+      EXPECT_FLOAT_EQ( image2Dheader.pinholeCameraDistortion.CV_K2, 2.02 );
+      EXPECT_FLOAT_EQ( image2Dheader.pinholeCameraDistortion.CV_K3, 3.03 );
+      EXPECT_FLOAT_EQ( image2Dheader.pinholeCameraDistortion.CV_K4, 4.04 );
+      EXPECT_FLOAT_EQ( image2Dheader.pinholeCameraDistortion.CV_K5, 5.05 );
+      EXPECT_FLOAT_EQ( image2Dheader.pinholeCameraDistortion.CV_K6, 6.06 );
+      EXPECT_FLOAT_EQ( image2Dheader.pinholeCameraDistortion.CV_P1, 11.11 );
+      EXPECT_FLOAT_EQ( image2Dheader.pinholeCameraDistortion.CV_P2, 12.12 );
+      EXPECT_FLOAT_EQ( image2Dheader.pinholeCameraDistortion.CV_CX, 21.21 );
+      EXPECT_FLOAT_EQ( image2Dheader.pinholeCameraDistortion.CV_CY, 22.22 );
+      EXPECT_FLOAT_EQ( image2Dheader.pinholeCameraDistortion.CV_FX, 31.31 );
+      EXPECT_FLOAT_EQ( image2Dheader.pinholeCameraDistortion.CV_FY, 32.32 );
+      EXPECT_EQ( image2Dheader.pinholeCameraDistortion.CV_HEIGHT, 225 );
+      EXPECT_EQ( image2Dheader.pinholeCameraDistortion.CV_WIDTH, 300 );
+   }
+
+   {
+      // test reading image with some distortion parameters omitted
+      e57::Image2D image2Dheader;
+      EXPECT_TRUE( reader->ReadImage2D( 1, image2Dheader ) );
+
+      EXPECT_EQ( image2Dheader.pinholeRepresentation.imageWidth, 225 );
+      EXPECT_EQ( image2Dheader.pinholeRepresentation.imageHeight, 300 );
+
+      EXPECT_EQ( image2Dheader.pinholeCameraDistortion.initialized, true );
+      EXPECT_EQ( image2Dheader.pinholeCameraDistortion.cameraNumber, 2 );
+      EXPECT_EQ( image2Dheader.pinholeCameraDistortion.type, "" );
+      EXPECT_FLOAT_EQ( image2Dheader.pinholeCameraDistortion.CV_K1, 1.01 );
+      EXPECT_FLOAT_EQ( image2Dheader.pinholeCameraDistortion.CV_K2, 2.02 );
+      EXPECT_FLOAT_EQ( image2Dheader.pinholeCameraDistortion.CV_K3, 0 );
+      EXPECT_FLOAT_EQ( image2Dheader.pinholeCameraDistortion.CV_K4, 0 );
+      EXPECT_FLOAT_EQ( image2Dheader.pinholeCameraDistortion.CV_K5, 0 );
+      EXPECT_FLOAT_EQ( image2Dheader.pinholeCameraDistortion.CV_K6, 0 );
+      EXPECT_FLOAT_EQ( image2Dheader.pinholeCameraDistortion.CV_P1, 0 );
+      EXPECT_FLOAT_EQ( image2Dheader.pinholeCameraDistortion.CV_P2, 0 );
+      EXPECT_FLOAT_EQ( image2Dheader.pinholeCameraDistortion.CV_CX, 0 );
+      EXPECT_FLOAT_EQ( image2Dheader.pinholeCameraDistortion.CV_CY, 0 );
+      EXPECT_FLOAT_EQ( image2Dheader.pinholeCameraDistortion.CV_FX, 0 );
+      EXPECT_FLOAT_EQ( image2Dheader.pinholeCameraDistortion.CV_FY, 0 );
+      EXPECT_EQ( image2Dheader.pinholeCameraDistortion.CV_HEIGHT, 225 );
+      EXPECT_EQ( image2Dheader.pinholeCameraDistortion.CV_WIDTH, 300 );
+   }
+
+   {
+      // test reading image without distortion header
+      e57::Image2D image2Dheader;
+      EXPECT_TRUE( reader->ReadImage2D( 2, image2Dheader ) );
+
+      EXPECT_EQ( image2Dheader.pinholeRepresentation.imageWidth, 225 );
+      EXPECT_EQ( image2Dheader.pinholeRepresentation.imageHeight, 300 );
+
+      EXPECT_EQ( image2Dheader.pinholeCameraDistortion.initialized, false );
+   }
+
+   delete reader;
+}

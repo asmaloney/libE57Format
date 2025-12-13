@@ -368,3 +368,68 @@ TEST( SimpleReaderData, ColourRepresentation )
 
    delete reader;
 }
+
+namespace
+{
+   // Checks that
+   //     StructureNode(e.data3d[0]["points"].prototype()).isDefined(attributeName)
+   //     == expectedResult
+   void CheckPointsIsDefinedAttr( const std::string &fileName, const std::string &attributeName, bool expectedResult )
+   {
+      e57::ImageFile imf( fileName, "r" );
+      ASSERT_TRUE( imf.isOpen() ) << "Failed to open: " << fileName;
+
+      e57::StructureNode root = imf.root();
+
+      ASSERT_TRUE( root.isDefined( "data3D" ) ) << "root should contain 'data3D'";
+
+      e57::Node data3DNode = root.get( "data3D" );
+      ASSERT_EQ( data3DNode.type(), e57::TypeVector ) << "'data3D' should be a VectorNode";
+
+      e57::VectorNode data3D = static_cast<e57::VectorNode>( data3DNode );
+
+      ASSERT_GT( data3D.childCount(), 0 ) << "'data3D' vector should not be empty";
+
+      e57::Node scanNode = data3D.get( 0 );
+      ASSERT_EQ( scanNode.type(), e57::TypeStructure )
+         << "data3D[0] should be a StructureNode";
+
+      e57::StructureNode scan0 = static_cast<e57::StructureNode>( scanNode );
+
+      ASSERT_TRUE( scan0.isDefined( "points" ) ) << "Scan 0 should have 'points' defined";
+
+      e57::Node pointsNode = scan0.get( "points" );
+      ASSERT_EQ( pointsNode.type(), e57::TypeCompressedVector )
+         << "'points' should be a CompressedVectorNode";
+
+      e57::CompressedVectorNode points =
+         static_cast<e57::CompressedVectorNode>( pointsNode );
+
+      e57::Node prototypeNode = points.prototype();
+      ASSERT_EQ( prototypeNode.type(), e57::TypeStructure )
+         << "Prototype should be a StructureNode";
+
+      e57::StructureNode prototype = static_cast<e57::StructureNode>( prototypeNode );
+
+      bool defined = false;
+      EXPECT_NO_THROW( defined = prototype.isDefined( attributeName ) );
+
+      EXPECT_EQ( defined, expectedResult )
+         << "Expected attribute '" << attributeName << "' to be "
+         << ( expectedResult ? "Defined" : "Undefined" ) << " in " << fileName;
+   }
+}
+
+TEST( ImageFile, IsDefinedHasNormals )
+{
+   const std::string fileName = TestData::Path() + "/self/single-point-with-nor:normalX.e57";
+
+   CheckPointsIsDefinedAttr( fileName, "nor:normalX", true );
+}
+
+TEST( ImageFile, IsDefinedMissingNormals )
+{
+   const std::string fileName = TestData::Path() + "/reference/bunnyDouble.e57";
+
+   CheckPointsIsDefinedAttr( fileName, "nor:normalX", false );
+}

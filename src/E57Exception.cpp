@@ -362,6 +362,14 @@ namespace e57
             return "trying to read an invalid Data3D with zero records - check for zero records "
                    "before trying to read this Data3D section (ErrorInvalidZeroRecordsData3D)";
 
+         case ErrorPathNameEmpty:
+            return "E57 path name is empty (ErrorPathNameEmpty)";
+         case ErrorPathNameMalformed:
+            return "E57 path name is not well formed (ErrorPathNameMalformed)";
+         case ErrorPathNameExtensionNotRegistered:
+            return "E57 path name uses an unregistered extension "
+                   "(ErrorPathNameExtensionNotRegistered)";
+
          default:
             return "unknown error (" + std::to_string( ecode ) + ")";
       }

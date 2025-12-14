@@ -258,8 +258,7 @@ int64_t VectorNode::childCount() const
 
 @details
 The @a pathName may be relative to this node, or absolute (starting with a "/"). The origin of the
-absolute path name is the root of the tree that contains this VectorNode. If this VectorNode is not
-attached to an ImageFile, the @a pathName origin root will not the root node of an ImageFile.
+absolute path name is the root of the tree that contains this VectorNode.
 
 The element names of child elements of VectorNodes are numbers, encoded as strings, starting at "0".
 

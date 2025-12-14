@@ -217,8 +217,7 @@ int64_t StructureNode::childCount() const
 
 @details
 The @a pathName may be relative to this node, or absolute (starting with a "/"). The origin of the
-absolute path name is the root of the tree that contains this StructureNode. If this StructureNode
-is not attached to an ImageFile, the @a pathName origin root will not the root node of an ImageFile.
+absolute path name is the root of the tree that contains this StructureNode.
 
 @pre The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @post No visible state is modified.

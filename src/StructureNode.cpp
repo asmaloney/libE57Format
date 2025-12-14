@@ -225,7 +225,9 @@ is not attached to an ImageFile, the @a pathName origin root will not the root n
 
 @return true if pathName is currently defined.
 
-@throw ::ErrorBadPathName (n/c)
+@throw ::ErrorPathNameEmpty (n/c)
+@throw ::ErrorPathNameMalformed (n/c)
+@throw ::ErrorPathNameExtensionNotRegistered (n/c)
 @throw ::ErrorImageFileNotOpen (n/c)
 @throw ::ErrorInternal All objects in undocumented state
 
@@ -278,7 +280,9 @@ an ImageFile.
 
 @return A smart Node handle referencing the child node.
 
-@throw ::ErrorBadPathName (n/c)
+@throw ::ErrorPathNameEmpty (n/c)
+@throw ::ErrorPathNameMalformed (n/c)
+@throw ::ErrorPathNameExtensionNotRegistered (n/c)
 @throw ::ErrorPathUndefined (n/c)
 @throw ::ErrorImageFileNotOpen (n/c)
 @throw ::ErrorInternal All objects in undocumented state
@@ -322,7 +326,9 @@ destImageFile() == n.destImageFile()).
 @post The @a pathName will be defined (i.e. isDefined(pathName)).
 
 @throw ::ErrorImageFileNotOpen (n/c)
-@throw ::ErrorBadPathName (n/c)
+@throw ::ErrorPathNameEmpty (n/c)
+@throw ::ErrorPathNameMalformed (n/c)
+@throw ::ErrorPathNameExtensionNotRegistered (n/c)
 @throw ::ErrorPathUndefined (n/c)
 @throw ::ErrorSetTwice (n/c)
 @throw ::ErrorAlreadyHasParent (n/c)

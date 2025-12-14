@@ -268,7 +268,9 @@ The element names of child elements of VectorNodes are numbers, encoded as strin
 
 @return true if pathName is currently defined.
 
-@throw ::ErrorBadPathName (n/c)
+@throw ::ErrorPathNameEmpty (n/c)
+@throw ::ErrorPathNameMalformed (n/c)
+@throw ::ErrorPathNameExtensionNotRegistered (n/c)
 @throw ::ErrorImageFileNotOpen (n/c)
 @throw ::ErrorInternal All objects in undocumented state
 
@@ -319,7 +321,9 @@ The element names of child elements of VectorNodes are numbers, encoded as strin
 
 @return A smart Node handle referencing the child node.
 
-@throw ::ErrorBadPathName (n/c)
+@throw ::ErrorPathNameEmpty (n/c)
+@throw ::ErrorPathNameMalformed (n/c)
+@throw ::ErrorPathNameExtensionNotRegistered (n/c)
 @throw ::ErrorPathUndefined (n/c)
 @throw ::ErrorImageFileNotOpen (n/c)
 @throw ::ErrorInternal All objects in undocumented state

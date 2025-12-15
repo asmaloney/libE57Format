@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 3.4.0 - (in progress)
+
+### Changed
+
+- `StructureNode::isDefine()` will no longer throw an exception when checking an extension field when the extension is unregistered. ([#333](https://github.com/asmaloney/libE57Format/pull/333)) (Thanks Niklas!)
+
+  Before this change:
+
+  - `isDefined( "foo" )` returned _true_ OR _false_
+  - `isDefined( "nor:normalX" )` returned _true_ OR _false_ (if the extension is registered) OR _caused an exception_ (if the extension is unregistered)
+
+  This is counterintuitive, so got rid of the exception case and now just return _false_ even if the extension is unregistered.
+
 ## [3.3.0](https://github.com/asmaloney/libE57Format/releases/tag/v3.3.0) - 2025-10-24
 
 ### Added

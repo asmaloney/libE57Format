@@ -6,6 +6,7 @@ target_sources( ${PROJECT_NAME}
         main.cpp
         RandomNum.cpp
         TestData.cpp
+        test_ImageFile.cpp
         test_SimpleData.cpp
         test_SimpleReader.cpp
         test_SimpleWriter.cpp

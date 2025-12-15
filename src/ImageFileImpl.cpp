@@ -506,28 +506,6 @@ namespace e57
       return ( prefix.length() > 0 );
    }
 
-   bool ImageFileImpl::isElementNameLegal( const ustring &elementName, bool allowNumber )
-   {
-#ifdef E57_VERBOSE
-      // cout << "isElementNameLegal elementName=""" << elementName << """" <<
-      // std::endl;
-#endif
-      try
-      {
-         checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
-
-         // Throws if elementName bad
-         checkElementNameLegal( elementName, allowNumber );
-      }
-      catch ( E57Exception & /*ex*/ )
-      {
-         return false;
-      }
-
-      // If get here, the name was good
-      return true;
-   }
-
    bool ImageFileImpl::isPathNameLegal( const ustring &pathName )
    {
 #ifdef E57_VERBOSE
@@ -549,7 +527,7 @@ namespace e57
       return true;
    }
 
-   void ImageFileImpl::checkElementNameLegal( const ustring &elementName, bool allowNumber )
+   void ImageFileImpl::checkElementNameLegal( const ustring &elementName )
    {
       // no checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__)
 
@@ -557,7 +535,7 @@ namespace e57
       ustring localPart;
 
       // Throws if bad elementName
-      elementNameParse( elementName, prefix, localPart, allowNumber );
+      elementNameParse( elementName, prefix, localPart, true );
 
       // If has prefix, it must be registered
       ustring uri;
@@ -618,13 +596,7 @@ namespace e57
          // Get element name from in between '/', check valid
          ustring elementName = pathName.substr( start, slash - start );
 
-         if ( !isElementNameLegal( elementName ) )
-         {
-            throw E57_EXCEPTION2( ErrorPathNameMalformed, std::string( "pathName=" )
-                                                             .append( pathName )
-                                                             .append( " elementName=" )
-                                                             .append( elementName ) );
-         }
+         checkElementNameLegal( elementName ); // throws if elementName bad
 
          // Add to list
          fields.push_back( elementName );

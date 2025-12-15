@@ -226,7 +226,6 @@ absolute path name is the root of the tree that contains this StructureNode.
 
 @throw ::ErrorPathNameEmpty (n/c)
 @throw ::ErrorPathNameMalformed (n/c)
-@throw ::ErrorPathNameExtensionNotRegistered (n/c)
 @throw ::ErrorImageFileNotOpen (n/c)
 @throw ::ErrorInternal All objects in undocumented state
 
@@ -234,7 +233,23 @@ absolute path name is the root of the tree that contains this StructureNode.
 */
 bool StructureNode::isDefined( const ustring &pathName ) const
 {
-   return impl_->isDefined( pathName );
+   try
+   {
+      bool defined = impl_->isDefined( pathName );
+
+      return defined;
+   }
+   catch ( const e57::E57Exception &e )
+   {
+      // Explicitly ignore the exception caused by requesting an extension field (e.g.
+      // "nor:normalX") when the extension is not yet registered.
+      if ( e.errorCode() == ErrorPathNameExtensionNotRegistered )
+      {
+         return false;
+      }
+
+      throw( e );
+   }
 }
 
 /*!

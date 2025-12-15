@@ -269,7 +269,6 @@ The element names of child elements of VectorNodes are numbers, encoded as strin
 
 @throw ::ErrorPathNameEmpty (n/c)
 @throw ::ErrorPathNameMalformed (n/c)
-@throw ::ErrorPathNameExtensionNotRegistered (n/c)
 @throw ::ErrorImageFileNotOpen (n/c)
 @throw ::ErrorInternal All objects in undocumented state
 
@@ -277,7 +276,23 @@ The element names of child elements of VectorNodes are numbers, encoded as strin
 */
 bool VectorNode::isDefined( const ustring &pathName ) const
 {
-   return impl_->isDefined( pathName );
+   try
+   {
+      bool defined = impl_->isDefined( pathName );
+
+      return defined;
+   }
+   catch ( const e57::E57Exception &e )
+   {
+      // Explicitly ignore the exception caused by requesting an extension field (e.g.
+      // "nor:normalX") when the extension is not yet registered.
+      if ( e.errorCode() == ErrorPathNameExtensionNotRegistered )
+      {
+         return false;
+      }
+
+      throw( e );
+   }
 }
 
 /*!

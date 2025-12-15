@@ -269,9 +269,7 @@ Node StructureNode::get( int64_t index ) const
 
 @param [in] pathName The absolute pathname, or pathname relative to this object, of the object to
 get. The @a pathName may be relative to this node, or absolute (starting with a "/"). The origin of
-the absolute path name is the root of the tree that contains this StructureNode. If this
-StructureNode is not attached to an ImageFile, the @a pathName origin root will not the root node of
-an ImageFile.
+the absolute path name is the root of the tree that contains this StructureNode.
 
 @pre The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @pre The @a pathName must be defined (i.e. isDefined(pathName)).
@@ -302,8 +300,7 @@ object @a n will be given.
 
 @details
 The @a pathName may be relative to this node, or absolute (starting with a "/"). The origin of the
-absolute path name is the root of the tree that contains this StructureNode. If this StructureNode
-is not attached to an ImageFile, the @a pathName origin root will not the root node of an ImageFile.
+absolute path name is the root of the tree that contains this StructureNode.
 
 The path name formed from all element names in @a pathName except the last must exist. If the @a
 pathName identifies the child of a VectorNode, then the last element name in @a pathName must be

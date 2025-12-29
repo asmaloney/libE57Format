@@ -912,9 +912,6 @@ namespace e57
    /// Implements e57 extension from http://www.libe57.org/E57_LEICA_Camera_Distortion.txt
    struct E57_DLL PinholeCameraDistortion
    {
-      /// Distortion parameters are optional part of standard 
-      bool initialized = false;
-
       /// Optional - Camera number in a multiple camera app (1 - n).
       int64_t cameraNumber = 0;
 
@@ -1009,7 +1006,7 @@ namespace e57
 
       /// Optional distortion parameters for a pinhole camera, used when the stored image is not
       /// undistorted.
-      PinholeCameraDistortion pinholeCameraDistortion;
+      std::unique_ptr<PinholeCameraDistortion> pinholeCameraDistortion;
    };
 
    /// @brief Identifies the format representation for the image data

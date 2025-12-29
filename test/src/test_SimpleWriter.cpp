@@ -729,23 +729,24 @@ TEST( SimpleWriterData, PinholeImageWithDistortionParameters )
       image2DHeader.pinholeRepresentation.jpegImageSize = cImageSize;
 
       auto &pcd = image2DHeader.pinholeCameraDistortion;
-      pcd.initialized = true;
-      pcd.cameraNumber = 1;
-      pcd.type = "Testing type";
-      pcd.CV_K1 = 1.01;
-      pcd.CV_K2 = 2.02;
-      pcd.CV_K3 = 3.03;
-      pcd.CV_K4 = 4.04;
-      pcd.CV_K5 = 5.05;
-      pcd.CV_K6 = 6.06;
-      pcd.CV_P1 = 11.11;
-      pcd.CV_P2 = 12.12;
-      pcd.CV_CX = 21.21;
-      pcd.CV_CY = 22.22;
-      pcd.CV_FX = 31.31;
-      pcd.CV_FY = 32.32;
-      pcd.CV_HEIGHT = 225;
-      pcd.CV_WIDTH = 300;
+      pcd = std::make_unique<e57::PinholeCameraDistortion>();
+
+      pcd->cameraNumber = 1;
+      pcd->type = "Testing type";
+      pcd->CV_K1 = 1.01;
+      pcd->CV_K2 = 2.02;
+      pcd->CV_K3 = 3.03;
+      pcd->CV_K4 = 4.04;
+      pcd->CV_K5 = 5.05;
+      pcd->CV_K6 = 6.06;
+      pcd->CV_P1 = 11.11;
+      pcd->CV_P2 = 12.12;
+      pcd->CV_CX = 21.21;
+      pcd->CV_CY = 22.22;
+      pcd->CV_FX = 31.31;
+      pcd->CV_FY = 32.32;
+      pcd->CV_HEIGHT = 225;
+      pcd->CV_WIDTH = 300;
 
       std::size_t bytesWritten = 0;
       E57_ASSERT_NO_THROW( bytesWritten = writer->WriteImage2DData( image2DHeader, e57::ImageJPEG,
@@ -766,12 +767,12 @@ TEST( SimpleWriterData, PinholeImageWithDistortionParameters )
       image2DHeader.pinholeRepresentation.jpegImageSize = cImageSize;
 
       auto &pcd = image2DHeader.pinholeCameraDistortion;
-      pcd.initialized = true;
-      pcd.cameraNumber = 2;
-      pcd.CV_K1 = 1.01;
-      pcd.CV_K2 = 2.02;
-      pcd.CV_HEIGHT = 225;
-      pcd.CV_WIDTH = 300;
+      pcd = std::make_unique<e57::PinholeCameraDistortion>();
+      pcd->cameraNumber = 2;
+      pcd->CV_K1 = 1.01;
+      pcd->CV_K2 = 2.02;
+      pcd->CV_HEIGHT = 225;
+      pcd->CV_WIDTH = 300;
 
       std::size_t bytesWritten = 0;
       E57_ASSERT_NO_THROW( bytesWritten = writer->WriteImage2DData( image2DHeader, e57::ImageJPEG,
@@ -785,7 +786,7 @@ TEST( SimpleWriterData, PinholeImageWithDistortionParameters )
       // test writing image without distortion header
       e57::Image2D image2DHeader;
       image2DHeader.name = "JPEG Image Test 3";
-      image2DHeader.guid = "Pinhole Image 2 - JPEG Image GUID";
+      image2DHeader.guid = "Pinhole Image 3 - JPEG Image GUID";
       image2DHeader.description = "JPEG image test 3 - without distortion header";
       image2DHeader.pinholeRepresentation.imageWidth = 225;
       image2DHeader.pinholeRepresentation.imageHeight = 300;

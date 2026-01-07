@@ -908,58 +908,63 @@ namespace e57
       }
    };
 
-   /// @brief Stores optional camera pinhole distortion coefficients and data
-   /// Implements e57 extension from http://www.libe57.org/E57_LEICA_Camera_Distortion.txt
-   struct E57_DLL PinholeCameraDistortion
+   namespace Extension
    {
-      /// Optional - Camera number in a multiple camera app (1 - n).
-      int64_t cameraNumber = 0;
 
-      /// Distortion Type like "OpenCV"
-      ustring type;
+      /// @brief Stores optional camera pinhole distortion coefficients and data
+      /// Implements e57 extension from http://www.libe57.org/E57_LEICA_Camera_Distortion.txt
+      struct E57_DLL PinholeCameraDistortion
+      {
+         /// Optional - Camera number in a multiple camera app (1 - n).
+         int64_t cameraNumber = 0;
 
-      /// Radial distortion coefficient K1
-      float CV_K1 = 0;
+         /// Distortion Type like "OpenCV"
+         ustring type;
 
-      /// Radial distortion coefficient K2
-      float CV_K2 = 0;
+         /// Radial distortion coefficient K1
+         float CV_K1 = 0;
 
-      /// Radial distortion coefficient K3
-      float CV_K3 = 0;
+         /// Radial distortion coefficient K2
+         float CV_K2 = 0;
 
-      /// Radial distortion coefficient K4
-      float CV_K4 = 0;
+         /// Radial distortion coefficient K3
+         float CV_K3 = 0;
 
-      /// Radial distortion coefficient K5
-      float CV_K5 = 0;
+         /// Radial distortion coefficient K4
+         float CV_K4 = 0;
 
-      /// Radial distortion coefficient K6
-      float CV_K6 = 0;
+         /// Radial distortion coefficient K5
+         float CV_K5 = 0;
 
-      /// Tangential distortion coefficient - P1
-      float CV_P1 = 0;
+         /// Radial distortion coefficient K6
+         float CV_K6 = 0;
 
-      /// Tangential distortion coefficient - P2
-      float CV_P2 = 0;
+         /// Tangential distortion coefficient - P1
+         float CV_P1 = 0;
 
-      /// Principal point usually at image centerX in pixel units
-      float CV_CX = 0;
+         /// Tangential distortion coefficient - P2
+         float CV_P2 = 0;
 
-      /// Principal point usually at image centerY in pixel units
-      float CV_CY = 0;
+         /// Principal point usually at image centerX in pixel units
+         float CV_CX = 0;
 
-      /// X focal length expressed in pixel units
-      float CV_FX = 0;
+         /// Principal point usually at image centerY in pixel units
+         float CV_CY = 0;
 
-      /// Y focal length expressed in pixel units
-      float CV_FY = 0;
+         /// X focal length expressed in pixel units
+         float CV_FX = 0;
 
-      /// Image X in pixel units
-      int32_t CV_HEIGHT = 0;
+         /// Y focal length expressed in pixel units
+         float CV_FY = 0;
 
-      /// Image Y in pixel units
-      int32_t CV_WIDTH = 0;
-   };
+         /// Image X in pixel units
+         int32_t CV_HEIGHT = 0;
+
+         /// Image Y in pixel units
+         int32_t CV_WIDTH = 0;
+      };
+
+   }
 
    /// @brief Stores an image from a camera
    struct E57_DLL Image2D
@@ -1004,9 +1009,8 @@ namespace e57
       /// Representation for an image using the cylindrical camera projection model.
       CylindricalRepresentation cylindricalRepresentation;
 
-      /// Optional distortion parameters for a pinhole camera, used when the stored image is not
-      /// undistorted.
-      std::unique_ptr<PinholeCameraDistortion> pinholeCameraDistortion;
+      /// Optional distortion parameters for a pinhole camera
+      std::unique_ptr<Extension::PinholeCameraDistortion> pinholeCameraDistortionExt;
    };
 
    /// @brief Identifies the format representation for the image data

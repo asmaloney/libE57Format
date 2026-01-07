@@ -370,7 +370,7 @@ TEST( SimpleReaderData, ColourRepresentation )
 }
 
 
-TEST( SimpleReaderData, PinholeImageWithDistortionParameters )
+TEST( SimpleReaderData, EXT_DIST_PinholeImageWithDistortionParameters )
 {
    e57::Reader *reader = nullptr;
 
@@ -389,13 +389,14 @@ TEST( SimpleReaderData, PinholeImageWithDistortionParameters )
 
    {
       // test reading image with distortion parameters set
-      e57::Image2D image2Dheader;
-      ASSERT_TRUE( reader->ReadImage2D( 0, image2Dheader ) );
+      e57::Image2D image2DHeader;
+      ASSERT_TRUE( reader->ReadImage2D( 0, image2DHeader ) );
 
-      EXPECT_EQ( image2Dheader.pinholeRepresentation.imageWidth, 225 );
-      EXPECT_EQ( image2Dheader.pinholeRepresentation.imageHeight, 300 );
+      EXPECT_EQ( image2DHeader.pinholeRepresentation.imageWidth, 1 );
+      EXPECT_EQ( image2DHeader.pinholeRepresentation.imageHeight, 1 );
 
-      const auto& pcd = image2Dheader.pinholeCameraDistortion;
+      const e57::Extension::PinholeCameraDistortion *pcd =
+         image2DHeader.pinholeCameraDistortionExt.get();
       EXPECT_TRUE( pcd );
       EXPECT_EQ( pcd->cameraNumber, 1 );
       EXPECT_EQ( pcd->type, "Testing type" );
@@ -411,19 +412,20 @@ TEST( SimpleReaderData, PinholeImageWithDistortionParameters )
       EXPECT_FLOAT_EQ( pcd->CV_CY, 22.22 );
       EXPECT_FLOAT_EQ( pcd->CV_FX, 31.31 );
       EXPECT_FLOAT_EQ( pcd->CV_FY, 32.32 );
-      EXPECT_EQ( pcd->CV_HEIGHT, 225 );
-      EXPECT_EQ( pcd->CV_WIDTH, 300 );
+      EXPECT_EQ( pcd->CV_HEIGHT, 1 );
+      EXPECT_EQ( pcd->CV_WIDTH, 1 );
    }
 
    {
       // test reading image with some distortion parameters omitted
-      e57::Image2D image2Dheader;
-      EXPECT_TRUE( reader->ReadImage2D( 1, image2Dheader ) );
+      e57::Image2D image2DHeader;
+      EXPECT_TRUE( reader->ReadImage2D( 1, image2DHeader ) );
 
-      EXPECT_EQ( image2Dheader.pinholeRepresentation.imageWidth, 225 );
-      EXPECT_EQ( image2Dheader.pinholeRepresentation.imageHeight, 300 );
+      EXPECT_EQ( image2DHeader.pinholeRepresentation.imageWidth, 1 );
+      EXPECT_EQ( image2DHeader.pinholeRepresentation.imageHeight, 1 );
 
-      const auto& pcd = image2Dheader.pinholeCameraDistortion;
+      const e57::Extension::PinholeCameraDistortion *pcd =
+         image2DHeader.pinholeCameraDistortionExt.get();
       EXPECT_TRUE( pcd );
       EXPECT_EQ( pcd->cameraNumber, 2 );
       EXPECT_EQ( pcd->type, "" );
@@ -439,19 +441,19 @@ TEST( SimpleReaderData, PinholeImageWithDistortionParameters )
       EXPECT_FLOAT_EQ( pcd->CV_CY, 0 );
       EXPECT_FLOAT_EQ( pcd->CV_FX, 0 );
       EXPECT_FLOAT_EQ( pcd->CV_FY, 0 );
-      EXPECT_EQ( pcd->CV_HEIGHT, 225 );
-      EXPECT_EQ( pcd->CV_WIDTH, 300 );
+      EXPECT_EQ( pcd->CV_HEIGHT, 1 );
+      EXPECT_EQ( pcd->CV_WIDTH, 1 );
    }
 
    {
       // test reading image without distortion header
-      e57::Image2D image2Dheader;
-      EXPECT_TRUE( reader->ReadImage2D( 2, image2Dheader ) );
+      e57::Image2D image2DHeader;
+      EXPECT_TRUE( reader->ReadImage2D( 2, image2DHeader ) );
 
-      EXPECT_EQ( image2Dheader.pinholeRepresentation.imageWidth, 225 );
-      EXPECT_EQ( image2Dheader.pinholeRepresentation.imageHeight, 300 );
+      EXPECT_EQ( image2DHeader.pinholeRepresentation.imageWidth, 1 );
+      EXPECT_EQ( image2DHeader.pinholeRepresentation.imageHeight, 1 );
 
-      EXPECT_FALSE( image2Dheader.pinholeCameraDistortion );
+      EXPECT_FALSE( image2DHeader.pinholeCameraDistortionExt );
    }
 
    delete reader;

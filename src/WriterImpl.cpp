@@ -417,7 +417,7 @@ namespace e57
 
       // E57_LEICA_Camera_Distortion
       // See: http://www.libe57.org/E57_LEICA_Camera_Distortion.txt
-      if ( image2DHeader.pinholeCameraDistortion )
+      if ( image2DHeader.pinholeCameraDistortionExt )
       {
          // make sure we declare the extension before using the fields with prefix
          if ( !imf_.extensionsLookupPrefix( "dist" ) )
@@ -428,7 +428,8 @@ namespace e57
          StructureNode distortion( imf_ );
          image.set( "dist:distortion", distortion );
 
-         auto &pcd = image2DHeader.pinholeCameraDistortion;
+         const Extension::PinholeCameraDistortion *pcd =
+            image2DHeader.pinholeCameraDistortionExt.get();
          if ( pcd->cameraNumber > 0 )
          {
             distortion.set( "dist:CameraNumber", IntegerNode( imf_, pcd->cameraNumber ) );

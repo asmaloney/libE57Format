@@ -8,19 +8,6 @@
 #include "Helpers.h"
 #include "TestData.h"
 
-namespace
-{
-   void CheckFileHeader( const e57::E57Root &fileHeader )
-   {
-      // These are invariant.
-      // See ASTM Standard Table 12.
-
-      EXPECT_EQ( fileHeader.formatName, "ASTM E57 3D Imaging Data File" );
-      EXPECT_EQ( fileHeader.versionMajor, 1 );
-      EXPECT_EQ( fileHeader.versionMinor, 0 );
-   }
-}
-
 TEST( SimpleReader, PathError )
 {
    E57_ASSERT_THROW( e57::Reader( "./no-path/empty.e57", {} ) );
@@ -39,7 +26,7 @@ TEST( SimpleReaderData, Empty )
    e57::E57Root fileHeader;
    ASSERT_TRUE( reader->GetE57Root( fileHeader ) );
 
-   CheckFileHeader( fileHeader );
+   TestHelper::CheckFileHeader( fileHeader );
    EXPECT_EQ( fileHeader.guid, "Empty File GUID" );
 
    delete reader;
@@ -58,7 +45,7 @@ TEST( SimpleReaderData, ZeroPoints )
    e57::E57Root fileHeader;
    ASSERT_TRUE( reader->GetE57Root( fileHeader ) );
 
-   CheckFileHeader( fileHeader );
+   TestHelper::CheckFileHeader( fileHeader );
    EXPECT_EQ( fileHeader.guid, "Zero Points GUID" );
 
    e57::Data3D data3DHeader;
@@ -95,7 +82,7 @@ TEST( SimpleReaderData, ZeroPointsInvalid )
    e57::E57Root fileHeader;
    ASSERT_TRUE( reader->GetE57Root( fileHeader ) );
 
-   CheckFileHeader( fileHeader );
+   TestHelper::CheckFileHeader( fileHeader );
    EXPECT_EQ( fileHeader.guid, "{EC1A0DE4-F76F-44CE-E527-789EEB818347}" );
 
    e57::Data3D data3DHeader;
@@ -127,7 +114,7 @@ TEST( SimpleReaderData, InvalidCVHeader )
    e57::E57Root fileHeader;
    ASSERT_TRUE( reader->GetE57Root( fileHeader ) );
 
-   CheckFileHeader( fileHeader );
+   TestHelper::CheckFileHeader( fileHeader );
    EXPECT_EQ( fileHeader.guid, "InvalidCVHeader GUID" );
 
    e57::Data3D data3DHeader;
@@ -192,7 +179,7 @@ TEST( SimpleReaderData, ColouredCubeFloat )
    e57::E57Root fileHeader;
    ASSERT_TRUE( reader->GetE57Root( fileHeader ) );
 
-   CheckFileHeader( fileHeader );
+   TestHelper::CheckFileHeader( fileHeader );
    EXPECT_EQ( fileHeader.guid, "Coloured Cube File GUID" );
 
    e57::Data3D data3DHeader;
@@ -230,7 +217,7 @@ TEST( SimpleReaderData, ColouredCubeFloatToDouble )
    e57::E57Root fileHeader;
    ASSERT_TRUE( reader->GetE57Root( fileHeader ) );
 
-   CheckFileHeader( fileHeader );
+   TestHelper::CheckFileHeader( fileHeader );
    EXPECT_EQ( fileHeader.guid, "Coloured Cube File GUID" );
 
    e57::Data3D data3DHeader;
@@ -268,7 +255,7 @@ TEST( SimpleReaderData, BunnyDouble )
    e57::E57Root fileHeader;
    ASSERT_TRUE( reader->GetE57Root( fileHeader ) );
 
-   CheckFileHeader( fileHeader );
+   TestHelper::CheckFileHeader( fileHeader );
    EXPECT_EQ( fileHeader.guid, "{19AA90ED-145E-4B3B-922C-80BC00648844}" );
 
    e57::Data3D data3DHeader;
@@ -306,7 +293,7 @@ TEST( SimpleReaderData, BunnyInt32 )
    e57::E57Root fileHeader;
    ASSERT_TRUE( reader->GetE57Root( fileHeader ) );
 
-   CheckFileHeader( fileHeader );
+   TestHelper::CheckFileHeader( fileHeader );
    EXPECT_EQ( fileHeader.guid, "{991574D2-854C-4CEF-8CB8-D0132E4BCD0A}" );
 
    e57::Data3D data3DHeader;
@@ -344,7 +331,7 @@ TEST( SimpleReaderData, ColourRepresentation )
    e57::E57Root fileHeader;
    ASSERT_TRUE( reader->GetE57Root( fileHeader ) );
 
-   CheckFileHeader( fileHeader );
+   TestHelper::CheckFileHeader( fileHeader );
    EXPECT_EQ( fileHeader.guid, "6107aa44-6289-4e9c-80bd-f36cc3fbd44b" );
 
    e57::Data3D data3DHeader;
@@ -384,7 +371,7 @@ TEST( SimpleReaderData, EXT_DIST_PinholeImageWithDistortionParameters )
    e57::E57Root fileHeader;
    ASSERT_TRUE( reader->GetE57Root( fileHeader ) );
 
-   CheckFileHeader( fileHeader );
+   TestHelper::CheckFileHeader( fileHeader );
    EXPECT_EQ( fileHeader.guid, "Pinhole image with distortion parameters GUID" );
 
    {

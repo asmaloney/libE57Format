@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file. The format 
 
 ## 3.4.0 - (in progress)
 
+### Added
+
+- E57Simple API: Add read and write support for the [DIST camera distortion extension](http://www.libe57.org/E57_LEICA_Camera_Distortion.txt). ([#320](https://github.com/asmaloney/libE57Format/pull/320)) (Thanks Vladislav!)
+
 ### Changed
 
 - `StructureNode::isDefine()` will no longer throw an exception when checking an extension field when the extension is unregistered. ([#333](https://github.com/asmaloney/libE57Format/pull/333)) (Thanks Niklas!)

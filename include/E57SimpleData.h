@@ -922,40 +922,40 @@ namespace e57
          ustring type;
 
          /// Radial distortion coefficient K1
-         float CV_K1 = 0;
+         double CV_K1 = 0;
 
          /// Radial distortion coefficient K2
-         float CV_K2 = 0;
+         double CV_K2 = 0;
 
          /// Radial distortion coefficient K3
-         float CV_K3 = 0;
+         double CV_K3 = 0;
 
          /// Radial distortion coefficient K4
-         float CV_K4 = 0;
+         double CV_K4 = 0;
 
          /// Radial distortion coefficient K5
-         float CV_K5 = 0;
+         double CV_K5 = 0;
 
          /// Radial distortion coefficient K6
-         float CV_K6 = 0;
+         double CV_K6 = 0;
 
          /// Tangential distortion coefficient - P1
-         float CV_P1 = 0;
+         double CV_P1 = 0;
 
          /// Tangential distortion coefficient - P2
-         float CV_P2 = 0;
+         double CV_P2 = 0;
 
          /// Principal point usually at image centerX in pixel units
-         float CV_CX = 0;
+         double CV_CX = 0;
 
          /// Principal point usually at image centerY in pixel units
-         float CV_CY = 0;
+         double CV_CY = 0;
 
          /// X focal length expressed in pixel units
-         float CV_FX = 0;
+         double CV_FX = 0;
 
          /// Y focal length expressed in pixel units
-         float CV_FY = 0;
+         double CV_FY = 0;
 
          /// Image X in pixel units
          int32_t CV_HEIGHT = 0;

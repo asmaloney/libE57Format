@@ -369,13 +369,13 @@ TEST( SimpleReaderData, ColourRepresentation )
    delete reader;
 }
 
-
 TEST( SimpleReaderData, EXT_DIST_PinholeImageWithDistortionParameters )
 {
    e57::Reader *reader = nullptr;
 
-   E57_ASSERT_NO_THROW( reader = new e57::Reader(
-                           TestData::Path() + "/self/PinholeImageWithDistortionParameters.e57", {} ) );
+   E57_ASSERT_NO_THROW(
+      reader = new e57::Reader( TestData::Path() + "/self/PinholeImageWithDistortionParameters.e57",
+                                {} ) );
 
    ASSERT_TRUE( reader->IsOpen() );
    EXPECT_EQ( reader->GetImage2DCount(), 3 );

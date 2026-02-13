@@ -1,6 +1,7 @@
 _NOTE:_ libE57Format will not accept generative "AI" PRs at this time
 
 ## Type
+
 - [ ] New feature
 - [ ] Bug fix
 - [ ] Refactor
@@ -17,3 +18,8 @@ _NOTE:_ libE57Format will not accept generative "AI" PRs at this time
 ## Additional Notes
 
 (Any additional information or context relevant to this PR.)
+
+## Checklist
+
+- [ ] The included code and/or docs were written by a human
+- [ ] If including code changes, clang-format was run on the code

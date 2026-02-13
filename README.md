@@ -145,6 +145,10 @@ This project uses [clang-format](https://clang.llvm.org/docs/ClangFormat.html) t
 cmake --build . --target e57-clang-format
 ```
 
+#### Generative "AI" PRs
+
+I am not accepting generative "AI" code into this library at this time.
+
 ### 📖 Documentation
 
 The [documentation](https://github.com/asmaloney/libE57Format) is a bit old and could use some lovin'. You can submit changes over in the [libE57Format-docs](https://github.com/asmaloney/libE57Format-docs) repository.

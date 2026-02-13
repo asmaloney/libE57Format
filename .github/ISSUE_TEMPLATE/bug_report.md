@@ -4,7 +4,6 @@ about: Report a bug
 title: ''
 labels: ''
 assignees: ''
-
 ---
 
 **Describe the bug**
@@ -17,9 +16,10 @@ Please include a reproduction test case that can be dropped into the test suite 
 A clear and concise description of what you expected to happen.
 
 **Version Info (please include the following information):**
- - libE57Format version or git hash: 
- - OS:
-- Compiler: 
+
+- libE57Format version or git hash:
+- OS:
+- Compiler:
 
 **Additional context**
 Add any other context about the problem here.

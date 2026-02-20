@@ -266,7 +266,7 @@ namespace e57
 #endif
 
    std::shared_ptr<CompressedVectorWriterImpl> CompressedVectorNodeImpl::writer(
-      std::vector<SourceDestBuffer> sbufs )
+      std::vector<SourceDestBuffer> sbufs, bool writeIndexPackets )
    {
       checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
 
@@ -313,7 +313,7 @@ namespace e57
 
       // Return a shared_ptr to new object
       std::shared_ptr<CompressedVectorWriterImpl> cvwi(
-         new CompressedVectorWriterImpl( cai, sbufs ) );
+         new CompressedVectorWriterImpl( cai, sbufs, writeIndexPackets ) );
       return ( cvwi );
    }
 

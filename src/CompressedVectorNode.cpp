@@ -474,7 +474,7 @@ prototype. It is not an error to create a CompressedVectorReader for an empty Co
 @see CompressedVectorReader, SourceDestBuffer, CompressedVectorNode::CompressedVectorNode,
 CompressedVectorNode::prototype
 */
-CompressedVectorReader CompressedVectorNode::reader( const std::vector<SourceDestBuffer> &dbufs )
+CompressedVectorReader CompressedVectorNode::reader( const std::vector<SourceDestBuffer> &dbufs, bool allowParallel )
 {
-   return CompressedVectorReader( impl_->reader( dbufs ) );
+   return CompressedVectorReader( impl_->reader( dbufs, allowParallel ) );
 }

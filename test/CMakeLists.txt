@@ -87,7 +87,7 @@ else()
 endif()
 
 # GoogleTest from here: https://github.com/google/googletest
-if ( USE_EXTERNAL_GTEST )
+if ( USE_PACKAGED_GTEST )
  find_package( GTest REQUIRED)
 else()
     if ( NOT TARGET GTest::gtest AND NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/extern/googletest/CMakeLists.txt" )

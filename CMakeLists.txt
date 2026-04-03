@@ -109,7 +109,7 @@ option( E57_WRITE_CRAZY_PACKET_MODE "Compile library to enable reader-stressing 
 
 # Other compile options
 
-# Link-time optiomization
+# Link-time optimization
 # CMake forces "thin" LTO (see https://gitlab.kitware.com/cmake/cmake/-/issues/23136)
 # which is a problem if compiling statically for distribution (e.g. in a package manager).
 # Generally you will only want to turn this off for distributing static release builds.

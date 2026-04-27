@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file. The format 
 
 ### Added
 
+- {cmake} Allow the use of external googletest library. ([#343](https://github.com/asmaloney/libE57Format/pull/343)) (Thanks Tobias!)
+
 - E57Simple API: Add read and write support for the [DIST camera distortion extension](http://www.libe57.org/E57_LEICA_Camera_Distortion.txt). ([#320](https://github.com/asmaloney/libE57Format/pull/320)) (Thanks Vladislav!)
 
 ### Changed
@@ -18,6 +20,10 @@ All notable changes to this project will be documented in this file. The format 
   - `isDefined( "nor:normalX" )` returned _true_ OR _false_ (if the extension is registered) OR _caused an exception_ (if the extension is unregistered)
 
   This is counterintuitive, so got rid of the exception case and now just return _false_ even if the extension is unregistered.
+
+### Fixed
+
+- Add missing include for 32-bit architectures. ([#340](https://github.com/asmaloney/libE57Format/pull/340)) (Thanks Tobias!)
 
 ## [3.3.0](https://github.com/asmaloney/libE57Format/releases/tag/v3.3.0) - 2025-10-24
 

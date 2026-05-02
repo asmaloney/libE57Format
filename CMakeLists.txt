@@ -113,7 +113,13 @@ option( E57_WRITE_CRAZY_PACKET_MODE "Compile library to enable reader-stressing 
 # CMake forces "thin" LTO (see https://gitlab.kitware.com/cmake/cmake/-/issues/23136)
 # which is a problem if compiling statically for distribution (e.g. in a package manager).
 # Generally you will only want to turn this off for distributing static release builds.
-option( E57_RELEASE_LTO "Compile release library with link-time optimization" ON )
+option( E57_RELEASE_LTO "Compile release library with link-time optimization" ${E57_BUILD_SHARED} )
+
+if ( E57_RELEASE_LTO AND NOT E57_BUILD_SHARED )
+    message( WARNING "E57_RELEASE_LTO is set to ON, but ${PROJECT_NAME} will be build as static library. This may lead to linker issues!" )
+elseif ( NOT E57_RELEASE_LTO AND E57_BUILD_SHARED )
+	message( WARNING "E57_RELEASE_LTO is set to OFF, but ${PROJECT_NAME} will be build as dynamic library. This may lead issues if compiling statically for distribution!" )
+endif()
 
 #########################################################################################
 

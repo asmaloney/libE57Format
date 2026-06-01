@@ -76,6 +76,8 @@ if ( E57_BUILDING_SELF )
     endif()
 endif()
 
+option( E57_USE_EXTERNAL_CRCPP "Use an external CRCpp package" OFF )
+
 find_package( Threads REQUIRED )
 find_package( XercesC 3.2 REQUIRED )
 
@@ -136,7 +138,9 @@ include( E57ExportHeader )
 include( GitUpdate )
 
 # Main sources and includes
-add_subdirectory( extern/CRCpp )
+if ( NOT E57_USE_EXTERNAL_CRCPP )
+	add_subdirectory( extern/CRCpp )
+endif()
 add_subdirectory( include )
 add_subdirectory( src )
 

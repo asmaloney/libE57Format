@@ -83,7 +83,19 @@ option( E57_BUILD_SHARED
 	"Compile E57Format as a shared library"
 	OFF
 )
+option( E57_USE_EXTERNAL_CRCPP
+	"Use system crcpp rather than bundled version"
+	OFF
+)
 
+if( E57_USE_EXTERNAL_CRCPP )
+	find_path(crcpp_INCLUDE_PATH CRC.h
+		${CMAKE_INCLUDE_PATH}
+		$ENV{include})
+	if ( NOT crcpp_INCLUDE_PATH )
+		message( FATAL_ERROR "[${PROJECT_NAME}] E57_USE_EXTERNAL_CRCPP was enabled but CRC.h was not found" )
+	endif()
+endif()
 if( BUILD_SHARED_LIBS )
 	set( E57_BUILD_SHARED ON )
 endif()
@@ -136,7 +148,9 @@ include( E57ExportHeader )
 include( GitUpdate )
 
 # Main sources and includes
-add_subdirectory( extern/CRCpp )
+if ( NOT E57_USE_EXTERNAL_CRCPP )
+	add_subdirectory( extern/CRCpp )
+endif()
 add_subdirectory( include )
 add_subdirectory( src )
 

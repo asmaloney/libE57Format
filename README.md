@@ -102,10 +102,10 @@ This _Simple API_ has evolved since this original port to fix some problems and 
 - [CloudCompare](https://github.com/CloudCompare/CloudCompare)
 - [MeshLab](https://github.com/cnr-isti-vclab/meshlab)
 - [pye57](https://github.com/davidcaron/pye57)
+- [FreeCAD](https://github.com/FreeCAD/FreeCAD)
 
 These projects use hard forks of libE57Format:
 
-- [FreeCAD](https://github.com/FreeCAD/FreeCAD)
 - [MicMac](https://github.com/micmacIGN/micmac)
 - [PDAL](https://github.com/PDAL/PDAL)
 

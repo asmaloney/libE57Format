@@ -63,7 +63,7 @@ endif()
 
 # propose a default installation directory
 if ( E57_BUILDING_SELF )
-    if( CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT )
+    if ( CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT )
         string( REGEX REPLACE "/${PROJECT_NAME}" "" CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX} )
         set( T_ ${PROJECT_NAME} )
         set( T_ ${T_}-${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR} )
@@ -80,9 +80,10 @@ find_package( Threads REQUIRED )
 find_package( XercesC 3.2 REQUIRED )
 
 option( E57_BUILD_SHARED
-	"Compile E57Format as a shared library"
-	OFF
+        "Compile E57Format as a shared library"
+        OFF
 )
+
 option( E57_USE_EXTERNAL_CRCPP
 	"Use system crcpp rather than bundled version"
 	OFF
@@ -94,8 +95,8 @@ if( E57_USE_EXTERNAL_CRCPP )
 		message( FATAL_ERROR "[${PROJECT_NAME}] E57_USE_EXTERNAL_CRCPP was enabled but CRC.h was not found" )
 	endif()
 endif()
-if( BUILD_SHARED_LIBS )
-	set( E57_BUILD_SHARED ON )
+if ( BUILD_SHARED_LIBS )
+        set( E57_BUILD_SHARED ON )
 endif()
 
 #########################################################################################

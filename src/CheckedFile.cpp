@@ -187,7 +187,7 @@ CheckedFile::CheckedFile( const ustring &fileName, Mode mode, ReadChecksumPolicy
    {
       case Read:
       {
-#if defined( _MSC_VER )
+#if defined( _WIN32 )
          constexpr int readFlags = O_RDONLY | O_BINARY;
 #else
          constexpr int readFlags = O_RDONLY;
@@ -208,9 +208,13 @@ CheckedFile::CheckedFile( const ustring &fileName, Mode mode, ReadChecksumPolicy
       {
          // File truncated to zero length if already exists
 
-#if defined( _MSC_VER )
+#if defined( _WIN32 )
          constexpr int writeFlags = O_RDWR | O_CREAT | O_TRUNC | O_BINARY;
+#if defined( _MSC_VER )
          constexpr int writeMode = S_IREAD | S_IWRITE;
+#else
+         constexpr int writeMode = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH;
+#endif
 #else
          constexpr int writeFlags = O_RDWR | O_CREAT | O_TRUNC;
          constexpr int writeMode = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH;

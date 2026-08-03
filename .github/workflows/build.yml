@@ -131,7 +131,7 @@ jobs:
           echo "ninja $(ninja --version)"
 
       - name: ccache
-        uses: hendrikmuhs/ccache-action@v1
+        uses: hendrikmuhs/ccache-action@v1.2
         with:
           max-size: '5G'
           key: ${{ matrix.os }}-${{ matrix.build_type }}

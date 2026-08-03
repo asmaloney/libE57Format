@@ -89,9 +89,7 @@ option( E57_USE_EXTERNAL_CRCPP
 )
 
 if( E57_USE_EXTERNAL_CRCPP )
-	find_path(crcpp_INCLUDE_PATH CRC.h
-		${CMAKE_INCLUDE_PATH}
-		$ENV{include})
+	find_path(crcpp_INCLUDE_PATH CRC.h ${CMAKE_INCLUDE_PATH})
 	if ( NOT crcpp_INCLUDE_PATH )
 		message( FATAL_ERROR "[${PROJECT_NAME}] E57_USE_EXTERNAL_CRCPP was enabled but CRC.h was not found" )
 	endif()

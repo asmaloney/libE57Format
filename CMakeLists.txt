@@ -84,17 +84,6 @@ option( E57_BUILD_SHARED
         OFF
 )
 
-option( E57_USE_EXTERNAL_CRCPP
-	"Use system crcpp rather than bundled version"
-	OFF
-)
-
-if( E57_USE_EXTERNAL_CRCPP )
-	find_path(crcpp_INCLUDE_PATH CRC.h ${CMAKE_INCLUDE_PATH})
-	if ( NOT crcpp_INCLUDE_PATH )
-		message( FATAL_ERROR "[${PROJECT_NAME}] E57_USE_EXTERNAL_CRCPP was enabled but CRC.h was not found" )
-	endif()
-endif()
 if ( BUILD_SHARED_LIBS )
         set( E57_BUILD_SHARED ON )
 endif()
@@ -126,6 +115,20 @@ option( E57_WRITE_CRAZY_PACKET_MODE "Compile library to enable reader-stressing 
 # Generally you will only want to turn this off for distributing static release builds.
 option( E57_RELEASE_LTO "Compile release library with link-time optimization" ON )
 
+# CRCpp
+option( E57_USE_EXTERNAL_CRCPP
+        "Use an external CRCpp package"
+        OFF
+)
+
+if ( E57_USE_EXTERNAL_CRCPP )
+        find_path(crcpp_INCLUDE_PATH CRC.h ${CMAKE_INCLUDE_PATH})
+        if ( crcpp_INCLUDE_PATH )
+            message( STATUS "[${PROJECT_NAME}] Using external CRCpp version from ${crcpp_INCLUDE_PATH}" )
+        else()
+            message( FATAL_ERROR "[${PROJECT_NAME}] E57_USE_EXTERNAL_CRCPP was enabled but CRC.h was not found" )
+        endif()
+endif()
 #########################################################################################
 
 set( REVISION_ID "${PROJECT_NAME}-${PROJECT_VERSION}-${${PROJECT_NAME}_BUILD_TAG}" )

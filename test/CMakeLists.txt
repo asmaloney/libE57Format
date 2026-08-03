@@ -1,8 +1,6 @@
 # SPDX-License-Identifier: BSL-1.0
 # Copyright 2022 Andy Maloney <asmaloney@gmail.com>
 
-option( E57_USE_EXTERNAL_GTEST "Use an external gtest package" OFF )
-
 project( testE57
     LANGUAGES
         CXX
@@ -24,6 +22,9 @@ set_target_properties( testE57
 
 add_subdirectory( include )
 add_subdirectory( src )
+
+# Options
+option( E57_USE_EXTERNAL_GTEST "Use an external gtest package" OFF )
 
 # Turn on sanitizers
 include( Sanitizers )
@@ -90,8 +91,8 @@ endif()
 
 # GoogleTest from here: https://github.com/google/googletest
 if ( E57_USE_EXTERNAL_GTEST )
- find_package( GTest REQUIRED)
- message( STATUS "[${PROJECT_NAME}] Using external gtest version from ${GTest_CONFIG}" )
+    find_package( GTest REQUIRED)
+    message( STATUS "[${PROJECT_NAME}] Using external gtest version from ${GTest_CONFIG}" )
 else()
     if ( NOT TARGET GTest::gtest AND NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/extern/googletest/CMakeLists.txt" )
         message( FATAL_ERROR "[E57 Test] The GoogleTest submodule was not downloaded. E57_GIT_SUBMODULE_UPDATE was turned off or failed. Please update submodules and try again." )
@@ -117,7 +118,6 @@ else()
     unset( BUILD_GMOCK CACHE )
     unset( GTEST_HAS_ABSL CACHE )
     unset( INSTALL_GTEST CACHE )
-
 endif()
 
 target_link_libraries( testE57

@@ -210,7 +210,7 @@ CheckedFile::CheckedFile( const ustring &fileName, Mode mode, ReadChecksumPolicy
          // File truncated to zero length if already exists
 
          constexpr int writeFlags = O_RDWR | O_CREAT | O_TRUNC | O_BINARY;
-#if defined( _MSC_VER )         
+#if defined( _MSC_VER )
          constexpr int writeMode = S_IREAD | S_IWRITE;
 #else
          constexpr int writeMode = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH;

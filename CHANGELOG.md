@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file. The format 
 
 ### Added
 
+- {cmake} Allow the use of external CRCpp library. ([#346](https://github.com/asmaloney/libE57Format/pull/346)) (Thanks Benson & Elaine!)
+
 - {cmake} Allow the use of external googletest library. ([#343](https://github.com/asmaloney/libE57Format/pull/343)) (Thanks Tobias!)
 
 - E57Simple API: Add read and write support for the [DIST camera distortion extension](http://www.libe57.org/E57_LEICA_Camera_Distortion.txt). ([#320](https://github.com/asmaloney/libE57Format/pull/320)) (Thanks Vladislav!)
@@ -15,13 +17,16 @@ All notable changes to this project will be documented in this file. The format 
 - `StructureNode::isDefine()` will no longer throw an exception when checking an extension field when the extension is unregistered. ([#333](https://github.com/asmaloney/libE57Format/pull/333)) (Thanks Niklas!)
 
   Before this change:
-
   - `isDefined( "foo" )` returned _true_ OR _false_
   - `isDefined( "nor:normalX" )` returned _true_ OR _false_ (if the extension is registered) OR _caused an exception_ (if the extension is unregistered)
 
   This is counterintuitive, so got rid of the exception case and now just return _false_ even if the extension is unregistered.
 
 ### Fixed
+
+- Fix crash with an invalid E57 file (when Data3D is missing the prototype section). ([#351](https://github.com/asmaloney/libE57Format/pull/351))
+
+- Fix missing O_BINARY when using MinGW compiler. ([#347](https://github.com/asmaloney/libE57Format/pull/347)) (Thanks Sjur!)
 
 - Add missing include for 32-bit architectures. ([#340](https://github.com/asmaloney/libE57Format/pull/340)) (Thanks Tobias!)
 

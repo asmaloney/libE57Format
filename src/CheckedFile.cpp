@@ -83,6 +83,11 @@
 #include "CheckedFile.h"
 #include "StringFunctions.h"
 
+// Fallback
+#ifndef O_BINARY
+#define O_BINARY 0
+#endif
+
 // #define E57_CHECK_FILE_DEBUG
 #ifdef E57_CHECK_FILE_DEBUG
 #include <cassert>
@@ -187,11 +192,7 @@ CheckedFile::CheckedFile( const ustring &fileName, Mode mode, ReadChecksumPolicy
    {
       case Read:
       {
-#if defined( _MSC_VER )
          constexpr int readFlags = O_RDONLY | O_BINARY;
-#else
-         constexpr int readFlags = O_RDONLY;
-#endif
 
          fd_ = open64( fileName_, readFlags, 0 );
 
@@ -208,11 +209,10 @@ CheckedFile::CheckedFile( const ustring &fileName, Mode mode, ReadChecksumPolicy
       {
          // File truncated to zero length if already exists
 
-#if defined( _MSC_VER )
          constexpr int writeFlags = O_RDWR | O_CREAT | O_TRUNC | O_BINARY;
+#if defined( _MSC_VER )
          constexpr int writeMode = S_IREAD | S_IWRITE;
 #else
-         constexpr int writeFlags = O_RDWR | O_CREAT | O_TRUNC;
          constexpr int writeMode = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH;
 #endif
 

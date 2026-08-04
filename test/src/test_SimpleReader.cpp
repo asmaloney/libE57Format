@@ -100,6 +100,30 @@ TEST( SimpleReaderData, ZeroPointsInvalid )
    delete reader;
 }
 
+// Check that we properly handle a file with a Data3D section which does not have a prototype
+TEST( SimpleReaderData, NoPrototype )
+{
+   e57::Reader *reader = nullptr;
+
+   E57_ASSERT_NO_THROW( reader =
+                           new e57::Reader( TestData::Path() + "/self/NoPrototype.e57", {} ) );
+
+   ASSERT_TRUE( reader->IsOpen() );
+   EXPECT_EQ( reader->GetImage2DCount(), 0 );
+   EXPECT_EQ( reader->GetData3DCount(), 1 );
+
+   e57::E57Root fileHeader;
+   ASSERT_TRUE( reader->GetE57Root( fileHeader ) );
+
+   TestHelper::CheckFileHeader( fileHeader );
+   EXPECT_EQ( fileHeader.guid, "No Prototype File GUID" );
+
+   e57::Data3D data3DHeader;
+   E57_ASSERT_THROW( reader->ReadData3D( 0, data3DHeader ) );
+
+   delete reader;
+}
+
 TEST( SimpleReaderData, InvalidCVHeader )
 {
    e57::Reader *reader = nullptr;

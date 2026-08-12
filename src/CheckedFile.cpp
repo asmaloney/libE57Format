@@ -172,6 +172,16 @@ public:
    void read( char *buffer, uint64_t count )
    {
       const uint64_t start = cursorStream_;
+
+      // Written as ( count > streamSize_ - start ) rather than ( start + count > streamSize_ )
+      // so the check itself cannot overflow.
+      if ( start > streamSize_ || count > streamSize_ - start )
+      {
+         throw E57_EXCEPTION2( ErrorReadFailed, "pos=" + toString( start ) +
+                                                   " count=" + toString( count ) +
+                                                   " bufferSize=" + toString( streamSize_ ) );
+      }
+
       for ( uint64_t i = 0; i < count; ++i )
       {
          buffer[i] = stream_[start + i];

@@ -1,6 +1,7 @@
 // libE57Format testing Copyright © 2025 Andy Maloney <asmaloney@gmail.com>
 // SPDX-License-Identifier: BSL-1.0
 
+#include <cstring>
 #include <memory>
 
 #include "gtest/gtest.h"
@@ -108,4 +109,27 @@ TEST( ImageFile, StructureNodeIsDefined )
    // 5. Check that a malformed path throws an exception
    SCOPED_TRACE( "(5)" );
    E57_ASSERT_THROW( defined = prototype.isDefined( "a:b:c:d" ) );
+}
+
+// Checks for out-of-bounds read when parsing a truncated in-memory E57 buffer
+// See: https://github.com/asmaloney/libE57Format/pull/352
+TEST( ImageFile, InvalidBufferLength )
+{
+   // 48 bytes: valid "ASTM-E57" magic followed by a header that ends early.
+   static const unsigned char sInput[] = {
+      0x41, 0x53, 0x54, 0x4d, 0x2d, 0x45, 0x35, 0x37, 0x01, 0x00, 0x00, 0x00,
+      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x4c, 0x69,
+      0x62, 0x72, 0x61, 0x72, 0x79, 0x56, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e,
+      0x20, 0x74, 0x79, 0x00, 0x00, 0x00, 0x00, 0x00, 0x13, 0x92, 0xe4, 0x13,
+   };
+
+   // Exact-sized data allocation so the sanitizer can see the overrun
+   char *data = new char[sizeof( sInput )];
+   std::memcpy( data, sInput, sizeof( sInput ) );
+
+   std::unique_ptr<e57::ImageFile> imf;
+
+   E57_ASSERT_THROW( imf = std::make_unique<e57::ImageFile>( data, sizeof( sInput ) ) );
+
+   delete[] data;
 }

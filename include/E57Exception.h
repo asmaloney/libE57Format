@@ -150,6 +150,8 @@ namespace e57
       ErrorPathNameMalformed,              ///< E57 path name is not well formed
       ErrorPathNameExtensionNotRegistered, ///< E57 path name uses an unregistered extension
 
+      ErrorBadInputDataSize, ///< the file or buffer size is not a multiple of 1024 bytes
+
       /// @deprecated Will be removed in 4.0. Use e57::Success.
       E57_SUCCESS E57_DEPRECATED_ENUM( "Will be removed in 4.0. Use Success." ) = Success,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorBadCVHeader.

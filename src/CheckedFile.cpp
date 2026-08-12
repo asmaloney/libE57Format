@@ -209,6 +209,13 @@ CheckedFile::CheckedFile( const ustring &fileName, Mode mode, ReadChecksumPolicy
          readOnly_ = true;
 
          physicalLength_ = lseek64( 0LL, SEEK_END );
+
+         if ( physicalLength_ % 1024 != 0 )
+         {
+            throw E57_EXCEPTION2( ErrorBadInputDataSize,
+                                  "file length is " + toString( physicalLength_ ) + " bytes" );
+         }
+
          lseek64( 0, SEEK_SET );
 
          logicalLength_ = physicalToLogical( physicalLength_ );
@@ -235,6 +242,12 @@ CheckedFile::CheckedFile( const ustring &fileName, Mode mode, ReadChecksumPolicy
 CheckedFile::CheckedFile( const char *input, uint64_t size, ReadChecksumPolicy policy ) :
    fileName_( "<StreamBuffer>" ), checkSumPolicy_( policy )
 {
+   if ( size % 1024 != 0 )
+   {
+      throw E57_EXCEPTION2( ErrorBadInputDataSize,
+                            "buffer length is " + toString( size ) + " bytes" );
+   }
+
    bufView_ = new BufferView( input, size );
 
    readOnly_ = true;

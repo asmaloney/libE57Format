@@ -370,6 +370,9 @@ namespace e57
             return "E57 path name uses an unregistered extension "
                    "(ErrorPathNameExtensionNotRegistered)";
 
+         case ErrorBadInputDataSize:
+            return "file or buffer size is not an integral multiple of 1024 bytes";
+
          default:
             return "unknown error (" + std::to_string( ecode ) + ")";
       }

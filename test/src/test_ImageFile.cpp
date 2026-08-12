@@ -138,3 +138,17 @@ TEST( ImageFile, InvalidBufferLength )
 
    delete[] data;
 }
+
+// Check that we throw if the file size is not an integral multiple of 1024 bytes
+TEST( ImageFile, InvalidFileLength )
+{
+   if ( !TestData::Exists() )
+   {
+      GTEST_SKIP_( "(test data not available)" );
+   }
+
+   std::unique_ptr<e57::ImageFile> imf;
+
+   const std::string cFileName = TestData::Path() + "/self/InvalidFileLength.e57";
+   E57_ASSERT_THROW( imf = std::make_unique<e57::ImageFile>( cFileName, "r" ) );
+}

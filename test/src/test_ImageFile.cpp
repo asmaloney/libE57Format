@@ -67,6 +67,11 @@ namespace
 // See: https://github.com/asmaloney/libE57Format/issues/330
 TEST( ImageFile, StructureNodeIsDefined )
 {
+   if ( !TestData::Exists() )
+   {
+      GTEST_SKIP_( "(test data not available)" );
+   }
+
    std::unique_ptr<e57::ImageFile> imf;
 
    const std::string cFileName = TestData::Path() + "/reference/bunnyDouble.e57";

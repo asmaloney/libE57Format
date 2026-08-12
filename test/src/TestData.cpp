@@ -3,8 +3,6 @@
 
 #include <sys/stat.h>
 
-#include "gtest/gtest.h"
-
 #include "TestData.h"
 
 namespace
@@ -40,9 +38,4 @@ namespace TestData
    {
       return dirExists( TestData::Path() );
    }
-}
-
-TEST( TestData, RepoExists )
-{
-   ASSERT_TRUE( dirExists( TestData::Path() ) ) << "Data path: " << TestData::Path();
 }

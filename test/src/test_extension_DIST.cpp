@@ -11,7 +11,7 @@
 #include "Helpers.h"
 #include "TestData.h"
 
-TEST( Extension_DIST_Read, PinholeImageWithDistortionParameters )
+TEST( Extension_DIST, ReadPinholeImageWithDistortionParameters )
 {
    e57::Reader *reader = nullptr;
 
@@ -101,7 +101,7 @@ TEST( Extension_DIST_Read, PinholeImageWithDistortionParameters )
    delete reader;
 }
 
-TEST( Extension_DIST_Write, PinholeImageWithDistortionParameters )
+TEST( Extension_DIST, WritePinholeImageWithDistortionParameters )
 {
    e57::WriterOptions options;
    options.guid = "Pinhole image with distortion parameters GUID";

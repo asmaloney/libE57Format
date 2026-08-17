@@ -14,6 +14,10 @@ All notable changes to this project will be documented in this file. The format 
 
 ### Changed
 
+- Add checks in _CheckedFile_ constructors for file/buffer size. It will now throw a new exception `ErrorBadInputDataSize` if the file size or data buffer size is not a multiple of 1024 (as required by the standard). ([#355](https://github.com/asmaloney/libE57Format/pull/355))
+
+- Add a check in _Node::type()_ to catch issues with improperly formed XML which are not caught by higher-level checks. This will throw a generic `ErrorInternal` exception. ([#351](https://github.com/asmaloney/libE57Format/pull/351))
+
 - `StructureNode::isDefine()` will no longer throw an exception when checking an extension field when the extension is unregistered. ([#333](https://github.com/asmaloney/libE57Format/pull/333)) (Thanks Niklas!)
 
   Before this change:
@@ -24,7 +28,11 @@ All notable changes to this project will be documented in this file. The format 
 
 ### Fixed
 
-- Fix crash with an invalid E57 file (when Data3D is missing the prototype section). ([#351](https://github.com/asmaloney/libE57Format/pull/351))
+- {test} Fixed so tests can run properly even without the test data files. It will skip any tests which require the data files from [libE57Format-test-data](https://github.com/asmaloney/libE57Format-test-data). ([#354](https://github.com/asmaloney/libE57Format/pull/354))
+
+- Fixed out-of-bounds read when _CheckedFile_ passed a buffer which is not a multiple of 1024 bytes (as required by the standard). ([#352](https://github.com/asmaloney/libE57Format/pull/352)) (Thanks Conner!)
+
+- Fix crash when passed an invalid E57 file where _Data3D_ is missing the _prototype_ section. This will now throw an `ErrorBadPrototype` exception. ([#351](https://github.com/asmaloney/libE57Format/pull/351))
 
 - Fix missing O_BINARY when using MinGW compiler. ([#347](https://github.com/asmaloney/libE57Format/pull/347)) (Thanks Sjur!)
 

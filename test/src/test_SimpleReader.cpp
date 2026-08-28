@@ -124,6 +124,15 @@ TEST( SimpleReaderData, NoPrototype )
    delete reader;
 }
 
+// Checks that if a Data3D is marked as homogeneous, it does not crash if a prototype section
+// is missing.
+// https://github.com/asmaloney/libE57Format/pull/356
+TEST( SimpleReaderData, MultipleScansHomogeneousError )
+{
+   E57_ASSERT_THROW(
+      e57::Reader( TestData::Path() + "/self/MultipleScansHomogeneousError.e57", {} ) );
+}
+
 TEST( SimpleReaderData, InvalidCVHeader )
 {
    e57::Reader *reader = nullptr;

@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file. The format 
 
 ### Fixed
 
+- Prevent external entity resolution & disallow entity expansion when parsing XML. ([#358](https://github.com/asmaloney/libE57Format/pull/358)) (Thanks Gareth!)
+
 - Fix crash when passed an invalid E57 file where a homogeneous `Data3D` is missing the prototype or codecs section. ([#356](https://github.com/asmaloney/libE57Format/pull/356)) (Thanks Benjamin!)
 
 ## [3.4.0](https://github.com/asmaloney/libE57Format/releases/tag/v3.4.0) - 2026-08-21

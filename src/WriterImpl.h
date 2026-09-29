@@ -79,5 +79,7 @@ namespace e57
       VectorNode data3D_;
 
       VectorNode images2D_;
+
+      bool writeIndexPackets_;
    }; // end Writer class
 } // end namespace e57

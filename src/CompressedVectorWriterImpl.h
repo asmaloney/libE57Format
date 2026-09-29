@@ -35,7 +35,8 @@ namespace e57
    {
    public:
       CompressedVectorWriterImpl( std::shared_ptr<CompressedVectorNodeImpl> ni,
-                                  std::vector<SourceDestBuffer> &sbufs );
+                                  std::vector<SourceDestBuffer> &sbufs,
+                                  bool writeIndexPackets = true );
       ~CompressedVectorWriterImpl();
 
       void write( size_t requestedRecordCount );
@@ -69,6 +70,7 @@ namespace e57
       std::vector<std::shared_ptr<Encoder>> bytestreams_;
       DataPacket dataPacket_;
 
+      bool writeIndexPackets_;             /// set this to false for backwards compatibility
       bool isOpen_;
       uint64_t sectionHeaderLogicalStart_; /// start of CompressedVector binary section
       uint64_t sectionLogicalLength_;      /// total length of CompressedVector binary section

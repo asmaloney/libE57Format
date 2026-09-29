@@ -58,7 +58,8 @@ namespace e57
                      const char *forcedFieldName = nullptr ) override;
 
       /// Iterator constructors
-      std::shared_ptr<CompressedVectorWriterImpl> writer( std::vector<SourceDestBuffer> sbufs );
+      std::shared_ptr<CompressedVectorWriterImpl> writer( std::vector<SourceDestBuffer> sbufs, 
+                                                          bool writeIndexPackets = true );
       std::shared_ptr<CompressedVectorReaderImpl> reader( std::vector<SourceDestBuffer> dbufs );
 
       int64_t getRecordCount() const

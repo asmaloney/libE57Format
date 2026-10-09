@@ -28,6 +28,7 @@
 #pragma once
 
 #include <algorithm>
+#include <vector>
 
 #include "Common.h"
 
@@ -47,6 +48,7 @@ namespace e57
       static constexpr size_t physicalPageSize = 1 << physicalPageSizeLog2;
       static constexpr uint64_t physicalPageSizeMask = physicalPageSize - 1;
       static constexpr size_t logicalPageSize = physicalPageSize - 4;
+      static constexpr size_t cacheMaxPageCount = 64; // size of read-ahead cache
 
    public:
       enum Mode
@@ -96,6 +98,7 @@ namespace e57
       void getCurrentPageAndOffset( uint64_t &page, size_t &pageOffset,
                                     OffsetMode omode = Logical );
       void readPhysicalPage( char *page_buffer, uint64_t page );
+      void readPhysicalPagesFromFile( char *page_buffer, uint64_t page, uint64_t pageCount );
       void writePhysicalPage( char *page_buffer, uint64_t page );
       int open64( const e57::ustring &fileName, int flags, int mode );
       uint64_t lseek64( int64_t offset, int whence );
@@ -109,6 +112,10 @@ namespace e57
       int fd_ = -1;
       BufferView *bufView_ = nullptr;
       bool readOnly_ = false;
+
+      std::vector<char> cache_;
+      uint64_t cacheFirstPage_ = 0;
+      size_t cachePageCount_ = 0;
    };
 
    inline uint64_t CheckedFile::logicalToPhysical( uint64_t logicalOffset )

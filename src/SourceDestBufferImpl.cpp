@@ -26,12 +26,81 @@
  */
 
 #include <cmath>
+#include <cstring>
+#include <limits>
 
 #include "ImageFileImpl.h"
 #include "SourceDestBufferImpl.h"
 #include "StringFunctions.h"
 
 using namespace e57;
+
+namespace
+{
+   template <typename Dst, typename Src> struct Copy
+   {
+      static void run( char *dst, size_t stride, const Src *values, size_t n )
+      {
+         for ( size_t i = 0; i < n; ++i, dst += stride )
+         {
+            Dst v = static_cast<Dst>( values[i] );
+            std::memcpy( dst, &v, sizeof( Dst ) );
+         }
+      }
+   };
+
+   template <typename T> struct Copy<T, T>
+   {
+      static void run( char *dst, size_t stride, const T *values, size_t n )
+      {
+         if ( stride == sizeof( T ) )
+         {
+            std::memcpy( dst, values, n * sizeof( T ) );
+         }
+         else
+         {
+            for ( size_t i = 0; i < n; ++i, dst += stride )
+            {
+               std::memcpy( dst, &values[i], sizeof( T ) );
+            }
+         }
+      }
+   };
+
+   template <typename Dst, typename Src>
+   void copy( char *dst, size_t stride, const Src *values, size_t n )
+   {
+      Copy<Dst, Src>::run( dst, stride, values, n );
+   }
+
+   template <typename Dst, typename Src>
+   void checkRange( const Src *values, size_t n, const e57::ustring &pathName, e57::ErrorCode err )
+   {
+      if ( !std::is_same<Src, Dst>::value )
+      {
+         for ( size_t i = 0; i < n; ++i )
+         {
+            if ( values[i] < std::numeric_limits<Dst>::lowest() ||
+                 static_cast<Src>( std::numeric_limits<Dst>::max() ) < values[i] )
+            {
+               throw E57_EXCEPTION2( err,
+                                     "pathName=" + pathName + " value=" + toString( values[i] ) );
+            }
+         }
+      }
+   }
+
+   void replicate( char *dst, size_t stride, size_t elementSize, size_t numElements )
+   {
+      char v[8];
+      std::memcpy( &v, dst, elementSize );
+
+      for ( size_t i = 0; i < numElements; ++i, dst += stride )
+      {
+         std::memcpy( dst, &v, elementSize );
+      }
+   }
+}
 
 SourceDestBufferImpl::SourceDestBufferImpl( ImageFileImplWeakPtr destImageFile,
                                             const ustring &pathName, const size_t capacity,
@@ -128,15 +197,20 @@ SourceDestBufferImpl::SourceDestBufferImpl( ImageFileImplWeakPtr destImageFile,
    /// stored in it.
 }
 
-template <typename T> void SourceDestBufferImpl::_setNextReal( T inValue )
+template <typename T> void SourceDestBufferImpl::_setNextRealArray( const T *inValues, size_t n )
 {
    static_assert( std::is_same<T, double>::value || std::is_same<T, float>::value,
-                  "_setNextReal() requires float or double type" );
+                  "_setNextRealArray() requires float or double type" );
 
    /// don't checkImageFileOpen
 
+   if ( n == 0 )
+   {
+      return;
+   }
+
    /// Verify have room
-   if ( nextIndex_ >= capacity_ )
+   if ( nextIndex_ + n > capacity_ )
    {
       throw E57_EXCEPTION2( ErrorInternal, "pathName=" + pathName_ );
    }
@@ -154,127 +228,80 @@ template <typename T> void SourceDestBufferImpl::_setNextReal( T inValue )
          }
          //??? fault if get special value: NaN, NegInf...  (all other ints below
          // too)
-         if ( inValue < INT8_MIN || INT8_MAX < inValue )
-         {
-            throw E57_EXCEPTION2( ErrorValueNotRepresentable,
-                                  "pathName=" + pathName_ + " value=" + toString( inValue ) );
-         }
-         *reinterpret_cast<int8_t *>( p ) = static_cast<int8_t>( inValue );
+         checkRange<int8_t>( inValues, n, pathName_, ErrorValueNotRepresentable );
+         copy<int8_t>( p, stride_, inValues, n );
          break;
       case UInt8:
          if ( !doConversion_ )
          {
             throw E57_EXCEPTION2( ErrorConversionRequired, "pathName=" + pathName_ );
          }
-         if ( inValue < UINT8_MIN || UINT8_MAX < inValue )
-         {
-            throw E57_EXCEPTION2( ErrorValueNotRepresentable,
-                                  "pathName=" + pathName_ + " value=" + toString( inValue ) );
-         }
-         *reinterpret_cast<uint8_t *>( p ) = static_cast<uint8_t>( inValue );
+         checkRange<uint8_t>( inValues, n, pathName_, ErrorValueNotRepresentable );
+         copy<uint8_t>( p, stride_, inValues, n );
          break;
       case Int16:
          if ( !doConversion_ )
          {
             throw E57_EXCEPTION2( ErrorConversionRequired, "pathName=" + pathName_ );
          }
-         if ( inValue < INT16_MIN || INT16_MAX < inValue )
-         {
-            throw E57_EXCEPTION2( ErrorValueNotRepresentable,
-                                  "pathName=" + pathName_ + " value=" + toString( inValue ) );
-         }
-         *reinterpret_cast<int16_t *>( p ) = static_cast<int16_t>( inValue );
+         checkRange<int16_t>( inValues, n, pathName_, ErrorValueNotRepresentable );
+         copy<int16_t>( p, stride_, inValues, n );
          break;
       case UInt16:
          if ( !doConversion_ )
          {
             throw E57_EXCEPTION2( ErrorConversionRequired, "pathName=" + pathName_ );
          }
-         if ( inValue < UINT16_MIN || UINT16_MAX < inValue )
-         {
-            throw E57_EXCEPTION2( ErrorValueNotRepresentable,
-                                  "pathName=" + pathName_ + " value=" + toString( inValue ) );
-         }
-         *reinterpret_cast<uint16_t *>( p ) = static_cast<uint16_t>( inValue );
+         checkRange<uint16_t>( inValues, n, pathName_, ErrorValueNotRepresentable );
+         copy<uint16_t>( p, stride_, inValues, n );
          break;
       case Int32:
          if ( !doConversion_ )
          {
             throw E57_EXCEPTION2( ErrorConversionRequired, "pathName=" + pathName_ );
          }
-         if ( inValue < INT32_MIN || ( inValue > static_cast<T>( INT32_MAX ) ) )
-         {
-            throw E57_EXCEPTION2( ErrorValueNotRepresentable,
-                                  "pathName=" + pathName_ + " value=" + toString( inValue ) );
-         }
-         *reinterpret_cast<int32_t *>( p ) = static_cast<int32_t>( inValue );
+         checkRange<int32_t>( inValues, n, pathName_, ErrorValueNotRepresentable );
+         copy<int32_t>( p, stride_, inValues, n );
          break;
       case UInt32:
          if ( !doConversion_ )
          {
             throw E57_EXCEPTION2( ErrorConversionRequired, "pathName=" + pathName_ );
          }
-         if ( inValue < UINT32_MIN || ( inValue > ( static_cast<T>( UINT32_MAX ) ) ) )
-         {
-            throw E57_EXCEPTION2( ErrorValueNotRepresentable,
-                                  "pathName=" + pathName_ + " value=" + toString( inValue ) );
-         }
-         *reinterpret_cast<uint32_t *>( p ) = static_cast<uint32_t>( inValue );
+         checkRange<uint32_t>( inValues, n, pathName_, ErrorValueNotRepresentable );
+         copy<uint32_t>( p, stride_, inValues, n );
          break;
       case Int64:
          if ( !doConversion_ )
          {
             throw E57_EXCEPTION2( ErrorConversionRequired, "pathName=" + pathName_ );
          }
-         if ( inValue < INT64_MIN || ( inValue > ( static_cast<T>( INT64_MAX ) ) ) )
-         {
-            throw E57_EXCEPTION2( ErrorValueNotRepresentable,
-                                  "pathName=" + pathName_ + " value=" + toString( inValue ) );
-         }
-         *reinterpret_cast<int64_t *>( p ) = static_cast<int64_t>( inValue );
+         checkRange<int64_t>( inValues, n, pathName_, ErrorValueNotRepresentable );
+         copy<int64_t>( p, stride_, inValues, n );
          break;
       case Bool:
          if ( !doConversion_ )
          {
             throw E57_EXCEPTION2( ErrorConversionRequired, "pathName=" + pathName_ );
          }
-         *reinterpret_cast<bool *>( p ) = ( inValue ? false : true );
+         copy<bool>( p, stride_, inValues, n );
          break;
       case Real32:
-         if ( std::is_same<T, double>::value )
-         {
-            /// Does this count as conversion?  It loses information.
-            /// Check for really large exponents that can't fit in a single
-            /// precision
-            if ( inValue < DOUBLE_MIN || DOUBLE_MAX < inValue )
-            {
-               throw E57_EXCEPTION2( ErrorValueNotRepresentable,
-                                     "pathName=" + pathName_ + " value=" + toString( inValue ) );
-            }
-            *reinterpret_cast<float *>( p ) = static_cast<float>( inValue );
-         }
-         else
-         {
-#ifdef _MSC_VER
-            // MSVC is not smart enough to realize 'inValue' cannot be a double here, so disable
-            // warning
-#pragma warning( disable : 4244 )
-            *reinterpret_cast<float *>( p ) = inValue;
-#pragma warning( default : 4244 )
-#else
-            *reinterpret_cast<float *>( p ) = inValue;
-#endif
-         }
+         /// Does this count as conversion?  It loses information.
+         /// Check for really large exponents that can't fit in a single
+         /// precision
+         checkRange<float>( inValues, n, pathName_, ErrorValueNotRepresentable );
+         copy<float>( p, stride_, inValues, n );
          break;
       case Real64:
          //??? does this count as a conversion?
-         *reinterpret_cast<double *>( p ) = static_cast<double>( inValue );
+         copy<double>( p, stride_, inValues, n );
          break;
       case UString:
          throw E57_EXCEPTION2( ErrorExpectingNumeric, "pathName=" + pathName_ );
    }
 
-   nextIndex_++;
+   nextIndex_ += static_cast<unsigned int>( n );
 }
 
 void SourceDestBufferImpl::checkState_() const
@@ -715,10 +742,20 @@ ustring SourceDestBufferImpl::getNextString()
 
 void SourceDestBufferImpl::setNextInt64( int64_t value )
 {
+   setNextInt64Array( &value, 1 );
+}
+
+void SourceDestBufferImpl::setNextInt64Array( const int64_t *values, size_t n )
+{
    /// don't checkImageFileOpen
 
+   if ( n == 0 )
+   {
+      return;
+   }
+
    /// Verify have room
-   if ( nextIndex_ >= capacity_ )
+   if ( nextIndex_ + n > capacity_ )
    {
       throw E57_EXCEPTION2( ErrorInternal, "pathName=" + pathName_ );
    }
@@ -730,58 +767,34 @@ void SourceDestBufferImpl::setNextInt64( int64_t value )
    switch ( memoryRepresentation_ )
    {
       case Int8:
-         if ( value < INT8_MIN || INT8_MAX < value )
-         {
-            throw E57_EXCEPTION2( ErrorValueNotRepresentable,
-                                  "pathName=" + pathName_ + " value=" + toString( value ) );
-         }
-         *reinterpret_cast<int8_t *>( p ) = static_cast<int8_t>( value );
+         checkRange<int8_t>( values, n, pathName_, ErrorValueNotRepresentable );
+         copy<int8_t>( p, stride_, values, n );
          break;
       case UInt8:
-         if ( value < UINT8_MIN || UINT8_MAX < value )
-         {
-            throw E57_EXCEPTION2( ErrorValueNotRepresentable,
-                                  "pathName=" + pathName_ + " value=" + toString( value ) );
-         }
-         *reinterpret_cast<uint8_t *>( p ) = static_cast<uint8_t>( value );
+         checkRange<uint8_t>( values, n, pathName_, ErrorValueNotRepresentable );
+         copy<uint8_t>( p, stride_, values, n );
          break;
       case Int16:
-         if ( value < INT16_MIN || INT16_MAX < value )
-         {
-            throw E57_EXCEPTION2( ErrorValueNotRepresentable,
-                                  "pathName=" + pathName_ + " value=" + toString( value ) );
-         }
-         *reinterpret_cast<int16_t *>( p ) = static_cast<int16_t>( value );
+         checkRange<int16_t>( values, n, pathName_, ErrorValueNotRepresentable );
+         copy<int16_t>( p, stride_, values, n );
          break;
       case UInt16:
-         if ( value < UINT16_MIN || UINT16_MAX < value )
-         {
-            throw E57_EXCEPTION2( ErrorValueNotRepresentable,
-                                  "pathName=" + pathName_ + " value=" + toString( value ) );
-         }
-         *reinterpret_cast<uint16_t *>( p ) = static_cast<uint16_t>( value );
+         checkRange<uint16_t>( values, n, pathName_, ErrorValueNotRepresentable );
+         copy<uint16_t>( p, stride_, values, n );
          break;
       case Int32:
-         if ( value < INT32_MIN || INT32_MAX < value )
-         {
-            throw E57_EXCEPTION2( ErrorValueNotRepresentable,
-                                  "pathName=" + pathName_ + " value=" + toString( value ) );
-         }
-         *reinterpret_cast<int32_t *>( p ) = static_cast<int32_t>( value );
+         checkRange<int32_t>( values, n, pathName_, ErrorValueNotRepresentable );
+         copy<int32_t>( p, stride_, values, n );
          break;
       case UInt32:
-         if ( value < UINT32_MIN || UINT32_MAX < value )
-         {
-            throw E57_EXCEPTION2( ErrorValueNotRepresentable,
-                                  "pathName=" + pathName_ + " value=" + toString( value ) );
-         }
-         *reinterpret_cast<uint32_t *>( p ) = static_cast<uint32_t>( value );
+         checkRange<uint32_t>( values, n, pathName_, ErrorValueNotRepresentable );
+         copy<uint32_t>( p, stride_, values, n );
          break;
       case Int64:
-         *reinterpret_cast<int64_t *>( p ) = static_cast<int64_t>( value );
+         copy<int64_t>( p, stride_, values, n );
          break;
       case Bool:
-         *reinterpret_cast<bool *>( p ) = ( value ? false : true );
+         copy<bool>( p, stride_, values, n );
          break;
       case Real32:
          if ( !doConversion_ )
@@ -789,23 +802,29 @@ void SourceDestBufferImpl::setNextInt64( int64_t value )
             throw E57_EXCEPTION2( ErrorConversionRequired, "pathName=" + pathName_ );
          }
          //??? very large integers may lose some lowest bits here. error?
-         *reinterpret_cast<float *>( p ) = static_cast<float>( value );
+         copy<float>( p, stride_, values, n );
          break;
       case Real64:
          if ( !doConversion_ )
          {
             throw E57_EXCEPTION2( ErrorConversionRequired, "pathName=" + pathName_ );
          }
-         *reinterpret_cast<double *>( p ) = static_cast<double>( value );
+         copy<double>( p, stride_, values, n );
          break;
       case UString:
          throw E57_EXCEPTION2( ErrorExpectingNumeric, "pathName=" + pathName_ );
    }
 
-   nextIndex_++;
+   nextIndex_ += static_cast<unsigned int>( n );
 }
 
 void SourceDestBufferImpl::setNextInt64( int64_t value, double scale, double offset )
+{
+   setNextInt64Array( &value, 1, scale, offset );
+}
+
+void SourceDestBufferImpl::setNextInt64Array( const int64_t *values, size_t n, double scale,
+                                              double offset )
 {
    /// don't checkImageFileOpen
 
@@ -818,135 +837,220 @@ void SourceDestBufferImpl::setNextInt64( int64_t value, double scale, double off
    if ( !doScaling_ )
    {
       /// Use raw value routine, then bail out.
-      setNextInt64( value );
+      setNextInt64Array( values, n );
+      return;
+   }
+
+   if ( n == 0 )
+   {
       return;
    }
 
    /// Verify have room
-   if ( nextIndex_ >= capacity_ )
+   if ( nextIndex_ + n > capacity_ )
    {
       throw E57_EXCEPTION2( ErrorInternal, "pathName=" + pathName_ );
    }
 
-   /// Calc start of memory location, index into buffer using stride_ (the
-   /// distance between elements).
+   // Process values in chunks on stack
+   constexpr size_t ChunkSize = 256;
+   for ( size_t done = 0; done < n; )
+   {
+      const size_t k = std::min( ChunkSize, n - done );
+
+      double scaledValues[ChunkSize];
+      bool toReal = memoryRepresentation_ == Real32 || memoryRepresentation_ == Real64;
+      for ( size_t i = 0; i < k; ++i )
+      {
+         /// Calc x*scale+offset
+         if ( toReal )
+         {
+            /// Value will be stored in some floating point rep in user's buffer, so
+            /// keep full resolution here.
+            scaledValues[i] = values[done + i] * scale + offset;
+         }
+         else
+         {
+            /// Value will represented as some integer in user's buffer, so round to
+            /// nearest integer here. But keep in floating point rep until we know
+            /// that the value is representable in the user's buffer.
+            scaledValues[i] = floor( values[done + i] * scale + offset + 0.5 );
+         }
+      }
+
+      /// Calc start of memory location, index into buffer using stride_ (the
+      /// distance between elements).
+      char *p = &base_[nextIndex_ * stride_];
+
+      switch ( memoryRepresentation_ )
+      {
+         case Int8:
+            checkRange<int8_t>( scaledValues, k, pathName_, ErrorScaledValueNotRepresentable );
+            copy<int8_t>( p, stride_, scaledValues, k );
+            break;
+         case UInt8:
+            checkRange<uint8_t>( scaledValues, k, pathName_, ErrorScaledValueNotRepresentable );
+            copy<uint8_t>( p, stride_, scaledValues, k );
+            break;
+         case Int16:
+            checkRange<int16_t>( scaledValues, k, pathName_, ErrorScaledValueNotRepresentable );
+            copy<int16_t>( p, stride_, scaledValues, k );
+            break;
+         case UInt16:
+            checkRange<uint16_t>( scaledValues, k, pathName_, ErrorScaledValueNotRepresentable );
+            copy<uint16_t>( p, stride_, scaledValues, k );
+            break;
+         case Int32:
+            checkRange<int32_t>( scaledValues, k, pathName_, ErrorScaledValueNotRepresentable );
+            copy<int32_t>( p, stride_, scaledValues, k );
+            break;
+         case UInt32:
+            checkRange<uint32_t>( scaledValues, k, pathName_, ErrorScaledValueNotRepresentable );
+            copy<uint32_t>( p, stride_, scaledValues, k );
+            break;
+         case Int64:
+            checkRange<int64_t>( scaledValues, k, pathName_, ErrorScaledValueNotRepresentable );
+            copy<int64_t>( p, stride_, scaledValues, k );
+            break;
+         case Bool:
+            copy<bool>( p, stride_, scaledValues, k );
+            break;
+         case Real32:
+            if ( !doConversion_ )
+            {
+               throw E57_EXCEPTION2( ErrorConversionRequired, "pathName=" + pathName_ );
+            }
+            /// Check that exponent of result is not too big for single precision
+            /// float
+            checkRange<float>( scaledValues, k, pathName_, ErrorScaledValueNotRepresentable );
+            copy<float>( p, stride_, scaledValues, k );
+            break;
+         case Real64:
+            if ( !doConversion_ )
+            {
+               throw E57_EXCEPTION2( ErrorConversionRequired, "pathName=" + pathName_ );
+            }
+            copy<double>( p, stride_, scaledValues, k );
+            break;
+         case UString:
+            throw E57_EXCEPTION2( ErrorExpectingNumeric, "pathName=" + pathName_ );
+      }
+
+      done += k;
+      nextIndex_ += static_cast<unsigned int>( k );
+   }
+}
+
+void SourceDestBufferImpl::fillNextInt64( int64_t value, size_t n )
+{
+   if ( n == 0 )
+   {
+      return;
+   }
+
+   /// Verify have room
+   if ( nextIndex_ + n > capacity_ )
+   {
+      throw E57_EXCEPTION2( ErrorInternal, "pathName=" + pathName_ );
+   }
+
    char *p = &base_[nextIndex_ * stride_];
 
-   /// Calc x*scale+offset
-   double scaledValue;
-   if ( memoryRepresentation_ == Real32 || memoryRepresentation_ == Real64 )
-   {
-      /// Value will be stored in some floating point rep in user's buffer, so
-      /// keep full resolution here.
-      scaledValue = value * scale + offset;
-   }
-   else
-   {
-      /// Value will represented as some integer in user's buffer, so round to
-      /// nearest integer here. But keep in floating point rep until we know
-      /// that the value is representable in the user's buffer.
-      scaledValue = floor( value * scale + offset + 0.5 );
-   }
+   // check and store first value
+   setNextInt64Array( &value, 1 );
 
+   // replicate first value into remaining slots
    switch ( memoryRepresentation_ )
    {
       case Int8:
-         if ( scaledValue < INT8_MIN || INT8_MAX < scaledValue )
-         {
-            throw E57_EXCEPTION2( ErrorScaledValueNotRepresentable,
-                                  "pathName=" + pathName_ +
-                                     " scaledValue=" + toString( scaledValue ) );
-         }
-         *reinterpret_cast<int8_t *>( p ) = static_cast<int8_t>( scaledValue );
-         break;
       case UInt8:
-         if ( scaledValue < UINT8_MIN || UINT8_MAX < scaledValue )
-         {
-            throw E57_EXCEPTION2( ErrorScaledValueNotRepresentable,
-                                  "pathName=" + pathName_ +
-                                     " scaledValue=" + toString( scaledValue ) );
-         }
-         *reinterpret_cast<uint8_t *>( p ) = static_cast<uint8_t>( scaledValue );
+      case Bool:
+         replicate( p, stride_, 1, n );
          break;
       case Int16:
-         if ( scaledValue < INT16_MIN || INT16_MAX < scaledValue )
-         {
-            throw E57_EXCEPTION2( ErrorScaledValueNotRepresentable,
-                                  "pathName=" + pathName_ +
-                                     " scaledValue=" + toString( scaledValue ) );
-         }
-         *reinterpret_cast<int16_t *>( p ) = static_cast<int16_t>( scaledValue );
-         break;
       case UInt16:
-         if ( scaledValue < UINT16_MIN || UINT16_MAX < scaledValue )
-         {
-            throw E57_EXCEPTION2( ErrorScaledValueNotRepresentable,
-                                  "pathName=" + pathName_ +
-                                     " scaledValue=" + toString( scaledValue ) );
-         }
-         *reinterpret_cast<uint16_t *>( p ) = static_cast<uint16_t>( scaledValue );
+         replicate( p, stride_, 2, n );
          break;
       case Int32:
-         if ( scaledValue < INT32_MIN || INT32_MAX < scaledValue )
-         {
-            throw E57_EXCEPTION2( ErrorScaledValueNotRepresentable,
-                                  "pathName=" + pathName_ +
-                                     " scaledValue=" + toString( scaledValue ) );
-         }
-         *reinterpret_cast<int32_t *>( p ) = static_cast<int32_t>( scaledValue );
-         break;
       case UInt32:
-         if ( scaledValue < UINT32_MIN || UINT32_MAX < scaledValue )
-         {
-            throw E57_EXCEPTION2( ErrorScaledValueNotRepresentable,
-                                  "pathName=" + pathName_ +
-                                     " scaledValue=" + toString( scaledValue ) );
-         }
-         *reinterpret_cast<uint32_t *>( p ) = static_cast<uint32_t>( scaledValue );
+      case Real32:
+         replicate( p, stride_, 4, n );
          break;
       case Int64:
-         *reinterpret_cast<int64_t *>( p ) = static_cast<int64_t>( scaledValue );
-         break;
-      case Bool:
-         *reinterpret_cast<bool *>( p ) = ( scaledValue ? false : true );
-         break;
-      case Real32:
-         if ( !doConversion_ )
-         {
-            throw E57_EXCEPTION2( ErrorConversionRequired, "pathName=" + pathName_ );
-         }
-         /// Check that exponent of result is not too big for single precision
-         /// float
-         if ( scaledValue < DOUBLE_MIN || DOUBLE_MAX < scaledValue )
-         {
-            throw E57_EXCEPTION2( ErrorScaledValueNotRepresentable,
-                                  "pathName=" + pathName_ +
-                                     " scaledValue=" + toString( scaledValue ) );
-         }
-         *reinterpret_cast<float *>( p ) = static_cast<float>( scaledValue );
-         break;
       case Real64:
-         if ( !doConversion_ )
-         {
-            throw E57_EXCEPTION2( ErrorConversionRequired, "pathName=" + pathName_ );
-         }
-         *reinterpret_cast<double *>( p ) = scaledValue;
+         replicate( p, stride_, 8, n );
          break;
       case UString:
          throw E57_EXCEPTION2( ErrorExpectingNumeric, "pathName=" + pathName_ );
    }
 
-   nextIndex_++;
+   nextIndex_ += static_cast<unsigned int>( n - 1 );
+}
+
+void SourceDestBufferImpl::fillNextInt64( int64_t value, size_t n, double scale, double offset )
+{
+   if ( n == 0 )
+   {
+      return;
+   }
+
+   /// Verify have room
+   if ( nextIndex_ + n > capacity_ )
+   {
+      throw E57_EXCEPTION2( ErrorInternal, "pathName=" + pathName_ );
+   }
+
+   char *p = &base_[nextIndex_ * stride_];
+
+   // check, scale and store first value
+   setNextInt64Array( &value, 1, scale, offset );
+
+   // replicate first value into remaining slots
+   switch ( memoryRepresentation_ )
+   {
+      case Int8:
+      case UInt8:
+      case Bool:
+         replicate( p, stride_, 1, n );
+         break;
+      case Int16:
+      case UInt16:
+         replicate( p, stride_, 2, n );
+         break;
+      case Int32:
+      case UInt32:
+      case Real32:
+         replicate( p, stride_, 4, n );
+         break;
+      case Int64:
+      case Real64:
+         replicate( p, stride_, 8, n );
+         break;
+      case UString:
+         throw E57_EXCEPTION2( ErrorExpectingNumeric, "pathName=" + pathName_ );
+   }
+
+   nextIndex_ += static_cast<unsigned int>( n - 1 );
 }
 
 void SourceDestBufferImpl::setNextFloat( float value )
 {
-   _setNextReal( value );
+   _setNextRealArray( &value, 1 );
 }
 
 void SourceDestBufferImpl::setNextDouble( double value )
 {
-   _setNextReal( value );
+   _setNextRealArray( &value, 1 );
+}
+
+void SourceDestBufferImpl::setNextFloatArray( const float *values, size_t n )
+{
+   _setNextRealArray( values, n );
+}
+
+void SourceDestBufferImpl::setNextDoubleArray( const double *values, size_t n )
+{
+   _setNextRealArray( values, n );
 }
 
 void SourceDestBufferImpl::setNextString( const ustring &value )

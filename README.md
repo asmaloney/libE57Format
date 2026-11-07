@@ -12,11 +12,11 @@ The doxygen-generated documentation may be [found here](https://asmaloney.github
 
 If you are using this library in commercial software, please [contribute to the project](/CONTRIBUTING.md).
 
-Of course the open source license allows you to just take and not give anything back. It is perfectly Legal, but it is not Right and it's not good for the project.
+Open source licensing legally allows your organization to just take and not give anything back. It is, however, not good for anyone if the open source ecosystem is starved of support & contributions. Eventually creators & maintainers will simply give up...
 
-Over the many years I've worked on this library, I have received precisely _zero_ contributions (PRs, documentation updates, improved testing, financial support) from the many million/billion-dollar companies who use it in their software.
+Over the many years I've worked on this library, I have received precisely _zero_ contributions (PRs, documentation updates, improved testing, financial support) from the many million-/billion-dollar companies who use it in their software.
 
-The more companies that leech on Open Source instead of nurturing it, the less healthy & viable the ecosystem is.
+Surely if a small company like [Benaco](http://benaco.com/) can afford to [sponsor](#commercial) this project, your company can too!
 
 ## Requirements
 
@@ -98,6 +98,8 @@ This _Simple API_ has evolved since this original port to fix some problems and 
 
 ## Projects Using libE57Format
 
+### Open Source
+
 - [AliceVision](https://github.com/alicevision/AliceVision)
 - [CloudCompare](https://github.com/CloudCompare/CloudCompare)
 - [MeshLab](https://github.com/cnr-isti-vclab/meshlab)
@@ -109,7 +111,13 @@ These projects use hard forks of libE57Format:
 - [MicMac](https://github.com/micmacIGN/micmac)
 - [PDAL](https://github.com/PDAL/PDAL)
 
-There are also many commercial products using libE57Format. If any of them would like to sponsor the project and be listed here, please <a href="mailto:asmaloney@gmail.com?subject=libE57Format Sponsorship">contact Andy</a>.
+### Commercial
+
+#### 💰 Sponsors
+
+- [Benaco](http://benaco.com/) (Nov 2026-present) - share your E57 laser scan files as easily accessible photorealistic virtual tours
+
+There are many other commercial products using libE57Format. If any of them would like to sponsor the project and be listed here, please <a href="mailto:asmaloney@gmail.com?subject=libE57Format Sponsorship">contact Andy</a>.
 
 ## How To Contribute
 

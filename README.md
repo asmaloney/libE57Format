@@ -16,7 +16,7 @@ Open source licensing legally allows your organization to just take and not give
 
 Over the many years I've worked on this library, I have received precisely _zero_ contributions (PRs, documentation updates, improved testing, financial support) from the many million-/billion-dollar companies who use it in their software.
 
-Surely if a small company like [Benaco](http://benaco.com/) can afford to [sponsor](#commercial) this project, your company can too!
+Surely if a small company like [Benaco](https://benaco.com/) can afford to [sponsor](#commercial) this project, your company can too!
 
 ## Requirements
 
@@ -115,7 +115,7 @@ These projects use hard forks of libE57Format:
 
 #### 💰 Sponsors
 
-- [Benaco](http://benaco.com/) (Nov 2026-present) - share your E57 laser scan files as easily accessible photorealistic virtual tours
+- [Benaco](https://benaco.com/) (Nov 2026-present) - share your E57 laser scan files as easily accessible photorealistic virtual tours
 
 There are many other commercial products using libE57Format. If any of them would like to sponsor the project and be listed here, please <a href="mailto:asmaloney@gmail.com?subject=libE57Format Sponsorship">contact Andy</a>.
 

@@ -38,9 +38,12 @@ namespace
    ///   - cartesian points
    ///   - spherical points
    ///   - time stamps
+   /// Also fills in:
+   ///   - cartesian bounds
+   ///   - spherical bounds
    template <typename COORDTYPE>
-   void _fillMinMaxData( e57::Data3D &ioData3DHeader,
-                         const e57::Data3DPointsData_t<COORDTYPE> &inBuffers )
+   void _fillMissingData( e57::Data3D &ioData3DHeader,
+                          const e57::Data3DPointsData_t<COORDTYPE> &inBuffers )
    {
       static_assert( std::is_floating_point<COORDTYPE>::value, "Floating point type required." );
 
@@ -49,25 +52,55 @@ namespace
       constexpr COORDTYPE cMin = std::numeric_limits<COORDTYPE>::lowest();
       constexpr COORDTYPE cMax = std::numeric_limits<COORDTYPE>::max();
 
-      // IF we are using scaled ints for cartesian points
-      // AND we haven't set either min or max
+      // For readability
+      const bool cUsingCartesian = pointFields.cartesianXField;
+      const bool cUsingSpherical = pointFields.sphericalRangeField;
+
+      // IF we haven't set either point range min or max
       // THEN calculate them from the points
       auto pointRangeMinimum = cMax;
       auto pointRangeMaximum = cMin;
 
-      const bool writePointRange =
+      const bool cWritePointRange =
          ( pointFields.pointRangeNodeType == e57::NumericalNodeType::ScaledInteger ) &&
          ( pointFields.pointRangeMinimum == cMin ) && ( pointFields.pointRangeMaximum == cMax );
 
-      // IF we are using scaled ints for spherical angles
+      // IF we are using cartesian coordinates
+      // AND we haven't set our bounds
+      // THEN calculate them from the points
+      e57::CartesianBounds cartesianBounds;
+      cartesianBounds.xMinimum = cMax;
+      cartesianBounds.xMaximum = cMin;
+      cartesianBounds.yMinimum = cMax;
+      cartesianBounds.yMaximum = cMin;
+      cartesianBounds.zMinimum = cMax;
+      cartesianBounds.zMaximum = cMin;
+
+      const bool cWriteCartesianBounds =
+         cUsingCartesian && ( ioData3DHeader.cartesianBounds == e57::CartesianBounds{} );
+
+      // IF we are using spherical coordinates
       // AND we haven't set either min or max
       // THEN calculate them from the points
       auto angleMinimum = cMax;
       auto angleMaximum = cMin;
 
-      const bool writeAngle =
-         ( pointFields.angleNodeType == e57::NumericalNodeType::ScaledInteger ) &&
-         ( pointFields.angleMinimum == cMin ) && ( pointFields.angleMaximum == cMax );
+      const bool cWriteAngle = cUsingSpherical && ( pointFields.angleMinimum == e57::DOUBLE_MIN ) &&
+                               ( pointFields.angleMaximum == e57::DOUBLE_MAX );
+
+      // IF we are using spherical coordinates
+      // AND we haven't set our bounds
+      // THEN calculate them from the points
+      e57::SphericalBounds sphericalBounds;
+      sphericalBounds.rangeMinimum = cMax;
+      sphericalBounds.rangeMaximum = cMin;
+      sphericalBounds.elevationMinimum = cMax;
+      sphericalBounds.elevationMaximum = cMin;
+      sphericalBounds.azimuthStart = cMax;
+      sphericalBounds.azimuthEnd = cMin;
+
+      const bool cWriteSphericalBounds =
+         cUsingSpherical && ( ioData3DHeader.sphericalBounds == e57::SphericalBounds{} );
 
       // IF we are using scaled ints for timestamps
       // AND we haven't set either min or max
@@ -75,7 +108,7 @@ namespace
       double timeMinimum = std::numeric_limits<double>::max();
       double timeMaximum = std::numeric_limits<double>::lowest();
 
-      const bool writeTimeStamp =
+      const bool cWriteTimeStamp =
          pointFields.timeStampField &&
          ( pointFields.timeNodeType == e57::NumericalNodeType::ScaledInteger ) &&
          ( pointFields.timeMinimum == cMin ) && ( pointFields.timeMaximum == cMax );
@@ -83,27 +116,65 @@ namespace
       // Now run through the points and set the things we need to
       for ( size_t i = 0; i < ioData3DHeader.pointCount; ++i )
       {
-         if ( writePointRange && pointFields.cartesianXField )
+         if ( cUsingCartesian )
          {
-            pointRangeMinimum = std::min( inBuffers.cartesianX[i], pointRangeMinimum );
-            pointRangeMinimum = std::min( inBuffers.cartesianY[i], pointRangeMinimum );
-            pointRangeMinimum = std::min( inBuffers.cartesianZ[i], pointRangeMinimum );
+            if ( cWritePointRange )
+            {
+               pointRangeMinimum = std::min( inBuffers.cartesianX[i], pointRangeMinimum );
+               pointRangeMinimum = std::min( inBuffers.cartesianY[i], pointRangeMinimum );
+               pointRangeMinimum = std::min( inBuffers.cartesianZ[i], pointRangeMinimum );
 
-            pointRangeMaximum = std::max( inBuffers.cartesianX[i], pointRangeMaximum );
-            pointRangeMaximum = std::max( inBuffers.cartesianY[i], pointRangeMaximum );
-            pointRangeMaximum = std::max( inBuffers.cartesianZ[i], pointRangeMaximum );
+               pointRangeMaximum = std::max( inBuffers.cartesianX[i], pointRangeMaximum );
+               pointRangeMaximum = std::max( inBuffers.cartesianY[i], pointRangeMaximum );
+               pointRangeMaximum = std::max( inBuffers.cartesianZ[i], pointRangeMaximum );
+            }
+
+            if ( cWriteCartesianBounds )
+            {
+               const auto cDoubleX = static_cast<double>( inBuffers.cartesianX[i] );
+               cartesianBounds.xMinimum = std::min( cartesianBounds.xMinimum, cDoubleX );
+               cartesianBounds.xMaximum = std::max( cartesianBounds.xMaximum, cDoubleX );
+
+               const auto cDoubleY = static_cast<double>( inBuffers.cartesianY[i] );
+               cartesianBounds.yMinimum = std::min( cartesianBounds.yMinimum, cDoubleY );
+               cartesianBounds.yMaximum = std::max( cartesianBounds.yMaximum, cDoubleY );
+
+               const auto cDoubleZ = static_cast<double>( inBuffers.cartesianZ[i] );
+               cartesianBounds.zMinimum = std::min( cartesianBounds.zMinimum, cDoubleZ );
+               cartesianBounds.zMaximum = std::max( cartesianBounds.zMaximum, cDoubleZ );
+            }
          }
 
-         if ( writePointRange && pointFields.sphericalRangeField )
+         if ( cUsingSpherical )
          {
-            // Note that the writer code uses pointRangeMinimum/pointRangeMaximum
-            // (see WriterImpl::NewData3D()) instead of using the sphericalBounds which has
-            // rangeMinimum and rangeMaximum.
-            pointRangeMinimum = std::min( inBuffers.sphericalRange[i], pointRangeMinimum );
-            pointRangeMaximum = std::max( inBuffers.sphericalRange[i], pointRangeMaximum );
+            if ( cWritePointRange )
+            {
+               pointRangeMinimum = std::min( inBuffers.sphericalRange[i], pointRangeMinimum );
+               pointRangeMaximum = std::max( inBuffers.sphericalRange[i], pointRangeMaximum );
+            }
+
+            if ( cWriteSphericalBounds )
+            {
+               const auto cDoubleRange = static_cast<double>( inBuffers.sphericalRange[i] );
+               sphericalBounds.rangeMinimum =
+                  std::min( sphericalBounds.rangeMinimum, cDoubleRange );
+               sphericalBounds.rangeMaximum =
+                  std::max( sphericalBounds.rangeMaximum, cDoubleRange );
+
+               const auto cDoubleElevation = static_cast<double>( inBuffers.sphericalElevation[i] );
+               sphericalBounds.elevationMinimum =
+                  std::min( sphericalBounds.elevationMinimum, cDoubleElevation );
+               sphericalBounds.elevationMaximum =
+                  std::max( sphericalBounds.elevationMaximum, cDoubleElevation );
+
+               const auto cDoubleAzimuth = static_cast<double>( inBuffers.sphericalAzimuth[i] );
+               sphericalBounds.azimuthStart =
+                  std::min( sphericalBounds.azimuthStart, cDoubleAzimuth );
+               sphericalBounds.azimuthEnd = std::max( sphericalBounds.azimuthEnd, cDoubleAzimuth );
+            }
          }
 
-         if ( writeAngle )
+         if ( cWriteAngle )
          {
             angleMinimum = std::min( inBuffers.sphericalAzimuth[i], angleMinimum );
             angleMinimum = std::min( inBuffers.sphericalElevation[i], angleMinimum );
@@ -112,35 +183,65 @@ namespace
             angleMaximum = std::max( inBuffers.sphericalElevation[i], angleMaximum );
          }
 
-         if ( writeTimeStamp )
+         if ( cWriteTimeStamp )
          {
             timeMinimum = std::min( inBuffers.timeStamp[i], timeMinimum );
             timeMaximum = std::max( inBuffers.timeStamp[i], timeMaximum );
          }
       }
 
-      if ( writePointRange )
+      // Handle case where we don't have any points
+      // The bounds are still required:
+      //    E57 Standard: 8.4.3.4 & 8.4.3.5
+      if ( ioData3DHeader.pointCount == 0 )
+      {
+         cartesianBounds.xMinimum = 0.0;
+         cartesianBounds.xMaximum = 0.0;
+         cartesianBounds.yMinimum = 0.0;
+         cartesianBounds.yMaximum = 0.0;
+         cartesianBounds.zMinimum = 0.0;
+         cartesianBounds.zMaximum = 0.0;
+
+         sphericalBounds.rangeMinimum = 0.0;
+         sphericalBounds.rangeMaximum = 0.0;
+         sphericalBounds.elevationMinimum = 0.0;
+         sphericalBounds.elevationMaximum = 0.0;
+         sphericalBounds.azimuthStart = 0.0;
+         sphericalBounds.azimuthEnd = 0.0;
+      }
+
+      if ( cWritePointRange )
       {
          pointFields.pointRangeMinimum = pointRangeMinimum;
          pointFields.pointRangeMaximum = pointRangeMaximum;
       }
 
-      if ( writeAngle )
+      if ( cWriteCartesianBounds )
+      {
+         ioData3DHeader.cartesianBounds = cartesianBounds;
+      }
+
+      if ( cWriteSphericalBounds )
+      {
+         ioData3DHeader.sphericalBounds = sphericalBounds;
+      }
+
+      if ( cWriteAngle )
       {
          pointFields.angleMinimum = angleMinimum;
          pointFields.angleMaximum = angleMaximum;
       }
 
-      if ( writeTimeStamp )
+      if ( cWriteTimeStamp )
       {
          pointFields.timeMinimum = timeMinimum;
          pointFields.timeMaximum = timeMaximum;
       }
    }
-   template void _fillMinMaxData( e57::Data3D &ioData3DHeader,
-                                  const e57::Data3DPointsFloat &inBuffers );
-   template void _fillMinMaxData( e57::Data3D &ioData3DHeader,
-                                  const e57::Data3DPointsDouble &inBuffers );
+   template void _fillMissingData( e57::Data3D &ioData3DHeader,
+                                   const e57::Data3DPointsFloat &inBuffers );
+   template void _fillMissingData( e57::Data3D &ioData3DHeader,
+                                   const e57::Data3DPointsDouble &inBuffers );
 }
 
 namespace e57
@@ -201,7 +302,7 @@ namespace e57
 
    int64_t Writer::WriteData3DData( Data3D &data3DHeader, const Data3DPointsFloat &buffers )
    {
-      _fillMinMaxData( data3DHeader, buffers );
+      _fillMissingData( data3DHeader, buffers );
 
       const int64_t scanIndex = impl_->NewData3D( data3DHeader );
 
@@ -216,7 +317,7 @@ namespace e57
 
    int64_t Writer::WriteData3DData( Data3D &data3DHeader, const Data3DPointsDouble &buffers )
    {
-      _fillMinMaxData( data3DHeader, buffers );
+      _fillMissingData( data3DHeader, buffers );
 
       const int64_t scanIndex = impl_->NewData3D( data3DHeader );
 

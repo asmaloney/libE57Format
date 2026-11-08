@@ -167,7 +167,6 @@ TEST( SimpleWriter, ZeroPoints )
    header.pointFields.cartesianXField = true;
    header.pointFields.cartesianYField = true;
    header.pointFields.cartesianZField = true;
-   header.cartesianBounds.xMinimum = 0.0;
 
    e57::Data3DPointsDouble pointsData( header );
 
@@ -501,6 +500,14 @@ TEST( SimpleWriter, CartesianPoints )
    }
 
    writer->WriteData3DData( header, pointsData );
+
+   // Check that the cartesian bounds were filled in properly
+   EXPECT_EQ( header.cartesianBounds.xMinimum, 0 );
+   EXPECT_EQ( header.cartesianBounds.xMaximum, cNumPoints - 1 );
+   EXPECT_EQ( header.cartesianBounds.yMinimum, 0 );
+   EXPECT_EQ( header.cartesianBounds.yMaximum, cNumPoints - 1 );
+   EXPECT_EQ( header.cartesianBounds.zMinimum, 0 );
+   EXPECT_EQ( header.cartesianBounds.zMaximum, cNumPoints - 1 );
 
    delete writer;
 }

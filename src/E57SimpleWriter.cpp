@@ -85,8 +85,11 @@ namespace
       auto angleMinimum = cMax;
       auto angleMaximum = cMin;
 
-      const bool cWriteAngle = cUsingSpherical && ( pointFields.angleMinimum == e57::DOUBLE_MIN ) &&
-                               ( pointFields.angleMaximum == e57::DOUBLE_MAX );
+      const bool cAngleSetByUser =
+         ( ( pointFields.angleMinimum == cMin ) && ( pointFields.angleMaximum == cMax ) );
+      const bool cWriteAngle =
+         cUsingSpherical &&
+         ( pointFields.angleNodeType == e57::NumericalNodeType::ScaledInteger ) && !cAngleSetByUser;
 
       // IF we are using spherical coordinates
       // AND we haven't set our bounds

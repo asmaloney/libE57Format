@@ -53,15 +53,35 @@ namespace e57
 
       constexpr bool cIsFloat = std::is_same<COORDTYPE, float>::value;
 
-      // We need to adjust min/max for floats.
+      // We need to adjust min/max for floats if they haven't been set by the user.
       if ( cIsFloat )
       {
-         data3D.pointFields.pointRangeMinimum = FLOAT_MIN;
-         data3D.pointFields.pointRangeMaximum = FLOAT_MAX;
-         data3D.pointFields.angleMinimum = FLOAT_MIN;
-         data3D.pointFields.angleMaximum = FLOAT_MAX;
-         data3D.pointFields.timeMinimum = FLOAT_MIN;
-         data3D.pointFields.timeMaximum = FLOAT_MAX;
+         if ( data3D.pointFields.pointRangeMinimum == DOUBLE_MIN )
+         {
+            data3D.pointFields.pointRangeMinimum = FLOAT_MIN;
+         }
+         if ( data3D.pointFields.pointRangeMaximum == DOUBLE_MAX )
+         {
+            data3D.pointFields.pointRangeMaximum = FLOAT_MAX;
+         }
+
+         if ( data3D.pointFields.angleMinimum == DOUBLE_MIN )
+         {
+            data3D.pointFields.angleMinimum = FLOAT_MIN;
+         }
+         if ( data3D.pointFields.angleMaximum == DOUBLE_MAX )
+         {
+            data3D.pointFields.angleMaximum = FLOAT_MAX;
+         }
+
+         if ( data3D.pointFields.timeMinimum == DOUBLE_MIN )
+         {
+            data3D.pointFields.timeMinimum = FLOAT_MIN;
+         }
+         if ( data3D.pointFields.timeMaximum == DOUBLE_MAX )
+         {
+            data3D.pointFields.timeMaximum = FLOAT_MAX;
+         }
       }
 
       // IF point range node type is not ScaledInteger

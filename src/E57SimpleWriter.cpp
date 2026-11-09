@@ -105,13 +105,16 @@ namespace
       // IF we are using scaled ints for timestamps
       // AND we haven't set either min or max
       // THEN calculate them from the points
+      // NOTE: timestamp is always a double in Data3DPointsData_t and not affected by the COORDTYPE
       double timeMinimum = std::numeric_limits<double>::max();
       double timeMaximum = std::numeric_limits<double>::lowest();
 
+      const bool cTimeStampSetByUser = ( pointFields.timeMinimum != e57::DOUBLE_MIN ) ||
+                                       ( pointFields.timeMaximum != e57::DOUBLE_MAX );
       const bool cWriteTimeStamp =
          pointFields.timeStampField &&
          ( pointFields.timeNodeType == e57::NumericalNodeType::ScaledInteger ) &&
-         ( pointFields.timeMinimum == cMin ) && ( pointFields.timeMaximum == cMax );
+         !cTimeStampSetByUser;
 
       // Now run through the points and set the things we need to
       for ( size_t i = 0; i < ioData3DHeader.pointCount; ++i )

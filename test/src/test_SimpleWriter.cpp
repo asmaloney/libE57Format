@@ -658,6 +658,58 @@ TEST( SimpleWriter, MinMaxIssuesSphericalDouble )
    EXPECT_NE( header.pointFields.timeMaximum, e57::DOUBLE_MAX );
 }
 
+// Check that we don't overwrite the user's min/max data when we use the float version
+TEST( SimpleWriter, MinMaxOverwriteUserDataFloat )
+{
+   e57::WriterOptions options;
+   options.guid = "Min/Max Overwrite User Data Float File GUID";
+
+   e57::Writer *writer = nullptr;
+
+   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./MinMaxOverwriteUserDataFloat.e57", options ) );
+
+   constexpr int64_t cNumPoints = 10;
+
+   e57::Data3D header;
+   header.guid = "Min/Max Overwrite User Data Float Header GUID";
+   header.pointCount = cNumPoints;
+   header.pointFields.cartesianXField = true;
+   header.pointFields.cartesianYField = true;
+   header.pointFields.cartesianZField = true;
+
+   // Set a min/max on the time field
+   header.pointFields.timeStampField = true;
+   header.pointFields.timeNodeType = e57::NumericalNodeType::ScaledInteger;
+   header.pointFields.timeScale = 0.1;
+   header.pointFields.timeMinimum = -1.0;
+   header.pointFields.timeMaximum = 2048.0;
+
+   e57::Data3DPointsFloat pointsData( header );
+
+   for ( int64_t i = 0; i < cNumPoints; ++i )
+   {
+      auto floati = static_cast<float>( i );
+      pointsData.cartesianX[i] = floati;
+      pointsData.cartesianY[i] = floati;
+      pointsData.cartesianZ[i] = floati;
+      pointsData.timeStamp[i] = floati + 0.1f;
+   }
+
+   try
+   {
+      writer->WriteData3DData( header, pointsData );
+   }
+   catch ( e57::E57Exception &err )
+   {
+      FAIL() << err.errorStr() << ": " << err.context();
+   }
+
+   delete writer;
+
+   EXPECT_EQ( header.pointFields.timeMinimum, -1.0 );
+   EXPECT_EQ( header.pointFields.timeMaximum, 2048.0 );
+}
+
 TEST( SimpleWriterData, VisualRefImage )
 {
    if ( !TestData::Exists() )

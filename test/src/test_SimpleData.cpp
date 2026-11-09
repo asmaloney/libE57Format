@@ -65,8 +65,10 @@ TEST( SimpleDataHeader, HeaderMinMaxFloat )
    EXPECT_EQ( dataHeader.pointFields.pointRangeMaximum, e57::FLOAT_MAX );
    EXPECT_EQ( dataHeader.pointFields.angleMinimum, e57::FLOAT_MIN );
    EXPECT_EQ( dataHeader.pointFields.angleMaximum, e57::FLOAT_MAX );
-   EXPECT_EQ( dataHeader.pointFields.timeMinimum, e57::FLOAT_MIN );
-   EXPECT_EQ( dataHeader.pointFields.timeMaximum, e57::FLOAT_MAX );
+
+   // Timestamps are always doubles in Data3DPointsData_t
+   EXPECT_EQ( dataHeader.pointFields.timeMinimum, e57::DOUBLE_MIN );
+   EXPECT_EQ( dataHeader.pointFields.timeMaximum, e57::DOUBLE_MAX );
 }
 
 TEST( SimpleDataHeader, HeaderMinMaxDouble )

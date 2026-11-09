@@ -485,12 +485,15 @@ namespace e57
       bool isTimeStampInvalidField = false;
 
       /// @brief Indicates that the PointRecord @a timeStamp fields should be configured with this
-      /// minimum value e.g. E57_UINT32_MIN, E57_DOUBLE_MIN or E57_DOUBLE_MIN.
-      /// @details If using a ScaledIntegerNode then this needs to be a minimum time value.
+      /// minimum value
+      /// @details If using a ScaledIntegerNode and this is left as the default, it will be filled
+      /// in based on the data.
       double timeMinimum = DOUBLE_MIN;
 
       /// Indicates that the PointRecord @a timeStamp fields should be configured with this maximum
-      /// value. e.g. E57_UINT32_MAX, E57_DOUBLE_MAX or E57_DOUBLE_MAX.
+      /// value.
+      /// @details If using a ScaledIntegerNode and this is left as the default, it will be filled
+      /// in based on the data.
       double timeMaximum = DOUBLE_MAX;
 
       /// @brief Controls the type of Node used for the PointRecord time fields

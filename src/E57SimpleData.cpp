@@ -73,15 +73,6 @@ namespace e57
          {
             data3D.pointFields.angleMaximum = FLOAT_MAX;
          }
-
-         if ( data3D.pointFields.timeMinimum == DOUBLE_MIN )
-         {
-            data3D.pointFields.timeMinimum = FLOAT_MIN;
-         }
-         if ( data3D.pointFields.timeMaximum == DOUBLE_MAX )
-         {
-            data3D.pointFields.timeMaximum = FLOAT_MAX;
-         }
       }
 
       // IF point range node type is not ScaledInteger

@@ -56,10 +56,10 @@ namespace e57
    {
       if ( value_ < minimum_ || value_ > maximum_ )
       {
-         throw E57_EXCEPTION2( ErrorValueOutOfBounds, "this->pathName=" + this->pathName() +
-                                                         " value=" + toString( value_ ) +
-                                                         " minimum=" + toString( minimum_ ) +
-                                                         " maximum=" + toString( maximum_ ) );
+         throw E57_EXCEPTION2(
+            ErrorValueOutOfBounds,
+            "(FloatNode) this->pathName=" + this->pathName() + " value=" + toString( value_ ) +
+               " minimum=" + toString( minimum_ ) + " maximum=" + toString( maximum_ ) );
       }
    }
 

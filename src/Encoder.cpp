@@ -741,9 +741,10 @@ uint64_t BitpackIntegerEncoder<RegisterT>::processRecords( size_t recordCount )
       // Enforce min/max specification on value
       if ( rawValue < minimum_ || maximum_ < rawValue )
       {
-         throw E57_EXCEPTION2( ErrorValueOutOfBounds, "rawValue=" + toString( rawValue ) +
-                                                         " minimum=" + toString( minimum_ ) +
-                                                         " maximum=" + toString( maximum_ ) );
+         throw E57_EXCEPTION2( ErrorValueOutOfBounds,
+                               "(BitpackIntegerEncoder) rawValue=" + toString( rawValue ) +
+                                  " minimum=" + toString( minimum_ ) +
+                                  " maximum=" + toString( maximum_ ) );
       }
 
       auto uValue = static_cast<uint64_t>( rawValue - minimum_ );
@@ -914,8 +915,9 @@ uint64_t ConstantIntegerEncoder::processRecords( size_t recordCount )
       int64_t nextInt64 = sourceBuffer_->getNextInt64();
       if ( nextInt64 != minimum_ )
       {
-         throw E57_EXCEPTION2( ErrorValueOutOfBounds, "nextInt64=" + toString( nextInt64 ) +
-                                                         " minimum=" + toString( minimum_ ) );
+         throw E57_EXCEPTION2( ErrorValueOutOfBounds,
+                               "(ConstantIntegerEncoder) nextInt64=" + toString( nextInt64 ) +
+                                  " minimum=" + toString( minimum_ ) );
       }
    }
 

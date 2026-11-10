@@ -32,7 +32,7 @@
 
 #if defined( _WIN32 )
 #if defined( _MSC_VER )
-#include <codecvt> //  codecvt_utf8_utf16 is deprecated in C++17, removed in C++226
+#include <codecvt> //  codecvt_utf8_utf16 is deprecated in C++17, removed in C++26
 #include <io.h>
 #define NOMINMAX // prevents <windows.h> to  #define min and max. Sigh ...
 // clang-format off: <windows.h> MUST be included before <stringapiset.h>

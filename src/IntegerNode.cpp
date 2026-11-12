@@ -126,8 +126,8 @@ destImageFile. It is an error to attempt to attach the IntegerNode to a differen
 
 @warning It is an error to give an @a value outside the @a minimum / @a maximum bounds, even if the
 IntegerNode is destined to be used in a CompressedVectorNode prototype (where the @a value will be
-ignored). If the IntegerNode is to be used in a prototype, it is recommended to specify a @a value =
-0 if 0 is within bounds, or a @a value = @a minimum if 0 is not within bounds.
+ignored). If the IntegerNode is to be used in a prototype, it is recommended to to use the
+constructor which does not take a value parameter.
 
 @pre The @a destImageFile must be open (i.e. destImageFile.isOpen() must be true).
 @pre The @a destImageFile must have been opened in write mode (i.e. destImageFile.isWritable() must
@@ -147,6 +147,48 @@ IntegerNode::IntegerNode( const ImageFile &destImageFile, int64_t value, int64_t
    impl_( new IntegerNodeImpl( destImageFile.impl(), value, minimum, maximum ) )
 {
    impl_->validateValue();
+}
+
+/*!
+@brief Create an E57 element for storing a integer element in a CompressedVectorNode prototype.
+
+@param [in] ignoredSignatureBreaker Because the main constructor has all default arguments, we need
+to change the signature of this one. This value is ignored.
+@param [in] destImageFile The ImageFile where the new node will eventually be stored.
+@param [in] minimum The smallest value that the element may take.
+@param [in] maximum The largest value that the element may take.
+
+@details
+An IntegerNode stores an integer value, and a lower and upper bound. In the prototype node, the
+value is left as the default value of 0. The IntegerNode class corresponds to the ASTM E57 standard
+Integer element. See the class discussion at bottom of IntegerNode page for more details.
+
+The @a destImageFile indicates which ImageFile the IntegerNode will eventually be attached to. A
+node is attached to an ImageFile by adding it underneath the predefined root of the ImageFile
+(gotten from ImageFile::root). It is not an error to fail to attach the IntegerNode to the @a
+destImageFile. It is an error to attempt to attach the IntegerNode to a different ImageFile.
+
+This version of the constructor is intended to be used when creating a CompressedVectorNode
+prototype node. It differs from the other constructors in that it does not take a value parameter,
+so it does not check bounds. This avoids an ::ErrorValueOutOfBounds exception when the minimum value
+passed in is greater than 0.
+
+@pre The @a destImageFile must be open (i.e. destImageFile.isOpen() must be true).
+@pre The @a destImageFile must have been opened in write mode (i.e. destImageFile.isWritable() must
+be true).
+
+@throw ::ErrorBadAPIArgument (n/c)
+@throw ::ErrorImageFileNotOpen (n/c)
+@throw ::ErrorFileReadOnly (n/c)
+@throw ::ErrorInternal All objects in undocumented state
+
+@see Node, CompressedVectorNode, CompressedVectorNode::prototype
+*/
+IntegerNode::IntegerNode( bool ignoredSignatureBreaker, const ImageFile &destImageFile,
+                          int64_t minimum, int64_t maximum ) :
+   impl_( new IntegerNodeImpl( destImageFile.impl(), 0, minimum, maximum ) )
+{
+   E57_UNUSED( ignoredSignatureBreaker );
 }
 
 /*!

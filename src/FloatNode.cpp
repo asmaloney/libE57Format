@@ -73,7 +73,7 @@ void FloatNode::checkInvariant( bool /*doRecurse*/, bool doUpcast ) const
 @brief An E57 element encoding a single or double precision IEEE floating point number.
 
 @details
-An FloatNode is a terminal node (i.e. having no children) that holds an IEEE floating point value,
+A FloatNode is a terminal node (i.e. having no children) that holds an IEEE floating point value,
 and minimum/maximum bounds. The precision of the floating point value and attributes may be either
 single or double precision. Once the FloatNode value and attributes are set at creation, they may
 not be modified.
@@ -106,7 +106,7 @@ externally visible state for consistency and throws an exception if the invarian
 */
 
 /*!
-@brief Create an E57 element for storing an double precision IEEE floating point number.
+@brief Create an E57 element for storing a double precision IEEE floating point number.
 
 @param [in] destImageFile The ImageFile where the new node will eventually be stored.
 @param [in] value The double precision IEEE floating point value of the element.
@@ -116,7 +116,7 @@ externally visible state for consistency and throws an exception if the invarian
 @param [in] maximum The largest value that the value may take.
 
 @details
-An FloatNode stores an IEEE floating point number and a lower and upper bound. The FloatNode class
+A FloatNode stores an IEEE floating point number and a lower and upper bound. The FloatNode class
 corresponds to the ASTM E57 standard Float element. See the class discussion at bottom of FloatNode
 page for more details.
 
@@ -125,7 +125,7 @@ is attached to an ImageFile by adding it underneath the predefined root of the I
 from ImageFile::root). It is not an error to fail to attach the FloatNode to the @a destImageFile.
 It is an error to attempt to attach the FloatNode to a different ImageFile.
 
-There is only one FloatNode constructor that handles both ::PrecisionSingle and ::PrecisionDouble
+There is one FloatNode constructor that handles both ::PrecisionSingle and ::PrecisionDouble
 precision cases. If @a precision = ::PrecisionSingle, then the object will silently round the double
 precision @a value to the nearest representable single precision value. In this case, the lower bits
 will be lost, and if the value is outside the representable range of a single precision number, the
@@ -133,8 +133,8 @@ exponent may be changed. The same is true for the @a minimum and @a maximum argu
 
 @warning It is an error to give an @a value outside the @a minimum / @a maximum bounds, even if the
 FloatNode is destined to be used in a CompressedVectorNode prototype (where the @a value will be
-ignored). If the FloatNode is to be used in a prototype, it is recommended to specify a @a value = 0
-if 0 is within bounds, or a @a value = @a minimum if 0 is not within bounds.
+ignored). If the FloatNode is to be used in a prototype, it is recommended to to use the constructor
+which does not take a value parameter.
 
 @pre The @a destImageFile must be open (i.e. destImageFile.isOpen() must be true).
 @pre The @a destImageFile must have been opened in write mode (i.e. destImageFile.isWritable() must
@@ -154,6 +154,53 @@ FloatNode::FloatNode( const ImageFile &destImageFile, double value, FloatPrecisi
    impl_( new FloatNodeImpl( destImageFile.impl(), value, precision, minimum, maximum ) )
 {
    impl_->validateValue();
+}
+
+/*!
+@brief Create an E57 element for storing a double precision IEEE floating point number element in a
+CompressedVectorNode prototype.
+
+@param [in] destImageFile The ImageFile where the new node will eventually be stored.
+@param [in] precision The precision of IEEE floating point to use. May be ::PrecisionSingle or
+::PrecisionDouble.
+@param [in] minimum The smallest value that the element may take.
+@param [in] maximum The largest value that the element may take.
+
+@details
+A FloatNode stores an IEEE floating point number and a lower and upper bound. In the prototype node,
+the value is left as the default value of 0.0. The FloatNode class corresponds to the ASTM E57
+standard Float element. See the class discussion at bottom of FloatNode page for more details.
+
+The @a destImageFile indicates which ImageFile the FloatNode will eventually be attached to. A node
+is attached to an ImageFile by adding it underneath the predefined root of the ImageFile (gotten
+from ImageFile::root). It is not an error to fail to attach the FloatNode to the @a destImageFile.
+It is an error to attempt to attach the FloatNode to a different ImageFile.
+
+The FloatNode constructor handles both ::PrecisionSingle and ::PrecisionDouble
+precision cases. If @a precision = ::PrecisionSingle, then the object will silently round the double
+precision @a minimum and @a maximum arguments to the nearest representable single precision value.
+In this case, the lower bits will be lost.
+
+This version of the constructor is intended to be used when creating a CompressedVectorNode
+prototype node. It differs from the other constructors in that it does not take a value parameter,
+so it does not check bounds. This avoids an ::ErrorValueOutOfBounds exception when the minimum value
+passed in is greater than 0.
+
+@pre The @a destImageFile must be open (i.e. destImageFile.isOpen() must be true).
+@pre The @a destImageFile must have been opened in write mode (i.e. destImageFile.isWritable() must
+be true).
+
+@throw ::ErrorBadAPIArgument (n/c)
+@throw ::ErrorImageFileNotOpen (n/c)
+@throw ::ErrorFileReadOnly (n/c)
+@throw ::ErrorInternal All objects in undocumented state
+
+@see FloatPrecision, Node, CompressedVectorNode, CompressedVectorNode::prototype
+*/
+FloatNode::FloatNode( const ImageFile &destImageFile, FloatPrecision precision, double minimum,
+                      double maximum ) :
+   impl_( new FloatNodeImpl( destImageFile.impl(), 0.0, precision, minimum, maximum ) )
+{
 }
 
 /*!

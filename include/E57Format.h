@@ -527,6 +527,13 @@ public:                                                                         
       explicit IntegerNode( const ImageFile &destImageFile, int64_t value = 0,
                             int64_t minimum = INT64_MIN, int64_t maximum = INT64_MAX );
 
+      // This constructor is used for prototype nodes. See the documentation for details.
+      // Because all the arguments in the main constructor have defaults, we need to change the
+      // signature of this one which is why the bool ignoredSignatureBreaker was added. This value
+      // is ignored.
+      explicit IntegerNode( bool ignoredSignatureBreaker, const ImageFile &destImageFile,
+                            int64_t minimum, int64_t maximum );
+
       int64_t value() const;
       int64_t minimum() const;
       int64_t maximum() const;
@@ -572,6 +579,10 @@ public:                                                                         
                                   double scaledMinimum, double scaledMaximum, double scale = 1.0,
                                   double offset = 0.0 );
 
+      // This constructor is used for prototype nodes. See the documentation for details.
+      explicit ScaledIntegerNode( const ImageFile &destImageFile, int64_t minimum, int64_t maximum,
+                                  double scale, double offset );
+
       int64_t rawValue() const;
       double scaledValue() const;
       int64_t minimum() const;
@@ -615,6 +626,10 @@ public:                                                                         
       explicit FloatNode( const ImageFile &destImageFile, double value = 0.0,
                           FloatPrecision precision = PrecisionDouble, double minimum = DOUBLE_MIN,
                           double maximum = DOUBLE_MAX );
+
+      // This constructor is used for prototype nodes. See the documentation for details.
+      explicit FloatNode( const ImageFile &destImageFile, FloatPrecision precision, double minimum,
+                          double maximum );
 
       double value() const;
       FloatPrecision precision() const;

@@ -661,20 +661,25 @@ namespace e57
 
             case NumericalNodeType::ScaledInteger:
             {
-               const double scale = data3DHeader.pointFields.intensityScale;
-               const double offset = 0.0;
+               const double intensityScale = data3DHeader.pointFields.intensityScale;
+               constexpr double offset = 0.0;
+
+               if ( intensityScale == 0.0 )
+               {
+                  throw E57_EXCEPTION2( ErrorInvalidData3DValue, "intensityScale cannot be 0" );
+               }
 
                const auto rawIntegerMinimum =
-                  static_cast<int64_t>( std::floor( ( intensityMin - offset ) / scale + .5 ) );
+                  static_cast<int64_t>( std::floor( intensityMin / intensityScale + .5 ) );
                const auto rawIntegerMaximum =
-                  static_cast<int64_t>( std::floor( ( intensityMax - offset ) / scale + .5 ) );
+                  static_cast<int64_t>( std::floor( intensityMax / intensityScale + .5 ) );
 
                intbox.set( "intensityMinimum",
-                           ScaledIntegerNode( imf_, rawIntegerMinimum, rawIntegerMinimum,
-                                              rawIntegerMaximum, scale, offset ) );
+                           ScaledIntegerNode( imf_, rawIntegerMinimum, rawIntegerMaximum,
+                                              intensityScale, offset ) );
                intbox.set( "intensityMaximum",
-                           ScaledIntegerNode( imf_, rawIntegerMaximum, rawIntegerMinimum,
-                                              rawIntegerMaximum, scale, offset ) );
+                           ScaledIntegerNode( imf_, rawIntegerMinimum, rawIntegerMaximum,
+                                              intensityScale, offset ) );
 
                break;
             }
@@ -887,8 +892,6 @@ namespace e57
 
             case NumericalNodeType::ScaledInteger:
             {
-               // Because ScaledInteger min/max are the raw integer min/max, we must calculate them
-               // from the data min/max
                const double pointRangeOffset = 0.0;
                const double pointRangeScale = data3DHeader.pointFields.pointRangeScale;
 
@@ -897,23 +900,23 @@ namespace e57
                   throw E57_EXCEPTION2( ErrorInvalidData3DValue, "pointRangeScale cannot be 0" );
                }
 
-               const auto pointRangeMinimum = static_cast<int64_t>(
-                  std::floor( ( pointRangeMin - pointRangeOffset ) / pointRangeScale + .5 ) );
-               const auto pointRangeMaximum = static_cast<int64_t>(
-                  std::floor( ( pointRangeMax - pointRangeOffset ) / pointRangeScale + .5 ) );
+               const auto pointRangeMinimum =
+                  static_cast<int64_t>( std::floor( pointRangeMin / pointRangeScale + .5 ) );
+               const auto pointRangeMaximum =
+                  static_cast<int64_t>( std::floor( pointRangeMax / pointRangeScale + .5 ) );
 
-               return ScaledIntegerNode( imf_, 0, pointRangeMinimum, pointRangeMaximum,
+               return ScaledIntegerNode( imf_, pointRangeMinimum, pointRangeMaximum,
                                          pointRangeScale, pointRangeOffset );
             }
 
             case NumericalNodeType::Float:
             {
-               return FloatNode( imf_, 0.0, PrecisionSingle, pointRangeMin, pointRangeMax );
+               return FloatNode( imf_, PrecisionSingle, pointRangeMin, pointRangeMax );
             }
 
             case NumericalNodeType::Double:
             {
-               return FloatNode( imf_, 0.0, PrecisionDouble, pointRangeMin, pointRangeMax );
+               return FloatNode( imf_, PrecisionDouble, pointRangeMin, pointRangeMax );
             }
          }
 
@@ -964,23 +967,23 @@ namespace e57
                   throw E57_EXCEPTION2( ErrorInvalidData3DValue, "angleScale cannot be 0" );
                }
 
-               const auto angleMinimum = static_cast<int64_t>(
-                  std::floor( ( angleMin - angleOffset ) / angleScale + .5 ) );
-               const auto angleMaximum = static_cast<int64_t>(
-                  std::floor( ( angleMax - angleOffset ) / angleScale + .5 ) );
+               const auto angleMinimum =
+                  static_cast<int64_t>( std::floor( angleMin / angleScale + .5 ) );
+               const auto angleMaximum =
+                  static_cast<int64_t>( std::floor( angleMax / angleScale + .5 ) );
 
-               return ScaledIntegerNode( imf_, 0, angleMinimum, angleMaximum, angleScale,
+               return ScaledIntegerNode( imf_, angleMinimum, angleMaximum, angleScale,
                                          angleOffset );
             }
 
             case NumericalNodeType::Float:
             {
-               return FloatNode( imf_, 0.0, PrecisionSingle, angleMin, angleMax );
+               return FloatNode( imf_, PrecisionSingle, angleMin, angleMax );
             }
 
             case NumericalNodeType::Double:
             {
-               return FloatNode( imf_, 0.0, PrecisionDouble, angleMin, angleMax );
+               return FloatNode( imf_, PrecisionDouble, angleMin, angleMax );
             }
          }
 
@@ -1009,42 +1012,45 @@ namespace e57
          {
             case NumericalNodeType::Integer:
             {
-               proto.set( "intensity", IntegerNode( imf_, 0, static_cast<int64_t>( intensityMin ),
-                                                    static_cast<int64_t>( intensityMax ) ) );
+               proto.set( "intensity", IntegerNode( true, imf_, INT64_MIN, INT64_MAX ) );
 
                break;
             }
 
             case NumericalNodeType::ScaledInteger:
             {
-               const double scale = data3DHeader.pointFields.intensityScale;
-               const double offset = 0.0; // could be data3DHeader.intensityLimits.intensityMinimum;
+               const double intensityOffset = 0.0;
+               const double intensityScale = data3DHeader.pointFields.intensityScale;
+
+               if ( intensityScale == 0.0 )
+               {
+                  throw E57_EXCEPTION2( ErrorInvalidData3DValue, "intensityScale cannot be 0" );
+               }
 
                const auto rawIntegerMaximum =
-                  static_cast<int64_t>( std::floor( ( intensityMax - offset ) / scale + .5 ) );
+                  static_cast<int64_t>( std::floor( intensityMax / intensityScale + .5 ) );
                const auto rawIntegerMinimum =
-                  static_cast<int64_t>( std::floor( ( intensityMin - offset ) / scale + .5 ) );
+                  static_cast<int64_t>( std::floor( intensityMin / intensityScale + .5 ) );
 
-               proto.set( "intensity", ScaledIntegerNode( imf_, 0, rawIntegerMinimum,
-                                                          rawIntegerMaximum, scale, offset ) );
+               proto.set( "intensity",
+                          ScaledIntegerNode( imf_, rawIntegerMinimum, rawIntegerMaximum,
+                                             intensityScale, intensityOffset ) );
 
                break;
             }
 
             case NumericalNodeType::Float:
             {
-               proto.set( "intensity", FloatNode( imf_, 0.0, PrecisionSingle,
-                                                  data3DHeader.intensityLimits.intensityMinimum,
-                                                  data3DHeader.intensityLimits.intensityMaximum ) );
+               proto.set( "intensity",
+                          FloatNode( imf_, PrecisionSingle, intensityMin, intensityMax ) );
 
                break;
             }
 
             case NumericalNodeType::Double:
             {
-               proto.set( "intensity", FloatNode( imf_, 0.0, PrecisionDouble,
-                                                  data3DHeader.intensityLimits.intensityMinimum,
-                                                  data3DHeader.intensityLimits.intensityMaximum ) );
+               proto.set( "intensity",
+                          FloatNode( imf_, PrecisionDouble, intensityMin, intensityMax ) );
 
                break;
             }
@@ -1053,45 +1059,47 @@ namespace e57
 
       if ( data3DHeader.pointFields.colorRedField )
       {
-         proto.set(
-            "colorRed",
-            IntegerNode( imf_, 0, static_cast<int64_t>( data3DHeader.colorLimits.colorRedMinimum ),
-                         static_cast<int64_t>( data3DHeader.colorLimits.colorRedMaximum ) ) );
+         proto.set( "colorRed",
+                    IntegerNode(
+                       true, imf_, static_cast<int64_t>( data3DHeader.colorLimits.colorRedMinimum ),
+                       static_cast<int64_t>( data3DHeader.colorLimits.colorRedMaximum ) ) );
       }
       if ( data3DHeader.pointFields.colorGreenField )
       {
-         proto.set( "colorGreen",
-                    IntegerNode(
-                       imf_, 0, static_cast<int64_t>( data3DHeader.colorLimits.colorGreenMinimum ),
-                       static_cast<int64_t>( data3DHeader.colorLimits.colorGreenMaximum ) ) );
+         proto.set(
+            "colorGreen",
+            IntegerNode( true, imf_,
+                         static_cast<int64_t>( data3DHeader.colorLimits.colorGreenMinimum ),
+                         static_cast<int64_t>( data3DHeader.colorLimits.colorGreenMaximum ) ) );
       }
       if ( data3DHeader.pointFields.colorBlueField )
       {
          proto.set(
             "colorBlue",
-            IntegerNode( imf_, 0, static_cast<int64_t>( data3DHeader.colorLimits.colorBlueMinimum ),
+            IntegerNode( true, imf_,
+                         static_cast<int64_t>( data3DHeader.colorLimits.colorBlueMinimum ),
                          static_cast<int64_t>( data3DHeader.colorLimits.colorBlueMaximum ) ) );
       }
 
       if ( data3DHeader.pointFields.returnIndexField )
       {
          proto.set( "returnIndex",
-                    IntegerNode( imf_, 0, UINT8_MIN, data3DHeader.pointFields.returnMaximum ) );
+                    IntegerNode( true, imf_, UINT8_MIN, data3DHeader.pointFields.returnMaximum ) );
       }
       if ( data3DHeader.pointFields.returnCountField )
       {
          proto.set( "returnCount",
-                    IntegerNode( imf_, 0, UINT8_MIN, data3DHeader.pointFields.returnMaximum ) );
+                    IntegerNode( true, imf_, UINT8_MIN, data3DHeader.pointFields.returnMaximum ) );
       }
 
       if ( data3DHeader.pointFields.rowIndexField )
       {
-         proto.set( "rowIndex",
-                    IntegerNode( imf_, 0, UINT32_MIN, data3DHeader.pointFields.rowIndexMaximum ) );
+         proto.set( "rowIndex", IntegerNode( true, imf_, UINT32_MIN,
+                                             data3DHeader.pointFields.rowIndexMaximum ) );
       }
       if ( data3DHeader.pointFields.columnIndexField )
       {
-         proto.set( "columnIndex", IntegerNode( imf_, 0, UINT32_MIN,
+         proto.set( "columnIndex", IntegerNode( true, imf_, UINT32_MIN,
                                                 data3DHeader.pointFields.columnIndexMaximum ) );
       }
 
@@ -1104,37 +1112,37 @@ namespace e57
          {
             case NumericalNodeType::Integer:
             {
-               proto.set( "timeStamp", IntegerNode( imf_, 0, static_cast<int64_t>( timeMinimum ),
-                                                    static_cast<int64_t>( timeMaximum ) ) );
+               proto.set( "timeStamp", IntegerNode( true, imf_, INT64_MIN, INT64_MAX ) );
                break;
             }
 
             case NumericalNodeType::ScaledInteger:
             {
-               const double scale = data3DHeader.pointFields.timeScale;
-               const double offset = 0.0;
+               const double timeOffset = 0.0;
+               const double timeScale = data3DHeader.pointFields.timeScale;
 
                const auto rawIntegerMinimum =
-                  static_cast<int64_t>( std::floor( ( timeMinimum - offset ) / scale + .5 ) );
+                  static_cast<int64_t>( std::floor( timeMinimum / timeScale + .5 ) );
                const auto rawIntegerMaximum =
-                  static_cast<int64_t>( std::floor( ( timeMaximum - offset ) / scale + .5 ) );
+                  static_cast<int64_t>( std::floor( timeMaximum / timeScale + .5 ) );
 
-               proto.set( "timeStamp", ScaledIntegerNode( imf_, 0, rawIntegerMinimum,
-                                                          rawIntegerMaximum, scale, offset ) );
+               proto.set( "timeStamp",
+                          ScaledIntegerNode( imf_, rawIntegerMinimum, rawIntegerMaximum, timeScale,
+                                             timeOffset ) );
                break;
             }
 
             case NumericalNodeType::Float:
             {
                proto.set( "timeStamp",
-                          FloatNode( imf_, 0.0, PrecisionSingle, FLOAT_MIN, FLOAT_MAX ) );
+                          FloatNode( imf_, PrecisionSingle, timeMinimum, timeMaximum ) );
                break;
             }
 
             case NumericalNodeType::Double:
             {
                proto.set( "timeStamp",
-                          FloatNode( imf_, 0.0, PrecisionDouble, DOUBLE_MIN, DOUBLE_MAX ) );
+                          FloatNode( imf_, PrecisionDouble, timeMinimum, timeMaximum ) );
                break;
             }
          }
@@ -1142,23 +1150,23 @@ namespace e57
 
       if ( data3DHeader.pointFields.cartesianInvalidStateField )
       {
-         proto.set( "cartesianInvalidState", IntegerNode( imf_, 0, 0, 2 ) );
+         proto.set( "cartesianInvalidState", IntegerNode( true, imf_, 0, 2 ) );
       }
       if ( data3DHeader.pointFields.sphericalInvalidStateField )
       {
-         proto.set( "sphericalInvalidState", IntegerNode( imf_, 0, 0, 2 ) );
+         proto.set( "sphericalInvalidState", IntegerNode( true, imf_, 0, 2 ) );
       }
       if ( data3DHeader.pointFields.isIntensityInvalidField )
       {
-         proto.set( "isIntensityInvalid", IntegerNode( imf_, 0, 0, 1 ) );
+         proto.set( "isIntensityInvalid", IntegerNode( true, imf_, 0, 1 ) );
       }
       if ( data3DHeader.pointFields.isColorInvalidField )
       {
-         proto.set( "isColorInvalid", IntegerNode( imf_, 0, 0, 1 ) );
+         proto.set( "isColorInvalid", IntegerNode( true, imf_, 0, 1 ) );
       }
       if ( data3DHeader.pointFields.isTimeStampInvalidField )
       {
-         proto.set( "isTimeStampInvalid", IntegerNode( imf_, 0, 0, 1 ) );
+         proto.set( "isTimeStampInvalid", IntegerNode( true, imf_, 0, 1 ) );
       }
 
       // E57_EXT_surface_normals
@@ -1176,15 +1184,15 @@ namespace e57
       // currently we support writing normals only as float32
       if ( data3DHeader.pointFields.normalXField )
       {
-         proto.set( "nor:normalX", FloatNode( imf_, 0.0, PrecisionSingle, -1.0, 1.0 ) );
+         proto.set( "nor:normalX", FloatNode( imf_, PrecisionSingle, -1.0, 1.0 ) );
       }
       if ( data3DHeader.pointFields.normalYField )
       {
-         proto.set( "nor:normalY", FloatNode( imf_, 0.0, PrecisionSingle, -1.0, 1.0 ) );
+         proto.set( "nor:normalY", FloatNode( imf_, PrecisionSingle, -1.0, 1.0 ) );
       }
       if ( data3DHeader.pointFields.normalZField )
       {
-         proto.set( "nor:normalZ", FloatNode( imf_, 0.0, PrecisionSingle, -1.0, 1.0 ) );
+         proto.set( "nor:normalZ", FloatNode( imf_, PrecisionSingle, -1.0, 1.0 ) );
       }
 
       // Make empty codecs vector for use in creating points CompressedVector.

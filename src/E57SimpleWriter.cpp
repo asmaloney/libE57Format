@@ -49,6 +49,8 @@ namespace
 
       auto &pointFields = ioData3DHeader.pointFields;
 
+      const bool cHavePoints = ioData3DHeader.pointCount > 0;
+
       constexpr COORDTYPE cMin = std::numeric_limits<COORDTYPE>::lowest();
       constexpr COORDTYPE cMax = std::numeric_limits<COORDTYPE>::max();
 
@@ -61,9 +63,9 @@ namespace
       auto pointRangeMinimum = cMax;
       auto pointRangeMaximum = cMin;
 
-      const bool cWritePointRange =
-         ( pointFields.pointRangeNodeType == e57::NumericalNodeType::ScaledInteger ) &&
-         ( pointFields.pointRangeMinimum == cMin ) && ( pointFields.pointRangeMaximum == cMax );
+      const bool cPointRangeSetByUser =
+         ( ( pointFields.pointRangeMinimum == cMin ) && ( pointFields.pointRangeMaximum == cMax ) );
+      const bool cWritePointRange = cHavePoints && cPointRangeSetByUser;
 
       // IF we are using cartesian coordinates
       // AND we haven't set our bounds
@@ -87,9 +89,7 @@ namespace
 
       const bool cAngleSetByUser =
          ( ( pointFields.angleMinimum == cMin ) && ( pointFields.angleMaximum == cMax ) );
-      const bool cWriteAngle =
-         cUsingSpherical &&
-         ( pointFields.angleNodeType == e57::NumericalNodeType::ScaledInteger ) && !cAngleSetByUser;
+      const bool cWriteAngle = cUsingSpherical && !cAngleSetByUser;
 
       // IF we are using spherical coordinates
       // AND we haven't set our bounds
@@ -114,10 +114,7 @@ namespace
 
       const bool cTimeStampSetByUser = ( pointFields.timeMinimum != e57::DOUBLE_MIN ) ||
                                        ( pointFields.timeMaximum != e57::DOUBLE_MAX );
-      const bool cWriteTimeStamp =
-         pointFields.timeStampField &&
-         ( pointFields.timeNodeType == e57::NumericalNodeType::ScaledInteger ) &&
-         !cTimeStampSetByUser;
+      const bool cWriteTimeStamp = pointFields.timeStampField && !cTimeStampSetByUser;
 
       // Now run through the points and set the things we need to
       for ( size_t i = 0; i < ioData3DHeader.pointCount; ++i )

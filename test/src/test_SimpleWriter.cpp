@@ -255,29 +255,11 @@ TEST( SimpleWriter, ColouredCubeDouble )
 
    e57::Data3DPointsDouble pointsData( header );
 
-   // reset these so we can calculate them using min/max
-   header.pointFields.pointRangeMinimum = e57::DOUBLE_MAX;
-   header.pointFields.pointRangeMaximum = e57::DOUBLE_MIN;
-
    int64_t i = 0;
    auto writePointLambda = [&]( uint8_t inFace, const Point &inPoint ) {
       ASSERT_LE( i, cNumPoints );
 
       fillColouredCartesianPoint( pointsData, i, inFace, inPoint );
-
-      header.pointFields.pointRangeMinimum =
-         std::min( pointsData.cartesianX[i], header.pointFields.pointRangeMinimum );
-      header.pointFields.pointRangeMinimum =
-         std::min( pointsData.cartesianY[i], header.pointFields.pointRangeMinimum );
-      header.pointFields.pointRangeMinimum =
-         std::min( pointsData.cartesianZ[i], header.pointFields.pointRangeMinimum );
-
-      header.pointFields.pointRangeMaximum =
-         std::max( pointsData.cartesianX[i], header.pointFields.pointRangeMaximum );
-      header.pointFields.pointRangeMaximum =
-         std::max( pointsData.cartesianY[i], header.pointFields.pointRangeMaximum );
-      header.pointFields.pointRangeMaximum =
-         std::max( pointsData.cartesianZ[i], header.pointFields.pointRangeMaximum );
 
       ++i;
    };
@@ -313,29 +295,11 @@ TEST( SimpleWriter, ColouredCubeFloat )
 
    e57::Data3DPointsFloat pointsData( header );
 
-   // reset these so we can calculate them using min/max
-   header.pointFields.pointRangeMinimum = e57::FLOAT_MAX;
-   header.pointFields.pointRangeMaximum = e57::FLOAT_MIN;
-
    int64_t i = 0;
    auto writePointLambda = [&]( uint8_t inFace, const Point &inPoint ) {
       ASSERT_LE( i, cNumPoints );
 
       fillColouredCartesianPoint( pointsData, i, inFace, inPoint );
-
-      header.pointFields.pointRangeMinimum = std::min(
-         static_cast<double>( pointsData.cartesianX[i] ), header.pointFields.pointRangeMinimum );
-      header.pointFields.pointRangeMinimum = std::min(
-         static_cast<double>( pointsData.cartesianY[i] ), header.pointFields.pointRangeMinimum );
-      header.pointFields.pointRangeMinimum = std::min(
-         static_cast<double>( pointsData.cartesianZ[i] ), header.pointFields.pointRangeMinimum );
-
-      header.pointFields.pointRangeMaximum = std::max(
-         static_cast<double>( pointsData.cartesianX[i] ), header.pointFields.pointRangeMaximum );
-      header.pointFields.pointRangeMaximum = std::max(
-         static_cast<double>( pointsData.cartesianY[i] ), header.pointFields.pointRangeMaximum );
-      header.pointFields.pointRangeMaximum = std::max(
-         static_cast<double>( pointsData.cartesianZ[i] ), header.pointFields.pointRangeMaximum );
 
       ++i;
    };
@@ -374,29 +338,11 @@ TEST( SimpleWriter, ColouredCubeScaledInt )
 
    e57::Data3DPointsDouble pointsData( header );
 
-   // reset these so we can calculate them using min/max
-   header.pointFields.pointRangeMinimum = e57::DOUBLE_MAX;
-   header.pointFields.pointRangeMaximum = e57::DOUBLE_MIN;
-
    int64_t i = 0;
    auto writePointLambda = [&]( uint8_t inFace, const Point &inPoint ) {
       ASSERT_LE( i, cNumPoints );
 
       fillColouredCartesianPoint( pointsData, i, inFace, inPoint );
-
-      header.pointFields.pointRangeMinimum =
-         std::min( pointsData.cartesianX[i], header.pointFields.pointRangeMinimum );
-      header.pointFields.pointRangeMinimum =
-         std::min( pointsData.cartesianY[i], header.pointFields.pointRangeMinimum );
-      header.pointFields.pointRangeMinimum =
-         std::min( pointsData.cartesianZ[i], header.pointFields.pointRangeMinimum );
-
-      header.pointFields.pointRangeMaximum =
-         std::max( pointsData.cartesianX[i], header.pointFields.pointRangeMaximum );
-      header.pointFields.pointRangeMaximum =
-         std::max( pointsData.cartesianY[i], header.pointFields.pointRangeMaximum );
-      header.pointFields.pointRangeMaximum =
-         std::max( pointsData.cartesianZ[i], header.pointFields.pointRangeMaximum );
 
       ++i;
    };
@@ -567,7 +513,7 @@ TEST( SimpleWriter, MinMaxIssuesCartesianFloat )
    header.pointFields.cartesianYField = true;
    header.pointFields.cartesianZField = true;
 
-   // Using any of these without setting their min/max explicitly should not fail
+   // Using any of these (as ScaledInteger) without setting their min/max explicitly should not fail
    header.pointFields.pointRangeNodeType = e57::NumericalNodeType::ScaledInteger;
    header.pointFields.pointRangeScale = 0.1;
    header.pointFields.timeStampField = true;
@@ -599,8 +545,8 @@ TEST( SimpleWriter, MinMaxIssuesCartesianFloat )
    EXPECT_NE( header.pointFields.pointRangeMinimum, e57::FLOAT_MIN );
    EXPECT_NE( header.pointFields.pointRangeMaximum, e57::FLOAT_MAX );
 
-   EXPECT_NE( header.pointFields.timeMinimum, e57::FLOAT_MIN );
-   EXPECT_NE( header.pointFields.timeMaximum, e57::FLOAT_MAX );
+   EXPECT_EQ( header.pointFields.timeMinimum, 0.0 );
+   EXPECT_EQ( header.pointFields.timeMaximum, 1024.0 );
 }
 
 // https://github.com/asmaloney/libE57Format/issues/160
@@ -622,7 +568,7 @@ TEST( SimpleWriter, MinMaxIssuesSphericalDouble )
    header.pointFields.sphericalAzimuthField = true;
    header.pointFields.sphericalElevationField = true;
 
-   // Using any of these without setting their min/max explicitly should not fail
+   // Using any of these (as ScaledInteger) without setting their min/max explicitly should not fail
    header.pointFields.pointRangeNodeType = e57::NumericalNodeType::ScaledInteger;
    header.pointFields.pointRangeScale = 0.1;
    header.pointFields.timeStampField = true;
@@ -654,8 +600,8 @@ TEST( SimpleWriter, MinMaxIssuesSphericalDouble )
    EXPECT_NE( header.pointFields.pointRangeMinimum, e57::DOUBLE_MIN );
    EXPECT_NE( header.pointFields.pointRangeMaximum, e57::DOUBLE_MAX );
 
-   EXPECT_NE( header.pointFields.timeMinimum, e57::DOUBLE_MIN );
-   EXPECT_NE( header.pointFields.timeMaximum, e57::DOUBLE_MAX );
+   EXPECT_EQ( header.pointFields.timeMinimum, 0.0 );
+   EXPECT_EQ( header.pointFields.timeMaximum, 1024.0 );
 }
 
 // Check that we don't overwrite the user's min/max data when we use the float version
@@ -708,6 +654,155 @@ TEST( SimpleWriter, MinMaxOverwriteUserDataFloat )
 
    EXPECT_EQ( header.pointFields.timeMinimum, -1.0 );
    EXPECT_EQ( header.pointFields.timeMaximum, 2048.0 );
+}
+
+// Checks that an integer timestamp with a minimum > 0 does not cause an exception
+TEST( SimpleWriter, MinMaxIssuesIntegerNode )
+{
+   e57::WriterOptions options;
+   options.guid = "MinMax Issues Integer File GUID";
+
+   e57::Writer *writer = nullptr;
+
+   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./MinMaxIssuesIntegerNode.e57", options ) );
+
+   constexpr int64_t cNumPoints = 8;
+
+   e57::Data3D header;
+   header.guid = "MinMax Issues Integer Header GUID";
+   header.pointCount = cNumPoints;
+   header.pointFields.cartesianXField = true;
+   header.pointFields.cartesianYField = true;
+   header.pointFields.cartesianZField = true;
+
+   header.pointFields.intensityField = true;
+   header.pointFields.intensityNodeType = e57::NumericalNodeType::Integer;
+
+   header.pointFields.timeStampField = true;
+   header.pointFields.timeNodeType = e57::NumericalNodeType::Integer;
+
+   e57::Data3DPointsFloat pointsData( header );
+
+   for ( int64_t i = 0; i < cNumPoints; ++i )
+   {
+      auto floati = static_cast<float>( i );
+      pointsData.cartesianX[i] = floati;
+      pointsData.cartesianY[i] = floati;
+      pointsData.cartesianZ[i] = floati;
+      pointsData.intensity[i] = ( i % 2 ) ? 1.0 : 0.0;
+      pointsData.timeStamp[i] = floati + 1;
+   }
+
+   try
+   {
+      writer->WriteData3DData( header, pointsData );
+   }
+   catch ( e57::E57Exception &err )
+   {
+      FAIL() << err.errorStr() << ": " << err.context();
+   }
+
+   delete writer;
+
+   EXPECT_EQ( header.pointFields.timeMinimum, 1.0 );
+   EXPECT_EQ( header.pointFields.timeMaximum, 8.0 );
+}
+
+// Checks that a scaled integer timestamp with a minimum > 0 does not cause an exception
+TEST( SimpleWriter, MinMaxIssuesScaledIntegerNode )
+{
+   e57::WriterOptions options;
+   options.guid = "MinMax Issues Scaled Integer File GUID";
+
+   e57::Writer *writer = nullptr;
+
+   E57_ASSERT_NO_THROW( writer =
+                           new e57::Writer( "./MinMaxIssuesScaledIntegerNode.e57", options ) );
+
+   constexpr int64_t cNumPoints = 8;
+
+   e57::Data3D header;
+   header.guid = "MinMax Issues Scaled Integer Header GUID";
+   header.pointCount = cNumPoints;
+   header.pointFields.cartesianXField = true;
+   header.pointFields.cartesianYField = true;
+   header.pointFields.cartesianZField = true;
+
+   header.pointFields.timeStampField = true;
+   header.pointFields.timeNodeType = e57::NumericalNodeType::ScaledInteger;
+   header.pointFields.timeScale = 0.1;
+
+   e57::Data3DPointsFloat pointsData( header );
+
+   for ( int64_t i = 0; i < cNumPoints; ++i )
+   {
+      auto floati = static_cast<float>( i );
+      pointsData.cartesianX[i] = floati + 0.22;
+      pointsData.cartesianY[i] = floati;
+      pointsData.cartesianZ[i] = floati;
+      pointsData.timeStamp[i] = floati + 1;
+   }
+
+   try
+   {
+      writer->WriteData3DData( header, pointsData );
+   }
+   catch ( e57::E57Exception &err )
+   {
+      FAIL() << err.errorStr() << ": " << err.context();
+   }
+
+   delete writer;
+
+   EXPECT_EQ( header.pointFields.timeMinimum, 1.0 );
+   EXPECT_EQ( header.pointFields.timeMaximum, 8.0 );
+}
+
+// Checks that a float timestamp with a minimum > 0.0 does not cause an exception
+TEST( SimpleWriter, MinMaxIssuesFloatNode )
+{
+   e57::WriterOptions options;
+   options.guid = "MinMax Issues Float File GUID";
+
+   e57::Writer *writer = nullptr;
+
+   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./MinMaxIssuesFloatNode.e57", options ) );
+
+   constexpr int64_t cNumPoints = 8;
+
+   e57::Data3D header;
+   header.guid = "MinMax Issues Float Header GUID";
+   header.pointCount = cNumPoints;
+   header.pointFields.cartesianXField = true;
+   header.pointFields.cartesianYField = true;
+   header.pointFields.cartesianZField = true;
+
+   header.pointFields.timeStampField = true;
+
+   e57::Data3DPointsFloat pointsData( header );
+
+   for ( int64_t i = 0; i < cNumPoints; ++i )
+   {
+      auto floati = static_cast<float>( i );
+      pointsData.cartesianX[i] = floati;
+      pointsData.cartesianY[i] = floati;
+      pointsData.cartesianZ[i] = floati;
+      pointsData.timeStamp[i] = floati + 1;
+   }
+
+   try
+   {
+      writer->WriteData3DData( header, pointsData );
+   }
+   catch ( e57::E57Exception &err )
+   {
+      FAIL() << err.errorStr() << ": " << err.context();
+   }
+
+   delete writer;
+
+   EXPECT_EQ( header.pointFields.timeMinimum, 1.0 );
+   EXPECT_EQ( header.pointFields.timeMaximum, 8.0 );
 }
 
 TEST( SimpleWriterData, VisualRefImage )

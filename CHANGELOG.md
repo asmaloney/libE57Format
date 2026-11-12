@@ -2,9 +2,19 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 3.4.2 - (in progress)
+## 3.5.0 - (in progress)
+
+### Added
+
+- Add new constructors for `FloatNode`, `IntegerNode`, and `ScaledIntegerNode` for use in creating compressed vector prototype elements. ([#369](https://github.com/asmaloney/libE57Format/pull/369))
+
+  These versions do not take a value parameter and therefore do not check against the range. This avoids `ErrorValueOutOfBounds` exceptions.
+
+  In the old documentation for these nodes, it was recommended to pass the minimum value if you were creating a prototype node to avoid exceptions, but that results in extra, misleading data in the XML.
 
 ### Fixed
+
+- **E57SimpleWriter**: Avoid `ErrorValueOutOfBounds` exceptions when using prototype nodes. ([#371](https://github.com/asmaloney/libE57Format/pull/371))
 
 - {standard conformance} **E57SimpleReader** should calculate and write the cartesian or spherical bounds. One of them is required by the standard (8.4.3.4 and 8.4.3.5). ([#361](https://github.com/asmaloney/libE57Format/pull/361))
 

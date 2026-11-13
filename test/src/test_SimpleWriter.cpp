@@ -805,6 +805,56 @@ TEST( SimpleWriter, MinMaxIssuesFloatNode )
    EXPECT_EQ( header.pointFields.timeMaximum, 8.0 );
 }
 
+// Checks that a constant timestamp when using ScaledInteger with a scale != 1.0 does not cause an
+// exception
+TEST( SimpleWriter, ConstantIntegerNodeException )
+{
+   e57::WriterOptions options;
+   options.guid = "Constant Integer Node Exception File GUID";
+
+   e57::Writer *writer = nullptr;
+
+   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./ConstantIntegerNodeException.e57", options ) );
+
+   constexpr int64_t cNumPoints = 8;
+
+   e57::Data3D header;
+   header.guid = "Constant Integer Node Exception Header GUID";
+   header.pointCount = cNumPoints;
+   header.pointFields.cartesianXField = true;
+   header.pointFields.cartesianYField = true;
+   header.pointFields.cartesianZField = true;
+
+   header.pointFields.timeStampField = true;
+   header.pointFields.timeNodeType = e57::NumericalNodeType::ScaledInteger;
+   header.pointFields.timeScale = 0.1;
+
+   e57::Data3DPointsFloat pointsData( header );
+
+   for ( int64_t i = 0; i < cNumPoints; ++i )
+   {
+      auto floati = static_cast<float>( i );
+      pointsData.cartesianX[i] = floati;
+      pointsData.cartesianY[i] = floati;
+      pointsData.cartesianZ[i] = floati;
+      pointsData.timeStamp[i] = 42.0;
+   }
+
+   try
+   {
+      writer->WriteData3DData( header, pointsData );
+   }
+   catch ( e57::E57Exception &err )
+   {
+      FAIL() << err.errorStr() << ": " << err.context();
+   }
+
+   delete writer;
+
+   EXPECT_EQ( header.pointFields.timeMinimum, 42 );
+   EXPECT_EQ( header.pointFields.timeMaximum, 42 );
+}
+
 TEST( SimpleWriterData, VisualRefImage )
 {
    if ( !TestData::Exists() )

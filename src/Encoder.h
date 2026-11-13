@@ -177,6 +177,8 @@ namespace e57
    {
    public:
       ConstantIntegerEncoder( unsigned bytestreamNumber, SourceDestBuffer &sbuf, int64_t minimum );
+      ConstantIntegerEncoder( unsigned bytestreamNumber, SourceDestBuffer &sbuf, int64_t minimum,
+                              double scale, double offset );
       uint64_t processRecords( size_t recordCount ) override;
       unsigned sourceBufferNextIndex() override;
       uint64_t currentRecordIndex() override;
@@ -199,5 +201,7 @@ namespace e57
       std::shared_ptr<SourceDestBufferImpl> sourceBuffer_;
       uint64_t currentRecordIndex_;
       int64_t minimum_;
+      double scale_;
+      double offset_;
    };
 }

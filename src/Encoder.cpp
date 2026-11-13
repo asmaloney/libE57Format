@@ -137,8 +137,8 @@ std::shared_ptr<Encoder> Encoder::EncoderFactory( unsigned bytestreamNumber,
          // stored.
          if ( bitsPerRecord == 0 )
          {
-            std::shared_ptr<Encoder> encoder(
-               new ConstantIntegerEncoder( bytestreamNumber, sbuf, sini->minimum() ) );
+            std::shared_ptr<Encoder> encoder( new ConstantIntegerEncoder(
+               bytestreamNumber, sbuf, sini->minimum(), sini->scale(), sini->offset() ) );
 
             return encoder;
          }
@@ -896,8 +896,14 @@ void BitpackIntegerEncoder<RegisterT>::dump( int indent, std::ostream &os ) cons
 
 ConstantIntegerEncoder::ConstantIntegerEncoder( unsigned bytestreamNumber, SourceDestBuffer &sbuf,
                                                 int64_t minimum ) :
+   ConstantIntegerEncoder( bytestreamNumber, sbuf, minimum, 1.0, 0.0 )
+{
+}
+
+ConstantIntegerEncoder::ConstantIntegerEncoder( unsigned bytestreamNumber, SourceDestBuffer &sbuf,
+                                                int64_t minimum, double scale, double offset ) :
    Encoder( bytestreamNumber ), sourceBuffer_( sbuf.impl() ), currentRecordIndex_( 0 ),
-   minimum_( minimum )
+   minimum_( minimum ), scale_( scale ), offset_( offset )
 {
 }
 
@@ -912,7 +918,17 @@ uint64_t ConstantIntegerEncoder::processRecords( size_t recordCount )
    // Check that all source values are == minimum_
    for ( unsigned i = 0; i < recordCount; i++ )
    {
-      int64_t nextInt64 = sourceBuffer_->getNextInt64();
+      int64_t nextInt64;
+
+      if ( scale_ != 1.0 || offset_ != 0.0 )
+      {
+         nextInt64 = sourceBuffer_->getNextInt64( scale_, offset_ );
+      }
+      else
+      {
+         nextInt64 = sourceBuffer_->getNextInt64();
+      }
+
       if ( nextInt64 != minimum_ )
       {
          throw E57_EXCEPTION2( ErrorValueOutOfBounds,

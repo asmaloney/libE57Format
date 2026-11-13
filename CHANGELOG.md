@@ -14,6 +14,8 @@ All notable changes to this project will be documented in this file. The format 
 
 ### Fixed
 
+- Fix `ErrorValueOutOfBounds` exception when using a ScaledInteger node with scale != 1.0 and a constant value. ([#372](https://github.com/asmaloney/libE57Format/pull/372))
+
 - **E57SimpleWriter**: Avoid `ErrorValueOutOfBounds` exceptions when using prototype nodes. ([#371](https://github.com/asmaloney/libE57Format/pull/371))
 
 - {standard conformance} **E57SimpleReader** should calculate and write the cartesian or spherical bounds. One of them is required by the standard (8.4.3.4 and 8.4.3.5). ([#361](https://github.com/asmaloney/libE57Format/pull/361))

@@ -26,7 +26,10 @@
  */
 
 #pragma once
+#define _USE_MATH_DEFINES
+#include <cmath>
 
+#include <limits>
 #include <set>
 #include <string>
 #include <vector>
@@ -79,4 +82,10 @@ namespace e57
 
    /// generates a new random GUID
    std::string generateRandomGUID();
+
+   inline bool isZero( double d )
+   {
+      return ( std::abs( d ) < std::numeric_limits<double>::epsilon() ) && !std::isnan( d ) &&
+             !std::isinf( d );
+   }
 }

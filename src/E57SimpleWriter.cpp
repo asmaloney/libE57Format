@@ -86,8 +86,7 @@ namespace
       const bool cWriteSphericalBounds =
          cUsingSpherical && ( ioData3DHeader.sphericalBounds == e57::SphericalBounds{} );
 
-      // IF we are using scaled ints for timestamps
-      // AND we haven't set either min or max
+      // IF we haven't set either min or max timestamp
       // THEN calculate them from the points
       // NOTE: timestamp is always a double in Data3DPointsData_t and not affected by the COORDTYPE
       double timeMinimum = std::numeric_limits<double>::max();
@@ -200,7 +199,7 @@ namespace e57
       {
          if ( inData3D.pointFields.intensityNodeType == NumericalNodeType::ScaledInteger )
          {
-            if ( inData3D.pointFields.intensityScale == 0.0 )
+            if ( isZero( inData3D.pointFields.intensityScale ) )
             {
                throw E57_EXCEPTION2( ErrorInvalidData3DValue, "intensityScale cannot be 0" );
             }
@@ -215,7 +214,7 @@ namespace e57
          }
          else if ( inData3D.pointFields.pointRangeNodeType == NumericalNodeType::ScaledInteger )
          {
-            if ( inData3D.pointFields.pointRangeScale == 0.0 )
+            if ( isZero( inData3D.pointFields.pointRangeScale ) )
             {
                throw E57_EXCEPTION2( ErrorInvalidData3DValue, "pointRangeScale cannot be 0" );
             }
@@ -231,7 +230,7 @@ namespace e57
          }
          else if ( inData3D.pointFields.angleNodeType == NumericalNodeType::ScaledInteger )
          {
-            if ( inData3D.pointFields.angleScale == 0.0 )
+            if ( isZero( inData3D.pointFields.angleScale ) )
             {
                throw E57_EXCEPTION2( ErrorInvalidData3DValue, "angleScale cannot be 0" );
             }

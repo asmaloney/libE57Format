@@ -1073,12 +1073,6 @@ namespace e57
                                                         double pointRangeMax ) -> Node {
          switch ( data3DHeader.pointFields.pointRangeNodeType )
          {
-            case NumericalNodeType::Integer:
-            {
-               throw E57_EXCEPTION2( ErrorInternal,
-                                     "pointRangeNodeType should checked before getting here" );
-            }
-
             case NumericalNodeType::ScaledInteger:
             {
                const double pointRangeOffset = 0.0;
@@ -1102,7 +1096,14 @@ namespace e57
             {
                return FloatNode( imf_, PrecisionDouble, pointRangeMin, pointRangeMax );
             }
+
+            default:
+               break;
          }
+
+         throw E57_EXCEPTION2(
+            ErrorInternal,
+            "invalid pointRangeNodeType; should have been checked before getting here" );         
       };
 
       if ( data3DHeader.pointFields.cartesianXField )
@@ -1132,12 +1133,6 @@ namespace e57
       const auto getAngleProto = [this, &data3DHeader]( double angleMin, double angleMax ) -> Node {
          switch ( data3DHeader.pointFields.angleNodeType )
          {
-            case NumericalNodeType::Integer:
-            {
-               throw E57_EXCEPTION2( ErrorInternal,
-                                     "angleNodeType should checked before getting here" );
-            }
-
             case NumericalNodeType::ScaledInteger:
             {
                const double angleOffset = 0.0;
@@ -1161,7 +1156,13 @@ namespace e57
             {
                return FloatNode( imf_, PrecisionDouble, angleMin, angleMax );
             }
+
+            default:
+               break;
          }
+
+         throw E57_EXCEPTION2(
+            ErrorInternal, "invalid angleNodeType; should have been checked before getting here" );
       };
 
       if ( data3DHeader.pointFields.sphericalAzimuthField )

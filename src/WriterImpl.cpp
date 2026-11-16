@@ -1103,7 +1103,7 @@ namespace e57
 
          throw E57_EXCEPTION2(
             ErrorInternal,
-            "invalid pointRangeNodeType; should have been checked before getting here" );         
+            "invalid pointRangeNodeType; should have been checked before getting here" );
       };
 
       if ( data3DHeader.pointFields.cartesianXField )

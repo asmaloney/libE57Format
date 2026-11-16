@@ -92,6 +92,11 @@ namespace
 
    void replicate( char *dst, size_t stride, size_t elementSize, size_t numElements )
    {
+      if ( elementSize > 8 )
+      {
+         throw E57_EXCEPTION2( ErrorInternal, "elementSize=" + toString( elementSize ) );
+      }
+
       char v[8];
       std::memcpy( &v, dst, elementSize );
 
@@ -859,7 +864,7 @@ void SourceDestBufferImpl::setNextInt64Array( const int64_t *values, size_t n, d
       const size_t k = std::min( ChunkSize, n - done );
 
       double scaledValues[ChunkSize];
-      bool toReal = memoryRepresentation_ == Real32 || memoryRepresentation_ == Real64;
+      const bool toReal = memoryRepresentation_ == Real32 || memoryRepresentation_ == Real64;
       for ( size_t i = 0; i < k; ++i )
       {
          /// Calc x*scale+offset
@@ -965,20 +970,20 @@ void SourceDestBufferImpl::fillNextInt64( int64_t value, size_t n )
       case Int8:
       case UInt8:
       case Bool:
-         replicate( p, stride_, 1, n );
+         replicate( p, stride_, sizeof( uint8_t ), n );
          break;
       case Int16:
       case UInt16:
-         replicate( p, stride_, 2, n );
+         replicate( p, stride_, sizeof( uint16_t ), n );
          break;
       case Int32:
       case UInt32:
       case Real32:
-         replicate( p, stride_, 4, n );
+         replicate( p, stride_, sizeof( uint32_t ), n );
          break;
       case Int64:
       case Real64:
-         replicate( p, stride_, 8, n );
+         replicate( p, stride_, sizeof( uint64_t ), n );
          break;
       case UString:
          throw E57_EXCEPTION2( ErrorExpectingNumeric, "pathName=" + pathName_ );
@@ -1011,20 +1016,20 @@ void SourceDestBufferImpl::fillNextInt64( int64_t value, size_t n, double scale,
       case Int8:
       case UInt8:
       case Bool:
-         replicate( p, stride_, 1, n );
+         replicate( p, stride_, sizeof( uint8_t ), n );
          break;
       case Int16:
       case UInt16:
-         replicate( p, stride_, 2, n );
+         replicate( p, stride_, sizeof( uint16_t ), n );
          break;
       case Int32:
       case UInt32:
       case Real32:
-         replicate( p, stride_, 4, n );
+         replicate( p, stride_, sizeof( uint32_t ), n );
          break;
       case Int64:
       case Real64:
-         replicate( p, stride_, 8, n );
+         replicate( p, stride_, sizeof( uint64_t ), n );
          break;
       case UString:
          throw E57_EXCEPTION2( ErrorExpectingNumeric, "pathName=" + pathName_ );

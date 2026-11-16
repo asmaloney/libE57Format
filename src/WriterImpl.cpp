@@ -948,10 +948,7 @@ namespace e57
                                                      data3DHeader.sphericalBounds.rangeMaximum ) );
       }
 
-      const double angleMin = data3DHeader.pointFields.angleMinimum;
-      const double angleMax = data3DHeader.pointFields.angleMaximum;
-
-      const auto getAngleProto = [this, &data3DHeader, angleMin, angleMax]() -> Node {
+      const auto getAngleProto = [this, &data3DHeader]( double angleMin, double angleMax ) -> Node {
          switch ( data3DHeader.pointFields.angleNodeType )
          {
             case NumericalNodeType::Integer:
@@ -997,12 +994,15 @@ namespace e57
 
       if ( data3DHeader.pointFields.sphericalAzimuthField )
       {
-         proto.set( "sphericalAzimuth", getAngleProto() );
+         proto.set( "sphericalAzimuth", getAngleProto( data3DHeader.sphericalBounds.azimuthStart,
+                                                       data3DHeader.sphericalBounds.azimuthEnd ) );
       }
 
       if ( data3DHeader.pointFields.sphericalElevationField )
       {
-         proto.set( "sphericalElevation", getAngleProto() );
+         proto.set( "sphericalElevation",
+                    getAngleProto( data3DHeader.sphericalBounds.elevationMinimum,
+                                   data3DHeader.sphericalBounds.elevationMaximum ) );
       }
 
       if ( data3DHeader.pointFields.intensityField )

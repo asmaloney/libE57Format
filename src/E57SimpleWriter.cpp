@@ -72,16 +72,6 @@ namespace
       const bool cWriteCartesianBounds = cUsingCartesian && !cCartesianBoundsSetByUser;
 
       // IF we are using spherical coordinates
-      // AND we haven't set either min or max
-      // THEN calculate them from the points
-      auto angleMinimum = cMax;
-      auto angleMaximum = cMin;
-
-      const bool cAngleSetByUser =
-         ( ( pointFields.angleMinimum == cMin ) && ( pointFields.angleMaximum == cMax ) );
-      const bool cWriteAngle = cUsingSpherical && !cAngleSetByUser;
-
-      // IF we are using spherical coordinates
       // AND we haven't set our bounds
       // THEN calculate them from the points
       e57::SphericalBounds sphericalBounds;
@@ -150,15 +140,6 @@ namespace
             }
          }
 
-         if ( cWriteAngle )
-         {
-            angleMinimum = std::min( inBuffers.sphericalAzimuth[i], angleMinimum );
-            angleMinimum = std::min( inBuffers.sphericalElevation[i], angleMinimum );
-
-            angleMaximum = std::max( inBuffers.sphericalAzimuth[i], angleMaximum );
-            angleMaximum = std::max( inBuffers.sphericalElevation[i], angleMaximum );
-         }
-
          if ( cWriteTimeStamp )
          {
             timeMinimum = std::min( inBuffers.timeStamp[i], timeMinimum );
@@ -194,12 +175,6 @@ namespace
       if ( cWriteSphericalBounds )
       {
          ioData3DHeader.sphericalBounds = sphericalBounds;
-      }
-
-      if ( cWriteAngle )
-      {
-         pointFields.angleMinimum = angleMinimum;
-         pointFields.angleMaximum = angleMaximum;
       }
 
       if ( cWriteTimeStamp )

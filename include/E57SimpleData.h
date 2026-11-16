@@ -444,11 +444,15 @@ namespace e57
       /// @brief Indicates that the PointRecord angle fields should be configured with this minimum
       /// value E57_FLOAT_MIN or E57_DOUBLE_MIN.
       /// @details If using a ScaledIntegerNode then this needs to be a minimum angle value.
+      /// @deprecated Will be removed in 4.0. This field is superceded by the more fine-grained
+      /// sphericalBounds on Data3D.
       double angleMinimum = DOUBLE_MIN;
 
       /// @brief Indicates that the PointRecord angle fields should be configured with this maximum
       /// value e.g. E57_FLOAT_MAX or E57_DOUBLE_MAX.
       /// @details If using a ScaledIntegerNode then this needs to be a maximum angle value.
+      /// @deprecated Will be removed in 4.0. This field is superceded by the more fine-grained
+      /// sphericalBounds on Data3D.
       double angleMaximum = DOUBLE_MAX;
 
       /// @brief Controls the type of Node used for the PointRecord angle fields

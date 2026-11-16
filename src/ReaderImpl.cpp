@@ -1126,6 +1126,7 @@ namespace e57
       data3DHeader.pointFields.sphericalInvalidStateField =
          proto.isDefined( "sphericalInvalidState" );
 
+      // Deprecated - will be removed in 4.0 (see PointStandardizedFieldsAvailable)
       data3DHeader.pointFields.angleMinimum = 0.0;
       data3DHeader.pointFields.angleMaximum = 0.0;
 
@@ -1143,6 +1144,7 @@ namespace e57
                const int64_t minimum = scaledSphericalAzimuth.minimum();
                const int64_t maximum = scaledSphericalAzimuth.maximum();
 
+               // Deprecated - will be removed in 4.0 (see PointStandardizedFieldsAvailable)
                data3DHeader.pointFields.angleMinimum =
                   static_cast<double>( minimum ) * scale + offset;
                data3DHeader.pointFields.angleMaximum =
@@ -1158,6 +1160,7 @@ namespace e57
             {
                const FloatNode floatSphericalAzimuth( sphericalAzimuthProto );
 
+               // Deprecated - will be removed in 4.0 (see PointStandardizedFieldsAvailable)
                data3DHeader.pointFields.angleMinimum = floatSphericalAzimuth.minimum();
                data3DHeader.pointFields.angleMaximum = floatSphericalAzimuth.maximum();
 

@@ -11,13 +11,12 @@
 #include "E57SimpleData.h"
 
 #include "Common.h"
-#include "StringFunctions.h"
 
 namespace e57
 {
    /// @private
    /// Validates a Data3D and throws on error.
-   constexpr void _validateData3D( const Data3D &inData3D )
+   constexpr void _validateData3DNodeTypes( const Data3D &inData3D )
    {
       if ( inData3D.pointFields.pointRangeNodeType == NumericalNodeType::Integer )
       {
@@ -49,7 +48,7 @@ namespace e57
    {
       static_assert( std::is_floating_point<COORDTYPE>::value, "Floating point type required." );
 
-      _validateData3D( data3D );
+      _validateData3DNodeTypes( data3D );
 
       constexpr bool cIsFloat = std::is_same<COORDTYPE, float>::value;
 

@@ -29,6 +29,7 @@
 #include <algorithm>
 #include <limits>
 
+#include "Common.h"
 #include "E57SimpleWriter.h"
 #include "WriterImpl.h"
 
@@ -191,6 +192,53 @@ namespace
 
 namespace e57
 {
+   /// @private
+   /// Validates a Data3D and throws on error.
+   constexpr void _validateData3D( const Data3D &inData3D )
+   {
+      if ( inData3D.pointFields.intensityField )
+      {
+         if ( inData3D.pointFields.intensityNodeType == NumericalNodeType::ScaledInteger )
+         {
+            if ( inData3D.pointFields.intensityScale == 0.0 )
+            {
+               throw E57_EXCEPTION2( ErrorInvalidData3DValue, "intensityScale cannot be 0" );
+            }
+         }
+      }
+
+      if ( inData3D.pointFields.cartesianXField || inData3D.pointFields.sphericalRangeField )
+      {
+         if ( inData3D.pointFields.pointRangeNodeType == NumericalNodeType::Integer )
+         {
+            throw E57_EXCEPTION2( ErrorInvalidNodeType, "pointRangeNodeType cannot be Integer" );
+         }
+         else if ( inData3D.pointFields.pointRangeNodeType == NumericalNodeType::ScaledInteger )
+         {
+            if ( inData3D.pointFields.pointRangeScale == 0.0 )
+            {
+               throw E57_EXCEPTION2( ErrorInvalidData3DValue, "pointRangeScale cannot be 0" );
+            }
+         }
+      }
+
+      if ( inData3D.pointFields.sphericalRangeField || inData3D.pointFields.sphericalAzimuthField ||
+           inData3D.pointFields.sphericalElevationField )
+      {
+         if ( inData3D.pointFields.angleNodeType == NumericalNodeType::Integer )
+         {
+            throw E57_EXCEPTION2( ErrorInvalidNodeType, "angleNodeType cannot be Integer" );
+         }
+         else if ( inData3D.pointFields.angleNodeType == NumericalNodeType::ScaledInteger )
+         {
+            if ( inData3D.pointFields.angleScale == 0.0 )
+            {
+               throw E57_EXCEPTION2( ErrorInvalidData3DValue, "angleScale cannot be 0" );
+            }
+         }
+      }
+   }
+
    Writer::Writer( const ustring &filePath, const WriterOptions &options ) :
       impl_( new WriterImpl( filePath, options ) )
    {
@@ -248,6 +296,7 @@ namespace e57
    int64_t Writer::WriteData3DData( Data3D &data3DHeader, const Data3DPointsFloat &buffers )
    {
       _fillMissingData( data3DHeader, buffers );
+      _validateData3D( data3DHeader );
 
       const int64_t scanIndex = impl_->NewData3D( data3DHeader );
 
@@ -263,6 +312,7 @@ namespace e57
    int64_t Writer::WriteData3DData( Data3D &data3DHeader, const Data3DPointsDouble &buffers )
    {
       _fillMissingData( data3DHeader, buffers );
+      _validateData3D( data3DHeader );
 
       const int64_t scanIndex = impl_->NewData3D( data3DHeader );
 

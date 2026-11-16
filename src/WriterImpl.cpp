@@ -33,46 +33,6 @@
 #include "Common.h"
 #include "E57Version.h"
 
-namespace
-{
-   /*!
-   @brief Convert e57::NumericalNodeType into human-readable string.
-
-   @param inNodeType node type to convert
-
-   @return human-readable representation of node type or "Unknown: <node type int>".
-   */
-   std::string _numericalNodeTypeStr( e57::NumericalNodeType inNodeType )
-   {
-      switch ( inNodeType )
-      {
-         case e57::NumericalNodeType::Integer:
-         {
-            return "Integer";
-         }
-
-         case e57::NumericalNodeType::ScaledInteger:
-         {
-            return "ScaledInteger";
-         }
-
-         case e57::NumericalNodeType::Float:
-         {
-            return "Float";
-         }
-
-         case e57::NumericalNodeType::Double:
-         {
-            return "Double";
-         }
-
-         default:
-            return std::string( "Unknown: " )
-               .append( std::to_string( static_cast<int>( inNodeType ) ) );
-      }
-   }
-}
-
 namespace e57
 {
    /*!
@@ -664,11 +624,6 @@ namespace e57
                const double intensityScale = data3DHeader.pointFields.intensityScale;
                constexpr double offset = 0.0;
 
-               if ( intensityScale == 0.0 )
-               {
-                  throw E57_EXCEPTION2( ErrorInvalidData3DValue, "intensityScale cannot be 0" );
-               }
-
                const auto rawIntegerMinimum =
                   static_cast<int64_t>( std::floor( intensityMin / intensityScale + .5 ) );
                const auto rawIntegerMaximum =
@@ -1120,18 +1075,14 @@ namespace e57
          {
             case NumericalNodeType::Integer:
             {
-               throw E57_EXCEPTION2( ErrorInvalidNodeType, "pointRangeNodeType cannot be Integer" );
+               throw E57_EXCEPTION2( ErrorInternal,
+                                     "pointRangeNodeType should checked before getting here" );
             }
 
             case NumericalNodeType::ScaledInteger:
             {
                const double pointRangeOffset = 0.0;
                const double pointRangeScale = data3DHeader.pointFields.pointRangeScale;
-
-               if ( pointRangeScale == 0.0 )
-               {
-                  throw E57_EXCEPTION2( ErrorInvalidData3DValue, "pointRangeScale cannot be 0" );
-               }
 
                const auto pointRangeMinimum =
                   static_cast<int64_t>( std::floor( pointRangeMin / pointRangeScale + .5 ) );
@@ -1152,11 +1103,6 @@ namespace e57
                return FloatNode( imf_, PrecisionDouble, pointRangeMin, pointRangeMax );
             }
          }
-
-         throw E57_EXCEPTION2(
-            ErrorInvalidNodeType,
-            std::string( "Invalid pointRangeNodeType type: " )
-               .append( _numericalNodeTypeStr( data3DHeader.pointFields.pointRangeNodeType ) ) );
       };
 
       if ( data3DHeader.pointFields.cartesianXField )
@@ -1188,18 +1134,14 @@ namespace e57
          {
             case NumericalNodeType::Integer:
             {
-               throw E57_EXCEPTION2( ErrorInvalidNodeType, "angleNodeType cannot be Integer" );
+               throw E57_EXCEPTION2( ErrorInternal,
+                                     "angleNodeType should checked before getting here" );
             }
 
             case NumericalNodeType::ScaledInteger:
             {
                const double angleOffset = 0.0;
                const double angleScale = data3DHeader.pointFields.angleScale;
-
-               if ( angleScale == 0.0 )
-               {
-                  throw E57_EXCEPTION2( ErrorInvalidData3DValue, "angleScale cannot be 0" );
-               }
 
                const auto angleMinimum =
                   static_cast<int64_t>( std::floor( angleMin / angleScale + .5 ) );
@@ -1220,11 +1162,6 @@ namespace e57
                return FloatNode( imf_, PrecisionDouble, angleMin, angleMax );
             }
          }
-
-         throw E57_EXCEPTION2(
-            ErrorInvalidNodeType,
-            std::string( "Invalid angleNodeType type: " )
-               .append( _numericalNodeTypeStr( data3DHeader.pointFields.angleNodeType ) ) );
       };
 
       if ( data3DHeader.pointFields.sphericalAzimuthField )
@@ -1258,11 +1195,6 @@ namespace e57
             {
                const double intensityOffset = 0.0;
                const double intensityScale = data3DHeader.pointFields.intensityScale;
-
-               if ( intensityScale == 0.0 )
-               {
-                  throw E57_EXCEPTION2( ErrorInvalidData3DValue, "intensityScale cannot be 0" );
-               }
 
                const auto rawIntegerMaximum =
                   static_cast<int64_t>( std::floor( intensityMax / intensityScale + .5 ) );

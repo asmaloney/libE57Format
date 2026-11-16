@@ -431,16 +431,15 @@ size_t BitpackFloatDecoder::inputProcessAligned( const char *inbuf, const size_t
       auto inp = reinterpret_cast<const float *>( inbuf );
 
       // Copy floats from inbuf to destBuffer_
+      destBuffer_->setNextFloatArray( inp, n );
+#ifdef E57_VERBOSE
       for ( unsigned i = 0; i < n; i++ )
       {
          float value = *inp;
-
-#ifdef E57_VERBOSE
          std::cout << "  got float value=" << value << std::endl;
-#endif
-         destBuffer_->setNextFloat( value );
          inp++;
       }
+#endif
    }
    else
    { // Double precision
@@ -448,16 +447,15 @@ size_t BitpackFloatDecoder::inputProcessAligned( const char *inbuf, const size_t
       auto inp = reinterpret_cast<const double *>( inbuf );
 
       // Copy doubles from inbuf to destBuffer_
+      destBuffer_->setNextDoubleArray( inp, n );
+#ifdef E57_VERBOSE
       for ( unsigned i = 0; i < n; i++ )
       {
          double value = *inp;
-
-#ifdef E57_VERBOSE
          std::cout << "  got double value=" << value << std::endl;
-#endif
-         destBuffer_->setNextDouble( value );
          inp++;
       }
+#endif
    }
 
    // Update counts of records processed
@@ -747,83 +745,92 @@ size_t BitpackIntegerDecoder<RegisterT>::inputProcessAligned( const char *inbuf,
 
    size_t bitOffset = firstBit;
 
-   for ( size_t i = 0; i < recordCount; i++ )
+   constexpr size_t ChunkSize = 256;
+   for ( size_t i = 0; i < recordCount; i += ChunkSize )
    {
-      // Get lower word (contains at least the LSbit of the value),
-      RegisterT low = inp[wordPosition];
+      int64_t chunk[ChunkSize];
 
-#ifdef E57_VERBOSE
-      std::cout << "  bitOffset: " << bitOffset << std::endl;
-      std::cout << "  low: " << binaryString( low ) << std::endl;
-#endif
-
-      RegisterT w;
-      if ( bitOffset == 0 )
+      size_t j = 0;
+      for ( ; j < ChunkSize && ( i + j < recordCount ); ++j )
       {
-         // The left shift (used below) is not defined if shift is >= size of
-         // word
-         w = low;
-      }
-      // Avoid reading the next word, unless it is needed
-      // If the last record finishes on the last bit of input, avoid UMR
-      else if ( bitOffset + bitsPerRecord_ <= RegisterBits )
-      {
-         w = low >> bitOffset;
-      }
-      else
-      {
-         // Get upper word (may or may not contain interesting bits),
-         RegisterT high = inp[wordPosition + 1];
+         // Get lower word (contains at least the LSbit of the value),
+         RegisterT low = inp[wordPosition];
 
 #ifdef E57_VERBOSE
-         std::cout << "  high:" << binaryString( high ) << std::endl;
+         std::cout << "  bitOffset: " << bitOffset << std::endl;
+         std::cout << "  low: " << binaryString( low ) << std::endl;
 #endif
 
-         // Shift high to just above the lower bits, shift low LSBit to bit0,
-         // OR together. Note shifts are logical (not arithmetic) because using
-         // unsigned variables.
-         w = ( high << ( RegisterBits - bitOffset ) ) | ( low >> bitOffset );
+         RegisterT w;
+         if ( bitOffset == 0 )
+         {
+            // The left shift (used below) is not defined if shift is >= size of
+            // word
+            w = low;
+         }
+         // Avoid reading the next word, unless it is needed
+         // If the last record finishes on the last bit of input, avoid UMR
+         else if ( bitOffset + bitsPerRecord_ <= RegisterBits )
+         {
+            w = low >> bitOffset;
+         }
+         else
+         {
+            // Get upper word (may or may not contain interesting bits),
+            RegisterT high = inp[wordPosition + 1];
+
+#ifdef E57_VERBOSE
+            std::cout << "  high:" << binaryString( high ) << std::endl;
+#endif
+
+            // Shift high to just above the lower bits, shift low LSBit to bit0,
+            // OR together. Note shifts are logical (not arithmetic) because using
+            // unsigned variables.
+            w = ( high << ( RegisterBits - bitOffset ) ) | ( low >> bitOffset );
+         }
+
+#ifdef E57_VERBOSE
+         std::cout << "  w:   " << binaryString( w ) << std::endl;
+#endif
+
+         // Mask off uninteresting bits
+         w &= destBitMask_;
+
+         // Add minimum_ to value to get back what writer originally sent
+         int64_t value = minimum_ + static_cast<uint64_t>( w );
+
+#ifdef E57_VERBOSE
+         std::cout << "  Storing value=" << value << std::endl;
+#endif
+
+         chunk[j] = value;
+
+         // Store the result in next available position in the user's dest buffer
+
+         // Calc next bit alignment and which word it starts in
+         bitOffset += bitsPerRecord_;
+         if ( bitOffset >= 8 * sizeof( RegisterT ) )
+         {
+            bitOffset -= 8 * sizeof( RegisterT );
+            wordPosition++;
+         }
+#ifdef E57_VERBOSE
+         std::cout << "  Processed " << i + j + 1 << " records, wordPosition=" << wordPosition
+                   << " decoder:" << std::endl;
+         dump( 4 );
+#endif
       }
-
-#ifdef E57_VERBOSE
-      std::cout << "  w:   " << binaryString( w ) << std::endl;
-#endif
-
-      // Mask off uninteresting bits
-      w &= destBitMask_;
-
-      // Add minimum_ to value to get back what writer originally sent
-      int64_t value = minimum_ + static_cast<uint64_t>( w );
-
-#ifdef E57_VERBOSE
-      std::cout << "  Storing value=" << value << std::endl;
-#endif
 
       // The parameter isScaledInteger_ determines which version of
       // setNextInt64 gets called
       if ( isScaledInteger_ )
       {
-         destBuffer_->setNextInt64( value, scale_, offset_ );
+         destBuffer_->setNextInt64Array( chunk, j, scale_, offset_ );
       }
       else
       {
-         destBuffer_->setNextInt64( value );
+         destBuffer_->setNextInt64Array( chunk, j );
       }
-
-      // Store the result in next available position in the user's dest buffer
-
-      // Calc next bit alignment and which word it starts in
-      bitOffset += bitsPerRecord_;
-      if ( bitOffset >= 8 * sizeof( RegisterT ) )
-      {
-         bitOffset -= 8 * sizeof( RegisterT );
-         wordPosition++;
-      }
-#ifdef E57_VERBOSE
-      std::cout << "  Processed " << i + 1 << " records, wordPosition=" << wordPosition
-                << " decoder:" << std::endl;
-      dump( 4 );
-#endif
    }
 
    // Update counts of records processed
@@ -893,17 +900,11 @@ size_t ConstantIntegerDecoder::inputProcess( const char *source, const size_t av
 
    if ( isScaledInteger_ )
    {
-      for ( size_t i = 0; i < count; i++ )
-      {
-         destBuffer_->setNextInt64( minimum_, scale_, offset_ );
-      }
+      destBuffer_->fillNextInt64( minimum_, count, scale_, offset_ );
    }
    else
    {
-      for ( size_t i = 0; i < count; i++ )
-      {
-         destBuffer_->setNextInt64( minimum_ );
-      }
+      destBuffer_->fillNextInt64( minimum_, count );
    }
    currentRecordIndex_ += count;
    return ( count );

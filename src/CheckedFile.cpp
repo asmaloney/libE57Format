@@ -101,6 +101,7 @@ constexpr size_t CheckedFile::physicalPageSizeLog2;
 constexpr size_t CheckedFile::physicalPageSize;
 constexpr uint64_t CheckedFile::physicalPageSizeMask;
 constexpr size_t CheckedFile::logicalPageSize;
+constexpr size_t CheckedFile::cacheMaxPageCount;
 
 namespace
 {
@@ -219,6 +220,8 @@ CheckedFile::CheckedFile( const ustring &fileName, Mode mode, ReadChecksumPolicy
          lseek64( 0, SEEK_SET );
 
          logicalLength_ = physicalToLogical( physicalLength_ );
+
+         cache_.resize( cacheMaxPageCount * physicalPageSize );
       }
       break;
 
@@ -763,6 +766,32 @@ void CheckedFile::getCurrentPageAndOffset( uint64_t &page, size_t &pageOffset, O
    }
 }
 
+void CheckedFile::readPhysicalPagesFromFile( char *page_buffer, uint64_t page, uint64_t pageCount )
+{
+#ifdef E57_CHECK_FILE_DEBUG
+   assert( ( bufView_ == nullptr ) && ( fd >= 0 ) );
+#endif
+
+   unsigned int bytes = static_cast<unsigned int>( pageCount * physicalPageSize );
+
+   // Seek to start of physical page
+   seek( page * physicalPageSize, Physical );
+
+#if defined( _MSC_VER )
+   int result = ::_read( fd_, page_buffer, bytes );
+#elif defined( __GNUC__ )
+   ssize_t result = ::read( fd_, page_buffer, bytes );
+#else
+#error "no supported compiler defined"
+#endif
+
+   if ( result < 0 || static_cast<size_t>( result ) != bytes )
+   {
+      throw E57_EXCEPTION2( ErrorReadFailed,
+                            "fileName=" + fileName_ + " result=" + toString( result ) );
+   }
+}
+
 void CheckedFile::readPhysicalPage( char *page_buffer, uint64_t page )
 {
 #ifdef E57_VERBOSE
@@ -775,28 +804,33 @@ void CheckedFile::readPhysicalPage( char *page_buffer, uint64_t page )
    assert( page * physicalPageSize < physicalLength );
 #endif
 
-   // Seek to start of physical page
-   seek( page * physicalPageSize, Physical );
-
    if ( ( fd_ < 0 ) && ( bufView_ != nullptr ) )
    {
+      // Seek to start of physical page
+      seek( page * physicalPageSize, Physical );
       bufView_->read( page_buffer, physicalPageSize );
       return;
    }
 
-#if defined( _MSC_VER )
-   int result = ::_read( fd_, page_buffer, physicalPageSize );
-#elif defined( __GNUC__ )
-   ssize_t result = ::read( fd_, page_buffer, physicalPageSize );
-#else
-#error "no supported compiler defined"
-#endif
-
-   if ( result < 0 || static_cast<size_t>( result ) != physicalPageSize )
+   if ( readOnly_ )
    {
-      throw E57_EXCEPTION2( ErrorReadFailed,
-                            "fileName=" + fileName_ + " result=" + toString( result ) );
+      bool hit = page >= cacheFirstPage_ && page < cacheFirstPage_ + cachePageCount_;
+      if ( !hit )
+      {
+         uint64_t maxPage = physicalLength_ / physicalPageSize;
+         cacheFirstPage_ = page;
+         cachePageCount_ = page < maxPage
+                              ? std::min( cacheMaxPageCount, static_cast<size_t>( maxPage - page ) )
+                              : 1;
+
+         readPhysicalPagesFromFile( cache_.data(), cacheFirstPage_, cachePageCount_ );
+      }
+      memcpy( page_buffer, cache_.data() + ( page - cacheFirstPage_ ) * physicalPageSize,
+              physicalPageSize );
+      return;
    }
+
+   readPhysicalPagesFromFile( page_buffer, page, 1 );
 }
 
 void CheckedFile::writePhysicalPage( char *page_buffer, uint64_t page )

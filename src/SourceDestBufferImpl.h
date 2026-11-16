@@ -110,6 +110,14 @@ namespace e57
       void setNextDouble( double value );
       void setNextString( const ustring &value );
 
+      void setNextInt64Array( const int64_t *values, size_t n );
+      void setNextInt64Array( const int64_t *values, size_t n, double scale, double offset );
+      void setNextFloatArray( const float *values, size_t n );
+      void setNextDoubleArray( const double *values, size_t n );
+
+      void fillNextInt64( int64_t value, size_t n );
+      void fillNextInt64( int64_t value, size_t n, double scale, double offset );
+
       void checkCompatible( const std::shared_ptr<SourceDestBufferImpl> &newBuf ) const;
 
 #ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT
@@ -117,7 +125,7 @@ namespace e57
 #endif
 
    private:
-      template <typename T> void _setNextReal( T inValue );
+      template <typename T> void _setNextRealArray( const T *inValues, size_t n );
 
       /// Common routine to check that constructor arguments were ok, throws if not
       void checkState_() const;

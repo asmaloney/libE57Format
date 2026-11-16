@@ -525,8 +525,8 @@ TEST( SimpleWriter, MinMaxIssuesCartesianFloat )
    for ( int64_t i = 0; i < cNumPoints; ++i )
    {
       auto floati = static_cast<float>( i );
-      pointsData.cartesianX[i] = floati;
-      pointsData.cartesianY[i] = floati;
+      pointsData.cartesianX[i] = floati + i;
+      pointsData.cartesianY[i] = floati - 1;
       pointsData.cartesianZ[i] = floati;
       pointsData.timeStamp[i] = floati;
    }
@@ -542,8 +542,12 @@ TEST( SimpleWriter, MinMaxIssuesCartesianFloat )
 
    delete writer;
 
-   EXPECT_NE( header.pointFields.pointRangeMinimum, e57::FLOAT_MIN );
-   EXPECT_NE( header.pointFields.pointRangeMaximum, e57::FLOAT_MAX );
+   EXPECT_EQ( header.cartesianBounds.xMinimum, 0.0 );
+   EXPECT_EQ( header.cartesianBounds.xMaximum, 2048.0 );
+   EXPECT_EQ( header.cartesianBounds.yMinimum, -1.0 );
+   EXPECT_EQ( header.cartesianBounds.yMaximum, 1023.0 );
+   EXPECT_EQ( header.cartesianBounds.zMinimum, 0.0 );
+   EXPECT_EQ( header.cartesianBounds.zMaximum, 1024.0 );
 
    EXPECT_EQ( header.pointFields.timeMinimum, 0.0 );
    EXPECT_EQ( header.pointFields.timeMaximum, 1024.0 );
@@ -597,8 +601,8 @@ TEST( SimpleWriter, MinMaxIssuesSphericalDouble )
 
    delete writer;
 
-   EXPECT_NE( header.pointFields.pointRangeMinimum, e57::DOUBLE_MIN );
-   EXPECT_NE( header.pointFields.pointRangeMaximum, e57::DOUBLE_MAX );
+   EXPECT_EQ( header.sphericalBounds.rangeMinimum, 0.0 );
+   EXPECT_EQ( header.sphericalBounds.rangeMaximum, 1024.0 );
 
    EXPECT_EQ( header.pointFields.timeMinimum, 0.0 );
    EXPECT_EQ( header.pointFields.timeMaximum, 1024.0 );

@@ -995,6 +995,7 @@ namespace e57
       data3DHeader.pointFields.cartesianInvalidStateField =
          proto.isDefined( "cartesianInvalidState" );
 
+      // Deprecated - will be removed in 4.0 (see PointStandardizedFieldsAvailable)
       data3DHeader.pointFields.pointRangeMinimum = 0.0;
       data3DHeader.pointFields.pointRangeMaximum = 0.0;
 
@@ -1019,6 +1020,7 @@ namespace e57
                const int64_t minimum = scaledCartesianX.minimum();
                const int64_t maximum = scaledCartesianX.maximum();
 
+               // Deprecated - will be removed in 4.0 (see PointStandardizedFieldsAvailable)
                data3DHeader.pointFields.pointRangeMinimum =
                   static_cast<double>( minimum ) * scale + offset;
                data3DHeader.pointFields.pointRangeMaximum =
@@ -1034,6 +1036,7 @@ namespace e57
             {
                const FloatNode floatCartesianX( cartesianXProto );
 
+               // Deprecated - will be removed in 4.0 (see PointStandardizedFieldsAvailable)
                data3DHeader.pointFields.pointRangeMinimum = floatCartesianX.minimum();
                data3DHeader.pointFields.pointRangeMaximum = floatCartesianX.maximum();
 
@@ -1077,6 +1080,7 @@ namespace e57
                const int64_t minimum = scaledSphericalRange.minimum();
                const int64_t maximum = scaledSphericalRange.maximum();
 
+               // Deprecated - will be removed in 4.0 (see PointStandardizedFieldsAvailable)
                data3DHeader.pointFields.pointRangeMinimum =
                   static_cast<double>( minimum ) * scale + offset;
                data3DHeader.pointFields.pointRangeMaximum =
@@ -1092,6 +1096,7 @@ namespace e57
             {
                const FloatNode floatSphericalRange( sphericalRangeProto );
 
+               // Deprecated - will be removed in 4.0 (see PointStandardizedFieldsAvailable)
                data3DHeader.pointFields.pointRangeMinimum = floatSphericalRange.minimum();
                data3DHeader.pointFields.pointRangeMaximum = floatSphericalRange.maximum();
 

@@ -879,10 +879,8 @@ namespace e57
       //      "/data3D/0/points/0/cartesianX"
       StructureNode proto( imf_ );
 
-      const double pointRangeMin = data3DHeader.pointFields.pointRangeMinimum;
-      const double pointRangeMax = data3DHeader.pointFields.pointRangeMaximum;
-
-      const auto getPointProto = [this, &data3DHeader, pointRangeMin, pointRangeMax]() -> Node {
+      const auto getPointProto = [this, &data3DHeader]( double pointRangeMin,
+                                                        double pointRangeMax ) -> Node {
          switch ( data3DHeader.pointFields.pointRangeNodeType )
          {
             case NumericalNodeType::Integer:
@@ -928,22 +926,26 @@ namespace e57
 
       if ( data3DHeader.pointFields.cartesianXField )
       {
-         proto.set( "cartesianX", getPointProto() );
+         proto.set( "cartesianX", getPointProto( data3DHeader.cartesianBounds.xMinimum,
+                                                 data3DHeader.cartesianBounds.xMaximum ) );
       }
 
       if ( data3DHeader.pointFields.cartesianYField )
       {
-         proto.set( "cartesianY", getPointProto() );
+         proto.set( "cartesianY", getPointProto( data3DHeader.cartesianBounds.yMinimum,
+                                                 data3DHeader.cartesianBounds.yMaximum ) );
       }
 
       if ( data3DHeader.pointFields.cartesianZField )
       {
-         proto.set( "cartesianZ", getPointProto() );
+         proto.set( "cartesianZ", getPointProto( data3DHeader.cartesianBounds.zMinimum,
+                                                 data3DHeader.cartesianBounds.zMaximum ) );
       }
 
       if ( data3DHeader.pointFields.sphericalRangeField )
       {
-         proto.set( "sphericalRange", getPointProto() );
+         proto.set( "sphericalRange", getPointProto( data3DHeader.sphericalBounds.rangeMinimum,
+                                                     data3DHeader.sphericalBounds.rangeMaximum ) );
       }
 
       const double angleMin = data3DHeader.pointFields.angleMinimum;

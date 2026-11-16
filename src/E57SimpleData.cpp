@@ -56,15 +56,6 @@ namespace e57
       // We need to adjust min/max for floats if they haven't been set by the user.
       if ( cIsFloat )
       {
-         if ( data3D.pointFields.pointRangeMinimum == DOUBLE_MIN )
-         {
-            data3D.pointFields.pointRangeMinimum = FLOAT_MIN;
-         }
-         if ( data3D.pointFields.pointRangeMaximum == DOUBLE_MAX )
-         {
-            data3D.pointFields.pointRangeMaximum = FLOAT_MAX;
-         }
-
          if ( data3D.pointFields.angleMinimum == DOUBLE_MIN )
          {
             data3D.pointFields.angleMinimum = FLOAT_MIN;

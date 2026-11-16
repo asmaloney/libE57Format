@@ -1327,7 +1327,7 @@ namespace e57
             {
                const IntegerNode integerIntensity( intensityProto );
 
-               if ( data3DHeader.intensityLimits.intensityMaximum == 0.0 )
+               if ( isZero( data3DHeader.intensityLimits.intensityMaximum ) )
                {
                   data3DHeader.intensityLimits.intensityMinimum =
                      static_cast<double>( integerIntensity.minimum() );
@@ -1346,7 +1346,7 @@ namespace e57
                double scale = scaledIntensity.scale();
                double offset = scaledIntensity.offset();
 
-               if ( data3DHeader.intensityLimits.intensityMaximum == 0.0 )
+               if ( isZero( data3DHeader.intensityLimits.intensityMaximum ) )
                {
                   const int64_t minimum = scaledIntensity.minimum();
                   const int64_t maximum = scaledIntensity.maximum();

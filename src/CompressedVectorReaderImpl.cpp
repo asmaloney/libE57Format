@@ -132,8 +132,7 @@ namespace e57
       uint64_t dataLogicalOffset =
          imf->file_->physicalToLogical( sectionHeader.dataPhysicalOffset );
 
-      //??? what if fault in this constructor?
-      cache_ = new PacketReadCache( imf->file_, 32 );
+      cache_ = std::make_unique<PacketReadCache>( imf->file_, 32 );
 
       // Verify that packet given by dataPhysicalOffset is actually a data packet,
       // init channels
@@ -580,8 +579,7 @@ namespace e57
       // Destroy decoders
       channels_.clear();
 
-      delete cache_;
-      cache_ = nullptr;
+      cache_.reset();
 
       isOpen_ = false;
    }

@@ -70,7 +70,7 @@ namespace e57
       std::shared_ptr<CompressedVectorNodeImpl> cVector_;
       NodeImplSharedPtr proto_;
       std::vector<DecodeChannel> channels_;
-      PacketReadCache *cache_;
+      std::unique_ptr<PacketReadCache> cache_;
 
       uint64_t recordCount_; /// number of records written so far
       uint64_t maxRecordCount_;

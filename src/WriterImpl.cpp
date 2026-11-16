@@ -877,6 +877,241 @@ namespace e57
       // This prototype will be used in creating the points CompressedVector.
       // Using this proto in a CompressedVector will define path names like:
       //      "/data3D/0/points/0/cartesianX"
+      const StructureNode proto = CreatePointsPrototypeNode( data3DHeader );
+
+      // Make empty codecs vector for use in creating points CompressedVector.
+      // If this vector is empty, it is assumed that all fields will use the BitPack codec.
+      const VectorNode codecs( imf_, true );
+
+      // Create CompressedVector for storing points.  Path Name: "/data3D/0/points".
+      // We use the prototype and empty codecs tree from above.
+      // The CompressedVector will be filled by code below.
+      const CompressedVectorNode points( imf_, proto, codecs );
+
+      scan.set( "points", points );
+
+      return pos;
+   }
+
+   template <typename COORDTYPE>
+   CompressedVectorWriter WriterImpl::SetUpData3DPointsData(
+      int64_t dataIndex, size_t count, const Data3DPointsData_t<COORDTYPE> &buffers )
+   {
+      static_assert( std::is_floating_point<COORDTYPE>::value, "Floating point type required." );
+
+      const StructureNode scan( data3D_.get( dataIndex ) );
+      CompressedVectorNode points( scan.get( "points" ) );
+      const StructureNode proto( points.prototype() );
+      std::vector<SourceDestBuffer> sourceBuffers;
+
+      if ( proto.isDefined( "cartesianX" ) && ( buffers.cartesianX != nullptr ) )
+      {
+         sourceBuffers.emplace_back( imf_, "cartesianX", buffers.cartesianX, count, true, true );
+      }
+
+      if ( proto.isDefined( "cartesianY" ) && ( buffers.cartesianY != nullptr ) )
+      {
+         sourceBuffers.emplace_back( imf_, "cartesianY", buffers.cartesianY, count, true, true );
+      }
+
+      if ( proto.isDefined( "cartesianZ" ) && ( buffers.cartesianZ != nullptr ) )
+      {
+         sourceBuffers.emplace_back( imf_, "cartesianZ", buffers.cartesianZ, count, true, true );
+      }
+
+      if ( proto.isDefined( "sphericalRange" ) && ( buffers.sphericalRange != nullptr ) )
+      {
+         sourceBuffers.emplace_back( imf_, "sphericalRange", buffers.sphericalRange, count, true,
+                                     true );
+      }
+
+      if ( proto.isDefined( "sphericalAzimuth" ) && ( buffers.sphericalAzimuth != nullptr ) )
+      {
+         sourceBuffers.emplace_back( imf_, "sphericalAzimuth", buffers.sphericalAzimuth, count,
+                                     true, true );
+      }
+
+      if ( proto.isDefined( "sphericalElevation" ) && ( buffers.sphericalElevation != nullptr ) )
+      {
+         sourceBuffers.emplace_back( imf_, "sphericalElevation", buffers.sphericalElevation, count,
+                                     true, true );
+      }
+
+      if ( proto.isDefined( "intensity" ) && ( buffers.intensity != nullptr ) )
+      {
+         sourceBuffers.emplace_back( imf_, "intensity", buffers.intensity, count, true, true );
+      }
+
+      if ( proto.isDefined( "colorRed" ) && ( buffers.colorRed != nullptr ) )
+      {
+         sourceBuffers.emplace_back( imf_, "colorRed", buffers.colorRed, count, true );
+      }
+
+      if ( proto.isDefined( "colorGreen" ) && ( buffers.colorGreen != nullptr ) )
+      {
+         sourceBuffers.emplace_back( imf_, "colorGreen", buffers.colorGreen, count, true );
+      }
+
+      if ( proto.isDefined( "colorBlue" ) && ( buffers.colorBlue != nullptr ) )
+      {
+         sourceBuffers.emplace_back( imf_, "colorBlue", buffers.colorBlue, count, true );
+      }
+
+      if ( proto.isDefined( "returnIndex" ) && ( buffers.returnIndex != nullptr ) )
+      {
+         sourceBuffers.emplace_back( imf_, "returnIndex", buffers.returnIndex, count, true );
+      }
+
+      if ( proto.isDefined( "returnCount" ) && ( buffers.returnCount != nullptr ) )
+      {
+         sourceBuffers.emplace_back( imf_, "returnCount", buffers.returnCount, count, true );
+      }
+
+      if ( proto.isDefined( "rowIndex" ) && ( buffers.rowIndex != nullptr ) )
+      {
+         sourceBuffers.emplace_back( imf_, "rowIndex", buffers.rowIndex, count, true );
+      }
+
+      if ( proto.isDefined( "columnIndex" ) && ( buffers.columnIndex != nullptr ) )
+      {
+         sourceBuffers.emplace_back( imf_, "columnIndex", buffers.columnIndex, count, true );
+      }
+
+      if ( proto.isDefined( "timeStamp" ) && ( buffers.timeStamp != nullptr ) )
+      {
+         sourceBuffers.emplace_back( imf_, "timeStamp", buffers.timeStamp, count, true, true );
+      }
+
+      if ( proto.isDefined( "cartesianInvalidState" ) &&
+           ( buffers.cartesianInvalidState != nullptr ) )
+      {
+         sourceBuffers.emplace_back( imf_, "cartesianInvalidState", buffers.cartesianInvalidState,
+                                     count, true );
+      }
+
+      if ( proto.isDefined( "sphericalInvalidState" ) &&
+           ( buffers.sphericalInvalidState != nullptr ) )
+      {
+         sourceBuffers.emplace_back( imf_, "sphericalInvalidState", buffers.sphericalInvalidState,
+                                     count, true );
+      }
+
+      if ( proto.isDefined( "isIntensityInvalid" ) && ( buffers.isIntensityInvalid != nullptr ) )
+      {
+         sourceBuffers.emplace_back( imf_, "isIntensityInvalid", buffers.isIntensityInvalid, count,
+                                     true );
+      }
+
+      if ( proto.isDefined( "isColorInvalid" ) && ( buffers.isColorInvalid != nullptr ) )
+      {
+         sourceBuffers.emplace_back( imf_, "isColorInvalid", buffers.isColorInvalid, count, true );
+      }
+
+      if ( proto.isDefined( "isTimeStampInvalid" ) && ( buffers.isTimeStampInvalid != nullptr ) )
+      {
+         sourceBuffers.emplace_back( imf_, "isTimeStampInvalid", buffers.isTimeStampInvalid, count,
+                                     true );
+      }
+
+      // E57_EXT_surface_normals
+      if ( imf_.extensionsLookupPrefix( "nor" ) )
+      {
+         if ( proto.isDefined( "nor:normalX" ) && ( buffers.normalX != nullptr ) )
+         {
+            sourceBuffers.emplace_back( imf_, "nor:normalX", buffers.normalX, count, true, true );
+         }
+
+         if ( proto.isDefined( "nor:normalY" ) && ( buffers.normalY != nullptr ) )
+         {
+            sourceBuffers.emplace_back( imf_, "nor:normalY", buffers.normalY, count, true, true );
+         }
+
+         if ( proto.isDefined( "nor:normalZ" ) && ( buffers.normalZ != nullptr ) )
+         {
+            sourceBuffers.emplace_back( imf_, "nor:normalZ", buffers.normalZ, count, true, true );
+         }
+      }
+
+      // create the writer, all buffers must be setup before this call
+      CompressedVectorWriter writer = points.writer( sourceBuffers );
+
+      return writer;
+   }
+
+   // Explicit template instantiation
+   template CompressedVectorWriter WriterImpl::SetUpData3DPointsData(
+      int64_t dataIndex, size_t pointCount, const Data3DPointsData_t<float> &buffers );
+
+   template CompressedVectorWriter WriterImpl::SetUpData3DPointsData(
+      int64_t dataIndex, size_t pointCount, const Data3DPointsData_t<double> &buffers );
+
+   // This function writes out the group data
+   bool WriterImpl::WriteData3DGroupsData( int64_t dataIndex, size_t groupCount,
+                                           int64_t *idElementValue, int64_t *startPointIndex,
+                                           int64_t *pointCount )
+   {
+      if ( ( dataIndex < 0 ) || ( dataIndex >= data3D_.childCount() ) )
+      {
+         return false;
+      }
+
+      const StructureNode scan( data3D_.get( dataIndex ) );
+
+      if ( !scan.isDefined( "pointGroupingSchemes" ) )
+      {
+         return false;
+      }
+
+      const StructureNode pointGroupingSchemes( scan.get( "pointGroupingSchemes" ) );
+
+      if ( !pointGroupingSchemes.isDefined( "groupingByLine" ) )
+      {
+         return false;
+      }
+
+      const StructureNode groupingByLine( pointGroupingSchemes.get( "groupingByLine" ) );
+
+      if ( !groupingByLine.isDefined( "groups" ) )
+      {
+         return false;
+      }
+
+      CompressedVectorNode groups( groupingByLine.get( "groups" ) );
+
+      std::vector<SourceDestBuffer> groupSDBuffers;
+      groupSDBuffers.emplace_back( imf_, "idElementValue", idElementValue, groupCount, true );
+      groupSDBuffers.emplace_back( imf_, "startPointIndex", startPointIndex, groupCount, true );
+      groupSDBuffers.emplace_back( imf_, "pointCount", pointCount, groupCount, true );
+
+      CompressedVectorWriter writer = groups.writer( groupSDBuffers );
+      writer.write( groupCount );
+      writer.close();
+
+      return true;
+   }
+
+   StructureNode WriterImpl::GetRawE57Root()
+   {
+      return root_;
+   }
+
+   VectorNode WriterImpl::GetRawData3D()
+   {
+      return data3D_;
+   }
+
+   VectorNode WriterImpl::GetRawImages2D()
+   {
+      return images2D_;
+   }
+
+   ImageFile WriterImpl::GetRawIMF()
+   {
+      return imf_;
+   }
+
+   StructureNode WriterImpl::CreatePointsPrototypeNode( const Data3D &data3DHeader )
+   {
       StructureNode proto( imf_ );
 
       const auto getPointProto = [this, &data3DHeader]( double pointRangeMin,
@@ -1197,234 +1432,6 @@ namespace e57
          proto.set( "nor:normalZ", FloatNode( imf_, PrecisionSingle, -1.0, 1.0 ) );
       }
 
-      // Make empty codecs vector for use in creating points CompressedVector.
-      // If this vector is empty, it is assumed that all fields will use the BitPack codec.
-      const VectorNode codecs( imf_, true );
-
-      // Create CompressedVector for storing points.  Path Name: "/data3D/0/points".
-      // We use the prototype and empty codecs tree from above.
-      // The CompressedVector will be filled by code below.
-      const CompressedVectorNode points( imf_, proto, codecs );
-
-      scan.set( "points", points );
-
-      return pos;
-   }
-
-   template <typename COORDTYPE>
-   CompressedVectorWriter WriterImpl::SetUpData3DPointsData(
-      int64_t dataIndex, size_t count, const Data3DPointsData_t<COORDTYPE> &buffers )
-   {
-      static_assert( std::is_floating_point<COORDTYPE>::value, "Floating point type required." );
-
-      const StructureNode scan( data3D_.get( dataIndex ) );
-      CompressedVectorNode points( scan.get( "points" ) );
-      const StructureNode proto( points.prototype() );
-      std::vector<SourceDestBuffer> sourceBuffers;
-
-      if ( proto.isDefined( "cartesianX" ) && ( buffers.cartesianX != nullptr ) )
-      {
-         sourceBuffers.emplace_back( imf_, "cartesianX", buffers.cartesianX, count, true, true );
-      }
-
-      if ( proto.isDefined( "cartesianY" ) && ( buffers.cartesianY != nullptr ) )
-      {
-         sourceBuffers.emplace_back( imf_, "cartesianY", buffers.cartesianY, count, true, true );
-      }
-
-      if ( proto.isDefined( "cartesianZ" ) && ( buffers.cartesianZ != nullptr ) )
-      {
-         sourceBuffers.emplace_back( imf_, "cartesianZ", buffers.cartesianZ, count, true, true );
-      }
-
-      if ( proto.isDefined( "sphericalRange" ) && ( buffers.sphericalRange != nullptr ) )
-      {
-         sourceBuffers.emplace_back( imf_, "sphericalRange", buffers.sphericalRange, count, true,
-                                     true );
-      }
-
-      if ( proto.isDefined( "sphericalAzimuth" ) && ( buffers.sphericalAzimuth != nullptr ) )
-      {
-         sourceBuffers.emplace_back( imf_, "sphericalAzimuth", buffers.sphericalAzimuth, count,
-                                     true, true );
-      }
-
-      if ( proto.isDefined( "sphericalElevation" ) && ( buffers.sphericalElevation != nullptr ) )
-      {
-         sourceBuffers.emplace_back( imf_, "sphericalElevation", buffers.sphericalElevation, count,
-                                     true, true );
-      }
-
-      if ( proto.isDefined( "intensity" ) && ( buffers.intensity != nullptr ) )
-      {
-         sourceBuffers.emplace_back( imf_, "intensity", buffers.intensity, count, true, true );
-      }
-
-      if ( proto.isDefined( "colorRed" ) && ( buffers.colorRed != nullptr ) )
-      {
-         sourceBuffers.emplace_back( imf_, "colorRed", buffers.colorRed, count, true );
-      }
-
-      if ( proto.isDefined( "colorGreen" ) && ( buffers.colorGreen != nullptr ) )
-      {
-         sourceBuffers.emplace_back( imf_, "colorGreen", buffers.colorGreen, count, true );
-      }
-
-      if ( proto.isDefined( "colorBlue" ) && ( buffers.colorBlue != nullptr ) )
-      {
-         sourceBuffers.emplace_back( imf_, "colorBlue", buffers.colorBlue, count, true );
-      }
-
-      if ( proto.isDefined( "returnIndex" ) && ( buffers.returnIndex != nullptr ) )
-      {
-         sourceBuffers.emplace_back( imf_, "returnIndex", buffers.returnIndex, count, true );
-      }
-
-      if ( proto.isDefined( "returnCount" ) && ( buffers.returnCount != nullptr ) )
-      {
-         sourceBuffers.emplace_back( imf_, "returnCount", buffers.returnCount, count, true );
-      }
-
-      if ( proto.isDefined( "rowIndex" ) && ( buffers.rowIndex != nullptr ) )
-      {
-         sourceBuffers.emplace_back( imf_, "rowIndex", buffers.rowIndex, count, true );
-      }
-
-      if ( proto.isDefined( "columnIndex" ) && ( buffers.columnIndex != nullptr ) )
-      {
-         sourceBuffers.emplace_back( imf_, "columnIndex", buffers.columnIndex, count, true );
-      }
-
-      if ( proto.isDefined( "timeStamp" ) && ( buffers.timeStamp != nullptr ) )
-      {
-         sourceBuffers.emplace_back( imf_, "timeStamp", buffers.timeStamp, count, true, true );
-      }
-
-      if ( proto.isDefined( "cartesianInvalidState" ) &&
-           ( buffers.cartesianInvalidState != nullptr ) )
-      {
-         sourceBuffers.emplace_back( imf_, "cartesianInvalidState", buffers.cartesianInvalidState,
-                                     count, true );
-      }
-
-      if ( proto.isDefined( "sphericalInvalidState" ) &&
-           ( buffers.sphericalInvalidState != nullptr ) )
-      {
-         sourceBuffers.emplace_back( imf_, "sphericalInvalidState", buffers.sphericalInvalidState,
-                                     count, true );
-      }
-
-      if ( proto.isDefined( "isIntensityInvalid" ) && ( buffers.isIntensityInvalid != nullptr ) )
-      {
-         sourceBuffers.emplace_back( imf_, "isIntensityInvalid", buffers.isIntensityInvalid, count,
-                                     true );
-      }
-
-      if ( proto.isDefined( "isColorInvalid" ) && ( buffers.isColorInvalid != nullptr ) )
-      {
-         sourceBuffers.emplace_back( imf_, "isColorInvalid", buffers.isColorInvalid, count, true );
-      }
-
-      if ( proto.isDefined( "isTimeStampInvalid" ) && ( buffers.isTimeStampInvalid != nullptr ) )
-      {
-         sourceBuffers.emplace_back( imf_, "isTimeStampInvalid", buffers.isTimeStampInvalid, count,
-                                     true );
-      }
-
-      // E57_EXT_surface_normals
-      if ( imf_.extensionsLookupPrefix( "nor" ) )
-      {
-         if ( proto.isDefined( "nor:normalX" ) && ( buffers.normalX != nullptr ) )
-         {
-            sourceBuffers.emplace_back( imf_, "nor:normalX", buffers.normalX, count, true, true );
-         }
-
-         if ( proto.isDefined( "nor:normalY" ) && ( buffers.normalY != nullptr ) )
-         {
-            sourceBuffers.emplace_back( imf_, "nor:normalY", buffers.normalY, count, true, true );
-         }
-
-         if ( proto.isDefined( "nor:normalZ" ) && ( buffers.normalZ != nullptr ) )
-         {
-            sourceBuffers.emplace_back( imf_, "nor:normalZ", buffers.normalZ, count, true, true );
-         }
-      }
-
-      // create the writer, all buffers must be setup before this call
-      CompressedVectorWriter writer = points.writer( sourceBuffers );
-
-      return writer;
-   }
-
-   // Explicit template instantiation
-   template CompressedVectorWriter WriterImpl::SetUpData3DPointsData(
-      int64_t dataIndex, size_t pointCount, const Data3DPointsData_t<float> &buffers );
-
-   template CompressedVectorWriter WriterImpl::SetUpData3DPointsData(
-      int64_t dataIndex, size_t pointCount, const Data3DPointsData_t<double> &buffers );
-
-   // This function writes out the group data
-   bool WriterImpl::WriteData3DGroupsData( int64_t dataIndex, size_t groupCount,
-                                           int64_t *idElementValue, int64_t *startPointIndex,
-                                           int64_t *pointCount )
-   {
-      if ( ( dataIndex < 0 ) || ( dataIndex >= data3D_.childCount() ) )
-      {
-         return false;
-      }
-
-      const StructureNode scan( data3D_.get( dataIndex ) );
-
-      if ( !scan.isDefined( "pointGroupingSchemes" ) )
-      {
-         return false;
-      }
-
-      const StructureNode pointGroupingSchemes( scan.get( "pointGroupingSchemes" ) );
-
-      if ( !pointGroupingSchemes.isDefined( "groupingByLine" ) )
-      {
-         return false;
-      }
-
-      const StructureNode groupingByLine( pointGroupingSchemes.get( "groupingByLine" ) );
-
-      if ( !groupingByLine.isDefined( "groups" ) )
-      {
-         return false;
-      }
-
-      CompressedVectorNode groups( groupingByLine.get( "groups" ) );
-
-      std::vector<SourceDestBuffer> groupSDBuffers;
-      groupSDBuffers.emplace_back( imf_, "idElementValue", idElementValue, groupCount, true );
-      groupSDBuffers.emplace_back( imf_, "startPointIndex", startPointIndex, groupCount, true );
-      groupSDBuffers.emplace_back( imf_, "pointCount", pointCount, groupCount, true );
-
-      CompressedVectorWriter writer = groups.writer( groupSDBuffers );
-      writer.write( groupCount );
-      writer.close();
-
-      return true;
-   }
-
-   StructureNode WriterImpl::GetRawE57Root()
-   {
-      return root_;
-   }
-
-   VectorNode WriterImpl::GetRawData3D()
-   {
-      return data3D_;
-   }
-
-   VectorNode WriterImpl::GetRawImages2D()
-   {
-      return images2D_;
-   }
-
-   ImageFile WriterImpl::GetRawIMF()
-   {
-      return imf_;
+      return proto;
    }
 } // end namespace e57

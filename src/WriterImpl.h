@@ -73,6 +73,8 @@ namespace e57
       ImageFile GetRawIMF();
 
    private:
+      StructureNode CreatePointsPrototypeNode( const Data3D &data3DHeader );
+
       ImageFile imf_;
       StructureNode root_;
 

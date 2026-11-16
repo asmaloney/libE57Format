@@ -420,11 +420,15 @@ namespace e57
       /// @brief Indicates that the PointRecord cartesian and range fields should be configured with
       /// this minimum value e.g. E57_FLOAT_MIN or E57_DOUBLE_MIN.
       /// @details If using a ScaledIntegerNode then this needs to be a minimum range value.
+      /// @deprecated Will be removed in 4.0. This field is superceded by the more fine-grained
+      /// cartesianBounds or sphericalBounds.rangeMinimum on Data3D.
       double pointRangeMinimum = DOUBLE_MIN;
 
       /// @brief Indicates that the PointRecord cartesian and range fields should be configured with
       /// this maximum value e.g. E57_FLOAT_MAX or E57_DOUBLE_MAX.
       /// @details If using a ScaledIntegerNode then this needs to be a maximum range value.
+      /// @deprecated Will be removed in 4.0. This field is superceded by the more fine-grained
+      /// cartesianBounds or sphericalBounds.rangeMaximum on Data3D.
       double pointRangeMaximum = DOUBLE_MAX;
 
       /// @brief Controls the type of Node used for the PointRecord cartesian and range fields

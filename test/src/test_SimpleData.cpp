@@ -51,8 +51,6 @@ TEST( SimpleDataHeader, HeaderMinMaxFloat )
 
    dataHeader.pointCount = 1;
 
-   EXPECT_EQ( dataHeader.pointFields.pointRangeMinimum, e57::DOUBLE_MIN );
-   EXPECT_EQ( dataHeader.pointFields.pointRangeMaximum, e57::DOUBLE_MAX );
    EXPECT_EQ( dataHeader.pointFields.angleMinimum, e57::DOUBLE_MIN );
    EXPECT_EQ( dataHeader.pointFields.angleMaximum, e57::DOUBLE_MAX );
    EXPECT_EQ( dataHeader.pointFields.timeMinimum, e57::DOUBLE_MIN );
@@ -61,8 +59,6 @@ TEST( SimpleDataHeader, HeaderMinMaxFloat )
    // This call should adjust our min/max for a variety of fields since we are using floats.
    e57::Data3DPointsFloat pointsData( dataHeader );
 
-   EXPECT_EQ( dataHeader.pointFields.pointRangeMinimum, e57::FLOAT_MIN );
-   EXPECT_EQ( dataHeader.pointFields.pointRangeMaximum, e57::FLOAT_MAX );
    EXPECT_EQ( dataHeader.pointFields.angleMinimum, e57::FLOAT_MIN );
    EXPECT_EQ( dataHeader.pointFields.angleMaximum, e57::FLOAT_MAX );
 
@@ -77,8 +73,6 @@ TEST( SimpleDataHeader, HeaderMinMaxDouble )
 
    dataHeader.pointCount = 1;
 
-   EXPECT_EQ( dataHeader.pointFields.pointRangeMinimum, e57::DOUBLE_MIN );
-   EXPECT_EQ( dataHeader.pointFields.pointRangeMaximum, e57::DOUBLE_MAX );
    EXPECT_EQ( dataHeader.pointFields.angleMinimum, e57::DOUBLE_MIN );
    EXPECT_EQ( dataHeader.pointFields.angleMaximum, e57::DOUBLE_MAX );
    EXPECT_EQ( dataHeader.pointFields.timeMinimum, e57::DOUBLE_MIN );
@@ -87,8 +81,6 @@ TEST( SimpleDataHeader, HeaderMinMaxDouble )
    // This call should NOT adjust our min/max for a variety of fields since we are using doubles.
    e57::Data3DPointsDouble pointsData( dataHeader );
 
-   EXPECT_EQ( dataHeader.pointFields.pointRangeMinimum, e57::DOUBLE_MIN );
-   EXPECT_EQ( dataHeader.pointFields.pointRangeMaximum, e57::DOUBLE_MAX );
    EXPECT_EQ( dataHeader.pointFields.angleMinimum, e57::DOUBLE_MIN );
    EXPECT_EQ( dataHeader.pointFields.angleMaximum, e57::DOUBLE_MAX );
    EXPECT_EQ( dataHeader.pointFields.timeMinimum, e57::DOUBLE_MIN );
@@ -177,6 +169,8 @@ TEST( SimpleData, ReadWrite )
 
    EXPECT_EQ( originalData3DHeader.colorLimits, copyData3DHeader.colorLimits );
 
+   EXPECT_EQ( originalData3DHeader.cartesianBounds, copyData3DHeader.cartesianBounds );
+
    EXPECT_EQ( originalData3DHeader.pointFields.cartesianXField,
               copyData3DHeader.pointFields.cartesianXField );
    EXPECT_EQ( originalData3DHeader.pointFields.cartesianYField,
@@ -194,11 +188,6 @@ TEST( SimpleData, ReadWrite )
               copyData3DHeader.pointFields.sphericalElevationField );
    EXPECT_EQ( originalData3DHeader.pointFields.sphericalInvalidStateField,
               copyData3DHeader.pointFields.sphericalInvalidStateField );
-
-   EXPECT_EQ( originalData3DHeader.pointFields.pointRangeMinimum,
-              copyData3DHeader.pointFields.pointRangeMinimum );
-   EXPECT_EQ( originalData3DHeader.pointFields.pointRangeMaximum,
-              copyData3DHeader.pointFields.pointRangeMaximum );
 
    EXPECT_EQ( originalData3DHeader.pointFields.pointRangeNodeType,
               copyData3DHeader.pointFields.pointRangeNodeType );

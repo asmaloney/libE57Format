@@ -49,23 +49,12 @@ namespace
 
       auto &pointFields = ioData3DHeader.pointFields;
 
-      const bool cHavePoints = ioData3DHeader.pointCount > 0;
-
       constexpr COORDTYPE cMin = std::numeric_limits<COORDTYPE>::lowest();
       constexpr COORDTYPE cMax = std::numeric_limits<COORDTYPE>::max();
 
       // For readability
       const bool cUsingCartesian = pointFields.cartesianXField;
       const bool cUsingSpherical = pointFields.sphericalRangeField;
-
-      // IF we haven't set either point range min or max
-      // THEN calculate them from the points
-      auto pointRangeMinimum = cMax;
-      auto pointRangeMaximum = cMin;
-
-      const bool cPointRangeSetByUser =
-         ( ( pointFields.pointRangeMinimum == cMin ) && ( pointFields.pointRangeMaximum == cMax ) );
-      const bool cWritePointRange = cHavePoints && cPointRangeSetByUser;
 
       // IF we are using cartesian coordinates
       // AND we haven't set our bounds
@@ -78,8 +67,9 @@ namespace
       cartesianBounds.zMinimum = cMax;
       cartesianBounds.zMaximum = cMin;
 
-      const bool cWriteCartesianBounds =
-         cUsingCartesian && ( ioData3DHeader.cartesianBounds == e57::CartesianBounds{} );
+      const bool cCartesianBoundsSetByUser =
+         ( ioData3DHeader.cartesianBounds != e57::CartesianBounds{} );
+      const bool cWriteCartesianBounds = cUsingCartesian && !cCartesianBoundsSetByUser;
 
       // IF we are using spherical coordinates
       // AND we haven't set either min or max
@@ -121,17 +111,6 @@ namespace
       {
          if ( cUsingCartesian )
          {
-            if ( cWritePointRange )
-            {
-               pointRangeMinimum = std::min( inBuffers.cartesianX[i], pointRangeMinimum );
-               pointRangeMinimum = std::min( inBuffers.cartesianY[i], pointRangeMinimum );
-               pointRangeMinimum = std::min( inBuffers.cartesianZ[i], pointRangeMinimum );
-
-               pointRangeMaximum = std::max( inBuffers.cartesianX[i], pointRangeMaximum );
-               pointRangeMaximum = std::max( inBuffers.cartesianY[i], pointRangeMaximum );
-               pointRangeMaximum = std::max( inBuffers.cartesianZ[i], pointRangeMaximum );
-            }
-
             if ( cWriteCartesianBounds )
             {
                const auto cDoubleX = static_cast<double>( inBuffers.cartesianX[i] );
@@ -150,12 +129,6 @@ namespace
 
          if ( cUsingSpherical )
          {
-            if ( cWritePointRange )
-            {
-               pointRangeMinimum = std::min( inBuffers.sphericalRange[i], pointRangeMinimum );
-               pointRangeMaximum = std::max( inBuffers.sphericalRange[i], pointRangeMaximum );
-            }
-
             if ( cWriteSphericalBounds )
             {
                const auto cDoubleRange = static_cast<double>( inBuffers.sphericalRange[i] );
@@ -211,12 +184,6 @@ namespace
          sphericalBounds.elevationMaximum = 0.0;
          sphericalBounds.azimuthStart = 0.0;
          sphericalBounds.azimuthEnd = 0.0;
-      }
-
-      if ( cWritePointRange )
-      {
-         pointFields.pointRangeMinimum = pointRangeMinimum;
-         pointFields.pointRangeMaximum = pointRangeMaximum;
       }
 
       if ( cWriteCartesianBounds )

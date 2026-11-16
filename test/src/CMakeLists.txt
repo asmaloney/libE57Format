@@ -12,6 +12,7 @@ target_sources( ${PROJECT_NAME}
         test_SimpleData.cpp
         test_SimpleReader.cpp
         test_SimpleWriter.cpp
+        test_SimpleWriterImages.cpp
 )
 
 # Include internal tests if not building shared lib.

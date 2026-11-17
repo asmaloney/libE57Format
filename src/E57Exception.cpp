@@ -373,6 +373,9 @@ namespace e57
          case ErrorBadInputDataSize:
             return "file or buffer size is not an integral multiple of 1024 bytes";
 
+         case ErrorInvalidImage2DValue:
+            return "an invalid value was passed in Image2D fields (ErrorInvalidImage2DValue)";
+
          default:
             return "unknown error (" + std::to_string( ecode ) + ")";
       }

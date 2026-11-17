@@ -238,6 +238,135 @@ namespace e57
       }
    }
 
+   /// @private
+   /// Validates a Image2D and throws ErrorInvalidImage2DValue on error.
+   void _validateImage2D( e57::Image2D &inImage2D )
+   {
+      bool representationDefined = false;
+
+      if ( inImage2D.visualReferenceRepresentation.jpegImageSize > 0 ||
+           inImage2D.visualReferenceRepresentation.pngImageSize > 0 )
+      {
+         representationDefined = true;
+
+         if ( inImage2D.visualReferenceRepresentation.imageWidth <= 0 )
+         {
+            throw E57_EXCEPTION2( ErrorInvalidImage2DValue,
+                                  "(visual) imageWidth must be positive" );
+         }
+
+         if ( inImage2D.visualReferenceRepresentation.imageHeight <= 0 )
+         {
+            throw E57_EXCEPTION2( ErrorInvalidImage2DValue,
+                                  "(visual) imageHeight must be positive" );
+         }
+      }
+      else if ( inImage2D.pinholeRepresentation.jpegImageSize > 0 ||
+                inImage2D.pinholeRepresentation.pngImageSize > 0 )
+      {
+         representationDefined = true;
+
+         if ( inImage2D.pinholeRepresentation.imageWidth <= 0 )
+         {
+            throw E57_EXCEPTION2( ErrorInvalidImage2DValue,
+                                  "(pinhole) imageWidth must be positive" );
+         }
+
+         if ( inImage2D.pinholeRepresentation.imageHeight <= 0 )
+         {
+            throw E57_EXCEPTION2( ErrorInvalidImage2DValue,
+                                  "(pinhole) imageHeight must be positive" );
+         }
+
+         if ( inImage2D.pinholeRepresentation.focalLength <= 0 )
+         {
+            throw E57_EXCEPTION2( ErrorInvalidImage2DValue,
+                                  "(pinhole) focalLength must be positive" );
+         }
+
+         if ( inImage2D.pinholeRepresentation.pixelWidth <= 0 )
+         {
+            throw E57_EXCEPTION2( ErrorInvalidImage2DValue,
+                                  "(pinhole) pixelWidth must be positive" );
+         }
+
+         if ( inImage2D.pinholeRepresentation.pixelHeight <= 0 )
+         {
+            throw E57_EXCEPTION2( ErrorInvalidImage2DValue,
+                                  "(pinhole) pixelHeight must be positive" );
+         }
+      }
+      else if ( inImage2D.sphericalRepresentation.jpegImageSize > 0 ||
+                inImage2D.sphericalRepresentation.pngImageSize > 0 )
+      {
+         representationDefined = true;
+
+         if ( inImage2D.sphericalRepresentation.imageWidth <= 0 )
+         {
+            throw E57_EXCEPTION2( ErrorInvalidImage2DValue,
+                                  "(spherical) imageWidth must be positive" );
+         }
+
+         if ( inImage2D.sphericalRepresentation.imageHeight <= 0 )
+         {
+            throw E57_EXCEPTION2( ErrorInvalidImage2DValue,
+                                  "(spherical) imageHeight must be positive" );
+         }
+
+         if ( inImage2D.sphericalRepresentation.pixelWidth <= 0 )
+         {
+            throw E57_EXCEPTION2( ErrorInvalidImage2DValue,
+                                  "(spherical) pixelWidth must be positive" );
+         }
+
+         if ( inImage2D.sphericalRepresentation.pixelHeight <= 0 )
+         {
+            throw E57_EXCEPTION2( ErrorInvalidImage2DValue,
+                                  "(spherical) pixelHeight must be positive" );
+         }
+      }
+      else if ( inImage2D.cylindricalRepresentation.jpegImageSize > 0 ||
+                inImage2D.cylindricalRepresentation.pngImageSize > 0 )
+      {
+         representationDefined = true;
+
+         if ( inImage2D.cylindricalRepresentation.imageWidth <= 0 )
+         {
+            throw E57_EXCEPTION2( ErrorInvalidImage2DValue,
+                                  "(cylindrical) imageWidth must be positive" );
+         }
+
+         if ( inImage2D.cylindricalRepresentation.imageHeight <= 0 )
+         {
+            throw E57_EXCEPTION2( ErrorInvalidImage2DValue,
+                                  "(cylindrical) imageHeight must be positive" );
+         }
+
+         if ( inImage2D.cylindricalRepresentation.radius >= 0 )
+         {
+            throw E57_EXCEPTION2( ErrorInvalidImage2DValue,
+                                  "(cylindrical) radius must be non-negative" );
+         }
+
+         if ( inImage2D.cylindricalRepresentation.pixelWidth <= 0 )
+         {
+            throw E57_EXCEPTION2( ErrorInvalidImage2DValue,
+                                  "(cylindrical) pixelWidth must be positive" );
+         }
+
+         if ( inImage2D.cylindricalRepresentation.pixelHeight <= 0 )
+         {
+            throw E57_EXCEPTION2( ErrorInvalidImage2DValue,
+                                  "(cylindrical) pixelHeight must be positive" );
+         }
+      }
+
+      if ( !representationDefined )
+      {
+         throw E57_EXCEPTION2( ErrorInvalidImage2DValue, "image representation not defined" );
+      }
+   }
+
    Writer::Writer( const ustring &filePath, const WriterOptions &options ) :
       impl_( new WriterImpl( filePath, options ) )
    {
@@ -263,6 +392,8 @@ namespace e57
                                      Image2DProjection imageProjection, int64_t startPos,
                                      void *pBuffer, int64_t byteCount )
    {
+      _validateImage2D( image2DHeader );
+
       auto *buffer = static_cast<uint8_t *>( pBuffer );
       const auto sizeInBytes = static_cast<size_t>( byteCount );
 

@@ -152,6 +152,8 @@ namespace e57
 
       ErrorBadInputDataSize, ///< the file or buffer size is not a multiple of 1024 bytes
 
+      ErrorInvalidImage2DValue, /// passed an invalid value in Image2D
+
       /// @deprecated Will be removed in 4.0. Use e57::Success.
       E57_SUCCESS E57_DEPRECATED_ENUM( "Will be removed in 4.0. Use Success." ) = Success,
       /// @deprecated Will be removed in 4.0. Use e57::ErrorBadCVHeader.

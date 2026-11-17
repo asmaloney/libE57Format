@@ -136,6 +136,9 @@ TEST( Extension_DIST, WritePinholeImageWithDistortionParameters )
       image2DHeader.pinholeRepresentation.imageWidth = 1;
       image2DHeader.pinholeRepresentation.imageHeight = 1;
       image2DHeader.pinholeRepresentation.jpegImageSize = cImageSize;
+      image2DHeader.pinholeRepresentation.focalLength = 0.1;
+      image2DHeader.pinholeRepresentation.pixelWidth = 0.1;
+      image2DHeader.pinholeRepresentation.pixelHeight = 0.1;
 
       auto &pcd = image2DHeader.pinholeCameraDistortionExt;
       pcd = std::make_unique<e57::Extension::PinholeCameraDistortion>();
@@ -174,6 +177,9 @@ TEST( Extension_DIST, WritePinholeImageWithDistortionParameters )
       image2DHeader.pinholeRepresentation.imageWidth = 1;
       image2DHeader.pinholeRepresentation.imageHeight = 1;
       image2DHeader.pinholeRepresentation.jpegImageSize = cImageSize;
+      image2DHeader.pinholeRepresentation.focalLength = 0.1;
+      image2DHeader.pinholeRepresentation.pixelWidth = 0.1;
+      image2DHeader.pinholeRepresentation.pixelHeight = 0.1;
 
       auto &pcd = image2DHeader.pinholeCameraDistortionExt;
       pcd = std::make_unique<e57::Extension::PinholeCameraDistortion>();
@@ -200,6 +206,9 @@ TEST( Extension_DIST, WritePinholeImageWithDistortionParameters )
       image2DHeader.pinholeRepresentation.imageWidth = 1;
       image2DHeader.pinholeRepresentation.imageHeight = 1;
       image2DHeader.pinholeRepresentation.jpegImageSize = cImageSize;
+      image2DHeader.pinholeRepresentation.focalLength = 0.1;
+      image2DHeader.pinholeRepresentation.pixelWidth = 0.1;
+      image2DHeader.pinholeRepresentation.pixelHeight = 0.1;
 
       std::size_t bytesWritten = 0;
       E57_ASSERT_NO_THROW( bytesWritten = writer->WriteImage2DData( image2DHeader, e57::ImageJPEG,

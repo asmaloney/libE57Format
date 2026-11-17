@@ -963,6 +963,19 @@ namespace e57
       /// Representation for an image using the cylindrical camera projection model.
       CylindricalRepresentation cylindricalRepresentation;
 
+      /// Is this Image2D using the visual representation? A representation is considered used if
+      /// any of the *Representation fields are modified.
+      bool isVisual() const;
+      /// Is this Image2D using the pinhole representation? A representation is considered used if
+      /// any of the *Representation fields are modified.
+      bool isPinhole() const;
+      /// Is this Image2D using the spherical representation? A representation is considered used if
+      /// any of the *Representation fields are modified.
+      bool isSpherical() const;
+      /// Is this Image2D using the cylindrical representation? A representation is considered used
+      /// if any of the *Representation fields are modified.
+      bool isCylindrical() const;
+
       /// Optional distortion parameters for a pinhole camera
       std::unique_ptr<Extension::PinholeCameraDistortion> pinholeCameraDistortionExt;
    };

@@ -214,7 +214,9 @@ namespace e57
       }
 
       // Create pose structure for image.
-      if ( image2DHeader.pose != RigidBodyTransform{} )
+      // It is required for pinhole, spherical, and cylindrical (standard 8.4.11.2).
+      if ( ( image2DHeader.pose != RigidBodyTransform{} ) || image2DHeader.isPinhole() ||
+           image2DHeader.isSpherical() || image2DHeader.isCylindrical() )
       {
          StructureNode pose( imf_ );
          image.set( "pose", pose );

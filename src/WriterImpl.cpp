@@ -233,8 +233,7 @@ namespace e57
          translation.set( "z", FloatNode( imf_, image2DHeader.pose.translation.z ) );
       }
 
-      if ( image2DHeader.visualReferenceRepresentation.jpegImageSize > 0 ||
-           image2DHeader.visualReferenceRepresentation.pngImageSize > 0 )
+      if ( image2DHeader.isVisual() )
       {
          StructureNode visualReferenceRepresentation( imf_ );
          image.set( "visualReferenceRepresentation", visualReferenceRepresentation );
@@ -265,8 +264,8 @@ namespace e57
             "imageWidth",
             IntegerNode( imf_, image2DHeader.visualReferenceRepresentation.imageWidth ) );
       }
-      else if ( image2DHeader.pinholeRepresentation.jpegImageSize > 0 ||
-                image2DHeader.pinholeRepresentation.pngImageSize > 0 )
+
+      if ( image2DHeader.isPinhole() )
       {
          StructureNode pinholeRepresentation( imf_ );
          image.set( "pinholeRepresentation", pinholeRepresentation );
@@ -304,8 +303,8 @@ namespace e57
             "principalPointY",
             FloatNode( imf_, image2DHeader.pinholeRepresentation.principalPointY ) );
       }
-      else if ( image2DHeader.sphericalRepresentation.jpegImageSize > 0 ||
-                image2DHeader.sphericalRepresentation.pngImageSize > 0 )
+
+      if ( image2DHeader.isSpherical() )
       {
          StructureNode sphericalRepresentation( imf_ );
          image.set( "sphericalRepresentation", sphericalRepresentation );
@@ -335,8 +334,8 @@ namespace e57
          sphericalRepresentation.set(
             "pixelWidth", FloatNode( imf_, image2DHeader.sphericalRepresentation.pixelWidth ) );
       }
-      else if ( image2DHeader.cylindricalRepresentation.jpegImageSize > 0 ||
-                image2DHeader.cylindricalRepresentation.pngImageSize > 0 )
+
+      if ( image2DHeader.isCylindrical() )
       {
          StructureNode cylindricalRepresentation( imf_ );
          image.set( "cylindricalRepresentation", cylindricalRepresentation );

@@ -100,6 +100,40 @@ TEST( SimpleWriterImage, NoRepresentation )
    delete writer;
 }
 
+// Check that it throws when we provide multiple (non-visual) image representations
+TEST( SimpleWriterImage, MultipleRepresentation )
+{
+   e57::Writer *writer = nullptr;
+
+   E57_ASSERT_NO_THROW(
+      writer = new e57::Writer( "./MultipleRepresentation.e57", e57::WriterOptions{} ) );
+
+   const int64_t cImageSize = 1;
+   char imageBuffer[cImageSize];
+
+   e57::Image2D image2DHeader;
+   image2DHeader.visualReferenceRepresentation.imageWidth = 225;
+   image2DHeader.visualReferenceRepresentation.imageHeight = 300;
+   image2DHeader.visualReferenceRepresentation.jpegImageSize = cImageSize;
+
+   image2DHeader.pinholeRepresentation.imageWidth = 225;
+   image2DHeader.pinholeRepresentation.imageHeight = 300;
+   image2DHeader.pinholeRepresentation.jpegImageSize = cImageSize;
+   image2DHeader.pinholeRepresentation.focalLength = 0.1;
+   image2DHeader.pinholeRepresentation.pixelWidth = 0.1;
+   image2DHeader.pinholeRepresentation.pixelHeight = 0.1;
+
+   image2DHeader.sphericalRepresentation.imageHeight = 300;
+   image2DHeader.sphericalRepresentation.imageWidth = 225;
+   image2DHeader.sphericalRepresentation.jpegImageSize = cImageSize;
+   image2DHeader.sphericalRepresentation.pixelHeight = 0.1;
+
+   E57_ASSERT_THROW( writer->WriteImage2DData(
+      image2DHeader, e57::ImageJPEG, e57::ProjectionPinhole, 0, imageBuffer, cImageSize ) );
+
+   delete writer;
+}
+
 // Check various visual image fields
 TEST( SimpleWriterImage, VisualRefImageInvalidFields )
 {
@@ -147,8 +181,9 @@ TEST( SimpleWriterImage, PinholeImageInvalidFields )
    image2DHeaderZeroWidth.pinholeRepresentation.pixelWidth = 0.1;
    image2DHeaderZeroWidth.pinholeRepresentation.pixelHeight = 0.1;
 
-   E57_ASSERT_THROW( writer->WriteImage2DData(
-      image2DHeaderZeroWidth, e57::ImageJPEG, e57::ProjectionVisual, 0, imageBuffer, cImageSize ) );
+   E57_ASSERT_THROW( writer->WriteImage2DData( image2DHeaderZeroWidth, e57::ImageJPEG,
+                                               e57::ProjectionPinhole, 0, imageBuffer,
+                                               cImageSize ) );
 
    // Check that it complains about negative focal
    e57::Image2D image2DHeaderNegativeFocal;
@@ -160,7 +195,7 @@ TEST( SimpleWriterImage, PinholeImageInvalidFields )
    image2DHeaderNegativeFocal.pinholeRepresentation.pixelHeight = 0.1;
 
    E57_ASSERT_THROW( writer->WriteImage2DData( image2DHeaderNegativeFocal, e57::ImageJPEG,
-                                               e57::ProjectionVisual, 0, imageBuffer,
+                                               e57::ProjectionPinhole, 0, imageBuffer,
                                                cImageSize ) );
 
    // Check that it complains about zero pixel width
@@ -172,7 +207,7 @@ TEST( SimpleWriterImage, PinholeImageInvalidFields )
    image2DHeaderZeroPixelWidth.pinholeRepresentation.pixelHeight = 0.1;
 
    E57_ASSERT_THROW( writer->WriteImage2DData( image2DHeaderZeroPixelWidth, e57::ImageJPEG,
-                                               e57::ProjectionVisual, 0, imageBuffer,
+                                               e57::ProjectionPinhole, 0, imageBuffer,
                                                cImageSize ) );
 
    delete writer;
@@ -196,8 +231,9 @@ TEST( SimpleWriterImage, SphericalImageInvalidFields )
    image2DHeaderZeroWidth.sphericalRepresentation.pixelWidth = 0.1;
    image2DHeaderZeroWidth.sphericalRepresentation.pixelHeight = 0.1;
 
-   E57_ASSERT_THROW( writer->WriteImage2DData(
-      image2DHeaderZeroWidth, e57::ImageJPEG, e57::ProjectionVisual, 0, imageBuffer, cImageSize ) );
+   E57_ASSERT_THROW( writer->WriteImage2DData( image2DHeaderZeroWidth, e57::ImageJPEG,
+                                               e57::ProjectionSpherical, 0, imageBuffer,
+                                               cImageSize ) );
 
    // Check that it complains about zero pixel width
    e57::Image2D image2DHeaderZeroPixelWidth;
@@ -207,7 +243,7 @@ TEST( SimpleWriterImage, SphericalImageInvalidFields )
    image2DHeaderZeroPixelWidth.sphericalRepresentation.pixelHeight = 0.1;
 
    E57_ASSERT_THROW( writer->WriteImage2DData( image2DHeaderZeroPixelWidth, e57::ImageJPEG,
-                                               e57::ProjectionVisual, 0, imageBuffer,
+                                               e57::ProjectionSpherical, 0, imageBuffer,
                                                cImageSize ) );
 
    delete writer;
@@ -234,8 +270,9 @@ TEST( SimpleWriterImage, CylindricalImageInvalidFields )
    image2DHeaderZeroWidth.cylindricalRepresentation.pixelWidth = 0.1;
    image2DHeaderZeroWidth.cylindricalRepresentation.pixelHeight = 0.1;
 
-   E57_ASSERT_THROW( writer->WriteImage2DData(
-      image2DHeaderZeroWidth, e57::ImageJPEG, e57::ProjectionVisual, 0, imageBuffer, cImageSize ) );
+   E57_ASSERT_THROW( writer->WriteImage2DData( image2DHeaderZeroWidth, e57::ImageJPEG,
+                                               e57::ProjectionCylindrical, 0, imageBuffer,
+                                               cImageSize ) );
 
    // Check that it complains about radius
    e57::Image2D image2DHeaderRadius;
@@ -246,8 +283,9 @@ TEST( SimpleWriterImage, CylindricalImageInvalidFields )
    image2DHeaderRadius.cylindricalRepresentation.pixelWidth = 0.1;
    image2DHeaderRadius.cylindricalRepresentation.pixelHeight = 0.1;
 
-   E57_ASSERT_THROW( writer->WriteImage2DData(
-      image2DHeaderRadius, e57::ImageJPEG, e57::ProjectionVisual, 0, imageBuffer, cImageSize ) );
+   E57_ASSERT_THROW( writer->WriteImage2DData( image2DHeaderRadius, e57::ImageJPEG,
+                                               e57::ProjectionCylindrical, 0, imageBuffer,
+                                               cImageSize ) );
 
    // Check that it complains about zero pixel width
    e57::Image2D image2DHeaderZeroPixelWidth;
@@ -257,7 +295,7 @@ TEST( SimpleWriterImage, CylindricalImageInvalidFields )
    image2DHeaderZeroPixelWidth.cylindricalRepresentation.pixelHeight = 0.1;
 
    E57_ASSERT_THROW( writer->WriteImage2DData( image2DHeaderZeroPixelWidth, e57::ImageJPEG,
-                                               e57::ProjectionVisual, 0, imageBuffer,
+                                               e57::ProjectionCylindrical, 0, imageBuffer,
                                                cImageSize ) );
 
    delete writer;

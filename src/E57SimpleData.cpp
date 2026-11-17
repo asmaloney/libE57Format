@@ -237,4 +237,24 @@ namespace e57
    template struct Data3DPointsData_t<float>;
    template struct Data3DPointsData_t<double>;
 #endif
+
+   bool Image2D::isVisual() const
+   {
+      return visualReferenceRepresentation != VisualReferenceRepresentation{};
+   }
+
+   bool Image2D::isPinhole() const
+   {
+      return pinholeRepresentation != PinholeRepresentation{};
+   }
+
+   bool Image2D::isSpherical() const
+   {
+      return sphericalRepresentation != SphericalRepresentation{};
+   }
+
+   bool Image2D::isCylindrical() const
+   {
+      return cylindricalRepresentation != CylindricalRepresentation{};
+   }
 } // end namespace e57

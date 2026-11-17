@@ -242,13 +242,31 @@ namespace e57
    /// Validates a Image2D and throws ErrorInvalidImage2DValue on error.
    void _validateImage2D( e57::Image2D &inImage2D )
    {
-      bool representationDefined = false;
+      int numDefined = 0;
 
-      if ( inImage2D.visualReferenceRepresentation.jpegImageSize > 0 ||
-           inImage2D.visualReferenceRepresentation.pngImageSize > 0 )
+      // According to the standard, only one of (pinhole, spherical, cylindrical) can be defined
+      numDefined += inImage2D.isPinhole();
+      numDefined += inImage2D.isSpherical();
+      numDefined += inImage2D.isCylindrical();
+
+      if ( numDefined > 1 )
       {
-         representationDefined = true;
+         throw E57_EXCEPTION2( ErrorInvalidImage2DValue,
+                               "multiple image representations are defined" );
+      }
 
+      // In addition, we can optionally have a visual defined
+      numDefined += inImage2D.isVisual();
+
+      if ( numDefined == 0 )
+      {
+         throw E57_EXCEPTION2( ErrorInvalidImage2DValue, "image representation not defined" );
+      }
+
+      // Now check the fields on the ones we have defined
+
+      if ( inImage2D.isVisual() )
+      {
          if ( inImage2D.visualReferenceRepresentation.imageWidth <= 0 )
          {
             throw E57_EXCEPTION2( ErrorInvalidImage2DValue,
@@ -261,11 +279,9 @@ namespace e57
                                   "(visual) imageHeight must be positive" );
          }
       }
-      else if ( inImage2D.pinholeRepresentation.jpegImageSize > 0 ||
-                inImage2D.pinholeRepresentation.pngImageSize > 0 )
-      {
-         representationDefined = true;
 
+      if ( inImage2D.isPinhole() )
+      {
          if ( inImage2D.pinholeRepresentation.imageWidth <= 0 )
          {
             throw E57_EXCEPTION2( ErrorInvalidImage2DValue,
@@ -296,11 +312,9 @@ namespace e57
                                   "(pinhole) pixelHeight must be positive" );
          }
       }
-      else if ( inImage2D.sphericalRepresentation.jpegImageSize > 0 ||
-                inImage2D.sphericalRepresentation.pngImageSize > 0 )
-      {
-         representationDefined = true;
 
+      if ( inImage2D.isSpherical() )
+      {
          if ( inImage2D.sphericalRepresentation.imageWidth <= 0 )
          {
             throw E57_EXCEPTION2( ErrorInvalidImage2DValue,
@@ -325,11 +339,9 @@ namespace e57
                                   "(spherical) pixelHeight must be positive" );
          }
       }
-      else if ( inImage2D.cylindricalRepresentation.jpegImageSize > 0 ||
-                inImage2D.cylindricalRepresentation.pngImageSize > 0 )
-      {
-         representationDefined = true;
 
+      if ( inImage2D.isCylindrical() )
+      {
          if ( inImage2D.cylindricalRepresentation.imageWidth <= 0 )
          {
             throw E57_EXCEPTION2( ErrorInvalidImage2DValue,
@@ -359,11 +371,6 @@ namespace e57
             throw E57_EXCEPTION2( ErrorInvalidImage2DValue,
                                   "(cylindrical) pixelHeight must be positive" );
          }
-      }
-
-      if ( !representationDefined )
-      {
-         throw E57_EXCEPTION2( ErrorInvalidImage2DValue, "image representation not defined" );
       }
    }
 

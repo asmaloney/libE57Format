@@ -6,11 +6,35 @@ All notable changes to this project will be documented in this file. The format 
 
 ### Added
 
+- Add read-ahead cache and batch conversion of values to improve read performance. ([#360](https://github.com/asmaloney/libE57Format/pull/360)) (Thanks Tobias!)
+
 - Add new constructors for `FloatNode`, `IntegerNode`, and `ScaledIntegerNode` for use in creating compressed vector prototype elements. ([#369](https://github.com/asmaloney/libE57Format/pull/369))
 
   These versions do not take a value parameter and therefore do not check against the range. This avoids `ErrorValueOutOfBounds` exceptions.
 
   In the old documentation for these nodes, it was recommended to pass the minimum value if you were creating a prototype node to avoid exceptions, but that results in extra, misleading data in the XML.
+
+### Changed
+
+- {standards conformance} Now checks several image fields and will throw a new `ErrorInvalidImage2DValue` exception if any issues are found. See `_validateImage2D()` in _E57SimpleWriter.cpp_ for the checks. ([#377](https://github.com/asmaloney/libE57Format/pull/377))
+
+### Deprecated
+
+- **E57Simple API**: Replace the `pointRangeMinimum` and `pointRangeMaximum` fields in `PointStandardizedFieldsAvailable` with bounds. These two fields are now deprecated and will be removed in version 4.0. ([#373](https://github.com/asmaloney/libE57Format/pull/373))
+
+  These were used to output min/max in the Data3D prototypes for the `cartesianX`, `cartesianY`, `cartesianZ`, and `sphericalRange` fields. This meant that the one value was used for all, which was not very precise.
+
+  Since we now calculate the cartesian and spherical bounds properly, we can use them to get finer-grained values for each of the fields, which can result in smaller E57 files. If you were setting these fields manually, you can set them on Data3D's `cartesianBounds` and `sphericalBounds` instead (see the `CartesianBounds` and `SphericalBounds` structs for details). If they are not set, they will be calculated based on the data.
+
+  With these changes, setting these fields no longer has an effect. We still set them when we read files in case someone is depending on them, but this behaviour is deprecated.
+
+- **E57Simple API**: Replace the `angleMinimum` and `angleMaximum` fields in `PointStandardizedFieldsAvailable` with bounds. These two fields are now deprecated and will be removed in version 4.0. ([#374](https://github.com/asmaloney/libE57Format/pull/374))
+
+  These were used to output min/max in the Data3D prototypes for the `sphericalAzimuth` and `sphericalElevation` fields. This meant that the one value was used for both, which was not very precise.
+
+  Since we now calculate the spherical bounds properly, we can use them to get finer-grained values for each of the fields, which can result in smaller E57 files. If you were setting these fields manually, you can set them on Data3D's`sphericalBounds` instead (see the `SphericalBounds` struct for details). If they are not set, they will be calculated based on the data.
+
+  With these changes, setting these fields no longer has an effect. We still set them when we read files in case someone is depending on them, but this behaviour is deprecated.
 
 ### Fixed
 

@@ -221,7 +221,7 @@ namespace e57
       dbufs_ = dbufs;
    }
 
-   unsigned CompressedVectorReaderImpl::read( std::vector<SourceDestBuffer> &dbufs )
+   size_t CompressedVectorReaderImpl::read( std::vector<SourceDestBuffer> &dbufs )
    {
       // don't checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__), read() will
       // do it
@@ -234,7 +234,7 @@ namespace e57
       return ( read() );
    }
 
-   unsigned CompressedVectorReaderImpl::read()
+   size_t CompressedVectorReaderImpl::read()
    {
 #ifdef E57_VERBOSE
       std::cout << "CompressedVectorReaderImpl::read() called" << std::endl; //???
@@ -276,8 +276,8 @@ namespace e57
       }
 
       // Verify that each channel produced the same number of records
-      unsigned outputCount = 0;
-      for ( unsigned i = 0; i < channels_.size(); i++ )
+      size_t outputCount = 0;
+      for ( size_t i = 0; i < channels_.size(); i++ )
       {
          DecodeChannel *chan = &channels_[i];
          if ( i == 0 )

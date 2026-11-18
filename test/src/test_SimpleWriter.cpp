@@ -143,7 +143,7 @@ TEST( SimpleWriter, Empty )
    e57::WriterOptions options;
    options.guid = "Empty File GUID";
 
-   E57_ASSERT_NO_THROW( e57::Writer writer( "./empty.e57", options ) );
+   E57_ASSERT_NO_THROW( e57::Writer writer( "./write-tests/empty.e57", options ) );
 }
 
 TEST( SimpleWriter, ZeroPoints )
@@ -153,7 +153,7 @@ TEST( SimpleWriter, ZeroPoints )
 
    e57::Writer *writer = nullptr;
 
-   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./ZeroPoints.e57", options ) );
+   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./write-tests/ZeroPoints.e57", options ) );
 
    constexpr uint16_t cNumPoints = 0;
 
@@ -180,7 +180,8 @@ TEST( SimpleWriter, InvalidData3DValueCartesian )
 
    e57::Writer *writer = nullptr;
 
-   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./InvalidData3DValueCartesian.e57", options ) );
+   E57_ASSERT_NO_THROW(
+      writer = new e57::Writer( "./write-tests/InvalidData3DValueCartesian.e57", options ) );
 
    constexpr uint16_t cNumPoints = 1;
 
@@ -208,7 +209,8 @@ TEST( SimpleWriter, InvalidData3DValueSpherical )
 
    e57::Writer *writer = nullptr;
 
-   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./InvalidData3DValueSpherical.e57", options ) );
+   E57_ASSERT_NO_THROW(
+      writer = new e57::Writer( "./write-tests/InvalidData3DValueSpherical.e57", options ) );
 
    constexpr uint16_t cNumPoints = 1;
 
@@ -239,7 +241,8 @@ TEST( SimpleWriter, ColouredCubeDouble )
 
    e57::Writer *writer = nullptr;
 
-   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./ColouredCubeDouble.e57", options ) );
+   E57_ASSERT_NO_THROW( writer =
+                           new e57::Writer( "./write-tests/ColouredCubeDouble.e57", options ) );
 
    constexpr uint16_t cNumPointsPerFace = 1280;
    constexpr uint16_t cNumPoints = cNumPointsPerFace * cNumCubeFaces;
@@ -279,7 +282,8 @@ TEST( SimpleWriter, ColouredCubeFloat )
 
    e57::Writer *writer = nullptr;
 
-   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./ColouredCubeFloat.e57", options ) );
+   E57_ASSERT_NO_THROW( writer =
+                           new e57::Writer( "./write-tests/ColouredCubeFloat.e57", options ) );
 
    constexpr uint16_t cNumPointsPerFace = 1280;
    constexpr uint16_t cNumPoints = cNumPointsPerFace * cNumCubeFaces;
@@ -319,7 +323,8 @@ TEST( SimpleWriter, ColouredCubeScaledInt )
 
    e57::Writer *writer = nullptr;
 
-   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./ColouredCubeScaledInt.e57", options ) );
+   E57_ASSERT_NO_THROW( writer =
+                           new e57::Writer( "./write-tests/ColouredCubeScaledInt.e57", options ) );
 
    constexpr uint16_t cNumPointsPerFace = 1280;
    constexpr uint16_t cNumPoints = cNumPointsPerFace * cNumCubeFaces;
@@ -359,7 +364,7 @@ TEST( SimpleWriter, MultipleScans )
 
    e57::Writer *writer = nullptr;
 
-   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./MultipleScans.e57", options ) );
+   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./write-tests/MultipleScans.e57", options ) );
 
    constexpr int cNumPoints = 8;
 
@@ -403,7 +408,7 @@ TEST( SimpleWriter, ChineseFileName )
    e57::WriterOptions options;
    options.guid = "Chinese File Name File GUID";
 
-   E57_ASSERT_NO_THROW( e57::Writer writer( "./测试点云.e57", options ) );
+   E57_ASSERT_NO_THROW( e57::Writer writer( "./write-tests/测试点云.e57", options ) );
 }
 
 // https://github.com/asmaloney/libE57Format/issues/69
@@ -412,7 +417,7 @@ TEST( SimpleWriter, WriteUmlautFileName )
    e57::WriterOptions options;
    options.guid = "Umlaut File Name File GUID";
 
-   E57_ASSERT_NO_THROW( e57::Writer writer( "./test filename äöü.e57", options ) );
+   E57_ASSERT_NO_THROW( e57::Writer writer( "./write-tests/test filename äöü.e57", options ) );
 }
 
 TEST( SimpleWriter, CartesianPoints )
@@ -422,7 +427,8 @@ TEST( SimpleWriter, CartesianPoints )
 
    e57::Writer *writer = nullptr;
 
-   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./CartesianPoints-1025.e57", options ) );
+   E57_ASSERT_NO_THROW( writer =
+                           new e57::Writer( "./write-tests/CartesianPoints-1025.e57", options ) );
 
    constexpr int64_t cNumPoints = 1025;
 
@@ -463,7 +469,8 @@ TEST( SimpleWriter, ColouredCartesianPoints )
 
    e57::Writer *writer = nullptr;
 
-   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./ColouredCartesianPoints-1025.e57", options ) );
+   E57_ASSERT_NO_THROW(
+      writer = new e57::Writer( "./write-tests/ColouredCartesianPoints-1025.e57", options ) );
 
    constexpr int64_t cNumPoints = 1025;
 
@@ -500,7 +507,8 @@ TEST( SimpleWriter, MinMaxIssuesCartesianFloat )
 
    e57::Writer *writer = nullptr;
 
-   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./CartesianPointsMinMaxFloat.e57", options ) );
+   E57_ASSERT_NO_THROW(
+      writer = new e57::Writer( "./write-tests/CartesianPointsMinMaxFloat.e57", options ) );
 
    constexpr int64_t cNumPoints = 1025;
 
@@ -559,7 +567,8 @@ TEST( SimpleWriter, MinMaxIssuesSphericalDouble )
 
    e57::Writer *writer = nullptr;
 
-   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./SphericalPointsMinMaxDouble.e57", options ) );
+   E57_ASSERT_NO_THROW(
+      writer = new e57::Writer( "./write-tests/SphericalPointsMinMaxDouble.e57", options ) );
 
    constexpr int64_t cNumPoints = 1025;
 
@@ -614,7 +623,8 @@ TEST( SimpleWriter, MinMaxOverwriteUserDataFloat )
 
    e57::Writer *writer = nullptr;
 
-   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./MinMaxOverwriteUserDataFloat.e57", options ) );
+   E57_ASSERT_NO_THROW(
+      writer = new e57::Writer( "./write-tests/MinMaxOverwriteUserDataFloat.e57", options ) );
 
    constexpr int64_t cNumPoints = 10;
 
@@ -666,7 +676,8 @@ TEST( SimpleWriter, MinMaxIssuesIntegerNode )
 
    e57::Writer *writer = nullptr;
 
-   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./MinMaxIssuesIntegerNode.e57", options ) );
+   E57_ASSERT_NO_THROW(
+      writer = new e57::Writer( "./write-tests/MinMaxIssuesIntegerNode.e57", options ) );
 
    constexpr int64_t cNumPoints = 8;
 
@@ -718,8 +729,8 @@ TEST( SimpleWriter, MinMaxIssuesScaledIntegerNode )
 
    e57::Writer *writer = nullptr;
 
-   E57_ASSERT_NO_THROW( writer =
-                           new e57::Writer( "./MinMaxIssuesScaledIntegerNode.e57", options ) );
+   E57_ASSERT_NO_THROW(
+      writer = new e57::Writer( "./write-tests/MinMaxIssuesScaledIntegerNode.e57", options ) );
 
    constexpr int64_t cNumPoints = 8;
 
@@ -768,7 +779,8 @@ TEST( SimpleWriter, MinMaxIssuesFloatNode )
 
    e57::Writer *writer = nullptr;
 
-   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./MinMaxIssuesFloatNode.e57", options ) );
+   E57_ASSERT_NO_THROW( writer =
+                           new e57::Writer( "./write-tests/MinMaxIssuesFloatNode.e57", options ) );
 
    constexpr int64_t cNumPoints = 8;
 
@@ -816,7 +828,8 @@ TEST( SimpleWriter, ConstantIntegerNodeException )
 
    e57::Writer *writer = nullptr;
 
-   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./ConstantIntegerNodeException.e57", options ) );
+   E57_ASSERT_NO_THROW(
+      writer = new e57::Writer( "./write-tests/ConstantIntegerNodeException.e57", options ) );
 
    constexpr int64_t cNumPoints = 8;
 

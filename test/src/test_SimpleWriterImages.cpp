@@ -65,7 +65,7 @@ TEST_F( SimpleWriterImageOneJPEG, VisualRefImage )
 
    e57::Writer *writer = nullptr;
 
-   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./VisualRefImage.e57", options ) );
+   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./write-tests/VisualRefImage.e57", options ) );
 
    e57::Image2D image2DHeader;
    image2DHeader.name = "JPEG Image Test";
@@ -86,8 +86,8 @@ TEST( SimpleWriterImage, NoRepresentation )
 {
    e57::Writer *writer = nullptr;
 
-   E57_ASSERT_NO_THROW( writer =
-                           new e57::Writer( "./NoRepresentation.e57", e57::WriterOptions{} ) );
+   E57_ASSERT_NO_THROW(
+      writer = new e57::Writer( "./write-tests/NoRepresentation.e57", e57::WriterOptions{} ) );
 
    const int64_t cImageSize = 1;
    char imageBuffer[cImageSize];
@@ -105,8 +105,8 @@ TEST( SimpleWriterImage, MultipleRepresentation )
 {
    e57::Writer *writer = nullptr;
 
-   E57_ASSERT_NO_THROW(
-      writer = new e57::Writer( "./MultipleRepresentation.e57", e57::WriterOptions{} ) );
+   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./write-tests/MultipleRepresentation.e57",
+                                                  e57::WriterOptions{} ) );
 
    const int64_t cImageSize = 1;
    char imageBuffer[cImageSize];
@@ -139,8 +139,8 @@ TEST( SimpleWriterImage, VisualRefImageInvalidFields )
 {
    e57::Writer *writer = nullptr;
 
-   E57_ASSERT_NO_THROW(
-      writer = new e57::Writer( "./VisualRefImageInvalidFields.e57", e57::WriterOptions{} ) );
+   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./write-tests/VisualRefImageInvalidFields.e57",
+                                                  e57::WriterOptions{} ) );
 
    const int64_t cImageSize = 1;
    char imageBuffer[cImageSize];
@@ -167,8 +167,8 @@ TEST( SimpleWriterImage, PinholeImageInvalidFields )
 {
    e57::Writer *writer = nullptr;
 
-   E57_ASSERT_NO_THROW(
-      writer = new e57::Writer( "./PinholeImageInvalidFields.e57", e57::WriterOptions{} ) );
+   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./write-tests/PinholeImageInvalidFields.e57",
+                                                  e57::WriterOptions{} ) );
 
    const int64_t cImageSize = 1;
    char imageBuffer[cImageSize];
@@ -218,8 +218,8 @@ TEST( SimpleWriterImage, SphericalImageInvalidFields )
 {
    e57::Writer *writer = nullptr;
 
-   E57_ASSERT_NO_THROW(
-      writer = new e57::Writer( "./SphericalImageInvalidFields.e57", e57::WriterOptions{} ) );
+   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./write-tests/SphericalImageInvalidFields.e57",
+                                                  e57::WriterOptions{} ) );
 
    const int64_t cImageSize = 1;
    char imageBuffer[cImageSize];
@@ -257,8 +257,8 @@ TEST( SimpleWriterImage, CylindricalImageInvalidFields )
 
    e57::Writer *writer = nullptr;
 
-   E57_ASSERT_NO_THROW(
-      writer = new e57::Writer( "./CylindricalImageInvalidFields.e57", e57::WriterOptions{} ) );
+   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./write-tests/CylindricalImageInvalidFields.e57",
+                                                  e57::WriterOptions{} ) );
 
    const int64_t cImageSize = 1;
    char imageBuffer[cImageSize];

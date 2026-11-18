@@ -108,8 +108,8 @@ TEST( Extension_DIST, WritePinholeImageWithDistortionParameters )
 
    e57::Writer *writer = nullptr;
 
-   E57_ASSERT_NO_THROW(
-      writer = new e57::Writer( "./PinholeImageWithDistortionParameters.e57", options ) );
+   E57_ASSERT_NO_THROW( writer = new e57::Writer(
+                           "./write-tests/PinholeImageWithDistortionParameters.e57", options ) );
 
    std::ifstream image( TestData::Path() + "/images/dummyImage.jpg",
                         std::ifstream::ate | std::ifstream::binary );

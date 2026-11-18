@@ -26,6 +26,13 @@ int main( int argc, char **argv )
 {
    Random::seed( 42 );
 
+   // ensure the directory for our write test files exists
+#if defined( _WIN32 ) && defined( _MSC_VER )
+   _mkdir( "./write-tests" );
+#else
+   mkdir( "./write-tests", 0755 );
+#endif
+
    ::testing::FLAGS_gtest_color = "yes";
    ::testing::InitGoogleTest( &argc, argv );
 

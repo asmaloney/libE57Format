@@ -87,7 +87,8 @@ TEST( SimpleData, ReadWrite )
       options.guid = originalFileHeader.guid;
 
       e57::Writer *writer = nullptr;
-      E57_ASSERT_NO_THROW( writer = new e57::Writer( "./ColouredCubeDoubleCopy.e57", options ) );
+      E57_ASSERT_NO_THROW(
+         writer = new e57::Writer( "./write-tests/ColouredCubeDoubleCopy.e57", options ) );
 
       writer->WriteData3DData( originalData3DHeader, *originalPointsData );
 
@@ -101,7 +102,8 @@ TEST( SimpleData, ReadWrite )
    {
       e57::E57Root copyFileHeader;
 
-      E57_ASSERT_NO_THROW( copyReader = new e57::Reader( "./ColouredCubeDoubleCopy.e57", {} ) );
+      E57_ASSERT_NO_THROW( copyReader =
+                              new e57::Reader( "./write-tests/ColouredCubeDoubleCopy.e57", {} ) );
 
       ASSERT_TRUE( copyReader->GetE57Root( copyFileHeader ) );
       ASSERT_TRUE( copyReader->ReadData3D( 0, copyData3DHeader ) );

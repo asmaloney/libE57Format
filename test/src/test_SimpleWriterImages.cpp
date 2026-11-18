@@ -81,6 +81,52 @@ TEST_F( SimpleWriterImageOneJPEG, VisualRefImage )
    delete writer;
 }
 
+// Tests writing multiple representations to the same Image2D
+TEST_F( SimpleWriterImageOneJPEG, MultipleRepresentation )
+{
+   if ( !TestData::Exists() )
+   {
+      GTEST_SKIP_( "(test data not available)" );
+   }
+
+   e57::WriterOptions options;
+   options.guid = "Multiple Representation Image File GUID";
+
+   e57::Writer *writer = nullptr;
+
+   E57_ASSERT_NO_THROW( writer =
+                           new e57::Writer( "./write-tests/MultipleRepresentation.e57", options ) );
+
+   // For convenience, we use the same image for both representations.
+
+   e57::Image2D image2DHeader;
+   image2DHeader.name = "JPEG Image Test";
+   image2DHeader.guid = "Multiple Representation Image - JPEG Image GUID";
+   image2DHeader.description = "JPEG image test";
+   image2DHeader.visualReferenceRepresentation.imageWidth = 225;
+   image2DHeader.visualReferenceRepresentation.imageHeight = 300;
+   image2DHeader.visualReferenceRepresentation.jpegImageSize = imageSize();
+
+   image2DHeader.pinholeRepresentation.imageWidth = 225;
+   image2DHeader.pinholeRepresentation.imageHeight = 300;
+   image2DHeader.pinholeRepresentation.jpegImageSize = imageSize();
+   image2DHeader.pinholeRepresentation.focalLength = 0.1;
+   image2DHeader.pinholeRepresentation.pixelWidth = 0.1;
+   image2DHeader.pinholeRepresentation.pixelHeight = 0.1;
+
+   int64_t index = 0;
+
+   E57_ASSERT_NO_THROW( index = writer->NewImage2D( image2DHeader ) );
+
+   E57_ASSERT_NO_THROW( writer->WriteImage2DData( index, e57::ImageJPEG, e57::ProjectionVisual,
+                                                  imageBuffer(), 0, imageSize() ) );
+
+   E57_ASSERT_NO_THROW( writer->WriteImage2DData( index, e57::ImageJPEG, e57::ProjectionPinhole,
+                                                  imageBuffer(), 0, imageSize() ) );
+
+   delete writer;
+}
+
 // Check that it throws when we don't provide an image representation
 TEST( SimpleWriterImage, NoRepresentation )
 {
@@ -101,11 +147,11 @@ TEST( SimpleWriterImage, NoRepresentation )
 }
 
 // Check that it throws when we provide multiple (non-visual) image representations
-TEST( SimpleWriterImage, MultipleRepresentation )
+TEST( SimpleWriterImage, InvalidMultipleRepresentation )
 {
    e57::Writer *writer = nullptr;
 
-   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./write-tests/MultipleRepresentation.e57",
+   E57_ASSERT_NO_THROW( writer = new e57::Writer( "./write-tests/InvalidMultipleRepresentation.e57",
                                                   e57::WriterOptions{} ) );
 
    const int64_t cImageSize = 1;

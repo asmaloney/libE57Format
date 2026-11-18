@@ -80,7 +80,13 @@ namespace e57
       /// @name Image2D
       ///@{
 
-      /// @brief This function writes the Image2D data to the file
+      /// @brief This function creates and writes an Image2D to the file
+      /// @details The user needs to configure a Image2D structure with all the image information
+      /// before making this call.
+      /// If you need to write multiple image types (a visual reference image AND one of the other
+      /// projections or an image mask) to the same Image2D, you should call @ref NewImage2D and
+      /// then, using the returned index, call the other @ref WriteImage2DData method once for each
+      /// projection/image type combination.
       /// @note @p image2DHeader may be modified (adding a guid or adding missing, required fields).
       /// @param [in,out] image2DHeader header metadata
       /// @param [in] imageType identifies the image format

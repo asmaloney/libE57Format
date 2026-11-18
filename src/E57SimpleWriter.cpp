@@ -399,12 +399,10 @@ namespace e57
                                      Image2DProjection imageProjection, int64_t startPos,
                                      void *pBuffer, int64_t byteCount )
    {
-      _validateImage2D( image2DHeader );
-
       auto *buffer = static_cast<uint8_t *>( pBuffer );
       const auto sizeInBytes = static_cast<size_t>( byteCount );
 
-      const int64_t imageIndex = impl_->NewImage2D( image2DHeader );
+      const int64_t imageIndex = NewImage2D( image2DHeader );
 
       const size_t written = impl_->WriteImage2DData( imageIndex, imageType, imageProjection,
                                                       buffer, startPos, sizeInBytes );
@@ -414,6 +412,8 @@ namespace e57
 
    int64_t Writer::NewImage2D( Image2D &image2DHeader )
    {
+      _validateImage2D( image2DHeader );
+
       return impl_->NewImage2D( image2DHeader );
    }
 

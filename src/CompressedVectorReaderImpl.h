@@ -40,8 +40,8 @@ namespace e57
                                   std::vector<SourceDestBuffer> &dbufs );
       ~CompressedVectorReaderImpl();
 
-      unsigned read();
-      unsigned read( std::vector<SourceDestBuffer> &dbufs );
+      size_t read();
+      size_t read( std::vector<SourceDestBuffer> &dbufs );
       void seek( uint64_t recordNumber );
       bool isOpen() const;
       std::shared_ptr<CompressedVectorNodeImpl> compressedVectorNode() const;

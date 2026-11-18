@@ -89,7 +89,7 @@ namespace e57
          return capacity_;
       }
 
-      unsigned nextIndex() const
+      size_t nextIndex() const
       {
          return nextIndex_;
       }
@@ -155,7 +155,7 @@ namespace e57
 
       /// Number of elements that have been set (dest buffer) or read (source buffer) since
       /// rewind().
-      unsigned nextIndex_ = 0;
+      size_t nextIndex_ = 0;
 
       /// Optional array of ustrings (used if memoryRepresentation_ == ::UString)
       StringList *ustrings_ = nullptr;

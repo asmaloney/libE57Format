@@ -27,10 +27,13 @@
  */
 
 #include <algorithm>
+#define _USE_MATH_DEFINES
+#include <cmath>
 #include <limits>
 
 #include "Common.h"
 #include "E57SimpleWriter.h"
+#include "StringFunctions.h"
 #include "WriterImpl.h"
 
 namespace
@@ -234,6 +237,57 @@ namespace e57
             {
                throw E57_EXCEPTION2( ErrorInvalidData3DValue, "angleScale cannot be 0" );
             }
+         }
+
+         // Check the sphericalBounds for ranges
+         if ( inData3D.sphericalBounds == SphericalBounds{} )
+         {
+            throw E57_EXCEPTION2( ErrorInvalidData3DValue,
+                                  "spherical points used, but sphericalBounds not defined" );
+         }
+
+         // check the range (E57 Standard table 27)
+         if ( inData3D.sphericalBounds.rangeMinimum < 0 )
+         {
+            throw E57_EXCEPTION2( ErrorValueOutOfBounds,
+                                  "spherical bounds rangeMinimum must be non-negative; value=" +
+                                     toString( inData3D.sphericalBounds.rangeMinimum ) );
+         }
+         if ( inData3D.sphericalBounds.rangeMaximum < inData3D.sphericalBounds.rangeMinimum )
+         {
+            throw E57_EXCEPTION2(
+               ErrorValueOutOfBounds,
+               "spherical bounds rangeMaximum must be >= rangeMinimum; rangeMinimum=" +
+                  toString( inData3D.sphericalBounds.rangeMinimum ) +
+                  " rangeMaximum=" + toString( ( inData3D.sphericalBounds.rangeMaximum ) ) );
+         }
+
+         // check elevation range (E57 Standard table 27)
+         if ( inData3D.sphericalBounds.elevationMinimum < -M_PI / 2.0 )
+         {
+            throw E57_EXCEPTION2( ErrorValueOutOfBounds,
+                                  "spherical bounds elevationMinimum must >= -π/2; value=" +
+                                     toString( inData3D.sphericalBounds.elevationMinimum ) );
+         }
+         if ( inData3D.sphericalBounds.elevationMaximum > M_PI / 2.0 )
+         {
+            throw E57_EXCEPTION2( ErrorValueOutOfBounds,
+                                  "spherical bounds elevationMaximum must <= π/2; value=" +
+                                     toString( inData3D.sphericalBounds.elevationMaximum ) );
+         }
+
+         // check azimuth start/end (E57 Standard table 27)
+         if ( inData3D.sphericalBounds.azimuthStart <= -M_PI )
+         {
+            throw E57_EXCEPTION2( ErrorValueOutOfBounds,
+                                  "spherical bounds azimuthStart must > -π; value=" +
+                                     toString( inData3D.sphericalBounds.azimuthStart ) );
+         }
+         if ( inData3D.sphericalBounds.azimuthEnd > M_PI )
+         {
+            throw E57_EXCEPTION2( ErrorValueOutOfBounds,
+                                  "spherical bounds azimuthEnd must <= π; value=" +
+                                     toString( inData3D.sphericalBounds.azimuthEnd ) );
          }
       }
    }

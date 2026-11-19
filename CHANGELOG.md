@@ -16,11 +16,15 @@ All notable changes to this project will be documented in this file. The format 
 
 ### Changed
 
-- {standards conformance} Now checks several image fields and will throw a new `ErrorInvalidImage2DValue` exception if any issues are found. See `_validateImage2D()` in _E57SimpleWriter.cpp_ for the checks. ([#377](https://github.com/asmaloney/libE57Format/pull/377))
+- {standards conformance} **E57SimpleWriter:** Check the ranges on spherical bounds and throw an `ErrorValueOutOfBounds` exception if values are invalid. (Standard: 5.5.2) ([#385](https://github.com/asmaloney/libE57Format/pull/385))
+
+- {standards conformance} **E57SimpleWriter:** Check if multiple non-visual image representations are active and throw an `ErrorInvalidImage2DValue` exception if we have more than one. (Standard: 8.4.11.2) ([#379](https://github.com/asmaloney/libE57Format/pull/379))
+
+- {standards conformance} **E57SimpleWriter:** Check several image fields and throw a new `ErrorInvalidImage2DValue` exception if any issues are found. See `_validateImage2D()` in _E57SimpleWriter.cpp_ for the checks. (Standard: Tables 21-25) ([#377](https://github.com/asmaloney/libE57Format/pull/377))
 
 ### Deprecated
 
-- **E57Simple API**: Replace the `pointRangeMinimum` and `pointRangeMaximum` fields in `PointStandardizedFieldsAvailable` with bounds. These two fields are now deprecated and will be removed in version 4.0. ([#373](https://github.com/asmaloney/libE57Format/pull/373))
+- **E57Simple API**: The `pointRangeMinimum` and `pointRangeMaximum` fields in `PointStandardizedFieldsAvailable` are now deprecated and will be removed in version 4.0. ([#373](https://github.com/asmaloney/libE57Format/pull/373))
 
   These were used to output min/max in the Data3D prototypes for the `cartesianX`, `cartesianY`, `cartesianZ`, and `sphericalRange` fields. This meant that the one value was used for all, which was not very precise.
 
@@ -28,7 +32,7 @@ All notable changes to this project will be documented in this file. The format 
 
   With these changes, setting these fields no longer has an effect. We still set them when we read files in case someone is depending on them, but this behaviour is deprecated.
 
-- **E57Simple API**: Replace the `angleMinimum` and `angleMaximum` fields in `PointStandardizedFieldsAvailable` with bounds. These two fields are now deprecated and will be removed in version 4.0. ([#374](https://github.com/asmaloney/libE57Format/pull/374))
+- **E57Simple API**: The `angleMinimum` and `angleMaximum` fields in `PointStandardizedFieldsAvailable` are now deprecated and will be removed in version 4.0. ([#374](https://github.com/asmaloney/libE57Format/pull/374))
 
   These were used to output min/max in the Data3D prototypes for the `sphericalAzimuth` and `sphericalElevation` fields. This meant that the one value was used for both, which was not very precise.
 
@@ -38,11 +42,13 @@ All notable changes to this project will be documented in this file. The format 
 
 ### Fixed
 
+- {standards conformance} **E57SimpleWriter:** Always write the Image2D `pose` if using pinhole, spherical, or cylindrical image representation. Required by the standard (8.4.11.2). ([#380](https://github.com/asmaloney/libE57Format/pull/380))
+
 - Fix `ErrorValueOutOfBounds` exception when using a ScaledInteger node with scale != 1.0 and a constant value. ([#372](https://github.com/asmaloney/libE57Format/pull/372))
 
 - **E57SimpleWriter**: Avoid `ErrorValueOutOfBounds` exceptions when using prototype nodes. ([#371](https://github.com/asmaloney/libE57Format/pull/371))
 
-- {standard conformance} **E57SimpleReader** should calculate and write the cartesian or spherical bounds. One of them is required by the standard (8.4.3.4 and 8.4.3.5). ([#361](https://github.com/asmaloney/libE57Format/pull/361))
+- {standard conformance} **E57SimpleWriter** should calculate and write the cartesian or spherical bounds. One of them is required by the standard (8.4.3.4 and 8.4.3.5). ([#361](https://github.com/asmaloney/libE57Format/pull/361))
 
 - Fix lambda capture warnings with C++20. ([#359](https://github.com/asmaloney/libE57Format/pull/359)) (Thanks M3mL34k!)
 

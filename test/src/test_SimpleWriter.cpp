@@ -1,6 +1,9 @@
 // libE57Format testing Copyright © 2022 Andy Maloney <asmaloney@gmail.com>
 // SPDX-License-Identifier: BSL-1.0
 
+#define _USE_MATH_DEFINES
+#include <cmath>
+
 #include <array>
 
 #include "gtest/gtest.h"
@@ -202,20 +205,20 @@ TEST( SimpleWriter, InvalidData3DValueCartesian )
    delete writer;
 }
 
-TEST( SimpleWriter, InvalidData3DValueSpherical )
+TEST( SimpleWriter, SphericalInvalidData3DValue )
 {
    e57::WriterOptions options;
-   options.guid = "Invalid Data3D Value Spherical GUID";
+   options.guid = "Spherical Invalid Data3D Value GUID";
 
    e57::Writer *writer = nullptr;
 
    E57_ASSERT_NO_THROW(
-      writer = new e57::Writer( "./write-tests/InvalidData3DValueSpherical.e57", options ) );
+      writer = new e57::Writer( "./write-tests/SphericalInvalidData3DValue.e57", options ) );
 
    constexpr uint16_t cNumPoints = 1;
 
    e57::Data3D header;
-   header.guid = "Invalid Data3D Value Spherical Header GUID";
+   header.guid = "Spherical Invalid Data3D Value Header GUID";
    header.pointCount = cNumPoints;
    header.pointFields.sphericalRangeField = true;
    header.pointFields.sphericalAzimuthField = true;
@@ -226,6 +229,54 @@ TEST( SimpleWriter, InvalidData3DValueSpherical )
 
    e57::Data3DPointsDouble pointsData( header );
 
+   E57_ASSERT_THROW( writer->WriteData3DData( header, pointsData ) );
+
+   delete writer;
+}
+
+TEST( SimpleWriter, SphericalOutOfRange )
+{
+   e57::WriterOptions options;
+   options.guid = "Spherical Out Of Range GUID";
+
+   e57::Writer *writer = nullptr;
+
+   E57_ASSERT_NO_THROW( writer =
+                           new e57::Writer( "./write-tests/SphericalOutOfRange.e57", options ) );
+
+   constexpr uint16_t cNumPoints = 1;
+
+   e57::Data3D header;
+   header.guid = "Spherical Out Of Range Header GUID";
+   header.pointCount = cNumPoints;
+   header.pointFields.sphericalRangeField = true;
+   header.pointFields.sphericalAzimuthField = true;
+   header.pointFields.sphericalElevationField = true;
+
+   header.sphericalBounds.rangeMinimum = 1.0;
+   header.sphericalBounds.rangeMaximum = 1.0;
+   header.sphericalBounds.elevationMinimum = 1.0;
+   header.sphericalBounds.elevationMaximum = 1.0;
+   header.sphericalBounds.azimuthStart = 1.0;
+   header.sphericalBounds.azimuthEnd = 1.0;
+
+   e57::Data3DPointsDouble pointsData( header );
+   pointsData.sphericalRange[0] = 0.0;
+   pointsData.sphericalElevation[0] = 0.0;
+   pointsData.sphericalAzimuth[0] = 0.0;
+
+   // Throw on range max < min
+   header.sphericalBounds.rangeMaximum = 0.5;
+   E57_ASSERT_THROW( writer->WriteData3DData( header, pointsData ) );
+
+   // Throw on elevation out of range
+   header.sphericalBounds.rangeMaximum = 1.0;
+   header.sphericalBounds.elevationMinimum = -2 * M_PI;
+   E57_ASSERT_THROW( writer->WriteData3DData( header, pointsData ) );
+
+   // Throw on azimuth out of range
+   header.sphericalBounds.elevationMinimum = 1.0;
+   header.sphericalBounds.azimuthEnd = 2 * M_PI;
    E57_ASSERT_THROW( writer->WriteData3DData( header, pointsData ) );
 
    delete writer;
@@ -592,8 +643,8 @@ TEST( SimpleWriter, MinMaxIssuesSphericalDouble )
    {
       auto floati = static_cast<float>( i );
       pointsData.sphericalRange[i] = floati;
-      pointsData.sphericalAzimuth[i] = floati;
-      pointsData.sphericalElevation[i] = floati;
+      pointsData.sphericalAzimuth[i] = -0.5 + floati / cNumPoints;
+      pointsData.sphericalElevation[i] = -0.5 + floati / cNumPoints;
       pointsData.timeStamp[i] = floati;
    }
 

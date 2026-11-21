@@ -16,6 +16,14 @@ All notable changes to this project will be documented in this file. The format 
 
 ### Changed
 
+- {standards conformance} **E57SimpleData:** For each of these groups of fields, if any one of them is defined, the whole group must be defined. ([#386](https://github.com/asmaloney/libE57Format/pull/386))
+  - cartesianXField / cartesianYField / cartesianZField (Standard: 8.4.4.2)
+  - sphericalRangeField / sphericalAzimuthField / sphericalElevationField (Standard: 8.4.4.2)
+  - colorRedField / colorGreenField / colorBlueField (Standard: 8.4.4.6)
+  - normalXField / normalYField / normalZField ([normals extension definition](http://www.libe57.org/E57_EXT_surface_normals.txt))
+
+  What this means in practice, is that if you have code which only sets `cartesianXField` to `true` for example, the SimpleAPI will now allocate space for all three fields (`cartesianXField`, `cartesianYField`, `cartesianZField`) and process the file as if they are all defined.
+
 - {standards conformance} **E57SimpleWriter:** Check the ranges on spherical bounds and throw an `ErrorValueOutOfBounds` exception if values are invalid. (Standard: 5.5.2) ([#385](https://github.com/asmaloney/libE57Format/pull/385))
 
 - {standards conformance} **E57SimpleWriter:** Check if multiple non-visual image representations are active and throw an `ErrorInvalidImage2DValue` exception if we have more than one. (Standard: 8.4.11.2) ([#379](https://github.com/asmaloney/libE57Format/pull/379))
@@ -44,11 +52,11 @@ All notable changes to this project will be documented in this file. The format 
 
 - {standards conformance} **E57SimpleWriter:** Always write the Image2D `pose` if using pinhole, spherical, or cylindrical image representation. Required by the standard (8.4.11.2). ([#380](https://github.com/asmaloney/libE57Format/pull/380))
 
-- Fix `ErrorValueOutOfBounds` exception when using a ScaledInteger node with scale != 1.0 and a constant value. ([#372](https://github.com/asmaloney/libE57Format/pull/372))
-
 - **E57SimpleWriter**: Avoid `ErrorValueOutOfBounds` exceptions when using prototype nodes. ([#371](https://github.com/asmaloney/libE57Format/pull/371))
 
 - {standard conformance} **E57SimpleWriter** should calculate and write the cartesian or spherical bounds. One of them is required by the standard (8.4.3.4 and 8.4.3.5). ([#361](https://github.com/asmaloney/libE57Format/pull/361))
+
+- Fix `ErrorValueOutOfBounds` exception when using a ScaledInteger node with scale != 1.0 and a constant value. ([#372](https://github.com/asmaloney/libE57Format/pull/372))
 
 - Fix lambda capture warnings with C++20. ([#359](https://github.com/asmaloney/libE57Format/pull/359)) (Thanks M3mL34k!)
 

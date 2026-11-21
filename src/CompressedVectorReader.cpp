@@ -180,7 +180,7 @@ destroyed.
 CompressedVectorNode::reader, SourceDestBuffer,
 CompressedVectorReader::read(std::vector<SourceDestBuffer>&)
 */
-unsigned CompressedVectorReader::read()
+size_t CompressedVectorReader::read()
 {
    return impl_->read();
 }
@@ -239,7 +239,7 @@ detect that a memory buffer been destroyed.
 
 @see CompressedVectorReader::read(), CompressedVectorNode::reader, SourceDestBuffer
 */
-unsigned CompressedVectorReader::read( std::vector<SourceDestBuffer> &dbufs )
+size_t CompressedVectorReader::read( std::vector<SourceDestBuffer> &dbufs )
 {
    return impl_->read( dbufs );
 }

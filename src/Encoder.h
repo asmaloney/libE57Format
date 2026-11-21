@@ -41,7 +41,7 @@ namespace e57
       virtual ~Encoder() = default;
 
       virtual uint64_t processRecords( size_t recordCount ) = 0;
-      virtual unsigned sourceBufferNextIndex() = 0;
+      virtual size_t sourceBufferNextIndex() = 0;
       virtual uint64_t currentRecordIndex() = 0;
       virtual float bitsPerRecord() = 0;
       virtual bool registerFlushToOutput() = 0;
@@ -73,7 +73,7 @@ namespace e57
    {
    public:
       uint64_t processRecords( size_t recordCount ) override = 0;
-      unsigned sourceBufferNextIndex() override;
+      size_t sourceBufferNextIndex() override;
       uint64_t currentRecordIndex() override;
       float bitsPerRecord() override = 0;
       bool registerFlushToOutput() override = 0;
@@ -180,7 +180,7 @@ namespace e57
       ConstantIntegerEncoder( unsigned bytestreamNumber, SourceDestBuffer &sbuf, int64_t minimum,
                               double scale, double offset );
       uint64_t processRecords( size_t recordCount ) override;
-      unsigned sourceBufferNextIndex() override;
+      size_t sourceBufferNextIndex() override;
       uint64_t currentRecordIndex() override;
       float bitsPerRecord() override;
       bool registerFlushToOutput() override;

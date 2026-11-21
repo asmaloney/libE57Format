@@ -80,12 +80,8 @@ namespace
    inline void setUsingColouredCartesianPoints( e57::Data3D &ioHeader )
    {
       ioHeader.pointFields.cartesianXField = true;
-      ioHeader.pointFields.cartesianYField = true;
-      ioHeader.pointFields.cartesianZField = true;
 
       ioHeader.pointFields.colorRedField = true;
-      ioHeader.pointFields.colorGreenField = true;
-      ioHeader.pointFields.colorBlueField = true;
 
       ioHeader.colorLimits.colorRedMaximum = 255;
       ioHeader.colorLimits.colorGreenMaximum = 255;
@@ -166,8 +162,6 @@ TEST( SimpleWriter, ZeroPoints )
 
    // For a valid file, we need to specify cartesian or spherical.
    header.pointFields.cartesianXField = true;
-   header.pointFields.cartesianYField = true;
-   header.pointFields.cartesianZField = true;
 
    e57::Data3DPointsDouble pointsData( header );
 
@@ -192,8 +186,6 @@ TEST( SimpleWriter, InvalidData3DValueCartesian )
    header.guid = "Invalid Data3D Value Cartesian Header GUID";
    header.pointCount = cNumPoints;
    header.pointFields.cartesianXField = true;
-   header.pointFields.cartesianYField = true;
-   header.pointFields.cartesianZField = true;
    header.pointFields.pointRangeNodeType = e57::NumericalNodeType::ScaledInteger;
 
    // since we are requesting a scaled int, leaving pointRangeScale as 0.0 should throw an exception
@@ -422,8 +414,6 @@ TEST( SimpleWriter, MultipleScans )
    e57::Data3D header;
    header.pointCount = cNumPoints;
    header.pointFields.cartesianXField = true;
-   header.pointFields.cartesianYField = true;
-   header.pointFields.cartesianZField = true;
 
    e57::Data3DPointsFloat pointsData( header );
 
@@ -487,8 +477,6 @@ TEST( SimpleWriter, CartesianPoints )
    header.guid = "Cartesian Points Header GUID";
    header.pointCount = cNumPoints;
    header.pointFields.cartesianXField = true;
-   header.pointFields.cartesianYField = true;
-   header.pointFields.cartesianZField = true;
 
    e57::Data3DPointsFloat pointsData( header );
 
@@ -567,8 +555,6 @@ TEST( SimpleWriter, MinMaxIssuesCartesianFloat )
    header.guid = "Cartesian Points Min/Max Float Header GUID";
    header.pointCount = cNumPoints;
    header.pointFields.cartesianXField = true;
-   header.pointFields.cartesianYField = true;
-   header.pointFields.cartesianZField = true;
 
    // Using any of these (as ScaledInteger) without setting their min/max explicitly should not fail
    header.pointFields.pointRangeNodeType = e57::NumericalNodeType::ScaledInteger;
@@ -683,8 +669,6 @@ TEST( SimpleWriter, MinMaxOverwriteUserDataFloat )
    header.guid = "Min/Max Overwrite User Data Float Header GUID";
    header.pointCount = cNumPoints;
    header.pointFields.cartesianXField = true;
-   header.pointFields.cartesianYField = true;
-   header.pointFields.cartesianZField = true;
 
    // Set a min/max on the time field
    header.pointFields.timeStampField = true;
@@ -736,8 +720,6 @@ TEST( SimpleWriter, MinMaxIssuesIntegerNode )
    header.guid = "MinMax Issues Integer Header GUID";
    header.pointCount = cNumPoints;
    header.pointFields.cartesianXField = true;
-   header.pointFields.cartesianYField = true;
-   header.pointFields.cartesianZField = true;
 
    header.pointFields.intensityField = true;
    header.pointFields.intensityNodeType = e57::NumericalNodeType::Integer;
@@ -789,8 +771,6 @@ TEST( SimpleWriter, MinMaxIssuesScaledIntegerNode )
    header.guid = "MinMax Issues Scaled Integer Header GUID";
    header.pointCount = cNumPoints;
    header.pointFields.cartesianXField = true;
-   header.pointFields.cartesianYField = true;
-   header.pointFields.cartesianZField = true;
 
    header.pointFields.timeStampField = true;
    header.pointFields.timeNodeType = e57::NumericalNodeType::ScaledInteger;
@@ -839,8 +819,6 @@ TEST( SimpleWriter, MinMaxIssuesFloatNode )
    header.guid = "MinMax Issues Float Header GUID";
    header.pointCount = cNumPoints;
    header.pointFields.cartesianXField = true;
-   header.pointFields.cartesianYField = true;
-   header.pointFields.cartesianZField = true;
 
    header.pointFields.timeStampField = true;
 
@@ -888,8 +866,6 @@ TEST( SimpleWriter, ConstantIntegerNodeException )
    header.guid = "Constant Integer Node Exception Header GUID";
    header.pointCount = cNumPoints;
    header.pointFields.cartesianXField = true;
-   header.pointFields.cartesianYField = true;
-   header.pointFields.cartesianZField = true;
 
    header.pointFields.timeStampField = true;
    header.pointFields.timeNodeType = e57::NumericalNodeType::ScaledInteger;

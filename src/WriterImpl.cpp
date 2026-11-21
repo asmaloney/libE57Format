@@ -1107,73 +1107,73 @@ namespace e57
             "invalid pointRangeNodeType; should have been checked before getting here" );
       };
 
-      if ( data3DHeader.pointFields.cartesianXField )
+      // If any are defined, they must all be defined
+      const bool hasCartesian = data3DHeader.pointFields.cartesianXField ||
+                                data3DHeader.pointFields.cartesianYField ||
+                                data3DHeader.pointFields.cartesianZField;
+
+      if ( hasCartesian )
       {
          proto.set( "cartesianX", getPointProto( data3DHeader.cartesianBounds.xMinimum,
                                                  data3DHeader.cartesianBounds.xMaximum ) );
-      }
 
-      if ( data3DHeader.pointFields.cartesianYField )
-      {
          proto.set( "cartesianY", getPointProto( data3DHeader.cartesianBounds.yMinimum,
                                                  data3DHeader.cartesianBounds.yMaximum ) );
-      }
 
-      if ( data3DHeader.pointFields.cartesianZField )
-      {
          proto.set( "cartesianZ", getPointProto( data3DHeader.cartesianBounds.zMinimum,
                                                  data3DHeader.cartesianBounds.zMaximum ) );
       }
 
-      if ( data3DHeader.pointFields.sphericalRangeField )
+      // If any are defined, they must all be defined
+      const bool hasSpherical = data3DHeader.pointFields.sphericalRangeField ||
+                                data3DHeader.pointFields.sphericalAzimuthField ||
+                                data3DHeader.pointFields.sphericalElevationField;
+
+      if ( hasSpherical )
       {
+         const auto getAngleProto = [this, &data3DHeader]( double angleMin,
+                                                           double angleMax ) -> Node {
+            switch ( data3DHeader.pointFields.angleNodeType )
+            {
+               case NumericalNodeType::ScaledInteger:
+               {
+                  const double angleOffset = 0.0;
+                  const double angleScale = data3DHeader.pointFields.angleScale;
+
+                  const auto angleMinimum =
+                     static_cast<int64_t>( std::floor( angleMin / angleScale + .5 ) );
+                  const auto angleMaximum =
+                     static_cast<int64_t>( std::floor( angleMax / angleScale + .5 ) );
+
+                  return ScaledIntegerNode( imf_, angleMinimum, angleMaximum, angleScale,
+                                            angleOffset );
+               }
+
+               case NumericalNodeType::Float:
+               {
+                  return FloatNode( imf_, PrecisionSingle, angleMin, angleMax );
+               }
+
+               case NumericalNodeType::Double:
+               {
+                  return FloatNode( imf_, PrecisionDouble, angleMin, angleMax );
+               }
+
+               default:
+                  break;
+            }
+
+            throw E57_EXCEPTION2(
+               ErrorInternal,
+               "invalid angleNodeType; should have been checked before getting here" );
+         };
+
          proto.set( "sphericalRange", getPointProto( data3DHeader.sphericalBounds.rangeMinimum,
                                                      data3DHeader.sphericalBounds.rangeMaximum ) );
-      }
 
-      const auto getAngleProto = [this, &data3DHeader]( double angleMin, double angleMax ) -> Node {
-         switch ( data3DHeader.pointFields.angleNodeType )
-         {
-            case NumericalNodeType::ScaledInteger:
-            {
-               const double angleOffset = 0.0;
-               const double angleScale = data3DHeader.pointFields.angleScale;
-
-               const auto angleMinimum =
-                  static_cast<int64_t>( std::floor( angleMin / angleScale + .5 ) );
-               const auto angleMaximum =
-                  static_cast<int64_t>( std::floor( angleMax / angleScale + .5 ) );
-
-               return ScaledIntegerNode( imf_, angleMinimum, angleMaximum, angleScale,
-                                         angleOffset );
-            }
-
-            case NumericalNodeType::Float:
-            {
-               return FloatNode( imf_, PrecisionSingle, angleMin, angleMax );
-            }
-
-            case NumericalNodeType::Double:
-            {
-               return FloatNode( imf_, PrecisionDouble, angleMin, angleMax );
-            }
-
-            default:
-               break;
-         }
-
-         throw E57_EXCEPTION2(
-            ErrorInternal, "invalid angleNodeType; should have been checked before getting here" );
-      };
-
-      if ( data3DHeader.pointFields.sphericalAzimuthField )
-      {
          proto.set( "sphericalAzimuth", getAngleProto( data3DHeader.sphericalBounds.azimuthStart,
                                                        data3DHeader.sphericalBounds.azimuthEnd ) );
-      }
 
-      if ( data3DHeader.pointFields.sphericalElevationField )
-      {
          proto.set( "sphericalElevation",
                     getAngleProto( data3DHeader.sphericalBounds.elevationMinimum,
                                    data3DHeader.sphericalBounds.elevationMaximum ) );
@@ -1228,23 +1228,24 @@ namespace e57
          }
       }
 
-      if ( data3DHeader.pointFields.colorRedField )
+      // If any are defined, they must all be defined
+      const bool hasColour = data3DHeader.pointFields.colorRedField ||
+                             data3DHeader.pointFields.colorGreenField ||
+                             data3DHeader.pointFields.colorBlueField;
+
+      if ( hasColour )
       {
          proto.set( "colorRed",
                     IntegerNode(
                        true, imf_, static_cast<int64_t>( data3DHeader.colorLimits.colorRedMinimum ),
                        static_cast<int64_t>( data3DHeader.colorLimits.colorRedMaximum ) ) );
-      }
-      if ( data3DHeader.pointFields.colorGreenField )
-      {
+
          proto.set(
             "colorGreen",
             IntegerNode( true, imf_,
                          static_cast<int64_t>( data3DHeader.colorLimits.colorGreenMinimum ),
                          static_cast<int64_t>( data3DHeader.colorLimits.colorGreenMaximum ) ) );
-      }
-      if ( data3DHeader.pointFields.colorBlueField )
-      {
+
          proto.set(
             "colorBlue",
             IntegerNode( true, imf_,
@@ -1342,27 +1343,22 @@ namespace e57
 
       // E57_EXT_surface_normals
       // See: http://www.libe57.org/E57_EXT_surface_normals.txt
-      if ( data3DHeader.pointFields.normalXField || data3DHeader.pointFields.normalYField ||
-           data3DHeader.pointFields.normalZField )
+      // If any are defined, they must all be defined
+      const bool hasEXTNormals = data3DHeader.pointFields.normalXField ||
+                                 data3DHeader.pointFields.normalYField ||
+                                 data3DHeader.pointFields.normalZField;
+
+      if ( hasEXTNormals )
       {
          // make sure we declare the extension before using the fields with prefix
          if ( !imf_.extensionsLookupPrefix( "nor" ) )
          {
             imf_.extensionsAdd( "nor", "http://www.libe57.org/E57_EXT_surface_normals.txt" );
          }
-      }
 
-      // currently we support writing normals only as float32
-      if ( data3DHeader.pointFields.normalXField )
-      {
+         // currently we only support writing normals as float32
          proto.set( "nor:normalX", FloatNode( imf_, PrecisionSingle, -1.0, 1.0 ) );
-      }
-      if ( data3DHeader.pointFields.normalYField )
-      {
          proto.set( "nor:normalY", FloatNode( imf_, PrecisionSingle, -1.0, 1.0 ) );
-      }
-      if ( data3DHeader.pointFields.normalZField )
-      {
          proto.set( "nor:normalZ", FloatNode( imf_, PrecisionSingle, -1.0, 1.0 ) );
       }
 

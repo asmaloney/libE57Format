@@ -70,18 +70,15 @@ namespace e57
 
       const auto cPointCount = data3D.pointCount;
 
-      if ( data3D.pointFields.cartesianXField )
+      // If any are defined, they must all be defined
+      const bool hasCartesian = data3D.pointFields.cartesianXField ||
+                                data3D.pointFields.cartesianYField ||
+                                data3D.pointFields.cartesianZField;
+
+      if ( hasCartesian )
       {
          cartesianX = new COORDTYPE[cPointCount];
-      }
-
-      if ( data3D.pointFields.cartesianYField )
-      {
          cartesianY = new COORDTYPE[cPointCount];
-      }
-
-      if ( data3D.pointFields.cartesianZField )
-      {
          cartesianZ = new COORDTYPE[cPointCount];
       }
 
@@ -100,18 +97,15 @@ namespace e57
          isIntensityInvalid = new int8_t[cPointCount];
       }
 
-      if ( data3D.pointFields.colorRedField )
+      // If any are defined, they must all be defined
+      const bool hasColour = data3D.pointFields.colorRedField ||
+                             data3D.pointFields.colorGreenField ||
+                             data3D.pointFields.colorBlueField;
+
+      if ( hasColour )
       {
          colorRed = new uint16_t[cPointCount];
-      }
-
-      if ( data3D.pointFields.colorGreenField )
-      {
          colorGreen = new uint16_t[cPointCount];
-      }
-
-      if ( data3D.pointFields.colorBlueField )
-      {
          colorBlue = new uint16_t[cPointCount];
       }
 
@@ -120,18 +114,15 @@ namespace e57
          isColorInvalid = new int8_t[cPointCount];
       }
 
-      if ( data3D.pointFields.sphericalRangeField )
+      // If any are defined, they must all be defined
+      const bool hasSpherical = data3D.pointFields.sphericalRangeField ||
+                                data3D.pointFields.sphericalAzimuthField ||
+                                data3D.pointFields.sphericalElevationField;
+
+      if ( hasSpherical )
       {
          sphericalRange = new COORDTYPE[cPointCount];
-      }
-
-      if ( data3D.pointFields.sphericalAzimuthField )
-      {
          sphericalAzimuth = new COORDTYPE[cPointCount];
-      }
-
-      if ( data3D.pointFields.sphericalElevationField )
-      {
          sphericalElevation = new COORDTYPE[cPointCount];
       }
 
@@ -170,18 +161,14 @@ namespace e57
          isTimeStampInvalid = new int8_t[cPointCount];
       }
 
-      if ( data3D.pointFields.normalXField )
+      // If any are defined, they must all be defined
+      const bool hasEXTNormals = data3D.pointFields.normalXField ||
+                                 data3D.pointFields.normalYField || data3D.pointFields.normalZField;
+
+      if ( hasEXTNormals )
       {
          normalX = new float[cPointCount];
-      }
-
-      if ( data3D.pointFields.normalYField )
-      {
          normalY = new float[cPointCount];
-      }
-
-      if ( data3D.pointFields.normalZField )
-      {
          normalZ = new float[cPointCount];
       }
    }

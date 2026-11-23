@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: BSL-1.0
 # Copyright 2022 Andy Maloney <asmaloney@gmail.com>
 
-target_sources( ${PROJECT_NAME}
+target_sources(${PROJECT_NAME}
     PRIVATE
         main.cpp
         Helpers.cpp
@@ -17,9 +17,9 @@ target_sources( ${PROJECT_NAME}
 
 # Include internal tests if not building shared lib.
 # The functions are not exported.
-if ( NOT E57_BUILD_SHARED )
-    target_sources( ${PROJECT_NAME}
+if (NOT E57_BUILD_SHARED)
+    target_sources(${PROJECT_NAME}
         PRIVATE
-           test_StringFunctions.cpp
+            test_StringFunctions.cpp
     )
-endif()
+endif ()

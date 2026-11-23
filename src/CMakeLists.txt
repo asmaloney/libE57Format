@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: BSL-1.0
 # Copyright 2020 Andy Maloney <asmaloney@gmail.com>
 
-target_sources( E57Format
+target_sources(E57Format
     PRIVATE
         ASTMVersion.h
         BlobNode.cpp
@@ -72,7 +72,7 @@ target_sources( E57Format
         E57XmlParser.h
 )
 
-target_include_directories( E57Format
-	PRIVATE
-	    ${CMAKE_CURRENT_SOURCE_DIR}
+target_include_directories(E57Format
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}
 )

@@ -33,49 +33,49 @@
 #include "Common.h"
 #include "E57Version.h"
 
-namespace e57
+namespace
 {
    /*!
    @brief This function writes the projection image
 
-   @param image 1 of 3 projects or the visual
-   @param imageType identifies the image format desired.
-   @param pBuffer pointer the buffer
-   @param start position in the block to start reading
-   @param count size of desired chunk or buffer size
-   */
-   static size_t _writeImage2DNode( const StructureNode &image, Image2DType imageType,
-                                    uint8_t *pBuffer, int64_t start, size_t count )
+    @param image 1 of 3 projects or the visual
+    @param imageType identifies the image format desired.
+    @param pBuffer pointer the buffer
+    @param start position in the block to start reading
+    @param count size of desired chunk or buffer size
+    */
+   size_t _writeImage2DNode( const e57::StructureNode &image, e57::Image2DType imageType,
+                             uint8_t *pBuffer, int64_t start, size_t count )
    {
       size_t transferred = 0;
 
       switch ( imageType )
       {
-         case ImageNone:
+         case e57::ImageNone:
             return 0;
 
-         case ImageJPEG:
+         case e57::ImageJPEG:
             if ( image.isDefined( "jpegImage" ) )
             {
-               BlobNode jpegImage( image.get( "jpegImage" ) );
+               e57::BlobNode jpegImage( image.get( "jpegImage" ) );
                jpegImage.write( pBuffer, start, count );
                transferred = count;
             }
             break;
 
-         case ImagePNG:
+         case e57::ImagePNG:
             if ( image.isDefined( "pngImage" ) )
             {
-               BlobNode pngImage( image.get( "pngImage" ) );
+               e57::BlobNode pngImage( image.get( "pngImage" ) );
                pngImage.write( pBuffer, start, count );
                transferred = count;
             }
             break;
 
-         case ImageMaskPNG:
+         case e57::ImageMaskPNG:
             if ( image.isDefined( "imageMask" ) )
             {
-               BlobNode imageMask( image.get( "imageMask" ) );
+               e57::BlobNode imageMask( image.get( "imageMask" ) );
                imageMask.write( pBuffer, start, count );
                transferred = count;
             }
@@ -84,7 +84,10 @@ namespace e57
 
       return transferred;
    }
+}
 
+namespace e57
+{
    WriterImpl::WriterImpl( const ustring &filePath, const WriterOptions &options ) :
       imf_( filePath, "w" ), root_( imf_.root() ), data3D_( imf_, true ), images2D_( imf_, true )
    {

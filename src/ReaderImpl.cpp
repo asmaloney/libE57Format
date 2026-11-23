@@ -33,6 +33,75 @@
 #include "Common.h"
 #include "StringFunctions.h"
 
+namespace
+{
+   /*!
+   @brief This function reads one of the image blobs
+
+    @param [in] image 1 of 3 projects or the visual
+    @param [out] imageType identifies the image format desired.
+    @param [out] imageWidth The image width (in pixels).
+    @param [out] imageHeight The image height (in pixels).
+    @param [out] imageSize This is the total number of bytes for the image blob.
+    @param [out] imageMaskType This is E57_PNG_IMAGE_MASK if "imageMask" is defined in the
+   projection
+
+   @return Returns true if successful
+   */
+   bool _getImage2DNodeSizes( const e57::StructureNode &image, e57::Image2DType &imageType,
+                              int64_t &imageWidth, int64_t &imageHeight, int64_t &imageSize,
+                              e57::Image2DType &imageMaskType )
+   {
+      imageWidth = 0;
+      imageHeight = 0;
+      imageSize = 0;
+      imageType = e57::ImageNone;
+      imageMaskType = e57::ImageNone;
+
+      if ( image.isDefined( "imageWidth" ) )
+      {
+         imageWidth = e57::IntegerNode( image.get( "imageWidth" ) ).value();
+      }
+      else
+      {
+         return false;
+      }
+
+      if ( image.isDefined( "imageHeight" ) )
+      {
+         imageHeight = e57::IntegerNode( image.get( "imageHeight" ) ).value();
+      }
+      else
+      {
+         return false;
+      }
+
+      if ( image.isDefined( "jpegImage" ) )
+      {
+         imageSize = e57::BlobNode( image.get( "jpegImage" ) ).byteCount();
+         imageType = e57::ImageJPEG;
+      }
+      else if ( image.isDefined( "pngImage" ) )
+      {
+         imageSize = e57::BlobNode( image.get( "pngImage" ) ).byteCount();
+         imageType = e57::ImagePNG;
+      }
+
+      if ( image.isDefined( "imageMask" ) )
+      {
+         if ( imageType == e57::ImageNone )
+         {
+            imageSize = e57::BlobNode( image.get( "imageMask" ) ).byteCount();
+            imageType = e57::ImageMaskPNG;
+         }
+
+         imageMaskType = e57::ImageMaskPNG;
+      }
+
+      return true;
+   }
+}
+
 namespace e57
 {
    /*!
@@ -85,71 +154,6 @@ namespace e57
       }
 
       return transferred;
-   }
-
-   /*!
-   @brief This function reads one of the image blobs
-
-   @param [in] image 1 of 3 projects or the visual
-   @param [out] imageType identifies the image format desired.
-   @param [out] imageWidth The image width (in pixels).
-   @param [out] imageHeight The image height (in pixels).
-   @param [out] imageSize This is the total number of bytes for the image blob.
-   @param [out] imageMaskType This is E57_PNG_IMAGE_MASK if "imageMask" is defined in the projection
-
-   @return Returns true if successful
-   */
-   static bool _getImage2DNodeSizes( const StructureNode &image, Image2DType &imageType,
-                                     int64_t &imageWidth, int64_t &imageHeight, int64_t &imageSize,
-                                     Image2DType &imageMaskType )
-   {
-      imageWidth = 0;
-      imageHeight = 0;
-      imageSize = 0;
-      imageType = ImageNone;
-      imageMaskType = ImageNone;
-
-      if ( image.isDefined( "imageWidth" ) )
-      {
-         imageWidth = IntegerNode( image.get( "imageWidth" ) ).value();
-      }
-      else
-      {
-         return false;
-      }
-
-      if ( image.isDefined( "imageHeight" ) )
-      {
-         imageHeight = IntegerNode( image.get( "imageHeight" ) ).value();
-      }
-      else
-      {
-         return false;
-      }
-
-      if ( image.isDefined( "jpegImage" ) )
-      {
-         imageSize = BlobNode( image.get( "jpegImage" ) ).byteCount();
-         imageType = ImageJPEG;
-      }
-      else if ( image.isDefined( "pngImage" ) )
-      {
-         imageSize = BlobNode( image.get( "pngImage" ) ).byteCount();
-         imageType = ImagePNG;
-      }
-
-      if ( image.isDefined( "imageMask" ) )
-      {
-         if ( imageType == ImageNone )
-         {
-            imageSize = BlobNode( image.get( "imageMask" ) ).byteCount();
-            imageType = ImageMaskPNG;
-         }
-
-         imageMaskType = ImageMaskPNG;
-      }
-
-      return true;
    }
 
    /// Possibly get min/max from the colour node itself instead of the colorLimits.

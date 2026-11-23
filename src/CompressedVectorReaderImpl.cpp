@@ -306,18 +306,16 @@ namespace e57
       unsigned earliestChannel = 0;
 #endif
 
-      for ( unsigned i = 0; i < channels_.size(); i++ )
+      for ( const auto &channel : channels_ )
       {
-         const DecodeChannel *chan = &channels_[i];
-
          // Test if channel needs more input.
          // Important to call inputProcess just before this, so these tests work.
-         if ( !chan->isOutputBlocked() && !chan->inputFinished )
+         if ( !channel.isOutputBlocked() && !channel.inputFinished )
          {
             // Check if earliest so far
-            if ( chan->currentPacketLogicalOffset < earliestPacketLogicalOffset )
+            if ( channel.currentPacketLogicalOffset < earliestPacketLogicalOffset )
             {
-               earliestPacketLogicalOffset = chan->currentPacketLogicalOffset;
+               earliestPacketLogicalOffset = channel.currentPacketLogicalOffset;
 #ifdef E57_VERBOSE
                earliestChannel = i;
 #endif

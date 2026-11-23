@@ -226,8 +226,7 @@ size_t BitpackDecoder::inputProcess( const char *source, const size_t availableB
    size_t bitsEaten = 0;
    do
    {
-      size_t byteCount =
-         std::min( bytesUnsaved, inBuffer_.size() - static_cast<size_t>( inBufferEndByte_ ) );
+      size_t byteCount = std::min( bytesUnsaved, inBuffer_.size() - inBufferEndByte_ );
 
       // Copy input bytes from caller, if any
       if ( ( byteCount > 0 ) && ( source != nullptr ) )

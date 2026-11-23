@@ -630,7 +630,7 @@ namespace e57
       auto packetLength = static_cast<unsigned int>( sizeof( DataPacketHeader ) );
 
       // packetLength must be multiple of 4, add zero padding
-      auto data = reinterpret_cast<char *>( &packet[sizeof( DataPacketHeader )] );
+      auto data = &packet[sizeof( DataPacketHeader )];
       while ( packetLength % 4 )
       {
          *data++ = 0;

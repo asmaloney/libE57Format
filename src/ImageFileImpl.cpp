@@ -709,7 +709,7 @@ namespace e57
       // If first char is ASCII (< 128), check for legality
       // Don't test any part of a multi-byte code point sequence (c >= 128).
       // Don't allow ':' as first char.
-      if ( c < 128 && !( ( 'a' <= c && c <= 'z' ) || ( 'A' <= c && c <= 'Z' ) || c == '_' ) )
+      if ( c < 128 && ( c < 'a' || c > 'z' ) && ( c < 'A' || c > 'Z' ) && c != '_' )
       {
          throw E57_EXCEPTION2( ErrorPathNameMalformed, "elementName=" + elementName );
       }
@@ -720,8 +720,8 @@ namespace e57
       {
          c = elementName[i];
 
-         if ( c < 128 && !( ( 'a' <= c && c <= 'z' ) || ( 'A' <= c && c <= 'Z' ) || c == '_' ||
-                            c == ':' || ( '0' <= c && c <= '9' ) || c == '-' || c == '.' ) )
+         if ( c < 128 && ( c < 'a' || c > 'z' ) && ( c < 'A' || c > 'Z' ) && c != '_' && c != ':' &&
+              ( c < '0' || c > '9' ) && c != '-' && c != '.' )
          {
             throw E57_EXCEPTION2( ErrorPathNameMalformed, "elementName=" + elementName );
          }

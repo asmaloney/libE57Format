@@ -757,13 +757,13 @@ uint64_t BitpackIntegerEncoder<RegisterT>::processRecords( size_t recordCount )
 #endif
 #ifdef VALIDATE_BASIC
       // Double check that no bits outside of the mask are set
-      if ( uValue & ~static_cast<uint64_t>( sourceBitMask_ ) )
+      if ( uValue & ~sourceBitMask_ )
       {
          throw E57_EXCEPTION2( ErrorInternal, "uValue=" + toString( uValue ) );
       }
 #endif
       // Mask off upper bits (just in case)
-      uValue &= static_cast<uint64_t>( sourceBitMask_ );
+      uValue &= sourceBitMask_;
 
       // See if uValue bits will fit in register
       unsigned newRegisterBitsUsed = registerBitsUsed_ + bitsPerRecord_;

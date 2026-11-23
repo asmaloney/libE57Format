@@ -136,8 +136,7 @@ namespace e57
 
       ImageFileImplSharedPtr imf( destImageFile_ );
       imf->file_->seek( binarySectionLogicalStart_ + sizeof( BlobSectionHeader ) + start );
-      imf->file_->read( reinterpret_cast<char *>( buf ),
-                        static_cast<size_t>( count ) ); //??? arg1 void* ?
+      imf->file_->read( reinterpret_cast<char *>( buf ), count ); //??? arg1 void* ?
    }
 
    void BlobNodeImpl::write( uint8_t *buf, int64_t start, size_t count )
@@ -166,8 +165,7 @@ namespace e57
 
       ImageFileImplSharedPtr imf( destImageFile_ );
       imf->file_->seek( binarySectionLogicalStart_ + sizeof( BlobSectionHeader ) + start );
-      imf->file_->write( reinterpret_cast<char *>( buf ),
-                         static_cast<size_t>( count ) ); //??? arg1 void* ?
+      imf->file_->write( reinterpret_cast<char *>( buf ), count ); //??? arg1 void* ?
    }
 
    void BlobNodeImpl::checkLeavesInSet( const StringSet &pathNames, NodeImplSharedPtr origin )

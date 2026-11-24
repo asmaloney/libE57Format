@@ -727,7 +727,7 @@ void E57XmlParser::endElement( const XMLCh *const uri, const XMLCh *const localN
          int64_t intValue = 0;
          bool foundValue = false;
 
-         if ( pi.childText.length() > 0 )
+         if ( !pi.childText.empty() )
          {
             intValue = convertStrToLL( pi.childText );
             foundValue = true;
@@ -750,7 +750,7 @@ void E57XmlParser::endElement( const XMLCh *const uri, const XMLCh *const localN
          int64_t intValue = 0;
          bool foundValue = false;
 
-         if ( pi.childText.length() > 0 )
+         if ( !pi.childText.empty() )
          {
             intValue = convertStrToLL( pi.childText );
             foundValue = true;
@@ -773,7 +773,7 @@ void E57XmlParser::endElement( const XMLCh *const uri, const XMLCh *const localN
          double floatValue = 0.0;
          bool foundValue = false;
 
-         if ( pi.childText.length() > 0 )
+         if ( !pi.childText.empty() )
          {
             floatValue = strToDouble( pi.childText );
             foundValue = true;

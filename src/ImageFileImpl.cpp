@@ -503,7 +503,7 @@ namespace e57
       }
 
       // If get here, the name was good, so test if found a prefix part
-      return ( prefix.length() > 0 );
+      return !prefix.empty();
    }
 
    bool ImageFileImpl::isPathNameLegal( const ustring &pathName )
@@ -540,7 +540,7 @@ namespace e57
       // If has prefix, it must be registered
       ustring uri;
 
-      if ( prefix.length() > 0 && !extensionsLookupPrefix( prefix, uri ) )
+      if ( !prefix.empty() && !extensionsLookupPrefix( prefix, uri ) )
       {
          throw E57_EXCEPTION2( ErrorPathNameExtensionNotRegistered,
                                "elementName=" + elementName + " prefix=" + prefix );
@@ -743,7 +743,7 @@ namespace e57
          prefix = elementName.substr( 0, found );
          localPart = elementName.substr( found + 1 );
 
-         if ( prefix.length() == 0 || localPart.length() == 0 )
+         if ( prefix.empty() || localPart.empty() )
          {
             throw E57_EXCEPTION2( ErrorPathNameMalformed, "elementName=" + elementName +
                                                              " prefix=" + prefix +

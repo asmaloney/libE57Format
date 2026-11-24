@@ -506,7 +506,7 @@ namespace e57
       return !prefix.empty();
    }
 
-   bool ImageFileImpl::isPathNameLegal( const ustring &pathName )
+   bool ImageFileImpl::isPathNameLegal( const ustring &pathName ) const
    {
 #ifdef E57_VERBOSE
       // cout << "isPathNameLegal elementName=""" << pathName << """" << std::endl;
@@ -527,7 +527,7 @@ namespace e57
       return true;
    }
 
-   void ImageFileImpl::checkElementNameLegal( const ustring &elementName )
+   void ImageFileImpl::checkElementNameLegal( const ustring &elementName ) const
    {
       // no checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__)
 
@@ -547,7 +547,7 @@ namespace e57
       }
    }
 
-   void ImageFileImpl::pathNameCheckWellFormed( const ustring &pathName )
+   void ImageFileImpl::pathNameCheckWellFormed( const ustring &pathName ) const
    {
       // no checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__)
 
@@ -559,7 +559,7 @@ namespace e57
    }
 
    void ImageFileImpl::pathNameParse( const ustring &pathName, bool &isRelative,
-                                      StringList &fields )
+                                      StringList &fields ) const
    {
 #ifdef E57_VERBOSE
       std::cout << "pathNameParse pathname="

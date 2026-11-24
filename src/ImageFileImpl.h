@@ -69,12 +69,12 @@ namespace e57
       ustring extensionsUri( size_t index ) const;
 
       /// Utility functions:
-      bool isElementNameExtended( const ustring &elementName );
-      bool isPathNameLegal( const ustring &pathName );
-      void checkElementNameLegal( const ustring &elementName );
+      static bool isElementNameExtended( const ustring &elementName );
+      bool isPathNameLegal( const ustring &pathName ) const;
+      void checkElementNameLegal( const ustring &elementName ) const;
 
-      void pathNameCheckWellFormed( const ustring &pathName );
-      void pathNameParse( const ustring &pathName, bool &isRelative, StringList &fields );
+      void pathNameCheckWellFormed( const ustring &pathName ) const;
+      void pathNameParse( const ustring &pathName, bool &isRelative, StringList &fields ) const;
 
       void incrWriterCount();
       void decrWriterCount();

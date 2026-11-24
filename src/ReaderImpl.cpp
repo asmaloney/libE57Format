@@ -1719,21 +1719,23 @@ namespace e57
       {
          const ustring name = lineGroupRecord.get( protoIndex ).elementName();
 
-         if ( ( name == "idElementValue" ) && lineGroupRecord.isDefined( "idElementValue" ) &&
-              ( idElementValue != nullptr ) )
+         if ( !lineGroupRecord.isDefined( name ) )
+         {
+            continue;
+         }
+
+         if ( ( idElementValue != nullptr ) && ( name == "idElementValue" ) )
          {
             groupSDBuffers.emplace_back( imf_, "idElementValue", idElementValue, groupCount, true );
          }
 
-         if ( ( name == "startPointIndex" ) && lineGroupRecord.isDefined( "startPointIndex" ) &&
-              ( startPointIndex != nullptr ) )
+         if ( ( startPointIndex != nullptr ) && ( name == "startPointIndex" ) )
          {
             groupSDBuffers.emplace_back( imf_, "startPointIndex", startPointIndex, groupCount,
                                          true );
          }
 
-         if ( ( name == "pointCount" ) && lineGroupRecord.isDefined( "pointCount" ) &&
-              ( pointCount != nullptr ) )
+         if ( ( pointCount != nullptr ) && ( name == "pointCount" ) )
          {
             groupSDBuffers.emplace_back( imf_, "pointCount", pointCount, groupCount, true );
          }
@@ -1759,139 +1761,129 @@ namespace e57
       const int64_t protoCount = proto.childCount();
       std::vector<SourceDestBuffer> destBuffers;
 
+      // E57_EXT_surface_normals
+      ustring norExtUri;
+      const bool haveNormalsExt = imf_.extensionsLookupPrefix( "nor", norExtUri );
+
       for ( int64_t protoIndex = 0; protoIndex < protoCount; protoIndex++ )
       {
          const ustring name = proto.get( protoIndex ).elementName();
+
+         if ( !proto.isDefined( name ) )
+         {
+            continue;
+         }
+
          const NodeType type = proto.get( protoIndex ).type();
          const bool scaled = ( type == TypeScaledInteger );
 
-         // E57_EXT_surface_normals
-         ustring norExtUri;
-         const bool haveNormalsExt = imf_.extensionsLookupPrefix( "nor", norExtUri );
-
-         if ( ( name == "cartesianX" ) && proto.isDefined( "cartesianX" ) &&
-              ( buffers.cartesianX != nullptr ) )
+         if ( ( buffers.cartesianX != nullptr ) && ( name == "cartesianX" ) )
          {
             destBuffers.emplace_back( imf_, "cartesianX", buffers.cartesianX, count, true, scaled );
          }
-         else if ( ( name == "cartesianY" ) && proto.isDefined( "cartesianY" ) &&
-                   ( buffers.cartesianY != nullptr ) )
+         else if ( ( buffers.cartesianY != nullptr ) && ( name == "cartesianY" ) )
          {
             destBuffers.emplace_back( imf_, "cartesianY", buffers.cartesianY, count, true, scaled );
          }
-         else if ( ( name == "cartesianZ" ) && proto.isDefined( "cartesianZ" ) &&
-                   ( buffers.cartesianZ != nullptr ) )
+         else if ( ( buffers.cartesianZ != nullptr ) && ( name == "cartesianZ" ) )
          {
             destBuffers.emplace_back( imf_, "cartesianZ", buffers.cartesianZ, count, true, scaled );
          }
-         else if ( ( name == "cartesianInvalidState" ) &&
-                   proto.isDefined( "cartesianInvalidState" ) &&
-                   ( buffers.cartesianInvalidState != nullptr ) )
+         else if ( ( buffers.cartesianInvalidState != nullptr ) &&
+                   ( name == "cartesianInvalidState" ) )
          {
             destBuffers.emplace_back( imf_, "cartesianInvalidState", buffers.cartesianInvalidState,
                                       count, true );
          }
-         else if ( ( name == "sphericalRange" ) && proto.isDefined( "sphericalRange" ) &&
-                   ( buffers.sphericalRange != nullptr ) )
+         else if ( ( buffers.sphericalRange != nullptr ) && ( name == "sphericalRange" ) )
          {
             destBuffers.emplace_back( imf_, "sphericalRange", buffers.sphericalRange, count, true,
                                       scaled );
          }
-         else if ( ( name == "sphericalAzimuth" ) && proto.isDefined( "sphericalAzimuth" ) &&
-                   ( buffers.sphericalAzimuth != nullptr ) )
+         else if ( ( buffers.sphericalAzimuth != nullptr ) && ( name == "sphericalAzimuth" ) )
          {
             destBuffers.emplace_back( imf_, "sphericalAzimuth", buffers.sphericalAzimuth, count,
                                       true, scaled );
          }
-         else if ( ( name == "sphericalElevation" ) && proto.isDefined( "sphericalElevation" ) &&
-                   ( buffers.sphericalElevation != nullptr ) )
+         else if ( ( buffers.sphericalElevation != nullptr ) && ( name == "sphericalElevation" ) )
          {
             destBuffers.emplace_back( imf_, "sphericalElevation", buffers.sphericalElevation, count,
                                       true, scaled );
          }
-         else if ( ( name == "sphericalInvalidState" ) &&
-                   proto.isDefined( "sphericalInvalidState" ) &&
-                   ( buffers.sphericalInvalidState != nullptr ) )
+         else if ( ( buffers.sphericalInvalidState != nullptr ) &&
+                   ( name == "sphericalInvalidState" ) )
          {
             destBuffers.emplace_back( imf_, "sphericalInvalidState", buffers.sphericalInvalidState,
                                       count, true );
          }
-         else if ( ( name == "rowIndex" ) && proto.isDefined( "rowIndex" ) &&
-                   ( buffers.rowIndex != nullptr ) )
+         else if ( ( buffers.rowIndex != nullptr ) && ( name == "rowIndex" ) )
          {
             destBuffers.emplace_back( imf_, "rowIndex", buffers.rowIndex, count, true );
          }
-         else if ( ( name == "columnIndex" ) && proto.isDefined( "columnIndex" ) &&
-                   ( buffers.columnIndex != nullptr ) )
+         else if ( ( buffers.columnIndex != nullptr ) && ( name == "columnIndex" ) )
          {
             destBuffers.emplace_back( imf_, "columnIndex", buffers.columnIndex, count, true );
          }
-         else if ( ( name == "returnIndex" ) && proto.isDefined( "returnIndex" ) &&
-                   ( buffers.returnIndex != nullptr ) )
+         else if ( ( buffers.returnIndex != nullptr ) && ( name == "returnIndex" ) )
          {
             destBuffers.emplace_back( imf_, "returnIndex", buffers.returnIndex, count, true );
          }
-         else if ( ( name == "returnCount" ) && proto.isDefined( "returnCount" ) &&
-                   ( buffers.returnCount != nullptr ) )
+         else if ( ( buffers.returnCount != nullptr ) && ( name == "returnCount" ) )
          {
             destBuffers.emplace_back( imf_, "returnCount", buffers.returnCount, count, true );
          }
-         else if ( ( name == "timeStamp" ) && proto.isDefined( "timeStamp" ) &&
-                   ( buffers.timeStamp != nullptr ) )
+         else if ( ( buffers.timeStamp != nullptr ) && ( name == "timeStamp" ) )
          {
             destBuffers.emplace_back( imf_, "timeStamp", buffers.timeStamp, count, true, scaled );
          }
-         else if ( ( name == "isTimeStampInvalid" ) && proto.isDefined( "isTimeStampInvalid" ) &&
-                   ( buffers.isTimeStampInvalid != nullptr ) )
+         else if ( ( buffers.isTimeStampInvalid != nullptr ) && ( name == "isTimeStampInvalid" ) )
          {
             destBuffers.emplace_back( imf_, "isTimeStampInvalid", buffers.isTimeStampInvalid, count,
                                       true );
          }
-         else if ( ( name == "intensity" ) && proto.isDefined( "intensity" ) &&
-                   ( buffers.intensity != nullptr ) )
+         else if ( ( buffers.intensity != nullptr ) && ( name == "intensity" ) )
          {
             destBuffers.emplace_back( imf_, "intensity", buffers.intensity, count, true, scaled );
          }
-         else if ( ( name == "isIntensityInvalid" ) && proto.isDefined( "isIntensityInvalid" ) &&
-                   ( buffers.isIntensityInvalid != nullptr ) )
+         else if ( ( buffers.isIntensityInvalid != nullptr ) && ( name == "isIntensityInvalid" ) )
          {
             destBuffers.emplace_back( imf_, "isIntensityInvalid", buffers.isIntensityInvalid, count,
                                       true );
          }
-         else if ( ( name == "colorRed" ) && proto.isDefined( "colorRed" ) &&
-                   ( buffers.colorRed != nullptr ) )
+         else if ( ( buffers.colorRed != nullptr ) && ( name == "colorRed" ) )
          {
             destBuffers.emplace_back( imf_, "colorRed", buffers.colorRed, count, true, scaled );
          }
-         else if ( ( name == "colorGreen" ) && proto.isDefined( "colorGreen" ) &&
-                   ( buffers.colorGreen != nullptr ) )
+         else if ( ( buffers.colorGreen != nullptr ) && ( name == "colorGreen" ) )
          {
             destBuffers.emplace_back( imf_, "colorGreen", buffers.colorGreen, count, true, scaled );
          }
-         else if ( ( name == "colorBlue" ) && proto.isDefined( "colorBlue" ) &&
-                   ( buffers.colorBlue != nullptr ) )
+         else if ( ( buffers.colorBlue != nullptr ) && ( name == "colorBlue" ) )
          {
             destBuffers.emplace_back( imf_, "colorBlue", buffers.colorBlue, count, true, scaled );
          }
-         else if ( ( name == "isColorInvalid" ) && proto.isDefined( "isColorInvalid" ) &&
-                   ( buffers.isColorInvalid != nullptr ) )
+         else if ( ( buffers.isColorInvalid != nullptr ) && ( name == "isColorInvalid" ) )
          {
             destBuffers.emplace_back( imf_, "isColorInvalid", buffers.isColorInvalid, count, true );
          }
-         else if ( haveNormalsExt && ( name == "nor:normalX" ) &&
-                   proto.isDefined( "nor:normalX" ) && ( buffers.normalX != nullptr ) )
+
+         if ( haveNormalsExt )
          {
-            destBuffers.emplace_back( imf_, "nor:normalX", buffers.normalX, count, true, scaled );
-         }
-         else if ( haveNormalsExt && ( name == "nor:normalY" ) &&
-                   proto.isDefined( "nor:normalY" ) && ( buffers.normalY != nullptr ) )
-         {
-            destBuffers.emplace_back( imf_, "nor:normalY", buffers.normalY, count, true, scaled );
-         }
-         else if ( haveNormalsExt && ( name == "nor:normalZ" ) &&
-                   proto.isDefined( "nor:normalZ" ) && ( buffers.normalZ != nullptr ) )
-         {
-            destBuffers.emplace_back( imf_, "nor:normalZ", buffers.normalZ, count, true, scaled );
+            if ( ( buffers.normalX != nullptr ) && ( name == "nor:normalX" ) )
+            {
+               destBuffers.emplace_back( imf_, "nor:normalX", buffers.normalX, count, true,
+                                         scaled );
+            }
+            else if ( ( buffers.normalY != nullptr ) && ( name == "nor:normalY" ) )
+            {
+               destBuffers.emplace_back( imf_, "nor:normalY", buffers.normalY, count, true,
+                                         scaled );
+            }
+            else if ( ( buffers.normalZ != nullptr ) && ( name == "nor:normalZ" ) )
+            {
+               destBuffers.emplace_back( imf_, "nor:normalZ", buffers.normalZ, count, true,
+                                         scaled );
+            }
          }
       }
 

@@ -81,7 +81,7 @@ ustring NodeImpl::pathName() const
 
    if ( isRoot() )
    {
-      return ( "/" );
+      return "/";
    }
 
    NodeImplSharedPtr p( parent_ );
@@ -99,7 +99,7 @@ ustring NodeImpl::relativePathName( const NodeImplSharedPtr &origin, ustring chi
    checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
    if ( origin == shared_from_this() )
    {
-      return ( childPathName );
+      return childPathName;
    }
 
    if ( isRoot() )
@@ -220,21 +220,21 @@ bool NodeImpl::isTypeConstrained()
             // If homogeneous vector and have more than one child, then can't change them
             if ( !ai->allowHeteroChildren() && ai->childCount() > 1 )
             {
-               return ( true );
+               return true;
             }
          }
          break;
          case TypeCompressedVector:
             // Can't make any type changes to CompressedVector prototype.  ???
             // what if hasn't been written to yet
-            return ( true );
+            return true;
          default:
             break;
       }
    }
    // Didn't find any constraining VECTORs or COMPRESSED_VECTORs in path above us, so our type is
    // not constrained.
-   return ( false );
+   return false;
 }
 
 NodeImplSharedPtr NodeImpl::get( const ustring &pathName )
@@ -378,7 +378,7 @@ bool NodeImpl::findTerminalPosition( const NodeImplSharedPtr &target, uint64_t &
          break;
    }
 
-   return ( false );
+   return false;
 }
 
 #ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT

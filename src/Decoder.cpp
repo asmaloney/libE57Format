@@ -906,7 +906,7 @@ size_t ConstantIntegerDecoder::inputProcess( const char *source, const size_t av
       destBuffer_->fillNextInt64( minimum_, count );
    }
    currentRecordIndex_ += count;
-   return ( count );
+   return count;
 }
 
 void ConstantIntegerDecoder::stateReset()

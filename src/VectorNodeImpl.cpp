@@ -44,7 +44,7 @@ namespace e57
       // Same node type?
       if ( ni->type() != TypeVector )
       {
-         return ( false );
+         return false;
       }
 
       std::shared_ptr<VectorNodeImpl> ai( std::static_pointer_cast<VectorNodeImpl>( ni ) );
@@ -52,13 +52,13 @@ namespace e57
       // allowHeteroChildren must match
       if ( allowHeteroChildren_ != ai->allowHeteroChildren_ )
       {
-         return ( false );
+         return false;
       }
 
       // Same number of children?
       if ( childCount() != ai->childCount() )
       {
-         return ( false );
+         return false;
       }
 
       // Check each child, must be in same order
@@ -66,12 +66,12 @@ namespace e57
       {
          if ( !children_.at( i )->isTypeEquivalent( ai->children_.at( i ) ) )
          {
-            return ( false );
+            return false;
          }
       }
 
       // Types match
-      return ( true );
+      return true;
    }
 
    bool VectorNodeImpl::allowHeteroChildren() const

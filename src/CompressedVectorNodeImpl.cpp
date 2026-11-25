@@ -82,7 +82,7 @@ namespace e57
    NodeImplSharedPtr CompressedVectorNodeImpl::getPrototype() const
    {
       checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
-      return ( prototype_ ); //??? check defined
+      return prototype_; //??? check defined
    }
 
    void CompressedVectorNodeImpl::setCodecs( const std::shared_ptr<VectorNodeImpl> &codecs )
@@ -126,7 +126,7 @@ namespace e57
    std::shared_ptr<VectorNodeImpl> CompressedVectorNodeImpl::getCodecs() const
    {
       checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
-      return ( codecs_ ); //??? check defined
+      return codecs_; //??? check defined
    }
 
    bool CompressedVectorNodeImpl::isTypeEquivalent( NodeImplSharedPtr ni )
@@ -138,7 +138,7 @@ namespace e57
       // Same node type?
       if ( ni->type() != TypeCompressedVector )
       {
-         return ( false );
+         return false;
       }
 
       std::shared_ptr<CompressedVectorNodeImpl> cvi(
@@ -147,29 +147,29 @@ namespace e57
       // recordCount must match
       if ( recordCount_ != cvi->recordCount_ )
       {
-         return ( false );
+         return false;
       }
 
       // Prototypes and codecs must match ???
       // These can be null since they are set after construction.
       if ( !prototype_ || !cvi->prototype_ )
       {
-         return ( false );
+         return false;
       }
       if ( !prototype_->isTypeEquivalent( cvi->prototype_ ) )
       {
-         return ( false );
+         return false;
       }
       if ( !codecs_ || !cvi->codecs_ )
       {
-         return ( false );
+         return false;
       }
       if ( !codecs_->isTypeEquivalent( cvi->codecs_ ) )
       {
-         return ( false );
+         return false;
       }
 
-      return ( true );
+      return true;
    }
 
    bool CompressedVectorNodeImpl::isDefined( const ustring &pathName )
@@ -199,7 +199,7 @@ namespace e57
    int64_t CompressedVectorNodeImpl::childCount() const
    {
       checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
-      return ( recordCount_ );
+      return recordCount_;
    }
 
    void CompressedVectorNodeImpl::checkLeavesInSet( const StringSet & /*pathNames*/,
@@ -323,7 +323,7 @@ namespace e57
       // Return a shared_ptr to new object
       std::shared_ptr<CompressedVectorWriterImpl> cvwi(
          new CompressedVectorWriterImpl( cai, sbufs ) );
-      return ( cvwi );
+      return cvwi;
    }
 
    std::shared_ptr<CompressedVectorReaderImpl> CompressedVectorNodeImpl::reader(
@@ -378,6 +378,6 @@ namespace e57
       // Return a shared_ptr to new object
       std::shared_ptr<CompressedVectorReaderImpl> cvri(
          new CompressedVectorReaderImpl( cai, dbufs ) );
-      return ( cvri );
+      return cvri;
    }
 }

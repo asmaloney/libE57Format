@@ -63,12 +63,12 @@ namespace e57
 
       int64_t getRecordCount() const
       {
-         return ( recordCount_ );
+         return recordCount_;
       }
 
       uint64_t getBinarySectionLogicalStart() const
       {
-         return ( binarySectionLogicalStart_ );
+         return binarySectionLogicalStart_;
       }
 
       void setRecordCount( int64_t recordCount )

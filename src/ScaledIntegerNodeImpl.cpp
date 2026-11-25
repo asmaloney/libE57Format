@@ -72,7 +72,7 @@ namespace e57
       // Same node type?
       if ( ni->type() != TypeScaledInteger )
       {
-         return ( false );
+         return false;
       }
 
       // Downcast to shared_ptr<ScaledIntegerNodeImpl>
@@ -82,31 +82,31 @@ namespace e57
       // minimum must match
       if ( minimum_ != ii->minimum_ )
       {
-         return ( false );
+         return false;
       }
 
       // maximum must match
       if ( maximum_ != ii->maximum_ )
       {
-         return ( false );
+         return false;
       }
 
       // scale must match
       if ( scale_ != ii->scale_ )
       {
-         return ( false );
+         return false;
       }
 
       // offset must match
       if ( offset_ != ii->offset_ )
       {
-         return ( false );
+         return false;
       }
 
       // ignore value_, doesn't have to match
 
       // Types match
-      return ( true );
+      return true;
    }
 
    bool ScaledIntegerNodeImpl::isDefined( const ustring &pathName )
@@ -120,7 +120,7 @@ namespace e57
    int64_t ScaledIntegerNodeImpl::rawValue()
    {
       checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
-      return ( value_ );
+      return value_;
    }
 
    double ScaledIntegerNodeImpl::scaledValue()
@@ -132,7 +132,7 @@ namespace e57
    int64_t ScaledIntegerNodeImpl::minimum()
    {
       checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
-      return ( minimum_ );
+      return minimum_;
    }
 
    double ScaledIntegerNodeImpl::scaledMinimum()
@@ -144,7 +144,7 @@ namespace e57
    int64_t ScaledIntegerNodeImpl::maximum()
    {
       checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
-      return ( maximum_ );
+      return maximum_;
    }
 
    double ScaledIntegerNodeImpl::scaledMaximum()
@@ -156,13 +156,13 @@ namespace e57
    double ScaledIntegerNodeImpl::scale()
    {
       checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
-      return ( scale_ );
+      return scale_;
    }
 
    double ScaledIntegerNodeImpl::offset()
    {
       checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
-      return ( offset_ );
+      return offset_;
    }
 
    void ScaledIntegerNodeImpl::checkLeavesInSet( const StringSet &pathNames,

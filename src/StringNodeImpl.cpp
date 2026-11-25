@@ -44,13 +44,13 @@ namespace e57
       // Same node type?
       if ( ni->type() != TypeString )
       {
-         return ( false );
+         return false;
       }
 
       // ignore value_, doesn't have to match
 
       // Types match
-      return ( true );
+      return true;
    }
 
    bool StringNodeImpl::isDefined( const ustring &pathName )
@@ -64,7 +64,7 @@ namespace e57
    ustring StringNodeImpl::value()
    {
       checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
-      return ( value_ );
+      return value_;
    }
 
    void StringNodeImpl::checkLeavesInSet( const StringSet &pathNames, NodeImplSharedPtr origin )

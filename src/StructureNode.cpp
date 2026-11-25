@@ -248,7 +248,7 @@ bool StructureNode::isDefined( const ustring &pathName ) const
          return false;
       }
 
-      throw( e );
+      throw e;
    }
 }
 

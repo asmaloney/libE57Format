@@ -47,7 +47,7 @@ namespace e57
       // If we have completed the entire vector, we are done
       if ( decoder->totalRecordsCompleted() >= maxRecordCount )
       {
-         return ( true );
+         return true;
       }
 
       // If we have filled the dest buffer, we are blocked
@@ -59,7 +59,7 @@ namespace e57
       // If have read until the section end, we are done
       if ( inputFinished )
       {
-         return ( true );
+         return true;
       }
 
       // If have eaten all the input in the current packet, we are blocked.

@@ -413,7 +413,7 @@ int64_t SourceDestBufferImpl::getNextInt64()
          throw E57_EXCEPTION2( ErrorInternal, "pathName=" + pathName_ );
    }
    nextIndex_++;
-   return ( value );
+   return value;
 }
 
 int64_t SourceDestBufferImpl::getNextInt64( double scale, double offset )
@@ -429,7 +429,7 @@ int64_t SourceDestBufferImpl::getNextInt64( double scale, double offset )
    if ( !doScaling_ )
    {
       /// Just return raw value.
-      return ( getNextInt64() );
+      return getNextInt64();
    }
 
    /// Double check non-zero scale.  Going to divide by it below.
@@ -533,7 +533,7 @@ int64_t SourceDestBufferImpl::getNextInt64( double scale, double offset )
    auto rawValue = static_cast<int64_t>( doubleRawValue );
 
    nextIndex_++;
-   return ( rawValue );
+   return rawValue;
 }
 
 float SourceDestBufferImpl::getNextFloat()
@@ -634,7 +634,7 @@ float SourceDestBufferImpl::getNextFloat()
          throw E57_EXCEPTION2( ErrorInternal, "pathName=" + pathName_ );
    }
    nextIndex_++;
-   return ( value );
+   return value;
 }
 
 double SourceDestBufferImpl::getNextDouble()
@@ -722,7 +722,7 @@ double SourceDestBufferImpl::getNextDouble()
          throw E57_EXCEPTION2( ErrorInternal, "pathName=" + pathName_ );
    }
    nextIndex_++;
-   return ( value );
+   return value;
 }
 
 ustring SourceDestBufferImpl::getNextString()
@@ -742,7 +742,7 @@ ustring SourceDestBufferImpl::getNextString()
    }
 
    /// Get ustring from vector
-   return ( ( *ustrings_ )[nextIndex_++] );
+   return ( *ustrings_ )[nextIndex_++];
 }
 
 void SourceDestBufferImpl::setNextInt64( int64_t value )

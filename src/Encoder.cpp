@@ -222,12 +222,12 @@ BitpackEncoder::BitpackEncoder( unsigned bytestreamNumber, SourceDestBuffer &sbu
 
 unsigned BitpackEncoder::sourceBufferNextIndex()
 {
-   return ( sourceBuffer_->nextIndex() );
+   return sourceBuffer_->nextIndex();
 }
 
 uint64_t BitpackEncoder::currentRecordIndex()
 {
-   return ( currentRecordIndex_ );
+   return currentRecordIndex_;
 }
 
 size_t BitpackEncoder::outputAvailable() const
@@ -297,7 +297,7 @@ void BitpackEncoder::sourceBufferSetNew( std::vector<SourceDestBuffer> &sbufs )
 size_t BitpackEncoder::outputGetMaxSize()
 {
    // Its size that matters here, not capacity
-   return ( outBuffer_.size() );
+   return outBuffer_.size();
 }
 
 void BitpackEncoder::outputSetMaxSize( unsigned byteCount )
@@ -463,13 +463,13 @@ uint64_t BitpackFloatEncoder::processRecords( size_t recordCount )
    // Update counts of records processed
    currentRecordIndex_ += recordCount;
 
-   return ( currentRecordIndex_ );
+   return currentRecordIndex_;
 }
 
 bool BitpackFloatEncoder::registerFlushToOutput()
 {
    // Since have no registers in encoder, return success
-   return ( true );
+   return true;
 }
 
 float BitpackFloatEncoder::bitsPerRecord()
@@ -617,13 +617,13 @@ uint64_t BitpackStringEncoder::processRecords( size_t recordCount )
    // Update counts of records processed
    currentRecordIndex_ += recordsProcessed;
 
-   return ( currentRecordIndex_ );
+   return currentRecordIndex_;
 }
 
 bool BitpackStringEncoder::registerFlushToOutput()
 {
    // Since have no registers in encoder, return success
-   return ( true );
+   return true;
 }
 
 float BitpackStringEncoder::bitsPerRecord()
@@ -837,7 +837,7 @@ uint64_t BitpackIntegerEncoder<RegisterT>::processRecords( size_t recordCount )
    // Update counts of records processed
    currentRecordIndex_ += recordCount;
 
-   return ( currentRecordIndex_ );
+   return currentRecordIndex_;
 }
 
 template <typename RegisterT> bool BitpackIntegerEncoder<RegisterT>::registerFlushToOutput()
@@ -940,28 +940,28 @@ uint64_t ConstantIntegerEncoder::processRecords( size_t recordCount )
    // Update counts of records processed
    currentRecordIndex_ += recordCount;
 
-   return ( currentRecordIndex_ );
+   return currentRecordIndex_;
 }
 
 unsigned ConstantIntegerEncoder::sourceBufferNextIndex()
 {
-   return ( sourceBuffer_->nextIndex() );
+   return sourceBuffer_->nextIndex();
 }
 
 uint64_t ConstantIntegerEncoder::currentRecordIndex()
 {
-   return ( currentRecordIndex_ );
+   return currentRecordIndex_;
 }
 
 float ConstantIntegerEncoder::bitsPerRecord()
 {
    // We don't produce any output
-   return ( 0.0 );
+   return 0.0;
 }
 
 bool ConstantIntegerEncoder::registerFlushToOutput()
 {
-   return ( true );
+   return true;
 }
 
 size_t ConstantIntegerEncoder::outputAvailable() const
@@ -997,7 +997,7 @@ void ConstantIntegerEncoder::sourceBufferSetNew( std::vector<SourceDestBuffer> &
 size_t ConstantIntegerEncoder::outputGetMaxSize()
 {
    // We don't produce any output
-   return ( 0 );
+   return 0;
 }
 
 void ConstantIntegerEncoder::outputSetMaxSize( unsigned /*byteCount*/ )

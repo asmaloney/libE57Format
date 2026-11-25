@@ -425,6 +425,7 @@ void DataPacket::verify( unsigned bufferLength ) const
                                                  " packetLength=" + toString( packetLength ) );
    }
 
+#if VALIDATE_DEEP
    // Verify that padding at end of packet is zero
    for ( unsigned i = needed; i < packetLength; i++ )
    {
@@ -433,6 +434,7 @@ void DataPacket::verify( unsigned bufferLength ) const
          throw E57_EXCEPTION2( ErrorBadCVPacket, "DATA; i=" + toString( i ) );
       }
    }
+#endif
 }
 
 char *DataPacket::getBytestream( unsigned bytestreamNumber, unsigned &byteCount )

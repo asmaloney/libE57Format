@@ -291,7 +291,7 @@ bool VectorNode::isDefined( const ustring &pathName ) const
          return false;
       }
 
-      throw( e );
+      throw e;
    }
 }
 

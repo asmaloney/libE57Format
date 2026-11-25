@@ -89,7 +89,7 @@ namespace e57
       // Same node type?
       if ( ni->type() != TypeBlob )
       {
-         return ( false );
+         return false;
       }
 
       // Downcast to shared_ptr<BlobNodeImpl>
@@ -98,13 +98,13 @@ namespace e57
       // blob lengths must match
       if ( blobLogicalLength_ != bi->blobLogicalLength_ )
       {
-         return ( false );
+         return false;
       }
 
       // ignore blob contents, doesn't have to match
 
       // Types match
-      return ( true );
+      return true;
    }
 
    bool BlobNodeImpl::isDefined( const ustring &pathName )
@@ -118,7 +118,7 @@ namespace e57
    int64_t BlobNodeImpl::byteCount()
    {
       checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
-      return ( blobLogicalLength_ );
+      return blobLogicalLength_;
    }
 
    void BlobNodeImpl::read( uint8_t *buf, int64_t start, size_t count )

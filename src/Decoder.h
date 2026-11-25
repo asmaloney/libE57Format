@@ -68,7 +68,7 @@ namespace e57
 
       uint64_t totalRecordsCompleted() override
       {
-         return ( currentRecordIndex_ );
+         return currentRecordIndex_;
       }
 
       size_t inputProcess( const char *source, size_t availableByteCount ) override;

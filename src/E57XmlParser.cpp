@@ -102,7 +102,7 @@ namespace
          TranscodeToStr UTF8Transcoder( xml_str, "UTF-8" );
          u_str = ustring( reinterpret_cast<const char *>( UTF8Transcoder.str() ) );
       }
-      return ( u_str );
+      return u_str;
    }
 
    ustring lookupAttribute( const Attributes &attributes, const XMLCh *attribute_name )
@@ -118,7 +118,7 @@ namespace
    bool isAttributeDefined( const Attributes &attributes, const XMLCh *attribute_name )
    {
       XMLSize_t attr_index;
-      return ( attributes.getIndex( attribute_name, attr_index ) );
+      return attributes.getIndex( attribute_name, attr_index );
    }
 }
 
@@ -136,7 +136,7 @@ public:
 
    XMLFilePos curPos() const override
    {
-      return ( logicalPosition_ );
+      return logicalPosition_;
    }
 
    XMLSize_t readBytes( XMLByte *toFill, XMLSize_t maxToRead ) override;
@@ -165,13 +165,13 @@ XMLSize_t E57FileInputStream::readBytes( XMLByte *const toFill, const XMLSize_t 
 {
    if ( logicalPosition_ > logicalStart_ + logicalLength_ )
    {
-      return ( 0 );
+      return 0;
    }
 
    int64_t available = logicalStart_ + logicalLength_ - logicalPosition_;
    if ( available <= 0 )
    {
-      return ( 0 );
+      return 0;
    }
 
    size_t maxToRead_size = maxToRead;
@@ -209,7 +209,7 @@ XMLSize_t E57FileInputStream::readBytes( XMLByte *const toFill, const XMLSize_t 
    cf_->seek( logicalPosition_ );
    cf_->read( reinterpret_cast<char *>( toFill ), readCount ); //??? cast ok?
    logicalPosition_ += readCount;
-   return ( readCount );
+   return readCount;
 }
 
 //=============================================================================

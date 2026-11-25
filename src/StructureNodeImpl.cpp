@@ -54,7 +54,7 @@ bool StructureNodeImpl::isTypeEquivalent( NodeImplSharedPtr ni )
    // Same node type?
    if ( ni->type() != TypeStructure )
    {
-      return ( false );
+      return false;
    }
 
    // Downcast to shared_ptr<StructureNodeImpl>
@@ -63,7 +63,7 @@ bool StructureNodeImpl::isTypeEquivalent( NodeImplSharedPtr ni )
    // Same number of children?
    if ( childCount() != si->childCount() )
    {
-      return ( false );
+      return false;
    }
 
    // Check each child is equivalent
@@ -75,7 +75,7 @@ bool StructureNodeImpl::isTypeEquivalent( NodeImplSharedPtr ni )
       {
          if ( !children_.at( i )->isTypeEquivalent( si->children_.at( i ) ) )
          {
-            return ( false );
+            return false;
          }
       }
       else
@@ -83,17 +83,17 @@ bool StructureNodeImpl::isTypeEquivalent( NodeImplSharedPtr ni )
          // Children in different order, so lookup by name and check if equal to our child
          if ( !si->isDefined( myChildsFieldName ) )
          {
-            return ( false );
+            return false;
          }
          if ( !children_.at( i )->isTypeEquivalent( si->lookup( myChildsFieldName ) ) )
          {
-            return ( false );
+            return false;
          }
       }
    }
 
    // Types match
-   return ( true );
+   return true;
 }
 
 bool StructureNodeImpl::isDefined( const ustring &pathName )
@@ -131,7 +131,7 @@ NodeImplSharedPtr StructureNodeImpl::get( int64_t index )
                             "this->pathName=" + this->pathName() + " index=" + toString( index ) +
                                " size=" + toString( children_.size() ) );
    }
-   return ( children_.at( static_cast<unsigned>( index ) ) );
+   return children_.at( static_cast<unsigned>( index ) );
 }
 
 NodeImplSharedPtr StructureNodeImpl::get( const ustring &pathName )
@@ -144,7 +144,7 @@ NodeImplSharedPtr StructureNodeImpl::get( const ustring &pathName )
       throw E57_EXCEPTION2( ErrorPathUndefined,
                             "this->pathName=" + this->pathName() + " pathName=" + pathName );
    }
-   return ( ni );
+   return ni;
 }
 
 NodeImplSharedPtr StructureNodeImpl::lookup( const ustring &pathName )
@@ -166,7 +166,7 @@ NodeImplSharedPtr StructureNodeImpl::lookup( const ustring &pathName )
          }
 
          NodeImplSharedPtr root( getRoot() );
-         return ( root );
+         return root;
       }
 
       // Find child with elementName that matches first field in path
@@ -185,7 +185,7 @@ NodeImplSharedPtr StructureNodeImpl::lookup( const ustring &pathName )
 
       if ( fields.size() == 1 )
       {
-         return ( children_.at( i ) );
+         return children_.at( i );
       }
 
       //??? use level here rather than unparse

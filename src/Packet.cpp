@@ -488,7 +488,7 @@ unsigned DataPacket::getBytestreamBufferLength( unsigned bytestreamNumber )
    //??? for now:
    unsigned byteCount;
    getBytestream( bytestreamNumber, byteCount );
-   return ( byteCount );
+   return byteCount;
 }
 
 #ifdef E57_ENABLE_DIAGNOSTIC_OUTPUT

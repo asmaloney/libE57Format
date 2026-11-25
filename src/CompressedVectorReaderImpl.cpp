@@ -231,7 +231,7 @@ namespace e57
       // Check compatible with current dbufs
       setBuffers( dbufs );
 
-      return ( read() );
+      return read();
    }
 
    unsigned CompressedVectorReaderImpl::read()
@@ -551,13 +551,13 @@ namespace e57
    {
       // don't checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__), or
       // checkReaderOpen()
-      return ( isOpen_ );
+      return isOpen_;
    }
 
    std::shared_ptr<CompressedVectorNodeImpl> CompressedVectorReaderImpl::compressedVectorNode()
       const
    {
-      return ( cVector_ );
+      return cVector_;
    }
 
    void CompressedVectorReaderImpl::close()

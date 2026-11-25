@@ -70,7 +70,7 @@ namespace e57
       // Same node type?
       if ( ni->type() != TypeFloat )
       {
-         return ( false );
+         return false;
       }
 
       // Downcast to shared_ptr<FloatNodeImpl>
@@ -79,25 +79,25 @@ namespace e57
       // precision must match
       if ( precision_ != fi->precision_ )
       {
-         return ( false );
+         return false;
       }
 
       // minimum must match
       if ( minimum_ != fi->minimum_ )
       {
-         return ( false );
+         return false;
       }
 
       // maximum must match
       if ( maximum_ != fi->maximum_ )
       {
-         return ( false );
+         return false;
       }
 
       // ignore value_, doesn't have to match
 
       // Types match
-      return ( true );
+      return true;
    }
 
    bool FloatNodeImpl::isDefined( const ustring &pathName )

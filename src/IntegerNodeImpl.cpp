@@ -56,7 +56,7 @@ namespace e57
       // Same node type?
       if ( ni->type() != TypeInteger )
       {
-         return ( false );
+         return false;
       }
 
       // Downcast to shared_ptr<IntegerNodeImpl>
@@ -65,19 +65,19 @@ namespace e57
       // minimum must match
       if ( minimum_ != ii->minimum_ )
       {
-         return ( false );
+         return false;
       }
 
       // maximum must match
       if ( maximum_ != ii->maximum_ )
       {
-         return ( false );
+         return false;
       }
 
       // ignore value_, doesn't have to match
 
       // Types match
-      return ( true );
+      return true;
    }
 
    bool IntegerNodeImpl::isDefined( const ustring &pathName )
@@ -91,19 +91,19 @@ namespace e57
    int64_t IntegerNodeImpl::value()
    {
       checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
-      return ( value_ );
+      return value_;
    }
 
    int64_t IntegerNodeImpl::minimum()
    {
       checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
-      return ( minimum_ );
+      return minimum_;
    }
 
    int64_t IntegerNodeImpl::maximum()
    {
       checkImageFileOpen( __FILE__, __LINE__, static_cast<const char *>( __FUNCTION__ ) );
-      return ( maximum_ );
+      return maximum_;
    }
 
    void IntegerNodeImpl::checkLeavesInSet( const StringSet &pathNames, NodeImplSharedPtr origin )

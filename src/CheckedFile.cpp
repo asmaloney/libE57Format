@@ -264,8 +264,7 @@ CheckedFile::CheckedFile( const char *input, uint64_t size, ReadChecksumPolicy p
 int CheckedFile::open64( const ustring &fileName, int flags, int mode )
 {
 #if defined( _MSC_VER )
-
-// Handle UTF-8 file names - Windows requires conversion to UTF-16
+   // Handle UTF-8 file names - Windows requires conversion to UTF-16
 #if ( ( defined( _MSVC_LANG ) && _MSVC_LANG >= 201703L ) || __cplusplus >= 201703L )
    // Ref:
    // https://learn.microsoft.com/en-us/windows/win32/api/stringapiset/nf-stringapiset-multibytetowidechar

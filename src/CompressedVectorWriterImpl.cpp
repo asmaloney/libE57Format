@@ -428,7 +428,7 @@ namespace e57
       const size_t cTotalOutput = totalOutputAvailable();
       if ( cTotalOutput == 0 )
       {
-         return ( 0 );
+         return 0;
       }
 
       // const bytestreams_ so it's clear it isn't modified in this function
@@ -613,7 +613,7 @@ namespace e57
       // !!! update seekIndex here? if started new chunk?
 
       // Return physical offset of data packet for potential use in seekIndex
-      return ( packetPhysicalOffset ); //??? needed
+      return packetPhysicalOffset; //??? needed
    }
 
    // If we don't have any records, write a packet which is only the header + zero padding.

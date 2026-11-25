@@ -95,16 +95,9 @@ namespace e57
       // Downcast to shared_ptr<BlobNodeImpl>
       std::shared_ptr<BlobNodeImpl> bi( std::static_pointer_cast<BlobNodeImpl>( ni ) );
 
-      // blob lengths must match
-      if ( blobLogicalLength_ != bi->blobLogicalLength_ )
-      {
-         return false;
-      }
-
       // ignore blob contents, doesn't have to match
 
-      // Types match
-      return true;
+      return blobLogicalLength_ == bi->blobLogicalLength_;
    }
 
    bool BlobNodeImpl::isDefined( const ustring &pathName )

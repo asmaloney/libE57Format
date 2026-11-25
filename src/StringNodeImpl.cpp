@@ -41,16 +41,9 @@ namespace e57
    {
       // don't checkImageFileOpen
 
-      // Same node type?
-      if ( ni->type() != TypeString )
-      {
-         return false;
-      }
-
       // ignore value_, doesn't have to match
 
-      // Types match
-      return true;
+      return ni->type() == TypeString;
    }
 
    bool StringNodeImpl::isDefined( const ustring &pathName )

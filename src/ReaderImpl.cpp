@@ -153,6 +153,310 @@ namespace e57
       return true;
    }
 
+   static void readImageSensorDetails( const StructureNode &image, Image2D &image2DHeader )
+   {
+      if ( image.isDefined( "sensorVendor" ) )
+      {
+         image2DHeader.sensorVendor = StringNode( image.get( "sensorVendor" ) ).value();
+      }
+      if ( image.isDefined( "sensorModel" ) )
+      {
+         image2DHeader.sensorModel = StringNode( image.get( "sensorModel" ) ).value();
+      }
+      if ( image.isDefined( "sensorSerialNumber" ) )
+      {
+         image2DHeader.sensorSerialNumber = StringNode( image.get( "sensorSerialNumber" ) ).value();
+      }
+   }
+
+   static void readImageAcquisitionData( const StructureNode &image, Image2D &image2DHeader )
+   {
+      if ( !image.isDefined( "acquisitionDateTime" ) )
+      {
+         return;
+      }
+
+      const StructureNode acquisitionDateTime( image.get( "acquisitionDateTime" ) );
+
+      image2DHeader.acquisitionDateTime.dateTimeValue =
+         FloatNode( acquisitionDateTime.get( "dateTimeValue" ) ).value();
+
+      if ( acquisitionDateTime.isDefined( "isAtomicClockReferenced" ) )
+      {
+         image2DHeader.acquisitionDateTime.isAtomicClockReferenced = static_cast<int32_t>(
+            IntegerNode( acquisitionDateTime.get( "isAtomicClockReferenced" ) ).value() );
+      }
+   }
+
+   static void readImagePose( const StructureNode &image, Image2D &image2DHeader )
+   {
+      if ( !image.isDefined( "pose" ) )
+      {
+         return;
+      }
+
+      const StructureNode pose( image.get( "pose" ) );
+
+      if ( pose.isDefined( "rotation" ) )
+      {
+         const StructureNode rotation( pose.get( "rotation" ) );
+
+         image2DHeader.pose.rotation.w = FloatNode( rotation.get( "w" ) ).value();
+         image2DHeader.pose.rotation.x = FloatNode( rotation.get( "x" ) ).value();
+         image2DHeader.pose.rotation.y = FloatNode( rotation.get( "y" ) ).value();
+         image2DHeader.pose.rotation.z = FloatNode( rotation.get( "z" ) ).value();
+      }
+      if ( pose.isDefined( "translation" ) )
+      {
+         const StructureNode translation( pose.get( "translation" ) );
+
+         image2DHeader.pose.translation.x = FloatNode( translation.get( "x" ) ).value();
+         image2DHeader.pose.translation.y = FloatNode( translation.get( "y" ) ).value();
+         image2DHeader.pose.translation.z = FloatNode( translation.get( "z" ) ).value();
+      }
+   }
+
+   static void readImageVisualRepresentation( const StructureNode &image, Image2D &image2DHeader )
+   {
+      if ( !image.isDefined( "visualReferenceRepresentation" ) )
+      {
+         return;
+      }
+
+      const StructureNode visualReferenceRepresentation(
+         image.get( "visualReferenceRepresentation" ) );
+
+      if ( visualReferenceRepresentation.isDefined( "jpegImage" ) )
+      {
+         image2DHeader.visualReferenceRepresentation.jpegImageSize =
+            BlobNode( visualReferenceRepresentation.get( "jpegImage" ) ).byteCount();
+      }
+      if ( visualReferenceRepresentation.isDefined( "pngImage" ) )
+      {
+         image2DHeader.visualReferenceRepresentation.pngImageSize =
+            BlobNode( visualReferenceRepresentation.get( "pngImage" ) ).byteCount();
+      }
+      if ( visualReferenceRepresentation.isDefined( "imageMask" ) )
+      {
+         image2DHeader.visualReferenceRepresentation.imageMaskSize =
+            BlobNode( visualReferenceRepresentation.get( "imageMask" ) ).byteCount();
+      }
+
+      image2DHeader.visualReferenceRepresentation.imageHeight = static_cast<int32_t>(
+         IntegerNode( visualReferenceRepresentation.get( "imageHeight" ) ).value() );
+      image2DHeader.visualReferenceRepresentation.imageWidth = static_cast<int32_t>(
+         IntegerNode( visualReferenceRepresentation.get( "imageWidth" ) ).value() );
+   }
+
+   static void readImagePinholeRepresentation( const StructureNode &image, Image2D &image2DHeader )
+   {
+      if ( !image.isDefined( "pinholeRepresentation" ) )
+      {
+         return;
+      }
+
+      const StructureNode pinholeRepresentation( image.get( "pinholeRepresentation" ) );
+
+      if ( pinholeRepresentation.isDefined( "jpegImage" ) )
+      {
+         image2DHeader.pinholeRepresentation.jpegImageSize =
+            BlobNode( pinholeRepresentation.get( "jpegImage" ) ).byteCount();
+      }
+      if ( pinholeRepresentation.isDefined( "pngImage" ) )
+      {
+         image2DHeader.pinholeRepresentation.pngImageSize =
+            BlobNode( pinholeRepresentation.get( "pngImage" ) ).byteCount();
+      }
+      if ( pinholeRepresentation.isDefined( "imageMask" ) )
+      {
+         image2DHeader.pinholeRepresentation.imageMaskSize =
+            BlobNode( pinholeRepresentation.get( "imageMask" ) ).byteCount();
+      }
+
+      image2DHeader.pinholeRepresentation.focalLength =
+         FloatNode( pinholeRepresentation.get( "focalLength" ) ).value();
+      image2DHeader.pinholeRepresentation.imageHeight =
+         static_cast<int32_t>( IntegerNode( pinholeRepresentation.get( "imageHeight" ) ).value() );
+      image2DHeader.pinholeRepresentation.imageWidth =
+         static_cast<int32_t>( IntegerNode( pinholeRepresentation.get( "imageWidth" ) ).value() );
+
+      image2DHeader.pinholeRepresentation.pixelHeight =
+         FloatNode( pinholeRepresentation.get( "pixelHeight" ) ).value();
+      image2DHeader.pinholeRepresentation.pixelWidth =
+         FloatNode( pinholeRepresentation.get( "pixelWidth" ) ).value();
+      image2DHeader.pinholeRepresentation.principalPointX =
+         FloatNode( pinholeRepresentation.get( "principalPointX" ) ).value();
+      image2DHeader.pinholeRepresentation.principalPointY =
+         FloatNode( pinholeRepresentation.get( "principalPointY" ) ).value();
+   }
+
+   static void readImageSphericalRepresentation( const StructureNode &image,
+                                                 Image2D &image2DHeader )
+   {
+      if ( !image.isDefined( "sphericalRepresentation" ) )
+      {
+         return;
+      }
+
+      const StructureNode sphericalRepresentation( image.get( "sphericalRepresentation" ) );
+
+      if ( sphericalRepresentation.isDefined( "jpegImage" ) )
+      {
+         image2DHeader.sphericalRepresentation.jpegImageSize =
+            BlobNode( sphericalRepresentation.get( "jpegImage" ) ).byteCount();
+      }
+      if ( sphericalRepresentation.isDefined( "pngImage" ) )
+      {
+         image2DHeader.sphericalRepresentation.pngImageSize =
+            BlobNode( sphericalRepresentation.get( "pngImage" ) ).byteCount();
+      }
+      if ( sphericalRepresentation.isDefined( "imageMask" ) )
+      {
+         image2DHeader.sphericalRepresentation.imageMaskSize =
+            BlobNode( sphericalRepresentation.get( "imageMask" ) ).byteCount();
+      }
+
+      image2DHeader.sphericalRepresentation.imageHeight = static_cast<int32_t>(
+         IntegerNode( sphericalRepresentation.get( "imageHeight" ) ).value() );
+      image2DHeader.sphericalRepresentation.imageWidth =
+         static_cast<int32_t>( IntegerNode( sphericalRepresentation.get( "imageWidth" ) ).value() );
+
+      image2DHeader.sphericalRepresentation.pixelHeight =
+         FloatNode( sphericalRepresentation.get( "pixelHeight" ) ).value();
+      image2DHeader.sphericalRepresentation.pixelWidth =
+         FloatNode( sphericalRepresentation.get( "pixelWidth" ) ).value();
+   }
+
+   static void readImageCylindricalRepresentation( const StructureNode &image,
+                                                   Image2D &image2DHeader )
+   {
+      if ( !image.isDefined( "cylindricalRepresentation" ) )
+      {
+         return;
+      }
+
+      const StructureNode cylindricalRepresentation( image.get( "cylindricalRepresentation" ) );
+
+      if ( cylindricalRepresentation.isDefined( "jpegImage" ) )
+      {
+         image2DHeader.cylindricalRepresentation.jpegImageSize =
+            BlobNode( cylindricalRepresentation.get( "jpegImage" ) ).byteCount();
+      }
+      if ( cylindricalRepresentation.isDefined( "pngImage" ) )
+      {
+         image2DHeader.cylindricalRepresentation.pngImageSize =
+            BlobNode( cylindricalRepresentation.get( "pngImage" ) ).byteCount();
+      }
+      if ( cylindricalRepresentation.isDefined( "imageMask" ) )
+      {
+         image2DHeader.cylindricalRepresentation.imageMaskSize =
+            BlobNode( cylindricalRepresentation.get( "imageMask" ) ).byteCount();
+      }
+
+      image2DHeader.cylindricalRepresentation.imageHeight = static_cast<int32_t>(
+         IntegerNode( cylindricalRepresentation.get( "imageHeight" ) ).value() );
+      image2DHeader.cylindricalRepresentation.imageWidth = static_cast<int32_t>(
+         IntegerNode( cylindricalRepresentation.get( "imageWidth" ) ).value() );
+
+      image2DHeader.cylindricalRepresentation.pixelHeight =
+         FloatNode( cylindricalRepresentation.get( "pixelHeight" ) ).value();
+      image2DHeader.cylindricalRepresentation.pixelWidth =
+         FloatNode( cylindricalRepresentation.get( "pixelWidth" ) ).value();
+      image2DHeader.cylindricalRepresentation.principalPointY =
+         FloatNode( cylindricalRepresentation.get( "principalPointY" ) ).value();
+      image2DHeader.cylindricalRepresentation.radius =
+         FloatNode( cylindricalRepresentation.get( "radius" ) ).value();
+   }
+
+   // E57_LEICA_Camera_Distortion
+   // See: http://www.libe57.org/E57_LEICA_Camera_Distortion.txt
+   static void readEXTCameraDistortion( const ImageFile &imf_, const StructureNode &image,
+                                        Image2D &image2DHeader )
+   {
+      if ( !imf_.extensionsLookupPrefix( "dist" ) || !image.isDefined( "dist:distortion" ) )
+      {
+         return;
+      }
+
+      const StructureNode distortion( image.get( "dist:distortion" ) );
+
+      auto &pcd = image2DHeader.pinholeCameraDistortionExt;
+      pcd = std::make_unique<Extension::PinholeCameraDistortion>();
+
+      if ( distortion.isDefined( "dist:CameraNumber" ) )
+      {
+         pcd->cameraNumber = IntegerNode( distortion.get( "dist:CameraNumber" ) ).value();
+      }
+
+      if ( distortion.isDefined( "dist:Type" ) )
+      {
+         pcd->type = StringNode( distortion.get( "dist:Type" ) ).value();
+      }
+
+      if ( distortion.isDefined( "dist:CV_K1" ) )
+      {
+         pcd->CV_K1 = FloatNode( distortion.get( "dist:CV_K1" ) ).value();
+      }
+      if ( distortion.isDefined( "dist:CV_K2" ) )
+      {
+         pcd->CV_K2 = FloatNode( distortion.get( "dist:CV_K2" ) ).value();
+      }
+      if ( distortion.isDefined( "dist:CV_K3" ) )
+      {
+         pcd->CV_K3 = FloatNode( distortion.get( "dist:CV_K3" ) ).value();
+      }
+      if ( distortion.isDefined( "dist:CV_K4" ) )
+      {
+         pcd->CV_K4 = FloatNode( distortion.get( "dist:CV_K4" ) ).value();
+      }
+      if ( distortion.isDefined( "dist:CV_K5" ) )
+      {
+         pcd->CV_K5 = FloatNode( distortion.get( "dist:CV_K5" ) ).value();
+      }
+      if ( distortion.isDefined( "dist:CV_K6" ) )
+      {
+         pcd->CV_K6 = FloatNode( distortion.get( "dist:CV_K6" ) ).value();
+      }
+
+      if ( distortion.isDefined( "dist:CV_P1" ) )
+      {
+         pcd->CV_P1 = FloatNode( distortion.get( "dist:CV_P1" ) ).value();
+      }
+      if ( distortion.isDefined( "dist:CV_P2" ) )
+      {
+         pcd->CV_P2 = FloatNode( distortion.get( "dist:CV_P2" ) ).value();
+      }
+
+      if ( distortion.isDefined( "dist:CV_CX" ) )
+      {
+         pcd->CV_CX = FloatNode( distortion.get( "dist:CV_CX" ) ).value();
+      }
+      if ( distortion.isDefined( "dist:CV_CY" ) )
+      {
+         pcd->CV_CY = FloatNode( distortion.get( "dist:CV_CY" ) ).value();
+      }
+
+      if ( distortion.isDefined( "dist:CV_FX" ) )
+      {
+         pcd->CV_FX = FloatNode( distortion.get( "dist:CV_FX" ) ).value();
+      }
+      if ( distortion.isDefined( "dist:CV_FY" ) )
+      {
+         pcd->CV_FY = FloatNode( distortion.get( "dist:CV_FY" ) ).value();
+      }
+
+      if ( distortion.isDefined( "dist:CV_HEIGHT" ) )
+      {
+         pcd->CV_HEIGHT =
+            static_cast<int32_t>( IntegerNode( distortion.get( "dist:CV_HEIGHT" ) ).value() );
+      }
+      if ( distortion.isDefined( "dist:CV_WIDTH" ) )
+      {
+         pcd->CV_WIDTH =
+            static_cast<int32_t>( IntegerNode( distortion.get( "dist:CV_WIDTH" ) ).value() );
+      }
+   }
+
    static void readSensorDetails( const StructureNode &scan, Data3D &data3DHeader )
    {
       if ( scan.isDefined( "sensorVendor" ) )
@@ -1081,273 +1385,23 @@ namespace e57
          image2DHeader.description = StringNode( image.get( "description" ) ).value();
       }
 
-      if ( image.isDefined( "sensorVendor" ) )
-      {
-         image2DHeader.sensorVendor = StringNode( image.get( "sensorVendor" ) ).value();
-      }
-      if ( image.isDefined( "sensorModel" ) )
-      {
-         image2DHeader.sensorModel = StringNode( image.get( "sensorModel" ) ).value();
-      }
-      if ( image.isDefined( "sensorSerialNumber" ) )
-      {
-         image2DHeader.sensorSerialNumber = StringNode( image.get( "sensorSerialNumber" ) ).value();
-      }
-
       if ( image.isDefined( "associatedData3DGuid" ) )
       {
          image2DHeader.associatedData3DGuid =
             StringNode( image.get( "associatedData3DGuid" ) ).value();
       }
 
-      if ( image.isDefined( "acquisitionDateTime" ) )
-      {
-         const StructureNode acquisitionDateTime( image.get( "acquisitionDateTime" ) );
+      readImageSensorDetails( image, image2DHeader );
+      readImageAcquisitionData( image, image2DHeader );
+      readImagePose( image, image2DHeader );
 
-         image2DHeader.acquisitionDateTime.dateTimeValue =
-            FloatNode( acquisitionDateTime.get( "dateTimeValue" ) ).value();
+      readImageVisualRepresentation( image, image2DHeader );
+      readImagePinholeRepresentation( image, image2DHeader );
+      readImageSphericalRepresentation( image, image2DHeader );
+      readImageCylindricalRepresentation( image, image2DHeader );
 
-         if ( acquisitionDateTime.isDefined( "isAtomicClockReferenced" ) )
-         {
-            image2DHeader.acquisitionDateTime.isAtomicClockReferenced = static_cast<int32_t>(
-               IntegerNode( acquisitionDateTime.get( "isAtomicClockReferenced" ) ).value() );
-         }
-      }
-
-      // Get pose structure for scan.
-      if ( image.isDefined( "pose" ) )
-      {
-         const StructureNode pose( image.get( "pose" ) );
-
-         if ( pose.isDefined( "rotation" ) )
-         {
-            const StructureNode rotation( pose.get( "rotation" ) );
-
-            image2DHeader.pose.rotation.w = FloatNode( rotation.get( "w" ) ).value();
-            image2DHeader.pose.rotation.x = FloatNode( rotation.get( "x" ) ).value();
-            image2DHeader.pose.rotation.y = FloatNode( rotation.get( "y" ) ).value();
-            image2DHeader.pose.rotation.z = FloatNode( rotation.get( "z" ) ).value();
-         }
-         if ( pose.isDefined( "translation" ) )
-         {
-            const StructureNode translation( pose.get( "translation" ) );
-
-            image2DHeader.pose.translation.x = FloatNode( translation.get( "x" ) ).value();
-            image2DHeader.pose.translation.y = FloatNode( translation.get( "y" ) ).value();
-            image2DHeader.pose.translation.z = FloatNode( translation.get( "z" ) ).value();
-         }
-      }
-
-      if ( image.isDefined( "visualReferenceRepresentation" ) )
-      {
-         const StructureNode visualReferenceRepresentation(
-            image.get( "visualReferenceRepresentation" ) );
-
-         if ( visualReferenceRepresentation.isDefined( "jpegImage" ) )
-         {
-            image2DHeader.visualReferenceRepresentation.jpegImageSize =
-               BlobNode( visualReferenceRepresentation.get( "jpegImage" ) ).byteCount();
-         }
-         if ( visualReferenceRepresentation.isDefined( "pngImage" ) )
-         {
-            image2DHeader.visualReferenceRepresentation.pngImageSize =
-               BlobNode( visualReferenceRepresentation.get( "pngImage" ) ).byteCount();
-         }
-         if ( visualReferenceRepresentation.isDefined( "imageMask" ) )
-         {
-            image2DHeader.visualReferenceRepresentation.imageMaskSize =
-               BlobNode( visualReferenceRepresentation.get( "imageMask" ) ).byteCount();
-         }
-
-         image2DHeader.visualReferenceRepresentation.imageHeight = static_cast<int32_t>(
-            IntegerNode( visualReferenceRepresentation.get( "imageHeight" ) ).value() );
-         image2DHeader.visualReferenceRepresentation.imageWidth = static_cast<int32_t>(
-            IntegerNode( visualReferenceRepresentation.get( "imageWidth" ) ).value() );
-      }
-
-      if ( image.isDefined( "pinholeRepresentation" ) )
-      {
-         const StructureNode pinholeRepresentation( image.get( "pinholeRepresentation" ) );
-
-         if ( pinholeRepresentation.isDefined( "jpegImage" ) )
-         {
-            image2DHeader.pinholeRepresentation.jpegImageSize =
-               BlobNode( pinholeRepresentation.get( "jpegImage" ) ).byteCount();
-         }
-         if ( pinholeRepresentation.isDefined( "pngImage" ) )
-         {
-            image2DHeader.pinholeRepresentation.pngImageSize =
-               BlobNode( pinholeRepresentation.get( "pngImage" ) ).byteCount();
-         }
-         if ( pinholeRepresentation.isDefined( "imageMask" ) )
-         {
-            image2DHeader.pinholeRepresentation.imageMaskSize =
-               BlobNode( pinholeRepresentation.get( "imageMask" ) ).byteCount();
-         }
-
-         image2DHeader.pinholeRepresentation.focalLength =
-            FloatNode( pinholeRepresentation.get( "focalLength" ) ).value();
-         image2DHeader.pinholeRepresentation.imageHeight = static_cast<int32_t>(
-            IntegerNode( pinholeRepresentation.get( "imageHeight" ) ).value() );
-         image2DHeader.pinholeRepresentation.imageWidth = static_cast<int32_t>(
-            IntegerNode( pinholeRepresentation.get( "imageWidth" ) ).value() );
-
-         image2DHeader.pinholeRepresentation.pixelHeight =
-            FloatNode( pinholeRepresentation.get( "pixelHeight" ) ).value();
-         image2DHeader.pinholeRepresentation.pixelWidth =
-            FloatNode( pinholeRepresentation.get( "pixelWidth" ) ).value();
-         image2DHeader.pinholeRepresentation.principalPointX =
-            FloatNode( pinholeRepresentation.get( "principalPointX" ) ).value();
-         image2DHeader.pinholeRepresentation.principalPointY =
-            FloatNode( pinholeRepresentation.get( "principalPointY" ) ).value();
-      }
-      else if ( image.isDefined( "sphericalRepresentation" ) )
-      {
-         const StructureNode sphericalRepresentation( image.get( "sphericalRepresentation" ) );
-
-         if ( sphericalRepresentation.isDefined( "jpegImage" ) )
-         {
-            image2DHeader.sphericalRepresentation.jpegImageSize =
-               BlobNode( sphericalRepresentation.get( "jpegImage" ) ).byteCount();
-         }
-         if ( sphericalRepresentation.isDefined( "pngImage" ) )
-         {
-            image2DHeader.sphericalRepresentation.pngImageSize =
-               BlobNode( sphericalRepresentation.get( "pngImage" ) ).byteCount();
-         }
-         if ( sphericalRepresentation.isDefined( "imageMask" ) )
-         {
-            image2DHeader.sphericalRepresentation.imageMaskSize =
-               BlobNode( sphericalRepresentation.get( "imageMask" ) ).byteCount();
-         }
-
-         image2DHeader.sphericalRepresentation.imageHeight = static_cast<int32_t>(
-            IntegerNode( sphericalRepresentation.get( "imageHeight" ) ).value() );
-         image2DHeader.sphericalRepresentation.imageWidth = static_cast<int32_t>(
-            IntegerNode( sphericalRepresentation.get( "imageWidth" ) ).value() );
-
-         image2DHeader.sphericalRepresentation.pixelHeight =
-            FloatNode( sphericalRepresentation.get( "pixelHeight" ) ).value();
-         image2DHeader.sphericalRepresentation.pixelWidth =
-            FloatNode( sphericalRepresentation.get( "pixelWidth" ) ).value();
-      }
-      else if ( image.isDefined( "cylindricalRepresentation" ) )
-      {
-         const StructureNode cylindricalRepresentation( image.get( "cylindricalRepresentation" ) );
-
-         if ( cylindricalRepresentation.isDefined( "jpegImage" ) )
-         {
-            image2DHeader.cylindricalRepresentation.jpegImageSize =
-               BlobNode( cylindricalRepresentation.get( "jpegImage" ) ).byteCount();
-         }
-         if ( cylindricalRepresentation.isDefined( "pngImage" ) )
-         {
-            image2DHeader.cylindricalRepresentation.pngImageSize =
-               BlobNode( cylindricalRepresentation.get( "pngImage" ) ).byteCount();
-         }
-         if ( cylindricalRepresentation.isDefined( "imageMask" ) )
-         {
-            image2DHeader.cylindricalRepresentation.imageMaskSize =
-               BlobNode( cylindricalRepresentation.get( "imageMask" ) ).byteCount();
-         }
-
-         image2DHeader.cylindricalRepresentation.imageHeight = static_cast<int32_t>(
-            IntegerNode( cylindricalRepresentation.get( "imageHeight" ) ).value() );
-         image2DHeader.cylindricalRepresentation.imageWidth = static_cast<int32_t>(
-            IntegerNode( cylindricalRepresentation.get( "imageWidth" ) ).value() );
-
-         image2DHeader.cylindricalRepresentation.pixelHeight =
-            FloatNode( cylindricalRepresentation.get( "pixelHeight" ) ).value();
-         image2DHeader.cylindricalRepresentation.pixelWidth =
-            FloatNode( cylindricalRepresentation.get( "pixelWidth" ) ).value();
-         image2DHeader.cylindricalRepresentation.principalPointY =
-            FloatNode( cylindricalRepresentation.get( "principalPointY" ) ).value();
-         image2DHeader.cylindricalRepresentation.radius =
-            FloatNode( cylindricalRepresentation.get( "radius" ) ).value();
-      }
-
-      // E57_LEICA_Camera_Distortion
-      // See: http://www.libe57.org/E57_LEICA_Camera_Distortion.txt
-      if ( imf_.extensionsLookupPrefix( "dist" ) && image.isDefined( "dist:distortion" ) )
-      {
-         const StructureNode distortion( image.get( "dist:distortion" ) );
-
-         auto &pcd = image2DHeader.pinholeCameraDistortionExt;
-         pcd = std::make_unique<Extension::PinholeCameraDistortion>();
-
-         if ( distortion.isDefined( "dist:CameraNumber" ) )
-         {
-            pcd->cameraNumber = IntegerNode( distortion.get( "dist:CameraNumber" ) ).value();
-         }
-
-         if ( distortion.isDefined( "dist:Type" ) )
-         {
-            pcd->type = StringNode( distortion.get( "dist:Type" ) ).value();
-         }
-
-         if ( distortion.isDefined( "dist:CV_K1" ) )
-         {
-            pcd->CV_K1 = FloatNode( distortion.get( "dist:CV_K1" ) ).value();
-         }
-         if ( distortion.isDefined( "dist:CV_K2" ) )
-         {
-            pcd->CV_K2 = FloatNode( distortion.get( "dist:CV_K2" ) ).value();
-         }
-         if ( distortion.isDefined( "dist:CV_K3" ) )
-         {
-            pcd->CV_K3 = FloatNode( distortion.get( "dist:CV_K3" ) ).value();
-         }
-         if ( distortion.isDefined( "dist:CV_K4" ) )
-         {
-            pcd->CV_K4 = FloatNode( distortion.get( "dist:CV_K4" ) ).value();
-         }
-         if ( distortion.isDefined( "dist:CV_K5" ) )
-         {
-            pcd->CV_K5 = FloatNode( distortion.get( "dist:CV_K5" ) ).value();
-         }
-         if ( distortion.isDefined( "dist:CV_K6" ) )
-         {
-            pcd->CV_K6 = FloatNode( distortion.get( "dist:CV_K6" ) ).value();
-         }
-
-         if ( distortion.isDefined( "dist:CV_P1" ) )
-         {
-            pcd->CV_P1 = FloatNode( distortion.get( "dist:CV_P1" ) ).value();
-         }
-         if ( distortion.isDefined( "dist:CV_P2" ) )
-         {
-            pcd->CV_P2 = FloatNode( distortion.get( "dist:CV_P2" ) ).value();
-         }
-
-         if ( distortion.isDefined( "dist:CV_CX" ) )
-         {
-            pcd->CV_CX = FloatNode( distortion.get( "dist:CV_CX" ) ).value();
-         }
-         if ( distortion.isDefined( "dist:CV_CY" ) )
-         {
-            pcd->CV_CY = FloatNode( distortion.get( "dist:CV_CY" ) ).value();
-         }
-
-         if ( distortion.isDefined( "dist:CV_FX" ) )
-         {
-            pcd->CV_FX = FloatNode( distortion.get( "dist:CV_FX" ) ).value();
-         }
-         if ( distortion.isDefined( "dist:CV_FY" ) )
-         {
-            pcd->CV_FY = FloatNode( distortion.get( "dist:CV_FY" ) ).value();
-         }
-
-         if ( distortion.isDefined( "dist:CV_HEIGHT" ) )
-         {
-            pcd->CV_HEIGHT =
-               static_cast<int32_t>( IntegerNode( distortion.get( "dist:CV_HEIGHT" ) ).value() );
-         }
-         if ( distortion.isDefined( "dist:CV_WIDTH" ) )
-         {
-            pcd->CV_WIDTH =
-               static_cast<int32_t>( IntegerNode( distortion.get( "dist:CV_WIDTH" ) ).value() );
-         }
-      }
+      // Extensions
+      readEXTCameraDistortion( imf_, image, image2DHeader );
 
       return true;
    }

@@ -103,45 +103,36 @@ namespace
       // Now run through the points and set the things we need to
       for ( size_t i = 0; i < ioData3DHeader.pointCount; ++i )
       {
-         if ( cUsingCartesian )
+         if ( cWriteCartesianBounds )
          {
-            if ( cWriteCartesianBounds )
-            {
-               const auto cDoubleX = static_cast<double>( inBuffers.cartesianX[i] );
-               cartesianBounds.xMinimum = std::min( cartesianBounds.xMinimum, cDoubleX );
-               cartesianBounds.xMaximum = std::max( cartesianBounds.xMaximum, cDoubleX );
+            const auto cDoubleX = static_cast<double>( inBuffers.cartesianX[i] );
+            cartesianBounds.xMinimum = std::min( cartesianBounds.xMinimum, cDoubleX );
+            cartesianBounds.xMaximum = std::max( cartesianBounds.xMaximum, cDoubleX );
 
-               const auto cDoubleY = static_cast<double>( inBuffers.cartesianY[i] );
-               cartesianBounds.yMinimum = std::min( cartesianBounds.yMinimum, cDoubleY );
-               cartesianBounds.yMaximum = std::max( cartesianBounds.yMaximum, cDoubleY );
+            const auto cDoubleY = static_cast<double>( inBuffers.cartesianY[i] );
+            cartesianBounds.yMinimum = std::min( cartesianBounds.yMinimum, cDoubleY );
+            cartesianBounds.yMaximum = std::max( cartesianBounds.yMaximum, cDoubleY );
 
-               const auto cDoubleZ = static_cast<double>( inBuffers.cartesianZ[i] );
-               cartesianBounds.zMinimum = std::min( cartesianBounds.zMinimum, cDoubleZ );
-               cartesianBounds.zMaximum = std::max( cartesianBounds.zMaximum, cDoubleZ );
-            }
+            const auto cDoubleZ = static_cast<double>( inBuffers.cartesianZ[i] );
+            cartesianBounds.zMinimum = std::min( cartesianBounds.zMinimum, cDoubleZ );
+            cartesianBounds.zMaximum = std::max( cartesianBounds.zMaximum, cDoubleZ );
          }
 
-         if ( cUsingSpherical )
+         if ( cWriteSphericalBounds )
          {
-            if ( cWriteSphericalBounds )
-            {
-               const auto cDoubleRange = static_cast<double>( inBuffers.sphericalRange[i] );
-               sphericalBounds.rangeMinimum =
-                  std::min( sphericalBounds.rangeMinimum, cDoubleRange );
-               sphericalBounds.rangeMaximum =
-                  std::max( sphericalBounds.rangeMaximum, cDoubleRange );
+            const auto cDoubleRange = static_cast<double>( inBuffers.sphericalRange[i] );
+            sphericalBounds.rangeMinimum = std::min( sphericalBounds.rangeMinimum, cDoubleRange );
+            sphericalBounds.rangeMaximum = std::max( sphericalBounds.rangeMaximum, cDoubleRange );
 
-               const auto cDoubleElevation = static_cast<double>( inBuffers.sphericalElevation[i] );
-               sphericalBounds.elevationMinimum =
-                  std::min( sphericalBounds.elevationMinimum, cDoubleElevation );
-               sphericalBounds.elevationMaximum =
-                  std::max( sphericalBounds.elevationMaximum, cDoubleElevation );
+            const auto cDoubleElevation = static_cast<double>( inBuffers.sphericalElevation[i] );
+            sphericalBounds.elevationMinimum =
+               std::min( sphericalBounds.elevationMinimum, cDoubleElevation );
+            sphericalBounds.elevationMaximum =
+               std::max( sphericalBounds.elevationMaximum, cDoubleElevation );
 
-               const auto cDoubleAzimuth = static_cast<double>( inBuffers.sphericalAzimuth[i] );
-               sphericalBounds.azimuthStart =
-                  std::min( sphericalBounds.azimuthStart, cDoubleAzimuth );
-               sphericalBounds.azimuthEnd = std::max( sphericalBounds.azimuthEnd, cDoubleAzimuth );
-            }
+            const auto cDoubleAzimuth = static_cast<double>( inBuffers.sphericalAzimuth[i] );
+            sphericalBounds.azimuthStart = std::min( sphericalBounds.azimuthStart, cDoubleAzimuth );
+            sphericalBounds.azimuthEnd = std::max( sphericalBounds.azimuthEnd, cDoubleAzimuth );
          }
 
          if ( cWriteTimeStamp )
@@ -201,12 +192,10 @@ namespace e57
    {
       if ( inData3D.pointFields.intensityField )
       {
-         if ( inData3D.pointFields.intensityNodeType == NumericalNodeType::ScaledInteger )
+         if ( ( inData3D.pointFields.intensityNodeType == NumericalNodeType::ScaledInteger ) &&
+              isZero( inData3D.pointFields.intensityScale ) )
          {
-            if ( isZero( inData3D.pointFields.intensityScale ) )
-            {
-               throw E57_EXCEPTION2( ErrorInvalidData3DValue, "intensityScale cannot be 0" );
-            }
+            throw E57_EXCEPTION2( ErrorInvalidData3DValue, "intensityScale cannot be 0" );
          }
       }
 
@@ -216,12 +205,11 @@ namespace e57
          {
             throw E57_EXCEPTION2( ErrorInvalidNodeType, "pointRangeNodeType cannot be Integer" );
          }
-         else if ( inData3D.pointFields.pointRangeNodeType == NumericalNodeType::ScaledInteger )
+
+         if ( ( inData3D.pointFields.pointRangeNodeType == NumericalNodeType::ScaledInteger ) &&
+              isZero( inData3D.pointFields.pointRangeScale ) )
          {
-            if ( isZero( inData3D.pointFields.pointRangeScale ) )
-            {
-               throw E57_EXCEPTION2( ErrorInvalidData3DValue, "pointRangeScale cannot be 0" );
-            }
+            throw E57_EXCEPTION2( ErrorInvalidData3DValue, "pointRangeScale cannot be 0" );
          }
       }
 
@@ -232,12 +220,11 @@ namespace e57
          {
             throw E57_EXCEPTION2( ErrorInvalidNodeType, "angleNodeType cannot be Integer" );
          }
-         else if ( inData3D.pointFields.angleNodeType == NumericalNodeType::ScaledInteger )
+
+         if ( ( inData3D.pointFields.angleNodeType == NumericalNodeType::ScaledInteger ) &&
+              isZero( inData3D.pointFields.angleScale ) )
          {
-            if ( isZero( inData3D.pointFields.angleScale ) )
-            {
-               throw E57_EXCEPTION2( ErrorInvalidData3DValue, "angleScale cannot be 0" );
-            }
+            throw E57_EXCEPTION2( ErrorInvalidData3DValue, "angleScale cannot be 0" );
          }
 
          // Check the sphericalBounds for ranges

@@ -43,7 +43,7 @@ namespace e57
       size_t currentBytestreamBufferLength;
       bool inputFinished;
 
-      DecodeChannel( SourceDestBuffer dbuf_arg, std::shared_ptr<Decoder> decoder_arg,
+      DecodeChannel( const SourceDestBuffer &dbuf_arg, std::shared_ptr<Decoder> decoder_arg,
                      unsigned bytestreamNumber_arg, uint64_t maxRecordCount_arg );
 
       bool isOutputBlocked() const;

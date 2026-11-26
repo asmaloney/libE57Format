@@ -220,7 +220,7 @@ BitpackEncoder::BitpackEncoder( unsigned bytestreamNumber, SourceDestBuffer &sbu
 {
 }
 
-unsigned BitpackEncoder::sourceBufferNextIndex()
+size_t BitpackEncoder::sourceBufferNextIndex()
 {
    return sourceBuffer_->nextIndex();
 }
@@ -943,7 +943,7 @@ uint64_t ConstantIntegerEncoder::processRecords( size_t recordCount )
    return currentRecordIndex_;
 }
 
-unsigned ConstantIntegerEncoder::sourceBufferNextIndex()
+size_t ConstantIntegerEncoder::sourceBufferNextIndex()
 {
    return sourceBuffer_->nextIndex();
 }

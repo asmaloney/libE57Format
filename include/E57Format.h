@@ -424,8 +424,8 @@ public:                                                                         
    public:
       CompressedVectorReader() = delete;
 
-      unsigned read();
-      unsigned read( std::vector<SourceDestBuffer> &dbufs );
+      size_t read();
+      size_t read( std::vector<SourceDestBuffer> &dbufs );
       void seek( int64_t recordNumber ); // !!! not implemented yet
       void close();
       bool isOpen();
